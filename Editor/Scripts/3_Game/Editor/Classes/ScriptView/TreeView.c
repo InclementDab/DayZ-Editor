@@ -1,8 +1,8 @@
-class EditorNodeView: ScriptView
+class TreeView: ScriptView
 {
-	static ref map<Widget, EditorNodeView> AllEditorNodeViews = new map<Widget, EditorNodeView>();
+	static ref map<Widget, TreeView> AllTreeViews = new map<Widget, TreeView>();
 	
-	protected EditorNodeViewController m_TemplateController;
+	protected TreeViewController m_TemplateController;
 		
 	TextWidget Text;
 	
@@ -12,11 +12,11 @@ class EditorNodeView: ScriptView
 	
 	protected bool m_IsBeingDragged;
 
-	protected EditorNode m_Node;
+	protected TreeNode m_Node;
 
-	void EditorNodeView(EditorNode node)
+	void TreeView(TreeNode node)
 	{
-		m_TemplateController = EditorNodeViewController.Cast(m_Controller);
+		m_TemplateController = TreeViewController.Cast(m_Controller);
 		m_Node = node;
 		
 		m_Node.OnSelectionChanged.Insert(OnSelectionChange);
@@ -26,12 +26,12 @@ class EditorNodeView: ScriptView
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());
 		IconImage.SetImage(0);
 		
-		AllEditorNodeViews[m_LayoutRoot] = this;
+		AllTreeViews[m_LayoutRoot] = this;
 	}
 	
-	void ~EditorNodeView()
+	void ~TreeView()
 	{
-		AllEditorNodeViews.Remove(m_LayoutRoot);
+		AllTreeViews.Remove(m_LayoutRoot);
 	}
 	
 	// should be on the node
@@ -76,7 +76,7 @@ class EditorNodeView: ScriptView
 		Texture.Show(state);
 		
 		// you only want to open upper containers when lower ones are opened. propagate up /\
-		EditorNode parent = m_Node.GetParent();
+		TreeNode parent = m_Node.GetParent();
 		if (parent) {
 			parent.GetNodeView().ShowChildren(true);
 		}
@@ -175,7 +175,7 @@ class EditorNodeView: ScriptView
 				switch (button) {
 					case 0: {
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
-							EditorNode.ClearSelections();
+							TreeNode.ClearSelections();
 						}
 						
 						if (KeyState(KeyCode.KC_LCONTROL)) {
@@ -207,25 +207,25 @@ class EditorNodeView: ScriptView
 		return super.OnDrag(w, x, y);
 	}
 			
-	void OnSelectionChange(EditorNode selectable)
+	void OnSelectionChange(TreeNode selectable)
 	{
 		if (Panel) {
 			Panel.SetColor(EditorColors.SELECT * selectable.IsSelected());
 		}
 	}
 						
-	EditorNodeViewController GetTemplateController()
+	TreeViewController GetTemplateController()
 	{
 		return m_TemplateController;
 	}
 		
 	override typename GetControllerType()
 	{
-		return EditorNodeViewController;
+		return TreeViewController;
 	}
 	
 	override string GetLayoutFile()
 	{
-		return "Editor\\GUI\\layouts\\items\\EditorNodeView.layout";
+		return "Editor\\GUI\\layouts\\items\\TreeView.layout";
 	}
 }

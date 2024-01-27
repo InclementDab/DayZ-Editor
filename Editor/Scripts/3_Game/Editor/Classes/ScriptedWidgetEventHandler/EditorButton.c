@@ -1,6 +1,6 @@
 class EditorButton: ScriptedWidgetEventHandler
 {	
-	protected EditorNode m_Node;
+	protected TreeNode m_Node;
 	
 	reference string Node;
 	
@@ -27,7 +27,7 @@ class EditorButton: ScriptedWidgetEventHandler
 #endif
 	}
 	
-	void SetNode(EditorNode node)
+	void SetNode(TreeNode node)
 	{
 		if (Node != string.Empty) {			
 			m_Node = GetDayZGame().GetEditor()["Commands"][Node];

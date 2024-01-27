@@ -19,7 +19,7 @@ class EditorObjectView: ScriptView
 		Outline.SetImage(0);
 	}
 	
-	void OnSelectionChange(EditorNode selectable)
+	void OnSelectionChange(TreeNode selectable)
 	{
 		Image.SetColor(Ternary<int>.If(selectable.IsSelected(), ARGB(255, 7, 111, 255), ARGB(255, 255, 255, 255)));
 	}
@@ -60,7 +60,7 @@ class EditorObjectView: ScriptView
 				}
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					EditorNode.ClearSelections();
+					TreeNode.ClearSelections();
 				}
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {

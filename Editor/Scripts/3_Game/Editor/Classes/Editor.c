@@ -19,8 +19,11 @@ class EditorColors
 	static const int HIDDEN_1 = ARGB(255, 131, 131, 149);
 }
 
-class Editor: EditorServer
+class Editor: TreeNode
 {
+	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
+	static const int DEFAULT_ENTITY_COUNT = 512;
+	
 	protected PlayerIdentity m_Identity;
 	protected DayZPlayer m_Player;
 	
@@ -35,7 +38,7 @@ class Editor: EditorServer
 	// Stack of Undo / Redo Actions
 	protected ref EditorHistory m_History = new EditorHistory();
 	
-	protected ref map<string, EditorNode> m_CommandShortcutMap = new map<string, EditorNode>();
+	protected ref map<string, TreeNode> m_CommandShortcutMap = new map<string, TreeNode>();
 		
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
@@ -43,14 +46,14 @@ class Editor: EditorServer
 		m_Player = player;	
 		
 		// Load all default categories and placements
-		EditorNode edited_objects = new EditorNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
-		edited_objects.Add(new EditorNode("PlacedObjects", "Placed Objects", Symbols.HAND));
-		edited_objects.Add(new EditorNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
-		edited_objects.Add(new EditorNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
+		TreeNode edited_objects = new TreeNode("EditedObjects", "Edited Objects", Symbols.OBJECT_GROUP);
+		edited_objects.Add(new TreeNode("PlacedObjects", "Placed Objects", Symbols.HAND));
+		edited_objects.Add(new TreeNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
+		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
 		
 #ifndef SERVER
-		EditorNode commands = new EditorNode("Commands", "Commands", Symbols.COMMAND);
+		TreeNode commands = new TreeNode("Commands", "Commands", Symbols.COMMAND);
 		commands.Add(new BoxSelectCommand("BoxSelectCommand", "Box Select", Symbols.SQUARE_DASHED));
 		commands.Add(new CircleSelectCommand("CircleSelectCommand", "Circle Select", Symbols.CIRCLE_DASHED));
 		commands.Add(new LassoSelectCommand("LassoSelectCommand", "Lasso Select", Symbols.LASSO));
@@ -59,22 +62,22 @@ class Editor: EditorServer
 		commands.Add(new RedoCommand("RedoCommand", "Redo", Symbols.ROTATE_RIGHT));
 		Add(commands);
 		
-		EditorNode placeable_objects = new EditorNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
-		placeable_objects.Add(new EditorNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
-		placeable_objects.Add(new EditorNode("Plants", "Plants", Symbols.TREE));
-		placeable_objects.Add(new EditorNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
-		placeable_objects.Add(new EditorNode("Clutter", "Clutter", Symbols.TRASH));
-		placeable_objects.Add(new EditorNode("Structures", "Structures", Symbols.HOUSE));
-		placeable_objects.Add(new EditorNode("Wrecks", "Wrecks", Symbols.CAR_BURST));
-		placeable_objects.Add(new EditorNode("AI", "AI", Symbols.PERSON));
-		placeable_objects.Add(new EditorNode("Water", "Water", Symbols.WATER));
-		placeable_objects.Add(new EditorNode("Vehicles", "Vehicles", Symbols.CAR));
-		placeable_objects.Add(new EditorNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
-		placeable_objects.Add(new EditorNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
-		placeable_objects.Add(new EditorNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
+		TreeNode placeable_objects = new TreeNode("PlaceableObjects", "Placeable Objects", Symbols.ADDRESS_BOOK);
+		placeable_objects.Add(new TreeNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
+		placeable_objects.Add(new TreeNode("Plants", "Plants", Symbols.TREE));
+		placeable_objects.Add(new TreeNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
+		placeable_objects.Add(new TreeNode("Clutter", "Clutter", Symbols.TRASH));
+		placeable_objects.Add(new TreeNode("Structures", "Structures", Symbols.HOUSE));
+		placeable_objects.Add(new TreeNode("Wrecks", "Wrecks", Symbols.CAR_BURST));
+		placeable_objects.Add(new TreeNode("AI", "AI", Symbols.PERSON));
+		placeable_objects.Add(new TreeNode("Water", "Water", Symbols.WATER));
+		placeable_objects.Add(new TreeNode("Vehicles", "Vehicles", Symbols.CAR));
+		placeable_objects.Add(new TreeNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
+		placeable_objects.Add(new TreeNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
+		placeable_objects.Add(new TreeNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
 		Add(placeable_objects);
 		
-		EditorNode brushes = new EditorNode("Brushes", "Brushes", Symbols.BRUSH);
+		TreeNode brushes = new TreeNode("Brushes", "Brushes", Symbols.BRUSH);
 		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		Add(brushes);
@@ -157,10 +160,14 @@ class Editor: EditorServer
 
 	void ~Editor() 
 	{
+		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+		}
+		
 		delete m_Hud;
 		GetGame().ObjectDelete(m_Camera);
 	}
-	
+			
 	override void OnSynchronized()
 	{
 		delete m_Hud;
@@ -183,7 +190,7 @@ class Editor: EditorServer
 		}
 	}
 		
-	override void Update(float timeslice)
+	void Update(float timeslice)
 	{
 		Input input = GetGame().GetInput();
 		if (!m_Camera) {
@@ -228,14 +235,14 @@ class Editor: EditorServer
 		}
 		
 		if (input.LocalPress_ID(UATempRaiseWeapon)) {
-			EditorNode.ClearSelections();			
+			TreeNode.ClearSelections();			
 			return;
 		}
 		
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
-				EditorNode.ClearSelections();
+				TreeNode.ClearSelections();
 			}
 			
 			if (raycast.Hit && EditorObject.ByObject[raycast.Hit]) {
@@ -252,7 +259,7 @@ class Editor: EditorServer
 				int tree_depth = editor_object_to_place.GetParentDepth();
 				footprint.Data.GetWriteContext().Write(tree_depth);
 				for (int i = tree_depth - 1; i >= 0; i--) {
-					EditorNode parent = editor_object_to_place.GetParentAtDepth(i);
+					TreeNode parent = editor_object_to_place.GetParentAtDepth(i);
 					footprint.Data.GetWriteContext().Write(parent.GetUUID());
 					footprint.Data.GetWriteContext().Write(parent.Type().ToString());
 				}
@@ -273,7 +280,7 @@ class Editor: EditorServer
 		}
 		
 		if (input.LocalHold_ID(UAFire)) {
-			foreach (EditorNode selected_node: EditorNode.SelectedObjects) {
+			foreach (TreeNode selected_node: TreeNode.SelectedObjects) {
 				EditorObject editor_object_cast = EditorObject.Cast(selected_node);
 				if (!editor_object_cast) {
 					continue;
@@ -331,7 +338,7 @@ class Editor: EditorServer
 		}
 		
 		if (input.LocalRelease_ID(UAFire)) {
-			foreach (EditorNode selected_node_synch: EditorNode.SelectedObjects) {
+			foreach (TreeNode selected_node_synch: TreeNode.SelectedObjects) {
 				EditorObject editor_object_sync = EditorObject.Cast(selected_node_synch);
 				if (!editor_object_sync) {
 					continue;
@@ -350,7 +357,7 @@ class Editor: EditorServer
 		}
 		
 		if (GetGame().GetInput().LocalPress("EditorDeleteObject")) {
-			foreach (EditorNode editor_node_to_delete: EditorNode.SelectedObjects) {
+			foreach (TreeNode editor_node_to_delete: TreeNode.SelectedObjects) {
 				if (!editor_node_to_delete.CanDelete()) {
 					continue;
 				}
@@ -359,7 +366,7 @@ class Editor: EditorServer
 				int delete_tree_depth = editor_node_to_delete.GetParentDepth();
 				footprint_delete.Data.GetWriteContext().Write(delete_tree_depth);
 				for (int i_d = delete_tree_depth - 1; i_d >= 0; i_d--) {
-					EditorNode delete_parent = editor_node_to_delete.GetParentAtDepth(i_d);
+					TreeNode delete_parent = editor_node_to_delete.GetParentAtDepth(i_d);
 					footprint_delete.Data.GetWriteContext().Write(delete_parent.GetUUID());
 					footprint_delete.Data.GetWriteContext().Write(delete_parent.Type().ToString());
 				}
@@ -372,7 +379,7 @@ class Editor: EditorServer
 				this["EditedObjects"]["PlacedObjects"].Synchronize();
 				
 				// remove it from placing
-				EditorNode.SelectedObjects.RemoveItem(editor_node_to_delete);
+				TreeNode.SelectedObjects.RemoveItem(editor_node_to_delete);
 				
 				EditorObject editor_object_to_delete = EditorObject.Cast(editor_node_to_delete);
 				if (editor_object_to_delete) {
@@ -791,7 +798,7 @@ class Editor: EditorServer
 	}
 	
 	// Hope you remembered to register it
-	EditorNode FindCommandbyType(typename type)
+	TreeNode FindCommandbyType(typename type)
 	{
 		return m_Children["Commands"][type.ToString()];
 	}

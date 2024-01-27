@@ -1,5 +1,5 @@
 [RegisterCommand(CommandBolt, "Create Lightning Bolt", Symbols.BOLT)]
-class CommandBolt: EditorNode
+class CommandBolt: TreeNode
 {
 	override void SetSelected(bool selected)
 	{

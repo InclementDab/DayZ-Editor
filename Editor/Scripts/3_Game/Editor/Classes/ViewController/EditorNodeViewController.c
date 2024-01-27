@@ -1,6 +1,6 @@
-class EditorNodeViewController: ViewController
+class TreeViewController: ViewController
 {
-	ref ObservableCollection<ref EditorNodeView> ChildrenItems = new ObservableCollection<ref EditorNodeView>(this);
+	ref ObservableCollection<ref TreeView> ChildrenItems = new ObservableCollection<ref TreeView>(this);
 	
 	Widget Collapse;
 					

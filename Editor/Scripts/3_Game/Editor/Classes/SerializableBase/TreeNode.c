@@ -1,11 +1,11 @@
-class EditorNode: SerializableBase
+class TreeNode: SerializableBase
 {
-	static ref array<EditorNode> SelectedObjects = {};	
-	static ref array<EditorNode> DirtyObjects = {};
+	static ref array<TreeNode> SelectedObjects = {};	
+	static ref array<TreeNode> DirtyObjects = {};
 	
 	static void ClearSelections()
 	{
-		foreach (EditorNode selected_object: SelectedObjects) {
+		foreach (TreeNode selected_object: SelectedObjects) {
 			if (selected_object) {
 				selected_object.SetSelected(false);
 			}
@@ -16,15 +16,15 @@ class EditorNode: SerializableBase
 	ref ScriptInvoker OnLockChanged = new ScriptInvoker();
 
 	protected string m_UUID;	
-	protected ref map<string, ref EditorNode> m_Children = new map<string, ref EditorNode>();
+	protected ref map<string, ref TreeNode> m_Children = new map<string, ref TreeNode>();
 
 	protected string m_Icon, m_DisplayName;
 	protected bool m_IsSelected; // local
-	protected EditorNode m_Parent;
+	protected TreeNode m_Parent;
 	
-	protected EditorNodeView m_NodeView; // Weak ref
+	protected TreeView m_NodeView; // Weak ref
 	
-	void EditorNode(string uuid, string display_name, Symbols icon)
+	void TreeNode(string uuid, string display_name, Symbols icon)
 	{
 		m_UUID = uuid;
 		m_DisplayName = display_name;
@@ -37,13 +37,13 @@ class EditorNode: SerializableBase
 #endif
 	}
 	
-	void LoadViews(inout notnull ObservableCollection<ref EditorNodeView> list_items)
+	void LoadViews(inout notnull ObservableCollection<ref TreeView> list_items)
 	{
 #ifndef WORKBENCH
-		EditorNodeView node_view = new EditorNodeView(this);
+		TreeView node_view = new TreeView(this);
 		list_items.Insert(node_view);
 		m_NodeView = node_view;
-		foreach (string uuid, EditorNode node: m_Children) {
+		foreach (string uuid, TreeNode node: m_Children) {
 			node.LoadViews(node_view.GetTemplateController().ChildrenItems);
 		}
 #endif
@@ -98,7 +98,7 @@ class EditorNode: SerializableBase
 		rpc.Write(tree_depth);
 
 		for (int i = tree_depth - 1; i >= 0; i--) {
-			EditorNode parent = GetParentAtDepth(i);
+			TreeNode parent = GetParentAtDepth(i);
 			rpc.Write(parent.GetUUID());
 			rpc.Write(parent.Type().ToString());
 		}
@@ -107,12 +107,12 @@ class EditorNode: SerializableBase
 		rpc.Send(null, DayZGame.RPC_NODE_SYNC, true, identity);
 	}
 							
-	void Add(notnull EditorNode node)
+	void Add(notnull TreeNode node)
 	{
 		Set(node.GetUUID(), node);
 	}
 	
-	void Set(string uuid, notnull EditorNode node)
+	void Set(string uuid, notnull TreeNode node)
 	{
 		m_Children[uuid] = node;
 		
@@ -125,7 +125,7 @@ class EditorNode: SerializableBase
 		m_Children.Remove(uuid);
 	}
 	
-	EditorNode Get(string uuid)
+	TreeNode Get(string uuid)
 	{
 		if (!m_Children.Contains(uuid)) {
 			Error(string.Format("[%1:%2] did not contain child: %3", m_UUID, m_DisplayName, uuid));
@@ -134,17 +134,17 @@ class EditorNode: SerializableBase
 		return m_Children[uuid];
 	}
 	
-	EditorNode GetNode(string uuid)
+	TreeNode GetNode(string uuid)
 	{
 		return this[uuid];
 	}
 		
-	map<string, ref EditorNode> GetChildren()
+	map<string, ref TreeNode> GetChildren()
 	{
 		return m_Children;
 	}
 	
-	void SetParent(EditorNode parent)
+	void SetParent(TreeNode parent)
 	{
 		m_Parent = parent;
 		
@@ -154,7 +154,7 @@ class EditorNode: SerializableBase
 		//}
 	}
 	
-	EditorNode GetParent()
+	TreeNode GetParent()
 	{
 		return m_Parent;
 	}
@@ -163,9 +163,9 @@ class EditorNode: SerializableBase
 	{
 	}
 	
-	EditorNode GetParentAtDepth(int depth)
+	TreeNode GetParentAtDepth(int depth)
 	{
-		EditorNode parent = this;
+		TreeNode parent = this;
 		while (depth > 0) {
 			if (!parent.GetParent()) {
 				Error("GetParentAtDepth ran out of depth " + depth);
@@ -182,7 +182,7 @@ class EditorNode: SerializableBase
 	int GetParentDepth()
 	{
 		int depth;
-		EditorNode parent = GetParent();
+		TreeNode parent = GetParent();
 		while (parent) {
 			depth++;
 			parent = parent.GetParent();
@@ -203,7 +203,7 @@ class EditorNode: SerializableBase
 		serializer.Write(m_Icon);
 		
 		serializer.Write(m_Children.Count());
-		foreach (string uuid, EditorNode node: m_Children) {
+		foreach (string uuid, TreeNode node: m_Children) {
 			serializer.Write(node.GetUUID());
 			serializer.Write(node.Type().ToString());
 			
@@ -227,9 +227,9 @@ class EditorNode: SerializableBase
 			serializer.Read(uuid);
 			string type;
 			serializer.Read(type);
-			EditorNode node = m_Children[uuid];
+			TreeNode node = m_Children[uuid];
 			if (!node) {				
-				node = EditorNode.Cast(type.ToType().Spawn());
+				node = TreeNode.Cast(type.ToType().Spawn());
 				if (!node) {
 					Error("Invalid node type " + type);
 					return false;
@@ -265,7 +265,7 @@ class EditorNode: SerializableBase
 		return m_Icon;
 	}
 		
-	EditorNodeView GetNodeView()
+	TreeView GetNodeView()
 	{
 		return m_NodeView;
 	}
@@ -342,7 +342,7 @@ class EditorNode: SerializableBase
 		
 		PrintFormat("[%4]%3[%1] %2:", m_UUID, m_DisplayName, tabs, depth);
 		
-		foreach (string uuid, EditorNode node: m_Children) {
+		foreach (string uuid, TreeNode node: m_Children) {
 			node.Debug(depth + 1);
 		}
 	}

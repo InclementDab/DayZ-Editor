@@ -1,9 +1,9 @@
-class DeleteCommand: EditorNode
+class DeleteCommand: TreeNode
 {
 	override void SetSelected(bool state) 
 	{
 		Print("Cringe"); 
-		foreach (EditorNode node: EditorNode.SelectedObjects) {
+		foreach (TreeNode node: TreeNode.SelectedObjects) {
 			Print(node);	
 			delete node;
 		}

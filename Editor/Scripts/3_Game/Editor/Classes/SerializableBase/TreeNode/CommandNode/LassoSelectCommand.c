@@ -1,4 +1,4 @@
-class LassoSelectCommand: EditorNode
+class LassoSelectCommand: TreeNode
 {
 	override void SetSelected(bool selected)
 	{

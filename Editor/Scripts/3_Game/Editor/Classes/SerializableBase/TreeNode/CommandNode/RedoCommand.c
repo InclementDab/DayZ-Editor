@@ -1,4 +1,4 @@
-class RedoCommand: EditorNode
+class RedoCommand: TreeNode
 {
 	override void SetSelected(bool state) 
 	{

@@ -1,4 +1,4 @@
-class UndoCommand: EditorNode
+class UndoCommand: TreeNode
 {
 	override void SetSelected(bool state) 
 	{

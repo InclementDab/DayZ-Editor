@@ -1,4 +1,4 @@
-class EditorCursorTool: EditorNode
+class EditorCursorTool: TreeNode
 {
 	override void SetSelected(bool selected)
 	{

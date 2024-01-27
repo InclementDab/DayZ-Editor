@@ -1,6 +1,6 @@
 class EditorCommandMenuItemController: ViewController
 {
-	ref ObservableCollection<EditorNodeView> Children = new ObservableCollection<EditorNodeView>(this);
+	ref ObservableCollection<TreeView> Children = new ObservableCollection<TreeView>(this);
 }
 
 class EditorCommandMenuItem: ScriptViewTemplate<EditorCommandMenuItemController>
@@ -9,7 +9,7 @@ class EditorCommandMenuItem: ScriptViewTemplate<EditorCommandMenuItemController>
 	ImageWidget Icon;
 	TextWidget Name, ShortcutText;
 	
-	void EditorCommandMenuItem(EditorNode node)
+	void EditorCommandMenuItem(TreeNode node)
 	{		
 		Name.SetText(node.GetDisplayName());
 		
@@ -19,8 +19,8 @@ class EditorCommandMenuItem: ScriptViewTemplate<EditorCommandMenuItemController>
 		}
 		
 		if (node.GetChildren().Count() > 0) {
-			map<string, ref EditorNode> nodes = node.GetChildren();
-			foreach (string uuid, EditorNode node1: nodes) {
+			map<string, ref TreeNode> nodes = node.GetChildren();
+			foreach (string uuid, TreeNode node1: nodes) {
 				//m_TemplateController.Children.Insert(node1.GetNodeView());
 			}
 			

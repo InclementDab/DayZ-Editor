@@ -46,7 +46,7 @@ class EditorFootprint: Managed
 			return;
 		}
 
-		EditorNode current = GetDayZGame().GetEditor();
+		TreeNode current = GetDayZGame().GetEditor();
 		for (int i = 0; i < tree_depth; i++) {
 			string uuid;
 			Data.GetReadContext().Read(uuid);
@@ -54,9 +54,9 @@ class EditorFootprint: Managed
 			string type;
 			Data.GetReadContext().Read(type);
 			
-			EditorNode node = current[uuid];
+			TreeNode node = current[uuid];
 			if (!node) {
-				node = EditorNode.Cast(type.ToType().Spawn());
+				node = TreeNode.Cast(type.ToType().Spawn());
 				if (!node) {
 					Error("Invalid node type " + type);
 					continue;

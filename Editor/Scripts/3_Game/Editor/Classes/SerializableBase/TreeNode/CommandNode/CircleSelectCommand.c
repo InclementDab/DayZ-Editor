@@ -1,4 +1,4 @@
-class CircleSelectCommand: EditorNode
+class CircleSelectCommand: TreeNode
 {
 	override void SetSelected(bool selected)
 	{

@@ -4,7 +4,7 @@ modded class DayZGame
 	static const int RPC_REQUEST_SYNC = 54364;
 	static const int RPC_NODE_SYNC = 54365;
 	
-	protected ref EditorNode m_Server = new EditorNode("SERVER", "Editors", Symbols.CAMERA_SECURITY);
+	protected ref TreeNode m_Server = new TreeNode("SERVER", "Editors", Symbols.CAMERA_SECURITY);
 	
 #ifdef WORKBENCH
 	protected ref Editor w_Editor = new Editor("", "", "", null, null);
@@ -41,7 +41,7 @@ modded class DayZGame
 				}
 
 				Print(tree_depth);
-				EditorNode current = m_Server;
+				TreeNode current = m_Server;
 				for (int i = 0; i < tree_depth; i++) {
 					string uuid;
 					ctx.Read(uuid);
@@ -49,9 +49,9 @@ modded class DayZGame
 					string type;
 					ctx.Read(type);
 					
-					EditorNode node = current[uuid];
+					TreeNode node = current[uuid];
 					if (!node) {
-						node = EditorNode.Cast(type.ToType().Spawn());
+						node = TreeNode.Cast(type.ToType().Spawn());
 						if (!node) {
 							Error("Invalid node type " + type);
 							continue;

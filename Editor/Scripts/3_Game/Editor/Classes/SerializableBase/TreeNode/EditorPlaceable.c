@@ -1,4 +1,4 @@
-class EditorPlaceable: EditorNode
+class EditorPlaceable: TreeNode
 {	
 	override void SetSelected(bool selected)
 	{

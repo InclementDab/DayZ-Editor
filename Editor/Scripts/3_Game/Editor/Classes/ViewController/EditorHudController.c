@@ -4,8 +4,8 @@ class EditorHudController: ViewController
 	
 	ref ObservableCollection<ref ScriptView> MenuItems = new ObservableCollection<ref ScriptView>(this);
 	
-	ref ObservableCollection<ref EditorNodeView> LeftListItems = new ObservableCollection<ref EditorNodeView>(this);
-	ref ObservableCollection<ref EditorNodeView> RightListItems = new ObservableCollection<ref EditorNodeView>(this);
+	ref ObservableCollection<ref TreeView> LeftListItems = new ObservableCollection<ref TreeView>(this);
+	ref ObservableCollection<ref TreeView> RightListItems = new ObservableCollection<ref TreeView>(this);
 		
 	ref ObservableCollection<ref EditorFileHeadView> OpenFiles = new ObservableCollection<ref EditorFileHeadView>(this);
 		

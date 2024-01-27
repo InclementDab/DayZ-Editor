@@ -98,7 +98,7 @@ class EditorHud: ScriptView
 		}
 		
 		Whiteboard.Clear();
-		if (input.LocalHold_ID(UAFire) && EditorNode.SelectedObjects.Count() == 0 && !m_DraggedBar) {
+		if (input.LocalHold_ID(UAFire) && TreeNode.SelectedObjects.Count() == 0 && !m_DraggedBar) {
 							
 			switch (CurrentSelectionMode) {
 				
@@ -133,7 +133,7 @@ class EditorHud: ScriptView
 					Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE);		
 					
 					
-					/*foreach (EditorNode node: EditorNode.All) {
+					/*foreach (TreeNode node: TreeNode.All) {
 						if (node && node.GetNodeView()) {
 							float x_n, y_n;
 							node.GetNodeView().GetLayoutRoot().GetScreenPos(x_n, y_n);
@@ -192,7 +192,7 @@ class EditorHud: ScriptView
 		if (input.LocalRelease_ID(UATempRaiseWeapon)) {
 			Widget w = GetWidgetUnderCursor();
 			RecursiveGetParent(w, "Root");
-			EditorNodeView node_view_under_cursor = EditorNodeView.AllEditorNodeViews[w];
+			TreeView node_view_under_cursor = TreeView.AllTreeViews[w];
 			if (!node_view_under_cursor) {
 				return;
 			}
@@ -300,7 +300,7 @@ class EditorHud: ScriptView
 	
 	void OnCreateNewFolder(ButtonCommandArgs args)
 	{
-		//m_TemplateController.RightListItems.Insert(new EditorNodeView("New Folder", null));
+		//m_TemplateController.RightListItems.Insert(new TreeView("New Folder", null));
 	}
 	
 	override bool OnFocus(Widget w, int x, int y)

@@ -1,4 +1,4 @@
-class EditorObject: EditorNode
+class EditorObject: TreeNode
 {	
 	static ref map<Object, EditorObject> ByObject = new map<Object, EditorObject>();
 	
@@ -352,7 +352,7 @@ class EditorObject: EditorNode
 	static array<EditorObject> GetSelectedEditorObjects()
 	{
 		array<EditorObject> editor_objects = {};
-		foreach (EditorNode selectable_base: SelectedObjects) {
+		foreach (TreeNode selectable_base: SelectedObjects) {
 			EditorObject editor_object = EditorObject.Cast(selectable_base);
 			if (editor_object) {
 				editor_objects.Insert(editor_object);
