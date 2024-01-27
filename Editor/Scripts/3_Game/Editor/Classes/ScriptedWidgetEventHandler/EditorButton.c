@@ -1,6 +1,6 @@
 class EditorButton: ScriptedWidgetEventHandler
 {	
-	protected TreeNode m_Node;
+	protected CommandNode m_Node;
 	
 	reference string Node;
 	

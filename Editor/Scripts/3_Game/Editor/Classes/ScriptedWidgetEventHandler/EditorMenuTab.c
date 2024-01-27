@@ -89,7 +89,7 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 		WidgetAnimator.Animate(m_TextWidget, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 		
 		if (m_Node) {
-			GetDayZGame().GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetShortcutString());
+			GetDayZGame().GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName());
 		}
 		
 		return true;

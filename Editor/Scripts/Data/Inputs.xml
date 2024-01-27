@@ -6,14 +6,15 @@
             <input name="CutCommand" loc="Cut"/>
             <input name="DeleteCommand" loc="Delete"/>
             <input name="LockCommand" loc="Lock"/>
-            <input name="NewCommand" loc="New"/>
-            <input name="OpenCommand" loc="Open"/>
+            <input name="NewCommand" loc="New File"/>
+            <input name="OpenCommand" loc="Open File"/>
             <input name="PasteCommand" loc="Paste"/>
             <input name="RedoCommand" loc="Redo"/>
             <input name="SaveAsCommand" loc="SaveAs"/>
-            <input name="SaveCommand" loc="Save"/>
+            <input name="SaveCommand" loc="Save File"/>
             <input name="UndoCommand" loc="Undo"/>
             <input name="UnlockCommand" loc="Unlock"/>
+            <input name="CursorToggleCommand" loc="Toggle Cursor"/>
         </actions>
         
         <sorting name="Editor" loc="EDITOR">
@@ -29,6 +30,7 @@
             <input name="SaveCommand"/>
             <input name="UndoCommand"/>
             <input name="UnlockCommand"/>
+            <input name="CursorToggleCommand"/>
         </sorting>
     </inputs>
 
@@ -93,6 +95,9 @@
             <btn name="kLControl">
                 <btn name="kL"/>
             </btn>
+        </input>
+        <input name="CursorToggleCommand">
+            <btn name="kSpace"/>
         </input>
     </preset>
 </modded_inputs>
