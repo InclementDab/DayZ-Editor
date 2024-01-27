@@ -32,15 +32,17 @@ class TreeNode: SerializableBase
 	protected TreeNode m_Parent;
 	
 	protected TreeView m_NodeView; // Weak ref
+	protected UAInput m_UAInput;
 	
 	void TreeNode(string uuid, string display_name, Symbols icon)
 	{
 		m_UUID = uuid;
 		m_DisplayName = display_name;
 		m_Icon = icon;
+		
 #ifndef SERVER
-		UAInput inp = GetUApi().GetInputByName(GetShortcut());
-		if (inp.BindKeyCount() > 0) {
+		m_UAInput = GetUApi().GetInputByName(m_UUID);
+		if (m_UAInput && m_UAInput.BindKeyCount() > 0) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(PollShortcutExecution);
 		}
 #endif
@@ -60,14 +62,21 @@ class TreeNode: SerializableBase
 	
 	protected void PollShortcutExecution()
 	{
-		if (!GetDayZGame().IsLeftCtrlDown() || GetFocus() && GetFocus().IsInherited(EditBoxWidget) || !CanSelect()) {
+		if ((GetFocus() && GetFocus().IsInherited(EditBoxWidget)) || !CanSelect()) {
 			return;
 		}
-				 			
-		string input_name = GetShortcut();
+		
+		if (!m_UAInput) {
+			m_UAInput = GetUApi().GetInputByName(m_UUID);
+			if (!m_UAInput) {
+				Error("No input validated for " + Type().ToString());
+				return; // hoe ass bitch
+			}
+		}
+		
 		switch (GetShortcutType()) {
 			case ShortcutKeyType.PRESS: {
-				if (GetGame().GetInput().LocalPress(input_name)) {
+				if (m_UAInput.LocalClick()) {
 					SetSelected(true);
 				}
 				
@@ -75,23 +84,27 @@ class TreeNode: SerializableBase
 			}
 			
 			case ShortcutKeyType.DOUBLE: {
-				if (GetGame().GetInput().LocalDbl(input_name)) {
-					SetSelected(true);
+				if (m_UAInput.LocalDoubleClick()) {
+					SetSelected(!IsSelected());
 				}
 				
 				break;
 			}
 			
 			case ShortcutKeyType.HOLD: {
-				if (GetGame().GetInput().LocalHold(input_name)) {
+				if (m_UAInput.LocalHoldBegin()) {
 					SetSelected(true);
+				}
+				
+				if (m_UAInput.LocalRelease()) {
+					SetSelected(false);
 				}
 				
 				break;
 			}
 			
 			case ShortcutKeyType.TOGGLE: {
-				if (GetGame().GetInput().LocalPress(input_name)) {
+				if (m_UAInput.LocalClick()) {
 					SetSelected(!IsSelected());
 				}
 				
@@ -348,17 +361,10 @@ class TreeNode: SerializableBase
 		return true;
 	}
 		
-	// Good default to have, makes sense in XMLs
-	// todo: Probably going to be UUID
-	string GetShortcut()
-	{
-		return ClassName();
-	}
-	
 	string GetShortcutString() 
 	{
 		string result;
-		UAInput inp = GetUApi().GetInputByName(GetShortcut());
+		UAInput inp = GetUApi().GetInputByName(m_UUID);
 		for (int i = 0; i < inp.BindKeyCount(); i++) { 
 			if (inp.CheckBindDevice(i, EInputDeviceType.MOUSE_AND_KEYBOARD)) {
 				string button_name = GetUApi().GetButtonName(inp.GetBindKey(i));
