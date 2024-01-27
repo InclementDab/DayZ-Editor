@@ -40,14 +40,17 @@ class TreeNode: SerializableBase
 	
 	void LoadViews(inout notnull ObservableCollection<ref TreeView> list_items)
 	{
-#ifndef WORKBENCH
 		TreeView node_view = new TreeView(this);
+		if (!list_items) {
+			PrintFormat("[%1] List Items not valid when adding %2", m_UUID, m_DisplayName);
+			return;
+		}
+		
 		list_items.Insert(node_view);
 		m_NodeView = node_view;
 		foreach (string uuid, TreeNode node: m_Children) {
 			node.LoadViews(node_view.GetTemplateController().ChildrenItems);
 		}
-#endif
 	}
 	
 	protected void PollShortcutExecution()

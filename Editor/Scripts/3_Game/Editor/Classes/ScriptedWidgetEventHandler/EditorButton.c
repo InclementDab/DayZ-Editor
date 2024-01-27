@@ -15,10 +15,19 @@ class EditorButton: ScriptedWidgetEventHandler
 		m_LayoutRoot.SetHandler(this);
 	
 		m_Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");
+		if (!m_Button) {
+			Error("Button widget not found below " + m_LayoutRoot.GetName());
+			return;
+		}
+		
 		m_Button.SetHandler(this);
 		
 		m_IconWidget = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");
-				
+		if (!m_IconWidget) {
+			Error("Icon widget not found below " + m_LayoutRoot.GetName());
+			return;
+		}
+		
 		if (Node != string.Empty) {			
 			m_Node = GetDayZGame().GetEditor().GetCommand(Node);
 			Print(m_Node);
