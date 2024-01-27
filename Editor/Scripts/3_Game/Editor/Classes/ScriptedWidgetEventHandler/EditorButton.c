@@ -36,7 +36,6 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		if (Node != string.Empty) {	
 			m_Node = GetDayZGame().GetEditor().GetCommand(Node);
-			Print(m_Node);
 			if (m_Node) {
 				m_Icon = m_Node.GetIcon();
 				m_Node.OnSelectionChanged.Insert(OnExecuted);				
@@ -67,14 +66,76 @@ class EditorButton: ScriptedWidgetEventHandler
 	{
 		return m_LayoutRoot;
 	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{		
-		if (button == 0 && m_Node) {
-			m_Node.SetSelected(!m_Node.IsSelected());
+		
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
 		}
 		
-		return true;
+		switch (m_Node.GetShortcutType()) {
+			case ShortcutKeyType.HOLD: {
+				m_Node.SetSelected(true);
+				return true;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (m_Node.GetShortcutType()) {
+			case ShortcutKeyType.HOLD: {
+				m_Node.SetSelected(false);
+				return true;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (m_Node.GetShortcutType()) {
+			case ShortcutKeyType.TOGGLE: {
+				m_Node.SetSelected(!m_Node.IsSelected());
+				return true;
+			}
+			
+			case ShortcutKeyType.PRESS: {
+				m_Node.SetSelected(true);				
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(m_Node.SetSelected, false, 100, false);
+				return true;
+			}
+		}
+				
+		return false;
+	}
+		
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (m_Node.GetShortcutType()) {		
+			case ShortcutKeyType.DOUBLE: {
+				m_Node.SetSelected(true);				
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(m_Node.SetSelected, false, 100, false);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
@@ -92,7 +153,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	{				
 		GetDayZGame().GetEditor().GetHud().ClearCursor();
 		
-		if (!m_Button.GetState()) {
+		if (!m_Node.IsSelected()) {
 			WidgetAnimator.Animate(m_IconWidget, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
 		}
 		

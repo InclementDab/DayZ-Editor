@@ -133,7 +133,7 @@ class TreeNode: SerializableBase
 	void Set(string uuid, notnull TreeNode node)
 	{
 		m_Children[uuid] = node;
-		
+
 		node.SetParent(this);
 	}
 	

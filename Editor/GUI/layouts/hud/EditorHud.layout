@@ -88,6 +88,7 @@ FrameWidgetClass Root {
      }
     }
     PanelWidgetClass FileTab {
+     visible 0
      ignorepointer 1
      color 0.0824 0.0824 0.0824 1
      size 1 26
