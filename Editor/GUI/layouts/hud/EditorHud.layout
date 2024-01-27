@@ -2843,7 +2843,7 @@ FrameWidgetClass Root {
    ignorepointer 1
    color 0.1216 0.1216 0.1216 1
    position 0 0
-   size 1 42
+   size 1 44
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -2856,7 +2856,7 @@ FrameWidgetClass Root {
      clipchildren 0
      ignorepointer 1
      position 0 0
-     size 472 40
+     size 418 40
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -2866,10 +2866,10 @@ FrameWidgetClass Root {
      Padding 0
      Margin 0
      content_valign center
-     Columns 5
+     Columns 4
      Rows 1
      {
-      FrameWidgetClass File {
+      GridSpacerWidgetClass File {
        clipchildren 0
        inheritalpha 0
        ignorepointer 1
@@ -2882,11 +2882,16 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
+       scriptclass "EditorMenuTab"
+       Padding 0
+       Margin 6
+       Columns 1
+       Rows 1
        {
         ButtonWidgetClass "File.Button" {
          visible 1
          clipchildren 1
-         color 0.2745 0.2745 0.2745 1
+         color 0.0275 0.4353 0.5725 1
          size 0.9 1
          halign center_ref
          valign center_ref
@@ -2897,11 +2902,12 @@ FrameWidgetClass Root {
          scaled 0
          style Default
          "no focus" 1
-         switch normal
+         switch toggle
          {
           TextWidgetClass "File.Text" {
            ignorepointer 1
-           size 1 0.6
+           color 1 1 1 0.7843
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -2910,275 +2916,21 @@ FrameWidgetClass Root {
            vexactsize 0
            scaled 0
            text "File"
-           font "gui/fonts/MetronBook"
-           "size to text h" 0
+           font "gui/fonts/Metron"
+           "exact text" 0
+           "size to text h" 1
            "text halign" center
            "text valign" center
           }
          }
         }
-        PanelWidgetClass "File.Menu" {
-         visible 0
-         disabled 0
-         ignorepointer 1
-         color 0.0588 0.0588 0.0588 1
-         position 0 1
-         size 274 478
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         scaled 0
-         style rover_sim_colorable
-         {
-          ImageWidgetClass "File.Panel" {
-           visible 0
-           ignorepointer 1
-           color 0.098 0.098 0.098 1
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 0
-           vexactpos 0
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           fixaspect outside
-           imageTexture "{6FE68A91E67552D5}DayZExpansion/Core/GUI/textures/expansion_icon.edds"
-           mode blend
-           "src alpha" 1
-           "clamp mode" invalid
-           "stretch mode" invalid
-           filter 0
-          }
-          GridSpacerWidgetClass "File.Wrapper" {
-           visible 1
-           ignorepointer 1
-           size 1 1
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style Empty
-           "Size To Content H" 1
-           "Size To Content V" 1
-           content_halign center
-           Columns 1
-           {
-            FrameWidgetClass "File.New" {
-             ignorepointer 1
-             position 0 0
-             size 1 56
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 1
-             scaled 0
-             {
-              ButtonWidgetClass "File.New.Button" {
-               visible 1
-               color 0.2745 0.2745 0.2745 1
-               size 1 1
-               halign center_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 0
-               scaled 0
-               style Default
-               "no focus" 1
-               switch normal
-               {
-                TextWidgetClass "File.New.Text" {
-                 ignorepointer 1
-                 position 57 0
-                 size 208 48
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 scaled 0
-                 text "New"
-                 font "gui/fonts/MetronBook"
-                 "exact text" 1
-                 "size to text h" 1
-                 "text valign" center
-                }
-                ImageWidgetClass "File.New.Icon" {
-                 ignorepointer 1
-                 color 1 1 1 0.3922
-                 position 12 0
-                 size 30 30
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 scaled 0
-                 image0 "set:regular image:file"
-                 mode blend
-                 "src alpha" 1
-                 filter 0
-                 nocache 0
-                }
-               }
-              }
-             }
-            }
-            FrameWidgetClass "File.New0" {
-             ignorepointer 1
-             position 0 0
-             size 1 56
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 1
-             scaled 0
-             {
-              ButtonWidgetClass "File.New.Button0" {
-               visible 1
-               color 0.2745 0.2745 0.2745 1
-               size 1 1
-               halign center_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 0
-               scaled 0
-               style Default
-               "no focus" 1
-               switch normal
-               {
-                TextWidgetClass "File.New.Text0" {
-                 ignorepointer 1
-                 position 57 0
-                 size 208 48
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 scaled 0
-                 text "Open"
-                 font "gui/fonts/MetronBook"
-                 "exact text" 1
-                 "size to text h" 1
-                 "text valign" center
-                }
-                ImageWidgetClass "File.New.Icon0" {
-                 ignorepointer 1
-                 color 1 1 1 0.3922
-                 position 12 0
-                 size 30 30
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 scaled 0
-                 image0 "set:regular image:file"
-                 mode blend
-                 "src alpha" 1
-                 filter 0
-                 nocache 0
-                }
-               }
-              }
-             }
-            }
-            FrameWidgetClass "File.New1" {
-             ignorepointer 1
-             position 0 0
-             size 1 56
-             halign center_ref
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 1
-             scaled 0
-             {
-              ButtonWidgetClass "File.New.Button1" {
-               visible 1
-               color 0.2745 0.2745 0.2745 1
-               size 1 1
-               halign center_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 0
-               scaled 0
-               style Default
-               "no focus" 1
-               switch normal
-               {
-                TextWidgetClass "File.New.Text1" {
-                 ignorepointer 1
-                 position 57 0
-                 size 208 48
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 scaled 0
-                 text "Save"
-                 font "gui/fonts/MetronBook"
-                 "exact text" 1
-                 "size to text h" 1
-                 "text valign" center
-                }
-                ImageWidgetClass "File.New.Icon1" {
-                 ignorepointer 1
-                 color 1 1 1 0.3922
-                 position 12 0
-                 size 30 30
-                 valign center_ref
-                 hexactpos 1
-                 vexactpos 1
-                 hexactsize 1
-                 vexactsize 1
-                 scaled 0
-                 image0 "set:regular image:file"
-                 mode blend
-                 "src alpha" 1
-                 filter 0
-                 nocache 0
-                }
-               }
-              }
-             }
-            }
-           }
-          }
-          TextWidgetClass F {
-           ignorepointer 1
-           color 1 1 1 0.0392
-           size 314 674
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           text "F"
-           font "gui/fonts/sdf_MetronBook72"
-           "outline size" 1
-           "outline color" 1 1 1 0.0392
-           "exact text" 0
-           "exact text size" 72
-          }
-         }
+       }
+       {
+        ScriptParamsClass {
         }
        }
       }
-      FrameWidgetClass Edit {
+      GridSpacerWidgetClass Edit {
        ignorepointer 1
        position 0 0
        size 110 42
@@ -3189,6 +2941,10 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
+       Padding 0
+       Margin 6
+       Columns 1
+       Rows 1
        {
         ButtonWidgetClass "Edit.Button" {
          visible 1
@@ -3203,11 +2959,12 @@ FrameWidgetClass Root {
          scaled 0
          style Default
          "no focus" 1
-         switch normal
+         switch toggle
          {
           TextWidgetClass "Edit.Text" {
            ignorepointer 1
-           size 1 0.6
+           color 1 1 1 0.7843
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -3216,9 +2973,9 @@ FrameWidgetClass Root {
            vexactsize 0
            scaled 0
            text "Edit"
-           font "gui/fonts/MetronBook"
+           font "gui/fonts/Metron"
            "exact text" 0
-           "size to text h" 0
+           "size to text h" 1
            "text halign" center
            "text valign" center
           }
@@ -3226,7 +2983,7 @@ FrameWidgetClass Root {
         }
        }
       }
-      FrameWidgetClass View {
+      GridSpacerWidgetClass View {
        ignorepointer 1
        position 0 0
        size 108 42
@@ -3237,6 +2994,10 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
+       Padding 0
+       Margin 6
+       Columns 1
+       Rows 1
        {
         ButtonWidgetClass "View.Button" {
          visible 1
@@ -3250,12 +3011,13 @@ FrameWidgetClass Root {
          vexactsize 0
          scaled 0
          style Default
-         "no focus" 0
-         switch normal
+         "no focus" 1
+         switch toggle
          {
           TextWidgetClass "View.Text" {
            ignorepointer 1
-           size 1 0.6
+           color 1 1 1 0.7843
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -3264,9 +3026,9 @@ FrameWidgetClass Root {
            vexactsize 0
            scaled 0
            text "View"
-           font "gui/fonts/MetronBook"
+           font "gui/fonts/Metron"
            "exact text" 0
-           "size to text h" 0
+           "size to text h" 1
            "text halign" center
            "text valign" center
           }
@@ -3274,7 +3036,7 @@ FrameWidgetClass Root {
         }
        }
       }
-      FrameWidgetClass Mission {
+      GridSpacerWidgetClass Mission {
        ignorepointer 1
        position 0 0
        size 108 42
@@ -3285,6 +3047,10 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
+       Padding 1
+       Margin 6
+       Columns 1
+       Rows 1
        {
         ButtonWidgetClass "Mission.Button" {
          visible 1
@@ -3298,12 +3064,13 @@ FrameWidgetClass Root {
          vexactsize 0
          scaled 0
          style Default
-         "no focus" 0
-         switch normal
+         "no focus" 1
+         switch toggle
          {
           TextWidgetClass "Mission.Text" {
            ignorepointer 1
-           size 1 0.6
+           color 1 1 1 0.7843
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -3312,57 +3079,9 @@ FrameWidgetClass Root {
            vexactsize 0
            scaled 0
            text "Mission"
-           font "gui/fonts/MetronBook"
+           font "gui/fonts/Metron"
            "exact text" 0
-           "size to text h" 0
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-       }
-      }
-      FrameWidgetClass Settings {
-       ignorepointer 1
-       position 0 0
-       size 106 42
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       {
-        ButtonWidgetClass "Settings.Button" {
-         visible 1
-         color 0.2745 0.2745 0.2745 1
-         size 0.9 1
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scaled 0
-         style Default
-         "no focus" 0
-         switch normal
-         {
-          TextWidgetClass "Settings.Text" {
-           ignorepointer 1
-           size 1 0.6
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scaled 0
-           text "Settings"
-           font "gui/fonts/MetronBook"
-           "exact text" 0
-           "size to text h" 0
+           "size to text h" 1
            "text halign" center
            "text valign" center
           }

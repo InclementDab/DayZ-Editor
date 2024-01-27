@@ -42,6 +42,7 @@ class Editor: TreeNode
 		
 	static const string EDITED_OBJECTS = "EditedObjects";
 	static const string COMMANDS = "Commands";
+	static const string MENUS = "Menus";
 	static const string UNDO_REDO = "UndoRedo";
 	static const string PLACEABLE_OBJECTS = "PlaceableObjects";
 	static const string BRUSHES = "Brushes";
@@ -81,9 +82,17 @@ class Editor: TreeNode
 		commands.Add(new UndoCommand("Undo", "Undo", Symbols.ROTATE_LEFT));
 		commands.Add(new UnlockCommand("Unlock", "Unlock", Symbols.LOCK_OPEN));
 		commands.Add(new WeatherCommand("Weather", "Weather", Symbols.CLOUD_SUN));
-		
 		Add(commands);
 		
+		TreeNode menus = new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST);
+		TreeNode file_menu = new TreeNode("File", "File", Symbols.FILE_SPREADSHEET);
+		file_menu.Add(commands["New"]);
+		file_menu.Add(commands["Open"]);
+		file_menu.Add(commands["Save"]);
+		file_menu.Add(commands["SaveAs"]);
+		menus.Add(file_menu);
+		Add(menus);
+				
 		TreeNode undo_redo = new TreeNode(UNDO_REDO, "History", Symbols.CLOCK_ROTATE_LEFT);
 		Add(undo_redo);
 		
@@ -855,5 +864,10 @@ class Editor: TreeNode
 	TreeNode GetBrushes()
 	{
 		return this[BRUSHES];
+	}
+	
+	TreeNode GetMenu(string menu)
+	{
+		return this[MENUS][menu];
 	}
 }
