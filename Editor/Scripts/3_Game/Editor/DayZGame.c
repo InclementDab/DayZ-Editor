@@ -23,11 +23,15 @@ modded class DayZGame
 #ifdef SERVER
 		return m_Server;
 #else
-		// If we havent authenticated, were giving them the base
-		if (!m_Server.Contains(GetUserManager().GetTitleInitiator().GetUid())) {
-			return m_Server;
+		if (!m_Editor) {
+			Man player = GetPlayer();
+			PlayerIdentity identity = player.GetIdentity();
+			
+			m_Editor = new Editor(GetUserManager().GetTitleInitiator().GetUid(), GetUserManager().GetTitleInitiator().GetName(), Symbols.CAMERA, identity, player);
+			m_Server.Add(m_Editor);
+			m_Editor.Synchronize();
 		}
-		
+				
 		return m_Server[GetUserManager().GetTitleInitiator().GetUid()];
 #endif
 	}
