@@ -58,7 +58,6 @@ class Editor: TreeNode
 		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
 		
-//#ifndef SERVER
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);
 		commands.Add(new BoxSelectCommand("BoxSelectCommand", "Box Select", Symbols.SQUARE_DASHED));
 		commands.Add(new CircleSelectCommand("CircleSelectCommand", "Circle Select", Symbols.CIRCLE_DASHED));
@@ -91,12 +90,14 @@ class Editor: TreeNode
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		Add(brushes);
 		
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 
 		string category = "Unknown";
 		// handle config objects
+
+#ifndef WORKBENCH
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		foreach (string path: config_paths) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
@@ -164,7 +165,7 @@ class Editor: TreeNode
 		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
 			this[PLACEABLE_OBJECTS]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
-//#endif
+#endif
 	}
 
 	void ~Editor() 

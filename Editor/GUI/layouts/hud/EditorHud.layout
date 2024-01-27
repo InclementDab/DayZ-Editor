@@ -2381,7 +2381,7 @@ FrameWidgetClass Root {
             ImageWidgetClass "BoxSelect.Icon" {
              ignorepointer 1
              color 1 1 1 0.3922
-             size 32 32
+             size 30 30
              halign center_ref
              valign center_ref
              hexactpos 1
@@ -2403,6 +2403,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
+           Node "BoxSelectCommand"
           }
          }
         }
@@ -2439,7 +2440,7 @@ FrameWidgetClass Root {
             ImageWidgetClass "CircleSelect.Icon" {
              ignorepointer 1
              color 1 1 1 0.3922
-             size 32 32
+             size 30 30
              halign center_ref
              valign center_ref
              hexactpos 1
@@ -2498,7 +2499,7 @@ FrameWidgetClass Root {
             ImageWidgetClass "LassoSelect.Icon" {
              ignorepointer 1
              color 1 1 1 0.3922
-             size 32 32
+             size 30 30
              halign center_ref
              valign center_ref
              hexactpos 1
@@ -3467,6 +3468,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
+           Node "UndoCommand"
           }
          }
         }
@@ -3518,6 +3520,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
+           Node "RedoCommand"
           }
          }
         }
