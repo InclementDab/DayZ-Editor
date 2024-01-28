@@ -36,6 +36,20 @@ modded class DayZGame
 #endif
 	}
 			
+	override bool OnInitialize()
+	{
+		BiosUserManager manager = GetGame().GetUserManager();
+		if (manager && manager.GetTitleInitiator()) {
+			manager.SelectUserEx(manager.GetTitleInitiator());
+		}
+		
+		if (manager && manager.GetSelectedUser()) {
+			SetPlayerName(manager.GetSelectedUser().GetName());
+		}
+		
+		return super.OnInitialize();
+	}
+	
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{				
 		switch (rpc_type) {			
