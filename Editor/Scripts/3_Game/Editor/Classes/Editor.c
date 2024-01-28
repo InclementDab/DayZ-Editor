@@ -124,14 +124,10 @@ class Editor: TreeNode
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		Add(brushes);
 		
-		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-
 		string category = "Unknown";
 		// handle config objects
-
 #ifndef WORKBENCH
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 		foreach (string path: config_paths) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
@@ -200,6 +196,8 @@ class Editor: TreeNode
 			this[PLACEABLE_OBJECTS]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
 #endif
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 
 	void ~Editor() 
@@ -214,11 +212,14 @@ class Editor: TreeNode
 			
 	override void OnSynchronized()
 	{
-		if (!IsLocal()) {
+		if (GetGame().IsDedicatedServer()) {
+			return;
+		}
+		
+		if (!IsLocal() || m_Identity.GetId() != GetGame().GetPlayer().GetIdentity().GetId()) {
 			return; // Zoom
 		}
 		
-		delete m_Hud;
 		if (!m_Hud) {
 			m_Hud = new EditorHud(this);
 		}
@@ -271,7 +272,7 @@ class Editor: TreeNode
 		}
 			
 		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().GetName().Contains("Panel")) {
-			return;
+			//return;
 		}
 		
 		Raycast raycast = m_Camera.PerformCursorRaycast();	
@@ -299,7 +300,7 @@ class Editor: TreeNode
 		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
 				
 		//Print(m_CursorNormal);
-		//ray1.Debug();
+		raycast.Debug();
 		
 		//Print(Placing.Count());
 		foreach (EditorObject editor_object_placing: Placing) {
@@ -336,7 +337,6 @@ class Editor: TreeNode
 				Placing.RemoveItem(editor_object_to_place);
 				PlaySound(EditorSounds.PLOP);				
 			}
-			
 		}
 		
 		if (input.LocalHold_ID(UAFire)) {

@@ -217,7 +217,9 @@ class EditorObject: TreeNode
 			}
 		}
 		
-		m_Object.SetTransform(transform);
+		if (m_Object)  {
+			m_Object.SetTransform(transform);
+		}
 				
 		serializer.Read(m_Flags);
 		return true;
