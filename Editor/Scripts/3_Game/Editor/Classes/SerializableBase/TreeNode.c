@@ -151,7 +151,7 @@ class TreeNode: SerializableBase
 		m_Parent = parent;
 		
 		// Update visual display
-		if (m_Parent && m_Parent.GetNodeView()) {
+		if (m_Parent && !GetGame().IsDedicatedServer()) {
 			m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(GetNodeView());
 		}
 	}

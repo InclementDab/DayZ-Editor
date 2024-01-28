@@ -214,6 +214,10 @@ class Editor: TreeNode
 			
 	override void OnSynchronized()
 	{
+		if (!IsLocal()) {
+			return; // Zoom
+		}
+		
 		delete m_Hud;
 		if (!m_Hud) {
 			m_Hud = new EditorHud(this);
