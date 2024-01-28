@@ -48,13 +48,17 @@ class Editor: TreeNode
 	{
 		m_Identity = identity;
 		m_Player = player;	
-		
+
 		// Load all default categories and placements
 		TreeNode edited_objects = new TreeNode(EDITED_OBJECTS, "Edited Objects", Symbols.OBJECT_GROUP);
 		edited_objects.Add(new TreeNode("PlacedObjects", "Placed Objects", Symbols.HAND));
 		edited_objects.Add(new TreeNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
 		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
+		
+		if (!IsLocal()) {
+			return;
+		}
 		
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
 		commands.Add(new CommandNode("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.TOGGLE));
@@ -682,7 +686,7 @@ class Editor: TreeNode
 	
 	bool IsLocal()
 	{
-		return m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
+		return GetGame() && GetGame().GetUserManager() && GetGame().GetUserManager().GetTitleInitiator() && m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
 	}
 		
 	TreeNode GetObjects()
