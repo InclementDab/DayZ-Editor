@@ -117,7 +117,7 @@ class TreeNode: SerializableBase
 		
 		return node;
 	}
-	
+
 	TreeNode GetNode(string uuid)
 	{
 		return this[uuid];
@@ -135,8 +135,7 @@ class TreeNode: SerializableBase
 	string GetFullPath()
 	{
 		string full_path;
-		int parent_depth = GetParentDepth();
-		for (int i = parent_depth - 1; i >= 0; i++) {
+		for (int i = GetParentDepth(); i >= 0; i--) {
 			TreeNode node = GetParentAtDepth(i);
 			full_path += node.GetUUID();
 			if (i != 0) {

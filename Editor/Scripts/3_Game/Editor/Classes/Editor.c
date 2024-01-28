@@ -57,29 +57,29 @@ class Editor: TreeNode
 		Add(edited_objects);
 		
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
-		commands.Add(new CommandNode("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, ShortcutKeyType.PRESS));
+		commands.Add(new CommandNode("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.TOGGLE));
+		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, ShortcutKeyType.TOGGLE));
 		commands.Add(new CommandNode("BoxSelect", "Box Selection", Symbols.SQUARE_DASHED, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, ShortcutKeyType.PRESS));
+		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("CircleSelect", "Circle Selection", Symbols.CIRCLE_DASHED, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Delete", "Delete", Symbols.TRASH, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("LassoSelect", "Lasso Select", Symbols.LASSO, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("New", "New File", Symbols.FILE, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Open", "Open File", Symbols.FOLDER_OPEN, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, ShortcutKeyType.PRESS));
+		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("New", "New File", Symbols.FILE, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("Open", "Open File", Symbols.FOLDER_OPEN, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Weather", "Weather", Symbols.CLOUD_SUN, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, ShortcutKeyType.PRESS));
+		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("Weather", "Weather", Symbols.CLOUD_SUN, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, ShortcutKeyType.TOGGLE));
 		Add(commands);
 		
 		TreeNode menus = new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST);
@@ -322,7 +322,7 @@ class Editor: TreeNode
 			}
 			
 			foreach (EditorObject editor_object_to_place: Placing) {
-				InsertHistory(string.Format("Undo Place %1", editor_object_to_place.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, editor_object_to_place, editor_object_to_place.CreateCopy());
+				InsertHistory(string.Format("Undo Place %1", editor_object_to_place.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, editor_object_to_place, null);
 				this[EDITED_OBJECTS]["PlacedObjects"].Add(editor_object_to_place);
 				this[EDITED_OBJECTS]["PlacedObjects"].Synchronize();
 				
