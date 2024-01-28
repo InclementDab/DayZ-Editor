@@ -58,6 +58,11 @@ modded class DayZGame
 					string type;
 					ctx.Read(type);
 					
+					// hack
+					if (uuid == m_Server.GetUUID()) {
+						continue;
+					}
+					
 					TreeNode node = current[uuid];
 					if (!node) {
 						node = TreeNode.Cast(type.ToType().Spawn());
