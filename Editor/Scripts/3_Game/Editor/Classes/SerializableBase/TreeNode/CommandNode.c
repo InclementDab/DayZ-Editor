@@ -70,7 +70,7 @@ class CommandNode: TreeNode
 			
 			case "Delete": {
 				foreach (TreeNode node: TreeNode.SelectedObjects) {					
-					GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, node.CreateCopy());					
+					GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());					
 					delete node;
 					GetEditor().GetObjects().Synchronize();
 					GetEditor().PlaySound(EditorSounds.HIGHLIGHT);

@@ -237,7 +237,7 @@ class Editor: TreeNode
 		EnScript.SetClassVar(GetDayZGame(), "m_Editor", 0, this);
 	}
 	
-	void InsertHistory(string display_name, Symbols icon, ScriptReadWriteContext context)
+	void InsertHistory(string display_name, Symbols icon, TreeNode node, ScriptReadWriteContext data)
 	{
 		// Clear the stack first
 		foreach (string uuid, TreeNode undo_redo_node: this[UNDO_REDO].Children) {	
@@ -253,8 +253,8 @@ class Editor: TreeNode
 			delete this[UNDO_REDO][uuid];
 		}
 		
-		string uuid_generated = string.Format("History:%1", this[UNDO_REDO].Children.Count());
-		this[UNDO_REDO][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon)
+		string uuid_generated = string.Format("History:%1", this[UNDO_REDO].Children.Count());		
+		this[UNDO_REDO][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon, node, data);
 	}
 				
 	void Update(float timeslice)
@@ -322,7 +322,7 @@ class Editor: TreeNode
 			}
 			
 			foreach (EditorObject editor_object_to_place: Placing) {
-				InsertHistory(string.Format("Undo Place %1", editor_object_to_place.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, editor_object_to_place.CreateCopy());
+				InsertHistory(string.Format("Undo Place %1", editor_object_to_place.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, editor_object_to_place, editor_object_to_place.CreateCopy());
 				this[EDITED_OBJECTS]["PlacedObjects"].Add(editor_object_to_place);
 				this[EDITED_OBJECTS]["PlacedObjects"].Synchronize();
 				
@@ -357,7 +357,6 @@ class Editor: TreeNode
 					
 					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
 					editor_object_cast.SetBaseTransform(current_transform);
-					
 				} 
 				
 
