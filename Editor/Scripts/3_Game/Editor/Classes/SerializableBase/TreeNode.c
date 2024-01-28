@@ -99,8 +99,8 @@ class TreeNode: SerializableBase
 	
 	TreeNode Get(string uuid)
 	{
-		if (!Children.Contains(uuid)) {
-			Error(string.Format("[%1:%2] did not contain child: %3", m_UUID, m_DisplayName, uuid));
+		if (Children.Contains(uuid)) {
+			return Children[uuid];
 		}
 	
 		array<string> full_path = {};
