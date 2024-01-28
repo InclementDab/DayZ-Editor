@@ -55,11 +55,7 @@ class Editor: TreeNode
 		edited_objects.Add(new TreeNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
 		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
-		
-		if (!IsLocal()) {
-			return;
-		}
-		
+				
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
 		commands.Add(new CommandNode("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.TOGGLE));
 		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, ShortcutKeyType.TOGGLE));
@@ -263,6 +259,8 @@ class Editor: TreeNode
 				
 	void Update(float timeslice)
 	{
+		//Synchronize();
+		
 		Input input = GetGame().GetInput();
 		if (!m_Camera) {
 			return;

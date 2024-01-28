@@ -23,14 +23,14 @@ modded class DayZGame
 #ifdef SERVER
 		return m_Server;
 #else
-		if (!m_Editor) {
+		/*if (!m_Editor) {			
 			DayZPlayer player = GetPlayer();
 			PlayerIdentity identity = player.GetIdentity();
 			
 			m_Editor = new Editor(GetUserManager().GetTitleInitiator().GetUid(), GetUserManager().GetTitleInitiator().GetName(), Symbols.CAMERA, identity, player);
 			m_Server.Add(m_Editor);
 			m_Editor.Synchronize();
-		}
+		}*/
 				
 		return Editor.Cast(m_Server[GetUserManager().GetTitleInitiator().GetUid()]);
 #endif
