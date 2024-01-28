@@ -52,8 +52,8 @@ class TreeNode: SerializableBase
 		int tree_depth = GetParentDepth();
 		rpc.Write(tree_depth);
 
-		for (int i = tree_depth; i >= 0; i--) {
-			TreeNode parent = GetParentAtDepth(i);
+		for (int i = tree_depth - 1; i >= 0; i--) {
+			TreeNode parent = GetParentAtDepth(i); 
 			rpc.Write(parent.GetUUID());
 			rpc.Write(parent.Type().ToString());
 		}
