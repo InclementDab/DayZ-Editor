@@ -40,7 +40,11 @@ class CommandNode: TreeNode
 			}
 			
 			case "BoxSelect": {
-				GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
+				
+				if (GetEditor().GetHud()) { // damn
+					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
+				}
+				
 				if (selected) {
 					m_Parent["CircleSelect"].SetSelected(false);
 					m_Parent["LassoSelect"].SetSelected(false);
