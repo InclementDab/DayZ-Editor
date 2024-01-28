@@ -1,5 +1,5 @@
 /*
-                    Lloyd sleeps here
+                    Euler sleeps here
                __..--''``---....___   _..._    __
      /// //_.-'    .-/";  `        ``<._  ``.''_ `. / // /
     ///_.-' _..--.'_    \                    `( ) ) // //
@@ -636,9 +636,9 @@ class Editor: TreeNode
 		
 		Object object;
 		if (type.Contains("\\") || type.Contains("/")) {
-			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, true);
+			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, !GetGame().IsDedicatedServer());
 		} else {
-			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL  | ECE_INITAI | ECE_CREATEPHYSICS);
+			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL | ECE_INITAI | ECE_CREATEPHYSICS);
 		}
 		
 		if (!object) {
