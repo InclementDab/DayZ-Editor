@@ -12,7 +12,7 @@ class TreeNode: SerializableBase
 	static const string PATH_SEPERATOR = "\\";
 	
 	protected string m_UUID;	
-	ref map<string, ref TreeNode> Children = new map<string, ref TreeNode>();
+	ref map<string, autoptr TreeNode> Children = new map<string, autoptr TreeNode>();
 
 	protected string m_Icon, m_DisplayName;
 	protected TreeNode m_Parent;
@@ -99,7 +99,6 @@ class TreeNode: SerializableBase
 	
 	void Remove(string uuid)
 	{
-		delete Children[uuid];
 		Children.Remove(uuid);
 	}
 	
@@ -234,7 +233,7 @@ class TreeNode: SerializableBase
 		serializer.Write(m_Icon);
 		
 		serializer.Write(Children.Count());
-		foreach (string uuid, TreeNode node: Children) {
+		foreach (string uuid, TreeNode node: Children) {			
 			serializer.Write(node.GetUUID());
 			serializer.Write(node.Type().ToString());
 			

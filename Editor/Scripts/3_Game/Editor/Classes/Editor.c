@@ -339,9 +339,9 @@ class Editor: TreeNode
 					
 			if (input.LocalPress_ID(UAFire)) {
 				InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
+				this[PLACING].Remove(object_node);
 				this[EDITS].Add(object_node);
 				this[EDITS].Synchronize();
-				this[PLACING].Remove(object_node);
 				
 				// remove it from placing
 				PlaySound(EditorSounds.PLOP);
@@ -351,6 +351,17 @@ class Editor: TreeNode
 		
 		if (input.LocalPress_ID(UAZoomIn)) {
 			m_Camera.FieldOfView = GameConstants.DZPLAYER_CAMERA_FOV_EYEZOOM;
+			Raycast cast = m_Camera.PerformCursorRaycast();
+			
+			if (cast && cast.Hit) {
+				Print(raycast);
+				vector matrix[3] = { vector.Zero, vector.Zero, vector.Zero };
+				cast.Hit.ClearFlags(cast.Hit.GetFlags(), true);
+				cast.Hit.ClearEventMask(cast.Hit.GetEventMask());
+				cast.Hit.SetTransform(matrix);
+				cast.Hit.SetEventMask(EntityEvent.NOTVISIBLE);
+				cast.Hit.Update();
+			}
 		}
 		
 		if (input.LocalRelease_ID(UAZoomIn)) { 
