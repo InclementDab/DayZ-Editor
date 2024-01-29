@@ -87,4 +87,9 @@ class TranslateTool: ToolNode
 				
 		return true;
 	}
+	
+	override array<string> GetXorSelections()
+	{
+		return { "Scale", "Rotate" };
+	}
 }

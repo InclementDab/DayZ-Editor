@@ -300,12 +300,7 @@ class TreeNode: SerializableBase
 		
 		return m_NodeView;
 	}
-		
-	bool GetDefaultState()
-	{
-		return false;
-	}
-	
+			
 	bool CanSelect()
 	{
 		return true;

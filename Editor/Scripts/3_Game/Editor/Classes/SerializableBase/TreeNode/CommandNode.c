@@ -14,16 +14,18 @@ class CommandNode: TreeNode
 #endif
 #endif
 	}
-			
+				
 	override void OnSelectionChanged(bool state)
 	{
 		super.OnSelectionChanged(state);
 		
+		Editor editor = GetEditor();
+		
 		switch (m_UUID) {			
 			case "CursorToggle": {
 				GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
-				if (GetEditor().GetHud()) {
-					GetEditor().GetHud().ClearCursor();
+				if (editor.GetHud()) {
+					editor.GetHud().ClearCursor();
 				}
 				
 				break;
@@ -40,56 +42,55 @@ class CommandNode: TreeNode
 			}
 			
 			case "BoxSelect": {
-				if (GetEditor().GetHud()) { // damn
-					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
+				if (editor.GetHud()) { // damn
+					editor.GetHud().CurrentSelectionMode = SelectionMode.BOX;
 				}
-				
-				if (state) {
-					GetEditor().Deselect(m_Parent["CircleSelect"]);
-					GetEditor().Deselect(m_Parent["LassoSelect"]);
-				}
-				
 				break;
 			}
 			
 			case "CircleSelect": {
-				if (GetEditor().GetHud()) {
-					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
+				if (editor.GetHud()) {
+					editor.GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
 				}
 				
-				if (state) {
-					GetEditor().Deselect(m_Parent["BoxSelect"]);
-					GetEditor().Deselect(m_Parent["LassoSelect"]);
-				}
-					
 				break;
 			}
 			
 			case "LassoSelect": {
-				if (GetEditor().GetHud()) {
-					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.LASSO;
+				if (editor.GetHud()) {
+					editor.GetHud().CurrentSelectionMode = SelectionMode.LASSO;
 				}
-				
-				if (state) {
-					GetEditor().Deselect(m_Parent["BoxSelect"]);
-					GetEditor().Deselect(m_Parent["CircleSelect"]);
-				}
+
 				break;
 			}
 			
 			case "Delete": {
 				array<TreeNode> selected_nodes = GetEditor().GetSelectedNodes();
 				foreach (TreeNode node: selected_nodes) {					
-					GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());	
+					editor.InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());	
 					node.GetParent().Children.Remove(node.GetUUID());				
 					delete node;
-					GetEditor().GetObjects().Synchronize();
-					GetEditor().PlaySound(EditorSounds.HIGHLIGHT);
+					editor.GetObjects().Synchronize();
+					editor.PlaySound(EditorSounds.HIGHLIGHT);
 				}
 				
 				break;
 			}
 		}
+		
+		array<string> xor_selections = GetXorSelections();
+		foreach (string xor: xor_selections) {
+			TreeNode xor_node = m_Parent[xor];
+			if (!xor_node) {
+				Error(string.Format("[%1] couldnt find node to xor %2", m_UUID, xor));
+				continue;
+			}
+			
+			if (state ^ GetEditor().IsSelected(xor_node)) {
+				GetEditor().Deselect(xor_node);
+			}
+		}
+		
 	}
 	
 	protected void PollShortcutExecution()
@@ -170,5 +171,15 @@ class CommandNode: TreeNode
 	ShortcutKeyType GetShortcutType()
 	{
 		return m_ShortcutKeyType;
+	}
+	
+	bool GetDefaultState()
+	{
+		return false;
+	}
+	
+	array<string> GetXorSelections()
+	{
+		return {};
 	}
 }

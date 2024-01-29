@@ -3,7 +3,6 @@ class ToolNode: CommandNode
 	// Called in editor when running, return TRUE when you want editor to continue processing inputs
 	bool Update(float dt, Raycast raycast)
 	{
-		Print(raycast);
 		if (raycast && raycast.Bounce) {
 			raycast.Debug();
 			if (raycast.Hit) {
@@ -24,10 +23,5 @@ class ToolNode: CommandNode
 	void OnExitNode(notnull TreeNode node)
 	{
 		GetEditor().GetHud().ClearCursor();
-	}
-
-	array<string> GetXORNodes()
-	{
-		return {};
 	}
 }

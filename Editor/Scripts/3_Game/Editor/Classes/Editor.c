@@ -57,14 +57,14 @@ class Editor: TreeNode
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
 		commands.Add(new CommandNode("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.TOGGLE));
 		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, ShortcutKeyType.TOGGLE));
-		commands.Add(new CommandNode("BoxSelect", "Box Selection", Symbols.SQUARE_DASHED, ShortcutKeyType.PRESS));
+		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("CircleSelect", "Circle Selection", Symbols.CIRCLE_DASHED, ShortcutKeyType.PRESS));
+		commands.Add(new CircleCommand("Circle", "Circle Selection", Symbols.CIRCLE_DASHED, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Delete", "Delete", Symbols.TRASH, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("LassoSelect", "Lasso Select", Symbols.LASSO, ShortcutKeyType.PRESS));
+		commands.Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("New", "New", Symbols.FILE, ShortcutKeyType.HOLD));
@@ -278,10 +278,6 @@ class Editor: TreeNode
 			return;
 		}
 			
-		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().GetName().Contains("Panel")) {
-			return;
-		}
-		
 		Raycast raycast = m_Camera.PerformCursorRaycast();
 		foreach (TreeNode node: m_SelectedNodes) {
 			ToolNode tool_node = ToolNode.Cast(node);
