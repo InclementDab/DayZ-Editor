@@ -1,7 +1,5 @@
 class ObjectNode: TreeNode
-{	
-	static ref map<Object, ObjectNode> ByObject = new map<Object, ObjectNode>();
-	
+{
 	static const int VERSION = 1;
 		
 	protected Object m_Object;
@@ -92,7 +90,6 @@ class ObjectNode: TreeNode
 	protected void InitObject(notnull Object object)
 	{
 		m_Object = object;
-		ByObject[object] = this;
 		
 		vector transform[4];
 		m_Object.GetTransform(transform);
@@ -175,12 +172,7 @@ class ObjectNode: TreeNode
 	{
 		return true;
 	}
-	
-	bool IsPlacing()
-	{
-		return GetDayZGame().GetEditor().Placing.Find(this) != -1;
-	}
-	
+		
 	override void Write(Serializer serializer, int version)
 	{
 		super.Write(serializer, version);

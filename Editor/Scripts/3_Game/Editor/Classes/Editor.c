@@ -21,6 +21,18 @@ class EditorColors
 
 class Editor: TreeNode
 {
+	protected ref array<ToolNode> m_ActiveTools = {};
+	
+	void AddTool(notnull ToolNode node)
+	{		
+		m_ActiveTools.Insert(node);
+	}
+	
+	void RemoveTool(notnull ToolNode node)
+	{
+		m_ActiveTools.RemoveItem(node);
+	}
+	
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -29,10 +41,8 @@ class Editor: TreeNode
 	
 	protected EditorCamera m_Camera;
 	protected ref EditorHud	m_Hud;
-	ref ToolNode Tool;
 
 	protected ref array<TreeNode> m_SelectedNodes = {};
-	ref array<ref ObjectNode> Placing = {};
 	
 	protected vector m_CursorNormal = vector.Aside;
 	
@@ -269,8 +279,6 @@ class Editor: TreeNode
 				
 	void Update(float timeslice)
 	{
-		//Synchronize();
-		
 		Input input = GetGame().GetInput();
 		if (!m_Camera) {
 			return;
@@ -281,44 +289,21 @@ class Editor: TreeNode
 		}
 		
 		Raycast raycast = m_Camera.PerformCursorRaycast();	
-		if (Tool && !Tool.Update(timeslice, raycast)) {
-			return; // MAYBE DDONT DO THIS HERE
-		}
-				
-		vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
-		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
-		
-		vector rotation_mat[3];
-		Math3D.MatrixIdentity3(rotation_mat);
-		if (input.LocalPress_ID(UAZoomInOptics)) {
-			Math3D.YawPitchRollMatrix(Vector(-15, 0, 0), rotation_mat);
+		foreach (ToolNode tool: m_ActiveTools) {
+			if (tool && !tool.Update(timeslice, raycast)) {
+				return;
+			}
 		}
 		
-		if (input.LocalPress_ID(UAZoomOutOptics)) {
-			Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
-		}
-		
-		Math3D.MatrixMultiply3(camera_orthogonal, rotation_mat, camera_orthogonal);
-		
-		//Shape.CreateMatrix(camera_orthogonal);
-		
-		m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
-				
 		//Print(m_CursorNormal);
 		raycast.Debug();
-		
-		//Print(Placing.Count());
-		foreach (ObjectNode editor_object_placing: Placing) {
-			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
-			editor_object_placing.SetBaseTransform(transform);
-		}
 				
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
 				ClearSelections();
 			}
-			
+			/*
 			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {
 				ObjectNode editor_object = ObjectNode.ByObject[raycast.Hit];
 				if (KeyState(KeyCode.KC_LCONTROL)) {
@@ -326,17 +311,7 @@ class Editor: TreeNode
 				} else {
 					Select(editor_object);
 				}
-			}
-			
-			foreach (ObjectNode editor_object_to_place: Placing) {
-				InsertHistory(string.Format("Undo Place %1", editor_object_to_place.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, editor_object_to_place, null);
-				this[EDITED_OBJECTS]["PlacedObjects"].Add(editor_object_to_place);
-				this[EDITED_OBJECTS]["PlacedObjects"].Synchronize();
-				
-				// remove it from placing
-				Placing.RemoveItem(editor_object_to_place);
-				PlaySound(EditorSounds.PLOP);				
-			}
+			}*/			
 		}
 		
 		if (input.LocalHold_ID(UAFire)) {
@@ -390,8 +365,8 @@ class Editor: TreeNode
 				
 				// Any distance placing
 				else {
-					transform = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
-					editor_object_cast.SetBaseTransform(transform);
+					//transform = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
+					//editor_object_cast.SetBaseTransform(transform);
 				}
 			}
 		}
@@ -662,12 +637,7 @@ class Editor: TreeNode
 	{
 		return m_Camera;
 	}
-					
-	bool IsPlacing()
-	{
-		return Placing.Count() > 0; 
-	}
-	
+		
 	EditorProfileSettings GetProfileSettings()
 	{
 		return EditorProfileSettings.Cast(GetDayZGame().GetProfileSetting(EditorProfileSettings));
