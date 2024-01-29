@@ -59,7 +59,10 @@ class CommandNode: TreeNode
 			}
 			
 			case "CircleSelect": {
-				GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
+				if (GetEditor().GetHud()) {
+					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
+				}
+				
 				if (selected) {
 					m_Parent["BoxSelect"].SetSelected(false);
 					m_Parent["LassoSelect"].SetSelected(false);
@@ -69,7 +72,10 @@ class CommandNode: TreeNode
 			}
 			
 			case "LassoSelect": {
-				GetEditor().GetHud().CurrentSelectionMode = SelectionMode.LASSO;
+				if (GetEditor().GetHud()) {
+					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.LASSO;
+				}
+				
 				if (selected) {
 					m_Parent["CircleSelect"].SetSelected(false);
 					m_Parent["BoxSelect"].SetSelected(false);

@@ -29,7 +29,7 @@ class Editor: TreeNode
 	
 	protected EditorCamera m_Camera;
 	protected ref EditorHud	m_Hud;
-	ref EditorCursorTool Tool;
+	ref ToolNode Tool;
 
 	ref array<ref EditorObject> Placing = {};
 	
