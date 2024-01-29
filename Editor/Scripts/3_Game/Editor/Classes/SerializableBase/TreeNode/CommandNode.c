@@ -14,19 +14,14 @@ class CommandNode: TreeNode
 #endif
 #endif
 	}
-	
-	Editor GetEditor()
+		
+	override void OnSelectionChanged(bool state)
 	{
-		return Editor.Cast(m_Parent.GetParent());
-	}
-	
-	override void SetSelected(bool selected)
-	{
-		super.SetSelected(selected);
+		super.OnSelectionChanged(state);
 		
 		switch (m_UUID) {
 			case "CursorToggle": {
-				GetGame().GetUIManager().ShowCursor(selected);
+				GetGame().GetUIManager().ShowCursor(state);
 				if (GetEditor().GetHud()) {
 					GetEditor().GetHud().ClearCursor();
 				}
@@ -50,9 +45,9 @@ class CommandNode: TreeNode
 					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
 				}
 				
-				if (selected) {
-					m_Parent["CircleSelect"].SetSelected(false);
-					m_Parent["LassoSelect"].SetSelected(false);
+				if (state) {
+					GetEditor().Deselect(m_Parent["CircleSelect"]);
+					GetEditor().Deselect(m_Parent["LassoSelect"]);
 				}
 				
 				break;
@@ -63,9 +58,9 @@ class CommandNode: TreeNode
 					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
 				}
 				
-				if (selected) {
-					m_Parent["BoxSelect"].SetSelected(false);
-					m_Parent["LassoSelect"].SetSelected(false);
+				if (state) {
+					GetEditor().Deselect(m_Parent["BoxSelect"]);
+					GetEditor().Deselect(m_Parent["LassoSelect"]);
 				}
 					
 				break;
@@ -76,15 +71,16 @@ class CommandNode: TreeNode
 					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.LASSO;
 				}
 				
-				if (selected) {
-					m_Parent["CircleSelect"].SetSelected(false);
-					m_Parent["BoxSelect"].SetSelected(false);
+				if (state) {
+					GetEditor().Deselect(m_Parent["BoxSelect"]);
+					GetEditor().Deselect(m_Parent["CircleSelect"]);
 				}
 				break;
 			}
 			
 			case "Delete": {
-				foreach (TreeNode node: TreeNode.SelectedObjects) {					
+				array<TreeNode> selected_nodes = GetEditor().GetSelectedNodes();
+				foreach (TreeNode node: selected_nodes) {					
 					GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());	
 					node.GetParent().Children.Remove(node.GetUUID());				
 					delete node;
@@ -114,7 +110,7 @@ class CommandNode: TreeNode
 		switch (GetShortcutType()) {
 			case ShortcutKeyType.PRESS: {
 				if (m_UAInput.LocalPress()) {
-					SetSelected(true);
+					GetEditor().Select(this);
 					break;
 				}
 				
@@ -123,7 +119,7 @@ class CommandNode: TreeNode
 			
 			case ShortcutKeyType.DOUBLE: {
 				if (m_UAInput.LocalDoubleClick()) {
-					SetSelected(!IsSelected());
+					GetEditor().ToggleSelect(this);
 				}
 				
 				break;
@@ -131,11 +127,11 @@ class CommandNode: TreeNode
 			
 			case ShortcutKeyType.HOLD: {
 				if (m_UAInput.LocalHoldBegin()) {
-					SetSelected(true);
+					GetEditor().Select(this);
 				}
 				
 				if (m_UAInput.LocalRelease()) {
-					SetSelected(false);
+					GetEditor().Deselect(this);
 				}
 				
 				break;
@@ -143,7 +139,7 @@ class CommandNode: TreeNode
 			
 			case ShortcutKeyType.TOGGLE: {
 				if (m_UAInput.LocalPress()) {
-					SetSelected(!IsSelected());
+					GetEditor().ToggleSelect(this);
 				}
 				
 				break;

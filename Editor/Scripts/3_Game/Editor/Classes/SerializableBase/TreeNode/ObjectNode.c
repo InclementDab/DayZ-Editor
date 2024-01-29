@@ -228,11 +228,11 @@ class ObjectNode: TreeNode
 		return true;
 	}
 			
-	override void SetSelected(bool selected)
+	override void OnSelectionChanged(bool state)
 	{
-		super.SetSelected(selected);
+		super.OnSelectionChanged(state);
 		
-		if (selected) {
+		if (state) {
 			if (((m_Flags & ObjectNodeFlags.BBOX) == ObjectNodeFlags.BBOX)) {
 				//EditorBoundingBox.Create(m_Object);
 			}
@@ -353,18 +353,5 @@ class ObjectNode: TreeNode
 	array<EditorSnapPoint> GetEditorSnapPoints()
 	{
 		return m_EditorSnapPoints;
-	}
-	
-	static array<ObjectNode> GetSelectedObjectNodes()
-	{
-		array<ObjectNode> editor_objects = {};
-		foreach (TreeNode selectable_base: SelectedObjects) {
-			ObjectNode editor_object = ObjectNode.Cast(selectable_base);
-			if (editor_object) {
-				editor_objects.Insert(editor_object);
-			}
-		}
-		
-		return editor_objects;
 	}
 }

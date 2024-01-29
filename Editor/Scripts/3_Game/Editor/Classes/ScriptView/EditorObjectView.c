@@ -8,7 +8,6 @@ class ObjectNodeView: ScriptView
 	void ObjectNodeView(ObjectNode editor_object)
 	{
 		m_ObjectNode = editor_object;
-		m_ObjectNode.OnSelectionChanged.Insert(OnSelectionChange);
 		
 		Symbols icon = m_ObjectNode.GetIcon();
 		
@@ -21,7 +20,7 @@ class ObjectNodeView: ScriptView
 	
 	void OnSelectionChange(TreeNode selectable)
 	{
-		Image.SetColor(Ternary<int>.If(selectable.IsSelected(), ARGB(255, 7, 111, 255), ARGB(255, 255, 255, 255)));
+		//Image.SetColor(Ternary<int>.If(selectable.IsSelected(), ARGB(255, 7, 111, 255), ARGB(255, 255, 255, 255)));
 	}
 	
 	override void Update(float dt)
@@ -60,13 +59,13 @@ class ObjectNodeView: ScriptView
 				}
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					TreeNode.ClearSelections();
+					GetDayZGame().GetEditor().ClearSelections();
 				}
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_ObjectNode.SetSelected(!m_ObjectNode.IsSelected());
+					GetDayZGame().GetEditor().ToggleSelect(m_ObjectNode);
 				} else {
-					m_ObjectNode.SetSelected(true);
+					GetDayZGame().GetEditor().Select(m_ObjectNode);
 				}
 				
 				return true;

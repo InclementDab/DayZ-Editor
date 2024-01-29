@@ -36,13 +36,14 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 		if (Menu != string.Empty) {	
 			m_Node = GetDayZGame().GetEditor().GetMenu(Menu);
 			if (m_Node) {
-				m_Node.OnSelectionChanged.Insert(OnExecuted);				
+				//m_Node.OnSelectionChanged.Insert(OnExecuted);				
 				m_Button.SetState(m_Node.GetDefaultState());
 				m_TextWidget.SetText(m_Node.GetDisplayName());
 			}
 		}
 	}
 	
+	/*
 	void OnExecuted(TreeNode node)
 	{
 		EditorHud hud = GetDayZGame().GetEditor().GetHud();
@@ -67,7 +68,7 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 			
 			hud.GetTemplateController().MenuItems.Insert(new CommandMenuItem(command_node));
 		}		
-	}
+	}*/
 		
 	Widget GetLayoutRoot()
 	{
@@ -77,7 +78,7 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 	override bool OnClick(Widget w, int x, int y, int button)
 	{		
 		if (button == 0 && m_Node) {
-			m_Node.SetSelected(!m_Node.IsSelected());
+			//m_Node.SetSelected(!m_Node.IsSelected());
 		}
 		
 		return true;

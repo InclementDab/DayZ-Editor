@@ -43,7 +43,7 @@ class EditorPointView: ScriptView
 		
 		bool is_in_bound = (mouse_x < x + h && mouse_x > x - h) && (mouse_y < y + h && mouse_y > y - h);
 		//Print(vector.Distance(transform_pos, GetGame().GetCurrentCameraPosition()));
-		m_LayoutRoot.SetAlpha(is_in_bound || !GetGame().GetUIManager().IsCursorVisible() || m_ObjectNode.IsSelected());
+		m_LayoutRoot.SetAlpha(is_in_bound || !GetGame().GetUIManager().IsCursorVisible());
 		
 		m_LayoutRoot.SetPos(screen_position[0] - w / 2, screen_position[1] - h / 2);
 		m_LayoutRoot.Show(screen_position[2] > 0 && (vector.Distance(transform_pos, GetGame().GetCurrentCameraPosition()) < m_CameraDistance));
@@ -70,15 +70,15 @@ class EditorPointView: ScriptView
 		switch (button) {
 			case MouseState.LEFT: {
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_ObjectNode.SetSelected(!m_ObjectNode.IsSelected());
+					//m_ObjectNode.SetSelected(!m_ObjectNode.IsSelected());
 					return true;
 				}
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					m_ObjectNode.ClearSelections();
+					//m_ObjectNode.ClearSelections();
 				}
 				
-				m_ObjectNode.SetSelected(true);
+				//m_ObjectNode.SetSelected(true);
 				
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CheckForDragging, 100);
 				return true;

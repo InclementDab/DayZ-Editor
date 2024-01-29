@@ -11,25 +11,10 @@ class TreeNode: SerializableBase
 {
 	static const string PATH_SEPERATOR = "\\";
 	
-	static ref array<TreeNode> SelectedObjects = {};	
-	static ref array<TreeNode> DirtyObjects = {};
-	
-	static void ClearSelections()
-	{
-		foreach (TreeNode selected_object: SelectedObjects) {
-			if (selected_object) {
-				selected_object.SetSelected(false);
-			}
-		}
-	}
-	
-	ref ScriptInvoker OnSelectionChanged = new ScriptInvoker();
-
 	protected string m_UUID;	
 	ref map<string, ref TreeNode> Children = new map<string, ref TreeNode>();
 
 	protected string m_Icon, m_DisplayName;
-	protected bool m_IsSelected; // local
 	protected TreeNode m_Parent;
 	
 	protected ref TreeView m_NodeView;
@@ -44,6 +29,13 @@ class TreeNode: SerializableBase
 	void ~TreeNode()
 	{
 		delete m_NodeView;
+	}
+	
+	void OnSelectionChanged(bool state)
+	{
+		if (m_NodeView) {
+			m_NodeView.OnSelectionChanged(state);
+		}
 	}
 	
 	bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
@@ -174,6 +166,25 @@ class TreeNode: SerializableBase
 	{
 	}
 	
+	Editor GetEditor()
+	{
+		return Editor.Cast(FindParentOfType(Editor));
+	}
+	
+	TreeNode FindParentOfType(typename type)
+	{
+		TreeNode parent = this;
+		while (parent) {
+			if (parent.IsInherited(type)) {
+				return parent;
+			}
+						
+			parent = parent.GetParent();
+		}
+		
+		return null;
+	}
+	
 	TreeNode GetParentAtDepth(int depth)
 	{
 		TreeNode parent = this;
@@ -285,20 +296,7 @@ class TreeNode: SerializableBase
 		
 		return m_NodeView;
 	}
-	
-	void SetSelected(bool selected)
-	{
-		m_IsSelected = selected;
-				
-		if (m_IsSelected) {
-			SelectedObjects.Insert(this);
-		} else {
-			SelectedObjects.RemoveItem(this);
-		}
-				
-		OnSelectionChanged.Invoke(this);
-	}
-	
+		
 	bool GetDefaultState()
 	{
 		return false;
@@ -307,11 +305,6 @@ class TreeNode: SerializableBase
 	bool CanSelect()
 	{
 		return true;
-	}
-		
-	bool IsSelected() 
-	{
-		return m_IsSelected;
 	}
 	
 #ifdef DIAG_DEVELOPER

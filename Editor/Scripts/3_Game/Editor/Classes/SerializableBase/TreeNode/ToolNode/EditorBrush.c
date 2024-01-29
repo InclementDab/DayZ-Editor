@@ -47,11 +47,11 @@ class EditorBrush: ToolNode
 		return true;
 	}
 	
-	override void SetSelected(bool selected)
+	override void OnSelectionChanged(bool state)
 	{
-		super.SetSelected(selected);
+		super.OnSelectionChanged(state);
 		
-		if (selected) {
+		if (state) {
 			m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);
 		} else {
 			GetGame().ObjectDelete(m_Ring);

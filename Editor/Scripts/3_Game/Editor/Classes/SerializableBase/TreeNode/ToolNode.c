@@ -1,10 +1,10 @@
 class ToolNode: TreeNode
 {
-	override void SetSelected(bool selected)
+	override void OnSelectionChanged(bool state)
 	{
-		super.SetSelected(selected);
+		super.OnSelectionChanged(state);
 		
-		if (selected) {
+		if (state) {
 			GetDayZGame().GetEditor().Tool = this;
 		} else {
 			GetDayZGame().GetEditor().Tool = null;

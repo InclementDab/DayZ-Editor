@@ -21,6 +21,48 @@ class EditorColors
 
 class Editor: TreeNode
 {
+	protected ref array<TreeNode> m_SelectedNodes = {};
+	
+	void Select(notnull TreeNode node)
+	{
+		m_SelectedNodes.Insert(node);
+		node.OnSelectionChanged(true);
+	}
+	
+	void Deselect(notnull TreeNode node)
+	{
+		node.OnSelectionChanged(false);
+		m_SelectedNodes.RemoveItemUnOrdered(node);		
+	}
+	
+	void ToggleSelect(notnull TreeNode node)
+	{
+		if (IsSelected(node)) {
+			Deselect(node);
+		} else {
+			Select(node);
+		}
+	}
+	
+	bool IsSelected(notnull TreeNode node)
+	{
+		return m_SelectedNodes.Find(node) != -1;
+	}
+	
+	void ClearSelections()
+	{
+		foreach (TreeNode node: m_SelectedNodes) {
+			node.OnSelectionChanged(false);
+		}
+		
+		m_SelectedNodes.Clear();
+	}
+	
+	array<TreeNode> GetSelectedNodes()
+	{
+		return m_SelectedNodes;
+	}
+	
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -315,15 +357,15 @@ class Editor: TreeNode
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
-				TreeNode.ClearSelections();
+				ClearSelections();
 			}
 			
 			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {
 				ObjectNode editor_object = ObjectNode.ByObject[raycast.Hit];
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					editor_object.SetSelected(!editor_object.IsSelected());
+					ToggleSelect(editor_object);
 				} else {
-					editor_object.SetSelected(true);
+					Select(editor_object);
 				}
 			}
 			
@@ -339,7 +381,7 @@ class Editor: TreeNode
 		}
 		
 		if (input.LocalHold_ID(UAFire)) {
-			foreach (TreeNode selected_node: TreeNode.SelectedObjects) {
+			foreach (TreeNode selected_node: m_SelectedNodes) {
 				ObjectNode editor_object_cast = ObjectNode.Cast(selected_node);
 				if (!editor_object_cast) {
 					continue;
@@ -396,7 +438,7 @@ class Editor: TreeNode
 		}
 		
 		if (input.LocalRelease_ID(UAFire)) {
-			foreach (TreeNode selected_node_synch: TreeNode.SelectedObjects) {
+			foreach (TreeNode selected_node_synch: m_SelectedNodes) {
 				ObjectNode editor_object_sync = ObjectNode.Cast(selected_node_synch);
 				if (!editor_object_sync) {
 					continue;

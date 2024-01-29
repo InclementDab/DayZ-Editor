@@ -11,11 +11,11 @@ class PlaceableNode: TreeNode
 		return true;
 	}
 	
-	override void SetSelected(bool selected)
+	override void OnSelectionChanged(bool state)
 	{
-		super.SetSelected(selected);
+		super.OnSelectionChanged(state);
 		
-		if (selected) {			
+		if (state) {			
 			Raycast raycast = GetDayZGame().GetEditor().GetCamera().PerformCursorRaycast();
 			
 			vector matrix[4];

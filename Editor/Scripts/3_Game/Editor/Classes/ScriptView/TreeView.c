@@ -18,9 +18,7 @@ class TreeView: ScriptView
 	{		
 		m_TemplateController = TreeViewController.Cast(m_Controller);
 		m_Node = node;
-		
-		m_Node.OnSelectionChanged.Insert(OnSelectionChange);
-		
+
 		SetText(m_Node.GetDisplayName());
 		
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());
@@ -33,7 +31,12 @@ class TreeView: ScriptView
 	{
 		AllTreeViews.Remove(m_LayoutRoot);
 	}
-		
+	
+	void OnSelectionChanged(bool state)
+	{
+		Panel.SetColor(EditorColors.SELECT * state);
+	}
+	
 	void SetText(string text)
 	{
 		Text.SetText(text);
@@ -163,13 +166,13 @@ class TreeView: ScriptView
 				switch (button) {
 					case 0: {
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
-							TreeNode.ClearSelections();
+							m_Node.GetEditor().ClearSelections();
 						}
 						
 						if (KeyState(KeyCode.KC_LCONTROL)) {
-							m_Node.SetSelected(!m_Node.IsSelected());
+							m_Node.GetEditor().ToggleSelect(m_Node);
 						} else {
-							m_Node.SetSelected(true);
+							m_Node.GetEditor().Select(m_Node);
 						}
 						
 						return true;
@@ -207,13 +210,6 @@ class TreeView: ScriptView
 	override bool OnDrag(Widget w, int x, int y)
 	{		
 		return super.OnDrag(w, x, y);
-	}
-			
-	void OnSelectionChange(TreeNode selectable)
-	{
-		if (Panel) {
-			Panel.SetColor(EditorColors.SELECT * selectable.IsSelected());
-		}
 	}
 						
 	TreeViewController GetTemplateController()
