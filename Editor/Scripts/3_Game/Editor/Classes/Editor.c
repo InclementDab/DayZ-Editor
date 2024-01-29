@@ -307,7 +307,9 @@ class Editor: TreeNode
 			}*/			
 		}
 		
-		foreach (string uuid, ObjectNode object_node: Children[PLACING].Children) {
+		foreach (string uuid, TreeNode node1: Children[PLACING].Children) {
+			ObjectNode object_node = ObjectNode.Cast(node1);
+			
 			vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 			Math3D.MatrixOrthogonalize4(camera_orthogonal);	
 			
