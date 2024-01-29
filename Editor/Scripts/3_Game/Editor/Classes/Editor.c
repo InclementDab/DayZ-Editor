@@ -286,16 +286,7 @@ class Editor: TreeNode
 		if (!m_Camera) {
 			return;
 		}
-			
-		Raycast raycast = m_Camera.PerformCursorRaycast();
-
-		foreach (string command_uuid, TreeNode node: Children[COMMANDS][TOOLS].Children) {
-			CommandNode command_node = CommandNode.Cast(node);
-			if (command_node && !command_node.Update(timeslice, raycast)) {
-				return;
-			}
-		}
-					
+								
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
@@ -314,6 +305,14 @@ class Editor: TreeNode
 		
 		foreach (string uuid, TreeNode node1: Children[PLACING].Children) {
 			ObjectNode object_node = ObjectNode.Cast(node1);
+			if (!object_node) {
+				continue;
+			}
+			
+			Raycast raycast = m_Camera.PerformCursorRaycast(object_node.GetObject());
+			if (!raycast) {
+				continue;
+			}			
 			
 			vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 			Math3D.MatrixOrthogonalize4(camera_orthogonal);	
@@ -346,6 +345,7 @@ class Editor: TreeNode
 				
 				// remove it from placing
 				PlaySound(EditorSounds.PLOP);
+				return;
 			}
 		}
 		
@@ -355,6 +355,16 @@ class Editor: TreeNode
 		
 		if (input.LocalRelease_ID(UAZoomIn)) { 
 			m_Camera.FieldOfView = 1.0;
+		}
+		
+		array<TreeNode> nodes = Children[COMMANDS].Children.GetValueArray();
+		nodes.InsertArray(Children[COMMANDS][TOOLS].Children.GetValueArray());
+		
+		foreach (TreeNode node: nodes) {
+			CommandNode command_node = CommandNode.Cast(node);
+			if (command_node && !command_node.Update(timeslice, m_Camera.PerformCursorRaycast())) {
+				return;
+			}
 		}
 	}
 				
