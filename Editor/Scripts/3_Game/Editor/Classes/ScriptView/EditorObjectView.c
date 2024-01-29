@@ -53,7 +53,11 @@ class ObjectNodeView: ScriptView
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		switch (button) {
-			case 0: {				
+			case 0: {
+				if (!m_ObjectNode) {
+					return false;
+				}
+				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
 					GetDayZGame().GetEditor().ClearSelections();
 				}

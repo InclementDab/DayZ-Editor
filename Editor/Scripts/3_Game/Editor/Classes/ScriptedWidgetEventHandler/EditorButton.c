@@ -41,7 +41,7 @@ class EditorButton: ScriptedWidgetEventHandler
 				m_Icon = m_Node.GetIcon();
 				m_Node.AfterSelectionChanged.Insert(OnExecuted);
 				GetDayZGame().GetEditor().Select(m_Node);
-				//OnExecuted(m_Node);
+				OnExecuted(m_Node, m_Node.GetDefaultState());
 			}
 		}
 	}
@@ -141,10 +141,10 @@ class EditorButton: ScriptedWidgetEventHandler
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{				
 		GetDayZGame().GetEditor().GetHud().ClearCursor();
-		/*
-		if (!m_Node.IsSelected()) {
+		
+		if (!m_Node.GetEditor().IsSelected(m_Node)) {
 			WidgetAnimator.Animate(m_IconWidget, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
-		}*/
+		}
 		
 		return true;
 	}

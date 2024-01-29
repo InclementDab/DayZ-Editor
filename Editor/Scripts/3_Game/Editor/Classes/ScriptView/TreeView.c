@@ -104,7 +104,7 @@ class TreeView: ScriptView
 	{
 		switch (w) {
 			case Collapse: {
-				ShowChildren(Collapse.GetState());
+				ShowChildren(!Children.IsVisible());
 				return true;
 			}
 		}
@@ -121,25 +121,7 @@ class TreeView: ScriptView
 		
 		EditorHud hud = GetDayZGame().GetEditor().GetHud();
 		
-		hud.SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());
-		
-		PlaceableNode placeable = PlaceableNode.Cast(m_Node);
-		if (placeable) {
-			Object object = GetGame().CreateObjectEx(placeable.GetUUID(), vector.Zero, ECE_LOCAL);
-			EntityAI entity = EntityAI.Cast(object);
-			if (entity) {
-				
-				DayZPlayer player = DayZPlayer.Cast(entity);
-				//hud.Player.Show(player != null);
-				//hud.Item.Show(player == null);
-				
-				
-				
-				//hud.Tooltip.SetPos(30, y);
-				//hud.Tooltip.Show(true);
-			}
-		}
-		
+		hud.SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());		
 		return true;
 	}
 	
