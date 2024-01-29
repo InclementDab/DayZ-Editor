@@ -1,33 +1,18 @@
 class ToolNode: CommandNode
 {
-	override void OnSelectionChanged(bool state)
-	{
-		super.OnSelectionChanged(state);
-
-		if (state) {			
-			GetEditor().AddTool(this);			
-		} else {
-			GetEditor().RemoveTool(this);
-		}
-	}
-	
 	// Called in editor when running, return TRUE when you want editor to continue processing inputs
 	bool Update(float dt, Raycast raycast)
 	{
-		if (raycast.Bounce) {
+		Print(raycast);
+		if (raycast && raycast.Bounce) {
 			raycast.Debug();
-			Shape.CreateSphere(COLOR_GREEN, ShapeFlags.ONCE, raycast.Bounce.Position, 0.5);
-			
 			if (raycast.Hit) {
 				TreeNode node = GetEditor().FindNodeFromObject(raycast.Hit);
 				if (node) {
 					Print(node);
 				}
 			}
-		}
-		
-		
-		
+		}	
 		return true;
 	}
 	

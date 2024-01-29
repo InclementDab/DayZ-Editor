@@ -20,19 +20,7 @@ class EditorColors
 }
 
 class Editor: TreeNode
-{
-	protected ref array<ToolNode> m_ActiveTools = {};
-	
-	void AddTool(notnull ToolNode node)
-	{		
-		m_ActiveTools.Insert(node);
-	}
-	
-	void RemoveTool(notnull ToolNode node)
-	{
-		m_ActiveTools.RemoveItem(node);
-	}
-	
+{	
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -294,16 +282,14 @@ class Editor: TreeNode
 			return;
 		}
 		
-		Raycast raycast = m_Camera.PerformCursorRaycast();	
-		foreach (ToolNode tool: m_ActiveTools) {
-			if (tool && !tool.Update(timeslice, raycast)) {
+		Raycast raycast = m_Camera.PerformCursorRaycast();
+		foreach (TreeNode node: m_SelectedNodes) {
+			ToolNode tool_node = ToolNode.Cast(node);
+			if (tool_node && !tool_node.Update(timeslice, raycast)) {
 				return;
 			}
 		}
-		
-		//Print(m_CursorNormal);
-		raycast.Debug();
-				
+					
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {

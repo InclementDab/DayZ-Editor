@@ -103,7 +103,7 @@ class EditorCamera: Camera
 	}
 	
 	Raycast PerformCursorRaycast(Object ignore = null)
-	{
+	{		
 		return GetCursorRay().PerformRaycast(ignore);
 	}
 	
