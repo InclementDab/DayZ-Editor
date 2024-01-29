@@ -19,6 +19,8 @@ class TreeNode: SerializableBase
 	
 	protected ref TreeView m_NodeView;
 	
+	ref ScriptInvoker AfterSelectionChanged = new ScriptInvoker();
+	
 	void TreeNode(string uuid, string display_name, Symbols icon)
 	{
 		m_UUID = uuid;
@@ -36,6 +38,8 @@ class TreeNode: SerializableBase
 		if (m_NodeView) {
 			m_NodeView.OnSelectionChanged(state);
 		}
+		
+		AfterSelectionChanged.Invoke(this, state);
 	}
 	
 	bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)

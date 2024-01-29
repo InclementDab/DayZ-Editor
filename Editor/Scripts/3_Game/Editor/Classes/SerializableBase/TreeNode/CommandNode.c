@@ -14,7 +14,7 @@ class CommandNode: TreeNode
 #endif
 #endif
 	}
-		
+			
 	override void OnSelectionChanged(bool state)
 	{
 		super.OnSelectionChanged(state);

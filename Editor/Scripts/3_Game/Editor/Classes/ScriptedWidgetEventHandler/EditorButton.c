@@ -39,24 +39,23 @@ class EditorButton: ScriptedWidgetEventHandler
 			m_Node = GetDayZGame().GetEditor().GetCommand(Node);
 			if (m_Node) {
 				m_Icon = m_Node.GetIcon();
-				//m_Node.OnSelectionChanged.Insert(OnExecuted);
+				m_Node.AfterSelectionChanged.Insert(OnExecuted);
 				GetDayZGame().GetEditor().Select(m_Node);
 				//OnExecuted(m_Node);
 			}
 		}
 	}
-	/*
 	
-	void OnExecuted(TreeNode node)
+	void OnExecuted(TreeNode node, bool state)
 	{
-		SymbolSize size = Ternary<SymbolSize>.If(node.IsSelected(), SymbolSize.SOLID, SymbolSize.REGULAR);
-		int color = Ternary<int>.If(node.IsSelected(), m_LayoutRoot.GetColor(),	ARGB(100, 255, 255, 255));
+		SymbolSize size = Ternary<SymbolSize>.If(state, SymbolSize.SOLID, SymbolSize.REGULAR);
+		int color = Ternary<int>.If(state, m_LayoutRoot.GetColor(),	ARGB(100, 255, 255, 255));
 		
 		WidgetAnimator.AnimateColor(m_IconWidget, color, 50);
 		
-		m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(node.IsSelected(), m_Icon.Solid(), m_Icon.Regular()));
+		m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(state, m_Icon.Solid(), m_Icon.Regular()));
 		m_IconWidget.SetImage(0);
-	}*/
+	}
 		
 	Widget GetLayoutRoot()
 	{

@@ -43,14 +43,13 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 		}
 	}
 	
-	/*
-	void OnExecuted(TreeNode node)
+	void OnExecuted(TreeNode node, bool state)
 	{
 		EditorHud hud = GetDayZGame().GetEditor().GetHud();
-				
+	
 		hud.Menu.Show(false);
 		hud.GetTemplateController().MenuItems.Clear();
-		if (!node.IsSelected()) {
+		if (!state) {
 			return;
 		}
 		
@@ -68,7 +67,7 @@ class EditorMenuTab: ScriptedWidgetEventHandler
 			
 			hud.GetTemplateController().MenuItems.Insert(new CommandMenuItem(command_node));
 		}		
-	}*/
+	}
 		
 	Widget GetLayoutRoot()
 	{

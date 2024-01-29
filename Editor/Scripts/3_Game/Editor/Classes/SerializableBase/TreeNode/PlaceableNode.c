@@ -22,6 +22,7 @@ class PlaceableNode: ToolNode
 		Math3D.MatrixIdentity4(matrix);
 		if (state) {
 			m_ObjectNode = new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
+			GetUApi().SupressNextFrame(true);
 		} else {
 			delete m_ObjectNode;
 		}
@@ -30,6 +31,9 @@ class PlaceableNode: ToolNode
 	override bool Update(float dt, Raycast raycast)
 	{
 		Input input = GetGame().GetInput();
+		if (!m_ObjectNode) {
+			return true;
+		}
 		
 		vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
@@ -58,9 +62,8 @@ class PlaceableNode: ToolNode
 			GetEditor().InsertHistory(string.Format("Undo Place %1", m_ObjectNode.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, m_ObjectNode, null);
 			GetEditor()[Editor.EDITED_OBJECTS]["PlacedObjects"].Add(m_ObjectNode);
 			GetEditor()[Editor.EDITED_OBJECTS]["PlacedObjects"].Synchronize();
-			
+			m_ObjectNode = null;
 			// remove it from placing
-			delete m_ObjectNode;
 			GetEditor().PlaySound(EditorSounds.PLOP);
 		}
 				
