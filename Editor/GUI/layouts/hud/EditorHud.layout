@@ -1142,7 +1142,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "New"
+           Node "Commands\New"
           }
          }
         }
@@ -2557,6 +2557,229 @@ FrameWidgetClass Root {
        scaled 0
        {
         PanelWidgetClass Divider1113 {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 2 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         style rover_sim_colorable
+        }
+       }
+      }
+      GridSpacerWidgetClass MovementTools {
+       ignorepointer 1
+       size 32 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       Padding 0
+       Margin 0
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 4
+       Rows 1
+       {
+        FrameWidgetClass Translate {
+         ignorepointer 1
+         color 0.2667 0.298 0.7059 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "EditorButton"
+         {
+          ButtonWidgetClass "Translate.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass ""
+           style Empty
+           "no focus" 0
+           switch toggle
+           {
+            ImageWidgetClass "Translate.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 30 30
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             image0 ""
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" none
+             "flip u" 0
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Node "Tools\Translate"
+          }
+         }
+        }
+        FrameWidgetClass Rotate {
+         ignorepointer 1
+         color 0.2667 0.298 0.7059 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         draggable 0
+         scriptclass "EditorButton"
+         {
+          ButtonWidgetClass "Rotate.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass ""
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Rotate.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 30 30
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             scriptclass ""
+             image0 ""
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" none
+             "flip u" 0
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Node "CircleSelect"
+          }
+         }
+        }
+        FrameWidgetClass Scale {
+         ignorepointer 1
+         color 0.2667 0.298 0.7059 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "EditorButton"
+         {
+          ButtonWidgetClass "Scale.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass ""
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Scale.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 30 30
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             image0 ""
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" none
+             "flip u" 0
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Node "LassoSelect"
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass Divider1114 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 20 42
+       halign center_ref
+       valign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        PanelWidgetClass Divider1115 {
          visible 1
          ignorepointer 1
          color 1 1 1 0.3922
