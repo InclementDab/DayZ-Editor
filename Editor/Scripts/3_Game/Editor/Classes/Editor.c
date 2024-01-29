@@ -31,7 +31,7 @@ class Editor: TreeNode
 	protected ref EditorHud	m_Hud;
 	ref ToolNode Tool;
 
-	ref array<ref EditorObject> Placing = {};
+	ref array<ref ObjectNode> Placing = {};
 	
 	protected vector m_CursorNormal = vector.Aside;
 	
@@ -154,7 +154,7 @@ class Editor: TreeNode
 					category = "AI";
 				}
 				
-				this[PLACEABLE_OBJECTS][category].Add(new EditorPlaceable(type, type, Symbols.BUILDING));
+				this[PLACEABLE_OBJECTS][category].Add(new PlaceableNode(type, type, Symbols.BUILDING));
 		    }
 		}
 		
@@ -188,12 +188,12 @@ class Editor: TreeNode
 					category = "Rocks";
 				}
 			
-				this[PLACEABLE_OBJECTS][category].Add(new EditorPlaceable(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
+				this[PLACEABLE_OBJECTS][category].Add(new PlaceableNode(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
 			}
 		}
 
-		foreach (Param3<typename, string, string> scripted_instance: RegisterEditorObject.Instances) {
-			this[PLACEABLE_OBJECTS]["ScriptedObjects"].Add(new EditorPlaceable(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+		foreach (Param3<typename, string, string> scripted_instance: RegisterObjectNode.Instances) {
+			this[PLACEABLE_OBJECTS]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
 #endif
 		
@@ -307,7 +307,7 @@ class Editor: TreeNode
 		raycast.Debug();
 		
 		//Print(Placing.Count());
-		foreach (EditorObject editor_object_placing: Placing) {
+		foreach (ObjectNode editor_object_placing: Placing) {
 			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 			editor_object_placing.SetBaseTransform(transform);
 		}
@@ -323,8 +323,8 @@ class Editor: TreeNode
 				TreeNode.ClearSelections();
 			}
 			
-			if (raycast.Hit && EditorObject.ByObject[raycast.Hit]) {
-				EditorObject editor_object = EditorObject.ByObject[raycast.Hit];
+			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {
+				ObjectNode editor_object = ObjectNode.ByObject[raycast.Hit];
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					editor_object.SetSelected(!editor_object.IsSelected());
 				} else {
@@ -332,7 +332,7 @@ class Editor: TreeNode
 				}
 			}
 			
-			foreach (EditorObject editor_object_to_place: Placing) {
+			foreach (ObjectNode editor_object_to_place: Placing) {
 				InsertHistory(string.Format("Undo Place %1", editor_object_to_place.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, editor_object_to_place, null);
 				this[EDITED_OBJECTS]["PlacedObjects"].Add(editor_object_to_place);
 				this[EDITED_OBJECTS]["PlacedObjects"].Synchronize();
@@ -345,7 +345,7 @@ class Editor: TreeNode
 		
 		if (input.LocalHold_ID(UAFire)) {
 			foreach (TreeNode selected_node: TreeNode.SelectedObjects) {
-				EditorObject editor_object_cast = EditorObject.Cast(selected_node);
+				ObjectNode editor_object_cast = ObjectNode.Cast(selected_node);
 				if (!editor_object_cast) {
 					continue;
 				}
@@ -402,7 +402,7 @@ class Editor: TreeNode
 		
 		if (input.LocalRelease_ID(UAFire)) {
 			foreach (TreeNode selected_node_synch: TreeNode.SelectedObjects) {
-				EditorObject editor_object_sync = EditorObject.Cast(selected_node_synch);
+				ObjectNode editor_object_sync = ObjectNode.Cast(selected_node_synch);
 				if (!editor_object_sync) {
 					continue;
 				}

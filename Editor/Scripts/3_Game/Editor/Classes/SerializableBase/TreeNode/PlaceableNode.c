@@ -1,4 +1,4 @@
-class EditorPlaceable: TreeNode
+class PlaceableNode: TreeNode
 {	
 	override void SetSelected(bool selected)
 	{
@@ -12,9 +12,9 @@ class EditorPlaceable: TreeNode
 			matrix[3] = raycast.Bounce.Position;
 			
 			Object object = Editor.CreateObject(GetUUID(), matrix);
-			EditorObject editor_object = new EditorObject(UUID.Generate(), m_UUID, GetIcon(), object, EFE_DEFAULT);
+			ObjectNode editor_object = new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), object, EFE_DEFAULT);
 			if (object) {
-				EditorObject.ByObject[object] = editor_object;
+				ObjectNode.ByObject[object] = editor_object;
 			}
 			
 			GetDayZGame().GetEditor().Placing.Insert(editor_object);

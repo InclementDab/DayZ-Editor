@@ -28,7 +28,7 @@ class EditorBrush: ToolNode
 			matrix[3] = random + Vector(0, 4, 0);
 			Object object = Editor.CreateObject(GetBrushedTypes().GetRandomElement(), matrix);
 			
-			EditorObject editor_object = new EditorObject(UUID.Generate(), m_UUID, GetIcon(), object, EFE_DEFAULT);
+			ObjectNode editor_object = new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), object, EFE_DEFAULT);
 			
 			GetDayZGame().GetEditor()["EditedObjects"]["BrushedObjects"].Add(editor_object);		
 			GetDayZGame().GetEditor().PlaySound(EditorSounds.PLOP);

@@ -1,6 +1,6 @@
 class EditorPointView: ScriptView
 {	
-	protected EditorObject m_EditorObject;
+	protected ObjectNode m_ObjectNode;
 	protected vector m_Offset;
 	protected float m_CameraDistance;
 	protected bool m_IsDragging;
@@ -8,9 +8,9 @@ class EditorPointView: ScriptView
 	
 	ImageWidget Image;
 	
-	void EditorPointView(notnull EditorObject editor_object, vector offset, float camera_distance)
+	void EditorPointView(notnull ObjectNode editor_object, vector offset, float camera_distance)
 	{
-		m_EditorObject = editor_object;
+		m_ObjectNode = editor_object;
 		m_Offset = offset;
 		m_CameraDistance = camera_distance;
 	}
@@ -27,11 +27,11 @@ class EditorPointView: ScriptView
 		GetMousePos(mouse_x, mouse_y);
 		
 		vector transform[4];
-		m_EditorObject.GetObject().GetTransform(transform);
+		m_ObjectNode.GetObject().GetTransform(transform);
 		
 		if (m_IsDragging) {
 			
-			//EditorObjectDragHandler.Drag(m_EditorObject.GetObject(), m_Offset);
+			//ObjectNodeDragHandler.Drag(m_ObjectNode.GetObject(), m_Offset);
 		}
 
 		float x, y, w, h;		
@@ -43,7 +43,7 @@ class EditorPointView: ScriptView
 		
 		bool is_in_bound = (mouse_x < x + h && mouse_x > x - h) && (mouse_y < y + h && mouse_y > y - h);
 		//Print(vector.Distance(transform_pos, GetGame().GetCurrentCameraPosition()));
-		m_LayoutRoot.SetAlpha(is_in_bound || !GetGame().GetUIManager().IsCursorVisible() || m_EditorObject.IsSelected());
+		m_LayoutRoot.SetAlpha(is_in_bound || !GetGame().GetUIManager().IsCursorVisible() || m_ObjectNode.IsSelected());
 		
 		m_LayoutRoot.SetPos(screen_position[0] - w / 2, screen_position[1] - h / 2);
 		m_LayoutRoot.Show(screen_position[2] > 0 && (vector.Distance(transform_pos, GetGame().GetCurrentCameraPosition()) < m_CameraDistance));
@@ -70,15 +70,15 @@ class EditorPointView: ScriptView
 		switch (button) {
 			case MouseState.LEFT: {
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
+					m_ObjectNode.SetSelected(!m_ObjectNode.IsSelected());
 					return true;
 				}
 				
 				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					m_EditorObject.ClearSelections();
+					m_ObjectNode.ClearSelections();
 				}
 				
-				m_EditorObject.SetSelected(true);
+				m_ObjectNode.SetSelected(true);
 				
 				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CheckForDragging, 100);
 				return true;
@@ -87,7 +87,7 @@ class EditorPointView: ScriptView
 			case MouseState.MIDDLE: {
 				/*
 				EditorCamera camera = GetDayZGame().GetEditor().GetCamera();
-				vector pos = m_EditorObject.GetObject().GetPosition();
+				vector pos = m_ObjectNode.GetObject().GetPosition();
 				pos[1] = camera.GetPosition()[1];
 				camera.SendToPosition(pos);*/
 				return true;
@@ -95,17 +95,17 @@ class EditorPointView: ScriptView
 			
 			case MouseState.RIGHT: {
 				/*
-				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
-					EditorObject.ClearSelections();
+				if (!m_ObjectNode.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
+					ObjectNode.ClearSelections();
 				}
 				
-				m_EditorObject.SetSelected(true);
+				m_ObjectNode.SetSelected(true);
 				
 				if (EditorHud.CurrentMenu) {
 					delete EditorHud.CurrentMenu;
 				}
 				
-				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y, m_EditorObject);
+				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y, m_ObjectNode);
 				*/
 				return true;
 			}

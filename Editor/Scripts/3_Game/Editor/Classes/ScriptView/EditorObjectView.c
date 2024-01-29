@@ -1,16 +1,16 @@
-class EditorObjectView: ScriptView
+class ObjectNodeView: ScriptView
 {
-	protected EditorObject m_EditorObject;
+	protected ObjectNode m_ObjectNode;
 	
 	ButtonWidget Button;
 	ImageWidget Image, Outline;
 	
-	void EditorObjectView(EditorObject editor_object)
+	void ObjectNodeView(ObjectNode editor_object)
 	{
-		m_EditorObject = editor_object;
-		m_EditorObject.OnSelectionChanged.Insert(OnSelectionChange);
+		m_ObjectNode = editor_object;
+		m_ObjectNode.OnSelectionChanged.Insert(OnSelectionChange);
 		
-		Symbols icon = m_EditorObject.GetIcon();
+		Symbols icon = m_ObjectNode.GetIcon();
 		
 		Image.LoadImageFile(0, icon.Solid());
 		Image.SetImage(0);
@@ -26,7 +26,7 @@ class EditorObjectView: ScriptView
 	
 	override void Update(float dt)
 	{
-		vector base_position = m_EditorObject.GetBasePoint();
+		vector base_position = m_ObjectNode.GetBasePoint();
 		base_position = GetGame().GetScreenPos(base_position);
 		
 		if (base_position[2] > 0) {
@@ -55,7 +55,7 @@ class EditorObjectView: ScriptView
 	{
 		switch (button) {
 			case 0: {
-				if (m_EditorObject.IsPlacing()) {
+				if (m_ObjectNode.IsPlacing()) {
 					return true;
 				}
 				
@@ -64,9 +64,9 @@ class EditorObjectView: ScriptView
 				}
 				
 				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_EditorObject.SetSelected(!m_EditorObject.IsSelected());
+					m_ObjectNode.SetSelected(!m_ObjectNode.IsSelected());
 				} else {
-					m_EditorObject.SetSelected(true);
+					m_ObjectNode.SetSelected(true);
 				}
 				
 				return true;

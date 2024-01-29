@@ -120,7 +120,7 @@ class TreeView: ScriptView
 		
 		hud.SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());
 		
-		EditorPlaceable placeable = EditorPlaceable.Cast(m_Node);
+		PlaceableNode placeable = PlaceableNode.Cast(m_Node);
 		if (placeable) {
 			Object object = GetGame().CreateObjectEx(placeable.GetUUID(), vector.Zero, ECE_LOCAL);
 			EntityAI entity = EntityAI.Cast(object);

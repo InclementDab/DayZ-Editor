@@ -1,18 +1,18 @@
-class EditorObject: TreeNode
+class ObjectNode: TreeNode
 {	
-	static ref map<Object, EditorObject> ByObject = new map<Object, EditorObject>();
+	static ref map<Object, ObjectNode> ByObject = new map<Object, ObjectNode>();
 	
 	static const int VERSION = 1;
 		
 	protected Object m_Object;
-	protected EditorObjectFlags m_Flags;
+	protected ObjectNodeFlags m_Flags;
 		
 	protected ref array<vector> m_Corners = {};
 	protected ref map<ETransformationAxis, ref Plane> m_BoundingBoxSurfaces = new map<ETransformationAxis, ref Plane>();
 	protected ref map<ETransformationAxis, EditorSnapPoint> m_SnapFaces = new map<ETransformationAxis, EditorSnapPoint>();
 	
 	protected ref array<ref EditorPointView> m_PointViews = {};
-	protected ref EditorObjectView m_EditorObjectView;
+	protected ref ObjectNodeView m_ObjectNodeView;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 
@@ -20,7 +20,7 @@ class EditorObject: TreeNode
 	
 	protected Object m_TranslationGizmo;
 	
-	void EditorObject(string uuid, string display_name, Symbols icon, Object object, int flags = EFE_DEFAULT)
+	void ObjectNode(string uuid, string display_name, Symbols icon, Object object, int flags = EFE_DEFAULT)
 	{
 		m_Flags = flags;
 		m_Object = object;
@@ -30,7 +30,7 @@ class EditorObject: TreeNode
 		}
 	}
 		
-	void ~EditorObject()
+	void ~ObjectNode()
 	{		
 		GetGame().ObjectDelete(m_Object);
 		EditorBoundingBox.Destroy(m_Object);
@@ -162,7 +162,7 @@ class EditorObject: TreeNode
 			m_SnapFaces[axis] = snap_point;
 		}
 							
-		m_EditorObjectView = new EditorObjectView(this);
+		m_ObjectNodeView = new ObjectNodeView(this);
 		
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
@@ -233,7 +233,7 @@ class EditorObject: TreeNode
 		super.SetSelected(selected);
 		
 		if (selected) {
-			if (((m_Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX)) {
+			if (((m_Flags & ObjectNodeFlags.BBOX) == ObjectNodeFlags.BBOX)) {
 				//EditorBoundingBox.Create(m_Object);
 			}
 			
@@ -303,9 +303,9 @@ class EditorObject: TreeNode
 		}
 		
 		if (state) {
-			SetFlag(EditorObjectFlags.HIDDEN);
+			SetFlag(ObjectNodeFlags.HIDDEN);
 		} else {
-			ClearFlag(EditorObjectFlags.HIDDEN);
+			ClearFlag(ObjectNodeFlags.HIDDEN);
 		}
 	}
 	
@@ -325,22 +325,22 @@ class EditorObject: TreeNode
 		return result;
 	}
 			
-	void SetFlag(EditorObjectFlags flag)
+	void SetFlag(ObjectNodeFlags flag)
 	{
 		m_Flags |= flag;
 	}
 	
-	void ClearFlag(EditorObjectFlags flag)
+	void ClearFlag(ObjectNodeFlags flag)
 	{
 		m_Flags &= ~flag;
 	}
 	
-	bool IsFlagEnabled(EditorObjectFlags flag)
+	bool IsFlagEnabled(ObjectNodeFlags flag)
 	{
 		return ((m_Flags & flag) == flag);
 	}
 	
-	EditorObjectFlags GetFlags()
+	ObjectNodeFlags GetFlags()
 	{
 		return m_Flags;
 	}
@@ -355,11 +355,11 @@ class EditorObject: TreeNode
 		return m_EditorSnapPoints;
 	}
 	
-	static array<EditorObject> GetSelectedEditorObjects()
+	static array<ObjectNode> GetSelectedObjectNodes()
 	{
-		array<EditorObject> editor_objects = {};
+		array<ObjectNode> editor_objects = {};
 		foreach (TreeNode selectable_base: SelectedObjects) {
-			EditorObject editor_object = EditorObject.Cast(selectable_base);
+			ObjectNode editor_object = ObjectNode.Cast(selectable_base);
 			if (editor_object) {
 				editor_objects.Insert(editor_object);
 			}
