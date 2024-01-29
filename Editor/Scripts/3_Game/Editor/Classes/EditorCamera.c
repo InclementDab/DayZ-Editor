@@ -104,20 +104,7 @@ class EditorCamera: Camera
 	
 	Raycast PerformCursorRaycast(Object ignore = null)
 	{
-		Ray cursor_ray = GetCursorRay();
-		Ray output_ray = new Ray();
-		Object hit_object;
-		
-		float fraction;
-		if (!DayZPhysics.RayCastBullet(cursor_ray.Position, cursor_ray.Position + cursor_ray.Direction * 1000.0, PhxInteractionLayers.TERRAIN, ignore, hit_object, output_ray.Position, output_ray.Direction, fraction)) {
-			return Raycast.INVALID;
-		}
-		
-		Raycast ray_cast = new Raycast();
-		ray_cast.Source = cursor_ray;
-		ray_cast.Bounce = output_ray;
-		ray_cast.Hit = hit_object;		
-		return ray_cast;
+		return GetCursorRay().PerformRaycast(ignore);
 	}
 	
 	Ray GetCursorRay()

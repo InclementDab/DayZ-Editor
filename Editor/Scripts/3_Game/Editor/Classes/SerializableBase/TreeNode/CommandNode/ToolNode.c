@@ -14,9 +14,16 @@ class ToolNode: CommandNode
 	// Called in editor when running, return TRUE when you want editor to continue processing inputs
 	bool Update(float dt, Raycast raycast)
 	{
-		if (raycast.Bounce != Raycast.INVALID) {
+		if (raycast.Bounce) {
 			raycast.Debug();
 			Shape.CreateSphere(COLOR_GREEN, ShapeFlags.ONCE, raycast.Bounce.Position, 0.5);
+			
+			if (raycast.Hit) {
+				TreeNode node = GetEditor().FindNodeFromObject(raycast.Hit);
+				if (node) {
+					Print(node);
+				}
+			}
 		}
 		
 		
