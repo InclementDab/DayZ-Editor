@@ -1196,7 +1196,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Open"
+           Node "Commands\Open"
           }
          }
         }
@@ -1250,7 +1250,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Save"
+           Node "Commands\Save"
           }
          }
         }
@@ -1305,7 +1305,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "SaveAs"
+           Node "Commands\SaveAs"
           }
          }
         }
@@ -1405,7 +1405,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Cut"
+           Node "Commands\Cut"
           }
          }
         }
@@ -1459,7 +1459,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Copy"
+           Node "Commands\Copy"
           }
          }
         }
@@ -1513,7 +1513,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Paste"
+           Node "Commands\Paste"
           }
          }
         }
@@ -1614,7 +1614,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Lock"
+           Node "Commands\Lock"
           }
          }
         }
@@ -1668,7 +1668,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Unlock"
+           Node "Commands\Unlock"
           }
          }
         }
@@ -1769,7 +1769,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Magnet"
+           Node "Commands\Magnet"
           }
          }
         }
@@ -1823,7 +1823,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Ground"
+           Node "Commands\Ground"
           }
          }
         }
@@ -1877,7 +1877,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Snap"
+           Node "Commands\Snap"
           }
          }
         }
@@ -1978,7 +1978,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Weather"
+           Node "Commands\Weather"
           }
          }
         }
@@ -2032,7 +2032,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Camera"
+           Node "Commands\Camera"
           }
          }
         }
@@ -2136,7 +2136,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Afterlife"
+           Node "Commands\Afterlife"
           }
          }
         }
@@ -2419,7 +2419,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "BoxSelect"
+           Node "Commands\BoxSelect"
           }
          }
         }
@@ -2479,7 +2479,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "CircleSelect"
+           Node "Commands\CircleSelect"
           }
          }
         }
@@ -2537,7 +2537,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "LassoSelect"
+           Node "Commands\LassoSelect"
           }
          }
         }
@@ -2642,7 +2642,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Tools\Translate"
+           Node "Commands\Tools\Translate"
           }
          }
         }
@@ -2702,7 +2702,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "CircleSelect"
+           Node "Commands\Tools\Rotate"
           }
          }
         }
@@ -2760,7 +2760,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "LassoSelect"
+           Node "Commands\Tools\Scale"
           }
          }
         }
@@ -2865,7 +2865,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Bolt"
+           Node "Commands\Bolt"
           }
          }
         }
@@ -3149,11 +3149,6 @@ FrameWidgetClass Root {
          }
         }
        }
-       {
-        ScriptParamsClass {
-         Menu "File"
-        }
-       }
       }
       GridSpacerWidgetClass Edit {
        ignorepointer 1
@@ -3206,11 +3201,6 @@ FrameWidgetClass Root {
            "text valign" center
           }
          }
-        }
-       }
-       {
-        ScriptParamsClass {
-         Menu "Edit"
         }
        }
       }
@@ -3268,11 +3258,6 @@ FrameWidgetClass Root {
          }
         }
        }
-       {
-        ScriptParamsClass {
-         Menu "View"
-        }
-       }
       }
       GridSpacerWidgetClass Mission {
        ignorepointer 1
@@ -3325,11 +3310,6 @@ FrameWidgetClass Root {
            "text valign" center
           }
          }
-        }
-       }
-       {
-        ScriptParamsClass {
-         Menu "Mission"
         }
        }
       }
@@ -3448,7 +3428,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Undo"
+           Node "Commands\Undo"
           }
          }
         }
@@ -3501,7 +3481,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Redo"
+           Node "Commands\Redo"
           }
          }
         }

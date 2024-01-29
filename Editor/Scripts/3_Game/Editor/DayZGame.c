@@ -31,8 +31,9 @@ modded class DayZGame
 			m_Server.Add(m_Editor);
 			m_Editor.Synchronize();
 		}*/
-				
-		return Editor.Cast(m_Server[GetUserManager().GetTitleInitiator().GetUid()]);
+			
+		// Dont use Get here, it has errors builtin on null return
+		return Editor.Cast(m_Server.Children[GetUserManager().GetTitleInitiator().GetUid()]);
 #endif
 	}
 			

@@ -116,8 +116,7 @@ class EditorCamera: Camera
 		Raycast ray_cast = new Raycast();
 		ray_cast.Source = cursor_ray;
 		ray_cast.Bounce = output_ray;
-		ray_cast.Hit = hit_object;
-		
+		ray_cast.Hit = hit_object;		
 		return ray_cast;
 	}
 	

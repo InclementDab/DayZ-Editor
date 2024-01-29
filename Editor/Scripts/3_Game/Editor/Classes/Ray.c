@@ -18,21 +18,6 @@ class Ray: Managed
 	
 	void Debug()
 	{
-		//Shape.CreateSphere(COLOR_WHITE, ShapeFlags.ONCE, Position, 0.1);
-		Shape.CreateArrow(Position, GetPoint(1.0), 1.0, COLOR_GREEN, ShapeFlags.ONCE);
-	}
-}
-
-class Raycast: Managed
-{
-	static const ref Raycast INVALID = new Raycast();
-	
-	ref Ray Source = Ray.INVALID;
-	ref Ray Bounce = Ray.INVALID;
-	Object Hit;
-	
-	void Debug()
-	{
-		Bounce.Debug();
+		Shape.CreateArrow(Position, GetPoint(0.5), 1.0, COLOR_BLUE, ShapeFlags.ONCE);
 	}
 }

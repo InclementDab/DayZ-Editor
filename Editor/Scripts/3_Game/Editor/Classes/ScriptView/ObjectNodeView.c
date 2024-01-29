@@ -39,14 +39,12 @@ class ObjectNodeView: ScriptView
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
-		GetDayZGame().GetEditor().GetHud().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 150.0 / 255.0, 100);
-		GetDayZGame().GetEditor().GetHud().ClearCursor();
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	

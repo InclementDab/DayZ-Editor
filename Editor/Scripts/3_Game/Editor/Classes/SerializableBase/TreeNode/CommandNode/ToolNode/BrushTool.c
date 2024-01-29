@@ -1,4 +1,4 @@
-class EditorBrush: ToolNode
+class BrushTool: ToolNode
 {
 	static const float ENTITY_COUNT_PER_SEC = 15.0;
 	

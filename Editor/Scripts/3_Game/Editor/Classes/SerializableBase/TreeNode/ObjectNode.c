@@ -1,6 +1,7 @@
 class ObjectNode: TreeNode
 {
 	static const int VERSION = 1;
+	static ref map<Object, ObjectNode> All = new map<Object, ObjectNode>();
 		
 	protected Object m_Object;
 	protected ObjectNodeFlags m_Flags;
@@ -30,6 +31,13 @@ class ObjectNode: TreeNode
 		
 	void ~ObjectNode()
 	{		
+		if (m_Object) {
+			All.Remove(m_Object);
+		} else {
+			// Does this work if the object gets deleted? :)
+			All.RemoveElement(All.GetValueArray().Find(this));
+		}
+		
 		GetGame().ObjectDelete(m_Object);
 		EditorBoundingBox.Destroy(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
@@ -56,7 +64,8 @@ class ObjectNode: TreeNode
 			m_TranslationGizmo.SetTransform(mat);
 		}
 		
-				
+		Shape.CreateSphere(COLOR_APPLE, ShapeFlags.ONCE, m_Object.GetBoundingCenter().Multiply4(transform), 0.25);
+		
 		for (int i = 0; i < 6; i++) {
 			// Debug
 			//m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
@@ -90,6 +99,7 @@ class ObjectNode: TreeNode
 	protected void InitObject(notnull Object object)
 	{
 		m_Object = object;
+		All[m_Object] = this;
 		
 		vector transform[4];
 		m_Object.GetTransform(transform);

@@ -1,4 +1,4 @@
-class ToolNode: TreeNode
+class ToolNode: CommandNode
 {
 	override void OnSelectionChanged(bool state)
 	{
@@ -19,12 +19,23 @@ class ToolNode: TreeNode
 			Shape.CreateSphere(COLOR_GREEN, ShapeFlags.ONCE, raycast.Bounce.Position, 0.5);
 		}
 		
+		
+		
 		return true;
 	}
 	
-	// Probably needs to be flags
-	bool IsExclusiveTool()
+	void OnEnterNode(notnull TreeNode node)
 	{
-		return true;
+		GetEditor().GetHud().SetCursor(m_Icon);
+	}
+	
+	void OnExitNode(notnull TreeNode node)
+	{
+		GetEditor().GetHud().ClearCursor();
+	}
+
+	array<string> GetXORNodes()
+	{
+		return {};
 	}
 }
