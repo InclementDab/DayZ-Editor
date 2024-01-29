@@ -107,13 +107,13 @@ class TreeNode: SerializableBase
 		array<string> full_path = {};
 		uuid.Split(PATH_SEPERATOR, full_path);
 		TreeNode node = this;
-		for (int i = 0; i < full_path.Count(); i++) {
+		for (int i = 0; i < full_path.Count(); i++) {			
+			node = node.Children[full_path[i]];
+			
 			if (!node) {
-				Error("Could not find child with id " + full_path[i]);
+				Error(string.Format("[%1] Could not find child with id %2", m_UUID, full_path[i]));
 				break;
 			}
-			
-			node = node.Children[uuid];
 		}
 		
 		return node;
