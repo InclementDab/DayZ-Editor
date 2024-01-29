@@ -69,8 +69,8 @@ class Editor: TreeNode
 		commands.Add(new CommandNode("LassoSelect", "Lasso Select", Symbols.LASSO, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("New", "New File", Symbols.FILE, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Open", "Open File", Symbols.FOLDER_OPEN, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("New", "New", Symbols.FILE, ShortcutKeyType.HOLD));
+		commands.Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, ShortcutKeyType.HOLD));
@@ -197,7 +197,11 @@ class Editor: TreeNode
 		}		
 #endif
 		
+#ifndef SERVER
+#ifndef WORKBENCH
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+#endif
+#endif
 	}
 
 	void ~Editor() 
@@ -272,7 +276,7 @@ class Editor: TreeNode
 		}
 			
 		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().GetName().Contains("Panel")) {
-			//return;
+			return;
 		}
 		
 		Raycast raycast = m_Camera.PerformCursorRaycast();	
@@ -431,9 +435,6 @@ class Editor: TreeNode
 		if (GetGame().GetInput().LocalPress("EditorToggleActive")) {
 			SetActive(!IsActive());
 		}
-		
-		Widget root_widget = EnScriptVar<Widget>.Get(GetGame().GetMission(), "m_HudRootWidget");
-		root_widget.Show(!IsActive());
 	}
 				
 	override void Write(Serializer serializer, int version)

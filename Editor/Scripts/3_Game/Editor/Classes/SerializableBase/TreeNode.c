@@ -151,9 +151,13 @@ class TreeNode: SerializableBase
 		m_Parent = parent;
 		
 		// Update visual display
-		if (m_Parent && !GetGame().IsDedicatedServer()) {
+#ifndef SERVER
+#ifndef WORKBENCH
+		if (m_Parent) {
 			m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(GetNodeView());
 		}
+#endif
+#endif
 	}
 	
 	TreeNode GetParent()

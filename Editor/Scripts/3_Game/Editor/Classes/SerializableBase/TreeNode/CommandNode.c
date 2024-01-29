@@ -9,7 +9,9 @@ class CommandNode: TreeNode
 		m_ShortcutKeyType = key_type;
 		
 #ifndef SERVER
+#ifndef WORKBENCH
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(PollShortcutExecution);
+#endif
 #endif
 	}
 	
@@ -25,7 +27,10 @@ class CommandNode: TreeNode
 		switch (m_UUID) {
 			case "CursorToggle": {
 				GetGame().GetUIManager().ShowCursor(selected);
-				GetEditor().GetHud().ClearCursor();
+				if (GetEditor().GetHud()) {
+					GetEditor().GetHud().ClearCursor();
+				}
+				
 				break;
 			}
 			
@@ -74,7 +79,8 @@ class CommandNode: TreeNode
 			
 			case "Delete": {
 				foreach (TreeNode node: TreeNode.SelectedObjects) {					
-					GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());					
+					GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());	
+					node.GetParent().Children.Remove(node.GetUUID());				
 					delete node;
 					GetEditor().GetObjects().Synchronize();
 					GetEditor().PlaySound(EditorSounds.HIGHLIGHT);

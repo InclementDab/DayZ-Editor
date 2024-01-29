@@ -1,5 +1,6 @@
 class EditorHud: ScriptView
 {	
+	protected Editor m_Editor;
 	protected EditorHudController m_TemplateController;
 	
 	Widget Cursor, CursorTooltip;
@@ -38,6 +39,7 @@ class EditorHud: ScriptView
 		
 	void EditorHud(notnull Editor editor)
 	{		
+		m_Editor = editor;
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 				
 		GetGame().GetMission().GetHud().ShowHudUI(false);
@@ -63,6 +65,9 @@ class EditorHud: ScriptView
 	override void Update(float dt)
 	{
 		super.Update(dt);
+		
+		Widget root_widget = EnScriptVar<Widget>.Get(GetGame().GetMission(), "m_HudRootWidget");
+		root_widget.Show(!m_Editor.IsActive());
 		
 		int x, y;
 		GetScreenSize(x, y);

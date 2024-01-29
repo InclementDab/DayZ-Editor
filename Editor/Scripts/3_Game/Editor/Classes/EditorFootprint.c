@@ -73,8 +73,6 @@ class EditorFootprint: TreeNode
 		}
 						
 		current.Read(Copy.GetReadContext(), 0);			
-		delete Copy;
-		
 	}
 		
 	void Redo()

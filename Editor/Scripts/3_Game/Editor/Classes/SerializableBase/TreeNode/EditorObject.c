@@ -212,14 +212,17 @@ class EditorObject: TreeNode
 		serializer.Read(transform);
 		if (!m_Object) {	
 			m_Object = Editor.CreateObject(type, transform);
+			if (!m_Object)  {
+				Print("Failed to create object on type " + type);
+				return false;
+			}
+			
 			if (!GetGame().IsDedicatedServer()) {
 				InitObject(m_Object);
 			}
 		}
 		
-		if (m_Object)  {
-			m_Object.SetTransform(transform);
-		}
+		m_Object.SetTransform(transform);		
 				
 		serializer.Read(m_Flags);
 		return true;

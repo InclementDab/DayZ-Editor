@@ -1,0 +1,191 @@
+FrameWidgetClass Root {
+ position 0 0
+ size 540 480
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ scaled 0
+ {
+  PanelWidgetClass Background {
+   ignorepointer 1
+   color 0.2353 0.2353 0.2353 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
+   style rover_sim_colorable
+  }
+  PanelWidgetClass Header {
+   ignorepointer 1
+   color 0.1176 0.1176 0.0588 1
+   size 1 56
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   style rover_sim_colorable
+   {
+    FrameWidgetClass Icon {
+     ignorepointer 1
+     size 25 25
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     {
+      ImageWidgetClass IconImage {
+       ignorepointer 1
+       color 1 1 1 0.3922
+       size 17 17
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       image0 "set:solid image:file"
+       mode blend
+       "src alpha" 1
+       "stretch mode" none
+       filter 0
+      }
+     }
+    }
+    GridSpacerWidgetClass HeaderCenter {
+     visible 1
+     ignorepointer 1
+     position 37 0
+     size 154 26
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     Padding 0
+     Margin 6
+     "Size To Content H" 1
+     content_halign center
+     content_valign center
+     Columns 1
+     Rows 1
+     {
+      TextWidgetClass HeaderText {
+       ignorepointer 1
+       size 48 48
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       text "New File.."
+       font "gui/fonts/MetronBook"
+       "size to text h" 1
+       "text halign" center
+       "text valign" center
+      }
+     }
+    }
+    GridSpacerWidgetClass WindowButtonGrid {
+     ignorepointer 1
+     size 132 24
+     halign right_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     content_halign center
+     Columns 2
+     Rows 1
+     {
+      ButtonWidgetClass Minimize {
+       position 0 0
+       size 17 17
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       font "gui/fonts/Metron"
+       {
+        ImageWidgetClass MinimizeIcon {
+         ignorepointer 1
+         position 0 0
+         size 16 16
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         image0 "set:regular image:window_minimize"
+         mode blend
+         "src alpha" 1
+        }
+       }
+      }
+      ButtonWidgetClass Exit {
+       color 0.6863 0.2588 0.2588 1
+       position 0 0
+       size 17 17
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       font "gui/fonts/Metron"
+       {
+        ImageWidgetClass ExitIcon {
+         ignorepointer 1
+         position 0 0
+         size 14 14
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         image0 "set:regular image:x"
+         mode blend
+         "src alpha" 1
+         filter 1
+         nocache 0
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass Outline {
+   ignorepointer 1
+   color 0.3137 0.3137 0.3137 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
+   style Outline_1px
+  }
+ }
+}
