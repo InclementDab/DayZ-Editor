@@ -151,7 +151,7 @@ class TreeNode: SerializableBase
 		
 		return full_path;
 	}
-		
+			
 	void SetParent(TreeNode parent)
 	{
 		m_Parent = parent;
@@ -226,13 +226,7 @@ class TreeNode: SerializableBase
 	{
 		return false;
 	}
-	
-	// If false, it will still call OnSelectionChanged(true) once
-	bool Selectable()
-	{
-		return true;
-	}
-						
+							
 	override void Write(Serializer serializer, int version)
 	{		
 		serializer.Write(m_UUID);
@@ -311,12 +305,7 @@ class TreeNode: SerializableBase
 		
 		return m_NodeView;
 	}
-			
-	bool CanSelect()
-	{
-		return true;
-	}
-	
+				
 #ifdef DIAG_DEVELOPER
 	void Debug(int depth)
 	{

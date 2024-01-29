@@ -34,12 +34,16 @@ class Editor: TreeNode
 		
 	protected ref map<string, TreeNode> m_CommandShortcutMap = new map<string, TreeNode>();
 		
-	static const string EDITED_OBJECTS = "EditedObjects";
+	static const string EDITS = "Edits";
+		static const string BRUSHED = "Brushed";
+		static const string HIDDEN = "Hidden";
+	
 	static const string COMMANDS = "Commands";
-	static const string TOOLS = "Tools";
+		static const string TOOLS = "Tools";
+	
 	static const string MENUS = "Menus";
-	static const string UNDO_REDO = "UndoRedo";
-	static const string PLACEABLE_OBJECTS = "Placeables";
+	static const string HISTORY = "UndoRedo";
+	static const string PLACEABLES = "Placeables";
 	static const string BRUSHES = "Brushes";
 	static const string PLACING = "Placing";
 	
@@ -51,10 +55,9 @@ class Editor: TreeNode
 		m_Player = player;	
 		
 		// Load all default categories and placements
-		TreeNode edited_objects = new TreeNode(EDITED_OBJECTS, "Edited Objects", Symbols.OBJECT_GROUP);
-		edited_objects.Add(new TreeNode("PlacedObjects", "Placed Objects", Symbols.HAND));
-		edited_objects.Add(new TreeNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
-		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
+		TreeNode edited_objects = new TreeNode(EDITS, "Edits", Symbols.OBJECT_GROUP);
+		edited_objects.Add(new TreeNode(BRUSHED, "Brushed Objects", Symbols.PAINTBRUSH));
+		edited_objects.Add(new TreeNode(HIDDEN, "Hidden Objects", Symbols.PAINTBRUSH));
 		Add(edited_objects);
 						
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
@@ -110,10 +113,10 @@ class Editor: TreeNode
 		
 		Add(menus);
 				
-		TreeNode undo_redo = new TreeNode(UNDO_REDO, "History", Symbols.CLOCK_ROTATE_LEFT);
+		TreeNode undo_redo = new TreeNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT);
 		Add(undo_redo);
 		
-		TreeNode placeable_objects = new TreeNode(PLACEABLE_OBJECTS, "Placeable Objects", Symbols.ADDRESS_BOOK);
+		TreeNode placeable_objects = new TreeNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK);
 		placeable_objects.Add(new TreeNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
 		placeable_objects.Add(new TreeNode("Plants", "Plants", Symbols.TREE));
 		placeable_objects.Add(new TreeNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
@@ -165,7 +168,7 @@ class Editor: TreeNode
 					category = "AI";
 				}
 				
-				this[PLACEABLE_OBJECTS][category].Add(new PlaceableNode(type, type, Symbols.BUILDING));
+				this[PLACEABLES][category].Add(new PlaceableNode(type, type, Symbols.BUILDING));
 		    }
 		}
 		
@@ -199,12 +202,12 @@ class Editor: TreeNode
 					category = "Rocks";
 				}
 			
-				this[PLACEABLE_OBJECTS][category].Add(new PlaceableNode(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
+				this[PLACEABLES][category].Add(new PlaceableNode(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
 			}
 		}
 
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
-			this[PLACEABLE_OBJECTS]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
+			this[PLACEABLES]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
 #endif
 		
@@ -252,13 +255,7 @@ class Editor: TreeNode
 			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
 			m_Camera.SetActive(true);
 		}
-		
-		Speed = m_Player.GetAnimInterface().BindEvent("RFootUp");
-		Print(Speed);
-		
-		Speed = m_Player.GetAnimInterface().BindCommand("CMD_Jump");
-		Print(Speed);
-		
+				
 		// What?
 		EnScript.SetClassVar(GetDayZGame(), "m_Editor", 0, this);
 	}
@@ -266,7 +263,7 @@ class Editor: TreeNode
 	void InsertHistory(string display_name, Symbols icon, TreeNode node, ScriptReadWriteContext data)
 	{
 		// Clear the stack first
-		foreach (string uuid, TreeNode undo_redo_node: this[UNDO_REDO].Children) {	
+		foreach (string uuid, TreeNode undo_redo_node: this[HISTORY].Children) {	
 			EditorFootprint footprint = EditorFootprint.Cast(undo_redo_node);
 			if (!footprint) {
 				continue;
@@ -276,11 +273,11 @@ class Editor: TreeNode
 				break;
 			}	
 			
-			delete this[UNDO_REDO][uuid];
+			delete this[HISTORY][uuid];
 		}
 		
-		string uuid_generated = string.Format("History:%1", this[UNDO_REDO].Children.Count());		
-		this[UNDO_REDO][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon, node, data);
+		string uuid_generated = string.Format("History:%1", this[HISTORY].Children.Count());		
+		this[HISTORY][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon, node, data);
 	}
 				
 	void Update(float timeslice)
@@ -302,7 +299,7 @@ class Editor: TreeNode
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
-				ClearSelections();
+				//ClearSelections();
 			}
 			/*
 			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {
@@ -343,8 +340,8 @@ class Editor: TreeNode
 					
 			if (input.LocalPress_ID(UAFire)) {
 				InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
-				this[EDITED_OBJECTS]["PlacedObjects"].Add(object_node);
-				this[EDITED_OBJECTS]["PlacedObjects"].Synchronize();
+				this[EDITS].Add(object_node);
+				this[EDITS].Synchronize();
 				this[PLACING].Remove(object_node);
 				
 				// remove it from placing
@@ -409,7 +406,7 @@ class Editor: TreeNode
 		
 	void Undo()
 	{
-		foreach (string uuid, TreeNode node: this[UNDO_REDO].Children) {
+		foreach (string uuid, TreeNode node: this[HISTORY].Children) {
 			EditorFootprint footprint = EditorFootprint.Cast(node);
 			if (!footprint) {
 				continue;
@@ -424,8 +421,8 @@ class Editor: TreeNode
 	
 	void Redo()
 	{
-		for (int i = this[UNDO_REDO].Children.Count() - 1; i >= 0; i--) {
-			EditorFootprint footprint = EditorFootprint.Cast(this[UNDO_REDO].Children.GetElement(i));
+		for (int i = this[HISTORY].Children.Count() - 1; i >= 0; i--) {
+			EditorFootprint footprint = EditorFootprint.Cast(this[HISTORY].Children.GetElement(i));
 			if (!footprint) {
 				continue;
 			}
@@ -439,7 +436,7 @@ class Editor: TreeNode
 	
 	bool CanUndo() 
 	{
-		foreach (string uuid, TreeNode node: this[UNDO_REDO].Children) {
+		foreach (string uuid, TreeNode node: this[HISTORY].Children) {
 			EditorFootprint footprint = EditorFootprint.Cast(node);
 			if (footprint && !footprint.IsUndone()) {
 				return true;
@@ -451,8 +448,8 @@ class Editor: TreeNode
 	
 	bool CanRedo() 
 	{
-		for (int i = this[UNDO_REDO].Children.Count() - 1; i >= 0; i--) {
-			EditorFootprint footprint = EditorFootprint.Cast(this[UNDO_REDO].Children.GetElement(i));
+		for (int i = this[HISTORY].Children.Count() - 1; i >= 0; i--) {
+			EditorFootprint footprint = EditorFootprint.Cast(this[HISTORY].Children.GetElement(i));
 			if (footprint && footprint.IsUndone()) {
 				return true;
 			}
@@ -660,7 +657,7 @@ class Editor: TreeNode
 		
 	TreeNode GetObjects()
 	{
-		return this[EDITED_OBJECTS];
+		return this[EDITS];
 	}
 	
 	TreeNode GetCommands()
@@ -675,12 +672,12 @@ class Editor: TreeNode
 	
 	TreeNode GetUndoRedo()
 	{
-		return this[UNDO_REDO];
+		return this[HISTORY];
 	}
 	
 	TreeNode GetPlaceables()
 	{
-		return this[PLACEABLE_OBJECTS];
+		return this[PLACEABLES];
 	}
 	
 	TreeNode GetBrushes()

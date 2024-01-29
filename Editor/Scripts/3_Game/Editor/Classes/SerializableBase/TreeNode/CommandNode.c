@@ -9,11 +9,7 @@ class CommandNode: TreeNode
 	}
 	
 	bool Update(float dt, Raycast raycast)
-	{
-		if ((GetFocus() && GetFocus().IsInherited(EditBoxWidget)) || !CanSelect()) {
-			return true;
-		}
-		
+	{		
 		// Never null for some reason?
 		UAInput input = GetUApi().GetInputByName(m_UUID);
 		if (input.ID() == -1) {
@@ -111,12 +107,7 @@ class CommandNode: TreeNode
 	{
 		return m_ShortcutKeyType;
 	}
-	
-	override bool Selectable()
-	{
-		return false;
-	}
-	
+
 	bool GetDefaultState()
 	{
 		return false;
