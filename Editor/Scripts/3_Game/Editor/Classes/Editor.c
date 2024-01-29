@@ -59,7 +59,7 @@ class Editor: TreeNode
 		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, ShortcutKeyType.TOGGLE));
 		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, ShortcutKeyType.HOLD));
-		commands.Add(new CircleCommand("Circle", "Circle Selection", Symbols.CIRCLE_DASHED, ShortcutKeyType.PRESS));
+		commands.Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Delete", "Delete", Symbols.TRASH, ShortcutKeyType.PRESS));

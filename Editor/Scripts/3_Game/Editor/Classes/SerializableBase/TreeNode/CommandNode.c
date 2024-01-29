@@ -40,30 +40,7 @@ class CommandNode: TreeNode
 				GetEditor().Redo();
 				break;
 			}
-			
-			case "BoxSelect": {
-				if (editor.GetHud()) { // damn
-					editor.GetHud().CurrentSelectionMode = SelectionMode.BOX;
-				}
-				break;
-			}
-			
-			case "CircleSelect": {
-				if (editor.GetHud()) {
-					editor.GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
-				}
-				
-				break;
-			}
-			
-			case "LassoSelect": {
-				if (editor.GetHud()) {
-					editor.GetHud().CurrentSelectionMode = SelectionMode.LASSO;
-				}
-
-				break;
-			}
-			
+									
 			case "Delete": {
 				array<TreeNode> selected_nodes = GetEditor().GetSelectedNodes();
 				foreach (TreeNode node: selected_nodes) {					

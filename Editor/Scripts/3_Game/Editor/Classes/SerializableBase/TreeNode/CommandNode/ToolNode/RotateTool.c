@@ -4,4 +4,9 @@ class RotateTool: ToolNode
 	{
 		return { "Scale", "Translate" };
 	}
+	
+	override ShortcutKeyType GetShortcutType()
+	{
+		return ShortcutKeyType.TOGGLE;
+	}
 }

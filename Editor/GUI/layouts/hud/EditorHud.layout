@@ -2365,7 +2365,7 @@ FrameWidgetClass Root {
        Columns 4
        Rows 1
        {
-        FrameWidgetClass BoxSelect {
+        FrameWidgetClass Box {
          ignorepointer 1
          color 0.2667 0.298 0.7059 1
          position 0 0
@@ -2379,7 +2379,7 @@ FrameWidgetClass Root {
          scaled 0
          scriptclass "EditorButton"
          {
-          ButtonWidgetClass "BoxSelect.Button" {
+          ButtonWidgetClass "Box.Button" {
            visible 1
            size 0.75 0.75
            halign center_ref
@@ -2394,7 +2394,7 @@ FrameWidgetClass Root {
            "no focus" 0
            switch toggle
            {
-            ImageWidgetClass "BoxSelect.Icon" {
+            ImageWidgetClass "Box.Icon" {
              ignorepointer 1
              color 1 1 1 0.3922
              size 30 30
@@ -2419,11 +2419,11 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Commands\BoxSelect"
+           Node "Commands\Box"
           }
          }
         }
-        FrameWidgetClass CircleSelect {
+        FrameWidgetClass Ellipse {
          ignorepointer 1
          color 0.2667 0.298 0.7059 1
          position 0 0
@@ -2438,7 +2438,7 @@ FrameWidgetClass Root {
          draggable 0
          scriptclass "EditorButton"
          {
-          ButtonWidgetClass "CircleSelect.Button" {
+          ButtonWidgetClass "Ellipse.Button" {
            visible 1
            size 0.75 0.75
            halign center_ref
@@ -2453,7 +2453,7 @@ FrameWidgetClass Root {
            "no focus" 1
            switch once
            {
-            ImageWidgetClass "CircleSelect.Icon" {
+            ImageWidgetClass "Ellipse.Icon" {
              ignorepointer 1
              color 1 1 1 0.3922
              size 30 30
@@ -2479,11 +2479,11 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Commands\CircleSelect"
+           Node "Commands\Ellipse"
           }
          }
         }
-        FrameWidgetClass LassoSelect {
+        FrameWidgetClass Lasso {
          ignorepointer 1
          color 0.2667 0.298 0.7059 1
          position 0 0
@@ -2497,7 +2497,7 @@ FrameWidgetClass Root {
          scaled 0
          scriptclass "EditorButton"
          {
-          ButtonWidgetClass "LassoSelect.Button" {
+          ButtonWidgetClass "Lasso.Button" {
            visible 1
            size 0.75 0.75
            halign center_ref
@@ -2512,7 +2512,7 @@ FrameWidgetClass Root {
            "no focus" 1
            switch once
            {
-            ImageWidgetClass "LassoSelect.Icon" {
+            ImageWidgetClass "Lasso.Icon" {
              ignorepointer 1
              color 1 1 1 0.3922
              size 30 30
@@ -2537,7 +2537,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Node "Commands\LassoSelect"
+           Node "Commands\Lasso"
           }
          }
         }
@@ -3106,7 +3106,7 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
-       scriptclass "EditorMenuTab"
+       scriptclass "EditorButton"
        Padding 0
        Margin 6
        Columns 1
@@ -3149,6 +3149,11 @@ FrameWidgetClass Root {
          }
         }
        }
+       {
+        ScriptParamsClass {
+         Node "Menus\File"
+        }
+       }
       }
       GridSpacerWidgetClass Edit {
        ignorepointer 1
@@ -3161,7 +3166,7 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
-       scriptclass "EditorMenuTab"
+       scriptclass "EditorButton"
        Padding 0
        Margin 6
        Columns 1
@@ -3203,6 +3208,11 @@ FrameWidgetClass Root {
          }
         }
        }
+       {
+        ScriptParamsClass {
+         Node "Menus\Edit"
+        }
+       }
       }
       GridSpacerWidgetClass View {
        ignorepointer 1
@@ -3216,7 +3226,7 @@ FrameWidgetClass Root {
        vexactsize 1
        scaled 0
        draggable 0
-       scriptclass "EditorMenuTab"
+       scriptclass "EditorButton"
        Padding 0
        Margin 6
        Columns 1
@@ -3258,6 +3268,11 @@ FrameWidgetClass Root {
          }
         }
        }
+       {
+        ScriptParamsClass {
+         Node "Menus\View"
+        }
+       }
       }
       GridSpacerWidgetClass Mission {
        ignorepointer 1
@@ -3270,7 +3285,7 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
-       scriptclass "EditorMenuTab"
+       scriptclass "EditorButton"
        Padding 1
        Margin 6
        Columns 1
@@ -3310,6 +3325,11 @@ FrameWidgetClass Root {
            "text valign" center
           }
          }
+        }
+       }
+       {
+        ScriptParamsClass {
+         Node "Menus\View"
         }
        }
       }

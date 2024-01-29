@@ -92,4 +92,9 @@ class TranslateTool: ToolNode
 	{
 		return { "Scale", "Rotate" };
 	}
+	
+	override ShortcutKeyType GetShortcutType()
+	{
+		return ShortcutKeyType.TOGGLE;
+	}
 }
