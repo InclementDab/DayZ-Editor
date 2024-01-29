@@ -43,13 +43,12 @@ class Editor: TreeNode
 	protected ref EditorHud	m_Hud;
 
 	protected ref array<TreeNode> m_SelectedNodes = {};
-	
-	protected vector m_CursorNormal = vector.Aside;
-	
+		
 	protected ref map<string, TreeNode> m_CommandShortcutMap = new map<string, TreeNode>();
 		
 	static const string EDITED_OBJECTS = "EditedObjects";
 	static const string COMMANDS = "Commands";
+	static const string TOOLS = "Tools";
 	static const string MENUS = "Menus";
 	static const string UNDO_REDO = "UndoRedo";
 	static const string PLACEABLE_OBJECTS = "PlaceableObjects";
@@ -66,7 +65,7 @@ class Editor: TreeNode
 		edited_objects.Add(new TreeNode("BrushedObjects", "Brushed Objects",Symbols.BRUSH));
 		edited_objects.Add(new TreeNode("HiddenObjects", "Hidden Objects", Symbols.HIPPO));
 		Add(edited_objects);
-				
+						
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
 		commands.Add(new CommandNode("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.TOGGLE));
 		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, ShortcutKeyType.TOGGLE));
@@ -91,6 +90,13 @@ class Editor: TreeNode
 		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Weather", "Weather", Symbols.CLOUD_SUN, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, ShortcutKeyType.TOGGLE));
+		
+		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
+		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
+		tools.Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
+		tools.Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));
+		commands.Add(tools);
+		
 		Add(commands);
 		
 		TreeNode menus = new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST);
@@ -312,74 +318,6 @@ class Editor: TreeNode
 					Select(editor_object);
 				}
 			}*/			
-		}
-		
-		if (input.LocalHold_ID(UAFire)) {
-			foreach (TreeNode selected_node: m_SelectedNodes) {
-				ObjectNode editor_object_cast = ObjectNode.Cast(selected_node);
-				if (!editor_object_cast) {
-					continue;
-				}
-												
-				vector current_transform[4];
-				editor_object_cast.GetBaseTransform(current_transform);
-				
-				// Held distance placing
-				if (KeyState(KeyCode.KC_LMENU)) {
-					Debug.DrawSphere(raycast.Source.Position, vector.Distance(raycast.Source.Position, current_transform[3]), COLOR_RED, ShapeFlags.ADDITIVE | ShapeFlags.WIREFRAME | ShapeFlags.ONCE);
-					
-					vector v3 = current_transform[1] * raycast.Source.Direction;					
-					float dist_z = vector.Dot(((raycast.Source.Position - current_transform[3]) * current_transform[1]), v3) / v3.LengthSq();
-
-					float d1 = vector.Dot(vector.Up, raycast.Source.Direction);
-					vector x = Math.Cos(d1) * (raycast.Source.Position - current_transform[3]);
-					
-					vector pos = raycast.Source.Position + raycast.Source.Direction * dist_z;
-					
-					current_transform = { current_transform[0], current_transform[1], current_transform[2], pos };
-					editor_object_cast.SetBaseTransform(current_transform);
-				} 
-				
-
-				if (KeyState(KeyCode.KC_LSHIFT)) {
-					
-					vector new_forward = vector.Direction(current_transform[3], raycast.Bounce.Position).Normalized();
-					
-					current_transform = { (current_transform[1] * new_forward).Normalized(), current_transform[1], new_forward, current_transform[3] };
-					
-					editor_object_cast.SetBaseTransform(current_transform);
-					/*
-					vector p1 = Vector(2, 0, 2).Multiply4(current_transform);
-					vector p2 = Vector(-2, 0, -2).Multiply4(current_transform);
-					
-					Shape.Create(ShapeType.BBOX, COLOR_GREEN, ShapeFlags.WIREFRAME | ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.ADDITIVE, p1, p2);
-					
-					float d = 1;
-					float t = -(vector.Dot(vector.Up, raycast.Source.Position) + current_transform[3][1]) / vector.Dot(vector.Up, raycast.Source.Direction);
-					
-					vector result = raycast.Source.Position + raycast.Source.Direction * t;
-					
-					*/
-				}
-				
-				
-				// Any distance placing
-				else {
-					//transform = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
-					//editor_object_cast.SetBaseTransform(transform);
-				}
-			}
-		}
-		
-		if (input.LocalRelease_ID(UAFire)) {
-			foreach (TreeNode selected_node_synch: m_SelectedNodes) {
-				ObjectNode editor_object_sync = ObjectNode.Cast(selected_node_synch);
-				if (!editor_object_sync) {
-					continue;
-				}
-				
-				editor_object_sync.Synchronize();
-			}
 		}
 		
 		if (input.LocalPress_ID(UAZoomIn)) {
@@ -696,6 +634,12 @@ class Editor: TreeNode
 	array<TreeNode> GetSelectedNodes()
 	{
 		return m_SelectedNodes;
+	}
+	
+	TreeNode FindNodeFromObject(Object object)
+	{
+		// Do this better! searching!!!
+		return ObjectNode.All[object];
 	}
 		
 	TreeNode GetObjects()
