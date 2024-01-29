@@ -7,12 +7,66 @@ class CommandNode: TreeNode
 	void CommandNode(string uuid, string display_name, Symbols icon, ShortcutKeyType key_type = ShortcutKeyType.NONE)
 	{
 		m_ShortcutKeyType = key_type;
+	}
+	
+	bool Update(float dt, Raycast raycast)
+	{
+		if ((GetFocus() && GetFocus().IsInherited(EditBoxWidget)) || !CanSelect()) {
+			return true;
+		}
 		
-#ifndef SERVER
-#ifndef WORKBENCH
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(PollShortcutExecution);
-#endif
-#endif
+		if (!m_UAInput) {
+			m_UAInput = GetUApi().GetInputByName(m_UUID);
+			if (m_UAInput.ID() == -1) {
+				//Error("No input validated for " + Type().ToString());
+				return true;
+			}
+		}
+				
+		switch (GetShortcutType()) {
+			case ShortcutKeyType.PRESS: {
+				if (m_UAInput.LocalPress()) {
+					GetEditor().Select(this);
+					return false;
+				}
+				
+				break;
+			}
+			
+			case ShortcutKeyType.DOUBLE: {
+				if (m_UAInput.LocalDoubleClick()) {
+					GetEditor().ToggleSelect(this);
+					return false;
+				}
+				
+				break;
+			}
+			
+			case ShortcutKeyType.HOLD: {
+				if (m_UAInput.LocalHoldBegin()) {
+					GetEditor().Select(this);
+					return false;
+				}
+				
+				if (m_UAInput.LocalRelease()) {
+					GetEditor().Deselect(this);
+					return false;
+				}
+				
+				break;
+			}
+			
+			case ShortcutKeyType.TOGGLE: {
+				if (m_UAInput.LocalPress()) {
+					GetEditor().ToggleSelect(this);
+					return false;
+				}
+				
+				break;
+			}
+		}
+		
+		return true;
 	}
 				
 	override void OnSelectionChanged(bool state)
@@ -55,71 +109,18 @@ class CommandNode: TreeNode
 			}
 		}
 		
-		array<string> xor_selections = GetXorSelections();
-		foreach (string xor: xor_selections) {
-			TreeNode xor_node = m_Parent[xor];
-			if (!xor_node) {
-				Error(string.Format("[%1] couldnt find node to xor %2", m_UUID, xor));
-				continue;
-			}
-			
-			if (state ^ GetEditor().IsSelected(xor_node)) {
-				GetEditor().Deselect(xor_node);
-			}
-		}
-		
-	}
-	
-	protected void PollShortcutExecution()
-	{
-		if ((GetFocus() && GetFocus().IsInherited(EditBoxWidget)) || !CanSelect()) {
-			return;
-		}
-		
-		if (!m_UAInput) {
-			m_UAInput = GetUApi().GetInputByName(m_UUID);
-			if (m_UAInput.ID() == -1) {
-				//Error("No input validated for " + Type().ToString());
-				return; // hoe ass bitch
-			}
-		}
-				
-		switch (GetShortcutType()) {
-			case ShortcutKeyType.PRESS: {
-				if (m_UAInput.LocalPress()) {
-					GetEditor().Select(this);
-					break;
+		if (state) {
+			array<string> xor_selections = GetXorSelections();
+			foreach (string xor: xor_selections) {
+				TreeNode xor_node = m_Parent[xor];
+				if (!xor_node) {
+					Error(string.Format("[%1] couldnt find node to xor %2", m_UUID, xor));
+					continue;
 				}
 				
-				break;
-			}
-			
-			case ShortcutKeyType.DOUBLE: {
-				if (m_UAInput.LocalDoubleClick()) {
-					GetEditor().ToggleSelect(this);
+				if (state ^ GetEditor().IsSelected(xor_node)) {
+					GetEditor().Deselect(xor_node);
 				}
-				
-				break;
-			}
-			
-			case ShortcutKeyType.HOLD: {
-				if (m_UAInput.LocalHoldBegin()) {
-					GetEditor().Select(this);
-				}
-				
-				if (m_UAInput.LocalRelease()) {
-					GetEditor().Deselect(this);
-				}
-				
-				break;
-			}
-			
-			case ShortcutKeyType.TOGGLE: {
-				if (m_UAInput.LocalPress()) {
-					GetEditor().ToggleSelect(this);
-				}
-				
-				break;
 			}
 		}
 	}
@@ -144,12 +145,7 @@ class CommandNode: TreeNode
 		
 		return result;
 	}
-	
-	bool UseCursorWhenActive()
-	{
-		return false;
-	}
-	
+		
 	ShortcutKeyType GetShortcutType()
 	{
 		return m_ShortcutKeyType;

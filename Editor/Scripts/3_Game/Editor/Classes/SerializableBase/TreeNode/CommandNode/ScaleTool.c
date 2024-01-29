@@ -1,4 +1,4 @@
-class ScaleTool: ToolNode
+class ScaleTool: CommandNode
 {
 	override array<string> GetXorSelections()
 	{

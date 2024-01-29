@@ -1,4 +1,4 @@
-class RotateTool: ToolNode
+class RotateTool: CommandNode
 {
 	override array<string> GetXorSelections()
 	{

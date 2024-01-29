@@ -92,6 +92,11 @@ class TreeNode: SerializableBase
 		node.SetParent(this);
 	}
 	
+	void Remove(notnull TreeNode node)
+	{
+		Remove(node.GetUUID());
+	}
+	
 	void Remove(string uuid)
 	{
 		delete Children[uuid];

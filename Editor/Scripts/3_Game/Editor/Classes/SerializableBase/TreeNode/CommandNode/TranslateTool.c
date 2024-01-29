@@ -1,10 +1,20 @@
-class TranslateTool: ToolNode
+class TranslateTool: CommandNode
 {
 	protected vector m_CursorAside = vector.Aside;
 	protected ref Raycast m_StartPosition;
 	
 	override bool Update(float dt, Raycast raycast)
 	{
+		if (raycast && raycast.Bounce) {
+			raycast.Debug();
+			if (raycast.Hit) {
+				TreeNode node = GetEditor().FindNodeFromObject(raycast.Hit);
+				if (node) {
+					//Print(node);
+				}
+			}
+		}
+		
 		Input input = GetGame().GetInput();
 		array<TreeNode> selected_nodes = GetEditor().GetSelectedNodes();
 		

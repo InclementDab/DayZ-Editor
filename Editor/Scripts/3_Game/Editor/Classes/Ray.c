@@ -20,7 +20,7 @@ class Ray: Managed
 		Object hit_object;
 		
 		float fraction;
-		if (!DayZPhysics.RayCastBullet(Position, Position + Direction * 1000.0, PhxInteractionLayers.TERRAIN, ignore, hit_object, output_ray.Position, output_ray.Direction, fraction)) {
+		if (!DayZPhysics.RayCastBullet(Position, Position + Direction * 1000.0, PhxInteractionLayers.TERRAIN | PhxInteractionLayers.CHARACTER | PhxInteractionLayers.VEHICLE | PhxInteractionLayers.ITEM_LARGE | PhxInteractionLayers.ITEM_SMALL | PhxInteractionLayers.BUILDING | PhxInteractionLayers.DOOR, ignore, hit_object, output_ray.Position, output_ray.Direction, fraction)) {
 			return null;
 		}
 		

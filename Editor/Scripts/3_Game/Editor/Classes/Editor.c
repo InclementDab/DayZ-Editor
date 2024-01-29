@@ -19,13 +19,14 @@ class EditorColors
 }
 
 class Editor: TreeNode
-{	
+{		
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
 	protected PlayerIdentity m_Identity;
 	protected DayZPlayer m_Player;
 	
+	protected vector m_CursorNormal = vector.Aside;
 	protected EditorCamera m_Camera;
 	protected ref EditorHud	m_Hud;
 
@@ -38,8 +39,9 @@ class Editor: TreeNode
 	static const string TOOLS = "Tools";
 	static const string MENUS = "Menus";
 	static const string UNDO_REDO = "UndoRedo";
-	static const string PLACEABLE_OBJECTS = "PlaceableObjects";
+	static const string PLACEABLE_OBJECTS = "Placeables";
 	static const string BRUSHES = "Brushes";
+	static const string PLACING = "Placing";
 		
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
@@ -127,6 +129,8 @@ class Editor: TreeNode
 		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		Add(brushes);
+		
+		Add(new TreeNode(PLACING, "Placing", Symbols.FIREPLACE));
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 		string category = "Unknown";
@@ -278,9 +282,10 @@ class Editor: TreeNode
 		}
 			
 		Raycast raycast = m_Camera.PerformCursorRaycast();
-		foreach (TreeNode node: m_SelectedNodes) {
-			ToolNode tool_node = ToolNode.Cast(node);
-			if (tool_node && !tool_node.Update(timeslice, raycast)) {
+
+		foreach (CommandNode node: m_SelectedNodes) {
+			CommandNode command_node = CommandNode.Cast(node);
+			if (command_node && !command_node.Update(timeslice, raycast)) {
 				return;
 			}
 		}
@@ -299,6 +304,41 @@ class Editor: TreeNode
 					Select(editor_object);
 				}
 			}*/			
+		}
+		
+		foreach (string uuid, ObjectNode object_node: Children[PLACING].Children) {
+			vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
+			Math3D.MatrixOrthogonalize4(camera_orthogonal);	
+			
+			vector rotation_mat[3];
+			Math3D.MatrixIdentity3(rotation_mat);
+			if (input.LocalPress_ID(UAZoomInOptics)) {
+				Math3D.YawPitchRollMatrix(Vector(-15, 0, 0), rotation_mat);
+			}
+			
+			if (input.LocalPress_ID(UAZoomOutOptics)) {
+				Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
+			}
+			
+			Math3D.MatrixMultiply3(camera_orthogonal, rotation_mat, camera_orthogonal);
+			
+			//Shape.CreateMatrix(camera_orthogonal);
+			
+			m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
+			
+			//Print(Placing.Count());
+			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
+			object_node.SetBaseTransform(transform);
+					
+			if (input.LocalPress_ID(UAFire)) {
+				InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
+				this[EDITED_OBJECTS]["PlacedObjects"].Add(object_node);
+				this[EDITED_OBJECTS]["PlacedObjects"].Synchronize();
+				this[PLACING].Remove(object_node);
+				
+				// remove it from placing
+				PlaySound(EditorSounds.PLOP);
+			}
 		}
 		
 		if (input.LocalPress_ID(UAZoomIn)) {
@@ -529,7 +569,7 @@ class Editor: TreeNode
 		if (type.Contains("\\") || type.Contains("/")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, !GetGame().IsDedicatedServer());
 		} else {
-			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL | ECE_INITAI | ECE_CREATEPHYSICS);
+			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL | ECE_INITAI | ECE_CREATEPHYSICS | ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_UPDATEPATHGRAPH);
 		}
 		
 		if (!object) {
