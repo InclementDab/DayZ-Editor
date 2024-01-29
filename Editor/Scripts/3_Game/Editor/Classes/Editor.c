@@ -325,7 +325,7 @@ class Editor: TreeNode
 		if (Tool && !Tool.Update(timeslice, raycast)) {
 			return; // MAYBE DDONT DO THIS HERE
 		}
-		
+				
 		vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 		Math3D.MatrixOrthogonalize4(camera_orthogonal);	
 		

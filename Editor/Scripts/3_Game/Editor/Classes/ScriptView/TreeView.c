@@ -159,7 +159,7 @@ class TreeView: ScriptView
 		switch (w) {
 			case Texture: {
 				ShowChildren(false);
-				break;
+				return true;
 			}
 			
 			case Panel: {
@@ -189,15 +189,15 @@ class TreeView: ScriptView
 							hud.Menu.Show(false);
 						}
 						
-						break;
+						return true;
 					}
 				}
 				
-				break;
+				return true;
 			}
 		}	
 		
-		return super.OnMouseButtonDown(w, x, y, button);
+		return false;
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)

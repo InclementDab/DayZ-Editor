@@ -19,9 +19,9 @@ class CommandNode: TreeNode
 	{
 		super.OnSelectionChanged(state);
 		
-		switch (m_UUID) {
+		switch (m_UUID) {			
 			case "CursorToggle": {
-				GetGame().GetUIManager().ShowCursor(state);
+				GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 				if (GetEditor().GetHud()) {
 					GetEditor().GetHud().ClearCursor();
 				}
@@ -40,7 +40,6 @@ class CommandNode: TreeNode
 			}
 			
 			case "BoxSelect": {
-				
 				if (GetEditor().GetHud()) { // damn
 					GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
 				}
@@ -101,12 +100,12 @@ class CommandNode: TreeNode
 		
 		if (!m_UAInput) {
 			m_UAInput = GetUApi().GetInputByName(m_UUID);
-			if (!m_UAInput) {
+			if (m_UAInput.ID() == -1) {
 				//Error("No input validated for " + Type().ToString());
 				return; // hoe ass bitch
 			}
-		}		
-		
+		}
+				
 		switch (GetShortcutType()) {
 			case ShortcutKeyType.PRESS: {
 				if (m_UAInput.LocalPress()) {
