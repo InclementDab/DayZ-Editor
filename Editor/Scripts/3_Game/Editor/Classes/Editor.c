@@ -21,48 +21,6 @@ class EditorColors
 
 class Editor: TreeNode
 {
-	protected ref array<TreeNode> m_SelectedNodes = {};
-	
-	void Select(notnull TreeNode node)
-	{
-		m_SelectedNodes.Insert(node);
-		node.OnSelectionChanged(true);
-	}
-	
-	void Deselect(notnull TreeNode node)
-	{
-		node.OnSelectionChanged(false);
-		m_SelectedNodes.RemoveItemUnOrdered(node);		
-	}
-	
-	void ToggleSelect(notnull TreeNode node)
-	{
-		if (IsSelected(node)) {
-			Deselect(node);
-		} else {
-			Select(node);
-		}
-	}
-	
-	bool IsSelected(notnull TreeNode node)
-	{
-		return m_SelectedNodes.Find(node) != -1;
-	}
-	
-	void ClearSelections()
-	{
-		foreach (TreeNode node: m_SelectedNodes) {
-			node.OnSelectionChanged(false);
-		}
-		
-		m_SelectedNodes.Clear();
-	}
-	
-	array<TreeNode> GetSelectedNodes()
-	{
-		return m_SelectedNodes;
-	}
-	
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	static const int DEFAULT_ENTITY_COUNT = 512;
 	
@@ -73,6 +31,7 @@ class Editor: TreeNode
 	protected ref EditorHud	m_Hud;
 	ref ToolNode Tool;
 
+	protected ref array<TreeNode> m_SelectedNodes = {};
 	ref array<ref ObjectNode> Placing = {};
 	
 	protected vector m_CursorNormal = vector.Aside;
@@ -727,6 +686,46 @@ class Editor: TreeNode
 	bool IsLocal()
 	{
 		return GetGame() && GetGame().GetUserManager() && GetGame().GetUserManager().GetTitleInitiator() && m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
+	}
+	
+	void Select(notnull TreeNode node)
+	{
+		m_SelectedNodes.Insert(node);
+		node.OnSelectionChanged(true);
+	}
+	
+	void Deselect(notnull TreeNode node)
+	{
+		node.OnSelectionChanged(false);
+		m_SelectedNodes.RemoveItemUnOrdered(node);		
+	}
+	
+	void ToggleSelect(notnull TreeNode node)
+	{
+		if (IsSelected(node)) {
+			Deselect(node);
+		} else {
+			Select(node);
+		}
+	}
+	
+	bool IsSelected(notnull TreeNode node)
+	{
+		return m_SelectedNodes.Find(node) != -1;
+	}
+	
+	void ClearSelections()
+	{
+		foreach (TreeNode node: m_SelectedNodes) {
+			node.OnSelectionChanged(false);
+		}
+		
+		m_SelectedNodes.Clear();
+	}
+	
+	array<TreeNode> GetSelectedNodes()
+	{
+		return m_SelectedNodes;
 	}
 		
 	TreeNode GetObjects()
