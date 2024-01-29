@@ -23,7 +23,11 @@ class EditorButton: ScriptedWidgetEventHandler
 		m_Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");				
 		m_IconWidget = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		m_TextWidget = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");
-				
+		
+		if (Node == string.Empty) {
+			return;
+		}
+		
 		m_Node = CommandNode.Cast(GetDayZGame().GetEditor().GetNode(Node));
 		if (!m_Node) {
 			Error(string.Format("Could not find node %1", Node));
@@ -39,12 +43,13 @@ class EditorButton: ScriptedWidgetEventHandler
 	{
 		SymbolSize size = Ternary<SymbolSize>.If(state, SymbolSize.SOLID, SymbolSize.REGULAR);
 		int color = Ternary<int>.If(state, m_LayoutRoot.GetColor(),	ARGB(100, 255, 255, 255));
-		
-		WidgetAnimator.AnimateColor(m_IconWidget, color, 50);
-		
+				
 		Symbols icon = m_Node.GetIcon();
-		m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(state, icon.Solid(), icon.Regular()));
-		m_IconWidget.SetImage(0);
+		if (m_IconWidget) {
+			WidgetAnimator.AnimateColor(m_IconWidget, color, 50);
+			m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(state, icon.Solid(), icon.Regular()));
+			m_IconWidget.SetImage(0);
+		}
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

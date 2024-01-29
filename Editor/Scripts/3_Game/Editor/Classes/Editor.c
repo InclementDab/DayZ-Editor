@@ -8,7 +8,6 @@
 */
 
 
-
 class EditorColors
 {
 	private void EditorColors();
@@ -88,20 +87,20 @@ class Editor: TreeNode
 		Add(commands);
 		
 		TreeNode menus = new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST);
-		TreeNode file_menu = new TreeNode("File", "File", Symbols.FILE_SPREADSHEET);
+		CommandNode file_menu = new CommandNode("File", "File", Symbols.FILE_SPREADSHEET);
 		file_menu.Add(commands["New"]);
 		file_menu.Add(commands["Open"]);
 		file_menu.Add(commands["Save"]);
 		file_menu.Add(commands["SaveAs"]);
 		menus.Add(file_menu);
 		
-		TreeNode edit_menu = new TreeNode("Edit", "Edit", Symbols.FILE_PEN);
+		CommandNode edit_menu = new CommandNode("Edit", "Edit", Symbols.FILE_PEN);
 		menus.Add(edit_menu);
 		
-		TreeNode view_menu = new TreeNode("View", "View", Symbols.BINOCULARS);
+		CommandNode view_menu = new CommandNode("View", "View", Symbols.BINOCULARS);
 		menus.Add(view_menu);
 		
-		TreeNode mission_menu = new TreeNode("Mission", "Mission", Symbols.PERSON_RIFLE);
+		CommandNode mission_menu = new CommandNode("Mission", "Mission", Symbols.PERSON_RIFLE);
 		menus.Add(mission_menu);
 		
 		Add(menus);

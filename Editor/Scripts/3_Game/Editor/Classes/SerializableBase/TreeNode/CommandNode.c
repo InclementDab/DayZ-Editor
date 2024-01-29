@@ -145,6 +145,11 @@ class CommandNode: TreeNode
 		return result;
 	}
 	
+	bool UseCursorWhenActive()
+	{
+		return false;
+	}
+	
 	ShortcutKeyType GetShortcutType()
 	{
 		return m_ShortcutKeyType;

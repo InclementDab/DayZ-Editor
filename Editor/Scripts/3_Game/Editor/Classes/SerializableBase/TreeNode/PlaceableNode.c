@@ -69,4 +69,9 @@ class PlaceableNode: ToolNode
 				
 		return true;
 	}
+	
+	override bool UseCursorWhenActive()
+	{
+		return true;
+	}
 }
