@@ -1,7 +1,5 @@
 class TreeView: ScriptView
 {
-	static ref map<Widget, TreeView> AllTreeViews = new map<Widget, TreeView>();
-	
 	protected TreeViewController m_TemplateController;
 		
 	TextWidget Text;
@@ -23,13 +21,10 @@ class TreeView: ScriptView
 		
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());
 		IconImage.SetImage(0);
-		
-		AllTreeViews[m_LayoutRoot] = this;
 	}
 	
 	void ~TreeView()
 	{
-		AllTreeViews.Remove(m_LayoutRoot);
 	}
 	
 	void OnSelectionChanged(bool state)
@@ -174,8 +169,6 @@ class TreeView: ScriptView
 						return true;
 					}
 				}
-				
-				return true;
 			}
 		}	
 		

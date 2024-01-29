@@ -1,7 +1,6 @@
 // I think its wise... it was
 class CommandNode: TreeNode
 {
-	protected UAInput m_UAInput;
 	protected ShortcutKeyType m_ShortcutKeyType;
 	
 	void CommandNode(string uuid, string display_name, Symbols icon, ShortcutKeyType key_type = ShortcutKeyType.NONE)
@@ -15,17 +14,15 @@ class CommandNode: TreeNode
 			return true;
 		}
 		
-		if (!m_UAInput) {
-			m_UAInput = GetUApi().GetInputByName(m_UUID);
-			if (m_UAInput.ID() == -1) {
-				//Error("No input validated for " + Type().ToString());
-				return true;
-			}
+		// Never null for some reason?
+		UAInput input = GetUApi().GetInputByName(m_UUID);
+		if (input.ID() == -1) {
+			return true;
 		}
-				
+						
 		switch (GetShortcutType()) {
 			case ShortcutKeyType.PRESS: {
-				if (m_UAInput.LocalPress()) {
+				if (input.LocalPress()) {
 					GetEditor().Select(this);
 					return false;
 				}
@@ -34,7 +31,7 @@ class CommandNode: TreeNode
 			}
 			
 			case ShortcutKeyType.DOUBLE: {
-				if (m_UAInput.LocalDoubleClick()) {
+				if (input.LocalDoubleClick()) {
 					GetEditor().ToggleSelect(this);
 					return false;
 				}
@@ -43,12 +40,12 @@ class CommandNode: TreeNode
 			}
 			
 			case ShortcutKeyType.HOLD: {
-				if (m_UAInput.LocalHoldBegin()) {
+				if (input.LocalHoldBegin()) {
 					GetEditor().Select(this);
 					return false;
 				}
 				
-				if (m_UAInput.LocalRelease()) {
+				if (input.LocalRelease()) {
 					GetEditor().Deselect(this);
 					return false;
 				}
@@ -57,7 +54,7 @@ class CommandNode: TreeNode
 			}
 			
 			case ShortcutKeyType.TOGGLE: {
-				if (m_UAInput.LocalPress()) {
+				if (input.LocalPress()) {
 					GetEditor().ToggleSelect(this);
 					return false;
 				}
@@ -72,51 +69,7 @@ class CommandNode: TreeNode
 	override void OnSelectionChanged(bool state)
 	{
 		super.OnSelectionChanged(state);
-		
-		Editor editor = GetEditor();
-		
-		switch (m_UUID) {	
-			case "HudToggle": {
-				if (GetEditor().GetHud()) {
-					GetEditor().GetHud().Show(state);
-				}
-				
-				break;
-			}
-					
-			case "CursorToggle": {
-				GetGame().GetUIManager().ShowCursor(state);
-				if (editor.GetHud()) {
-					editor.GetHud().ClearCursor();
-				}
-				
-				break;
-			}
-			
-			case "Undo": {
-				GetEditor().Undo();
-				break;
-			}
-			
-			case "Redo": {
-				GetEditor().Redo();
-				break;
-			}
-									
-			case "Delete": {
-				array<TreeNode> selected_nodes = GetEditor().GetSelectedNodes();
-				foreach (TreeNode node: selected_nodes) {					
-					editor.InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());	
-					node.GetParent().Children.Remove(node.GetUUID());				
-					delete node;
-					editor.GetObjects().Synchronize();
-					editor.PlaySound(EditorSounds.HIGHLIGHT);
-				}
-				
-				break;
-			}
-		}
-		
+						
 		if (state) {
 			array<string> xor_selections = GetXorSelections();
 			foreach (string xor: xor_selections) {
@@ -157,6 +110,11 @@ class CommandNode: TreeNode
 	ShortcutKeyType GetShortcutType()
 	{
 		return m_ShortcutKeyType;
+	}
+	
+	override bool Selectable()
+	{
+		return false;
 	}
 	
 	bool GetDefaultState()

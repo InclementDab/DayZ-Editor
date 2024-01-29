@@ -226,6 +226,12 @@ class TreeNode: SerializableBase
 	{
 		return false;
 	}
+	
+	// If false, it will still call OnSelectionChanged(true) once
+	bool Selectable()
+	{
+		return true;
+	}
 						
 	override void Write(Serializer serializer, int version)
 	{		

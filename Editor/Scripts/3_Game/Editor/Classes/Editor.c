@@ -42,12 +42,14 @@ class Editor: TreeNode
 	static const string PLACEABLE_OBJECTS = "Placeables";
 	static const string BRUSHES = "Brushes";
 	static const string PLACING = "Placing";
-		
+	
+	TAnimGraphVariable Speed;
+	
 	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
 		m_Player = player;	
-
+		
 		// Load all default categories and placements
 		TreeNode edited_objects = new TreeNode(EDITED_OBJECTS, "Edited Objects", Symbols.OBJECT_GROUP);
 		edited_objects.Add(new TreeNode("PlacedObjects", "Placed Objects", Symbols.HAND));
@@ -78,7 +80,7 @@ class Editor: TreeNode
 		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Weather", "Weather", Symbols.CLOUD_SUN, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, ShortcutKeyType.TOGGLE));
+		commands.Add(new CursorToggle("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, ShortcutKeyType.TOGGLE));
 		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE, ShortcutKeyType.TOGGLE));
 		
 		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
@@ -251,6 +253,12 @@ class Editor: TreeNode
 			m_Camera.SetActive(true);
 		}
 		
+		Speed = m_Player.GetAnimInterface().BindEvent("RFootUp");
+		Print(Speed);
+		
+		Speed = m_Player.GetAnimInterface().BindCommand("CMD_Jump");
+		Print(Speed);
+		
 		// What?
 		EnScript.SetClassVar(GetDayZGame(), "m_Editor", 0, this);
 	}
@@ -284,7 +292,7 @@ class Editor: TreeNode
 			
 		Raycast raycast = m_Camera.PerformCursorRaycast();
 
-		foreach (string command_uuid, TreeNode node: Children[COMMANDS].Children) {
+		foreach (string command_uuid, TreeNode node: Children[COMMANDS][TOOLS].Children) {
 			CommandNode command_node = CommandNode.Cast(node);
 			if (command_node && !command_node.Update(timeslice, raycast)) {
 				return;
@@ -631,6 +639,7 @@ class Editor: TreeNode
 	
 	void ClearSelections()
 	{
+		m_SelectedNodes.Debug();
 		foreach (TreeNode node: m_SelectedNodes) {
 			node.OnSelectionChanged(false);
 		}
