@@ -192,7 +192,7 @@ class Editor: TreeNode
 			}
 		}
 
-		foreach (Param3<typename, string, string> scripted_instance: RegisterObjectNode.Instances) {
+		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
 			this[PLACEABLE_OBJECTS]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
 #endif
@@ -311,12 +311,7 @@ class Editor: TreeNode
 			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 			editor_object_placing.SetBaseTransform(transform);
 		}
-		
-		if (input.LocalPress_ID(UATempRaiseWeapon)) {
-			TreeNode.ClearSelections();			
-			return;
-		}
-		
+				
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {

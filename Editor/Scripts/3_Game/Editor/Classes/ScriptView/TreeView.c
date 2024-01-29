@@ -42,7 +42,7 @@ class TreeView: ScriptView
 		Text.GetScreenSize(w, h);		
 		Panel.SetScreenSize(w, h);
 	}
-	
+		
 	void ShowChildren(bool state)
 	{
 		if (!CollapseIcon) {
@@ -173,6 +173,20 @@ class TreeView: ScriptView
 						}
 						
 						return true;
+					}
+					
+					case 1: {
+						EditorHud hud = GetDayZGame().GetEditor().GetHud();
+						hud.GetTemplateController().MenuItems.Clear();
+						
+						if (m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
+							hud.Menu.Show(true);
+							hud.Menu.SetScreenPos(x, y);
+						} else {
+							hud.Menu.Show(false);
+						}
+						
+						break;
 					}
 				}
 				

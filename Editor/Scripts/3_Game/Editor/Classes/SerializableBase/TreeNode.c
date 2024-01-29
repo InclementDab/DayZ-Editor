@@ -45,6 +45,11 @@ class TreeNode: SerializableBase
 	{
 		delete m_NodeView;
 	}
+	
+	bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
+	{
+		return false;
+	}
 			
 	void Synchronize(PlayerIdentity identity = null)
 	{	

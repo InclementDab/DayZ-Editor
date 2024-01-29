@@ -1,5 +1,16 @@
 class PlaceableNode: TreeNode
 {	
+	override bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
+	{
+		Editor editor = GetDayZGame().GetEditor();
+		list_items.Insert(new CommandMenuItem(editor.GetCommand("Cut")));
+		list_items.Insert(new CommandMenuItem(editor.GetCommand("Copy")));
+		list_items.Insert(new CommandMenuItem(editor.GetCommand("Paste")));
+		list_items.Insert(new CommandMenuDivider());
+		
+		return true;
+	}
+	
 	override void SetSelected(bool selected)
 	{
 		super.SetSelected(selected);
