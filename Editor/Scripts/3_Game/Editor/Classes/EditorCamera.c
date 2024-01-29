@@ -1,4 +1,4 @@
-class EditorCamera: ScriptedCamera
+class EditorCamera: Camera
 {
 	static float UPDATE_ACCUMULATOR_INTERVAL = 0.5;
 	
@@ -18,7 +18,6 @@ class EditorCamera: ScriptedCamera
 	
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		// We are holding control down, essentially
 		if (GetDayZGame().IsLeftCtrlDown() || !IsActive()) {
 			return;
 		}
