@@ -24,7 +24,7 @@ class PlaceableNode: ToolNode
 			m_ObjectNode = new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
 			GetUApi().SupressNextFrame(true);
 		} else {
-			delete m_ObjectNode;
+			//delete m_ObjectNode;
 		}
 	}
 	
