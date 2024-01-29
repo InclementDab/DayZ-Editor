@@ -75,9 +75,17 @@ class CommandNode: TreeNode
 		
 		Editor editor = GetEditor();
 		
-		switch (m_UUID) {			
+		switch (m_UUID) {	
+			case "HudToggle": {
+				if (GetEditor().GetHud()) {
+					GetEditor().GetHud().Show(state);
+				}
+				
+				break;
+			}
+					
 			case "CursorToggle": {
-				GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+				GetGame().GetUIManager().ShowCursor(state);
 				if (editor.GetHud()) {
 					editor.GetHud().ClearCursor();
 				}

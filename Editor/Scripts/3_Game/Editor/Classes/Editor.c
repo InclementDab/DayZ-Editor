@@ -79,6 +79,7 @@ class Editor: TreeNode
 		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Weather", "Weather", Symbols.CLOUD_SUN, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, ShortcutKeyType.TOGGLE));
+		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE, ShortcutKeyType.TOGGLE));
 		
 		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
 		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
@@ -283,7 +284,7 @@ class Editor: TreeNode
 			
 		Raycast raycast = m_Camera.PerformCursorRaycast();
 
-		foreach (CommandNode node: m_SelectedNodes) {
+		foreach (string command_uuid, TreeNode node: Children[COMMANDS].Children) {
 			CommandNode command_node = CommandNode.Cast(node);
 			if (command_node && !command_node.Update(timeslice, raycast)) {
 				return;
@@ -347,23 +348,6 @@ class Editor: TreeNode
 		
 		if (input.LocalRelease_ID(UAZoomIn)) { 
 			m_Camera.FieldOfView = 1.0;
-		}
-				
-		if (input.LocalPress("EditorToggleCursor")) {
-			bool cursor_state = !GetGame().GetUIManager().IsCursorVisible();
-			GetGame().GetUIManager().ShowCursor(cursor_state);
-			GetGame().GetUIManager().ShowUICursor(cursor_state);
-			m_Hud.ClearCursor();
-		}
-		
-		if (input.LocalPress("EditorToggleHudCommand")) {
-			if (m_Camera.IsActive()) {
-				m_Hud.Show(!m_Hud.IsVisible());
-			}
-		}
-		
-		if (GetGame().GetInput().LocalPress("EditorToggleActive")) {
-			SetActive(!IsActive());
 		}
 	}
 				
