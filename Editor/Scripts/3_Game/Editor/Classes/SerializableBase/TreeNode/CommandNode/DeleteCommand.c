@@ -1,6 +1,6 @@
 class DeleteCommand: CommandNode
 {
-	override void SetState(TreeNodeState state)
+	override bool SetState(TreeNodeState state)
 	{
 		/*
 		array<TreeNode> selected_nodes = GetEditor().GetSelectedNodes();

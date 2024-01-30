@@ -47,15 +47,19 @@ class BrushTool: CommandNode
 		return true;
 	}
 	
-	override void SetState(TreeNodeState state)
+	override bool SetState(TreeNodeState state)
 	{
-		super.SetState(state);
+		if (!super.SetState(state)) {
+			return false;
+		}
 		
 		if (state) {
 			m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);
 		} else {
 			GetGame().ObjectDelete(m_Ring);
 		}
+		
+		return true;
 	}
 	
 	array<string> GetBrushedTypes()

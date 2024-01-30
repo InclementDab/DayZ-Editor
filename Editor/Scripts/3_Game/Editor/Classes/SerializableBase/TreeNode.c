@@ -14,17 +14,51 @@ enum TreeNodeState
 	ACTIVE
 };
 
-typedef map<string, ref TreeNode> TreeStrongRef;
-typedef map<string, TreeNode> TreeWeakRef;
+class TreeNodeStateMachine: map<int, ref array<TreeNode>>
+{
+	void TreeNodeStateMachine()
+	{
+		this[TreeNodeState.EMPTY] = {};
+		this[TreeNodeState.HOVER] = {};
+		this[TreeNodeState.ACTIVE] = {};
+	}
+		
+	void SetAllStates(TreeNodeState state)
+	{
+		foreach (TreeNodeState node_state, array<TreeNode> nodes: this) {
+			if (node_state == state) {
+				continue;
+			}
+			
+			foreach (TreeNode node: nodes) {				
+				node.SetState(state);
+			}
+		}
+	}
+}
+
+class TreeNodeChildren: map<string, ref TreeNode>
+{
+	void SetAllStates(TreeNodeState state)
+	{
+		foreach (string uuid, TreeNode node: this) {			
+			if (node.GetState() == state) {
+				continue;
+			}
+						
+			node.SetState(state);
+		}
+	}
+}
 
 class TreeNode: SerializableBase
 {
 	static const string PATH_SEPERATOR = "\\";
-	static ref map<TreeNodeState, ref array<TreeNode>> StateMachine = new map<TreeNodeState, ref array<TreeNode>>();
-	
+	static ref TreeNodeStateMachine StateMachine = new TreeNodeStateMachine();
+		
 	protected string m_UUID;
 	protected TreeNodeState m_TreeNodeState = GetDefaultState();
-	ref map<string, ref TreeNode> Children = new map<string, ref TreeNode>();
+	ref TreeNodeChildren Children = new TreeNodeChildren();
 
 	protected string m_Icon, m_DisplayName;
 	protected TreeNode m_Parent;
@@ -38,11 +72,7 @@ class TreeNode: SerializableBase
 		m_UUID = uuid;
 		m_DisplayName = display_name;
 		m_Icon = icon;
-		
-		if (!StateMachine[m_TreeNodeState]) {
-			StateMachine[m_TreeNodeState] = {};
-		}
-		
+
 		StateMachine[m_TreeNodeState].Insert(this);
 	}
 	
@@ -68,22 +98,23 @@ class TreeNode: SerializableBase
 		}
 	}
 	
-	void SetState(TreeNodeState state)
+	bool SetState(TreeNodeState state)
 	{
-		StateMachine[m_TreeNodeState].RemoveItem(this);
+		if (GetValidStates().Find(state) == -1) {
+			PrintFormat("[%1] Could not change state %2 => %3", m_UUID, typename.EnumToString(TreeNodeState, m_TreeNodeState), typename.EnumToString(TreeNodeState, state));
+			return false;
+		}
+		
+		StateMachine[m_TreeNodeState].RemoveItem(this);	
+		StateMachine[state].Insert(this);
 		
 		m_TreeNodeState = state;
-		if (!StateMachine[m_TreeNodeState]) {
-			StateMachine[m_TreeNodeState] = {};
-		}
-		
-		StateMachine[m_TreeNodeState].Insert(this);
-		
 		if (m_NodeView) {
-			m_NodeView.OnStateChanged(state);
+			m_NodeView.OnStateChanged(m_TreeNodeState);
 		}
 		
-		State_OnChanged.Invoke(this, state);
+		State_OnChanged.Invoke(this, m_TreeNodeState);
+		return true;
 	}
 	
 	TreeNodeState GetState()
@@ -357,6 +388,11 @@ class TreeNode: SerializableBase
 	TreeNodeState GetDefaultState()
 	{
 		return TreeNodeState.EMPTY;
+	}
+	
+	array<TreeNodeState> GetValidStates()
+	{
+		return { TreeNodeState.EMPTY, TreeNodeState.HOVER, TreeNodeState.ACTIVE };
 	}
 				
 #ifdef DIAG_DEVELOPER

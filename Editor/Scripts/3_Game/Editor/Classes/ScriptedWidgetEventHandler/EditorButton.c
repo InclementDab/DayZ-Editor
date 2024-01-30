@@ -44,7 +44,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		switch (state) {
 			case TreeNodeState.EMPTY: {
 				m_Node.GetEditor().GetHud().ClearCursor();
-				WidgetAnimator.AnimateColor(Icon, ARGB(100, 255, 255, 255), 50);
+				//WidgetAnimator.AnimateColor(Icon, ARGB(100, 255, 255, 255), 50);
 				Icon.LoadImageFile(0, m_Node.GetIcon().Regular());
 				Icon.SetImage(0);
 				break;
@@ -58,7 +58,7 @@ class EditorButton: ScriptedWidgetEventHandler
 			
 			case TreeNodeState.ACTIVE: {
 				m_Node.GetEditor().GetHud().ClearCursor();
-				WidgetAnimator.AnimateColor(Icon, m_LayoutRoot.GetColor(), 50);
+				//WidgetAnimator.AnimateColor(Icon, m_LayoutRoot.GetColor(), 50);
 				Icon.LoadImageFile(0, m_Node.GetIcon().Solid());
 				Icon.SetImage(0);
 				break;
@@ -73,7 +73,6 @@ class EditorButton: ScriptedWidgetEventHandler
 		}
 		
 		switch (m_Node.GetShortcutType()) {
-			case ShortcutKeyType.PRESS:
 			case ShortcutKeyType.HOLD: {
 				m_Node.SetState(TreeNodeState.ACTIVE);
 				return true;
@@ -92,6 +91,11 @@ class EditorButton: ScriptedWidgetEventHandler
 		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.HOLD: {
 				m_Node.SetState(TreeNodeState.EMPTY);
+				return true;
+			}
+			
+			case ShortcutKeyType.PRESS: {
+				m_Node.SetState(TreeNodeState.ACTIVE);
 				return true;
 			}
 		}

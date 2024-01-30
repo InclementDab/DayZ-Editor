@@ -143,6 +143,7 @@ class TreeView: ScriptView
 				switch (button) {
 					case 0: {
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
+							m_Node.GetParent().Children.SetAllStates(TreeNodeState.EMPTY);
 							foreach (TreeNode active_nodes: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
 								active_nodes.SetState(TreeNodeState.EMPTY);
 							}
