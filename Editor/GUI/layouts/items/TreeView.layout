@@ -2,7 +2,7 @@ FrameWidgetClass Root {
  visible 1
  clipchildren 0
  position 0 0
- size 0.99 24
+ size 1 30
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -10,25 +10,23 @@ FrameWidgetClass Root {
  scaled 0
  scriptclass ""
  {
-  WrapSpacerWidgetClass Wrapper {
+  FrameWidgetClass Wrapper {
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
    position 0 0
-   size 1 24
+   size 1 30
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
    scaled 0
-   Padding 0
-   Margin 0
    {
     FrameWidgetClass CollapseFrame {
      visible 1
      ignorepointer 0
      position 0 0
-     size 24 24
+     size 30 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -39,7 +37,7 @@ FrameWidgetClass Root {
        visible 0
        color 1 1 1 0.3922
        position 0 0
-       size 12 12
+       size 14 14
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -56,7 +54,7 @@ FrameWidgetClass Root {
          visible 1
          ignorepointer 1
          position 0 0
-         size 5 5
+         size 7 7
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -77,8 +75,8 @@ FrameWidgetClass Root {
     FrameWidgetClass Icon {
      visible 1
      ignorepointer 1
-     position 0 0
-     size 24 24
+     position 30 0
+     size 30 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -90,7 +88,7 @@ FrameWidgetClass Root {
        disabled 0
        ignorepointer 1
        position 0 0
-       size 16 16
+       size 20 20
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -112,19 +110,18 @@ FrameWidgetClass Root {
      clipchildren 0
      ignorepointer 0
      color 0.0275 0.4353 0.5725 0
-     position 0 0
-     size 390 0
-     halign center_ref
-     valign center_ref
+     position 60 0
+     size 356 22
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 0
-     draggable 0
+     draggable 1
      scriptclass ""
-     Padding 3
-     Margin 1
+     style Colorable
+     Padding 0
+     Margin 0
      "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
@@ -132,31 +129,58 @@ FrameWidgetClass Root {
      Columns 1
      Rows 1
      {
-      TextWidgetClass Text {
+      GridSpacerWidgetClass Outline {
        visible 1
        disabled 0
        clipchildren 0
        ignorepointer 1
-       position 0 0
-       size 230 22
+       color 0.0588 0.0588 0.0588 0
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        scaled 0
        draggable 0
        scriptclass ""
-       style Normal
-       text "akfjvNl9YFJiXr9UoOUgK0ks6Yar_-L3NR1hDBsPPzw="
-       font "gui/fonts/Metron"
-       "bold text" 0
-       "exact text" 0
-       "exact text size" 16
-       "size to text h" 1
-       "size to text v" 0
-       "text valign" center
+       style dashed
+       Padding 0
+       Margin 6
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 1
+       Rows 1
+       {
+        TextWidgetClass Text {
+         visible 1
+         disabled 0
+         clipchildren 0
+         ignorepointer 1
+         size 230 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         draggable 0
+         scriptclass ""
+         style Normal
+         text "akfjvNl9YFJiXr9UoOUgK0ks6Yar_-L3NR1hDBsPPzw="
+         font "gui/fonts/Metron"
+         "bold text" 0
+         "exact text" 0
+         "exact text size" 16
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+       }
       }
      }
     }
@@ -167,7 +191,7 @@ FrameWidgetClass Root {
    disabled 0
    clipchildren 0
    ignorepointer 1
-   position 18 24
+   position 30 30
    size 1 1
    hexactpos 1
    vexactpos 1

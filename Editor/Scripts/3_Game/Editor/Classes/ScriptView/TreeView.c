@@ -4,7 +4,7 @@ class TreeView: ScriptView
 		
 	TextWidget Text;
 	
-	Widget Panel, Children;
+	Widget Panel, Children, Outline;
 	ImageWidget IconImage, CollapseIcon, Texture;
 	ButtonWidget Collapse;
 	
@@ -26,7 +26,7 @@ class TreeView: ScriptView
 	void ~TreeView()
 	{
 	}
-	
+		
 	void OnSelectionChanged(bool state)
 	{
 		Panel.SetColor(EditorColors.SELECT * state);
@@ -79,20 +79,7 @@ class TreeView: ScriptView
 	}
 			
 	override void Update(float dt)
-	{				
-		if (m_IsBeingDragged) {
-			
-			if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
-				m_IsBeingDragged = false;
-				// drop!
-			}
-			
-			int x, y;
-			GetMousePos(x, y);
-			
-			Panel.SetPos(x, y);
-			Text.SetPos(x, y);
-		}
+	{
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
@@ -132,6 +119,12 @@ class TreeView: ScriptView
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		Panel.SetAlpha(1.0);
+		return false;
+	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
 		switch (w) {
 			case Texture: {
@@ -184,7 +177,80 @@ class TreeView: ScriptView
 	
 	override bool OnDrag(Widget w, int x, int y)
 	{		
-		return super.OnDrag(w, x, y);
+		
+		
+		return false;
+	}
+	
+	override bool OnDragging(Widget w, int x, int y, Widget reciever)
+	{
+		Outline.SetAlpha(1.0);
+			
+		if (!RecursiveGetParent(reciever, "Root")) {
+			return false;
+		}
+		
+		// Warning:: unsafe
+		TreeView bottom_view;
+		reciever.GetUserData(bottom_view);
+		if (!bottom_view) {
+			return false;
+		}
+		
+		//Print(bottom_view);
+		
+		return false;
+	}
+	
+	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
+	{
+		if (!RecursiveGetParent(reciever, "Root")) {
+			return false;
+		}
+		
+		// Warning:: unsafe
+		TreeView bottom_view;
+		reciever.GetUserData(bottom_view);
+		if (!bottom_view) {
+			return false;
+		}
+		
+		//Print(bottom_view);
+		//WidgetAnimator.Animate(bottom_view.Outline, WidgetAnimatorProperty.COLOR_A, 1.0, 0.0, 100);
+		//bottom_view.Outline.SetAlpha(1.0);
+		
+		return false;
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		Panel.SetPos(60, 0);
+		Panel.Update();
+		Panel.SetAlpha(0.0);
+		return false;
+	}
+	
+	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
+	{
+		if (!RecursiveGetParent(w, "Root")) {
+			return false;
+		}
+		
+		// Warning:: unsafe
+		TreeView bottom_view;
+		w.GetUserData(bottom_view);
+		if (!bottom_view) {
+			return false;
+		}
+		
+		m_Node.Add(bottom_view.m_Node);
+		
+		return false;
+	}
+	
+	TreeNode GetNode()
+	{
+		return m_Node;
 	}
 						
 	TreeViewController GetTemplateController()

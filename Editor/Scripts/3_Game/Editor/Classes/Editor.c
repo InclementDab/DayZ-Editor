@@ -238,6 +238,7 @@ class Editor: TreeNode
 			return; // Zoom
 		}
 		
+		delete m_Hud;
 		if (!m_Hud) {
 			m_Hud = new EditorHud(this);
 		}
@@ -681,6 +682,10 @@ class Editor: TreeNode
 	{
 		m_SelectedNodes.Debug();
 		foreach (TreeNode node: m_SelectedNodes) {
+			if (node.IsInherited(CursorToggle)) {
+				continue; // ?? LMAOO
+			}
+			
 			node.OnSelectionChanged(false);
 		}
 		
