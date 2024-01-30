@@ -16,7 +16,7 @@ class TreeNodeState: int
 	
 	bool IsEmpty()
 	{
-		return value == 0x0;
+		return value == 0x00;
 	}
 	
 	bool IsHover()
@@ -174,16 +174,14 @@ class TreeNode: SerializableBase
 					
 	void AddState(TreeNodeState state)
 	{
-		DumpStack();
 		StateMachine[state].Insert(this);		
 		m_TreeNodeState |= state;
 		OnStateChanged(m_TreeNodeState);
-		Print("DOne");
 	}
 	
 	void RemoveState(TreeNodeState state)
 	{
-		StateMachine[state].RemoveItem(this);	
+		StateMachine[state].RemoveItem(this);
 		m_TreeNodeState &= ~state;
 		OnStateChanged(m_TreeNodeState);
 	}
@@ -205,7 +203,7 @@ class TreeNode: SerializableBase
 			}
 		}
 		
-		State_OnChanged.Invoke(state);
+		State_OnChanged.Invoke(this, state);
 	}
 	
 	bool HasState(TreeNodeState state)
@@ -485,12 +483,7 @@ class TreeNode: SerializableBase
 	{
 		return TreeNodeState.EMPTY;
 	}
-	
-	array<TreeNodeState> GetValidStates()
-	{
-		return { TreeNodeState.EMPTY, TreeNodeState.HOVER, TreeNodeState.ACTIVE };
-	}
-	
+		
 	TreeNodeInteract GetInteractType()
 	{
 		return m_TreeNodeInteract;

@@ -28,6 +28,8 @@ class EditorButton: ScriptedWidgetEventHandler
 		if (Node != string.Empty) {
 			m_Node = CommandNode.Cast(GetDayZGame().GetEditor().GetNode(Node));
 			if (m_Node) {
+				Icon.LoadImageFile(0, Icon.GetIcon().Regular());
+				Icon.SetImage(0);
 				m_Node.State_OnChanged.Insert(OnStateChanged);
 				OnStateChanged(m_Node, m_Node.GetDefaultState());
 			}
@@ -40,7 +42,6 @@ class EditorButton: ScriptedWidgetEventHandler
 			return;
 		}
 		
-	
 		if (state.IsHover()) {
 			//WidgetAnimator.Animate(Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
 			Icon.SetAlpha(1.0);
@@ -81,7 +82,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		switch (m_Node.GetInteractType()) {
 			case TreeNodeInteract.HOLD: {
-				m_Node.RemoveState(TreeNodeState.EMPTY);
+				m_Node.RemoveState(TreeNodeState.ACTIVE);
 				return true;
 			}
 			
@@ -146,7 +147,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (m_Node) {
-			m_Node.RemoveState(TreeNodeState.EMPTY);
+			m_Node.RemoveState(TreeNodeState.HOVER);
 		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);

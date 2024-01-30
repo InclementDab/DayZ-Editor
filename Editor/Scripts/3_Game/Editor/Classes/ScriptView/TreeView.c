@@ -182,7 +182,7 @@ class TreeView: ScriptView
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_Node.RemoveState(TreeNodeState.EMPTY);
+		m_Node.RemoveState(TreeNodeState.HOVER);
 		return true;
 	}
 			
