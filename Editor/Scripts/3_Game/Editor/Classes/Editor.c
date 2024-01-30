@@ -294,7 +294,7 @@ class Editor: TreeNode
 		Raycast raycast = m_Camera.PerformCursorRaycast();
 		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {
 			// Clear our pressed buttons when we click in the world randomly, probably same with 
-			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && (!raycast || !raycast.Hit)) {
+			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
 				foreach (TreeNode node_to_deselect: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
 					if (node_to_deselect && node_to_deselect.GetInteractType() == TreeNodeInteract.PRESS) {
 						node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
