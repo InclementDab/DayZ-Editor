@@ -373,7 +373,7 @@ class ObjectNode: TreeNode
 	
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.ALL;
+		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING;
 	}
 	
 	ObjectNodeFlags GetFlags()

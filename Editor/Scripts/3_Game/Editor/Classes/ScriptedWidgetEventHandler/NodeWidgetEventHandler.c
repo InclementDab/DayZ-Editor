@@ -64,19 +64,27 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (!m_Node) {
 			return false;
 		}
 		
-		switch (m_Node.GetInteractType()) {
-			case TreeNodeInteract.HOLD: {
-				m_Node.RemoveState(TreeNodeState.ACTIVE);
-				return true;
-			}
-			
-			case TreeNodeInteract.PRESS: {
-				m_Node.AddState(TreeNodeState.ACTIVE);
-				return true;
+		if (button == 2) {
+			m_Node.AddState(TreeNodeState.CONTEXT);
+			return true;
+		}
+		
+		if (button == 1) {
+			switch (m_Node.GetInteractType()) {
+				case TreeNodeInteract.HOLD: {
+					m_Node.RemoveState(TreeNodeState.ACTIVE);
+					return true;
+				}
+				
+				case TreeNodeInteract.ONCE:
+				case TreeNodeInteract.PRESS: {
+					m_Node.AddState(TreeNodeState.ACTIVE);									
+					return true;
+				}
 			}
 		}
 				

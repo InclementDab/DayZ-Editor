@@ -48,7 +48,7 @@ class PlaceableNode: TreeNode
 	
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.ALL;
+		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING;
 	}
 	
 	override TreeNodeInteract GetInteractType()
