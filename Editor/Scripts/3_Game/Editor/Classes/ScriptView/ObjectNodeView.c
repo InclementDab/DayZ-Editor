@@ -39,7 +39,7 @@ class ObjectNodeView: ScriptView
 		}
 		
 		Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
-		
+				
 		// Dragging
 		if (m_StartPosition && raycast) {
 			raycast.Debug();
@@ -50,24 +50,19 @@ class ObjectNodeView: ScriptView
 		
 			vector transform[4];
 			m_ObjectNode.GetBaseTransform(transform);
-			
+						
 			// Held distance placing
 			if (KeyState(KeyCode.KC_LMENU)) {
 				Debug.DrawSphere(raycast.Source.Position, vector.Distance(raycast.Source.Position, transform[3]), COLOR_RED, ShapeFlags.ADDITIVE | ShapeFlags.WIREFRAME | ShapeFlags.ONCE);
 				
-				vector v3 = transform[1] * raycast.Source.Direction;					
-				float dist_z = vector.Dot(((raycast.Source.Position - transform[3]) * transform[1]), v3) / v3.LengthSq();
-	
-				float d1 = vector.Dot(vector.Up, raycast.Source.Direction);
-				
-				vector pos = raycast.Source.Position + raycast.Source.Direction * dist_z;
-				
-				transform = { transform[0], transform[1], transform[2], pos };
+				vector v3 = vector.Up * raycast.Source.Direction;					
+				float dist_z = vector.Dot(((raycast.Source.Position - transform[3]) * vector.Up), v3) / v3.LengthSq();
+				transform = { transform[0], transform[1], transform[2], raycast.Source.Position + raycast.Source.Direction * dist_z };
 				m_ObjectNode.SetBaseTransform(transform);
 			} 
 			
 	
-			if (KeyState(KeyCode.KC_LSHIFT)) {
+			else if (KeyState(KeyCode.KC_LSHIFT)) {
 				
 				vector new_forward = vector.Direction(transform[3], raycast.Bounce.Position).Normalized();
 				
