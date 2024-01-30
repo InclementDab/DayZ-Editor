@@ -23,9 +23,26 @@ class TreeView: ScriptView
 		IconImage.SetImage(0);
 	}
 			
-	void OnSelectionChanged(bool state)
+	void OnStateChanged(TreeNodeState state)
 	{
-		Panel.SetColor(EditorColors.SELECT * state);
+		switch (state) {
+			case TreeNodeState.EMPTY: {
+				Outline.Show(false);
+				Panel.SetAlpha(0);
+				break;
+			}
+			
+			case TreeNodeState.HOVER: {
+				Outline.Show(true);
+				break;
+			}
+			
+			case TreeNodeState.ACTIVE: {
+				Outline.Show(false);
+				Panel.SetAlpha(0);
+				break;
+			}
+		}
 	}
 	
 	void SetText(string text)
@@ -113,13 +130,7 @@ class TreeView: ScriptView
 		GetDayZGame().GetEditor().GetHud().ClearCursor();				
 		return true;
 	}
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		//Panel.SetAlpha(1.0);
-		return false;
-	}
-	
+		
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
 		switch (w) {
@@ -132,13 +143,19 @@ class TreeView: ScriptView
 				switch (button) {
 					case 0: {
 						if (!KeyState(KeyCode.KC_LSHIFT)) {
-							m_Node.GetEditor().ClearSelections();
+							foreach (TreeNode active_nodes: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+								active_nodes.SetState(TreeNodeState.EMPTY);
+							}
+							
+							foreach (TreeNode hover_nodes: TreeNode.StateMachine[TreeNodeState.HOVER]) {
+								hover_nodes.SetState(TreeNodeState.EMPTY);
+							}
 						}
 						
 						if (KeyState(KeyCode.KC_LCONTROL)) {
-							m_Node.GetEditor().ToggleSelect(m_Node);
+							m_Node.ToggleState();
 						} else {
-							m_Node.GetEditor().Select(m_Node);
+							m_Node.SetState(TreeNodeState.ACTIVE);
 						}
 						
 						return true;

@@ -5,9 +5,9 @@ class EditorButton: ScriptedWidgetEventHandler
 	protected CommandNode m_Node;
 	protected Widget m_LayoutRoot;
 	
-	protected TextWidget m_TextWidget;
-	protected ButtonWidget m_Button;
-	protected ImageWidget m_IconWidget;
+	TextWidget Text;
+	ButtonWidget Button;
+	ImageWidget Icon;
 	
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -20,10 +20,10 @@ class EditorButton: ScriptedWidgetEventHandler
 		}
 #endif
 		
-		m_Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");				
-		m_Button.SetHandler(this);
-		m_IconWidget = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
-		m_TextWidget = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");
+		Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");				
+		Button.SetHandler(this);
+		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
+		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");
 		
 		if (Node == string.Empty) {
 			return;
@@ -35,21 +35,34 @@ class EditorButton: ScriptedWidgetEventHandler
 			return;
 		}
 
-		m_Node.AfterSelectionChanged.Insert(OnExecuted);
-		GetDayZGame().GetEditor().Select(m_Node);
-		OnExecuted(m_Node, m_Node.GetDefaultState());
+		m_Node.State_OnChanged.Insert(OnStateChanged);
+		OnStateChanged(m_Node, m_Node.GetDefaultState());
 	}
-	
-	void OnExecuted(TreeNode node, bool state)
+		
+	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		SymbolSize size = Ternary<SymbolSize>.If(state, SymbolSize.SOLID, SymbolSize.REGULAR);
-		int color = Ternary<int>.If(state, m_LayoutRoot.GetColor(),	ARGB(100, 255, 255, 255));
-				
-		Symbols icon = m_Node.GetIcon();
-		if (m_IconWidget) {
-			WidgetAnimator.AnimateColor(m_IconWidget, color, 50);
-			m_IconWidget.LoadImageFile(0, Ternary<Symbol>.If(state, icon.Solid(), icon.Regular()));
-			m_IconWidget.SetImage(0);
+		switch (state) {
+			case TreeNodeState.EMPTY: {
+				m_Node.GetEditor().GetHud().ClearCursor();
+				WidgetAnimator.AnimateColor(Icon, ARGB(100, 255, 255, 255), 50);
+				Icon.LoadImageFile(0, m_Node.GetIcon().Regular());
+				Icon.SetImage(0);
+				break;
+			}
+			
+			case TreeNodeState.HOVER: {
+				WidgetAnimator.Animate(Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+				m_Node.GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetShortcutString());		
+				break;
+			}
+			
+			case TreeNodeState.ACTIVE: {
+				m_Node.GetEditor().GetHud().ClearCursor();
+				WidgetAnimator.AnimateColor(Icon, m_LayoutRoot.GetColor(), 50);
+				Icon.LoadImageFile(0, m_Node.GetIcon().Solid());
+				Icon.SetImage(0);
+				break;
+			}
 		}
 	}
 	
@@ -62,7 +75,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.PRESS:
 			case ShortcutKeyType.HOLD: {
-				GetDayZGame().GetEditor().Select(m_Node);
+				m_Node.SetState(TreeNodeState.ACTIVE);
 				return true;
 			}
 		}
@@ -78,7 +91,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.HOLD: {
-				GetDayZGame().GetEditor().Deselect(m_Node);
+				m_Node.SetState(TreeNodeState.EMPTY);
 				return true;
 			}
 		}
@@ -94,7 +107,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.TOGGLE: {
-				GetDayZGame().GetEditor().ToggleSelect(m_Node);
+				m_Node.ToggleState();
 				return true;
 			}
 		}
@@ -110,7 +123,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 		switch (m_Node.GetShortcutType()) {
 			case ShortcutKeyType.DOUBLE: {
-				GetDayZGame().GetEditor().ToggleSelect(m_Node);
+				m_Node.ToggleState();
 				return true;
 			}
 		}
@@ -120,17 +133,17 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		WidgetAnimator.Animate(m_IconWidget, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-		GetDayZGame().GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetShortcutString());		
+		if (m_Node) {
+			m_Node.SetState(TreeNodeState.HOVER);
+		}
+		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		GetDayZGame().GetEditor().GetHud().ClearCursor();
-					
-		if (m_Node && !m_Node.GetEditor().IsSelected(m_Node)) {
-			WidgetAnimator.Animate(m_IconWidget, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
+		if (m_Node && m_Node.GetState() == TreeNodeState.HOVER) {
+			m_Node.SetState(TreeNodeState.EMPTY);
 		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);

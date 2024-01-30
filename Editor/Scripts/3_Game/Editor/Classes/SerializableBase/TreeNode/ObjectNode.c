@@ -230,12 +230,12 @@ class ObjectNode: TreeNode
 		return true;
 	}
 			
-	override void OnSelectionChanged(bool state)
+	override void SetState(TreeNodeState state)
 	{
-		super.OnSelectionChanged(state);
+		super.SetState(state);
 		
 		if (m_ObjectNodeView) {
-			m_ObjectNodeView.OnSelectionChanged(state);
+			m_ObjectNodeView.OnStateChanged(state);
 		}
 		
 		if (state) {

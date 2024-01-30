@@ -23,9 +23,19 @@ class ObjectNodeView: ScriptView
 		Outline.SetImage(0);
 	}
 	
-	void OnSelectionChanged(bool state)
+	void OnStateChanged(TreeNodeState state)
 	{
-		Image.SetColor(Ternary<int>.If(state, EditorColors.SELECT, ARGB(255, 255, 255, 255)));
+		switch (state) {
+			case TreeNodeState.EMPTY: {
+				Image.SetColor(ARGB(255, 255, 255, 150));
+				break;
+			}
+			
+			case TreeNodeState.ACTIVE: {
+				Image.SetColor(EditorColors.SELECT);
+				break;
+			}
+		}
 	}
 	
 	override void Update(float dt)
@@ -46,8 +56,6 @@ class ObjectNodeView: ScriptView
 			Shape.CreateArrow(m_StartPosition.Bounce.Position, raycast.Bounce.Position, 1, COLOR_BLACK, ShapeFlags.ONCE);
 			
 			Input input = GetGame().GetInput();
-			array<TreeNode> selected_nodes = m_ObjectNode.GetEditor().GetSelectedNodes();
-		
 			vector transform[4];
 			m_ObjectNode.GetBaseTransform(transform);
 						

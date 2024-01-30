@@ -1,6 +1,6 @@
 class CursorToggle: CommandNode
 {
-	override void OnSelectionChanged(bool state)
+	override void SetState(TreeNodeState state)
 	{
 		GetGame().GetUIManager().ShowCursor(state);
 		if (GetEditor().GetHud()) {

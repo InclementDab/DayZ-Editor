@@ -47,9 +47,9 @@ class BrushTool: CommandNode
 		return true;
 	}
 	
-	override void OnSelectionChanged(bool state)
+	override void SetState(TreeNodeState state)
 	{
-		super.OnSelectionChanged(state);
+		super.SetState(state);
 		
 		if (state) {
 			m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);

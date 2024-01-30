@@ -1,6 +1,6 @@
 class AfterlifeToggle: CommandNode
 {
-	override void OnSelectionChanged(bool state)
+	override void SetState(TreeNodeState state)
 	{
 		
 	}

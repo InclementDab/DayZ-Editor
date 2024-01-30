@@ -7,39 +7,88 @@ enum ShortcutKeyType
 	TOGGLE // ying and yang
 };
 
+enum TreeNodeState
+{
+	EMPTY,
+	HOVER,
+	ACTIVE
+};
+
+typedef map<string, ref TreeNode> TreeStrongRef;
+typedef map<string, TreeNode> TreeWeakRef;
+
 class TreeNode: SerializableBase
 {
 	static const string PATH_SEPERATOR = "\\";
+	static ref map<TreeNodeState, ref array<TreeNode>> StateMachine = new map<TreeNodeState, ref array<TreeNode>>();
 	
-	protected string m_UUID;	
-	ref map<string, autoptr TreeNode> Children = new map<string, autoptr TreeNode>();
+	protected string m_UUID;
+	protected TreeNodeState m_TreeNodeState = GetDefaultState();
+	ref map<string, ref TreeNode> Children = new map<string, ref TreeNode>();
 
 	protected string m_Icon, m_DisplayName;
 	protected TreeNode m_Parent;
 	
 	protected ref TreeView m_NodeView;
-	
-	ref ScriptInvoker AfterSelectionChanged = new ScriptInvoker();
+		
+	ref ScriptInvoker State_OnChanged = new ScriptInvoker();
 	
 	void TreeNode(string uuid, string display_name, Symbols icon)
 	{
 		m_UUID = uuid;
 		m_DisplayName = display_name;
 		m_Icon = icon;
+		
+		if (!StateMachine[m_TreeNodeState]) {
+			StateMachine[m_TreeNodeState] = {};
+		}
+		
+		StateMachine[m_TreeNodeState].Insert(this);
 	}
 	
 	void ~TreeNode()
 	{
+		StateMachine[m_TreeNodeState].RemoveItem(this);
 		delete m_NodeView;
 	}
 	
-	void OnSelectionChanged(bool state)
+	void ToggleState()
 	{
-		if (m_NodeView) {
-			m_NodeView.OnSelectionChanged(state);
+		switch (m_TreeNodeState) {
+			case TreeNodeState.ACTIVE: {
+				SetState(TreeNodeState.EMPTY);
+				break;
+			}
+			
+			case TreeNodeState.HOVER:
+			case TreeNodeState.EMPTY: {
+				SetState(TreeNodeState.ACTIVE);
+				break;
+			}
+		}
+	}
+	
+	void SetState(TreeNodeState state)
+	{
+		StateMachine[m_TreeNodeState].RemoveItem(this);
+		
+		m_TreeNodeState = state;
+		if (!StateMachine[m_TreeNodeState]) {
+			StateMachine[m_TreeNodeState] = {};
 		}
 		
-		AfterSelectionChanged.Invoke(this, state);
+		StateMachine[m_TreeNodeState].Insert(this);
+		
+		if (m_NodeView) {
+			m_NodeView.OnStateChanged(state);
+		}
+		
+		State_OnChanged.Invoke(this, state);
+	}
+	
+	TreeNodeState GetState()
+	{
+		return m_TreeNodeState;
 	}
 	
 	bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
@@ -303,6 +352,11 @@ class TreeNode: SerializableBase
 		}
 		
 		return m_NodeView;
+	}
+	
+	TreeNodeState GetDefaultState()
+	{
+		return TreeNodeState.EMPTY;
 	}
 				
 #ifdef DIAG_DEVELOPER

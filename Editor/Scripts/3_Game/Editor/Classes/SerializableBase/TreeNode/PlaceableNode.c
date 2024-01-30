@@ -11,9 +11,9 @@ class PlaceableNode: TreeNode
 		return true;
 	}
 	
-	override void OnSelectionChanged(bool state)
+	override void SetState(TreeNodeState state)
 	{
-		super.OnSelectionChanged(state);
+		super.SetState(state);
 		
 		vector matrix[4];
 		Math3D.MatrixIdentity4(matrix);

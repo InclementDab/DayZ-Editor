@@ -290,7 +290,7 @@ class Editor: TreeNode
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
-				ClearSelections();
+				//ClearSelections();
 			}
 			/*
 			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {
@@ -338,7 +338,7 @@ class Editor: TreeNode
 			object_node.SetBaseTransform(transform);
 					
 			if (input.LocalPress_ID(UAFire)) {
-				Deselect(object_node);
+				//Deselect(object_node);
 				InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
 				this[PLACING].Remove(object_node);
 				this[EDITS].Add(object_node);
@@ -652,52 +652,7 @@ class Editor: TreeNode
 	{
 		return GetGame() && GetGame().GetUserManager() && GetGame().GetUserManager().GetTitleInitiator() && m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
 	}
-	
-	void Select(notnull TreeNode node)
-	{
-		m_SelectedNodes.Insert(node);
-		node.OnSelectionChanged(true);
-	}
-	
-	void Deselect(notnull TreeNode node)
-	{
-		node.OnSelectionChanged(false);
-		m_SelectedNodes.RemoveItemUnOrdered(node);		
-	}
-	
-	void ToggleSelect(notnull TreeNode node)
-	{
-		if (IsSelected(node)) {
-			Deselect(node);
-		} else {
-			Select(node);
-		}
-	}
-	
-	bool IsSelected(notnull TreeNode node)
-	{
-		return m_SelectedNodes.Find(node) != -1;
-	}
-	
-	void ClearSelections()
-	{
-		m_SelectedNodes.Debug();
-		foreach (TreeNode node: m_SelectedNodes) {
-			if (node.IsInherited(CursorToggle)) {
-				continue; // ?? LMAOO
-			}
-			
-			node.OnSelectionChanged(false);
-		}
 		
-		m_SelectedNodes.Clear();
-	}
-	
-	array<TreeNode> GetSelectedNodes()
-	{
-		return m_SelectedNodes;
-	}
-	
 	TreeNode FindNodeFromObject(Object object)
 	{
 		// Do this better! searching!!!

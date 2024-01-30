@@ -19,7 +19,7 @@ class CommandNode: TreeNode
 		switch (GetShortcutType()) {
 			case ShortcutKeyType.PRESS: {
 				if (input.LocalPress()) {
-					GetEditor().Select(this);
+					SetState(TreeNodeState.ACTIVE);
 					return false;
 				}
 				
@@ -28,7 +28,7 @@ class CommandNode: TreeNode
 			
 			case ShortcutKeyType.DOUBLE: {
 				if (input.LocalDoubleClick()) {
-					GetEditor().ToggleSelect(this);
+					SetState(TreeNodeState.ACTIVE);
 					return false;
 				}
 				
@@ -37,12 +37,12 @@ class CommandNode: TreeNode
 			
 			case ShortcutKeyType.HOLD: {
 				if (input.LocalHoldBegin()) {
-					GetEditor().Select(this);
+					SetState(TreeNodeState.ACTIVE);
 					return false;
 				}
 				
 				if (input.LocalRelease()) {
-					GetEditor().Deselect(this);
+					SetState(TreeNodeState.ACTIVE);
 					return false;
 				}
 				
@@ -51,7 +51,7 @@ class CommandNode: TreeNode
 			
 			case ShortcutKeyType.TOGGLE: {
 				if (input.LocalPress()) {
-					GetEditor().ToggleSelect(this);
+					ToggleState();
 					return false;
 				}
 				
@@ -62,9 +62,9 @@ class CommandNode: TreeNode
 		return true;
 	}
 				
-	override void OnSelectionChanged(bool state)
+	override void SetState(TreeNodeState state)
 	{
-		super.OnSelectionChanged(state);
+		super.SetState(state);
 						
 		if (state) {
 			array<string> xor_selections = GetXorSelections();
@@ -75,8 +75,8 @@ class CommandNode: TreeNode
 					continue;
 				}
 				
-				if (state ^ GetEditor().IsSelected(xor_node)) {
-					GetEditor().Deselect(xor_node);
+				if (state ^ xor_node.GetState()) {
+					xor_node.SetState(TreeNodeState.EMPTY);
 				}
 			}
 		}
@@ -108,11 +108,6 @@ class CommandNode: TreeNode
 		return m_ShortcutKeyType;
 	}
 
-	bool GetDefaultState()
-	{
-		return false;
-	}
-	
 	array<string> GetXorSelections()
 	{
 		return {};

@@ -1,6 +1,6 @@
 class EllipseCommand: CommandNode
 {
-	override void OnSelectionChanged(bool state)
+	override void SetState(TreeNodeState state)
 	{
 		if (state && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;

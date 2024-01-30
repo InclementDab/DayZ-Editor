@@ -85,7 +85,7 @@ class EditorHud: ScriptView
 		}
 		
 		Whiteboard.Clear();
-		if (input.LocalHold_ID(UAFire) && m_Editor.GetSelectedNodes().Count() == 0 && !m_DraggedBar) {	
+		if (input.LocalHold_ID(UAFire) && /*m_Editor.GetSelectedNodes().Count() == 0 && */!m_DraggedBar) {	
 			switch (CurrentSelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
