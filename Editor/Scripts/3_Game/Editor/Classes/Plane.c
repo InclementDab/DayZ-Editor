@@ -35,6 +35,17 @@ class Plane: Managed
 	{
 		return (Corner[1] - Corner[0]) * 0.5;
 	}
+	
+	vector Intersect(notnull Ray source, vector mat[4])
+    {
+        float d1 = vector.Dot(Normal.Multiply3(mat), source.Position - GetPosition().Multiply4(mat));
+		float d2 = vector.Dot(Normal.Multiply3(mat), -source.Direction);
+		if (d2 == 0) {
+			return mat[3];
+		}
+		
+        return source.Position + (d1 / d2) * source.Direction;
+    }
 				
 	void Debug(string name, vector mat[4])
 	{		

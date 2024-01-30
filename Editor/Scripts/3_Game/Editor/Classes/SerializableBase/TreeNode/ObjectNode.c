@@ -299,6 +299,11 @@ class ObjectNode: TreeNode
 		
 		return m_BoundingBoxSurfaces[ETransformationAxis.TOP].GetPosition();
 	}
+	
+	Plane GetBoundingFace(ETransformationAxis axis)
+	{
+		return m_BoundingBoxSurfaces[axis];
+	}
 				
 	void Hide(bool state) 
 	{		

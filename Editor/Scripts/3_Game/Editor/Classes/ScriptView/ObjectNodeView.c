@@ -64,30 +64,33 @@ class ObjectNodeView: ScriptView
 	
 			else if (KeyState(KeyCode.KC_LSHIFT)) {
 				
-				vector new_forward = vector.Direction(transform[3], raycast.Bounce.Position).Normalized();
+				Plane face = m_ObjectNode.GetBoundingFace(ETransformationAxis.BOTTOM);
+				face.Debug("Cursor intersection", transform);
 				
-				transform = { (transform[1] * new_forward).Normalized(), transform[1], new_forward, transform[3] };
+				vector point = face.Intersect(raycast.Source, transform);
+				Shape.CreateSphere(COLOR_RED, ShapeFlags.ONCE, point, 0.25);
 				
-				m_ObjectNode.SetBaseTransform(transform);
-				/*
-				vector p1 = Vector(2, 0, 2).Multiply4(transform);
-				vector p2 = Vector(-2, 0, -2).Multiply4(transform);
+				//vector new_forward = vector.Direction(transform[3], raycast.Bounce.Position).Normalized();
 				
-				Shape.Create(ShapeType.BBOX, COLOR_GREEN, ShapeFlags.WIREFRAME | ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.ADDITIVE, p1, p2);
+				//transform = { (transform[1] * new_forward).Normalized(), transform[1], new_forward, transform[3] };
 				
-				float d = 1;
-				float t = -(vector.Dot(vector.Up, raycast.Source.Position) + transform[3][1]) / vector.Dot(vector.Up, raycast.Source.Direction);
+				//m_ObjectNode.SetBaseTransform(transform);
 				
-				vector result = raycast.Source.Position + raycast.Source.Direction * t;
+				//vector p1 = Vector(2, 0, 2).Multiply4(transform);
+				//vector p2 = Vector(-2, 0, -2).Multiply4(transform);
 				
-				*/
+				//Shape.Create(ShapeType.BBOX, COLOR_GREEN, ShapeFlags.WIREFRAME | ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.ADDITIVE, p1, p2);
+				
+				
+				
 				
 			}
 			
 			
 			// Any distance placing
 			else {
-				transform = { m_CursorAside, raycast.Bounce.Direction, m_CursorAside * raycast.Bounce.Direction, raycast.Bounce.Position };
+				float delta_y = transform[3][1] - raycast.Bounce.Position[1];
+				transform = { m_CursorAside, raycast.Bounce.Direction, m_CursorAside * raycast.Bounce.Direction, raycast.Bounce.Position + Vector(0, delta_y, 0) };				
 				m_ObjectNode.SetBaseTransform(transform);
 			}
 		}
