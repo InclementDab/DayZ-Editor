@@ -79,7 +79,7 @@ class CfgSoundShaders
 	class WindHills_SoundShader
 	{
 		samples[] = {{"Editor\Sounds\Environment\WindHills_-9db",1}};
-		volume = "(windy factor[0.6,1]) * (hills factor[0.5,1]) * 0.4 * (1 - 0.3*night)";
+		volume = "(windy factor[0.6,1]) * (hills factor[0.5,1]) * 0.4 * (0.7 * night)";
 	};
 };
 
