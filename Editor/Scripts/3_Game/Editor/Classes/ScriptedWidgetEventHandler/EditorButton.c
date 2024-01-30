@@ -40,29 +40,21 @@ class EditorButton: ScriptedWidgetEventHandler
 			return;
 		}
 		
-		switch (state) {
-			case TreeNodeState.EMPTY: {
-				node.GetEditor().GetHud().ClearCursor();
-				//WidgetAnimator.AnimateColor(Icon, ARGB(100, 255, 255, 255), 50);
-				Icon.LoadImageFile(0, node.GetIcon().Regular());
-				Icon.SetImage(0);
-				break;
-			}
-			
-			case TreeNodeState.HOVER: {
-				WidgetAnimator.Animate(Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-				node.GetEditor().GetHud().SetCursor(node.GetIcon(), node.GetDisplayName(), node.GetShortcutString());		
-				break;
-			}
-			
-			case TreeNodeState.ACTIVE: {
-				node.GetEditor().GetHud().ClearCursor();
-				//WidgetAnimator.AnimateColor(Icon, m_LayoutRoot.GetColor(), 50);
-				Icon.LoadImageFile(0, node.GetIcon().Solid());
-				Icon.SetImage(0);
-				break;
-			}
+	
+		if (state.IsHover()) {
+			//WidgetAnimator.Animate(Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
+			Icon.SetAlpha(1.0);
+			node.GetEditor().GetHud().SetCursor(node.GetIcon(), node.GetDisplayName(), node.GetShortcutString());
 		}
+		
+		if (state.IsActive()) {
+			Icon.LoadImageFile(0, node.GetIcon().Solid());
+		} else {
+			node.GetEditor().GetHud().ClearCursor();
+			Icon.LoadImageFile(0, node.GetIcon().Regular());
+		}
+		
+		Icon.SetImage(0);
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

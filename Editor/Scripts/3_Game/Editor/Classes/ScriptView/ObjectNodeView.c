@@ -26,16 +26,10 @@ class ObjectNodeView: ScriptView
 	
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		switch (state) {
-			case TreeNodeState.EMPTY: {
-				Image.SetColor(ARGB(255, 255, 255, 150));
-				break;
-			}
-			
-			case TreeNodeState.ACTIVE: {
-				Image.SetColor(EditorColors.SELECT);
-				break;
-			}
+		if (state.IsActive()) {
+			Image.SetColor(EditorColors.SELECT);
+		} else {
+			Image.SetColor(ARGB(255, 255, 255, 150));
 		}
 	}
 	

@@ -174,9 +174,11 @@ class TreeNode: SerializableBase
 					
 	void AddState(TreeNodeState state)
 	{
+		DumpStack();
 		StateMachine[state].Insert(this);		
 		m_TreeNodeState |= state;
 		OnStateChanged(m_TreeNodeState);
+		Print("DOne");
 	}
 	
 	void RemoveState(TreeNodeState state)
