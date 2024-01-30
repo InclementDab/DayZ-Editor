@@ -234,11 +234,10 @@ class Editor: TreeNode
 			return;
 		}
 		
-		if (!IsLocal() || m_Identity.GetId() != GetGame().GetPlayer().GetIdentity().GetId()) {
+		if (!IsLocal()) {
 			return; // Zoom
 		}
-		
-		delete m_Hud;
+
 		if (!m_Hud) {
 			m_Hud = new EditorHud(this);
 		}
