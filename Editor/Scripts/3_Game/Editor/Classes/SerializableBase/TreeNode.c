@@ -13,6 +13,7 @@ class TreeNodeState: int
 	static const int HOVER = 0x01;
 	static const int ACTIVE = 0x02;
 	static const int CONTEXT = 0x04;
+	static const int DRAGGING = 0x08;
 	
 	bool IsEmpty()
 	{
@@ -33,6 +34,11 @@ class TreeNodeState: int
 	{
 		return (value & CONTEXT) == CONTEXT;
 	}	
+	
+	bool IsDragging()
+	{
+		return (value & DRAGGING) == DRAGGING;
+	}
 }
 
 typedef int TreeNodeState;
@@ -45,6 +51,7 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 		this[TreeNodeState.HOVER] = {};
 		this[TreeNodeState.ACTIVE] = {};
 		this[TreeNodeState.CONTEXT] = {};
+		this[TreeNodeState.DRAGGING] = {};
 	}
 		
 	void AddAllStates(TreeNodeState state)
@@ -74,11 +81,6 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 	}
 }
 
-class TreeNodeChildren: map<string, ref TreeNode>
-{
-
-}
-
 class TreeNode: SerializableBase
 {
 	static const string PATH_SEPERATOR = "\\";
@@ -88,7 +90,7 @@ class TreeNode: SerializableBase
 	protected UAInput m_Input;
 	protected TreeNodeInteract m_TreeNodeInteract = TreeNodeInteract.NONE;
 	protected TreeNodeState m_TreeNodeState = GetDefaultState();
-	ref TreeNodeChildren Children = new TreeNodeChildren();
+	ref map<string, ref TreeNode> Children = new map<string, ref TreeNode>();
 
 	protected string m_Icon, m_DisplayName;
 	protected TreeNode m_Parent;

@@ -26,10 +26,18 @@ class ObjectNodeView: ScriptView
 	
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		if (state.IsHover()) {
+		Outline.SetAlpha(state.IsHover());
+		
+		if (state.IsDragging() || state.IsActive()) {			
 			Image.SetColor(EditorColors.SELECT);
 		} else {
 			Image.SetColor(ARGB(150, 255, 255, 255));
+		}
+		
+		if (state.IsDragging()) {
+			m_ObjectNode.GetEditor().GetHud().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
+		} else {
+			m_ObjectNode.GetEditor().GetHud().ClearCursor();
 		}
 	}
 	
@@ -46,7 +54,7 @@ class ObjectNodeView: ScriptView
 		Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
 				
 		// Dragging
-		if (m_StartPosition && raycast) {
+		if (m_ObjectNode.HasState(TreeNodeState.DRAGGING) && raycast) {
 			//raycast.Debug();
 			Shape.CreateArrow(m_StartPosition.Bounce.Position, raycast.Bounce.Position, 1, COLOR_BLACK, ShapeFlags.ONCE);
 			
@@ -197,6 +205,7 @@ class ObjectNodeView: ScriptView
 		
 	override bool OnDrag(Widget w, int x, int y)
 	{
+		m_ObjectNode.AddState(TreeNodeState.DRAGGING);
 		m_StartPosition = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
 		return true;
 	}
@@ -208,7 +217,7 @@ class ObjectNodeView: ScriptView
 	
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		delete m_StartPosition;
+		m_ObjectNode.RemoveState(TreeNodeState.DRAGGING);
 		m_ObjectNode.Synchronize();	
 		
 		return true;
