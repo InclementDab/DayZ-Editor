@@ -9,7 +9,7 @@ class CursorToggle: CommandNode
 		if (GetEditor().GetHud()) {
 			GetEditor().GetHud().ClearCursor();
 		}
-		
+				
 		switch (state) {
 			case TreeNodeState.EMPTY: {
 				GetGame().GetUIManager().ShowCursor(false);

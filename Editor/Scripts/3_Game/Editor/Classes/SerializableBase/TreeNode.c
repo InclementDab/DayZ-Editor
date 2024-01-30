@@ -7,13 +7,35 @@ enum TreeNodeInteract
 	TOGGLE // ying and yang
 };
 
-enum TreeNodeState
+class TreeNodeState: int
 {
-	EMPTY,
-	HOVER,
-	ACTIVE,
-	CONTEXT
-};
+	static const TreeNodeState EMPTY = 0x0;
+	static const TreeNodeState HOVER = 0x1;
+	static const TreeNodeState ACTIVE = 0x2;
+	static const TreeNodeState CONTEXT = 0x4;
+	
+	bool IsEmpty()
+	{
+		return value == 0x0;
+	}
+	
+	bool IsHover()
+	{
+		return (value & HOVER) == HOVER;
+	}
+	
+	bool IsActive()
+	{
+		return (value & ACTIVE) == ACTIVE;
+	}
+	
+	bool IsContext()
+	{
+		return (value & CONTEXT) == CONTEXT;
+	}	
+}
+
+typedef int TreeNodeState;
 
 class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 {
@@ -22,6 +44,7 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 		this[TreeNodeState.EMPTY] = {};
 		this[TreeNodeState.HOVER] = {};
 		this[TreeNodeState.ACTIVE] = {};
+		this[TreeNodeState.CONTEXT] = {};
 	}
 		
 	void SetAllStates(TreeNodeState state)
@@ -114,13 +137,37 @@ class TreeNode: SerializableBase
 		StateMachine[m_TreeNodeState].RemoveItem(this);	
 		StateMachine[state].Insert(this);
 		
-		m_TreeNodeState = state;
-		if (m_NodeView) {
-			m_NodeView.OnStateChanged(m_TreeNodeState);
+		m_TreeNodeState = state;		
+		State_OnChanged.Invoke(m_TreeNodeState);
+		return true;
+	}
+	
+	bool AddState(TreeNodeState state)
+	{
+		if (GetValidStates().Find(state) == -1) {
+			PrintFormat("[%1] Could not add state %2", m_UUID, typename.EnumToString(TreeNodeState, state));
+			return false;
 		}
 		
-		State_OnChanged.Invoke(this, m_TreeNodeState);
+		StateMachine[state].Insert(this);
+		
+		m_TreeNodeState |= state;		
+		State_OnChanged.Invoke(m_TreeNodeState);
 		return true;
+	}
+	
+	void RemoveState(TreeNodeState state)
+	{
+		StateMachine[state].RemoveItem(this);	
+		Print(m_TreeNodeState);
+		m_TreeNodeState &= ~state;
+		Print(m_TreeNodeState);
+		State_OnChanged.Invoke(m_TreeNodeState);
+	}
+	
+	bool HasState(TreeNodeState state)
+	{
+		return (m_TreeNodeState & state) == state;
 	}
 	
 	TreeNodeState GetState()
@@ -404,6 +451,27 @@ class TreeNode: SerializableBase
 	TreeNodeInteract GetInteractType()
 	{
 		return m_TreeNodeInteract;
+	}
+	
+	string GetShortcutString() 
+	{
+		string result;
+		UAInput inp = GetUApi().GetInputByName(m_UUID);
+		for (int i = 0; i < inp.BindKeyCount(); i++) { 
+			if (inp.CheckBindDevice(i, EInputDeviceType.MOUSE_AND_KEYBOARD)) {
+				string button_name = GetUApi().GetButtonName(inp.GetBindKey(i));
+				button_name.Replace("Left ", "");
+				button_name.Replace("Right ", "R");
+				
+				result += button_name;
+			}
+			
+			if (i != inp.BindKeyCount() - 1) {
+				result += " + ";
+			}
+		}
+		
+		return result;
 	}
 				
 #ifdef DIAG_DEVELOPER

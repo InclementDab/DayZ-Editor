@@ -240,7 +240,7 @@ class ObjectNode: TreeNode
 			m_ObjectNodeView.OnStateChanged(state);
 		}
 		
-		if (state) {
+		if (state.IsActive()) {
 			if (((m_Flags & ObjectNodeFlags.BBOX) == ObjectNodeFlags.BBOX)) {
 				//EditorBoundingBox.Create(m_Object);
 			}

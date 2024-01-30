@@ -35,31 +35,30 @@ class EditorButton: ScriptedWidgetEventHandler
 	}
 		
 	void OnStateChanged(TreeNode node, TreeNodeState state)
-	{
-		if (!m_Node) {
-			Print("Gotta find a node for " + Node);
+	{		
+		if (!node.GetEditor().GetHud() || !Icon) {
 			return;
 		}
 		
 		switch (state) {
 			case TreeNodeState.EMPTY: {
-				m_Node.GetEditor().GetHud().ClearCursor();
+				node.GetEditor().GetHud().ClearCursor();
 				//WidgetAnimator.AnimateColor(Icon, ARGB(100, 255, 255, 255), 50);
-				Icon.LoadImageFile(0, m_Node.GetIcon().Regular());
+				Icon.LoadImageFile(0, node.GetIcon().Regular());
 				Icon.SetImage(0);
 				break;
 			}
 			
 			case TreeNodeState.HOVER: {
 				WidgetAnimator.Animate(Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-				m_Node.GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetShortcutString());		
+				node.GetEditor().GetHud().SetCursor(node.GetIcon(), node.GetDisplayName(), node.GetShortcutString());		
 				break;
 			}
 			
 			case TreeNodeState.ACTIVE: {
-				m_Node.GetEditor().GetHud().ClearCursor();
+				node.GetEditor().GetHud().ClearCursor();
 				//WidgetAnimator.AnimateColor(Icon, m_LayoutRoot.GetColor(), 50);
-				Icon.LoadImageFile(0, m_Node.GetIcon().Solid());
+				Icon.LoadImageFile(0, node.GetIcon().Solid());
 				Icon.SetImage(0);
 				break;
 			}
@@ -138,7 +137,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		if (m_Node) {
-			m_Node.SetState(TreeNodeState.HOVER);
+			m_Node.AddState(TreeNodeState.HOVER);
 		}
 		
 		return super.OnMouseEnter(w, x, y);
@@ -146,8 +145,8 @@ class EditorButton: ScriptedWidgetEventHandler
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (m_Node && m_Node.GetState() == TreeNodeState.HOVER) {
-			m_Node.SetState(TreeNodeState.EMPTY);
+		if (m_Node) {
+			m_Node.RemoveState(TreeNodeState.EMPTY);
 		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);

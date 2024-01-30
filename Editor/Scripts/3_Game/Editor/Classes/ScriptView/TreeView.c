@@ -16,33 +16,18 @@ class TreeView: ScriptView
 	{
 		m_TemplateController = TreeViewController.Cast(m_Controller);
 		m_Node = node;
-
+		m_Node.State_OnChanged.Insert(OnStateChanged);
+		
 		SetText(m_Node.GetDisplayName());
 		
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
 	}
 			
-	void OnStateChanged(TreeNodeState state)
-	{
-		switch (state) {
-			case TreeNodeState.EMPTY: {
-				Outline.SetAlpha(0.0);
-				Panel.SetAlpha(0);
-				break;
-			}
-			
-			case TreeNodeState.HOVER: {
-				Outline.SetAlpha(1.0);
-				break;
-			}
-			
-			case TreeNodeState.ACTIVE: {
-				Outline.SetAlpha(0.0);
-				Panel.SetAlpha(1.0);
-				break;
-			}
-		}
+	void OnStateChanged(TreeNode node, TreeNodeState state)
+	{		
+		Panel.SetAlpha(state.IsActive());
+		Outline.SetAlpha(state.IsHover());
 	}
 	
 	void SetText(string text)
@@ -91,7 +76,7 @@ class TreeView: ScriptView
 			
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
@@ -113,7 +98,7 @@ class TreeView: ScriptView
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
@@ -141,7 +126,7 @@ class TreeView: ScriptView
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
@@ -168,7 +153,7 @@ class TreeView: ScriptView
 		
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
@@ -184,28 +169,18 @@ class TreeView: ScriptView
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (m_Node) {
-			m_Node.SetState(TreeNodeState.HOVER);
-			return true;
-		}
-		
-		return false;
+		m_Node.AddState(TreeNodeState.HOVER);
+		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (m_Node && m_Node.GetState() == TreeNodeState.HOVER) {
-			m_Node.SetState(TreeNodeState.EMPTY);
-			return true;
-		}
-		
-		return false;
+		m_Node.RemoveState(TreeNodeState.EMPTY);
+		return true;
 	}
 			
 	override bool OnDrag(Widget w, int x, int y)
 	{		
-		
-		
 		return false;
 	}
 	

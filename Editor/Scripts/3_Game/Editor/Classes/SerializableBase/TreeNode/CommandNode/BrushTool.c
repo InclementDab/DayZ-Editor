@@ -53,7 +53,7 @@ class BrushTool: CommandNode
 			return false;
 		}
 		
-		if (state) {
+		if (state.IsActive()) {
 			m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);
 		} else {
 			GetGame().ObjectDelete(m_Ring);

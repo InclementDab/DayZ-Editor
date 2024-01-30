@@ -6,7 +6,7 @@ class BoxCommand: CommandNode
 			return false;
 		}
 		
-		if (state && GetEditor().GetHud()) {
+		if (state.IsActive() && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
 		}
 		
