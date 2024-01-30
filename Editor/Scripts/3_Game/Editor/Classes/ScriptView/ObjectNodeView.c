@@ -42,7 +42,7 @@ class ObjectNodeView: ScriptView
 				
 		// Dragging
 		if (m_StartPosition && raycast) {
-			raycast.Debug();
+			//raycast.Debug();
 			Shape.CreateArrow(m_StartPosition.Bounce.Position, raycast.Bounce.Position, 1, COLOR_BLACK, ShapeFlags.ONCE);
 			
 			Input input = GetGame().GetInput();
@@ -68,13 +68,14 @@ class ObjectNodeView: ScriptView
 				face.Debug("Cursor intersection", transform);
 				
 				vector point = face.Intersect(raycast.Source, transform);
-				Shape.CreateSphere(COLOR_RED, ShapeFlags.ONCE, point, 0.25);
+
+				vector new_forward = vector.Direction(transform[3], point).Normalized();
+				vector aside = (transform[1] * new_forward).Normalized();
 				
-				//vector new_forward = vector.Direction(transform[3], raycast.Bounce.Position).Normalized();
-				
-				//transform = { (transform[1] * new_forward).Normalized(), transform[1], new_forward, transform[3] };
-				
-				//m_ObjectNode.SetBaseTransform(transform);
+				transform = { aside, new_forward * aside, new_forward, transform[3] };
+				//Math3D.MatrixOrthogonalize3(transform);
+				Print(transform);
+				m_ObjectNode.SetBaseTransform(transform);
 				
 				//vector p1 = Vector(2, 0, 2).Multiply4(transform);
 				//vector p2 = Vector(-2, 0, -2).Multiply4(transform);
