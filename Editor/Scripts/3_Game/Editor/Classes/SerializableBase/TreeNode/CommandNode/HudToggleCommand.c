@@ -1,29 +1,13 @@
 class HudToggleCommand: CommandNode
 {
-	override bool SetState(TreeNodeState state)
+	override void OnStateChanged(TreeNodeState state)
 	{
-		if (!super.SetState(state)) {
-			return false;
-		}
+		super.OnStateChanged(state);
 		
 		EditorHud hud = GetEditor().GetHud();
-		if (!hud) {
-			return false;
+		if (hud) {
+			hud.Show(m_TreeNodeState.IsActive());
 		}
-		
-		switch (state) {
-			case TreeNodeState.EMPTY: {
-				hud.Show(false);
-				return true;
-			}
-			
-			case TreeNodeState.ACTIVE: {
-				hud.Show(true);
-				return true;
-			}
-		}			
-		
-		return true;
 	}
 	
 	override TreeNodeInteract GetInteractType()

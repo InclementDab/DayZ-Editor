@@ -1,16 +1,12 @@
 class BoxCommand: CommandNode
 {
-	override bool SetState(TreeNodeState state)
+	override void OnStateChanged(TreeNodeState state)
 	{
-		if (!super.SetState(state)) {
-			return false;
-		}
+		super.OnStateChanged(state);
 		
 		if (state.IsActive() && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
 		}
-		
-		return true;
 	}
 	
 	override array<string> GetXorSelections()

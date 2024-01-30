@@ -9,10 +9,10 @@ enum TreeNodeInteract
 
 class TreeNodeState: int
 {
-	static const TreeNodeState EMPTY = 0x0;
-	static const TreeNodeState HOVER = 0x1;
-	static const TreeNodeState ACTIVE = 0x2;
-	static const TreeNodeState CONTEXT = 0x4;
+	static const int EMPTY = 0x00;
+	static const int HOVER = 0x01;
+	static const int ACTIVE = 0x02;
+	static const int CONTEXT = 0x04;
 	
 	bool IsEmpty()
 	{
@@ -47,7 +47,7 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 		this[TreeNodeState.CONTEXT] = {};
 	}
 		
-	void SetAllStates(TreeNodeState state)
+	void AddAllStates(TreeNodeState state)
 	{
 		foreach (TreeNodeState node_state, array<TreeNode> nodes: this) {
 			if (node_state == state) {
@@ -55,7 +55,20 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 			}
 			
 			foreach (TreeNode node: nodes) {				
-				node.SetState(state);
+				node.AddState(state);
+			}
+		}
+	}
+	
+	void RemoveAllStates(TreeNodeState state)
+	{
+		foreach (TreeNodeState node_state, array<TreeNode> nodes: this) {
+			if (node_state != state) {
+				continue;
+			}
+			
+			foreach (TreeNode node: nodes) {				
+				node.RemoveState(state);
 			}
 		}
 	}
@@ -63,20 +76,7 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 
 class TreeNodeChildren: map<string, ref TreeNode>
 {
-	void SetAllStates(TreeNodeState state, bool recursively = false)
-	{
-		foreach (string uuid, TreeNode node: this) {
-			if (recursively) {
-				node.Children.SetAllStates(state, recursively);
-			}
-			
-			if (node.GetState() == state) {
-				continue;
-			}
-						
-			node.SetState(state);
-		}
-	}
+
 }
 
 class TreeNode: SerializableBase
@@ -85,6 +85,7 @@ class TreeNode: SerializableBase
 	static ref TreeNodeStateMachine StateMachine = new TreeNodeStateMachine();
 		
 	protected string m_UUID;
+	protected UAInput m_Input;
 	protected TreeNodeInteract m_TreeNodeInteract = TreeNodeInteract.NONE;
 	protected TreeNodeState m_TreeNodeState = GetDefaultState();
 	ref TreeNodeChildren Children = new TreeNodeChildren();
@@ -103,66 +104,106 @@ class TreeNode: SerializableBase
 		m_Icon = icon;
 
 		StateMachine[m_TreeNodeState].Insert(this);
+		
+		m_Input = GetUApi().GetInputByName(m_UUID);
+		if (m_Input.ID() != -1) {
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateInputs);
+		}
 	}
 	
 	void ~TreeNode()
-	{
+	{		
 		StateMachine[m_TreeNodeState].RemoveItem(this);
 		delete m_NodeView;
+		
+		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateInputs);
+		}
 	}
 	
-	void ToggleState()
+	protected void UpdateInputs()
 	{
-		switch (m_TreeNodeState) {
-			case TreeNodeState.ACTIVE: {
-				SetState(TreeNodeState.EMPTY);
+		switch (GetInteractType()) {
+			case TreeNodeInteract.PRESS: {
+				if (m_Input.LocalPress()) {
+					AddState(TreeNodeState.ACTIVE);
+					break;
+				}
+				
 				break;
 			}
 			
-			case TreeNodeState.HOVER:
-			case TreeNodeState.EMPTY: {
-				SetState(TreeNodeState.ACTIVE);
+			case TreeNodeInteract.DOUBLE: {
+				if (m_Input.LocalDoubleClick()) {
+					AddState(TreeNodeState.ACTIVE);
+					break;
+				}
+				
+				break;
+			}
+			
+			case TreeNodeInteract.HOLD: {
+				if (m_Input.LocalHoldBegin()) {
+					AddState(TreeNodeState.ACTIVE);
+					break;
+				}
+				
+				if (m_Input.LocalRelease()) {
+					RemoveState(TreeNodeState.ACTIVE);
+					break;
+				}
+				
+				break;
+			}
+			
+			case TreeNodeInteract.TOGGLE: {
+				if (m_Input.LocalPress()) {
+					if (HasState(TreeNodeState.ACTIVE)) {
+						RemoveState(TreeNodeState.ACTIVE);
+					} else {
+						AddState(TreeNodeState.ACTIVE);
+					}
+					
+					break;
+				}
+				
 				break;
 			}
 		}
 	}
-	
-	bool SetState(TreeNodeState state)
+					
+	void AddState(TreeNodeState state)
 	{
-		if (GetValidStates().Find(state) == -1) {
-			PrintFormat("[%1] Could not change state %2 => %3", m_UUID, typename.EnumToString(TreeNodeState, m_TreeNodeState), typename.EnumToString(TreeNodeState, state));
-			return false;
-		}
-		
-		StateMachine[m_TreeNodeState].RemoveItem(this);	
-		StateMachine[state].Insert(this);
-		
-		m_TreeNodeState = state;		
-		State_OnChanged.Invoke(m_TreeNodeState);
-		return true;
-	}
-	
-	bool AddState(TreeNodeState state)
-	{
-		if (GetValidStates().Find(state) == -1) {
-			PrintFormat("[%1] Could not add state %2", m_UUID, typename.EnumToString(TreeNodeState, state));
-			return false;
-		}
-		
-		StateMachine[state].Insert(this);
-		
-		m_TreeNodeState |= state;		
-		State_OnChanged.Invoke(m_TreeNodeState);
-		return true;
+		StateMachine[state].Insert(this);		
+		m_TreeNodeState |= state;
+		OnStateChanged(m_TreeNodeState);
 	}
 	
 	void RemoveState(TreeNodeState state)
 	{
 		StateMachine[state].RemoveItem(this);	
-		Print(m_TreeNodeState);
 		m_TreeNodeState &= ~state;
-		Print(m_TreeNodeState);
-		State_OnChanged.Invoke(m_TreeNodeState);
+		OnStateChanged(m_TreeNodeState);
+	}
+	
+	void OnStateChanged(TreeNodeState state)
+	{
+		if (state.IsActive()) {
+			array<string> xor_selections = GetXorSelections();
+			foreach (string xor: xor_selections) {
+				TreeNode xor_node = m_Parent[xor];
+				if (!xor_node) {
+					Error(string.Format("[%1] couldnt find node to xor %2", m_UUID, xor));
+					continue;
+				}
+				
+				if (state ^ xor_node.GetState()) {
+					xor_node.RemoveState(TreeNodeState.ACTIVE);
+				}
+			}
+		}
+		
+		State_OnChanged.Invoke(state);
 	}
 	
 	bool HasState(TreeNodeState state)
@@ -472,6 +513,11 @@ class TreeNode: SerializableBase
 		}
 		
 		return result;
+	}
+	
+	array<string> GetXorSelections()
+	{
+		return {};
 	}
 				
 #ifdef DIAG_DEVELOPER

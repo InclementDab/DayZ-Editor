@@ -230,15 +230,9 @@ class ObjectNode: TreeNode
 		return true;
 	}
 			
-	override bool SetState(TreeNodeState state)
+	override void OnStateChanged(TreeNodeState state)
 	{
-		if (!super.SetState(state)) {
-			return false;
-		}
-		
-		if (m_ObjectNodeView) {
-			m_ObjectNodeView.OnStateChanged(state);
-		}
+		super.OnStateChanged(state);
 		
 		if (state.IsActive()) {
 			if (((m_Flags & ObjectNodeFlags.BBOX) == ObjectNodeFlags.BBOX)) {
@@ -251,8 +245,6 @@ class ObjectNode: TreeNode
 			
 			GetGame().ObjectDelete(m_TranslationGizmo);
 		}
-		
-		return true;
 	}
 			
 	bool GetGroundUnderObject(out vector position, out vector direction)

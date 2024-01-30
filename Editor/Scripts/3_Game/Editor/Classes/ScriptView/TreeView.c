@@ -84,7 +84,7 @@ class TreeView: ScriptView
 			case Panel: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.HOLD: {
-						m_Node.SetState(TreeNodeState.ACTIVE);
+						m_Node.AddState(TreeNodeState.ACTIVE);
 						return true;
 					}
 				}
@@ -106,13 +106,12 @@ class TreeView: ScriptView
 			case Panel: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.HOLD: {
-						m_Node.SetState(TreeNodeState.EMPTY);
+						m_Node.RemoveState(TreeNodeState.ACTIVE);
 						return true;
 					}
 					
 					case TreeNodeInteract.PRESS: {
-						Print(m_Node);
-						m_Node.SetState(TreeNodeState.ACTIVE);
+						m_Node.AddState(TreeNodeState.ACTIVE);
 						return true;
 					}
 				}
@@ -139,7 +138,11 @@ class TreeView: ScriptView
 			case Panel: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.TOGGLE: {
-						m_Node.ToggleState();
+						if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+							m_Node.RemoveState(TreeNodeState.ACTIVE);
+						} else {
+							m_Node.AddState(TreeNodeState.ACTIVE);
+						}
 						return true;
 					}
 				}
@@ -159,7 +162,11 @@ class TreeView: ScriptView
 		
 		switch (w) {
 			case Panel: {
-				m_Node.ToggleState();
+				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+					m_Node.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_Node.AddState(TreeNodeState.ACTIVE);
+				}
 				return true;
 			}
 		}

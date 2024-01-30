@@ -13,6 +13,7 @@ class ObjectNodeView: ScriptView
 	void ObjectNodeView(notnull ObjectNode editor_object)
 	{
 		m_ObjectNode = editor_object;
+		m_ObjectNode.State_OnChanged.Insert(OnStateChanged);
 		
 		Symbols icon = m_ObjectNode.GetIcon();
 		
@@ -23,7 +24,7 @@ class ObjectNodeView: ScriptView
 		Outline.SetImage(0);
 	}
 	
-	void OnStateChanged(TreeNodeState state)
+	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
 		switch (state) {
 			case TreeNodeState.EMPTY: {

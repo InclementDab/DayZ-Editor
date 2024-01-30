@@ -6,6 +6,7 @@ class BrushTool: CommandNode
 	
 	protected float m_Radius = 10.0;
 		
+	/*
 	override bool Update(float dt, Raycast raycast)
 	{
 		if (!super.Update(dt, raycast)) {
@@ -45,21 +46,17 @@ class BrushTool: CommandNode
 		}
 		
 		return true;
-	}
+	}*/
 	
-	override bool SetState(TreeNodeState state)
+	override void OnStateChanged(TreeNodeState state)
 	{
-		if (!super.SetState(state)) {
-			return false;
-		}
+		super.OnStateChanged(state);
 		
-		if (state.IsActive()) {
+		if (m_TreeNodeState.IsActive()) {
 			m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);
 		} else {
 			GetGame().ObjectDelete(m_Ring);
 		}
-		
-		return true;
 	}
 	
 	array<string> GetBrushedTypes()

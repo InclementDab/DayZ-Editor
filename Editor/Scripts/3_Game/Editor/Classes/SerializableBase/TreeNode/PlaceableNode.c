@@ -11,13 +11,10 @@ class PlaceableNode: TreeNode
 		return true;
 	}
 	
-	override bool SetState(TreeNodeState state)
+	override void OnStateChanged(TreeNodeState state)
 	{
-		if (!super.SetState(state)) {
-			return false;
-		}
-		
-		
+		super.OnStateChanged(state);
+	
 		if (state.IsActive()) {
 			vector matrix[4];
 			Math3D.MatrixIdentity4(matrix);
@@ -25,11 +22,7 @@ class PlaceableNode: TreeNode
 				GetEditor().GetNode(Editor.PLACING).Add(new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT));
 				GetUApi().SupressNextFrame(true);
 			}
-			
-			return true;
 		}
-
-		return true;
 	}
 	
 	override TreeNodeInteract GetInteractType()

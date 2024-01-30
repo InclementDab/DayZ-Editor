@@ -1,16 +1,12 @@
 class LassoCommand: CommandNode
 {
-	override bool SetState(TreeNodeState state)
+	override void OnStateChanged(TreeNodeState state)
 	{
-		if (!super.SetState(state)) {
-			return false;
-		}
+		super.OnStateChanged(state);
 		
-		if (state && GetEditor().GetHud()) {
+		if (state.IsActive() && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.LASSO;
 		}
-		
-		return true;
 	}
 	
 	override array<string> GetXorSelections()

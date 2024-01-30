@@ -288,7 +288,7 @@ class Editor: TreeNode
 		}
 								
 		if (input.LocalPress_ID(UAUIBack)) {
-			TreeNode.StateMachine.SetAllStates(TreeNodeState.EMPTY);
+			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.ACTIVE);
 		}
 				
 		if (input.LocalPress_ID(UAFire)) {
@@ -375,13 +375,6 @@ class Editor: TreeNode
 		
 		array<TreeNode> nodes = Children[COMMANDS].Children.GetValueArray();
 		nodes.InsertArray(Children[COMMANDS][TOOLS].Children.GetValueArray());
-		
-		foreach (TreeNode node: nodes) {
-			CommandNode command_node = CommandNode.Cast(node);
-			if (command_node && !command_node.Update(timeslice, m_Camera.PerformCursorRaycast())) {
-				return;
-			}
-		}
 	}
 				
 	override void Write(Serializer serializer, int version)
