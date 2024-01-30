@@ -25,22 +25,22 @@ class EditorButton: ScriptedWidgetEventHandler
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");
 		
-		if (Node == string.Empty) {
-			return;
+		if (Node != string.Empty) {
+			m_Node = CommandNode.Cast(GetDayZGame().GetEditor().GetNode(Node));
+			if (m_Node) {
+				m_Node.State_OnChanged.Insert(OnStateChanged);
+				OnStateChanged(m_Node, m_Node.GetDefaultState());
+			}
 		}
-		
-		m_Node = CommandNode.Cast(GetDayZGame().GetEditor().GetNode(Node));
-		if (!m_Node) {
-			Error(string.Format("Could not find node %1", Node));
-			return;
-		}
-
-		m_Node.State_OnChanged.Insert(OnStateChanged);
-		OnStateChanged(m_Node, m_Node.GetDefaultState());
 	}
 		
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
+		if (!m_Node) {
+			Print("Gotta find a node for " + Node);
+			return;
+		}
+		
 		switch (state) {
 			case TreeNodeState.EMPTY: {
 				m_Node.GetEditor().GetHud().ClearCursor();
@@ -72,8 +72,8 @@ class EditorButton: ScriptedWidgetEventHandler
 			return false;
 		}
 		
-		switch (m_Node.GetShortcutType()) {
-			case ShortcutKeyType.HOLD: {
+		switch (m_Node.GetInteractType()) {
+			case TreeNodeInteract.HOLD: {
 				m_Node.SetState(TreeNodeState.ACTIVE);
 				return true;
 			}
@@ -88,13 +88,13 @@ class EditorButton: ScriptedWidgetEventHandler
 			return false;
 		}
 		
-		switch (m_Node.GetShortcutType()) {
-			case ShortcutKeyType.HOLD: {
+		switch (m_Node.GetInteractType()) {
+			case TreeNodeInteract.HOLD: {
 				m_Node.SetState(TreeNodeState.EMPTY);
 				return true;
 			}
 			
-			case ShortcutKeyType.PRESS: {
+			case TreeNodeInteract.PRESS: {
 				m_Node.SetState(TreeNodeState.ACTIVE);
 				return true;
 			}
@@ -109,8 +109,8 @@ class EditorButton: ScriptedWidgetEventHandler
 			return false;
 		}
 		
-		switch (m_Node.GetShortcutType()) {
-			case ShortcutKeyType.TOGGLE: {
+		switch (m_Node.GetInteractType()) {
+			case TreeNodeInteract.TOGGLE: {
 				m_Node.ToggleState();
 				return true;
 			}
@@ -125,8 +125,8 @@ class EditorButton: ScriptedWidgetEventHandler
 			return false;
 		}
 		
-		switch (m_Node.GetShortcutType()) {
-			case ShortcutKeyType.DOUBLE: {
+		switch (m_Node.GetInteractType()) {
+			case TreeNodeInteract.DOUBLE: {
 				m_Node.ToggleState();
 				return true;
 			}

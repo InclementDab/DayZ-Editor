@@ -134,7 +134,7 @@ FrameWidgetClass Root {
        disabled 0
        clipchildren 0
        ignorepointer 1
-       color 0.0588 0.0588 0.0588 0
+       color 0.1569 0.1569 0.1569 0
        size 1 1
        halign center_ref
        valign center_ref
@@ -145,7 +145,7 @@ FrameWidgetClass Root {
        scaled 0
        draggable 0
        scriptclass ""
-       style dashed
+       style outline
        Padding 0
        Margin 6
        "Size To Content H" 1

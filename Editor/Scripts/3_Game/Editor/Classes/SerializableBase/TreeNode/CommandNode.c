@@ -1,11 +1,9 @@
 // I think its wise... it was
 class CommandNode: TreeNode
 {
-	protected ShortcutKeyType m_ShortcutKeyType;
-	
-	void CommandNode(string uuid, string display_name, Symbols icon, ShortcutKeyType key_type = ShortcutKeyType.NONE)
+	void CommandNode(string uuid, string display_name, Symbols icon, TreeNodeInteract key_type = TreeNodeInteract.NONE)
 	{
-		m_ShortcutKeyType = key_type;
+		m_TreeNodeInteract = key_type;
 	}
 	
 	bool Update(float dt, Raycast raycast)
@@ -16,8 +14,8 @@ class CommandNode: TreeNode
 			return true;
 		}
 						
-		switch (GetShortcutType()) {
-			case ShortcutKeyType.PRESS: {
+		switch (GetInteractType()) {
+			case TreeNodeInteract.PRESS: {
 				if (input.LocalPress()) {
 					SetState(TreeNodeState.ACTIVE);
 					return false;
@@ -26,7 +24,7 @@ class CommandNode: TreeNode
 				break;
 			}
 			
-			case ShortcutKeyType.DOUBLE: {
+			case TreeNodeInteract.DOUBLE: {
 				if (input.LocalDoubleClick()) {
 					SetState(TreeNodeState.ACTIVE);
 					return false;
@@ -35,7 +33,7 @@ class CommandNode: TreeNode
 				break;
 			}
 			
-			case ShortcutKeyType.HOLD: {
+			case TreeNodeInteract.HOLD: {
 				if (input.LocalHoldBegin()) {
 					SetState(TreeNodeState.ACTIVE);
 					return false;
@@ -49,7 +47,7 @@ class CommandNode: TreeNode
 				break;
 			}
 			
-			case ShortcutKeyType.TOGGLE: {
+			case TreeNodeInteract.TOGGLE: {
 				if (input.LocalPress()) {
 					ToggleState();
 					return false;
@@ -107,11 +105,6 @@ class CommandNode: TreeNode
 		return result;
 	}
 		
-	ShortcutKeyType GetShortcutType()
-	{
-		return m_ShortcutKeyType;
-	}
-
 	array<string> GetXorSelections()
 	{
 		return {};

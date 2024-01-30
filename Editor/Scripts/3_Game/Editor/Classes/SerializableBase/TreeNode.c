@@ -1,4 +1,4 @@
-enum ShortcutKeyType
+enum TreeNodeInteract
 {
 	NONE, // darn :(
 	PRESS, // 100ms
@@ -11,7 +11,8 @@ enum TreeNodeState
 {
 	EMPTY,
 	HOVER,
-	ACTIVE
+	ACTIVE,
+	CONTEXT
 };
 
 class TreeNodeStateMachine: map<int, ref array<TreeNode>>
@@ -39,9 +40,13 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 
 class TreeNodeChildren: map<string, ref TreeNode>
 {
-	void SetAllStates(TreeNodeState state)
+	void SetAllStates(TreeNodeState state, bool recursively = false)
 	{
-		foreach (string uuid, TreeNode node: this) {			
+		foreach (string uuid, TreeNode node: this) {
+			if (recursively) {
+				node.Children.SetAllStates(state, recursively);
+			}
+			
 			if (node.GetState() == state) {
 				continue;
 			}
@@ -57,6 +62,7 @@ class TreeNode: SerializableBase
 	static ref TreeNodeStateMachine StateMachine = new TreeNodeStateMachine();
 		
 	protected string m_UUID;
+	protected TreeNodeInteract m_TreeNodeInteract = TreeNodeInteract.NONE;
 	protected TreeNodeState m_TreeNodeState = GetDefaultState();
 	ref TreeNodeChildren Children = new TreeNodeChildren();
 
@@ -393,6 +399,11 @@ class TreeNode: SerializableBase
 	array<TreeNodeState> GetValidStates()
 	{
 		return { TreeNodeState.EMPTY, TreeNodeState.HOVER, TreeNodeState.ACTIVE };
+	}
+	
+	TreeNodeInteract GetInteractType()
+	{
+		return m_TreeNodeInteract;
 	}
 				
 #ifdef DIAG_DEVELOPER

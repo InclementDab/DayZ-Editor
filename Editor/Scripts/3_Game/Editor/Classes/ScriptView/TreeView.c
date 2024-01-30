@@ -5,7 +5,7 @@ class TreeView: ScriptView
 	TextWidget Text;
 	
 	Widget Panel, Children, Outline;
-	ImageWidget IconImage, CollapseIcon, Texture;
+	ImageWidget IconImage, CollapseIcon;
 	ButtonWidget Collapse;
 	
 	protected bool m_IsBeingDragged;
@@ -13,13 +13,13 @@ class TreeView: ScriptView
 	protected TreeNode m_Node;
 
 	void TreeView(TreeNode node)
-	{		
+	{
 		m_TemplateController = TreeViewController.Cast(m_Controller);
 		m_Node = node;
 
 		SetText(m_Node.GetDisplayName());
 		
-		IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());
+		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
 	}
 			
@@ -27,19 +27,19 @@ class TreeView: ScriptView
 	{
 		switch (state) {
 			case TreeNodeState.EMPTY: {
-				Outline.Show(false);
+				Outline.SetAlpha(0.0);
 				Panel.SetAlpha(0);
 				break;
 			}
 			
 			case TreeNodeState.HOVER: {
-				Outline.Show(true);
+				Outline.SetAlpha(1.0);
 				break;
 			}
 			
 			case TreeNodeState.ACTIVE: {
-				Outline.Show(false);
-				Panel.SetAlpha(0);
+				Outline.SetAlpha(0.0);
+				Panel.SetAlpha(1.0);
 				break;
 			}
 		}
@@ -71,9 +71,7 @@ class TreeView: ScriptView
 		m_LayoutRoot.GetScreenSize(x, y);
 		m_LayoutRoot.SetScreenSize(x, h * state + 24);
 		m_LayoutRoot.Update();
-		
-		Texture.Show(state);
-		
+				
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		TreeNode parent = m_Node.GetParent();
 		if (parent) {
@@ -91,104 +89,118 @@ class TreeView: ScriptView
 		m_LayoutRoot.Show(name.Contains(filter));
 	}
 			
-	override void Update(float dt)
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (w) {
+			case Panel: {
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.HOLD: {
+						m_Node.SetState(TreeNodeState.ACTIVE);
+						return true;
+					}
+				}
+				
+				return false;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (w) {
+			case Panel: {
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.HOLD: {
+						m_Node.SetState(TreeNodeState.EMPTY);
+						return true;
+					}
+					
+					case TreeNodeInteract.PRESS: {
+						m_Node.SetState(TreeNodeState.ACTIVE);
+						return true;
+					}
+				}
+				
+				return false;
+			}
+		}
+				
+		return false;
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
 		switch (w) {
 			case Collapse: {
 				ShowChildren(!Children.IsVisible());
 				return true;
 			}
-		}
-		
-		return super.OnClick(w, x, y, button);
-	}
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		if (w == Texture || Collapse) {
-			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-			WidgetAnimator.Animate(Collapse, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-		}
-		
-		EditorHud hud = GetDayZGame().GetEditor().GetHud();
-		
-		hud.SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());		
-		return true;
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{				
-		if (w == Texture || Collapse) {
-			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
-			WidgetAnimator.Animate(Collapse, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
-		}
-		
-		GetDayZGame().GetEditor().GetHud().ClearCursor();				
-		return true;
-	}
-		
-	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
-	{
-		switch (w) {
-			case Texture: {
-				ShowChildren(false);
-				return true;
-			}
 			
 			case Panel: {
-				switch (button) {
-					case 0: {
-						if (!KeyState(KeyCode.KC_LSHIFT)) {
-							m_Node.GetParent().Children.SetAllStates(TreeNodeState.EMPTY);
-							foreach (TreeNode active_nodes: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
-								active_nodes.SetState(TreeNodeState.EMPTY);
-							}
-							
-							foreach (TreeNode hover_nodes: TreeNode.StateMachine[TreeNodeState.HOVER]) {
-								hover_nodes.SetState(TreeNodeState.EMPTY);
-							}
-						}
-						
-						if (KeyState(KeyCode.KC_LCONTROL)) {
-							m_Node.ToggleState();
-						} else {
-							m_Node.SetState(TreeNodeState.ACTIVE);
-						}
-						
-						return true;
-					}
-					
-					case 1: {
-						EditorHud hud = GetDayZGame().GetEditor().GetHud();
-						hud.GetTemplateController().MenuItems.Clear();
-						
-						if (m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
-							hud.Menu.Show(true);
-							hud.Menu.SetScreenPos(x, y);
-						} else {
-							hud.Menu.Show(false);
-						}
-						
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.TOGGLE: {
+						m_Node.ToggleState();
 						return true;
 					}
 				}
+				
+				return false;
 			}
-		}	
+		}
+				
+		return false;
+	}
+		
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (w) {
+			case Panel: {
+				m_Node.ToggleState();
+				return true;
+			}
+		}
+		
+		return false;
+	}
+		
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		if (m_Node) {
+			m_Node.SetState(TreeNodeState.HOVER);
+			return true;
+		}
 		
 		return false;
 	}
 	
-	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		Print("OnDoubleClick" + w);
+		if (m_Node && m_Node.GetState() == TreeNodeState.HOVER) {
+			m_Node.SetState(TreeNodeState.EMPTY);
+			return true;
+		}
 		
-		return super.OnDoubleClick(w, x, y, button);
+		return false;
 	}
-	
+			
 	override bool OnDrag(Widget w, int x, int y)
 	{		
 		

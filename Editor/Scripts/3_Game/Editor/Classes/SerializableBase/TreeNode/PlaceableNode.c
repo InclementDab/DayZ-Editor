@@ -16,7 +16,7 @@ class PlaceableNode: TreeNode
 		if (!super.SetState(state)) {
 			return false;
 		}
-		
+				
 		vector matrix[4];
 		Math3D.MatrixIdentity4(matrix);
 		if (state) {
@@ -26,4 +26,39 @@ class PlaceableNode: TreeNode
 		
 		return true;
 	}
+	
+	override TreeNodeInteract GetInteractType()
+	{
+		return TreeNodeInteract.PRESS;
+	}
 }
+
+/*switch (button) {
+					case 0: {
+						if (!KeyState(KeyCode.KC_LSHIFT)) {
+							m_Node.GetParent().Children.SetAllStates(TreeNodeState.EMPTY);
+						}
+						
+						if (KeyState(KeyCode.KC_LCONTROL)) {
+							m_Node.ToggleState();
+						} else {
+							m_Node.SetState(TreeNodeState.ACTIVE);
+						}
+						
+						return true;
+					}
+					
+					case 1: {
+						EditorHud hud = GetDayZGame().GetEditor().GetHud();
+						hud.GetTemplateController().MenuItems.Clear();
+						
+						if (m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
+							hud.Menu.Show(true);
+							hud.Menu.SetScreenPos(x, y);
+						} else {
+							hud.Menu.Show(false);
+						}
+						
+						return true;
+					}
+				}*/
