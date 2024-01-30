@@ -184,6 +184,25 @@ FrameWidgetClass Root {
       }
      }
     }
+    ImageWidgetClass Texture {
+     visible 0
+     ignorepointer 0
+     color 1 1 1 0.3922
+     position 2 0
+     size 7 1
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     scaled 0
+     scriptclass ""
+     image0 "set:editor_tree image:tree_l"
+     mode blend
+     "src alpha" 1
+     "clamp mode" clamp
+     filter 0
+    }
    }
   }
   WrapSpacerWidgetClass Children {
@@ -192,7 +211,7 @@ FrameWidgetClass Root {
    clipchildren 0
    ignorepointer 1
    position 30 30
-   size 1 1
+   size 0.99 1
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -208,25 +227,6 @@ FrameWidgetClass Root {
      Binding_Name "ChildrenItems"
     }
    }
-  }
-  ImageWidgetClass Texture {
-   visible 0
-   ignorepointer 0
-   color 1 1 1 0.3922
-   position 2 0
-   size 7 0.99
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 0
-   scaled 0
-   scriptclass ""
-   image0 "set:editor_tree image:tree_l"
-   mode blend
-   "src alpha" 1
-   "clamp mode" clamp
-   filter 0
   }
  }
 }

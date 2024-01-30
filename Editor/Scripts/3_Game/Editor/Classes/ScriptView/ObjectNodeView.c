@@ -123,6 +123,20 @@ class ObjectNodeView: ScriptView
 				m_ObjectNode.AddState(TreeNodeState.ACTIVE);
 				return true;
 			}
+			
+			case TreeNodeInteract.TOGGLE: {
+				if (m_ObjectNode.HasState(TreeNodeState.ACTIVE)) {
+					m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+			
+			case TreeNodeInteract.PRESS: {
+				m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				return true;
+			}
 		}
 				
 		return false;
@@ -139,11 +153,6 @@ class ObjectNodeView: ScriptView
 				m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
 				return true;
 			}
-			
-			case TreeNodeInteract.PRESS: {
-				m_ObjectNode.AddState(TreeNodeState.ACTIVE);
-				return true;
-			}
 		}
 				
 		return false;
@@ -155,16 +164,7 @@ class ObjectNodeView: ScriptView
 			return false;
 		}
 		
-		switch (m_ObjectNode.GetInteractType()) {
-			case TreeNodeInteract.TOGGLE: {
-				if (m_ObjectNode.HasState(TreeNodeState.ACTIVE)) {
-					m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
-				} else {
-					m_ObjectNode.AddState(TreeNodeState.ACTIVE);
-				}
-				return true;
-			}
-		}
+		
 				
 		return false;
 	}

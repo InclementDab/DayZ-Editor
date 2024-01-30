@@ -1,5 +1,7 @@
 class PlaceableNode: TreeNode
 {
+	protected string m_ObjectUuid;
+	
 	override bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
 	{
 		Editor editor = GetDayZGame().GetEditor();
@@ -15,26 +17,28 @@ class PlaceableNode: TreeNode
 	{
 		super.OnStateChanged(state);
 	
-		if (state.IsActive()) {			
+		if (state.IsActive()) {	
 			vector matrix[4];
 			Math3D.MatrixIdentity4(matrix);
-
-			ObjectNode node = new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
-			//node.AddState(TreeNodeState.ACTIVE);
+			m_ObjectUuid = UUID.Generate();
+			ObjectNode node = new ObjectNode(m_ObjectUuid, m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
 			GetEditor().GetNode(Editor.PLACING).Add(node);
-			GetUApi().SupressNextFrame(true);
 			
-			// Clear all other states
-			foreach (TreeNode active_node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
-				if (!active_node || !active_node.IsInherited(PlaceableNode)) {
-					continue;
-				}
-				
-				if (active_node == this) {
-					continue;
-				}
-				
-				active_node.RemoveState(TreeNodeState.ACTIVE);
+			GetUApi().SupressNextFrame(true);
+		} else {			
+			ObjectNode object_node = GetEditor()[Editor.PLACING][m_ObjectUuid];
+			GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
+			GetEditor()[Editor.PLACING].Remove(object_node);
+			GetEditor()[Editor.EDITS].Add(object_node);
+			GetEditor()[Editor.EDITS].Synchronize();
+						
+			object_node.AddState(TreeNodeState.ACTIVE);
+			
+			// remove it from placing
+			GetEditor().PlaySound(EditorSounds.PLOP);
+			
+			if (KeyState(KeyCode.KC_LSHIFT)) {
+				AddState(TreeNodeState.ACTIVE);
 			}
 		}
 	}
@@ -44,33 +48,3 @@ class PlaceableNode: TreeNode
 		return TreeNodeInteract.PRESS;
 	}
 }
-
-/*switch (button) {
-					case 0: {
-						if (!KeyState(KeyCode.KC_LSHIFT)) {
-							m_Node.GetParent().Children.SetAllStates(TreeNodeState.EMPTY);
-						}
-						
-						if (KeyState(KeyCode.KC_LCONTROL)) {
-							m_Node.ToggleState();
-						} else {
-							m_Node.SetState(TreeNodeState.ACTIVE);
-						}
-						
-						return true;
-					}
-					
-					case 1: {
-						EditorHud hud = GetDayZGame().GetEditor().GetHud();
-						hud.GetTemplateController().MenuItems.Clear();
-						
-						if (m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
-							hud.Menu.Show(true);
-							hud.Menu.SetScreenPos(x, y);
-						} else {
-							hud.Menu.Show(false);
-						}
-						
-						return true;
-					}
-				}*/

@@ -355,7 +355,12 @@ class ObjectNode: TreeNode
 	}
 	
 	override TreeNodeInteract GetInteractType()
-	{
+	{		
+		// This is pretty cool. inheritence with KEYBINDS??
+		if (GetDayZGame().IsLeftCtrlDown()) {
+			return TreeNodeInteract.TOGGLE;
+		}
+		
 		return TreeNodeInteract.PRESS;
 	}
 	

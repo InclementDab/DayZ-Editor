@@ -290,23 +290,17 @@ class Editor: TreeNode
 		if (input.LocalPress_ID(UAUIBack)) {
 			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.ACTIVE);
 		}
-				
-		if (input.LocalPress_ID(UAFire)) {
-			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
-			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
+		
+		Raycast raycast = m_Camera.PerformCursorRaycast();
+		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {
+			// Clear our pressed buttons when we click in the world randomly, probably same with 
+			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && (!raycast || !raycast.Hit)) {
 				foreach (TreeNode node_to_deselect: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
-					node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
+					if (node_to_deselect && node_to_deselect.GetInteractType() == TreeNodeInteract.PRESS) {
+						node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
+					}
 				}
-			}
-			/*
-			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {
-				ObjectNode editor_object = ObjectNode.ByObject[raycast.Hit];
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					ToggleSelect(editor_object);
-				} else {
-					Select(editor_object);
-				}
-			}*/			
+			}		
 		}
 		
 		foreach (string uuid, TreeNode node1: Children[PLACING].Children) {
@@ -315,7 +309,7 @@ class Editor: TreeNode
 				continue;
 			}
 			
-			Raycast raycast = m_Camera.PerformCursorRaycast(object_node.GetObject());
+			raycast = m_Camera.PerformCursorRaycast(object_node.GetObject());
 			if (!raycast) {
 				continue;
 			}			
@@ -342,21 +336,6 @@ class Editor: TreeNode
 			//Print(Placing.Count());
 			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 			object_node.SetBaseTransform(transform);
-						
-			if (input.LocalPress_ID(UAFire)) {
-				//Deselect(object_node);
-				InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
-				this[PLACING].Remove(object_node);
-				this[EDITS].Add(object_node);
-				this[EDITS].Synchronize();
-				
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					RemoveState(TreeNodeState.ACTIVE);
-				}
-				// remove it from placing
-				PlaySound(EditorSounds.PLOP);
-				return;
-			}
 		}
 		
 		if (input.LocalPress_ID(UAZoomIn)) {

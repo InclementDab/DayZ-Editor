@@ -205,6 +205,21 @@ class TreeNode: SerializableBase
 			}
 		}
 		
+		if (state.IsContext()) {
+			EditorHud hud = GetEditor().GetHud();
+			hud.GetTemplateController().MenuItems.Clear();
+			
+			if (CreateContextMenu(hud.GetTemplateController().MenuItems)) {
+				hud.Menu.Show(true);
+				
+				int x, y;
+				GetMousePos(x, y);
+				hud.Menu.SetScreenPos(x, y);
+			} else {
+				hud.Menu.Show(false);
+			}
+		}
+		
 		State_OnChanged.Invoke(this, state);
 	}
 	
