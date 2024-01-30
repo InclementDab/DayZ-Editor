@@ -46,6 +46,11 @@ class PlaceableNode: TreeNode
 		}
 	}
 	
+	override TreeNodeState GetStateMask()
+	{
+		return TreeNodeState.ALL;
+	}
+	
 	override TreeNodeInteract GetInteractType()
 	{
 		return TreeNodeInteract.PRESS;

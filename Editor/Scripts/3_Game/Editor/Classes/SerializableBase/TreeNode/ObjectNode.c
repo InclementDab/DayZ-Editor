@@ -371,6 +371,11 @@ class ObjectNode: TreeNode
 		return TreeNodeInteract.PRESS;
 	}
 	
+	override TreeNodeState GetStateMask()
+	{
+		return TreeNodeState.ALL;
+	}
+	
 	ObjectNodeFlags GetFlags()
 	{
 		return m_Flags;

@@ -26,6 +26,8 @@ class TreeNodeState: int
 	static const int CONTEXT = 0x04;
 	static const int DRAGGING = 0x08;
 	
+	static const int ALL = HOVER | ACTIVE | CONTEXT | DRAGGING;
+	
 	bool IsEmpty()
 	{
 		return value == 0x00;
@@ -188,6 +190,11 @@ class TreeNode: SerializableBase
 					
 	void AddState(TreeNodeState state)
 	{
+		state &= GetStateMask();
+		if (state == 0) {
+			return;
+		}
+		
 		StateMachine[state].Insert(this);		
 		m_TreeNodeState |= state;
 		OnStateChanged(state, m_TreeNodeState);
@@ -195,6 +202,11 @@ class TreeNode: SerializableBase
 	
 	void RemoveState(TreeNodeState state)
 	{
+		state &= GetStateMask();
+		if (state == 0) {
+			return;
+		}
+		
 		StateMachine[state].RemoveItem(this);
 		m_TreeNodeState &= ~state;
 		OnStateChanged(state, m_TreeNodeState);
@@ -509,6 +521,12 @@ class TreeNode: SerializableBase
 	}
 	
 	TreeNodeState GetDefaultState()
+	{
+		return TreeNodeState.EMPTY;
+	}
+	
+	// Override to enable different states
+	TreeNodeState GetStateMask()
 	{
 		return TreeNodeState.EMPTY;
 	}
