@@ -223,7 +223,7 @@ class ObjectNode: TreeNode
 				InitObject(m_Object);
 			}
 		}
-		
+				
 		m_Object.SetTransform(transform);		
 				
 		serializer.Read(m_Flags);

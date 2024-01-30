@@ -286,7 +286,7 @@ class Editor: TreeNode
 		if (!m_Camera) {
 			return;
 		}
-									
+										
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
@@ -338,6 +338,7 @@ class Editor: TreeNode
 			object_node.SetBaseTransform(transform);
 					
 			if (input.LocalPress_ID(UAFire)) {
+				Deselect(object_node);
 				InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
 				this[PLACING].Remove(object_node);
 				this[EDITS].Add(object_node);

@@ -116,7 +116,7 @@ class TreeView: ScriptView
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		Panel.SetAlpha(1.0);
+		//Panel.SetAlpha(1.0);
 		return false;
 	}
 	
