@@ -6,7 +6,7 @@ class HudToggleCommand: CommandNode
 		
 		EditorHud hud = GetEditor().GetHud();
 		if (hud) {
-			hud.Show(m_TreeNodeState.IsActive());
+			hud.Show(total_state.IsActive());
 		}
 	}
 	

@@ -4,7 +4,7 @@ class DeleteCommand: CommandNode
 	{
 		super.OnStateChanged(state, total_state);
 		
-		if (m_TreeNodeState.IsActive()) {
+		if (total_state.IsActive()) {
 			foreach (TreeNode node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {					
 				GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());	
 				node.GetParent().Children.Remove(node.GetUUID());				

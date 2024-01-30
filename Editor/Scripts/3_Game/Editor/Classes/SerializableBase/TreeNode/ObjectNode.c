@@ -65,10 +65,12 @@ class ObjectNode: TreeNode
 		}
 		
 		Shape.CreateSphere(COLOR_APPLE, ShapeFlags.ONCE, m_Object.GetBoundingCenter().Multiply4(transform), 0.25);
-		
-		for (int i = 0; i < 6; i++) {
-			// Debug
-			//m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+				
+		if (HasState(TreeNodeState.ACTIVE | TreeNodeState.DRAGGING)) {
+			for (int i = 0; i < 6; i++) {
+				// Debug
+				m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+			}
 		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
@@ -241,16 +243,21 @@ class ObjectNode: TreeNode
 	{
 		super.OnStateChanged(state, total_state);
 		
-		if (state.IsActive()) {
-			if (((m_Flags & ObjectNodeFlags.BBOX) == ObjectNodeFlags.BBOX)) {
+		if (state.IsHover() || state.IsActive()) {
+			if (total_state.IsHover() || total_state.IsActive()) {
 				//EditorBoundingBox.Create(m_Object);
+				
 			}
 			
+			if (!total_state.IsHover() && !total_state.IsActive()) {
+				//EditorBoundingBox.Destroy(m_Object);
+			}
+		}
+				
+		if (total_state.IsActive()) {			
 			//m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 		} else {
-			//EditorBoundingBox.Destroy(m_Object);
-			
-			GetGame().ObjectDelete(m_TranslationGizmo);
+			//GetGame().ObjectDelete(m_TranslationGizmo);
 		}
 	}
 			

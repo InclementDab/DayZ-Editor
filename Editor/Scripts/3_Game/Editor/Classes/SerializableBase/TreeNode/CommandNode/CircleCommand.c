@@ -4,7 +4,7 @@ class EllipseCommand: CommandNode
 	{
 		super.OnStateChanged(state, total_state);
 		
-		if (state.IsActive() && GetEditor().GetHud()) {
+		if (total_state.IsActive() && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
 		}
 	}

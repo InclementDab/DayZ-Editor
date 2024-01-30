@@ -52,7 +52,7 @@ class BrushTool: CommandNode
 	{
 		super.OnStateChanged(state, total_state);
 		
-		if (m_TreeNodeState.IsActive()) {
+		if (total_state.IsActive()) {
 			m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);
 		} else {
 			GetGame().ObjectDelete(m_Ring);
