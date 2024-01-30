@@ -22,11 +22,7 @@ class TreeView: ScriptView
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());
 		IconImage.SetImage(0);
 	}
-	
-	void ~TreeView()
-	{
-	}
-		
+			
 	void OnSelectionChanged(bool state)
 	{
 		Panel.SetColor(EditorColors.SELECT * state);

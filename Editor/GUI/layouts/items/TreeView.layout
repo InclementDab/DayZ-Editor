@@ -100,7 +100,7 @@ FrameWidgetClass Root {
        image0 "set:regular image:folder"
        mode blend
        "src alpha" 1
-       filter 0
+       filter 1
       }
      }
     }

@@ -234,6 +234,10 @@ class ObjectNode: TreeNode
 	{
 		super.OnSelectionChanged(state);
 		
+		if (m_ObjectNodeView) {
+			m_ObjectNodeView.OnSelectionChanged(state);
+		}
+		
 		if (state) {
 			if (((m_Flags & ObjectNodeFlags.BBOX) == ObjectNodeFlags.BBOX)) {
 				//EditorBoundingBox.Create(m_Object);

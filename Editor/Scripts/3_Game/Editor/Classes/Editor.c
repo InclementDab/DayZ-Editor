@@ -285,11 +285,12 @@ class Editor: TreeNode
 		Input input = GetGame().GetInput();
 		if (!m_Camera) {
 			return;
-		}								
+		}
+									
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
-				//ClearSelections();
+				ClearSelections();
 			}
 			/*
 			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {

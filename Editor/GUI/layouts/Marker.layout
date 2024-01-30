@@ -8,12 +8,13 @@ PanelWidgetClass Marker {
  hexactsize 1
  vexactsize 1
  scaled 0
- "no focus" 1
+ draggable 1
+ "no focus" 0
  {
   ImageWidgetClass Image {
    ignorepointer 1
    color 1 1 1 0.5882
-   size 1 1
+   size 0.99 1
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -24,11 +25,11 @@ PanelWidgetClass Marker {
    image0 "set:solid image:camera"
    mode blend
    "src alpha" 1
-   filter 0
+   filter 1
   }
   ImageWidgetClass Outline {
    ignorepointer 1
-   color 0.0588 0.0588 0.0588 1
+   color 0.7843 0.7843 0.7843 1
    size 1 1
    halign center_ref
    valign center_ref
@@ -40,7 +41,7 @@ PanelWidgetClass Marker {
    image0 "set:thin image:camera"
    mode blend
    "src alpha" 1
-   filter 0
+   filter 1
   }
  }
 }
