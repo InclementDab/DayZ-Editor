@@ -25,7 +25,7 @@ class TreeView: ScriptView
 	}
 			
 	void OnStateChanged(TreeNode node, TreeNodeState state)
-	{		
+	{
 		Panel.SetAlpha(state.IsActive());
 		Outline.SetAlpha(state.IsHover());
 	}

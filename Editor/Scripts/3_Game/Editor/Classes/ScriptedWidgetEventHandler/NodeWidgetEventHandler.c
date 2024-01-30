@@ -48,7 +48,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		if (button != 0) {
+		if (button != 0 || !m_Node) {
 			return false;
 		}
 		
@@ -64,7 +64,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (button != 0) {
+		if (button != 0 || !m_Node) {
 			return false;
 		}
 		
@@ -85,7 +85,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0) {
+		if (button != 0 || !m_Node) {
 			return false;
 		}
 		
@@ -105,7 +105,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0) {
+		if (button != 0 || !m_Node) {
 			return false;
 		}
 		
@@ -125,15 +125,19 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		m_Node.AddState(TreeNodeState.HOVER);
+		if (m_Node) {
+			m_Node.AddState(TreeNodeState.HOVER);
+		}
 		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_Node.RemoveState(TreeNodeState.HOVER);
-		
+		if (m_Node) {
+			m_Node.RemoveState(TreeNodeState.HOVER);
+		}
+				
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	

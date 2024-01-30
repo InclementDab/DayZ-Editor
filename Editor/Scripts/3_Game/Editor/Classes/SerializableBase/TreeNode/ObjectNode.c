@@ -246,7 +246,7 @@ class ObjectNode: TreeNode
 				//EditorBoundingBox.Create(m_Object);
 			}
 			
-			m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
+			//m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 		} else {
 			//EditorBoundingBox.Destroy(m_Object);
 			
@@ -352,6 +352,11 @@ class ObjectNode: TreeNode
 	bool IsFlagEnabled(ObjectNodeFlags flag)
 	{
 		return ((m_Flags & flag) == flag);
+	}
+	
+	override TreeNodeInteract GetInteractType()
+	{
+		return TreeNodeInteract.PRESS;
 	}
 	
 	ObjectNodeFlags GetFlags()

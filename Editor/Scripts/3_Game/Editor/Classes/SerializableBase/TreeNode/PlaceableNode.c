@@ -15,12 +15,26 @@ class PlaceableNode: TreeNode
 	{
 		super.OnStateChanged(state);
 	
-		if (state.IsActive()) {
+		if (state.IsActive()) {			
 			vector matrix[4];
 			Math3D.MatrixIdentity4(matrix);
-			if (state) {
-				GetEditor().GetNode(Editor.PLACING).Add(new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT));
-				GetUApi().SupressNextFrame(true);
+
+			ObjectNode node = new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
+			//node.AddState(TreeNodeState.ACTIVE);
+			GetEditor().GetNode(Editor.PLACING).Add(node);
+			GetUApi().SupressNextFrame(true);
+			
+			// Clear all other states
+			foreach (TreeNode active_node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+				if (!active_node || !active_node.IsInherited(PlaceableNode)) {
+					continue;
+				}
+				
+				if (active_node == this) {
+					continue;
+				}
+				
+				active_node.RemoveState(TreeNodeState.ACTIVE);
 			}
 		}
 	}

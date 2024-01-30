@@ -293,8 +293,10 @@ class Editor: TreeNode
 				
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
-			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
-				//ClearSelections();
+			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor()) {
+				foreach (TreeNode node_to_deselect: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+					node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
+				}
 			}
 			/*
 			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {
@@ -340,7 +342,7 @@ class Editor: TreeNode
 			//Print(Placing.Count());
 			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 			object_node.SetBaseTransform(transform);
-					
+						
 			if (input.LocalPress_ID(UAFire)) {
 				//Deselect(object_node);
 				InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
@@ -348,6 +350,9 @@ class Editor: TreeNode
 				this[EDITS].Add(object_node);
 				this[EDITS].Synchronize();
 				
+				if (!KeyState(KeyCode.KC_LSHIFT)) {
+					RemoveState(TreeNodeState.ACTIVE);
+				}
 				// remove it from placing
 				PlaySound(EditorSounds.PLOP);
 				return;

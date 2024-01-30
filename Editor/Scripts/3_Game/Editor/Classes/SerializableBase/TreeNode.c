@@ -88,7 +88,7 @@ class TreeNode: SerializableBase
 		
 	protected string m_UUID;
 	protected UAInput m_Input;
-	protected TreeNodeInteract m_TreeNodeInteract = TreeNodeInteract.NONE;
+	protected TreeNodeInteract m_TreeNodeInteract = GetInteractType();
 	protected TreeNodeState m_TreeNodeState = GetDefaultState();
 	ref map<string, ref TreeNode> Children = new map<string, ref TreeNode>();
 
@@ -488,7 +488,7 @@ class TreeNode: SerializableBase
 		
 	TreeNodeInteract GetInteractType()
 	{
-		return m_TreeNodeInteract;
+		return TreeNodeInteract.NONE;
 	}
 	
 	string GetShortcutString() 
