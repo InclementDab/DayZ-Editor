@@ -137,6 +137,7 @@ class TreeNode: SerializableBase
 	protected void UpdateInputs()
 	{
 		switch (GetInteractType()) {
+			case TreeNodeInteract.ONCE:
 			case TreeNodeInteract.PRESS: {
 				if (m_Input.LocalPress()) {
 					AddState(TreeNodeState.ACTIVE);
@@ -189,17 +190,17 @@ class TreeNode: SerializableBase
 	{
 		StateMachine[state].Insert(this);		
 		m_TreeNodeState |= state;
-		OnStateChanged(m_TreeNodeState);
+		OnStateChanged(state, m_TreeNodeState);
 	}
 	
 	void RemoveState(TreeNodeState state)
 	{
 		StateMachine[state].RemoveItem(this);
 		m_TreeNodeState &= ~state;
-		OnStateChanged(m_TreeNodeState);
+		OnStateChanged(state, m_TreeNodeState);
 	}
 	
-	void OnStateChanged(TreeNodeState state)
+	void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
 		if (state.IsActive()) {
 			array<string> xor_selections = GetXorSelections();
@@ -211,7 +212,7 @@ class TreeNode: SerializableBase
 				}
 				
 				if (state ^ xor_node.GetState()) {
-					xor_node.RemoveState(TreeNodeState.ACTIVE);
+					//xor_node.RemoveState(TreeNodeState.ACTIVE);
 				}
 			}
 		}

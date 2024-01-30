@@ -48,9 +48,9 @@ class BrushTool: CommandNode
 		return true;
 	}*/
 	
-	override void OnStateChanged(TreeNodeState state)
+	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
-		super.OnStateChanged(state);
+		super.OnStateChanged(state, total_state);
 		
 		if (m_TreeNodeState.IsActive()) {
 			m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);

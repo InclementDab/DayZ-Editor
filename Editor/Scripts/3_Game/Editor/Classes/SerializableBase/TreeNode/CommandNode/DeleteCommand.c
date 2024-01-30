@@ -1,8 +1,8 @@
 class DeleteCommand: CommandNode
 {
-	override void OnStateChanged(TreeNodeState state)
+	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
-		super.OnStateChanged(state);
+		super.OnStateChanged(state, total_state);
 		
 		if (m_TreeNodeState.IsActive()) {
 			foreach (TreeNode node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {					

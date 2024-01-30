@@ -26,8 +26,8 @@ class TreeView: ScriptView
 			
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		Panel.SetAlpha(state.IsActive());
-		Outline.SetAlpha(state.IsHover());
+		Panel.SetAlpha(node.GetState().IsActive());
+		Outline.SetAlpha(node.GetState().IsHover());
 	}
 	
 	void SetText(string text)
@@ -195,16 +195,17 @@ class TreeView: ScriptView
 	{
 		Outline.SetAlpha(1.0);
 			
-		if (!RecursiveGetParent(reciever, "Root")) {
-			return false;
-		}
+		//if (!RecursiveGetParent(reciever, "Root")) {
+		//	return false;
+		//}
 		
 		// Warning:: unsafe
-		TreeView bottom_view;
+		
+		/*TreeView bottom_view;
 		reciever.GetUserData(bottom_view);
 		if (!bottom_view) {
 			return false;
-		}
+		}*/
 		
 		//Print(bottom_view);
 		
@@ -213,17 +214,17 @@ class TreeView: ScriptView
 	
 	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
 	{
-		if (!RecursiveGetParent(reciever, "Root")) {
-			return false;
-		}
+		//if (!RecursiveGetParent(reciever, "Root")) {
+		//	return false;
+		//}
 		
 		// Warning:: unsafe
-		TreeView bottom_view;
+		/*TreeView bottom_view;
 		reciever.GetUserData(bottom_view);
 		if (!bottom_view) {
 			return false;
 		}
-		
+		*/
 		//Print(bottom_view);
 		//WidgetAnimator.Animate(bottom_view.Outline, WidgetAnimatorProperty.COLOR_A, 1.0, 0.0, 100);
 		//bottom_view.Outline.SetAlpha(1.0);
@@ -245,7 +246,7 @@ class TreeView: ScriptView
 		if (!RecursiveGetParent(w, "Root")) {
 			return false;
 		}
-		
+		/*
 		// Warning:: unsafe
 		TreeView bottom_view;
 		w.GetUserData(bottom_view);
@@ -254,7 +255,7 @@ class TreeView: ScriptView
 		}
 		
 		m_Node.Add(bottom_view.m_Node);
-		
+		*/
 		return false;
 	}
 	
