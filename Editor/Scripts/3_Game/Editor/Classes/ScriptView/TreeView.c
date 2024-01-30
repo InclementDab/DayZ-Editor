@@ -232,6 +232,7 @@ class TreeView: ScriptView
 	
 	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
 	{
+		return true;
 		if (!RecursiveGetParent(w, "Root")) {
 			return false;
 		}
