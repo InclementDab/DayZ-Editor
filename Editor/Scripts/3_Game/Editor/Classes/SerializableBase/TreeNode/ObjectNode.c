@@ -168,9 +168,7 @@ class ObjectNode: TreeNode
 			m_Object.AddChild(snap_point, -1);
 			m_SnapFaces[axis] = snap_point;
 		}
-							
-		m_ObjectNodeView = new ObjectNodeView(this);
-		
+									
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DiagOnFrameUpdate);
@@ -178,6 +176,15 @@ class ObjectNode: TreeNode
 #endif
 	}
 		
+	override void SetParent(TreeNode parent)
+	{
+		super.SetParent(parent);
+		
+		if (parent.GetUUID() != Editor.PLACING && !m_ObjectNodeView) {
+			m_ObjectNodeView = new ObjectNodeView(this);
+		}
+	}
+	
 	override bool CanDelete()
 	{
 		return true;

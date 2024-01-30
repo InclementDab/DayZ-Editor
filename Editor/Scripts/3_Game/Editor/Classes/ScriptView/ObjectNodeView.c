@@ -26,10 +26,10 @@ class ObjectNodeView: ScriptView
 	
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		if (state.IsActive()) {
+		if (state.IsHover()) {
 			Image.SetColor(EditorColors.SELECT);
 		} else {
-			Image.SetColor(ARGB(255, 255, 255, 150));
+			Image.SetColor(ARGB(150, 255, 255, 255));
 		}
 	}
 	
@@ -104,15 +104,94 @@ class ObjectNodeView: ScriptView
 		m_LayoutRoot.Show(true);
 	}
 		
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (m_ObjectNode.GetInteractType()) {
+			case TreeNodeInteract.HOLD: {
+				m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				return true;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (m_ObjectNode.GetInteractType()) {
+			case TreeNodeInteract.HOLD: {
+				m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
+				return true;
+			}
+			
+			case TreeNodeInteract.PRESS: {
+				m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				return true;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (m_ObjectNode.GetInteractType()) {
+			case TreeNodeInteract.TOGGLE: {
+				if (m_ObjectNode.HasState(TreeNodeState.ACTIVE)) {
+					m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+		}
+				
+		return false;
+	}
+		
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (m_ObjectNode.GetInteractType()) {
+			case TreeNodeInteract.DOUBLE: {
+				if (m_ObjectNode.HasState(TreeNodeState.ACTIVE)) {
+					m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+		}
+		
+		return false;
+	}
+		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
+		m_ObjectNode.AddState(TreeNodeState.HOVER);
+		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 150.0 / 255.0, 100);
+		m_ObjectNode.RemoveState(TreeNodeState.HOVER);
+		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 		
@@ -134,12 +213,7 @@ class ObjectNodeView: ScriptView
 		
 		return true;
 	}
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		return false;
-	}
-	
+		
 	override string GetLayoutFile()
 	{
 		return "Editor\\GUI\\layouts\\Marker.layout";

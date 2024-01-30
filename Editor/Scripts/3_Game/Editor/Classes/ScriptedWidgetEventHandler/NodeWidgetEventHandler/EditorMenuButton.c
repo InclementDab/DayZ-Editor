@@ -1,4 +1,4 @@
-class EditorMenuButton: EditorButton
+class EditorMenuButton: NodeWidgetEventHandler
 {
 	override void OnStateChanged(TreeNode node, TreeNodeState state)
 	{

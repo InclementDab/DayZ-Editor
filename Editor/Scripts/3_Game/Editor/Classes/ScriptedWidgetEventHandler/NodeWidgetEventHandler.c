@@ -1,13 +1,14 @@
-class EditorButton: ScriptedWidgetEventHandler
-{		
+class NodeWidgetEventHandler: ScriptedWidgetEventHandler
+{
 	reference string Node;
+	protected TreeNode m_Node;
 	
-	protected CommandNode m_Node;
 	protected Widget m_LayoutRoot;
 	
 	TextWidget Text;
 	ButtonWidget Button;
 	ImageWidget Icon;
+	
 	
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -21,46 +22,33 @@ class EditorButton: ScriptedWidgetEventHandler
 #endif
 		
 		Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");				
-		Button.SetHandler(this);
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
-		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");
-		
+		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
 		if (Node != string.Empty) {
-			m_Node = CommandNode.Cast(GetDayZGame().GetEditor().GetNode(Node));
+			m_Node = GetDayZGame().GetEditor().GetNode(Node);
 			if (m_Node) {
-				Icon.LoadImageFile(0, Icon.GetIcon().Regular());
-				Icon.SetImage(0);
+				if (Button) {
+					Button.SetHandler(this);
+				}
+				
+				if (Icon) {
+					Icon.LoadImageFile(0, m_Node.GetIcon().Regular());
+					Icon.SetImage(0);
+				}
+				
 				m_Node.State_OnChanged.Insert(OnStateChanged);
 				OnStateChanged(m_Node, m_Node.GetDefaultState());
 			}
 		}
 	}
-		
+	
 	void OnStateChanged(TreeNode node, TreeNodeState state)
-	{		
-		if (!node.GetEditor().GetHud() || !Icon) {
-			return;
-		}
-		
-		if (state.IsHover()) {
-			//WidgetAnimator.Animate(Icon, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-			Icon.SetAlpha(1.0);
-			node.GetEditor().GetHud().SetCursor(node.GetIcon(), node.GetDisplayName(), node.GetShortcutString());
-		}
-		
-		if (state.IsActive()) {
-			Icon.LoadImageFile(0, node.GetIcon().Solid());
-		} else {
-			node.GetEditor().GetHud().ClearCursor();
-			Icon.LoadImageFile(0, node.GetIcon().Regular());
-		}
-		
-		Icon.SetImage(0);
+	{
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
@@ -76,7 +64,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
@@ -97,7 +85,7 @@ class EditorButton: ScriptedWidgetEventHandler
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
@@ -117,7 +105,7 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
@@ -137,22 +125,18 @@ class EditorButton: ScriptedWidgetEventHandler
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (m_Node) {
-			m_Node.AddState(TreeNodeState.HOVER);
-		}
+		m_Node.AddState(TreeNodeState.HOVER);
 		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (m_Node) {
-			m_Node.RemoveState(TreeNodeState.HOVER);
-		}
+		m_Node.RemoveState(TreeNodeState.HOVER);
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
-		
+	
 	Widget GetLayoutRoot()
 	{
 		return m_LayoutRoot;
