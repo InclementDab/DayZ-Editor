@@ -16,14 +16,21 @@ class PlaceableNode: TreeNode
 		if (!super.SetState(state)) {
 			return false;
 		}
-				
-		vector matrix[4];
-		Math3D.MatrixIdentity4(matrix);
-		if (state) {
-			GetEditor().GetNode(Editor.PLACING).Add(new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT));
-			GetUApi().SupressNextFrame(true);
-		}
 		
+		
+		switch (state) {
+			case TreeNodeState.ACTIVE: {
+				vector matrix[4];
+				Math3D.MatrixIdentity4(matrix);
+				if (state) {
+					GetEditor().GetNode(Editor.PLACING).Add(new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT));
+					GetUApi().SupressNextFrame(true);
+				}
+				
+				return true;
+			}
+		}
+
 		return true;
 	}
 	

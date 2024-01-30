@@ -66,4 +66,9 @@ class BrushTool: CommandNode
 	{
 		return {};
 	}
+	
+	override TreeNodeInteract GetInteractType()
+	{
+		return TreeNodeInteract.TOGGLE;
+	}
 }

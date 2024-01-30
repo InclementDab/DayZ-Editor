@@ -1,11 +1,6 @@
 // I think its wise... it was
 class CommandNode: TreeNode
-{
-	void CommandNode(string uuid, string display_name, Symbols icon, TreeNodeInteract key_type = TreeNodeInteract.NONE)
-	{
-		m_TreeNodeInteract = key_type;
-	}
-	
+{	
 	bool Update(float dt, Raycast raycast)
 	{		
 		// Never null for some reason?

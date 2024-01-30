@@ -61,35 +61,35 @@ class Editor: TreeNode
 		Add(edited_objects);
 						
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
-		commands.Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST, TreeNodeInteract.TOGGLE));
-		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, TreeNodeInteract.TOGGLE));
-		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED, TreeNodeInteract.PRESS));
-		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, TreeNodeInteract.HOLD));
-		commands.Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED, TreeNodeInteract.PRESS));
-		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Delete", "Delete", Symbols.TRASH, TreeNodeInteract.PRESS));
-		commands.Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE, TreeNodeInteract.PRESS));
-		commands.Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO, TreeNodeInteract.PRESS));
-		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("New", "New", Symbols.FILE, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, TreeNodeInteract.HOLD));
-		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, TreeNodeInteract.HOLD));
-		commands.Add(new WeatherToggle("Weather", "Weather", Symbols.SUN, TreeNodeInteract.TOGGLE));
-		commands.Add(new CursorToggle("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, TreeNodeInteract.TOGGLE));
-		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE, TreeNodeInteract.TOGGLE));
+		commands.Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
+		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT));
+		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED));
+		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA));
+		commands.Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED));
+		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY));
+		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS));
+		commands.Add(new CommandNode("Delete", "Delete", Symbols.TRASH));
+		commands.Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
+		commands.Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO));
+		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK));
+		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET));
+		commands.Add(new CommandNode("New", "New", Symbols.FILE));
+		commands.Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN));
+		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE));
+		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT));
+		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN));
+		commands.Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK));
+		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK));
+		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT));
+		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN));
+		commands.Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
+		commands.Add(new CursorToggle("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER));
+		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE));
 		
 		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
-		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT, TreeNodeInteract.TOGGLE));
-		tools.Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE, TreeNodeInteract.TOGGLE));
-		tools.Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE, TreeNodeInteract.TOGGLE));
+		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
+		tools.Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
+		tools.Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));
 		commands.Add(tools);
 		
 		Add(commands);
@@ -286,7 +286,11 @@ class Editor: TreeNode
 		if (!m_Camera) {
 			return;
 		}
-										
+								
+		if (input.LocalPress_ID(UAUIBack)) {
+			TreeNode.StateMachine.SetAllStates(TreeNodeState.EMPTY);
+		}
+				
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {

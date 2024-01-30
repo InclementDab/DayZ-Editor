@@ -126,6 +126,7 @@ class TreeView: ScriptView
 					}
 					
 					case TreeNodeInteract.PRESS: {
+						Print(m_Node);
 						m_Node.SetState(TreeNodeState.ACTIVE);
 						return true;
 					}

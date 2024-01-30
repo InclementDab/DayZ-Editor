@@ -17,4 +17,9 @@ class LassoCommand: CommandNode
 	{
 		return { "Box", "Ellipse" };
 	}
+	
+	override TreeNodeInteract GetInteractType()
+	{
+		return TreeNodeInteract.PRESS;
+	}
 }

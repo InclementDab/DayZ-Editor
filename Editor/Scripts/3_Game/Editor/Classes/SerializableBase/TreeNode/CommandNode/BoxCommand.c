@@ -17,4 +17,14 @@ class BoxCommand: CommandNode
 	{
 		return { "Lasso", "Ellipse" };
 	}
+	
+	override TreeNodeInteract GetInteractType()
+	{
+		return TreeNodeInteract.PRESS;
+	}
+	
+	override TreeNodeState GetDefaultState()
+	{
+		return TreeNodeState.ACTIVE;
+	}
 }

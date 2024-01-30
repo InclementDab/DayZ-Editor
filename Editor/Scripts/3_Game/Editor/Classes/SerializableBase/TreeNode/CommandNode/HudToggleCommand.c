@@ -6,10 +6,28 @@ class HudToggleCommand: CommandNode
 			return false;
 		}
 		
-		if (GetEditor().GetHud()) {
-			GetEditor().GetHud().Show(state);
+		EditorHud hud = GetEditor().GetHud();
+		if (!hud) {
+			return false;
 		}
 		
+		switch (state) {
+			case TreeNodeState.EMPTY: {
+				hud.Show(false);
+				return true;
+			}
+			
+			case TreeNodeState.ACTIVE: {
+				hud.Show(true);
+				return true;
+			}
+		}			
+		
 		return true;
+	}
+	
+	override TreeNodeInteract GetInteractType()
+	{
+		return TreeNodeInteract.TOGGLE;
 	}
 }
