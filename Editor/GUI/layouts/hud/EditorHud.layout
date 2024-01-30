@@ -1930,6 +1930,7 @@ FrameWidgetClass Root {
        {
         FrameWidgetClass Weather {
          ignorepointer 1
+         color 0.8118 0.7373 0.5059 1
          position 0 0
          size 42 42
          halign center_ref
@@ -1954,7 +1955,7 @@ FrameWidgetClass Root {
            scriptclass ""
            style Empty
            "no focus" 1
-           switch once
+           switch toggle
            {
             ImageWidgetClass "Weather.Icon" {
              ignorepointer 1

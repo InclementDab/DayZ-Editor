@@ -7,9 +7,4 @@ class CursorToggle: CommandNode
 			GetEditor().GetHud().ClearCursor();
 		}
 	}
-	
-	override ShortcutKeyType GetShortcutType()
-	{
-		return ShortcutKeyType.TOGGLE;
-	}
 }

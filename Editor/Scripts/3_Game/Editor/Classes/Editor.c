@@ -61,7 +61,7 @@ class Editor: TreeNode
 		Add(edited_objects);
 						
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
-		commands.Add(new CommandNode("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.TOGGLE));
+		commands.Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.TOGGLE));
 		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, ShortcutKeyType.TOGGLE));
 		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED, ShortcutKeyType.PRESS));
 		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, ShortcutKeyType.HOLD));
@@ -82,14 +82,14 @@ class Editor: TreeNode
 		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, ShortcutKeyType.HOLD));
 		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Weather", "Weather", Symbols.CLOUD_SUN, ShortcutKeyType.HOLD));
+		commands.Add(new WeatherToggle("Weather", "Weather", Symbols.SUN, ShortcutKeyType.TOGGLE));
 		commands.Add(new CursorToggle("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, ShortcutKeyType.TOGGLE));
 		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE, ShortcutKeyType.TOGGLE));
 		
 		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
-		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
-		tools.Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
-		tools.Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));
+		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT, ShortcutKeyType.TOGGLE));
+		tools.Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE, ShortcutKeyType.TOGGLE));
+		tools.Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE, ShortcutKeyType.TOGGLE));
 		commands.Add(tools);
 		
 		Add(commands);
@@ -279,14 +279,13 @@ class Editor: TreeNode
 		string uuid_generated = string.Format("History:%1", this[HISTORY].Children.Count());		
 		this[HISTORY][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon, node, data);
 	}
-				
+	
 	void Update(float timeslice)
 	{
 		Input input = GetGame().GetInput();
 		if (!m_Camera) {
 			return;
-		}
-								
+		}								
 		if (input.LocalPress_ID(UAFire)) {
 			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
 			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
@@ -424,7 +423,7 @@ class Editor: TreeNode
 			hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
 		}
 	}
-		
+	
 	void Undo()
 	{
 		foreach (string uuid, TreeNode node: this[HISTORY].Children) {
@@ -477,6 +476,29 @@ class Editor: TreeNode
 		}
 		
 		return false;
+	}
+	
+    static float GetSolarDeclination(DateTime date) 
+	{			
+		DateTime delta = (date - DateTime.Create(date.GetYear(), 1, 1));
+        int day_of_year = DateTime.GetDays(delta.GetYear(), delta.GetMonth(), delta.GetDay()) + 1;
+        float declination = 23.45 * Math.Sin(Math.DEG2RAD * (360 * (day_of_year + 10) / 365));
+        return declination;
+	}
+	
+	DateTime SunniestDay(int year, float lattitude)
+	{
+		DateTime solstice_date = DateTime.Create(year, 6, 21);
+        float declination = GetSolarDeclination(solstice_date);
+
+        for (int i = -10; i < 11; i++) {
+            if ((GetSolarDeclination(solstice_date + DateTime.Create(i, 0, 0))) > declination) {
+                declination = GetSolarDeclination(solstice_date + DateTime.Create(i, 0, 0));
+                solstice_date = solstice_date + DateTime.Create(i, 0, 0);
+			}
+		}
+		
+        return solstice_date;
 	}
 			
 	static Man CreateDefaultCharacter(string type, vector position)

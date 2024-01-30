@@ -5,15 +5,15 @@ class TranslateTool: CommandNode
 	
 	override bool Update(float dt, Raycast raycast)
 	{
-		if (raycast && raycast.Bounce) {
-			raycast.Debug();
-			if (raycast.Hit) {
-				TreeNode node = GetEditor().FindNodeFromObject(raycast.Hit);
-				if (node) {
-					//Print(node);
-				}
-			}
+		if (!raycast) {
+			return true;
 		}
+		
+		if (raycast.Hit) {
+			raycast = raycast.Redo(raycast.Hit);
+		}
+		
+		//raycast.Debug();
 		
 		Input input = GetGame().GetInput();
 		array<TreeNode> selected_nodes = GetEditor().GetSelectedNodes();
@@ -101,10 +101,5 @@ class TranslateTool: CommandNode
 	override array<string> GetXorSelections()
 	{
 		return { "Scale", "Rotate" };
-	}
-	
-	override ShortcutKeyType GetShortcutType()
-	{
-		return ShortcutKeyType.TOGGLE;
 	}
 }

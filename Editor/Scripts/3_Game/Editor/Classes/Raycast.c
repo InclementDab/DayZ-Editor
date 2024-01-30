@@ -16,4 +16,9 @@ class Raycast: Managed
 		
 		Bounce.Debug();
 	}
+	
+	Raycast Redo(Object ignore = null)
+	{
+		return Source.PerformRaycast(ignore);
+	}
 }

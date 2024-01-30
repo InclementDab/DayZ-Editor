@@ -21,6 +21,7 @@ class EditorButton: ScriptedWidgetEventHandler
 #endif
 		
 		m_Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");				
+		m_Button.SetHandler(this);
 		m_IconWidget = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		m_TextWidget = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");
 		
