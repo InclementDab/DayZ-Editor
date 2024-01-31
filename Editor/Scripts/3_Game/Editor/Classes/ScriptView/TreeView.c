@@ -5,7 +5,7 @@ class TreeView: ScriptView
 	TextWidget Text;
 	
 	Widget Panel, Children, Outline;
-	ImageWidget IconImage, CollapseIcon, Texture;
+	ImageWidget IconImage, CollapseIcon;
 	ButtonWidget Collapse;
 	
 	protected bool m_IsBeingDragged;
@@ -13,19 +13,21 @@ class TreeView: ScriptView
 	protected TreeNode m_Node;
 
 	void TreeView(TreeNode node)
-	{		
+	{
 		m_TemplateController = TreeViewController.Cast(m_Controller);
 		m_Node = node;
-
+		m_Node.State_OnChanged.Insert(OnStateChanged);
+		
 		SetText(m_Node.GetDisplayName());
 		
-		IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());
+		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
 	}
 			
-	void OnSelectionChanged(bool state)
+	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		Panel.SetColor(EditorColors.SELECT * state);
+		Panel.SetAlpha(node.GetState().IsActive());
+		Outline.SetAlpha(node.GetState().IsHover());
 	}
 	
 	void SetText(string text)
@@ -54,9 +56,7 @@ class TreeView: ScriptView
 		m_LayoutRoot.GetScreenSize(x, y);
 		m_LayoutRoot.SetScreenSize(x, h * state + 24);
 		m_LayoutRoot.Update();
-		
-		Texture.Show(state);
-		
+				
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		TreeNode parent = m_Node.GetParent();
 		if (parent) {
@@ -74,107 +74,120 @@ class TreeView: ScriptView
 		m_LayoutRoot.Show(name.Contains(filter));
 	}
 			
-	override void Update(float dt)
-	{
-	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		switch (w) {
-			case Collapse: {
-				ShowChildren(!Children.IsVisible());
-				return true;
-			}
-		}
-		
-		return super.OnClick(w, x, y, button);
-	}
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		if (w == Texture || Collapse) {
-			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-			WidgetAnimator.Animate(Collapse, WidgetAnimatorProperty.COLOR_A, 1.0, 50);
-		}
-		
-		EditorHud hud = GetDayZGame().GetEditor().GetHud();
-		
-		hud.SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());		
-		return true;
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{				
-		if (w == Texture || Collapse) {
-			WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
-			WidgetAnimator.Animate(Collapse, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 50);
-		}
-		
-		GetDayZGame().GetEditor().GetHud().ClearCursor();				
-		return true;
-	}
-	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		Panel.SetAlpha(1.0);
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (w) {
+			case Panel: {
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.HOLD: {
+						m_Node.AddState(TreeNodeState.ACTIVE);
+						return true;
+					}
+				}
+				
+				return false;
+			}
+		}
+				
 		return false;
 	}
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
+		if (button != 0) {
+			return false;
+		}
+		
 		switch (w) {
-			case Texture: {
-				ShowChildren(false);
+			case Panel: {
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.HOLD: {
+						m_Node.RemoveState(TreeNodeState.ACTIVE);
+						return true;
+					}
+					
+					case TreeNodeInteract.PRESS: {
+						m_Node.AddState(TreeNodeState.ACTIVE);
+						return true;
+					}
+				}
+				
+				return false;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (w) {
+			case Collapse: {
+				ShowChildren(!Children.IsVisible());
 				return true;
 			}
 			
 			case Panel: {
-				switch (button) {
-					case 0: {
-						if (!KeyState(KeyCode.KC_LSHIFT)) {
-							m_Node.GetEditor().ClearSelections();
-						}
-						
-						if (KeyState(KeyCode.KC_LCONTROL)) {
-							m_Node.GetEditor().ToggleSelect(m_Node);
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.TOGGLE: {
+						if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+							m_Node.RemoveState(TreeNodeState.ACTIVE);
 						} else {
-							m_Node.GetEditor().Select(m_Node);
+							m_Node.AddState(TreeNodeState.ACTIVE);
 						}
-						
-						return true;
-					}
-					
-					case 1: {
-						EditorHud hud = GetDayZGame().GetEditor().GetHud();
-						hud.GetTemplateController().MenuItems.Clear();
-						
-						if (m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
-							hud.Menu.Show(true);
-							hud.Menu.SetScreenPos(x, y);
-						} else {
-							hud.Menu.Show(false);
-						}
-						
 						return true;
 					}
 				}
+				
+				return false;
 			}
-		}	
+		}
+				
+		return false;
+	}
+		
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (w) {
+			case Panel: {
+				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+					m_Node.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_Node.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+		}
 		
 		return false;
 	}
-	
-	override bool OnDoubleClick(Widget w, int x, int y, int button)
-	{
-		Print("OnDoubleClick" + w);
 		
-		return super.OnDoubleClick(w, x, y, button);
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		m_Node.AddState(TreeNodeState.HOVER);
+		return true;
 	}
 	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		m_Node.RemoveState(TreeNodeState.HOVER);
+		return true;
+	}
+			
 	override bool OnDrag(Widget w, int x, int y)
 	{		
-		
-		
 		return false;
 	}
 	
@@ -182,16 +195,17 @@ class TreeView: ScriptView
 	{
 		Outline.SetAlpha(1.0);
 			
-		if (!RecursiveGetParent(reciever, "Root")) {
-			return false;
-		}
+		//if (!RecursiveGetParent(reciever, "Root")) {
+		//	return false;
+		//}
 		
 		// Warning:: unsafe
-		TreeView bottom_view;
+		
+		/*TreeView bottom_view;
 		reciever.GetUserData(bottom_view);
 		if (!bottom_view) {
 			return false;
-		}
+		}*/
 		
 		//Print(bottom_view);
 		
@@ -200,17 +214,17 @@ class TreeView: ScriptView
 	
 	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
 	{
-		if (!RecursiveGetParent(reciever, "Root")) {
-			return false;
-		}
+		//if (!RecursiveGetParent(reciever, "Root")) {
+		//	return false;
+		//}
 		
 		// Warning:: unsafe
-		TreeView bottom_view;
+		/*TreeView bottom_view;
 		reciever.GetUserData(bottom_view);
 		if (!bottom_view) {
 			return false;
 		}
-		
+		*/
 		//Print(bottom_view);
 		//WidgetAnimator.Animate(bottom_view.Outline, WidgetAnimatorProperty.COLOR_A, 1.0, 0.0, 100);
 		//bottom_view.Outline.SetAlpha(1.0);
@@ -232,7 +246,7 @@ class TreeView: ScriptView
 		if (!RecursiveGetParent(w, "Root")) {
 			return false;
 		}
-		
+		/*
 		// Warning:: unsafe
 		TreeView bottom_view;
 		w.GetUserData(bottom_view);
@@ -241,7 +255,7 @@ class TreeView: ScriptView
 		}
 		
 		m_Node.Add(bottom_view.m_Node);
-		
+		*/
 		return false;
 	}
 	

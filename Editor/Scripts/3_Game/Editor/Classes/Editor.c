@@ -61,35 +61,35 @@ class Editor: TreeNode
 		Add(edited_objects);
 						
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
-		commands.Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST, ShortcutKeyType.TOGGLE));
-		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, ShortcutKeyType.TOGGLE));
-		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, ShortcutKeyType.HOLD));
-		commands.Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Delete", "Delete", Symbols.TRASH, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE, ShortcutKeyType.PRESS));
-		commands.Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO, ShortcutKeyType.PRESS));
-		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("New", "New", Symbols.FILE, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, ShortcutKeyType.HOLD));
-		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, ShortcutKeyType.HOLD));
-		commands.Add(new WeatherToggle("Weather", "Weather", Symbols.SUN, ShortcutKeyType.TOGGLE));
-		commands.Add(new CursorToggle("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER, ShortcutKeyType.TOGGLE));
-		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE, ShortcutKeyType.TOGGLE));
+		commands.Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
+		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT));
+		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED));
+		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA));
+		commands.Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED));
+		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY));
+		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS));
+		commands.Add(new CommandNode("Delete", "Delete", Symbols.TRASH));
+		commands.Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
+		commands.Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO));
+		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK));
+		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET));
+		commands.Add(new CommandNode("New", "New", Symbols.FILE));
+		commands.Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN));
+		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE));
+		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT));
+		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN));
+		commands.Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK));
+		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK));
+		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT));
+		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN));
+		commands.Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
+		commands.Add(new CursorToggle("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER));
+		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE));
 		
 		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
-		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT, ShortcutKeyType.TOGGLE));
-		tools.Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE, ShortcutKeyType.TOGGLE));
-		tools.Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE, ShortcutKeyType.TOGGLE));
+		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
+		tools.Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
+		tools.Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));
 		commands.Add(tools);
 		
 		Add(commands);
@@ -286,21 +286,21 @@ class Editor: TreeNode
 		if (!m_Camera) {
 			return;
 		}
-									
-		if (input.LocalPress_ID(UAFire)) {
-			// The magic copy-paste code that handles all your interactive dreams. hasnt changed
-			if (!KeyState(KeyCode.KC_LSHIFT) && !GetWidgetUnderCursor() && KeyState(KeyCode.KC_LMENU)) {
-				ClearSelections();
-			}
-			/*
-			if (raycast.Hit && ObjectNode.ByObject[raycast.Hit]) {
-				ObjectNode editor_object = ObjectNode.ByObject[raycast.Hit];
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					ToggleSelect(editor_object);
-				} else {
-					Select(editor_object);
+								
+		if (input.LocalPress_ID(UAUIBack)) {
+			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.ACTIVE);
+		}
+		
+		Raycast raycast = m_Camera.PerformCursorRaycast();
+		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {
+			// Clear our pressed buttons when we click in the world randomly, probably same with 
+			if (!GetWidgetUnderCursor()) {
+				foreach (TreeNode node_to_deselect: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+					if (node_to_deselect && node_to_deselect.GetInteractType() == TreeNodeInteract.PRESS) {
+						node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
+					}
 				}
-			}*/			
+			}		
 		}
 		
 		foreach (string uuid, TreeNode node1: Children[PLACING].Children) {
@@ -309,7 +309,7 @@ class Editor: TreeNode
 				continue;
 			}
 			
-			Raycast raycast = m_Camera.PerformCursorRaycast(object_node.GetObject());
+			raycast = m_Camera.PerformCursorRaycast(object_node.GetObject());
 			if (!raycast) {
 				continue;
 			}			
@@ -336,17 +336,6 @@ class Editor: TreeNode
 			//Print(Placing.Count());
 			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
 			object_node.SetBaseTransform(transform);
-					
-			if (input.LocalPress_ID(UAFire)) {
-				InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
-				this[PLACING].Remove(object_node);
-				this[EDITS].Add(object_node);
-				this[EDITS].Synchronize();
-				
-				// remove it from placing
-				PlaySound(EditorSounds.PLOP);
-				return;
-			}
 		}
 		
 		if (input.LocalPress_ID(UAZoomIn)) {
@@ -370,13 +359,6 @@ class Editor: TreeNode
 		
 		array<TreeNode> nodes = Children[COMMANDS].Children.GetValueArray();
 		nodes.InsertArray(Children[COMMANDS][TOOLS].Children.GetValueArray());
-		
-		foreach (TreeNode node: nodes) {
-			CommandNode command_node = CommandNode.Cast(node);
-			if (command_node && !command_node.Update(timeslice, m_Camera.PerformCursorRaycast())) {
-				return;
-			}
-		}
 	}
 				
 	override void Write(Serializer serializer, int version)
@@ -651,52 +633,7 @@ class Editor: TreeNode
 	{
 		return GetGame() && GetGame().GetUserManager() && GetGame().GetUserManager().GetTitleInitiator() && m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
 	}
-	
-	void Select(notnull TreeNode node)
-	{
-		m_SelectedNodes.Insert(node);
-		node.OnSelectionChanged(true);
-	}
-	
-	void Deselect(notnull TreeNode node)
-	{
-		node.OnSelectionChanged(false);
-		m_SelectedNodes.RemoveItemUnOrdered(node);		
-	}
-	
-	void ToggleSelect(notnull TreeNode node)
-	{
-		if (IsSelected(node)) {
-			Deselect(node);
-		} else {
-			Select(node);
-		}
-	}
-	
-	bool IsSelected(notnull TreeNode node)
-	{
-		return m_SelectedNodes.Find(node) != -1;
-	}
-	
-	void ClearSelections()
-	{
-		m_SelectedNodes.Debug();
-		foreach (TreeNode node: m_SelectedNodes) {
-			if (node.IsInherited(CursorToggle)) {
-				continue; // ?? LMAOO
-			}
-			
-			node.OnSelectionChanged(false);
-		}
 		
-		m_SelectedNodes.Clear();
-	}
-	
-	array<TreeNode> GetSelectedNodes()
-	{
-		return m_SelectedNodes;
-	}
-	
 	TreeNode FindNodeFromObject(Object object)
 	{
 		// Do this better! searching!!!

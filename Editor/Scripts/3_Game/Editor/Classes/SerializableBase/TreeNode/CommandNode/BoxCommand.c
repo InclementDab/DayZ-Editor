@@ -1,8 +1,10 @@
 class BoxCommand: CommandNode
 {
-	override void OnSelectionChanged(bool state)
+	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
-		if (state && GetEditor().GetHud()) {
+		super.OnStateChanged(state, total_state);
+		
+		if (total_state.IsActive() && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
 		}
 	}
@@ -10,5 +12,15 @@ class BoxCommand: CommandNode
 	override array<string> GetXorSelections()
 	{
 		return { "Lasso", "Ellipse" };
+	}
+	
+	override TreeNodeInteract GetInteractType()
+	{
+		return TreeNodeInteract.PRESS;
+	}
+	
+	override TreeNodeState GetDefaultState()
+	{
+		return TreeNodeState.ACTIVE;
 	}
 }

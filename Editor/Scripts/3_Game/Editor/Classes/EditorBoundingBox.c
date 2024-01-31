@@ -48,7 +48,7 @@ class EditorBoundingBox: Managed
 			bbox_line.SetTransform(transform);
 			bbox_line.Update();	
 			
-			object.AddChild(bbox_line, -1);
+			object.AddChild(bbox_line, 0);
 			object.Update();
 		}
 	}

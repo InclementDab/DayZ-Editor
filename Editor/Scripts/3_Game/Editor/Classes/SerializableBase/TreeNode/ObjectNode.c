@@ -65,10 +65,12 @@ class ObjectNode: TreeNode
 		}
 		
 		Shape.CreateSphere(COLOR_APPLE, ShapeFlags.ONCE, m_Object.GetBoundingCenter().Multiply4(transform), 0.25);
-		
-		for (int i = 0; i < 6; i++) {
-			// Debug
-			//m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+				
+		if (HasState(TreeNodeState.ACTIVE | TreeNodeState.DRAGGING)) {
+			for (int i = 0; i < 6; i++) {
+				// Debug
+				m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+			}
 		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
@@ -168,9 +170,7 @@ class ObjectNode: TreeNode
 			m_Object.AddChild(snap_point, -1);
 			m_SnapFaces[axis] = snap_point;
 		}
-							
-		m_ObjectNodeView = new ObjectNodeView(this);
-		
+									
 #ifdef DIAG_DEVELOPER
 #ifndef SERVER
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(DiagOnFrameUpdate);
@@ -178,6 +178,15 @@ class ObjectNode: TreeNode
 #endif
 	}
 		
+	override void SetParent(TreeNode parent)
+	{
+		super.SetParent(parent);
+		
+		if (parent.GetUUID() != Editor.PLACING && !m_ObjectNodeView) {
+			m_ObjectNodeView = new ObjectNodeView(this);
+		}
+	}
+	
 	override bool CanDelete()
 	{
 		return true;
@@ -223,31 +232,32 @@ class ObjectNode: TreeNode
 				InitObject(m_Object);
 			}
 		}
-		
+				
 		m_Object.SetTransform(transform);		
 				
 		serializer.Read(m_Flags);
 		return true;
 	}
 			
-	override void OnSelectionChanged(bool state)
+	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
-		super.OnSelectionChanged(state);
+		super.OnStateChanged(state, total_state);
 		
-		if (m_ObjectNodeView) {
-			m_ObjectNodeView.OnSelectionChanged(state);
-		}
-		
-		if (state) {
-			if (((m_Flags & ObjectNodeFlags.BBOX) == ObjectNodeFlags.BBOX)) {
+		if (state.IsHover() || state.IsActive()) {
+			if (total_state.IsHover() || total_state.IsActive()) {
 				//EditorBoundingBox.Create(m_Object);
+				
 			}
 			
-			m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
+			if (!total_state.IsHover() && !total_state.IsActive()) {
+				//EditorBoundingBox.Destroy(m_Object);
+			}
+		}
+				
+		if (total_state.IsActive()) {			
+			//m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 		} else {
-			//EditorBoundingBox.Destroy(m_Object);
-			
-			GetGame().ObjectDelete(m_TranslationGizmo);
+			//GetGame().ObjectDelete(m_TranslationGizmo);
 		}
 	}
 			
@@ -349,6 +359,21 @@ class ObjectNode: TreeNode
 	bool IsFlagEnabled(ObjectNodeFlags flag)
 	{
 		return ((m_Flags & flag) == flag);
+	}
+	
+	override TreeNodeInteract GetInteractType()
+	{		
+		// This is pretty cool. inheritence with KEYBINDS??
+		if (GetDayZGame().IsLeftCtrlDown()) {
+			return TreeNodeInteract.TOGGLE;
+		}
+		
+		return TreeNodeInteract.PRESS;
+	}
+	
+	override TreeNodeState GetStateMask()
+	{
+		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING;
 	}
 	
 	ObjectNodeFlags GetFlags()

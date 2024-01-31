@@ -5,8 +5,8 @@ class ScaleTool: CommandNode
 		return { "Translate", "Rotate" };
 	}
 	
-	override ShortcutKeyType GetShortcutType()
+	override TreeNodeInteract GetInteractType()
 	{
-		return ShortcutKeyType.TOGGLE;
+		return TreeNodeInteract.TOGGLE;
 	}
 }

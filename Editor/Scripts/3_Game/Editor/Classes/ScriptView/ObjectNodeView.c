@@ -13,6 +13,7 @@ class ObjectNodeView: ScriptView
 	void ObjectNodeView(notnull ObjectNode editor_object)
 	{
 		m_ObjectNode = editor_object;
+		m_ObjectNode.State_OnChanged.Insert(OnStateChanged);
 		
 		Symbols icon = m_ObjectNode.GetIcon();
 		
@@ -23,9 +24,21 @@ class ObjectNodeView: ScriptView
 		Outline.SetImage(0);
 	}
 	
-	void OnSelectionChanged(bool state)
+	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		Image.SetColor(Ternary<int>.If(state, EditorColors.SELECT, ARGB(255, 255, 255, 255)));
+		Outline.SetAlpha(state.IsHover());
+		
+		if (state.IsDragging() || state.IsActive()) {			
+			Image.SetColor(EditorColors.SELECT);
+		} else {
+			Image.SetColor(ARGB(150, 255, 255, 255));
+		}
+		
+		if (state.IsDragging()) {
+			m_ObjectNode.GetEditor().GetHud().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
+		} else {
+			m_ObjectNode.GetEditor().GetHud().ClearCursor();
+		}
 	}
 	
 	override void Update(float dt)
@@ -41,13 +54,11 @@ class ObjectNodeView: ScriptView
 		Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
 				
 		// Dragging
-		if (m_StartPosition && raycast) {
+		if (m_ObjectNode.HasState(TreeNodeState.DRAGGING) && raycast) {
 			//raycast.Debug();
 			Shape.CreateArrow(m_StartPosition.Bounce.Position, raycast.Bounce.Position, 1, COLOR_BLACK, ShapeFlags.ONCE);
 			
 			Input input = GetGame().GetInput();
-			array<TreeNode> selected_nodes = m_ObjectNode.GetEditor().GetSelectedNodes();
-		
 			vector transform[4];
 			m_ObjectNode.GetBaseTransform(transform);
 						
@@ -101,20 +112,100 @@ class ObjectNodeView: ScriptView
 		m_LayoutRoot.Show(true);
 	}
 		
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (m_ObjectNode.GetInteractType()) {
+			case TreeNodeInteract.HOLD: {
+				m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				return true;
+			}
+			
+			case TreeNodeInteract.TOGGLE: {
+				if (m_ObjectNode.HasState(TreeNodeState.ACTIVE)) {
+					m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+			
+			case TreeNodeInteract.PRESS: {
+				m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				return true;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (m_ObjectNode.GetInteractType()) {
+			case TreeNodeInteract.HOLD: {
+				m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
+				return true;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		
+				
+		return false;
+	}
+		
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return false;
+		}
+		
+		switch (m_ObjectNode.GetInteractType()) {
+			case TreeNodeInteract.DOUBLE: {
+				if (m_ObjectNode.HasState(TreeNodeState.ACTIVE)) {
+					m_ObjectNode.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_ObjectNode.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+		}
+		
+		return false;
+	}
+		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
+		m_ObjectNode.AddState(TreeNodeState.HOVER);
+		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		WidgetAnimator.Animate(Image, WidgetAnimatorProperty.COLOR_A, 150.0 / 255.0, 100);
+		m_ObjectNode.RemoveState(TreeNodeState.HOVER);
+		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 		
 	override bool OnDrag(Widget w, int x, int y)
 	{
+		m_ObjectNode.AddState(TreeNodeState.DRAGGING);
 		m_StartPosition = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
 		return true;
 	}
@@ -126,17 +217,12 @@ class ObjectNodeView: ScriptView
 	
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		delete m_StartPosition;
+		m_ObjectNode.RemoveState(TreeNodeState.DRAGGING);
 		m_ObjectNode.Synchronize();	
 		
 		return true;
 	}
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		return false;
-	}
-	
+		
 	override string GetLayoutFile()
 	{
 		return "Editor\\GUI\\layouts\\Marker.layout";
