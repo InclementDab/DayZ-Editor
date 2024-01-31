@@ -93,6 +93,11 @@ class TreeView: ScriptView
 		}
 		
 		switch (w) {
+			case Texture: {
+				ShowChildren(false);
+				return true;
+			}
+			
 			case Panel: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.HOLD: {
@@ -188,13 +193,35 @@ class TreeView: ScriptView
 		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		m_Node.AddState(TreeNodeState.HOVER);
+		switch (w) {
+			case Texture: {
+				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
+				break;
+			}
+			
+			default: {
+				m_Node.AddState(TreeNodeState.HOVER);
+				break;
+			}
+		}
+		
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_Node.RemoveState(TreeNodeState.HOVER);
+		switch (w) {
+			case Texture: {
+				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 100);
+				break;
+			}
+			
+			default: {
+				m_Node.RemoveState(TreeNodeState.HOVER);
+				break;
+			}
+		}
+		
 		return true;
 	}
 			

@@ -204,31 +204,27 @@ FrameWidgetClass Root {
    "Size To Content H" 1
    "Size To Content V" 1
    {
-    ImageWidgetClass Texture {
-     visible 1
-     ignorepointer 0
-     color 1 1 1 0.3922
-     position 2 0
-     size 7 1
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 0
-     scaled 0
-     scriptclass ""
-     image0 "set:editor_tree image:tree_l"
-     mode blend
-     "src alpha" 1
-     "clamp mode" clamp
-     filter 0
-    }
-   }
-   {
     ScriptParamsClass {
      Binding_Name "ChildrenItems"
     }
    }
+  }
+  ImageWidgetClass Texture {
+   visible 0
+   ignorepointer 0
+   color 1 1 1 0.3922
+   size 7 1
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   scaled 0
+   scriptclass ""
+   image0 "set:editor_tree image:tree_l"
+   mode blend
+   "src alpha" 1
+   "clamp mode" clamp
+   filter 0
   }
  }
 }
