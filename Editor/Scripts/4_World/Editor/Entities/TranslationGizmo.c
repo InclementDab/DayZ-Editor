@@ -141,9 +141,11 @@ class TranslationGizmo: House
 			vector huh = screen_origin.Multiply3(twobytwo);
 			
 			float height = 24;
-			float width = (screen_origin - screen_end).Length();
+			float width = (screen_end - screen_origin).Length();
 			ray_view.GetLayoutRoot().SetSize(width, height);
-			ray_view.GetLayoutRoot().SetScreenPos(screen_origin[0] - width / 2 + Math.Cos(angle) * width / 2, screen_origin[1] - height / 2 + Math.Sin(angle) * height / 2);
+			// - width / 2 + Math.Cos(angle) * width / 2
+			//  - height / 2 + Math.Sin(angle) * height / 2
+			ray_view.GetLayoutRoot().SetScreenPos(screen_origin[0] + Math.Cos(angle) * width / 2, screen_origin[1] + Math.Sin(angle) * height / 2);
 		}
 	}
 }
