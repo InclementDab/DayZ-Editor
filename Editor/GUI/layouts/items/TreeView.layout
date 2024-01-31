@@ -25,7 +25,7 @@ FrameWidgetClass Root {
     FrameWidgetClass CollapseFrame {
      visible 1
      ignorepointer 0
-     position 0 0
+     position 7 0
      size 30 30
      hexactpos 1
      vexactpos 1
@@ -34,7 +34,7 @@ FrameWidgetClass Root {
      scaled 0
      {
       ButtonWidgetClass Collapse {
-       visible 0
+       visible 1
        color 1 1 1 0.3922
        position 0 0
        size 14 14
@@ -75,7 +75,7 @@ FrameWidgetClass Root {
     FrameWidgetClass Icon {
      visible 1
      ignorepointer 1
-     position 30 0
+     position 37 0
      size 30 30
      hexactpos 1
      vexactpos 1
@@ -110,7 +110,7 @@ FrameWidgetClass Root {
      clipchildren 0
      ignorepointer 0
      color 0.0275 0.4353 0.5725 0
-     position 60 0
+     position 67 0
      size 356 22
      hexactpos 1
      vexactpos 1
@@ -191,7 +191,7 @@ FrameWidgetClass Root {
    disabled 0
    clipchildren 0
    ignorepointer 1
-   position 30 30
+   position 23 30
    size 0.99 1
    hexactpos 1
    vexactpos 1
@@ -210,7 +210,7 @@ FrameWidgetClass Root {
    }
   }
   ImageWidgetClass Texture {
-   visible 0
+   visible 1
    ignorepointer 0
    color 1 1 1 0.3922
    size 7 1
