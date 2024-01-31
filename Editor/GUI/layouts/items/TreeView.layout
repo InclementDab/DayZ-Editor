@@ -191,7 +191,7 @@ FrameWidgetClass Root {
    disabled 0
    clipchildren 0
    ignorepointer 1
-   position 23 30
+   position 18 30
    size 0.99 1
    hexactpos 1
    vexactpos 1
@@ -210,10 +210,10 @@ FrameWidgetClass Root {
    }
   }
   ImageWidgetClass Texture {
-   visible 0
+   visible 1
    ignorepointer 0
-   color 1 1 1 0.7843
-   position 0 0
+   color 1 1 1 0.3922
+   position 2 12
    size 3 1
    hexactpos 1
    vexactpos 1
