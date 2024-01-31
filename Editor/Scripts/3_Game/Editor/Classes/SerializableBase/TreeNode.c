@@ -124,6 +124,12 @@ class TreeNode: SerializableBase
 		if (m_Input.ID() != -1) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateInputs);
 		}
+		
+#ifndef SERVER
+#ifndef WORKBENCH
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+#endif
+#endif
 	}
 	
 	void ~TreeNode()
@@ -132,8 +138,14 @@ class TreeNode: SerializableBase
 		delete m_NodeView;
 		
 		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {
-			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateInputs);
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateInputs);
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 		}
+	}
+	
+	void Update(float dt)
+	{
+		// Please dont use me much :(
 	}
 	
 	protected void UpdateInputs()

@@ -51,6 +51,11 @@ class CfgSoundShaders
 		samples[] = {{"Editor\sounds\Notifications\highlight", 1}};
 	};
 
+	class PianoDrop_SoundShader: Editor_Soundshader
+	{
+		samples[] = {{"Editor\sounds\Environment\Piano", 1}};
+	};
+
 	class Sea_SoundShader
 	{
 		samples[] = {{"Editor\Sounds\Environment\Sea",1}};
@@ -123,6 +128,10 @@ class CfgSoundSets
 	class Highlight_SoundSet: Editor_Soundset
 	{
 		soundShaders[] = {"Highlight_SoundShader"};
+	};
+	class PianoDrop_SoundSet: Editor_Soundset
+	{
+		soundShaders[] = {"PianoDrop_SoundShader"};
 	};
 };
 

@@ -63,6 +63,7 @@ class Editor: TreeNode
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
 		commands.Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
 		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT));
+		commands.Add(new PianoCommand("Piano", "Drop Piano", Symbols.PIANO));
 		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED));
 		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA));
 		commands.Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED));
@@ -134,6 +135,7 @@ class Editor: TreeNode
 		TreeNode brushes = new TreeNode(BRUSHES, "Brushes", Symbols.BRUSH);
 		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
+		brushes.Add(commands["Piano"]);
 		Add(brushes);
 		
 		Add(new TreeNode(PLACING, "Placing", Symbols.FIREPLACE));
@@ -210,12 +212,6 @@ class Editor: TreeNode
 			this[PLACEABLES]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
 #endif
-		
-#ifndef SERVER
-#ifndef WORKBENCH
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-#endif
-#endif
 	}
 
 	void ~Editor() 
@@ -280,7 +276,7 @@ class Editor: TreeNode
 		this[HISTORY][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon, node, data);
 	}
 	
-	void Update(float timeslice)
+	override void Update(float timeslice)
 	{
 		Input input = GetGame().GetInput();
 		if (!m_Camera) {
@@ -361,9 +357,6 @@ class Editor: TreeNode
 		if (input.LocalRelease_ID(UAZoomIn)) { 
 			m_Camera.FieldOfView = 1.0;
 		}
-		
-		array<TreeNode> nodes2 = Children[COMMANDS].Children.GetValueArray();
-		nodes2.InsertArray(Children[COMMANDS][TOOLS].Children.GetValueArray());
 	}
 				
 	override void Write(Serializer serializer, int version)
