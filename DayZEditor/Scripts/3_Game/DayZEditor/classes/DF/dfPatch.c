@@ -18,7 +18,8 @@ class RelayCommandExec : RelayCommand
 }
 
 static int EditorObjectID;
-class EditorObjectDataWithID : EditorObjectData
+
+modded class EditorObjectData
 {
 	[NonSerialized()]
 	int m_Id;
