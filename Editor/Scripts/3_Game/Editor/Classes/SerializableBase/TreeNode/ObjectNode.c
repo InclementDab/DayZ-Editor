@@ -1,3 +1,11 @@
+class BoundingBox: Managed
+{
+	void BoundingBox(notnull Object object)
+	{
+		
+	}
+}
+
 class ObjectNode: TreeNode
 {
 	static const int VERSION = 1;
@@ -64,12 +72,36 @@ class ObjectNode: TreeNode
 			m_TranslationGizmo.SetTransform(mat);
 		}
 		
-		//Shape.CreateSphere(COLOR_APPLE, ShapeFlags.ONCE, m_Object.GetBoundingCenter().Multiply4(transform), 0.25);
-				
-		if (HasState(TreeNodeState.ACTIVE | TreeNodeState.DRAGGING)) {
+		if (HasState(TreeNodeState.ACTIVE | TreeNodeState.HOVER)) {
 			for (int i = 0; i < 6; i++) {
 				// Debug
 				m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+			}
+			
+			for (int j = 0; j < 6; j++) {
+				// Generates each direction vector
+				vector direction = vector.Zero;
+				direction[j % 3] = 1 * ((j > 2) * -2 + 1);
+				
+				Shape.CreateSphere(ARGB(255, 240, 233, 324), ShapeFlags.ONCE, (direction * m_Object.GetCollisionRadius()).Multiply4(transform), 0.25);
+				
+				Ray ray = new Ray((direction * m_Object.GetCollisionRadius()).Multiply4(transform), -direction);
+				Raycast raycast = ray.PerformRaycastRV(null, null);
+				
+				if (raycast) {
+					Shape.CreateArrow(raycast.Source.Position, raycast.Bounce.Position, 0.1, ARGB(255, 124, 253, 120), ShapeFlags.ONCE);
+				}
+			}
+			
+			vector min_max2[2];
+			m_Object.GetCollisionBox(min_max2);
+			if (min_max2[0].Length() > 0) {
+				Shape.CreateSphere(COLOR_YELLOW, ShapeFlags.ONCE, min_max2[0].Multiply4(transform), 0.1);
+				Shape.CreateSphere(COLOR_YELLOW, ShapeFlags.ONCE, min_max2[1].Multiply4(transform), 0.1);
+			}
+			
+			if (m_Object.GetCollisionRadius() > 0) {
+				Shape.CreateSphere(COLOR_GREEN_A, ShapeFlags.TRANSP | ShapeFlags.ONCE, transform[3], m_Object.GetCollisionRadius());
 			}
 		}
 		
@@ -107,7 +139,10 @@ class ObjectNode: TreeNode
 		m_Object.GetTransform(transform);
 		
 		vector clip[2];
-		m_Object.ClippingInfo(clip);
+		m_Object.GetCollisionBox(clip);
+		
+		string bounding = m_Object.ConfigGetString("physLayer");		
+		
 		
 		// Corner positions
 		vector corners[8];
@@ -245,12 +280,12 @@ class ObjectNode: TreeNode
 		
 		if (state.IsHover() || state.IsActive()) {
 			if (total_state.IsHover() || total_state.IsActive()) {
-				EditorBoundingBox.Create(m_Object);
+				//EditorBoundingBox.Create(m_Object);
 				
 			}
 			
 			if (!total_state.IsHover() && !total_state.IsActive()) {
-				EditorBoundingBox.Destroy(m_Object);
+				//EditorBoundingBox.Destroy(m_Object);
 			}
 		}
 			

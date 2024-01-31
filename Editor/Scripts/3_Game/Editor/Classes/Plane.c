@@ -14,6 +14,22 @@ class Plane: Managed
 		}
 	}
 	
+	static Plane Create(vector normal, vector size, vector position, vector aside)
+	{
+		if (vector.Dot(normal, aside) != 0) {
+			PrintFormat("Non orthongonal basis vectors used %1", vector.Dot(normal, aside));
+		}
+		
+		vector matrix[3];
+		Math3D.DirectionAndUpMatrix(aside, normal, matrix);
+		size = size * 0.5;
+		size[2] = 0;
+		vector corner0 = size.Multiply3(matrix);
+		vector corner1 = (-size).Multiply3(matrix);
+				
+		return new Plane(corner0, corner1, normal, aside);
+	}
+	
 	void CreateMatrix(out vector mat[4])
 	{
 		mat = {
