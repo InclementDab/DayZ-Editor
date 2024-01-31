@@ -474,7 +474,7 @@ class EditorNode: TreeNode
 			}
 		}
 		
-		return GetNode(EditorNode.PLACING);
+		return GetNode(EditorNode.EDITS);
 	}
 	
     static float GetSolarDeclination(DateTime date) 
