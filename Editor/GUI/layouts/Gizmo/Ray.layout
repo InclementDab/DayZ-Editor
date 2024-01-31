@@ -14,12 +14,13 @@ FrameWidgetClass Frame {
    clipchildren 1
    ignorepointer 1
    color 1 0 0 1
-   size 1 0.235
+   size 0.98 6
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 0
+   vexactsize 1
+   scaled 0
    style rover_sim_colorable
   }
   ImageWidgetClass Arrow {

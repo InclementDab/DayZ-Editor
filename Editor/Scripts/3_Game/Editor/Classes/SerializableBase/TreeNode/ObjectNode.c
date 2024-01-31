@@ -64,7 +64,7 @@ class ObjectNode: TreeNode
 			m_TranslationGizmo.SetTransform(mat);
 		}
 		
-		Shape.CreateSphere(COLOR_APPLE, ShapeFlags.ONCE, m_Object.GetBoundingCenter().Multiply4(transform), 0.25);
+		//Shape.CreateSphere(COLOR_APPLE, ShapeFlags.ONCE, m_Object.GetBoundingCenter().Multiply4(transform), 0.25);
 				
 		if (HasState(TreeNodeState.ACTIVE | TreeNodeState.DRAGGING)) {
 			for (int i = 0; i < 6; i++) {
@@ -253,11 +253,13 @@ class ObjectNode: TreeNode
 				EditorBoundingBox.Destroy(m_Object);
 			}
 		}
-				
-		if (total_state.IsActive()) {			
-			//m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
-		} else {
-			//GetGame().ObjectDelete(m_TranslationGizmo);
+			
+		if (state.IsActive()) {	
+			if (total_state.IsActive()) {			
+				m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
+			} else {
+				GetGame().ObjectDelete(m_TranslationGizmo);
+			}
 		}
 	}
 			
