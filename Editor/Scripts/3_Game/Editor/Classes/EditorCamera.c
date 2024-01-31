@@ -33,7 +33,7 @@ class EditorCamera: Camera
 		Input input = GetGame().GetInput();
 		m_LinearVelocity += Vector(input.LocalValue_ID(UAMoveRight) 	- input.LocalValue_ID(UAMoveLeft), 
 									input.LocalValue_ID(UAMoveUp) 		- input.LocalValue_ID(UAMoveDown), 
-									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * timeSlice * (1 + input.LocalValue_ID(UATurbo) * 5.0);
+									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * 7.5 * timeSlice * (1 + input.LocalValue_ID(UATurbo) * 2.5) * (1 - (input.LocalValue_ID(UALookAround) * 0.85));
 		
 		vector view_delta = vector.Forward;
 		
