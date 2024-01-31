@@ -17,6 +17,11 @@ class Raycast: Managed
 		Bounce.Debug();
 	}
 	
+	Raycast Continue(Object ignore = null)
+	{
+		return Ray(Bounce.Position, Source.Direction).PerformRaycast(ignore);
+	}
+	
 	Raycast Redo(Object ignore = null)
 	{
 		return Source.PerformRaycast(ignore);

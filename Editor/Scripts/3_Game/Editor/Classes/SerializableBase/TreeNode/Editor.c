@@ -315,7 +315,7 @@ class Editor: TreeNode
 			raycast = m_Camera.PerformCursorRaycast(object_node.GetObject());
 			if (!raycast) {
 				continue;
-			}			
+			}
 			
 			vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
 			Math3D.MatrixOrthogonalize4(camera_orthogonal);	
@@ -342,17 +342,19 @@ class Editor: TreeNode
 		}
 		
 		if (input.LocalPress_ID(UAZoomIn)) {
-			m_Camera.FieldOfView = GameConstants.DZPLAYER_CAMERA_FOV_EYEZOOM;
-			Raycast cast = m_Camera.PerformCursorRaycast();
-			
-			if (cast && cast.Hit) {
-				Print(raycast);
-				vector matrix[3] = { vector.Zero, vector.Zero, vector.Zero };
-				cast.Hit.ClearFlags(cast.Hit.GetFlags(), true);
-				cast.Hit.ClearEventMask(cast.Hit.GetEventMask());
-				cast.Hit.SetTransform(matrix);
-				cast.Hit.SetEventMask(EntityEvent.NOTVISIBLE);
-				cast.Hit.Update();
+			if (GetGame().GetUIManager().IsCursorVisible()) {				
+				vector camera_position = m_Camera.GetCursorRay().GetPoint(1000.0);
+				raycast = m_Camera.PerformCursorRaycast();
+				if (raycast) {
+					vector current_position = m_Camera.GetPosition();
+					float y_height = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
+					camera_position = raycast.Bounce.GetPoint(y_height);
+				}
+								
+				m_Camera.SetPosition(camera_position);
+				m_Camera.Update();
+			} else {
+				m_Camera.FieldOfView = GameConstants.DZPLAYER_CAMERA_FOV_EYEZOOM;
 			}
 		}
 		
