@@ -2,106 +2,112 @@
 <modded_inputs>
     <inputs>
         <actions>
-            <input name="Copy" loc="Copy"/>
-            <input name="Cut" loc="Cut"/>
-            <input name="Delete" loc="Delete"/>
-            <input name="Lock" loc="Lock"/>
-            <input name="New" loc="New File"/>
-            <input name="Open" loc="Open File"/>
-            <input name="Paste" loc="Paste"/>
-            <input name="Redo" loc="Redo"/>
-            <input name="SaveAs" loc="SaveAs"/>
-            <input name="Save" loc="Save File"/>
-            <input name="Undo" loc="Undo"/>
-            <input name="Unlock" loc="Unlock"/>
-            <input name="CursorToggle" loc="Toggle Cursor"/>
+            <input name="UAEditorCopy" loc="Copy"/>
+            <input name="UAEditorCut" loc="Cut"/>
+            <input name="UAEditorDelete" loc="Delete"/>
+            <input name="UAEditorLock" loc="Lock"/>
+            <input name="UAEditorNew" loc="New File"/>
+            <input name="UAEditorOpen" loc="Open File"/>
+            <input name="UAEditorPaste" loc="Paste"/>
+            <input name="UAEditorRedo" loc="Redo"/>
+            <input name="UAEditorSaveAs" loc="SaveAs"/>
+            <input name="UAEditorSave" loc="Save File"/>
+            <input name="UAEditorUndo" loc="Undo"/>
+            <input name="UAEditorUnlock" loc="Unlock"/>
+            <input name="UAEditorCursor" loc="Toggle Cursor"/>
+            <input name="UAEditorHud" loc="Toggle Hud"/>
+            <input name="UAEditorControl" loc="Toggle Control"/>
         </actions>
         
         <sorting name="Editor" loc="EDITOR">
-            <input name="Copy"/>
-            <input name="Cut"/>
-            <input name="Delete"/>
-            <input name="Lock"/>
-            <input name="New"/>
-            <input name="Open"/>
-            <input name="Paste"/>
-            <input name="Redo"/>
-            <input name="SaveAs"/>
-            <input name="Save"/>
-            <input name="Undo"/>
-            <input name="Unlock"/>
-            <input name="CursorToggle"/>
-            <input name="HudToggle"/>
+            <input name="UAEditorCopy"/>
+            <input name="UAEditorCut"/>
+            <input name="UAEditorDelete"/>
+            <input name="UAEditorLock"/>
+            <input name="UAEditorNew"/>
+            <input name="UAEditorOpen"/>
+            <input name="UAEditorPaste"/>
+            <input name="UAEditorRedo"/>
+            <input name="UAEditorSaveAs"/>
+            <input name="UAEditorSave"/>
+            <input name="UAEditorUndo"/>
+            <input name="UAEditorUnlock"/>
+            <input name="UAEditorCursor"/>
+            <input name="UAEditorHud"/>
+            <input name="UAEditorControl"/>
         </sorting>
     </inputs>
 
     <preset>
-        <input name="Copy">
+        <input name="UAEditorCopy">
             <btn name="kLControl">
                 <btn name="kC"/>
             </btn>
         </input>
-        <input name="Cut">
+        <input name="UAEditorCut">
             <btn name="kLControl">
                 <btn name="kX"/>
             </btn>
         </input>
-        <input name="Delete">
+        <input name="UAEditorDelete">
             <btn name="kDelete"/>
         </input>
-        <input name="Lock">
+        <input name="UAEditorLock">
             <btn name="kLControl">
                 <btn name="kL"/>
             </btn>
         </input>
-        <input name="New">
+        <input name="UAEditorNew">
             <btn name="kLControl">
                 <btn name="kN"/>
             </btn>
         </input>
-        <input name="Open">
+        <input name="UAEditorOpen">
             <btn name="kLControl">
                 <btn name="kO"/>
             </btn>
         </input>
-        <input name="Paste">
+        <input name="UAEditorPaste">
             <btn name="kLControl">
                 <btn name="kV"/>
             </btn>
         </input>
-        <input name="Redo">
+        <input name="UAEditorRedo">
             <btn name="kLControl">
                 <btn name="kY"/>
             </btn>
         </input>
-        <input name="SaveAs">
+        <input name="UAEditorSaveAs">
             <btn name="kLControl" >
                 <event name="hold" />
             </btn>
-            <btn name="kLShift">
+            <btn name="UAEditorkLShift">
                 <btn name="kS"/>
             </btn>
         </input>
-        <input name="Save">
+        <input name="UAEditorSave">
             <btn name="kLControl">
                 <btn name="kS"/>
             </btn>
         </input>
-        <input name="Undo">
+        <input name="UAEditorUndo">
             <btn name="kLControl">
                 <btn name="kZ"/>
             </btn>
         </input>
-        <input name="Unlock">
+        <input name="UAEditorUnlock">
             <btn name="kLControl">
                 <btn name="kL"/>
             </btn>
         </input>
-        <input name="CursorToggle">
+        <input name="UAEditorCursor">
             <btn name="kSpace"/>
         </input>
-        <input name="HudToggle">
+        <input name="UAEditorHud">
             <btn name="kY"/>
+        </input>
+        <input name="UAEditorControl">
+            <btn name="kHome"/>
         </input>
     </preset>
 </modded_inputs>

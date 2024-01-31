@@ -119,7 +119,7 @@ class TreeNode: SerializableBase
 
 		StateMachine[m_TreeNodeState].Insert(this);
 		
-		m_Input = GetUApi().GetInputByName(m_UUID);
+		m_Input = GetUApi().GetInputByName(GetInputName());
 		if (m_Input.ID() != -1) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateInputs);
 		}
@@ -551,7 +551,7 @@ class TreeNode: SerializableBase
 	string GetShortcutString() 
 	{
 		string result;
-		UAInput inp = GetUApi().GetInputByName(m_UUID);
+		UAInput inp = GetUApi().GetInputByName(GetInputName());
 		for (int i = 0; i < inp.BindKeyCount(); i++) { 
 			if (inp.CheckBindDevice(i, EInputDeviceType.MOUSE_AND_KEYBOARD)) {
 				string button_name = GetUApi().GetButtonName(inp.GetBindKey(i));
@@ -567,6 +567,11 @@ class TreeNode: SerializableBase
 		}
 		
 		return result;
+	}
+	
+	string GetInputName()
+	{
+		return string.Format("UAEditor%1", m_UUID);
 	}
 	
 	array<string> GetXorSelections()

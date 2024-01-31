@@ -89,8 +89,9 @@ class EditorNode: TreeNode
 		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT));
 		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN));
 		commands.Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
-		commands.Add(new CursorToggle("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER));
-		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE));
+		commands.Add(new CursorToggle("Cursor", "Toggle Cursor", Symbols.ARROW_POINTER));
+		commands.Add(new CommandNode("Hud", "Toggle Hud", Symbols.EYE));
+		commands.Add(new CommandNode("Control", "Toggle Control", Symbols.PERSON_PREGNANT));
 		commands.Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
 		
 		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
@@ -307,7 +308,7 @@ class EditorNode: TreeNode
 				}
 			}		
 		}
-				
+						
 		foreach (string uuid, TreeNode node1: Children[PLACING].Children) {
 			ObjectNode object_node = ObjectNode.Cast(node1);
 			if (!object_node) {
