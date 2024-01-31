@@ -17,7 +17,7 @@ FrameWidgetClass Root {
  {
   CanvasWidgetClass Whiteboard {
    ignorepointer 1
-   position -0.0008 0
+   position -0.00194 0.0004
    size 1 1
    halign center_ref
    valign center_ref
@@ -3044,7 +3044,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:regular image:folder_plus"
+             image0 "set:regular image:layer_plus"
              mode blend
              "src alpha" 1
              filter 0

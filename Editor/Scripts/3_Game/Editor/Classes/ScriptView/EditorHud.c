@@ -2,6 +2,9 @@ class EditorHud: ScriptView
 {	
 	static const string SEARCH_BAR_DEFAULT = "Search...";
 	
+	static const ref array<string> LEFT_NODES = { EditorNode.PLACEABLES, EditorNode.BRUSHES };
+	static const ref array<string> RIGHT_NODES = { EditorNode.HISTORY, EditorNode.EDITS };
+	
 	protected EditorNode m_Editor;
 	protected EditorHudController m_TemplateController;
 	
@@ -50,15 +53,13 @@ class EditorHud: ScriptView
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 		SetCursorWidget(Cursor);
 		
-		m_TemplateController.LeftListItems.Insert(editor.GetPlaceables().GetNodeView());
-		m_TemplateController.LeftListItems.Insert(editor.GetBrushes().GetNodeView());
-		m_TemplateController.RightListItems.Insert(editor.GetUndoRedo().GetNodeView());
-		m_TemplateController.RightListItems.Insert(editor.GetObjects().GetNodeView());
-
+		foreach (string left: LEFT_NODES) {
+			m_TemplateController.LeftListItems.Insert(editor[left].CreateView());
+		}
 		
-		//editor.GetNode("Brushes").LoadViews(m_TemplateController.LeftListItems);
-		//editor.LoadViews(m_TemplateController.RightListItems);
-		//editor.GetNode("EditedObjects").LoadViews(m_TemplateController.RightListItems);
+		foreach (string right: RIGHT_NODES) {
+			m_TemplateController.RightListItems.Insert(editor[right].CreateView());
+		}
 	}
 	
 	void ~EditorHud()

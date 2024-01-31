@@ -4,9 +4,9 @@ class TreeView: ScriptView
 		
 	TextWidget Text;
 	
-	Widget Panel, Children, Outline, Texture;
+	Widget Panel, Children, Outline, Texture, Collapse;
 	ImageWidget IconImage, CollapseIcon;
-	ButtonWidget Collapse;
+	ButtonWidget CollapseButton;
 	
 	protected bool m_IsBeingDragged;
 
@@ -30,6 +30,13 @@ class TreeView: ScriptView
 		Outline.SetAlpha(node.GetState().IsHover());
 	}
 	
+	void AddView(notnull TreeView view)
+	{
+		m_TemplateController.ChildrenItems.Insert(view);
+		
+		// Recalculate size
+	}
+	
 	void SetText(string text)
 	{
 		Text.SetText(text);
@@ -47,22 +54,22 @@ class TreeView: ScriptView
 		
 		Children.Show(state);
 		Children.Update(); //! importante
-			
-		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, "set:dayz_gui image:Expand", "set:dayz_gui image:Collapse"));
+		
+		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, Symbols.CIRCLE_PLUS.Regular(), Symbols.CIRCLE_MINUS.Regular()));
 		CollapseIcon.SetImage(0);
 		
 		float w, h, x, y;
 		Children.GetScreenSize(w, h);		
 		m_LayoutRoot.GetScreenSize(x, y);
-		m_LayoutRoot.SetScreenSize(x, h * state + 24);
+		m_LayoutRoot.SetScreenSize(x, h * state + 30);
 		m_LayoutRoot.Update();
 		
 		Texture.Show(state);
 				
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		TreeNode parent = m_Node.GetParent();
-		if (parent) {
-			parent.GetNodeView().ShowChildren(true);
+		if (parent && parent.View) {
+			parent.View.ShowChildren(true);
 		}
 	}
 		
@@ -147,7 +154,7 @@ class TreeView: ScriptView
 		}
 		
 		switch (w) {
-			case Collapse: {
+			case CollapseButton: {
 				ShowChildren(!Children.IsVisible());
 				return true;
 			}
@@ -194,6 +201,11 @@ class TreeView: ScriptView
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		switch (w) {
+			case CollapseButton: {
+				WidgetAnimator.AnimateColor(CollapseIcon, EditorColors.SELECT, 100);
+				break;
+			}
+			
 			case Texture: {
 				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
 				break;
@@ -211,6 +223,11 @@ class TreeView: ScriptView
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		switch (w) {
+			case CollapseButton: {
+				WidgetAnimator.AnimateColor(CollapseIcon, ARGB(150, 255, 255, 255), 100);
+				break;
+			}
+			
 			case Texture: {
 				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 100);
 				break;

@@ -27,7 +27,7 @@ class PlaceableNode: TreeNode
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				ObjectNode object_node = GetEditor()[EditorNode.PLACING][m_ObjectUuid];
+				ObjectNode object_node = ObjectNode.Cast(GetEditor()[EditorNode.PLACING][m_ObjectUuid]);
 				m_ObjectUuid = string.Empty;
 				GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
 				GetEditor()[EditorNode.PLACING].Remove(object_node);

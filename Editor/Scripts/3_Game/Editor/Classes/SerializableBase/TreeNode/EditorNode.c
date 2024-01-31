@@ -34,7 +34,7 @@ class EditorNode: TreeNode
 		
 	protected ref map<string, TreeNode> m_CommandShortcutMap = new map<string, TreeNode>();
 		
-	static const string EDITS = "Edits";
+	static const string EDITS = "Layers";
 		static const string BRUSHED = "Brushed";
 		static const string HIDDEN = "Hidden";
 	
@@ -56,8 +56,8 @@ class EditorNode: TreeNode
 		
 		// Load all default categories and placements
 		FolderNode edited_objects = new FolderNode(EDITS, "Edits", Symbols.OBJECT_GROUP);
-		edited_objects.Add(new FolderNode(BRUSHED, "Brushed Objects", Symbols.PAINTBRUSH));
-		edited_objects.Add(new FolderNode(HIDDEN, "Hidden Objects", Symbols.PAINTBRUSH));
+		edited_objects.Add(new FolderNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
+		edited_objects.Add(new FolderNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
 		Add(edited_objects);
 						
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		

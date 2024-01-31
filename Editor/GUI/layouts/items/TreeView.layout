@@ -10,20 +10,23 @@ FrameWidgetClass Root {
  scaled 0
  scriptclass ""
  {
-  FrameWidgetClass Wrapper {
+  WrapSpacerWidgetClass Wrapper {
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
    position 0 0
-   size 1 30
+   size 1.01 30
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
    scaled 0
+   Padding 0
+   Margin 12
+   content_valign center
    {
-    FrameWidgetClass CollapseFrame {
-     visible 1
+    FrameWidgetClass Collapse {
+     visible 0
      ignorepointer 0
      position 7 0
      size 30 30
@@ -33,11 +36,11 @@ FrameWidgetClass Root {
      vexactsize 1
      scaled 0
      {
-      ButtonWidgetClass Collapse {
-       visible 0
+      ButtonWidgetClass CollapseButton {
+       visible 1
        color 1 1 1 0.3922
        position 0 0
-       size 14 14
+       size 16 16
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -46,27 +49,28 @@ FrameWidgetClass Root {
        vexactsize 1
        scaled 0
        scriptclass ""
-       style Outline_1px_Button
+       style Empty
        font "gui/fonts/etelkatextpro14"
        switch toggle
        {
         ImageWidgetClass CollapseIcon {
          visible 1
          ignorepointer 1
+         color 1 1 1 0.5882
          position 0 0
-         size 7 7
+         size 1 1
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 1
-         vexactsize 1
+         hexactsize 0
+         vexactsize 0
          scaled 0
          scriptclass ""
-         image0 "set:dayz_gui image:Expand"
-         mode blend
+         image0 "set:regular image:circle_plus"
+         mode additive
          "src alpha" 1
-         filter 0
+         filter 1
         }
        }
       }
@@ -135,6 +139,7 @@ FrameWidgetClass Root {
        clipchildren 0
        ignorepointer 1
        color 0.1569 0.1569 0.1569 0
+       position 0 0
        size 1 1
        halign center_ref
        valign center_ref
@@ -174,7 +179,7 @@ FrameWidgetClass Root {
          text "akfjvNl9YFJiXr9UoOUgK0ks6Yar_-L3NR1hDBsPPzw="
          font "gui/fonts/Metron"
          "bold text" 0
-         "exact text" 0
+         "exact text" 1
          "exact text size" 16
          "size to text h" 1
          "size to text v" 0
@@ -210,11 +215,11 @@ FrameWidgetClass Root {
    }
   }
   ImageWidgetClass Texture {
-   visible 1
+   visible 0
    ignorepointer 0
    color 1 1 1 0.3922
-   position 2 12
-   size 3 1
+   position 0 0
+   size 7 1
    hexactpos 1
    vexactpos 1
    hexactsize 1

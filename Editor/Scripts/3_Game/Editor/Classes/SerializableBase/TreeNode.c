@@ -108,8 +108,7 @@ class TreeNode: SerializableBase
 	protected string m_Icon, m_DisplayName;
 	protected TreeNode m_Parent;
 	
-	protected ref TreeView m_NodeView;
-		
+	ref TreeView View;
 	ref ScriptInvoker State_OnChanged = new ScriptInvoker();
 	
 	void TreeNode(string uuid, string display_name, Symbols icon)
@@ -133,9 +132,9 @@ class TreeNode: SerializableBase
 	}
 	
 	void ~TreeNode()
-	{		
+	{
 		StateMachine[m_TreeNodeState].RemoveItem(this);
-		delete m_NodeView;
+		delete View;
 		
 		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateInputs);
@@ -258,17 +257,7 @@ class TreeNode: SerializableBase
 		
 		State_OnChanged.Invoke(this, state);
 	}
-	
-	bool HasState(TreeNodeState state)
-	{
-		return (m_TreeNodeState & state) == state;
-	}
-	
-	TreeNodeState GetState()
-	{
-		return m_TreeNodeState;
-	}
-	
+		
 	bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
 	{
 		return false;
@@ -316,6 +305,14 @@ class TreeNode: SerializableBase
 	{
 		Children[uuid] = node;
 
+#ifndef SERVER
+#ifndef WORKBENCH
+		if (View) {
+			View.AddView(node.CreateView());
+		}
+#endif
+#endif
+		
 		node.SetParent(this);
 	}
 	
@@ -355,6 +352,17 @@ class TreeNode: SerializableBase
 		return this[uuid];
 	}
 	
+	TreeView CreateView()
+	{
+		View = new TreeView(this);
+		foreach (string uuid, TreeNode node: Children) {
+			// Initialize all child nodes aswell :)
+			View.AddView(node.CreateView());
+		}
+		
+		return View;
+	}
+	
 	ScriptReadWriteContext CreateCopy()
 	{
 		ScriptReadWriteContext ctx = new ScriptReadWriteContext();
@@ -381,15 +389,6 @@ class TreeNode: SerializableBase
 	void SetParent(TreeNode parent)
 	{
 		m_Parent = parent;
-		
-		// Update visual display
-#ifndef SERVER
-#ifndef WORKBENCH
-		if (m_Parent) {
-			m_Parent.GetNodeView().GetTemplateController().ChildrenItems.Insert(GetNodeView());
-		}
-#endif
-#endif
 	}
 	
 	TreeNode GetParent()
@@ -523,15 +522,6 @@ class TreeNode: SerializableBase
 		return m_Icon;
 	}
 		
-	TreeView GetNodeView()
-	{
-		if (!m_NodeView) {
-			m_NodeView = new TreeView(this);
-		}
-		
-		return m_NodeView;
-	}
-	
 	TreeNodeState GetDefaultState()
 	{
 		return TreeNodeState.EMPTY;
@@ -546,6 +536,16 @@ class TreeNode: SerializableBase
 	TreeNodeInteract GetInteractType()
 	{
 		return TreeNodeInteract.NONE;
+	}
+	
+	bool HasState(TreeNodeState state)
+	{
+		return (m_TreeNodeState & state) == state;
+	}
+	
+	TreeNodeState GetState()
+	{
+		return m_TreeNodeState;
 	}
 	
 	string GetShortcutString() 
