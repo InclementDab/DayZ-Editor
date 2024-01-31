@@ -1,98 +1,111 @@
-class EditorDZEFile: EditorFileType
+class EditorDZEFile : EditorFileType
 {
 	EditorSaveData LoadBinFile(string file)
-	{				
+	{
 		EditorSaveData save_data = new EditorSaveData();
-		
-		if (!FileExist(file)) {
+
+		if (!FileExist(file))
+		{
 			EditorLog.Error("File not found %1", file);
 			return save_data;
 		}
 
 		FileSerializer file_serializer = new FileSerializer();
-		if (!file_serializer.Open(file, FileMode.READ)) {
+		if (!file_serializer.Open(file, FileMode.READ))
+		{
 			EditorLog.Error("File in use %1", file);
 			return save_data;
 		}
-		
-		if (!save_data.Read(file_serializer)) {
+
+		if (!save_data.Read(file_serializer))
+		{
 			file_serializer.Close();
 			EditorLog.Error("Could not read file %1", file);
 			return save_data;
 		}
-		
+
 		file_serializer.Close();
-		
+
 		return save_data;
 	}
-	
+
 	EditorSaveData LoadJsonFile(string file)
 	{
 		EditorSaveData save_data = new EditorSaveData();
 		EditorJsonLoader<EditorSaveData>.LoadFromFile(file, save_data);
-				
+
 		// bugfix to fix the id not incrementing
 		EditorSaveData bug_fix_save_data = new EditorSaveData();
 		foreach (EditorObjectData object_data: save_data.EditorObjects) {
-			if (GetGame().GetModelName(object_data.Type) == "UNKNOWN_P3D_FILE") {
+			if (GetGame().GetModelName(object_data.Type) == "UNKNOWN_P3D_FILE")
+			{
 				EditorLog.Warning("Ignoring %1 on import. Invalid type, possible for crash", object_data.Type);
 			}
-			
+
 			EditorObjectData dta = EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags);
 			bug_fix_save_data.EditorObjects.Insert(dta);
 		}
-			
-		foreach (int id, EditorDeletedObjectData deleted_object: save_data.EditorDeletedObjects) {
+
+		foreach (int id, EditorDeletedObjectData deleted_object: save_data.EditorHiddenObjects) {
 			EditorDeletedObjectData deleted_dta = EditorDeletedObjectData.Create(deleted_object.Type, deleted_object.Position);
 			deleted_dta.Flags = deleted_object.Flags;
-			bug_fix_save_data.EditorDeletedObjects.Insert(deleted_dta);
+			bug_fix_save_data.EditorHiddenObjects.Insert(deleted_dta);
 		}
-				
+
 		bug_fix_save_data.MapName = save_data.MapName;
 		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
 		return bug_fix_save_data;
 	}
-	
+
 	override EditorSaveData Import(string file, ImportSettings settings)
 	{
 		EditorSaveData save_data = new EditorSaveData();
-		
-		if (!FileExist(file)) {
+
+		if (!FileExist(file))
+		{
 			EditorLog.Error("File not found %1", file);
 			return save_data;
 		}
-		
-		if (EditorSaveData.IsBinnedFile(file)) {
+
+		if (EditorSaveData.IsBinnedFile(file))
+		{
 			save_data = LoadBinFile(file);
-		} else {
+		}
+		else
+		{
 			save_data = LoadJsonFile(file);
 		}
-				
+
 		return save_data;
 	}
-	
+
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
-	{		
-		if (FileExist(file) && !DeleteFile(file)) {
+	{
+		if (FileExist(file) && !DeleteFile(file))
+		{
 			return;
 		}
-		
-		if (settings.Binarized) {
+
+		if (settings.Binarized)
+		{
 			FileSerializer file_serializer = new FileSerializer();
-			if (!file_serializer.Open(file, FileMode.WRITE)) {
+			if (!file_serializer.Open(file, FileMode.WRITE))
+			{
 				EditorLog.Error("Failed to open file %1", file);
 				return;
 			}
-			
+
 			data.Write(file_serializer);
 			file_serializer.Close();
-			
-		} else {
+
+		}
+		else
+		{
 			EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
 		}
 	}
-	
-	override string GetExtension() 
+
+	override string GetExtension()
 	{
 		return ".dze";
 	}

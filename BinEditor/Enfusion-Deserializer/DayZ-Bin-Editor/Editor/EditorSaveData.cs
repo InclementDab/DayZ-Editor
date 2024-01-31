@@ -22,8 +22,8 @@ namespace DayZ_Bin_Editor.Editor
         ALL = 2147483647
     }
 
- 
-    public class EditorSaveData: INotifyPropertyChanged
+
+    public class EditorSaveData : INotifyPropertyChanged
     {
         public static readonly string BIN_CHECK = "EditorBinned";
 
@@ -33,12 +33,13 @@ namespace DayZ_Bin_Editor.Editor
         public vector CameraPosition { get; set; }
 
         public ObservableCollection<EditorObjectData> EditorObjects { get; set; } = new();
-        public ObservableCollection<EditorDeletedObjectData> EditorDeletedObjects { get; set; } = new();
+        public ObservableCollection<EditorDeletedObjectData> EditorHiddenObjects { get; set; } = new();
 
         public bool Read(EnfusionSerializer stream)
         {
             string bin_check = stream.ReadString();
-            if (bin_check != BIN_CHECK) {
+            if (bin_check != BIN_CHECK)
+            {
                 return false;
             }
 
@@ -51,7 +52,8 @@ namespace DayZ_Bin_Editor.Editor
 
             int objects_length = stream.ReadInt();
             Console.WriteLine("--Placements--");
-            for (int i = 0; i < objects_length; i++) {
+            for (int i = 0; i < objects_length; i++)
+            {
                 EditorObjectData editor_object = new();
                 editor_object.Read(stream, Version);
                 Console.WriteLine(editor_object.ToString());
@@ -60,11 +62,12 @@ namespace DayZ_Bin_Editor.Editor
 
             int deletions_length = stream.ReadInt();
             Console.WriteLine("--Deletions--");
-            for (int i = 0; i < deletions_length; i++) {
+            for (int i = 0; i < deletions_length; i++)
+            {
                 EditorDeletedObjectData deletion_data = new();
                 deletion_data.Read(stream, Version);
                 Console.WriteLine(deletion_data.ToString());
-                EditorDeletedObjects.Add(deletion_data);
+                EditorHiddenObjects.Add(deletion_data);
             }
 
             return true;
@@ -78,12 +81,14 @@ namespace DayZ_Bin_Editor.Editor
             stream.WriteVector(CameraPosition);
 
             stream.WriteInt(EditorObjects.Count);
-            foreach (EditorObjectData data in EditorObjects) {
+            foreach (EditorObjectData data in EditorObjects)
+            {
                 data.Write(stream, Version);
             }
 
-            stream.WriteInt(EditorDeletedObjects.Count);
-            foreach (EditorDeletedObjectData data in EditorDeletedObjects) {
+            stream.WriteInt(EditorHiddenObjects.Count);
+            foreach (EditorDeletedObjectData data in EditorHiddenObjects)
+            {
                 data.Write(stream, Version);
             }
         }
@@ -123,17 +128,20 @@ namespace DayZ_Bin_Editor.Editor
             Scale = stream.ReadFloat();
             Flags = stream.ReadInt();
 
-            if (version < 2) {
+            if (version < 2)
+            {
                 return true;
             }
 
             int attachment_count = stream.ReadInt();
-            for (int i = 0; i < attachment_count; i++) {
+            for (int i = 0; i < attachment_count; i++)
+            {
                 Attachments.Add(stream.ReadString());
             }
 
             int parameters_count = stream.ReadInt();
-            for (int i = 0; i < parameters_count; i++) {
+            for (int i = 0; i < parameters_count; i++)
+            {
                 string param_key = stream.ReadString();
                 string param_type = stream.ReadString();
                 string[] param_type_data = param_type.Split('<');
@@ -150,7 +158,8 @@ namespace DayZ_Bin_Editor.Editor
                 Console.WriteLine(editor_object_param.param1);
             }
 
-            if (version < 3) {
+            if (version < 3)
+            {
                 return true;
             }
 
@@ -171,24 +180,28 @@ namespace DayZ_Bin_Editor.Editor
             stream.WriteFloat(Scale);
             stream.WriteInt(Flags);
 
-            if (version < 2) {
+            if (version < 2)
+            {
                 return;
             }
 
             stream.WriteInt(Attachments.Count);
-            foreach (string attachment in Attachments) {
+            foreach (string attachment in Attachments)
+            {
                 stream.WriteString(attachment);
             }
 
             stream.WriteInt(Parameters.Count);
-            foreach (KeyValuePair<string, SerializableParam> param in Parameters) {
+            foreach (KeyValuePair<string, SerializableParam> param in Parameters)
+            {
                 stream.WriteString(param.Key);
                 stream.WriteString(param.Value.GetSerializableType());
 
                 param.Value.Write(stream);
             }
 
-            if (version < 3) {
+            if (version < 3)
+            {
                 return;
             }
 

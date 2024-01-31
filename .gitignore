@@ -1,3 +1,5 @@
+#Temp Comparison Folder
+DayZEditor/Reserved/
 # DayZ Editor Specific files
 DeveloperDefines.c
 
@@ -413,4 +415,10 @@ FodyWeavers.xsd
 DevData.cs
 .key/InclementDab.txt
 .key/InclementDab.bikey
+
+#Devils BS
 DayZEditor/Workbench/project.cfg
+DayZEditor/Workbench/dayz.gproj
+DayZEditor/Workbench/launch.bin
+desktop.ini
+.gitignore
