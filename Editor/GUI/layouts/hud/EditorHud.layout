@@ -3375,7 +3375,7 @@ FrameWidgetClass Root {
          hexactsize 0
          vexactsize 0
          scaled 0
-         scriptclass "ViewBinding"
+         scriptclass ""
          "no focus" 0
          text "Search..."
          font "gui/fonts/MetronBook"

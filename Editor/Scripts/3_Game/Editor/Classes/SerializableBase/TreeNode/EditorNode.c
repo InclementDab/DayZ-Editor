@@ -18,7 +18,7 @@ class EditorColors
 	static const int HIDDEN_1 = ARGB(255, 131, 131, 149);
 }
 
-class Editor: TreeNode
+class EditorNode: TreeNode
 {		
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	static const int DEFAULT_ENTITY_COUNT = 512;
@@ -49,15 +49,15 @@ class Editor: TreeNode
 	
 	TAnimGraphVariable Speed;
 	
-	void Editor(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
+	void EditorNode(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
 		m_Player = player;	
 		
 		// Load all default categories and placements
-		TreeNode edited_objects = new TreeNode(EDITS, "Edits", Symbols.OBJECT_GROUP);
-		edited_objects.Add(new TreeNode(BRUSHED, "Brushed Objects", Symbols.PAINTBRUSH));
-		edited_objects.Add(new TreeNode(HIDDEN, "Hidden Objects", Symbols.PAINTBRUSH));
+		FolderNode edited_objects = new FolderNode(EDITS, "Edits", Symbols.OBJECT_GROUP);
+		edited_objects.Add(new FolderNode(BRUSHED, "Brushed Objects", Symbols.PAINTBRUSH));
+		edited_objects.Add(new FolderNode(HIDDEN, "Hidden Objects", Symbols.PAINTBRUSH));
 		Add(edited_objects);
 						
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
@@ -86,6 +86,7 @@ class Editor: TreeNode
 		commands.Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
 		commands.Add(new CursorToggle("CursorToggle", "Toggle Cursor", Symbols.ARROW_POINTER));
 		commands.Add(new CommandNode("HudToggle", "Toggle Hud", Symbols.EYE));
+		commands.Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
 		
 		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
 		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
@@ -214,7 +215,7 @@ class Editor: TreeNode
 #endif
 	}
 
-	void ~Editor() 
+	void ~EditorNode() 
 	{
 		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);

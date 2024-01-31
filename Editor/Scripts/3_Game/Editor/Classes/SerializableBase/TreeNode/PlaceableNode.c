@@ -4,7 +4,7 @@ class PlaceableNode: TreeNode
 	
 	override bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
 	{
-		Editor editor = GetDayZGame().GetEditor();
+		EditorNode editor = GetDayZGame().GetEditor();
 		list_items.Insert(new CommandMenuItem(editor.GetCommand("Cut")));
 		list_items.Insert(new CommandMenuItem(editor.GetCommand("Copy")));
 		list_items.Insert(new CommandMenuItem(editor.GetCommand("Paste")));
@@ -22,17 +22,17 @@ class PlaceableNode: TreeNode
 				vector matrix[4];
 				Math3D.MatrixIdentity4(matrix);
 				m_ObjectUuid = UUID.Generate();
-				ObjectNode node = new ObjectNode(m_ObjectUuid, m_UUID, GetIcon(), Editor.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
-				GetEditor().GetNode(Editor.PLACING).Add(node);
+				ObjectNode node = new ObjectNode(m_ObjectUuid, m_UUID, GetIcon(), EditorNode.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
+				GetEditor().GetNode(EditorNode.PLACING).Add(node);
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				ObjectNode object_node = GetEditor()[Editor.PLACING][m_ObjectUuid];
+				ObjectNode object_node = GetEditor()[EditorNode.PLACING][m_ObjectUuid];
 				m_ObjectUuid = string.Empty;
 				GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
-				GetEditor()[Editor.PLACING].Remove(object_node);
-				GetEditor()[Editor.EDITS].Add(object_node);
-				GetEditor()[Editor.EDITS].Synchronize();
+				GetEditor()[EditorNode.PLACING].Remove(object_node);
+				GetEditor()[EditorNode.EDITS].Add(object_node);
+				GetEditor()[EditorNode.EDITS].Synchronize();
 							
 				object_node.AddState(TreeNodeState.ACTIVE);
 				

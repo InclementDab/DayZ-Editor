@@ -1,6 +1,8 @@
 class EditorHud: ScriptView
 {	
-	protected Editor m_Editor;
+	static const string SEARCH_BAR_DEFAULT = "Search...";
+	
+	protected EditorNode m_Editor;
 	protected EditorHudController m_TemplateController;
 	
 	Widget Cursor, CursorTooltip;
@@ -27,6 +29,8 @@ class EditorHud: ScriptView
 	Widget Notification;
 	TextWidget NotificationText;
 	
+	EditBoxWidget SearchBar;
+	
 	ItemPreviewWidget Item;
 	PlayerPreviewWidget Player;
 	
@@ -37,7 +41,7 @@ class EditorHud: ScriptView
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
 		
-	void EditorHud(notnull Editor editor)
+	void EditorHud(notnull EditorNode editor)
 	{		
 		m_Editor = editor;
 		m_TemplateController = EditorHudController.Cast(m_Controller);
@@ -274,12 +278,31 @@ class EditorHud: ScriptView
 	
 	override bool OnFocus(Widget w, int x, int y)
 	{
+		switch (w) {
+			case SearchBar: {
+				if (SearchBar.GetText() == SEARCH_BAR_DEFAULT) {
+					SearchBar.SetText(string.Empty);
+				}
+				
+				return true;
+			}
+		}
+		
 		return super.OnFocus(w, x, y);
 	}
 
 	override bool OnFocusLost(Widget w, int x, int y)
 	{
-		
+		switch (w) {
+			case SearchBar: {
+				if (SearchBar.GetText() == string.Empty) {
+					SearchBar.SetText(SEARCH_BAR_DEFAULT);
+				}
+				
+				return true;
+			}
+		}
+			
 		return super.OnFocusLost(w, x, y);
 	}
 	
@@ -332,16 +355,19 @@ class EditorHud: ScriptView
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		switch (w) {
-			/*
 			case SearchBar: {
-				for (int i = 0; i < m_TemplateController.LeftListItems.Count(); i++) {					
-					string text;
-					SearchBar.GetText(text);
-					m_TemplateController.LeftListItems[i].ApplyFilter(text);
-				}
+				//if (finished) {
+					for (int i = 0; i < m_TemplateController.LeftListItems.Count(); i++) {
+						m_TemplateController.LeftListItems[i].ApplyFilter(SearchBar.GetText());
+					}
+					
+					for (int j = 0; j < m_TemplateController.RightListItems.Count(); j++) {
+						m_TemplateController.RightListItems[j].ApplyFilter(SearchBar.GetText());
+					}
+				//}
 				
 				break;
-			}*/
+			}
 		}
 		
 		return super.OnChange(w, x, y, finished);

@@ -5,16 +5,16 @@ modded class DayZGame
 	static const int RPC_NODE_SYNC = 54365;
 	
 	protected ref TreeNode m_Server = new TreeNode("SERVER", "Editors", Symbols.CAMERA_SECURITY);
-	protected ref Editor m_Editor;
+	protected ref EditorNode m_Editor;
 		
 	void DayZGame()
 	{
 #ifdef WORKBENCH
-		m_Editor = new Editor("WORKBENCH", "Debug", Symbols.CAMERA_SECURITY, null, null);
+		m_Editor = new EditorNode("WORKBENCH", "Debug", Symbols.CAMERA_SECURITY, null, null);
 #endif
 	}
 		
-	Editor GetEditor()
+	EditorNode GetEditor()
 	{
 #ifdef WORKBENCH
 		return m_Editor;
@@ -33,7 +33,7 @@ modded class DayZGame
 		}*/
 			
 		// Dont use Get here, it has errors builtin on null return
-		return Editor.Cast(m_Server.Children[GetUserManager().GetTitleInitiator().GetUid()]);
+		return EditorNode.Cast(m_Server.Children[GetUserManager().GetTitleInitiator().GetUid()]);
 #endif
 	}
 			
@@ -124,7 +124,7 @@ modded class DayZGame
 		PlayerIdentity identity = GetPlayer().GetIdentity();
 		delete m_Server[identity.GetPlainId()];
 		
-		Editor editor = new Editor(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular(), identity, GetPlayer());
+		EditorNode editor = new EditorNode(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular(), identity, GetPlayer());
 		m_Server[identity.GetPlainId()] = editor;
 		
 		editor.OnSynchronized();

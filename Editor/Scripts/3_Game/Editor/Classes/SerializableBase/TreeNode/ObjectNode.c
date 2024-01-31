@@ -182,7 +182,7 @@ class ObjectNode: TreeNode
 	{
 		super.SetParent(parent);
 		
-		if (parent.GetUUID() != Editor.PLACING && !m_ObjectNodeView) {
+		if (parent.GetUUID() != EditorNode.PLACING && !m_ObjectNodeView) {
 			m_ObjectNodeView = new ObjectNodeView(this);
 		}
 	}
@@ -222,7 +222,7 @@ class ObjectNode: TreeNode
 		vector transform[4];
 		serializer.Read(transform);
 		if (!m_Object) {	
-			m_Object = Editor.CreateObject(type, transform);
+			m_Object = EditorNode.CreateObject(type, transform);
 			if (!m_Object)  {
 				Print("Failed to create object on type " + type);
 				return false;

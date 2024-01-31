@@ -4,7 +4,7 @@ class TreeView: ScriptView
 		
 	TextWidget Text;
 	
-	Widget Panel, Children, Outline;
+	Widget Panel, Children, Outline, Texture;
 	ImageWidget IconImage, CollapseIcon;
 	ButtonWidget Collapse;
 	
@@ -56,6 +56,8 @@ class TreeView: ScriptView
 		m_LayoutRoot.GetScreenSize(x, y);
 		m_LayoutRoot.SetScreenSize(x, h * state + 24);
 		m_LayoutRoot.Update();
+		
+		Texture.Show(state);
 				
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		TreeNode parent = m_Node.GetParent();
@@ -64,14 +66,24 @@ class TreeView: ScriptView
 		}
 	}
 		
-	void ApplyFilter(string filter)
+	// returns whether or not the filter was applied
+	bool ApplyFilter(string filter)
 	{
 		filter.ToLower();
 	
 		string name = m_Node.GetDisplayName();
 		name.ToLower();
-	
-		m_LayoutRoot.Show(name.Contains(filter));
+			
+		string uuid = m_Node.GetUUID();
+		uuid.ToLower();
+		
+		bool applied = name.Contains(filter) || uuid.Contains(filter) || filter.Contains(name) || filter.Contains(uuid);
+		for (int i = 0; i < m_TemplateController.ChildrenItems.Count(); i++) {
+			applied = applied || m_TemplateController.ChildrenItems[i].ApplyFilter(filter);
+		}
+		
+		m_LayoutRoot.Show(applied);
+		return applied;
 	}
 			
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

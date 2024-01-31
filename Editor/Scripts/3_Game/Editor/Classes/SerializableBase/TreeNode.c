@@ -6,7 +6,7 @@ enum TreeNodeInteract
 	ONCE,
 	
 	// The button was pressed, it will be cleaned up when you press off of it
-	PRESS, // 100ms
+	PRESS,
 	
 	// Button will have to be double clicked
 	DOUBLE, // woah
@@ -401,9 +401,9 @@ class TreeNode: SerializableBase
 	{
 	}
 	
-	Editor GetEditor()
+	EditorNode GetEditor()
 	{
-		return Editor.Cast(FindParentOfType(Editor));
+		return EditorNode.Cast(FindParentOfType(EditorNode));
 	}
 	
 	TreeNode FindParentOfType(typename type)
