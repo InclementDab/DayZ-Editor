@@ -1,6 +1,6 @@
 GameProjectClass {
-	ID "DayZ"
-	TITLE "DayZ"
+	ID "EditorLegacy"
+	TITLE "EditorLegacy"
 	Configurations {
 		GameProjectConfigClass PC {
 			platformHardware PC
@@ -40,11 +40,11 @@ GameProjectClass {
 				ScriptModulePathClass {
 					Name "core"
 					Paths {
-						"DabsFramework/Scripts/1_Core"
 						"scripts/1_Core"
-						"DayZEditor/Scripts/1_Core"
 						"JM/CF/defines"
 						"JM/CF/scripts/1_Core"
+						"DabsFramework/Scripts/1_Core"
+						"DayZEditor/Scripts/1_Core"
 					}
 					EntryPoint ""
 				}
@@ -60,34 +60,34 @@ GameProjectClass {
 				ScriptModulePathClass {
 					Name "game"
 					Paths {
-						"DabsFramework/Scripts/3_Game"
 						"scripts/3_Game"
-						"DayZEditor/Scripts/3_Game"
 						"JM/CF/defines"
 						"JM/CF/scripts/3_Game"
+						"DabsFramework/Scripts/3_Game"
+						"DayZEditor/Scripts/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
 				ScriptModulePathClass {
 					Name "world"
 					Paths {
-						"DabsFramework/Scripts/4_World"
 						"scripts/4_World"
-						"DayZEditor/Scripts/4_World"
 						"JM/CF/defines"
 						"JM/CF/scripts/4_World"
+						"DabsFramework/Scripts/4_World"
+						"DayZEditor/Scripts/4_World"
 					}
 					EntryPoint ""
 				}
 				ScriptModulePathClass {
 					Name "mission"
 					Paths {
-						"DabsFramework/Scripts/5_Mission"
 						"scripts/5_Mission"
-						"DayZEditor/Scripts/5_Mission"
 						"JM/CF/defines"
 						"JM/CF/scripts/5_Mission"
+						"DabsFramework/Scripts/5_Mission"
 						"DayZEditor/GUI"
+						"DayZEditor/Scripts/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}
@@ -97,7 +97,7 @@ GameProjectClass {
 					Paths {
 						"DabsFramework/Workbench/ToolAddons"
 					} 
-					EntryPoint ""
+					EntryPoint "CreateWorkbench"
 				} 
 			}
 		}
