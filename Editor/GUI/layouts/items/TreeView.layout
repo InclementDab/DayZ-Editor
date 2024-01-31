@@ -212,15 +212,16 @@ FrameWidgetClass Root {
   ImageWidgetClass Texture {
    visible 1
    ignorepointer 0
-   color 1 1 1 0.3922
-   size 7 1
+   color 1 1 1 0.7843
+   position 0 0
+   size 3 1
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 0
    scaled 0
    scriptclass ""
-   image0 "set:editor_tree image:tree_l"
+   image0 ""
    mode blend
    "src alpha" 1
    "clamp mode" clamp
