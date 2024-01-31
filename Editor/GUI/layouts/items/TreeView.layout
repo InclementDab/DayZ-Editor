@@ -34,7 +34,7 @@ FrameWidgetClass Root {
      scaled 0
      {
       ButtonWidgetClass Collapse {
-       visible 1
+       visible 0
        color 1 1 1 0.3922
        position 0 0
        size 14 14
@@ -210,7 +210,7 @@ FrameWidgetClass Root {
    }
   }
   ImageWidgetClass Texture {
-   visible 1
+   visible 0
    ignorepointer 0
    color 1 1 1 0.7843
    position 0 0
