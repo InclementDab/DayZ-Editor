@@ -8,6 +8,6 @@ class CommandNode: TreeNode
 	
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.ACTIVE;
+		return TreeNodeState.ACTIVE | TreeNodeState.HOVER;
 	}
 }
