@@ -55,13 +55,18 @@ class EditorNode: TreeNode
 		m_Player = player;	
 		
 		// Load all default categories and placements
-		FolderNode edited_objects = new FolderNode(EDITS, "Edits", Symbols.OBJECT_GROUP);
+		FolderNode edited_objects = new FolderNode(EDITS, "Layers", Symbols.LAYER_GROUP);
 		edited_objects.Add(new FolderNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
 		edited_objects.Add(new FolderNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
+		
+		// default layer for now
+		edited_objects.AddState(TreeNodeState.ACTIVE);
 		Add(edited_objects);
 						
 		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
 		commands.Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
+		commands.Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
+		commands.Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty));
 		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT));
 		commands.Add(new PianoCommand("Piano", "Drop Piano", Symbols.PIANO));
 		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED));
@@ -302,7 +307,7 @@ class EditorNode: TreeNode
 				}
 			}		
 		}
-		
+				
 		foreach (string uuid, TreeNode node1: Children[PLACING].Children) {
 			ObjectNode object_node = ObjectNode.Cast(node1);
 			if (!object_node) {
@@ -458,6 +463,18 @@ class EditorNode: TreeNode
 		}
 		
 		return false;
+	}
+	
+	TreeNode GetPlacingDestination()
+	{
+		foreach (TreeNode tree_node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+			FolderNode folder_node = FolderNode.Cast(tree_node);
+			if (folder_node && folder_node.GetState().IsActive()) {
+				return folder_node;
+			}
+		}
+		
+		return GetNode(EditorNode.PLACING);
 	}
 	
     static float GetSolarDeclination(DateTime date) 

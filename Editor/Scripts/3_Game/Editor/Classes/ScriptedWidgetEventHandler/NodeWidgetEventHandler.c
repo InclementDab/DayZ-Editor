@@ -68,12 +68,12 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 			return false;
 		}
 		
-		if (button == 2) {
+		if (button == 1) {
 			m_Node.AddState(TreeNodeState.CONTEXT);
 			return true;
 		}
 		
-		if (button == 1) {
+		if (button == 0) {
 			switch (m_Node.GetInteractType()) {
 				case TreeNodeInteract.HOLD: {
 					m_Node.RemoveState(TreeNodeState.ACTIVE);

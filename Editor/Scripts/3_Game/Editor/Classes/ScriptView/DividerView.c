@@ -1,4 +1,4 @@
-class CommandMenuDivider: ScriptView
+class DividerView: ScriptView
 {
 	override string GetLayoutFile()
 	{

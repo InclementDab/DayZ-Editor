@@ -1,3 +1,8 @@
+class Base: ScriptView
+{
+	
+}
+
 class TreeView: ScriptView
 {
 	protected TreeViewController m_TemplateController;
@@ -94,7 +99,12 @@ class TreeView: ScriptView
 	}
 			
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
+	{		
+		if (button == 1) {
+			m_Node.AddState(TreeNodeState.CONTEXT);
+			return true;
+		}
+		
 		if (button != 0) {
 			return false;
 		}

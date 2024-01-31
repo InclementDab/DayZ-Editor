@@ -4,13 +4,8 @@ class PlaceableNode: TreeNode
 	
 	override bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
 	{
-		EditorNode editor = GetDayZGame().GetEditor();
-		list_items.Insert(new CommandMenuItem(editor.GetCommand("Cut")));
-		list_items.Insert(new CommandMenuItem(editor.GetCommand("Copy")));
-		list_items.Insert(new CommandMenuItem(editor.GetCommand("Paste")));
-		list_items.Insert(new CommandMenuDivider());
 		
-		return true;
+		return false;
 	}
 	
 	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
@@ -31,8 +26,8 @@ class PlaceableNode: TreeNode
 				m_ObjectUuid = string.Empty;
 				GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
 				GetEditor()[EditorNode.PLACING].Remove(object_node);
-				GetEditor()[EditorNode.EDITS].Add(object_node);
-				GetEditor()[EditorNode.EDITS].Synchronize();
+				GetEditor().GetPlacingDestination().Add(object_node);
+				GetEditor().GetPlacingDestination().Synchronize();
 							
 				object_node.AddState(TreeNodeState.ACTIVE);
 				

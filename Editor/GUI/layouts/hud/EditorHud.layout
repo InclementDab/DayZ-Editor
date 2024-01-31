@@ -3005,7 +3005,7 @@ FrameWidgetClass Root {
           }
          }
         }
-        FrameWidgetClass NewFolder {
+        FrameWidgetClass AddLayer {
          ignorepointer 1
          position 0 0
          size 42 42
@@ -3018,7 +3018,7 @@ FrameWidgetClass Root {
          scaled 0
          scriptclass "EditorButton"
          {
-          ButtonWidgetClass "NewFolder.Button" {
+          ButtonWidgetClass "AddLayer.Button" {
            visible 1
            size 0.75 0.75
            halign center_ref
@@ -3031,9 +3031,9 @@ FrameWidgetClass Root {
            scriptclass ""
            style Empty
            "no focus" 1
-           switch once
+           switch toggle
            {
-            ImageWidgetClass "NewFolder.Icon" {
+            ImageWidgetClass "AddLayer.Icon" {
              ignorepointer 1
              color 1 1 1 0.3922
              size 1 1
@@ -3044,7 +3044,7 @@ FrameWidgetClass Root {
              hexactsize 0
              vexactsize 0
              scaled 0
-             image0 "set:regular image:layer_plus"
+             image0 ""
              mode blend
              "src alpha" 1
              filter 0
@@ -3055,6 +3055,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
+           Node "Commands\AddLayer"
           }
          }
         }
@@ -3781,6 +3782,7 @@ FrameWidgetClass Root {
   WrapSpacerWidgetClass Menu {
    visible 0
    ignorepointer 1
+   color 0.098 0.098 0.098 1
    size 535 0
    hexactpos 1
    vexactpos 1
@@ -3788,7 +3790,7 @@ FrameWidgetClass Root {
    vexactsize 1
    scaled 1
    scriptclass "ViewBinding"
-   style Empty
+   style Colorable
    Padding 0
    Margin 0
    "Size To Content H" 1

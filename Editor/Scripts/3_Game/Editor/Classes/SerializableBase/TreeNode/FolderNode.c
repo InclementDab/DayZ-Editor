@@ -3,12 +3,13 @@ class FolderNode: TreeNode
 	override bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
 	{
 		EditorNode editor = GetDayZGame().GetEditor();
-		list_items.Insert(new CommandMenuItem(editor.GetCommand("Cut")));
-		list_items.Insert(new CommandMenuItem(editor.GetCommand("Copy")));
-		list_items.Insert(new CommandMenuItem(editor.GetCommand("Paste")));
-		list_items.Insert(new CommandMenuDivider());
+		list_items.Insert(new MenuItemView(editor.GetCommand("Cut")));
+		list_items.Insert(new MenuItemView(editor.GetCommand("Copy")));
+		list_items.Insert(new MenuItemView(editor.GetCommand("Paste")));
+		list_items.Insert(new DividerView());
 		
-		list_items.Insert(new CommandMenuItem(editor.GetCommand("NewFolder")));
+		list_items.Insert(new MenuItemView(editor.GetCommand("AddLayer")));
+		list_items.Insert(new MenuItemView(editor.GetCommand("SetLayerActive")));
 		
 		return true;
 	}

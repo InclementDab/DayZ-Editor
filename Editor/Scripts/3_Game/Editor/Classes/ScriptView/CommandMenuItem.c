@@ -3,8 +3,10 @@ class CommandMenuItemController: ViewController
 	ref ObservableCollection<TreeView> Children = new ObservableCollection<TreeView>(this);
 }
 
-class CommandMenuItem: ScriptViewTemplate<CommandMenuItemController>
+class CommandMenuItem: ScriptView
 {
+	protected CommandMenuItemController m_TemplateController;
+	
 	Widget Panel, Shortcut, Caret;
 	ImageWidget Icon;
 	TextWidget Name, ShortcutText;
@@ -34,23 +36,15 @@ class CommandMenuItem: ScriptViewTemplate<CommandMenuItemController>
 		}
 	}
 	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		WidgetAnimator.AnimateColor(Panel, EditorColors.SELECT, 1);
-		WidgetAnimator.AnimateColor(ShortcutText, COLOR_WHITE, 1);
-		return true;
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		WidgetAnimator.AnimateColor(Panel, EditorColors.BACKGROUND_1, 100);
-		
-		WidgetAnimator.AnimateColor(ShortcutText, ARGB(255, 131, 131, 149), 100);
-		return true;
-	}
+
 	
 	override string GetLayoutFile()
 	{
 		return "Editor\\GUI\\layouts\\Menu\\Item.layout";
+	}
+	
+	override typename GetControllerType()
+	{
+		return CommandMenuItemController;
 	}
 }
