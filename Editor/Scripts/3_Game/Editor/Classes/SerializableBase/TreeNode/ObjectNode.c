@@ -245,12 +245,12 @@ class ObjectNode: TreeNode
 		
 		if (state.IsHover() || state.IsActive()) {
 			if (total_state.IsHover() || total_state.IsActive()) {
-				//EditorBoundingBox.Create(m_Object);
+				EditorBoundingBox.Create(m_Object);
 				
 			}
 			
 			if (!total_state.IsHover() && !total_state.IsActive()) {
-				//EditorBoundingBox.Destroy(m_Object);
+				EditorBoundingBox.Destroy(m_Object);
 			}
 		}
 				
@@ -272,11 +272,16 @@ class ObjectNode: TreeNode
 		
 	void SetBaseTransform(vector mat[4])
 	{		
-		vector matrix[4];		
+		vector matrix[4];
 		m_BoundingBoxSurfaces[ETransformationAxis.BOTTOM].CreateMatrix(matrix);
 		
 		Math3D.MatrixInvMultiply4(matrix, mat, matrix);
 		m_Object.SetTransform(matrix);		
+		
+		if (EditorBoundingBox.HasBoundingBox(m_Object)) {
+			EditorBoundingBox.Destroy(m_Object);
+			EditorBoundingBox.Create(m_Object);
+		}
 	}
 	
 	void GetBaseTransform(out vector mat[4])

@@ -1,6 +1,6 @@
 class EditorBoundingBox: Managed
 {
-	static const float THICKNESS = 0.05;
+	static const float THICKNESS = 0.03;
 	
 	static void Create(notnull Object object)
 	{
@@ -44,9 +44,9 @@ class EditorBoundingBox: Managed
 				transform[j][j] = ((position[j] == line_centers[i][j]) * size[j]) + THICKNESS;						
 			}
 			 
-			Object bbox_line = GetGame().CreateObjectEx("BoundingBoxBase", line_centers[i], ECE_LOCAL);
+			Object bbox_line = GetGame().CreateObjectEx("jdTestBox1", line_centers[i], ECE_LOCAL);
 			bbox_line.SetTransform(transform);
-			bbox_line.Update();	
+			bbox_line.Update();
 			
 			object.AddChild(bbox_line, 0);
 			object.Update();
@@ -61,12 +61,26 @@ class EditorBoundingBox: Managed
 		
 		Object child = Object.Cast(object.GetChildren());
 		while (child) {
-			if (child.GetType() == "BoundingBoxBase") {
+			if (child.GetType() == "jdTestBox1") {
 				child.Delete();
 			}
 			
 			// technically objects arent deleted instantly like you think they are. so this is fine
 			child = Object.Cast(child.GetSibling());
 		}
+	}
+	
+	static bool HasBoundingBox(notnull Object object)
+	{
+		Object child = Object.Cast(object.GetChildren());
+		while (child) {
+			if (child.GetType() == "jdTestBox1") {
+				return true;
+			}
+			
+			child = Object.Cast(child.GetSibling());
+		}
+		
+		return false;
 	}
 }

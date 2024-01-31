@@ -27,8 +27,8 @@ class ObjectNodeView: ScriptView
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
 		Outline.SetAlpha(state.IsHover());
-		
-		if (state.IsDragging() || state.IsActive()) {			
+				
+		if (node.GetState().IsDragging() || node.GetState().IsActive()) {			
 			Image.SetColor(EditorColors.SELECT);
 		} else {
 			Image.SetColor(ARGB(150, 255, 255, 255));

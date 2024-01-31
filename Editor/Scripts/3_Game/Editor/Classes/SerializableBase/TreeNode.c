@@ -570,7 +570,7 @@ class TreeNode: SerializableBase
 			tabs += "\t";
 		}
 		
-		PrintFormat("[%4]%3[%1] %2:", m_UUID, m_DisplayName, tabs, depth);
+		PrintFormat("[%4]%3[%1] %2: State:%3", m_UUID, m_DisplayName, tabs, depth, m_TreeNodeState);
 		
 		foreach (string uuid, TreeNode node: Children) {
 			node.Debug(depth + 1);

@@ -295,7 +295,10 @@ class Editor: TreeNode
 		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {
 			// Clear our pressed buttons when we click in the world randomly, probably same with 
 			if (!GetWidgetUnderCursor()) {
-				foreach (TreeNode node_to_deselect: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+				// reassigning because were gonna fuck with this statemachine array
+				array<TreeNode> nodes = {};
+				nodes.Copy(TreeNode.StateMachine[TreeNodeState.ACTIVE]);
+				foreach (TreeNode node_to_deselect: nodes) {
 					if (node_to_deselect && node_to_deselect.GetInteractType() == TreeNodeInteract.PRESS) {
 						node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
 					}
@@ -357,8 +360,8 @@ class Editor: TreeNode
 			m_Camera.FieldOfView = 1.0;
 		}
 		
-		array<TreeNode> nodes = Children[COMMANDS].Children.GetValueArray();
-		nodes.InsertArray(Children[COMMANDS][TOOLS].Children.GetValueArray());
+		array<TreeNode> nodes2 = Children[COMMANDS].Children.GetValueArray();
+		nodes2.InsertArray(Children[COMMANDS][TOOLS].Children.GetValueArray());
 	}
 				
 	override void Write(Serializer serializer, int version)
