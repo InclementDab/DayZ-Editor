@@ -8,5 +8,10 @@ class TreeViewController: ViewController
 	{
 		Collapse.Show(ChildrenItems.Count() > 0);
 		Texture.Update();
+		
+		TreeView tree_view = TreeView.Cast(GetParent());
+		if (tree_view) {
+			tree_view.RecalculateSize();
+		}
 	}
 }

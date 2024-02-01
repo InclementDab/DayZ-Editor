@@ -26,7 +26,7 @@ class TreeView: ScriptView
 			
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext());
+		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext() || node.GetState().IsDragging());
 		Outline.SetAlpha(node.GetState().IsHover());
 		Dot.Show(node.GetState().IsFocus());
 		
@@ -36,9 +36,6 @@ class TreeView: ScriptView
 	void AddView(notnull TreeView view)
 	{
 		m_TemplateController.ChildrenItems.Insert(view);
-		
-		// Recalculate size
-		RecalculateSize();
 	}
 	
 	void SetText(string text)
@@ -51,11 +48,7 @@ class TreeView: ScriptView
 	}
 		
 	void ShowChildren(bool state)
-	{
-		if (!CollapseIcon) {
-			return;
-		}
-		
+	{		
 		Children.Show(state);
 		Children.Update(); //! importante
 		
@@ -72,7 +65,7 @@ class TreeView: ScriptView
 		}
 	}
 	
-	protected void RecalculateSize()
+	void RecalculateSize()
 	{
 		float w, h, x, y;
 		Children.GetScreenSize(w, h);		
@@ -95,10 +88,12 @@ class TreeView: ScriptView
 		string search_bar = EditorHud.SEARCH_BAR_DEFAULT;
 		search_bar.ToLower();
 				
-		bool applied = File.WildcardMatch(uuid, filter) || File.WildcardMatch(name, filter) || filter.Length() < 3 || search_bar.Contains(filter);
+		bool applied = File.WildcardMatch(uuid, filter) || File.WildcardMatch(name, filter) || filter.Length() < 3;
 		for (int i = 0; i < m_TemplateController.ChildrenItems.Count(); i++) {
 			applied = applied || m_TemplateController.ChildrenItems[i].ApplyFilter(filter);
 		}
+		
+		RecalculateSize();
 		
 		m_LayoutRoot.Show(applied);
 		return applied;
@@ -276,75 +271,46 @@ class TreeView: ScriptView
 			
 	override bool OnDrag(Widget w, int x, int y)
 	{		
+		m_Node.AddState(TreeNodeState.DRAGGING);
+		
 		return false;
 	}
 	
 	override bool OnDragging(Widget w, int x, int y, Widget reciever)
-	{
-		Outline.SetAlpha(1.0);
-			
-		//if (!RecursiveGetParent(reciever, "Root")) {
-		//	return false;
-		//}
-		
-		// Warning:: unsafe
-		
-		/*TreeView bottom_view;
-		reciever.GetUserData(bottom_view);
-		if (!bottom_view) {
-			return false;
-		}*/
-		
-		//Print(bottom_view);
-		
+	{		
 		return false;
 	}
 	
 	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
 	{
-		//if (!RecursiveGetParent(reciever, "Root")) {
-		//	return false;
-		//}
-		
-		// Warning:: unsafe
-		/*TreeView bottom_view;
-		reciever.GetUserData(bottom_view);
-		if (!bottom_view) {
+		if (!RecursiveGetParent(reciever, "Root")) {
 			return false;
 		}
-		*/
-		//Print(bottom_view);
-		//WidgetAnimator.Animate(bottom_view.Outline, WidgetAnimatorProperty.COLOR_A, 1.0, 0.0, 100);
-		//bottom_view.Outline.SetAlpha(1.0);
 		
 		return false;
 	}
 	
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		Panel.SetPos(60, 0);
-		Panel.Update();
-		Panel.SetAlpha(0.0);
+		m_Node.RemoveState(TreeNodeState.DRAGGING);
 		return false;
 	}
 	
 	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
 	{
-		return true;
 		if (!RecursiveGetParent(w, "Root")) {
 			return false;
 		}
-		/*
-		// Warning:: unsafe
-		TreeView bottom_view;
-		w.GetUserData(bottom_view);
-		if (!bottom_view) {
+		
+		Class user_data;
+		w.GetUserData(user_data);
+		TreeView tree_view = TreeView.Cast(user_data);		
+		if (!tree_view || tree_view == this) {
 			return false;
 		}
 		
-		m_Node.Add(bottom_view.m_Node);
-		*/
-		return false;
+		m_Node.Add(tree_view.GetNode());
+		return true;
 	}
 	
 	TreeNode GetNode()

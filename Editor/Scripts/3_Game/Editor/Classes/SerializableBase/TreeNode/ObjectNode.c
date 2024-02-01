@@ -21,7 +21,6 @@ class ObjectNode: TreeNode
 	
 	void ObjectNode(string uuid, string display_name, Symbols icon, Object object, int flags = EFE_DEFAULT)
 	{
-		Print("ObjectNode");
 		m_Flags = flags;
 		m_Object = object;
 		
@@ -32,7 +31,6 @@ class ObjectNode: TreeNode
 		
 	void ~ObjectNode()
 	{	
-		Print("~ObjectNode");	
 		if (m_Object) {
 			All.Remove(m_Object);
 		} else {

@@ -206,7 +206,7 @@ class TreeNode: SerializableBase
 			}
 		}
 	}
-	
+		
 	void AddState(TreeNodeState state)
 	{
 		state &= GetStateMask();
@@ -315,7 +315,7 @@ class TreeNode: SerializableBase
 		
 		return node != null;
 	}
-		
+			
 	void Add(notnull TreeNode node)
 	{
 		Set(node.GetUUID(), node);

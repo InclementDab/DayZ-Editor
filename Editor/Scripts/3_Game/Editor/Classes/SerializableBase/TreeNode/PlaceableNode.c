@@ -4,7 +4,6 @@ class PlaceableNode: TreeNode
 	
 	override bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
 	{
-		
 		return false;
 	}
 	

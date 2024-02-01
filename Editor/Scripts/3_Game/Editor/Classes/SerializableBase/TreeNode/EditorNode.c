@@ -572,7 +572,6 @@ class EditorNode: TreeNode
 	
 	static Object CreateObject(string type, vector transform[4])
 	{
-		Print("CreateObject");
 		Math3D.MatrixOrthogonalize4(transform);
 		Object object;
 		if (type.Contains("\\") || type.Contains("/")) {

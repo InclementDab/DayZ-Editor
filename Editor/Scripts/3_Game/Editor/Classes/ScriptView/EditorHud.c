@@ -82,21 +82,13 @@ class EditorHud: ScriptView
 		
 		Input input = GetGame().GetInput();	
 		
-		if (input.LocalPress_ID(UAFire)) {
-			if (!GetWidgetUnderCursor()) {
-				m_DragX = mouse_x;
-				m_DragY = mouse_y;
-			} 
-				
-			// Clear context menu
-			if (!GetWidgetUnderCursor() || !Menu.FindAnyWidget(GetWidgetUnderCursor().GetName())) {
-				TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
-				Menu.Show(false);
-			}
+		if (input.LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
+			m_DragX = mouse_x;
+			m_DragY = mouse_y;
 		}
 		
 		Whiteboard.Clear();
-		if (input.LocalHold_ID(UAFire) && !m_DraggedBar) {	
+		if (input.LocalHold_ID(UAFire) && !m_DraggedBar && m_DragX != -1 && m_DragY != -1) {	
 			switch (CurrentSelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);

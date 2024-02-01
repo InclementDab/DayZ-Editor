@@ -8,12 +8,14 @@ FrameWidgetClass Root {
  hexactsize 0
  vexactsize 1
  scaled 0
+ draggable 0
  scriptclass ""
  {
   WrapSpacerWidgetClass Wrapper {
+   visible 1
    clipchildren 0
    inheritalpha 0
-   ignorepointer 1
+   ignorepointer 0
    position 0 0
    size 1 30
    hexactpos 1
@@ -21,6 +23,7 @@ FrameWidgetClass Root {
    hexactsize 0
    vexactsize 1
    scaled 0
+   draggable 1
    Padding 0
    Margin 12
    content_valign center
@@ -110,11 +113,31 @@ FrameWidgetClass Root {
       }
      }
     }
+    PanelWidgetClass Outline0 {
+     visible 0
+     disabled 0
+     clipchildren 0
+     ignorepointer 1
+     keepsafezone 0
+     color 0.1569 0.1569 0.1569 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     draggable 0
+     scriptclass ""
+     style Outline
+     "no focus" 0
+    }
     GridSpacerWidgetClass Panel {
      visible 1
      disabled 0
      clipchildren 0
-     ignorepointer 0
+     ignorepointer 1
      color 0.0275 0.4353 0.5725 0
      position 67 0
      size 356 22
@@ -123,11 +146,10 @@ FrameWidgetClass Root {
      hexactsize 1
      vexactsize 1
      scaled 0
-     draggable 1
+     draggable 0
      scriptclass ""
      style Colorable
      Padding 0
-     Margin 1
      "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
@@ -141,7 +163,6 @@ FrameWidgetClass Root {
        clipchildren 0
        ignorepointer 1
        color 0.1569 0.1569 0.1569 0
-       position 0 0
        size 1 1
        halign center_ref
        valign center_ref
@@ -153,8 +174,9 @@ FrameWidgetClass Root {
        draggable 0
        scriptclass ""
        style outline
+       "no focus" 0
        Padding 0
-       Margin 6
+       Margin 4
        "Size To Content H" 1
        "Size To Content V" 1
        content_halign center
@@ -167,7 +189,8 @@ FrameWidgetClass Root {
          disabled 0
          clipchildren 0
          ignorepointer 1
-         size 230 16
+         position 0 0
+         size 231 16
          halign center_ref
          valign center_ref
          hexactpos 1
