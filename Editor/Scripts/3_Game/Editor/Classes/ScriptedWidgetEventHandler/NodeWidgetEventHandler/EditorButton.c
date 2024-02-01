@@ -6,10 +6,12 @@ class EditorButton: NodeWidgetEventHandler
 			return;
 		}
 		
-		if (node.GetState().IsHover()) {
-			node.GetEditor().GetHud().SetCursor(node.GetIcon(), node.GetDisplayName(), node.GetShortcutString());
-		} else {
-			node.GetEditor().GetHud().ClearCursor();
+		if (state.IsHover()) {
+			if (node.GetState().IsHover()) {
+				node.GetEditor().GetHud().SetCursor(node.GetIcon(), node.GetDisplayName(), node.GetShortcutString());
+			} else {
+				node.GetEditor().GetHud().ClearCursor();
+			}
 		}
 		
 		int color = ARGB(100 + node.GetState().IsHover() * 155.0, 255, 255, 255);

@@ -26,15 +26,64 @@ class TreeView: ScriptView
 			
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
+		EditorHud hud = m_Node.GetEditor().GetHud();
 		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext() || node.GetState().IsDragging());
 		Outline.SetAlpha(node.GetState().IsHover());
 		Dot.Show(node.GetState().IsFocus());
 		
-		if (!state.IsDragging()) {
+		if (!node.GetState().IsDragging()) {
 			m_LayoutRoot.SetPos(0, 0);
 		}
 		
-		m_Node.GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());
+		/*
+		if (state.IsActive()) {
+			array<string> xor_selections = GetXorSelections();
+			foreach (string xor: xor_selections) {
+				TreeNode xor_node = Parent[xor];
+				if (!xor_node) {
+					Error(string.Format("[%1] couldnt find node to xor %2", m_UUID, xor));
+					continue;
+				}
+				
+				if (state ^ xor_node.GetState()) {
+					//xor_node.RemoveState(TreeNodeState.ACTIVE);
+				}
+			}
+		}*/
+		
+		if (state.IsHover()) {
+			if (node.GetState().IsHover()) {
+				hud.SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());	
+			} else {
+				hud.ClearCursor();
+			}
+		}
+		
+		if (state.IsContext()) {
+			hud.GetTemplateController().MenuItems.Clear();
+			if (node.GetState().IsContext() && m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
+				hud.Menu.Show(true);
+				
+				int screen_x, screen_y;
+				GetScreenSize(screen_x, screen_y);
+				
+				int x, y;
+				GetMousePos(x, y);
+				
+				float menu_w, menu_h;
+				hud.Menu.GetScreenSize(menu_w, menu_h);
+								
+				x = Math.Min(x, screen_x - 15 - menu_w);
+				x = Math.Max(15 + menu_w, x);
+				
+				y = Math.Min(y, screen_y - 15 - menu_h);
+				y = Math.Max(15 + menu_h, y);
+				
+				hud.Menu.SetScreenPos(x, y);
+			} else {
+				hud.Menu.Show(false);
+			}
+		}
 	}
 	
 	void AddView(notnull TreeView view)
