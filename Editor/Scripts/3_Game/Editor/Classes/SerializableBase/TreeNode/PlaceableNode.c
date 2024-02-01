@@ -18,17 +18,17 @@ class PlaceableNode: TreeNode
 				Math3D.MatrixIdentity4(matrix);
 				m_ObjectUuid = UUID.Generate();
 				ObjectNode node = new ObjectNode(m_ObjectUuid, m_UUID, GetIcon(), EditorNode.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
-				GetEditor().GetNode(EditorNode.PLACING).Add(node);
+				GetEditor().GetPlacing().Add(node);
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				ObjectNode object_node = ObjectNode.Cast(GetEditor()[EditorNode.PLACING][m_ObjectUuid]);
+				ObjectNode object_node = ObjectNode.Cast(GetEditor().GetPlacing()[m_ObjectUuid]);
 				m_ObjectUuid = string.Empty;
 				GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
-				GetEditor()[EditorNode.PLACING].Remove(object_node);
 				GetEditor().GetPlacingDestination().Add(object_node);
-				GetEditor().GetPlacingDestination().Synchronize();
-							
+				GetEditor().GetPlacingDestination().Synchronize();			
+				GetEditor().GetPlacing().Remove(object_node);
+				
 				object_node.AddState(TreeNodeState.ACTIVE);
 				
 				// remove it from placing
@@ -37,6 +37,8 @@ class PlaceableNode: TreeNode
 				if (KeyState(KeyCode.KC_LSHIFT)) {
 					AddState(TreeNodeState.ACTIVE);
 				}
+				
+				GetUApi().SupressNextFrame(true);
 			}
 		}
 	}

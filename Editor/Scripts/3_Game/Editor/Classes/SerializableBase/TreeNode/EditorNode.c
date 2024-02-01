@@ -188,22 +188,22 @@ class EditorNode: TreeNode
 		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
 		for (int j = 0; j < 473; j++) {
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + P3D_DIRECTORIES[j], "*.p3d");
-			foreach (string p3d_file: p3d_files) {
-				array<string> p3d_split = {};
-				p3d_file.Split(Directory.PATH_SEPERATOR, p3d_split);
+			foreach (string p3d: p3d_files) {
 				TreeNode current = this;
-				foreach (string p3d_path: p3d_split) {					
-					if (!current[p3d_path]) {
-						if (File.WildcardMatch(p3d_path, "*.p3d")) {
-							current[p3d_path] = new PlaceableNode(p3d_file, p3d_path, Symbols.TRIANGLE);
-						} else {
-							current[p3d_path] = new TreeNode(p3d_path, p3d_path, Symbols.FOLDER);
+				array<string> p3d_split = {};
+				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
+				for (int k = 0; k < p3d_split.Count(); k++) {
+					if (k != p3d_split.Count() - 1) {
+						if (!current[p3d_split[k]]) {
+							current[p3d_split[k]] = new TreeNode(p3d_split[k], p3d_split[k], Symbols.FOLDER);
 						}
+						
+						current = current[p3d_split[k]];
+					} else {
+						current[p3d_split[k]] = new PlaceableNode(p3d, p3d_split[k], Symbols.TRIANGLE);
 					}
-					
-					current = current[p3d_path];
 				}
-			}			
+			}
 		}
 		
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
@@ -556,22 +556,7 @@ class EditorNode: TreeNode
 		position[1] = GetGame().SurfaceY(position[0], position[2]) + 25.0;		
 		return position;
 	}
-		
-	static Object GetObjectUnderCursor(float raycast_distance = 3000)
-	{
-		vector ray_start = GetGame().GetCurrentCameraPosition();
-		vector ray_end = ray_start + GetGame().GetPointerDirection() * raycast_distance;
-		
-		vector hitPos, hitNormal;
-		int hitComponentIndex;		
-		set<Object> collisions = new set<Object>;
-		
-	
-		DayZPhysics.RaycastRV(ray_start, ray_end, hitPos, hitNormal, hitComponentIndex, collisions);
-		
-		return collisions.Get(0);
-	}
-	
+			
 	static EditorHoliday GetCurrentHoliday()
 	{		
 		int year, month, day;
@@ -598,7 +583,6 @@ class EditorNode: TreeNode
 	static Object CreateObject(string type, vector transform[4])
 	{
 		Math3D.MatrixOrthogonalize4(transform);
-		
 		Object object;
 		if (type.Contains("\\") || type.Contains("/")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, !GetGame().IsDedicatedServer());
@@ -695,5 +679,10 @@ class EditorNode: TreeNode
 	TreeNode GetRecycle()
 	{
 		return this[RECYCLE];
+	}
+	
+	TreeNode GetPlacing()
+	{
+		return this[PLACING];
 	}
 }
