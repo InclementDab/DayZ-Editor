@@ -45,6 +45,7 @@ class EditorNode: TreeNode
 	static const string MENUS = "Menus";
 	static const string HISTORY = "UndoRedo";
 	static const string PLACEABLES = "Placeables";
+	static const string DZ = "DZ";
 	static const string BRUSHES = "Brushes";
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
@@ -184,13 +185,13 @@ class EditorNode: TreeNode
 		    }
 		}
 		
-		this[PLACEABLES]["DZ"] = new TreeNode("DZ", "DZ", Symbols.FOLDER);
+		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
 		for (int j = 0; j < 473; j++) {
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + P3D_DIRECTORIES[j], "*.p3d");
 			foreach (string p3d_file: p3d_files) {
 				array<string> p3d_split = {};
 				p3d_file.Split(Directory.PATH_SEPERATOR, p3d_split);
-				TreeNode current = this[PLACEABLES];
+				TreeNode current = this;
 				foreach (string p3d_path: p3d_split) {					
 					if (!current[p3d_path]) {
 						if (File.WildcardMatch(p3d_path, "*.p3d")) {
