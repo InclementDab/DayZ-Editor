@@ -15,10 +15,7 @@ enum TreeNodeInteract
 	HOLD, // EEEEEK like a poop?
 	
 	// Button must be in toggle mode lol
-	TOGGLE, // ying and yang
-	
-	// For radio buttons
-	ONLY, // its parents are constantly angry
+	TOGGLE // ying and yang
 };
 
 class TreeNodeState: int

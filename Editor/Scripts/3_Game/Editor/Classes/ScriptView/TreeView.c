@@ -170,12 +170,6 @@ class TreeView: ScriptView
 			
 			case Wrapper: {
 				switch (m_Node.GetInteractType()) {
-					case TreeNodeInteract.ONCE: {
-						TreeNode.StateMachine.RemoveAllStates(TreeNodeState.ACTIVE);
-						m_Node.AddState(TreeNodeState.ACTIVE);
-						break;
-					}
-					
 					case TreeNodeInteract.HOLD:
 					case TreeNodeInteract.PRESS: {
 						m_Node.AddState(TreeNodeState.ACTIVE);
@@ -191,7 +185,11 @@ class TreeView: ScriptView
 	}
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
-	{		
+	{
+		if (button != 0) {
+			return false;
+		}
+		
 		switch (w) {
 			case Wrapper: {
 				switch (m_Node.GetInteractType()) {					
@@ -204,10 +202,6 @@ class TreeView: ScriptView
 						break;
 					}
 					
-					case TreeNodeInteract.ONCE:
-					case TreeNodeInteract.HOLD:
-					case TreeNodeInteract.DOUBLE:
-					case TreeNodeInteract.TOGGLE:
 					case TreeNodeInteract.PRESS: {
 						switch (button) {							
 							case 1: {
@@ -229,34 +223,26 @@ class TreeView: ScriptView
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
-	{		
+	{
+		if (button != 0) {
+			return false;
+		}
+		
 		switch (w) {
 			case CollapseButton: {
-				switch (button) {
-					case 0: {
-						ShowChildren(!Children.IsVisible());
-						break;
-					}
-				}
+				ShowChildren(!Children.IsVisible());
 				return true;
 			}
 			
 			case Wrapper: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.TOGGLE: {
-						switch (button) {
-							case 0: {
-								if (m_Node.HasState(TreeNodeState.ACTIVE)) {
-									m_Node.RemoveState(TreeNodeState.ACTIVE);
-								} else {
-									m_Node.AddState(TreeNodeState.ACTIVE);
-								}
-								
-								return true;
-							}
+						if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+							m_Node.RemoveState(TreeNodeState.ACTIVE);
+						} else {
+							m_Node.AddState(TreeNodeState.ACTIVE);
 						}
-						
-						break;
+						return true;
 					}
 				}
 				
@@ -275,11 +261,11 @@ class TreeView: ScriptView
 		
 		switch (w) {
 			case Wrapper: {
-				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+				/*if (m_Node.HasState(TreeNodeState.ACTIVE)) {
 					m_Node.RemoveState(TreeNodeState.ACTIVE);
 				} else {
 					m_Node.AddState(TreeNodeState.ACTIVE);
-				}
+				}*/
 				
 				return false;
 			}
