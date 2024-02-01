@@ -29,6 +29,8 @@ class TreeView: ScriptView
 		Panel.SetAlpha(node.GetState().IsActive());
 		Outline.SetAlpha(node.GetState().IsHover());
 		Dot.Show(node.GetState().IsFocus());
+		
+		m_Node.GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());
 	}
 	
 	void AddView(notnull TreeView view)

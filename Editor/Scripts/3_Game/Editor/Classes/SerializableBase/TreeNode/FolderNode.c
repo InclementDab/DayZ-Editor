@@ -14,6 +14,20 @@ class FolderNode: TreeNode
 		return true;
 	}
 	
+	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	{
+		super.OnStateChanged(state, total_state);
+		
+		if (state.IsActive()) {
+			View.ShowChildren(total_state.IsActive());
+		}
+	}
+	
+	override TreeNodeInteract GetInteractType()
+	{
+		return TreeNodeInteract.DOUBLE;
+	}
+	
 	override bool CanDelete()
 	{
 		return true;
