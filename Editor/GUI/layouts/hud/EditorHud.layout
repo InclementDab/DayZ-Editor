@@ -3783,7 +3783,7 @@ FrameWidgetClass Root {
    visible 0
    ignorepointer 1
    color 0.098 0.098 0.098 1
-   size 535 0
+   size 200 0
    hexactpos 1
    vexactpos 1
    hexactsize 1

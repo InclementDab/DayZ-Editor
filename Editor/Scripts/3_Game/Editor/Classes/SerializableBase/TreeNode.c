@@ -247,8 +247,21 @@ class TreeNode: SerializableBase
 			if (CreateContextMenu(hud.GetTemplateController().MenuItems)) {
 				hud.Menu.Show(true);
 				
+				int screen_x, screen_y;
+				GetScreenSize(screen_x, screen_y);
+				
 				int x, y;
 				GetMousePos(x, y);
+				
+				float menu_w, menu_h;
+				hud.Menu.GetScreenSize(menu_w, menu_h);
+								
+				x = Math.Min(x, screen_x - 15 - menu_w);
+				x = Math.Max(15 + menu_w, x);
+				
+				y = Math.Min(y, screen_y - 15 - menu_h);
+				y = Math.Max(15 + menu_h, y);
+				
 				hud.Menu.SetScreenPos(x, y);
 			} else {
 				hud.Menu.Show(false);
