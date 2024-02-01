@@ -133,7 +133,10 @@ class TreeNode: SerializableBase
 	
 	void ~TreeNode()
 	{
-		StateMachine[m_TreeNodeState].RemoveItem(this);
+		if (StateMachine[m_TreeNodeState]) {
+			StateMachine[m_TreeNodeState].RemoveItem(this);
+		}
+		
 		delete View;
 		
 		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {

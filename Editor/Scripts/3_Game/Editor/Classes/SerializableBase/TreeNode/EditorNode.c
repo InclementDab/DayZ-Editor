@@ -46,6 +46,7 @@ class EditorNode: TreeNode
 	static const string PLACEABLES = "Placeables";
 	static const string BRUSHES = "Brushes";
 	static const string PLACING = "Placing";
+	static const string RECYCLE = "Recycle";
 	
 	TAnimGraphVariable Speed;
 	
@@ -74,7 +75,7 @@ class EditorNode: TreeNode
 		commands.Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED));
 		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY));
 		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS));
-		commands.Add(new CommandNode("Delete", "Delete", Symbols.TRASH));
+		commands.Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH));
 		commands.Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
 		commands.Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO));
 		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK));
@@ -146,6 +147,7 @@ class EditorNode: TreeNode
 		Add(brushes);
 		
 		Add(new TreeNode(PLACING, "Placing", Symbols.FIREPLACE));
+		Add(new TreeNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));
 		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 		string category = "Unknown";
@@ -690,5 +692,10 @@ class EditorNode: TreeNode
 	TreeNode GetMenu(string menu)
 	{
 		return this[MENUS][menu];
+	}
+	
+	TreeNode GetRecycle()
+	{
+		return this[RECYCLE];
 	}
 }

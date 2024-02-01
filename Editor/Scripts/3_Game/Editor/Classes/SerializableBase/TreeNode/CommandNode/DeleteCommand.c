@@ -5,18 +5,13 @@ class DeleteCommand: CommandNode
 		super.OnStateChanged(state, total_state);
 		
 		if (total_state.IsActive()) {
-			foreach (TreeNode node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {					
-				GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());	
-				node.GetParent().Children.Remove(node.GetUUID());				
-				delete node;
-				GetEditor().GetObjects().Synchronize();
+			foreach (TreeNode node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+				GetEditor().InsertHistory("Undo Delete", Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());
+				
+				node.GetParent().Remove(node.GetUUID());
+				node.GetParent().Synchronize();
 				GetEditor().PlaySound(EditorSounds.HIGHLIGHT);
 			}
 		}
-	}
-	
-	override TreeNodeInteract GetInteractType()
-	{
-		return TreeNodeInteract.HOLD;
 	}
 }
