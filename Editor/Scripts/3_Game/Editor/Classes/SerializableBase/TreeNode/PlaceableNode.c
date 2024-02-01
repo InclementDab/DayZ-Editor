@@ -11,7 +11,7 @@ class PlaceableNode: TreeNode
 	{
 		super.OnStateChanged(state, total_state);
 	
-		if (state.IsActive()) {	
+		if (total_state.IsActive()) {	
 			if (total_state.IsActive() && m_ObjectUuid == string.Empty) {
 				vector matrix[4];
 				Math3D.MatrixIdentity4(matrix);

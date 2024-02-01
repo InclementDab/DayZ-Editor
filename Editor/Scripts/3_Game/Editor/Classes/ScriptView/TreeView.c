@@ -4,7 +4,7 @@ class TreeView: ScriptView
 		
 	TextWidget Text;
 	
-	Widget Panel, Children, Outline, Texture, Collapse, Minimize, Dot;
+	Widget Panel, Wrapper, Children, Outline, Texture, Collapse, Minimize, Dot;
 	ImageWidget IconImage, CollapseIcon;
 	ButtonWidget CollapseButton;
 	
@@ -116,7 +116,7 @@ class TreeView: ScriptView
 				return true;
 			}
 			
-			case Panel: {
+			case Wrapper: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.HOLD: {
 						m_Node.AddState(TreeNodeState.ACTIVE);
@@ -142,7 +142,7 @@ class TreeView: ScriptView
 		}
 		
 		switch (w) {
-			case Panel: {
+			case Wrapper: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.HOLD: {
 						if (button == 0) {
@@ -185,7 +185,7 @@ class TreeView: ScriptView
 				return true;
 			}
 			
-			case Panel: {
+			case Wrapper: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.TOGGLE: {
 						if (m_Node.HasState(TreeNodeState.ACTIVE)) {
@@ -211,7 +211,7 @@ class TreeView: ScriptView
 		}
 		
 		switch (w) {
-			case Panel: {
+			case Wrapper: {
 				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
 					m_Node.RemoveState(TreeNodeState.ACTIVE);
 				} else {

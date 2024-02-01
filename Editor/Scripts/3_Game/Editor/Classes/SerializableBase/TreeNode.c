@@ -108,6 +108,7 @@ class TreeNode: SerializableBase
 		
 	void AddState(TreeNodeState state)
 	{
+		PrintFormat("[%1], AddState=%2, StateMask=%3, Result=%4", m_UUID, typename.EnumToString(TreeNodeState, state), GetStateMask(), state & GetStateMask());
 		state &= GetStateMask();
 		if (state == 0) {
 			return;
@@ -132,6 +133,7 @@ class TreeNode: SerializableBase
 	
 	void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
+		/*
 		if (state.IsActive()) {
 			array<string> xor_selections = GetXorSelections();
 			foreach (string xor: xor_selections) {
@@ -145,7 +147,7 @@ class TreeNode: SerializableBase
 					//xor_node.RemoveState(TreeNodeState.ACTIVE);
 				}
 			}
-		}
+		}*/
 		
 		if (state.IsContext() && total_state.IsContext()) {
 			EditorHud hud = GetEditor().GetHud();

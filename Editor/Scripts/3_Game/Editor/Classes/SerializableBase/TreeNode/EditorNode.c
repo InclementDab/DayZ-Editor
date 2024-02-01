@@ -7,9 +7,6 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
-#ifdef WORKBENCH
-//[EditorNode("WORKBENCH", "Workbench", Symbols.CAMERA_VIEWFINDER)]
-#endif
 class EditorNode: TreeNode
 {	
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
@@ -21,9 +18,7 @@ class EditorNode: TreeNode
 	protected vector m_CursorNormal = vector.Aside;
 	protected EditorCamera m_Camera;
 	protected ref EditorHud	m_Hud;
-
-	protected ref array<TreeNode> m_SelectedNodes = {};
-		
+	
 	protected ref map<string, TreeNode> m_CommandShortcutMap = new map<string, TreeNode>();
 	
 	//[TreeNode("SERVER\\Layers", "Layers", Symbols.LAYER_GROUP)]
@@ -95,9 +90,7 @@ class EditorNode: TreeNode
 		this[COMMANDS].Add(new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX));
 		this[COMMANDS][TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
 		this[COMMANDS][TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
-		this[COMMANDS][TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));
-
-		
+		this[COMMANDS][TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));		
 		
 		this[MENUS].Add(new CommandNode("File", "File", Symbols.FILE_SPREADSHEET));
 		this[MENUS].Add(new CommandNode("Edit", "Edit", Symbols.FILE_PEN));
