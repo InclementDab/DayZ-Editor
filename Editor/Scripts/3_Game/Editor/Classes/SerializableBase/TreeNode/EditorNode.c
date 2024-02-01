@@ -184,53 +184,27 @@ class EditorNode: TreeNode
 		    }
 		}
 		
+		this[PLACEABLES]["DZ"] = new TreeNode("DZ", "DZ", Symbols.FOLDER);
 		for (int j = 0; j < 473; j++) {
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + P3D_DIRECTORIES[j], "*.p3d");
 			foreach (string p3d_file: p3d_files) {
-				Print(p3d_file);
-				
+				array<string> p3d_split = {};
+				p3d_file.Split(Directory.PATH_SEPERATOR, p3d_split);
+				TreeNode current = this[PLACEABLES];
+				foreach (string p3d_path: p3d_split) {					
+					if (!current[p3d_path]) {
+						if (File.WildcardMatch(p3d_path, "*.p3d")) {
+							current[p3d_path] = new PlaceableNode(p3d_file, p3d_path, Symbols.TRIANGLE);
+						} else {
+							current[p3d_path] = new TreeNode(p3d_path, p3d_path, Symbols.FOLDER);
+						}
+					}
+					
+					current = current[p3d_path];
+				}
 			}			
 		}
 		
-		/*
-		foreach (string model_path: P3D_DIRECTORIES) {
-			array<ref CF_File> files = {};
-			Print("DZ\\" + model_path + "\\*");
-			if (!CF_Directory.GetFiles("DZ\\" + model_path + "\\*", files, FindFileFlags.ARCHIVES)) {
-				continue;
-			}
-				
-			foreach (CF_File file: files) {		
-				if (!file || file.GetExtension() != ".p3d") {
-					continue;
-				}
-				
-				string model_name;
-				array<string> items = {};
-				string full_path_p3d = file.GetFullPath();
-				full_path_p3d.Replace("/", "\\");
-				full_path_p3d.Split("\\", items);
-				if (items.Count() != 0) {
-					model_name = items[items.Count() - 1];
-				}
-								
-				Symbols symbol = Symbols.TRIANGLE;
-				category = "StaticObjects";
-				if ((items.Find("tree") != -1) || (items.Find("bush") != -1)) {
-					category = "Plants";
-					symbol = Symbols.TREE;
-				} else if (items.Find("clutter") != -1) {
-					category = "Clutter";
-					symbol = Symbols.TIRE_FLAT;
-				} else if (items.Find("rocks") != -1) {
-					category = "Rocks";
-					symbol = Symbols.MOUNTAIN;
-				}
-			
-				this[PLACEABLES][category].Add(new PlaceableNode(file.GetFullPath(), model_name, this[PLACEABLES][category].GetIcon()));
-			}
-		}*/
-
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
 			this[PLACEABLES]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
