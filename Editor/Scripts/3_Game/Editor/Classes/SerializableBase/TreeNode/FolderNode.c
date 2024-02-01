@@ -18,7 +18,7 @@ class FolderNode: TreeNode
 	{
 		super.OnStateChanged(state, total_state);
 		
-		if (state.IsActive()) {
+		if (state.IsActive() && View) {
 			View.ShowChildren(total_state.IsActive());
 		}
 	}

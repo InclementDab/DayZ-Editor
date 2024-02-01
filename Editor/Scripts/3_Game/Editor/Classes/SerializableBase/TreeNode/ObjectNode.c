@@ -1,11 +1,3 @@
-class BoundingBox: Managed
-{
-	void BoundingBox(notnull Object object)
-	{
-		
-	}
-}
-
 class ObjectNode: TreeNode
 {
 	static const int VERSION = 1;
@@ -416,6 +408,11 @@ class ObjectNode: TreeNode
 	Object GetObject() 
 	{		
 		return m_Object;
+	}
+	
+	ObjectNodeView GetObjectNodeView()
+	{
+		return m_ObjectNodeView;
 	}
 		
 	array<EditorSnapPoint> GetEditorSnapPoints()

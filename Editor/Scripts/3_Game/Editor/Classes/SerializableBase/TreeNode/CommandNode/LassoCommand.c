@@ -4,7 +4,7 @@ class LassoCommand: CommandNode
 	{
 		super.OnStateChanged(state, total_state);
 		
-		if (total_state.IsActive() && GetEditor().GetHud()) {
+		if (state.IsActive() && total_state.IsActive() && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.LASSO;
 		}
 	}

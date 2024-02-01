@@ -50,8 +50,6 @@ class EditorNode: TreeNode
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 	
-	TAnimGraphVariable Speed;
-	
 	void EditorNode(string uuid, string display_name, Symbols icon, PlayerIdentity identity, DayZPlayer player) 
 	{
 		m_Identity = identity;
@@ -155,6 +153,7 @@ class EditorNode: TreeNode
 		string category = "Unknown";
 		// handle config objects
 #ifndef SERVER
+#ifndef WORKBENCH
 		foreach (string path: config_paths) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
@@ -209,6 +208,7 @@ class EditorNode: TreeNode
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
 			this[PLACEABLES]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
+#endif
 #endif
 	}
 

@@ -96,7 +96,7 @@ class EditorHud: ScriptView
 		}
 		
 		Whiteboard.Clear();
-		if (input.LocalHold_ID(UAFire) && !m_DraggedBar && TreeNode.StateMachine[TreeNodeState.ACTIVE].Count() == 0) {	
+		if (input.LocalHold_ID(UAFire) && !m_DraggedBar) {	
 			switch (CurrentSelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
@@ -180,6 +180,25 @@ class EditorHud: ScriptView
 		}
 		
 		if (input.LocalRelease_ID(UAFire)) {
+
+			switch (CurrentSelectionMode) {
+				case SelectionMode.LASSO: {
+					foreach (Object object, ObjectNode object_node: ObjectNode.All) {
+						ObjectNodeView view = object_node.GetObjectNodeView();
+						
+						float x_node_screen, y_node_screen;
+						view.GetLayoutRoot().GetScreenPos(x_node_screen, y_node_screen);
+						if (m_LassoHistory.Count() > 0) {							
+							if (IsPointInPolygon(x_node_screen, y_node_screen, m_LassoHistory)) {
+								object_node.AddState(TreeNodeState.ACTIVE);
+							}
+						}
+					}
+					
+					break;
+				}
+			}
+			
 			m_DragX = -1;
 			m_DragY = -1;
 			m_LassoHistory.Clear();
@@ -218,6 +237,18 @@ class EditorHud: ScriptView
 			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + top_height));
 			m_DraggedBar.GetChildren().SetColor(EditorColors.SELECT);
 		}
+	}
+	
+	static bool IsPointInPolygon(float x, float y, array<vector> points)
+	{
+		bool inside = false;
+        for (int i = 0, j = points.Count() - 1; i < points.Count(); j = i++) {
+            if ((points[i][1] > y) != (points[j][1] > y) && x < (points[j][0] - points[i][0]) * (y - points[i][1]) / (points[j][1] - points[i][1]) + points[i][0]) {
+                inside = !inside;
+            }
+        }
+
+        return inside;
 	}
 
 	void SetCursor(Symbols cursor, string name = string.Empty, string type = string.Empty)
@@ -415,7 +446,7 @@ class EditorHud: ScriptView
 		Whiteboard.DrawLine(0, y / 3, x, y / 3, 1, COLOR_BLACK);
 		Whiteboard.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
 	}
-	
+		
 	override string GetLayoutFile() 
 	{
 		return "Editor/gui/layouts/hud/EditorHud.layout";
