@@ -572,10 +572,11 @@ class EditorNode: TreeNode
 	
 	static Object CreateObject(string type, vector transform[4])
 	{
+		Print("CreateObject");
 		Math3D.MatrixOrthogonalize4(transform);
 		Object object;
 		if (type.Contains("\\") || type.Contains("/")) {
-			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, !GetGame().IsDedicatedServer());
+			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, true);
 		} else {
 			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL | ECE_INITAI | ECE_CREATEPHYSICS | ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_UPDATEPATHGRAPH);
 		}
