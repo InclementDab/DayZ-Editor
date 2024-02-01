@@ -75,7 +75,6 @@ class ObjectNode: TreeNode
 				vector direction = vector.Zero;
 				direction[j % 3] = 1 * ((j > 2) * -2 + 1);
 				
-				
 			}
 			
 			vector min_max2[2];
