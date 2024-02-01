@@ -30,6 +30,10 @@ class TreeView: ScriptView
 		Outline.SetAlpha(node.GetState().IsHover());
 		Dot.Show(node.GetState().IsFocus());
 		
+		if (!state.IsDragging()) {
+			m_LayoutRoot.SetPos(0, 0);
+		}
+		
 		m_Node.GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());
 	}
 	
@@ -101,13 +105,7 @@ class TreeView: ScriptView
 	}
 			
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{		
-		if (button == 1) {
-			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
-			m_Node.AddState(TreeNodeState.CONTEXT);
-			return true;
-		}
-		
+	{				
 		if (button != 0) {
 			return false;
 		}
@@ -121,6 +119,10 @@ class TreeView: ScriptView
 			case Panel: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.HOLD: {
+						m_Node.AddState(TreeNodeState.ACTIVE);
+						return true;
+					}
+					case TreeNodeInteract.PRESS: {
 						m_Node.AddState(TreeNodeState.ACTIVE);
 						return true;
 					}
@@ -152,13 +154,9 @@ class TreeView: ScriptView
 					}
 					
 					case TreeNodeInteract.PRESS: {
-						switch (button) {
-							case 0: {
-								m_Node.AddState(TreeNodeState.ACTIVE);
-								break;
-							}
-							
+						switch (button) {							
 							case 1: {
+								TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
 								m_Node.AddState(TreeNodeState.CONTEXT);
 								break;
 							}
@@ -289,7 +287,7 @@ class TreeView: ScriptView
 	
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		m_Node.RemoveState(TreeNodeState.DRAGGING);
+		m_Node.RemoveState(TreeNodeState.DRAGGING);		
 		return false;
 	}
 	
