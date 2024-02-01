@@ -470,6 +470,13 @@ class EditorNode: TreeNode
 	
 	TreeNode GetPlacingDestination()
 	{
+		foreach (TreeNode tree_node_context: TreeNode.StateMachine[TreeNodeState.CONTEXT]) {
+			FolderNode folder_node_context = FolderNode.Cast(tree_node_context);
+			if (folder_node_context && folder_node_context.GetState().IsContext()) {
+				return folder_node_context;
+			}
+		}
+		
 		foreach (TreeNode tree_node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
 			FolderNode folder_node = FolderNode.Cast(tree_node);
 			if (folder_node && folder_node.GetState().IsActive()) {

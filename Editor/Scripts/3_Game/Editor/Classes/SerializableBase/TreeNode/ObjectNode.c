@@ -132,10 +132,7 @@ class ObjectNode: TreeNode
 		m_Object.GetTransform(transform);
 		
 		vector clip[2];
-		m_Object.GetCollisionBox(clip);
-		
-		string bounding = m_Object.ConfigGetString("physLayer");		
-		
+		m_Object.ClippingInfo(clip);
 		
 		// Corner positions
 		vector corners[8];

@@ -15,7 +15,7 @@ FrameWidgetClass Root {
    inheritalpha 0
    ignorepointer 1
    position 0 0
-   size 1.01 30
+   size 1 30
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -127,7 +127,7 @@ FrameWidgetClass Root {
      scriptclass ""
      style Colorable
      Padding 0
-     Margin 0
+     Margin 1
      "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
@@ -167,7 +167,7 @@ FrameWidgetClass Root {
          disabled 0
          clipchildren 0
          ignorepointer 1
-         size 230 18
+         size 230 16
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -181,7 +181,7 @@ FrameWidgetClass Root {
          text "akfjvNl9YFJiXr9UoOUgK0ks6Yar_-L3NR1hDBsPPzw="
          font "gui/fonts/Metron"
          "bold text" 0
-         "exact text" 1
+         "exact text" 0
          "exact text size" 16
          "size to text h" 1
          "size to text v" 0
