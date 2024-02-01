@@ -77,6 +77,9 @@ class TreeView: ScriptView
 		m_LayoutRoot.GetScreenSize(x, y);
 		m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
 		m_LayoutRoot.Update();
+		
+		Collapse.Show(m_TemplateController.ChildrenItems.Count() > 0);
+		Texture.Update();
 	}
 		
 	// returns whether or not the filter was applied
@@ -209,12 +212,13 @@ class TreeView: ScriptView
 		
 		switch (w) {
 			case Wrapper: {
-				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+				/*if (m_Node.HasState(TreeNodeState.ACTIVE)) {
 					m_Node.RemoveState(TreeNodeState.ACTIVE);
 				} else {
 					m_Node.AddState(TreeNodeState.ACTIVE);
-				}
-				return true;
+				}*/
+				
+				return false;
 			}
 		}
 		

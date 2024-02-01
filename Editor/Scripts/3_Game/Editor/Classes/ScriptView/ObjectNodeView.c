@@ -46,12 +46,6 @@ class ObjectNodeView: ScriptView
 	override void Update(float dt)
 	{
 		vector base_position = m_ObjectNode.GetBasePoint();
-		base_position = GetGame().GetScreenPos(base_position);
-		
-		if (base_position[2] < 0) {
-			m_LayoutRoot.Show(false);
-			return;
-		}
 		
 		Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
 				
@@ -121,7 +115,7 @@ class ObjectNodeView: ScriptView
 		
 		base_position = GetGame().GetScreenPos(m_ObjectNode.GetBasePoint());
 		m_LayoutRoot.SetPos(base_position[0] - 12.5, base_position[1] - 12.5);
-		m_LayoutRoot.Show(true);
+		m_LayoutRoot.Show(base_position[2] > 0);
 	}
 		
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

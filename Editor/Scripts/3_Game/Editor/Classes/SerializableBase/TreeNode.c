@@ -109,7 +109,7 @@ class TreeNode: SerializableBase
 		
 	void AddState(TreeNodeState state)
 	{
-		PrintFormat("[%1], AddState=%2, StateMask=%3, Result=%4", m_UUID, typename.EnumToString(TreeNodeState, state), GetStateMask(), state & GetStateMask());
+		//PrintFormat("[%1], AddState=%2, StateMask=%3, Result=%4", m_UUID, typename.EnumToString(TreeNodeState, state), GetStateMask(), state & GetStateMask());
 		state &= GetStateMask();
 		if (state == 0) {
 			return;
@@ -239,13 +239,21 @@ class TreeNode: SerializableBase
 	
 	void Set(string uuid, notnull TreeNode node)
 	{
+		TreeNode former_parent = node.Parent;
+		
 		Children[uuid] = node;
 		node.Parent = this;
 		
 #ifndef SERVER
 #ifndef WORKBENCH
-		if (View) {
+		if (!View) {
+			//Print("No view for " + m_UUID);
+		} else {
 			View.AddView(node.CreateView());
+		}
+		
+		if (former_parent && former_parent.View) {
+			former_parent.View.RecalculateSize();
 		}
 #endif
 #endif
@@ -286,14 +294,13 @@ class TreeNode: SerializableBase
 	}
 	
 	TreeView CreateView()
-	{
+	{		
 		View = new TreeView(this);
 		foreach (string uuid, TreeNode node: Children) {
 			// Initialize all child nodes aswell :)
 			View.AddView(node.CreateView());
-			View.RecalculateSize();
 		}
-		
+				
 		return View;
 	}
 	
