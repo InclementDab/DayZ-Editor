@@ -26,7 +26,7 @@ class TreeView: ScriptView
 			
 	void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		Panel.SetAlpha(node.GetState().IsActive());
+		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext());
 		Outline.SetAlpha(node.GetState().IsHover());
 		Dot.Show(node.GetState().IsFocus());
 		
@@ -107,6 +107,7 @@ class TreeView: ScriptView
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{		
 		if (button == 1) {
+			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
 			m_Node.AddState(TreeNodeState.CONTEXT);
 			return true;
 		}
