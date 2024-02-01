@@ -16,17 +16,3 @@ class RelayCommandExec : RelayCommand
 	override bool Execute(Class sender, CommandArgs args);
 	void CanExecuteChanged(bool state);
 }
-
-static int EditorObjectID;
-
-modded class EditorObjectData
-{
-	[NonSerialized()]
-	int m_Id;
-	int GetID() { return m_Id; }
-	void EditorObjectData()
-	{
-		EditorObjectID++;
-		m_Id = EditorObjectID;
-	}
-}
