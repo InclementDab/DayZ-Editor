@@ -259,30 +259,30 @@ class EditorObjectManagerModule : JMModuleBase
 		m_EditorDeletedObjectRefs.Remove(target.GetID());
 	}
 
-	/* 	void SelectHiddenObject(notnull EditorDeletedObject target)
-		{
-			EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
-			m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
-			EditorEvents.DeletedObjectSelected(this, target);
-			target.OnSelected();
-		}
+	void SelectHiddenObject(notnull EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
+		m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
+		EditorEvents.DeletedObjectSelected(this, target);
+		target.OnSelected();
+	}
 
-		void DeselectHiddenObject(notnull EditorDeletedObject target)
-		{
-			EditorLog.Trace("EditorObjectManager::DeselectHiddenObject");
-			m_SelectedDeletedObjects.RemoveEditorDeletedObject(target);
-			EditorEvents.DeletedObjectDeselected(this, target);
-			target.OnDeselected();
-		}
+	void DeselectHiddenObject(notnull EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorObjectManager::DeselectHiddenObject");
+		m_SelectedDeletedObjects.RemoveEditorDeletedObject(target);
+		EditorEvents.DeletedObjectDeselected(this, target);
+		target.OnDeselected();
+	}
 
-		void ToggleHiddenObjectSelection(notnull EditorDeletedObject target)
-		{
-			EditorLog.Trace("EditorObjectManager::ToggleHiddenObjectSelection");
-			if (target.IsSelected())
-				DeselectHiddenObject(target);
-			else
-				SelectHiddenObject(target);
-		} */
+	void ToggleHiddenObjectSelection(notnull EditorDeletedObject target)
+	{
+		EditorLog.Trace("EditorObjectManager::ToggleHiddenObjectSelection");
+		if (target.IsSelected())
+			DeselectHiddenObject(target);
+		else
+			SelectHiddenObject(target);
+	}
 
 	void Clear()
 	{
