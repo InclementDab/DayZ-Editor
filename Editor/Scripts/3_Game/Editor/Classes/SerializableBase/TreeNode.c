@@ -204,7 +204,7 @@ class TreeNode: SerializableBase
 #ifndef SERVER
 #ifndef WORKBENCH
 		if (!View) {
-			//Print("No view for " + m_UUID);
+			Print("No view for " + m_UUID);
 		} else {
 			View.AddView(node.CreateView());
 		}
@@ -257,7 +257,7 @@ class TreeNode: SerializableBase
 			// Initialize all child nodes aswell :)
 			View.AddView(node.CreateView());
 		}
-				
+					
 		return View;
 	}
 	

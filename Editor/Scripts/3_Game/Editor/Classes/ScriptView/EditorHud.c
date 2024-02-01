@@ -274,15 +274,14 @@ class EditorHud: ScriptView
 		
 		CursorTooltipName.SetText(name);
 		
-		if (Foreground) {
-			Foreground.LoadImageFile(0, cursor.Thin());
-			Foreground.SetImage(0);
-		}
-
-		if (Background) {
-			Background.LoadImageFile(0, cursor.Solid());
-			Background.SetImage(0);
-		}
+		Foreground.LoadImageFile(0, cursor.Thin());
+		Foreground.SetImage(0);
+		Foreground.Show(name == string.Empty);
+		
+		Background.LoadImageFile(0, cursor.Solid());
+		Background.SetImage(0);
+		Background.Show(name == string.Empty);
+		
 		
 		Cursor.Show(true);
 		SetCursorWidget(Cursor);

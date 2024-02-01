@@ -1,4 +1,4 @@
-class TreeView: ScriptView
+class TreeView: NodeView
 {
 	protected TreeViewController m_TemplateController;
 		
@@ -10,21 +10,16 @@ class TreeView: ScriptView
 	
 	protected bool m_IsBeingDragged;
 
-	protected TreeNode m_Node;
-
 	void TreeView(TreeNode node)
 	{
-		m_TemplateController = TreeViewController.Cast(m_Controller);
-		m_Node = node;
-		m_Node.State_OnChanged.Insert(OnStateChanged);
-		
+		m_TemplateController = TreeViewController.Cast(m_Controller);		
 		SetText(m_Node.GetDisplayName());
 		
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
 	}
 			
-	void OnStateChanged(TreeNode node, TreeNodeState state)
+	override void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
 		EditorHud hud = m_Node.GetEditor().GetHud();
 		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext() || node.GetState().IsDragging());
@@ -317,55 +312,7 @@ class TreeView: ScriptView
 		
 		return true;
 	}
-			
-	override bool OnDrag(Widget w, int x, int y)
-	{		
-		m_Node.AddState(TreeNodeState.DRAGGING);
-		return false;
-	}
-	
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
-	{		
-		return false;
-	}
-	
-	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
-	{		
-		return false;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
-	{
-		m_Node.RemoveState(TreeNodeState.ACTIVE);
-		m_Node.RemoveState(TreeNodeState.DRAGGING);
-		return false;
-	}
-	
-	override bool OnDropReceived(Widget w, int x, int y, Widget reciever)
-	{
-		if (!RecursiveGetParent(w, "Root")) {
-			return false;
-		}
-		
-		Class user_data;
-		w.GetUserData(user_data);
-		TreeView tree_view = TreeView.Cast(user_data);		
-		if (!tree_view || tree_view == this) {
-			return false;
-		}
-		
-		TreeNode node = tree_view.GetNode();		
-		delete tree_view;
-		//GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);		
-		m_Node.Add(node);
-		return true;
-	}	
-	
-	TreeNode GetNode()
-	{
-		return m_Node;
-	}
-						
+										
 	TreeViewController GetTemplateController()
 	{
 		return m_TemplateController;

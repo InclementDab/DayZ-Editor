@@ -152,24 +152,26 @@ class EditorNode: TreeNode
 				this[PLACEABLES][category].Add(new PlaceableNode(type, type, this[PLACEABLES][category].GetIcon()));
 		    }
 		}
-		
-		for (int j = 0; j < 473; j++) {
+		//473
+		for (int j = 0; j < 5; j++) {
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
 			foreach (string p3d: p3d_files) {
 				TreeNode current = this;
 				array<string> p3d_split = {};
 				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
-				for (int k = 0; k < p3d_split.Count(); k++) {
-					if (k != p3d_split.Count() - 1) {
-						if (!current[p3d_split[k]]) {
-							current[p3d_split[k]] = new TreeNode(p3d_split[k], p3d_split[k], Symbols.FOLDER);
-						}
-						
-						current = current[p3d_split[k]];
-					} else {
-						current[p3d_split[k]] = new PlaceableNode(p3d, p3d_split[k], Symbols.TRIANGLE);
+				for (int k = 0; k < p3d_split.Count() - 1; k++) {
+					Print(p3d_split[k]);
+					if (!current[p3d_split[k]]) {
+						current[p3d_split[k]] = new TreeNode(p3d_split[k], p3d_split[k], Symbols.FOLDER);
 					}
+					
+					current = current[p3d_split[k]];
 				}
+				
+				//Print(current);
+				Print(p3d);
+				//Print(p3d_split[p3d_split.Count() - 1]);
+				current[p3d_split[p3d_split.Count() - 1]] = new PlaceableNode(p3d, p3d_split[p3d_split.Count() - 1], Symbols.TRIANGLE);
 			}
 		}
 		

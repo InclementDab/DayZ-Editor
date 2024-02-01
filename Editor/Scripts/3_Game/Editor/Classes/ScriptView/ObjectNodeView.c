@@ -1,20 +1,15 @@
-class ObjectNodeView: ScriptView
+class ObjectNodeView: NodeView
 {
 	protected ObjectNode m_ObjectNode;
 	protected vector m_CursorAside = vector.Aside;
 	
-	protected ref Raycast m_StartPosition;
-	
-	protected bool m_IsDragging;
 	
 	ButtonWidget Button;
 	ImageWidget Image, Outline;
 	
-	void ObjectNodeView(notnull ObjectNode editor_object)
+	void ObjectNodeView(TreeNode node)
 	{
-		m_ObjectNode = editor_object;
-		m_ObjectNode.State_OnChanged.Insert(OnStateChanged);
-		
+		m_ObjectNode = ObjectNode.Cast(node);		
 		Symbols icon = m_ObjectNode.GetIcon();
 		
 		Image.LoadImageFile(0, icon.Regular());
@@ -24,8 +19,10 @@ class ObjectNodeView: ScriptView
 		Outline.SetImage(0);
 	}
 	
-	void OnStateChanged(TreeNode node, TreeNodeState state)
+	override void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
+		super.OnStateChanged(node, state);
+		
 		Outline.SetAlpha(state.IsHover());
 				
 		if (node.GetState().IsDragging() || node.GetState().IsActive()) {			
@@ -208,27 +205,7 @@ class ObjectNodeView: ScriptView
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
-		
-	override bool OnDrag(Widget w, int x, int y)
-	{
-		m_ObjectNode.AddState(TreeNodeState.DRAGGING);
-		m_StartPosition = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
-		return true;
-	}
-	
-	override bool OnDragging(Widget w, int x, int y, Widget reciever)
-	{	
-		return false;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget reciever)
-	{
-		m_ObjectNode.RemoveState(TreeNodeState.DRAGGING);
-		m_ObjectNode.Synchronize();	
-		
-		return true;
-	}
-		
+			
 	override string GetLayoutFile()
 	{
 		return "Editor\\GUI\\layouts\\Marker.layout";

@@ -270,8 +270,8 @@ class ObjectNode: TreeNode
 			}
 		}
 			
-		if (state.IsActive()) {	
-			if (total_state.IsActive()) {			
+		if (state.IsHover()) {	
+			if (total_state.IsHover()) {			
 				//m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
 			} else {
 				//GetGame().ObjectDelete(m_TranslationGizmo);

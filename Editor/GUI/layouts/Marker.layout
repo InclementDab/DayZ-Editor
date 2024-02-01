@@ -1,4 +1,4 @@
-PanelWidgetClass Marker {
+PanelWidgetClass Root {
  visible 1
  ignorepointer 0
  position 0 0
