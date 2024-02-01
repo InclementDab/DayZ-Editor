@@ -1,15 +1,10 @@
-class Base: ScriptView
-{
-	
-}
-
 class TreeView: ScriptView
 {
 	protected TreeViewController m_TemplateController;
 		
 	TextWidget Text;
 	
-	Widget Panel, Children, Outline, Texture, Collapse;
+	Widget Panel, Children, Outline, Texture, Collapse, Minimize;
 	ImageWidget IconImage, CollapseIcon;
 	ButtonWidget CollapseButton;
 	
@@ -40,6 +35,7 @@ class TreeView: ScriptView
 		m_TemplateController.ChildrenItems.Insert(view);
 		
 		// Recalculate size
+		RecalculateSize();
 	}
 	
 	void SetText(string text)
@@ -62,20 +58,24 @@ class TreeView: ScriptView
 		
 		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, Symbols.CIRCLE_PLUS.Regular(), Symbols.CIRCLE_MINUS.Regular()));
 		CollapseIcon.SetImage(0);
+		Minimize.Show(state);
 		
-		float w, h, x, y;
-		Children.GetScreenSize(w, h);		
-		m_LayoutRoot.GetScreenSize(x, y);
-		m_LayoutRoot.SetScreenSize(x, h * state + 30);
-		m_LayoutRoot.Update();
-		
-		Texture.Show(state);
+		RecalculateSize();
 				
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		TreeNode parent = m_Node.GetParent();
 		if (parent && parent.View) {
 			parent.View.ShowChildren(true);
 		}
+	}
+	
+	protected void RecalculateSize()
+	{
+		float w, h, x, y;
+		Children.GetScreenSize(w, h);		
+		m_LayoutRoot.GetScreenSize(x, y);
+		m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
+		m_LayoutRoot.Update();
 	}
 		
 	// returns whether or not the filter was applied
@@ -110,7 +110,7 @@ class TreeView: ScriptView
 		}
 		
 		switch (w) {
-			case Texture: {
+			case Minimize: {
 				ShowChildren(false);
 				return true;
 			}
@@ -216,7 +216,7 @@ class TreeView: ScriptView
 				break;
 			}
 			
-			case Texture: {
+			case Minimize: {
 				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
 				break;
 			}
@@ -238,8 +238,8 @@ class TreeView: ScriptView
 				break;
 			}
 			
-			case Texture: {
-				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 100.0 / 255.0, 100);
+			case Minimize: {
+				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 200.0 / 255.0, 100);
 				break;
 			}
 			

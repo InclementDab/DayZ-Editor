@@ -216,23 +216,38 @@ FrameWidgetClass Root {
     }
    }
   }
-  ImageWidgetClass Texture {
+  PanelWidgetClass Minimize {
    visible 0
    ignorepointer 0
-   color 1 1 1 0.3922
-   position 0 0
-   size 7 1
+   position 0 6
+   size 8 1
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 0
    scaled 0
    scriptclass ""
-   image0 ""
-   mode blend
-   "src alpha" 1
-   "clamp mode" clamp
-   filter 0
+   {
+    ImageWidgetClass Texture {
+     visible 1
+     ignorepointer 1
+     color 1 1 1 0.5882
+     size 2 1
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     scaled 0
+     scriptclass ""
+     image0 ""
+     mode additive
+     "src alpha" 1
+     "clamp mode" clamp
+     filter 1
+    }
+   }
   }
  }
 }

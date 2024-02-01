@@ -83,14 +83,7 @@ class ObjectNode: TreeNode
 				vector direction = vector.Zero;
 				direction[j % 3] = 1 * ((j > 2) * -2 + 1);
 				
-				Shape.CreateSphere(ARGB(255, 240, 233, 324), ShapeFlags.ONCE, (direction * m_Object.GetCollisionRadius()).Multiply4(transform), 0.25);
 				
-				Ray ray = new Ray((direction * m_Object.GetCollisionRadius()).Multiply4(transform), -direction);
-				Raycast raycast = ray.PerformRaycastRV(null, null);
-				
-				if (raycast) {
-					Shape.CreateArrow(raycast.Source.Position, raycast.Bounce.Position, 0.1, ARGB(255, 124, 253, 120), ShapeFlags.ONCE);
-				}
 			}
 			
 			vector min_max2[2];
@@ -139,7 +132,7 @@ class ObjectNode: TreeNode
 		m_Object.GetTransform(transform);
 		
 		vector clip[2];
-		m_Object.ClippingInfo(clip);
+		m_Object.GetCollisionBox(clip);
 		
 		string bounding = m_Object.ConfigGetString("physLayer");		
 		
