@@ -7,6 +7,7 @@ class TreeNode: SerializableBase
 	protected UAInput m_Input;
 	protected TreeNodeInteract m_TreeNodeInteract = GetInteractType();
 	protected TreeNodeState m_TreeNodeState = GetDefaultState();
+	protected ref map<int, TreeNodeState> m_TreeNodeStateHistory = new map<int, TreeNodeState>();
 	ref map<string, ref TreeNode> Children = new map<string, ref TreeNode>();
 
 	protected string m_Icon, m_DisplayName;
@@ -116,6 +117,7 @@ class TreeNode: SerializableBase
 		
 		StateMachine[state].Insert(this);		
 		m_TreeNodeState |= state;
+		m_TreeNodeStateHistory.Insert(DateTime.Now(), state);
 		OnStateChanged(state, m_TreeNodeState);
 	}
 	
@@ -128,7 +130,20 @@ class TreeNode: SerializableBase
 		
 		StateMachine[state].RemoveItem(this);
 		m_TreeNodeState &= ~state;
+		m_TreeNodeStateHistory.Insert(DateTime.Now(), state);
 		OnStateChanged(state, m_TreeNodeState);
+	}
+	
+	// lmao
+	bool CheckIfStateChangedInPeriod(DateTime min, DateTime max, TreeNodeState state)
+	{
+		for (int i = min; i < max; i++) {
+			if (m_TreeNodeStateHistory[i] == state) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
 	void OnStateChanged(TreeNodeState state, TreeNodeState total_state)

@@ -118,10 +118,7 @@ class TreeView: ScriptView
 			
 			case Wrapper: {
 				switch (m_Node.GetInteractType()) {
-					case TreeNodeInteract.HOLD: {
-						m_Node.AddState(TreeNodeState.ACTIVE);
-						return true;
-					}
+					case TreeNodeInteract.HOLD:
 					case TreeNodeInteract.PRESS: {
 						m_Node.AddState(TreeNodeState.ACTIVE);
 						return true;
@@ -143,7 +140,7 @@ class TreeView: ScriptView
 		
 		switch (w) {
 			case Wrapper: {
-				switch (m_Node.GetInteractType()) {
+				switch (m_Node.GetInteractType()) {					
 					case TreeNodeInteract.HOLD: {
 						if (button == 0) {
 							m_Node.RemoveState(TreeNodeState.ACTIVE);
@@ -271,7 +268,6 @@ class TreeView: ScriptView
 	override bool OnDrag(Widget w, int x, int y)
 	{		
 		m_Node.AddState(TreeNodeState.DRAGGING);
-		
 		return false;
 	}
 	
@@ -287,7 +283,8 @@ class TreeView: ScriptView
 	
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
-		m_Node.RemoveState(TreeNodeState.DRAGGING);		
+		m_Node.RemoveState(TreeNodeState.ACTIVE);
+		m_Node.RemoveState(TreeNodeState.DRAGGING);
 		return false;
 	}
 	
