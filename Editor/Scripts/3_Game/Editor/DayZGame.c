@@ -22,17 +22,7 @@ modded class DayZGame
 		
 #ifdef SERVER
 		return m_Server;
-#else
-		/*if (!m_Editor) {			
-			DayZPlayer player = GetPlayer();
-			PlayerIdentity identity = player.GetIdentity();
-			
-			m_Editor = new Editor(GetUserManager().GetTitleInitiator().GetUid(), GetUserManager().GetTitleInitiator().GetName(), Symbols.CAMERA, identity, player);
-			m_Server.Add(m_Editor);
-			m_Editor.Synchronize();
-		}*/
-			
-		// Dont use Get here, it has errors builtin on null return
+#else		
 		return EditorNode.Cast(m_Server.Children[GetUserManager().GetTitleInitiator().GetUid()]);
 #endif
 	}

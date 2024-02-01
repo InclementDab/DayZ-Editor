@@ -44,101 +44,86 @@ class EditorNode: TreeNode
 	{
 		m_Identity = identity;
 		m_Player = player;	
-		
-		// Load all default categories and placements
-		TreeNode edited_objects = new IndestructableFolderNode(EDITS, "Layers", Symbols.LAYER_GROUP);
-		edited_objects.Add(new IndestructableFolderNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
-		edited_objects.Add(new IndestructableFolderNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
-		
-		// default layer for now
-		edited_objects.AddState(TreeNodeState.ACTIVE);
-		Add(edited_objects);
-						
-		TreeNode commands = new TreeNode(COMMANDS, "Commands", Symbols.COMMAND);		
-		commands.Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
-		commands.Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
-		commands.Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty));
-		commands.Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT));
-		commands.Add(new PianoCommand("Piano", "Drop Piano", Symbols.PIANO));
-		commands.Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED));
-		commands.Add(new CommandNode("Camera", "Camera", Symbols.CAMERA));
-		commands.Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED));
-		commands.Add(new CommandNode("Copy", "Copy", Symbols.COPY));
-		commands.Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS));
-		commands.Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH));
-		commands.Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
-		commands.Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO));
-		commands.Add(new CommandNode("Lock", "Lock", Symbols.LOCK));
-		commands.Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET));
-		commands.Add(new CommandNode("New", "New", Symbols.FILE));
-		commands.Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN));
-		commands.Add(new CommandNode("Paste", "Paste", Symbols.PASTE));
-		commands.Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT));
-		commands.Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN));
-		commands.Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK));
-		commands.Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK));
-		commands.Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT));
-		commands.Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN));
-		commands.Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
-		commands.Add(new CursorToggle("Cursor", "Toggle Cursor", Symbols.ARROW_POINTER));
-		commands.Add(new HudToggle("Hud", "Toggle Hud", Symbols.EYE));
-		commands.Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT));
-		commands.Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
-		
-		TreeNode tools = new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX);
-		tools.Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
-		tools.Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
-		tools.Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));
-		commands.Add(tools);
-		
-		Add(commands);
-		
-		TreeNode menus = new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST);
-		CommandNode file_menu = new CommandNode("File", "File", Symbols.FILE_SPREADSHEET);
-		file_menu.Add(commands["New"]);
-		file_menu.Add(commands["Open"]);
-		file_menu.Add(commands["Save"]);
-		file_menu.Add(commands["SaveAs"]);
-		menus.Add(file_menu);
-		
-		CommandNode edit_menu = new CommandNode("Edit", "Edit", Symbols.FILE_PEN);
-		menus.Add(edit_menu);
-		
-		CommandNode view_menu = new CommandNode("View", "View", Symbols.BINOCULARS);
-		menus.Add(view_menu);
-		
-		CommandNode mission_menu = new CommandNode("Mission", "Mission", Symbols.PERSON_RIFLE);
-		menus.Add(mission_menu);
-		
-		Add(menus);
 				
-		TreeNode undo_redo = new TreeNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT);
-		Add(undo_redo);
-		
-		TreeNode placeable_objects = new TreeNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK);
-		placeable_objects.Add(new TreeNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
-		placeable_objects.Add(new TreeNode("Plants", "Plants", Symbols.TREE));
-		placeable_objects.Add(new TreeNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
-		placeable_objects.Add(new TreeNode("Clutter", "Clutter", Symbols.TRASH));
-		placeable_objects.Add(new TreeNode("Structures", "Structures", Symbols.HOUSE));
-		placeable_objects.Add(new TreeNode("Wrecks", "Wrecks", Symbols.CAR_BURST));
-		placeable_objects.Add(new TreeNode("AI", "AI", Symbols.PERSON));
-		placeable_objects.Add(new TreeNode("Water", "Water", Symbols.WATER));
-		placeable_objects.Add(new TreeNode("Vehicles", "Vehicles", Symbols.CAR));
-		placeable_objects.Add(new TreeNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
-		placeable_objects.Add(new TreeNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
-		placeable_objects.Add(new TreeNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
-		Add(placeable_objects);
-		
-		TreeNode brushes = new TreeNode(BRUSHES, "Brushes", Symbols.BRUSH);
-		brushes.Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
-		brushes.Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
-		brushes.Add(commands["Piano"]);
-		Add(brushes);
-		
+		// Load all default categories and placements
+		Add(new IndestructableFolderNode(EDITS, "Layers", Symbols.LAYER_GROUP));
+		Add(new TreeNode(COMMANDS, "Commands", Symbols.COMMAND));
+		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
+		Add(new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST));
+		Add(new TreeNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT));
+		Add(new TreeNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK));
+		Add(new TreeNode(BRUSHES, "Brushes", Symbols.BRUSH));
 		Add(new TreeNode(PLACING, "Placing", Symbols.FIREPLACE));
-		Add(new TreeNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));
+		Add(new TreeNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));		
 		
+		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
+		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
+		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty));
+		this[COMMANDS].Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT));
+		this[COMMANDS].Add(new PianoCommand("Piano", "Drop Piano", Symbols.PIANO));
+		this[COMMANDS].Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED));
+		this[COMMANDS].Add(new CommandNode("Camera", "Camera", Symbols.CAMERA));
+		this[COMMANDS].Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED));
+		this[COMMANDS].Add(new CommandNode("Copy", "Copy", Symbols.COPY));
+		this[COMMANDS].Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS));
+		this[COMMANDS].Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH));
+		this[COMMANDS].Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
+		this[COMMANDS].Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO));
+		this[COMMANDS].Add(new CommandNode("Lock", "Lock", Symbols.LOCK));
+		this[COMMANDS].Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET));
+		this[COMMANDS].Add(new CommandNode("New", "New", Symbols.FILE));
+		this[COMMANDS].Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN));
+		this[COMMANDS].Add(new CommandNode("Paste", "Paste", Symbols.PASTE));
+		this[COMMANDS].Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT));
+		this[COMMANDS].Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN));
+		this[COMMANDS].Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK));
+		this[COMMANDS].Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK));
+		this[COMMANDS].Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT));
+		this[COMMANDS].Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN));
+		this[COMMANDS].Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
+		this[COMMANDS].Add(new CursorToggle("Cursor", "Toggle Cursor", Symbols.ARROW_POINTER));
+		this[COMMANDS].Add(new HudToggle("Hud", "Toggle Hud", Symbols.EYE));
+		this[COMMANDS].Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT));
+		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
+				
+		this[EDITS].Add(new IndestructableFolderNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
+		this[EDITS].Add(new IndestructableFolderNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
+		// default layer for now
+		this[EDITS].AddState(TreeNodeState.ACTIVE);
+		
+		this[COMMANDS].Add(new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX));
+		this[COMMANDS][TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
+		this[COMMANDS][TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
+		this[COMMANDS][TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));
+
+		
+		
+		this[MENUS].Add(new CommandNode("File", "File", Symbols.FILE_SPREADSHEET));
+		this[MENUS].Add(new CommandNode("Edit", "Edit", Symbols.FILE_PEN));
+		this[MENUS].Add(new CommandNode("View", "View", Symbols.BINOCULARS));
+		this[MENUS].Add(new CommandNode("Mission", "Mission", Symbols.PERSON_RIFLE));
+		this[MENUS]["File"].Add(this[COMMANDS]["New"]);
+		this[MENUS]["File"].Add(this[COMMANDS]["Open"]);
+		this[MENUS]["File"].Add(this[COMMANDS]["Save"]);
+		this[MENUS]["File"].Add(this[COMMANDS]["SaveAs"]);
+		
+		this[PLACEABLES].Add(new TreeNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
+		this[PLACEABLES].Add(new TreeNode("Plants", "Plants", Symbols.TREE));
+		this[PLACEABLES].Add(new TreeNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
+		this[PLACEABLES].Add(new TreeNode("Clutter", "Clutter", Symbols.TRASH));
+		this[PLACEABLES].Add(new TreeNode("Structures", "Structures", Symbols.HOUSE));
+		this[PLACEABLES].Add(new TreeNode("Wrecks", "Wrecks", Symbols.CAR_BURST));
+		this[PLACEABLES].Add(new TreeNode("AI", "AI", Symbols.PERSON));
+		this[PLACEABLES].Add(new TreeNode("Water", "Water", Symbols.WATER));
+		this[PLACEABLES].Add(new TreeNode("Vehicles", "Vehicles", Symbols.CAR));
+		this[PLACEABLES].Add(new TreeNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
+		this[PLACEABLES].Add(new TreeNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
+		this[PLACEABLES].Add(new TreeNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
+		
+		this[BRUSHES].Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
+		this[BRUSHES].Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
+		this[BRUSHES].Add(this[COMMANDS]["Piano"]);
+						
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 		string category = "Unknown";
 		// handle config objects
@@ -174,7 +159,6 @@ class EditorNode: TreeNode
 		    }
 		}
 		
-		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
 		for (int j = 0; j < 473; j++) {
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + P3D_DIRECTORIES[j], "*.p3d");
 			foreach (string p3d: p3d_files) {
@@ -211,20 +195,13 @@ class EditorNode: TreeNode
 		delete m_Hud;
 		GetGame().ObjectDelete(m_Camera);
 	}
-			
+	
 	override void OnSynchronized()
 	{
-		if (GetGame().IsDedicatedServer()) {
-			return;
-		}
+		super.OnSynchronized();
 		
-		if (!IsLocal()) {
-			return; // Zoom
-		}
-
-		if (!m_Hud) {
-			m_Hud = new EditorHud(this);
-		}
+#ifndef SERVER
+		m_Hud = new EditorHud(this);
 		
 		// how long until this is a node?? :/
 		if (!m_Camera) {
@@ -239,11 +216,9 @@ class EditorNode: TreeNode
 			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + "0 10 0", ECE_LOCAL));
 			m_Camera.SetActive(true);
 		}
-				
-		// What?
-		EnScript.SetClassVar(GetDayZGame(), "m_Editor", 0, this);
+#endif
 	}
-	
+		
 	void InsertHistory(string display_name, Symbols icon, TreeNode node, ScriptReadWriteContext data)
 	{
 		// Clear the stack first

@@ -51,8 +51,7 @@ class EditorHud: ScriptView
 				
 		GetGame().GetMission().GetHud().ShowHudUI(false);
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
-		SetCursorWidget(Cursor);
-		
+			
 		foreach (string left: LEFT_NODES) {
 			m_TemplateController.LeftListItems.Insert(editor[left].CreateView());
 		}
@@ -272,6 +271,7 @@ class EditorHud: ScriptView
 		}
 		
 		Cursor.Show(true);
+		SetCursorWidget(Cursor);
 	}
 	
 	void ClearCursor()

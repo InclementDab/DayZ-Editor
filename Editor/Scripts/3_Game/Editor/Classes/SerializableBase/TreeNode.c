@@ -227,9 +227,7 @@ class TreeNode: SerializableBase
 		
 #ifndef SERVER
 #ifndef WORKBENCH
-		if (!View) {
-			Error(string.Format("View not initialized for %1", m_UUID));
-		} else {
+		if (View) {
 			View.AddView(node.CreateView());
 		}
 #endif
