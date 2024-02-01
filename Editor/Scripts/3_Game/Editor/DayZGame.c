@@ -82,7 +82,7 @@ modded class DayZGame
 						}
 						
 						current[uuid] = node;
-						node.SetParent(current[uuid]);
+						node.Parent = current[uuid];
 					}
 					
 					current = current[uuid];

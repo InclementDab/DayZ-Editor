@@ -59,9 +59,8 @@ class TreeView: ScriptView
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);
 				
 		// you only want to open upper containers when lower ones are opened. propagate up /\
-		TreeNode parent = m_Node.GetParent();
-		if (parent && parent.View) {
-			parent.View.ShowChildren(true);
+		if (m_Node.Parent && m_Node.Parent.View) {
+			m_Node.Parent.View.ShowChildren(true);
 		}
 	}
 	

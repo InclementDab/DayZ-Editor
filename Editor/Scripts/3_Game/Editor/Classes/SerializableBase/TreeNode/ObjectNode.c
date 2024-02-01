@@ -195,13 +195,13 @@ class ObjectNode: TreeNode
 #endif
 	}
 		
-	override void SetParent(TreeNode parent)
+	override TreeView CreateView()
 	{
-		super.SetParent(parent);
-		
-		if (parent.GetUUID() != EditorNode.PLACING && !m_ObjectNodeView) {
+		if (Parent.GetUUID() != EditorNode.PLACING && !m_ObjectNodeView) {
 			m_ObjectNodeView = new ObjectNodeView(this);
 		}
+		
+		return super.CreateView();
 	}
 	
 	override bool CanDelete()

@@ -12,8 +12,8 @@ class DeleteCommand: CommandNode
 				
 				GetEditor().InsertHistory(string.Format("Undo Delete %1", node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());
 				
-				node.GetParent().Remove(node.GetUUID());
-				node.GetParent().Synchronize();
+				node.Parent.Remove(node.GetUUID());
+				node.Parent.Synchronize();
 				GetEditor().PlaySound(EditorSounds.HIGHLIGHT);
 			}
 		}

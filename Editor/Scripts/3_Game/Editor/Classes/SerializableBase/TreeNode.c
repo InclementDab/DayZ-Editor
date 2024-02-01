@@ -135,7 +135,7 @@ class TreeNode: SerializableBase
 		if (state.IsActive()) {
 			array<string> xor_selections = GetXorSelections();
 			foreach (string xor: xor_selections) {
-				TreeNode xor_node = m_Parent[xor];
+				TreeNode xor_node = Parent[xor];
 				if (!xor_node) {
 					Error(string.Format("[%1] couldnt find node to xor %2", m_UUID, xor));
 					continue;
@@ -223,7 +223,8 @@ class TreeNode: SerializableBase
 	void Set(string uuid, notnull TreeNode node)
 	{
 		Children[uuid] = node;
-
+		node.Parent = this;
+		
 #ifndef SERVER
 #ifndef WORKBENCH
 		if (!View) {
@@ -233,8 +234,6 @@ class TreeNode: SerializableBase
 		}
 #endif
 #endif
-		
-		node.SetParent(this);
 	}
 	
 	void Remove(notnull TreeNode node)
@@ -323,7 +322,7 @@ class TreeNode: SerializableBase
 				return parent;
 			}
 						
-			parent = parent.GetParent();
+			parent = parent.Parent;
 		}
 		
 		return null;
@@ -333,12 +332,12 @@ class TreeNode: SerializableBase
 	{
 		TreeNode parent = this;
 		while (depth > 0) {
-			if (!parent.GetParent()) {
+			if (!parent.Parent) {
 				Error("GetParentAtDepth ran out of depth " + depth);
 				return parent;
 			}
 			
-			parent = parent.GetParent();
+			parent = parent.Parent;
 			depth--;
 		}
 		
@@ -348,10 +347,10 @@ class TreeNode: SerializableBase
 	int GetParentDepth()
 	{
 		int depth;
-		TreeNode parent = GetParent();
+		TreeNode parent = Parent;
 		while (parent) {
 			depth++;
-			parent = parent.GetParent();
+			parent = parent.Parent;
 		}
 		
 		return depth;
@@ -401,7 +400,7 @@ class TreeNode: SerializableBase
 					return false;
 				}
 				
-				node.SetParent(this);
+				node.Parent = this;
 				Children[uuid] = node;
 			}
 			

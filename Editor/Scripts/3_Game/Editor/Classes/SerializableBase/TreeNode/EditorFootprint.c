@@ -15,7 +15,7 @@ class EditorFootprint: TreeNode
 		
 		if (Pointer) {
 			m_Path = Pointer.GetFullPath();
-			m_PointerParent = Pointer.GetParent();
+			m_PointerParent = Pointer.Parent;
 		}
 		
 		// Can be null
@@ -66,7 +66,7 @@ class EditorFootprint: TreeNode
 				}
 				
 				current[uuid] = node;
-				node.SetParent(current[uuid]);
+				node.Parent = current[uuid];
 			}
 			
 			current = current[uuid];
