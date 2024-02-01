@@ -103,7 +103,7 @@ class EditorHud: ScriptView
 					if (m_LassoHistory.Count() > 0) {
 						vector last = m_LassoHistory[m_LassoHistory.Count() - 1];
 						
-						if (vector.Distance(last, current) > 16) {
+						if (vector.Distance(last, current) > 4) {
 							m_LassoHistory.Insert(current);
 						}				
 					} else {
@@ -111,11 +111,11 @@ class EditorHud: ScriptView
 					}
 					
 					for (int j = 0; j < m_LassoHistory.Count() - 1; j++) {
-						Whiteboard.DrawLine(m_LassoHistory[j][0], m_LassoHistory[j][1], m_LassoHistory[j + 1][0], m_LassoHistory[j + 1][1], 2, COLOR_BLACK);
+						Whiteboard.DrawLine(m_LassoHistory[j][0], m_LassoHistory[j][1], m_LassoHistory[j + 1][0], m_LassoHistory[j + 1][1], 4, EditorColors.SELECT);
 					}
 					
 					if (m_LassoHistory.Count() > 2) {
-						Whiteboard.DrawLine(m_LassoHistory[0][0], m_LassoHistory[0][1], m_LassoHistory[m_LassoHistory.Count() - 1][0], m_LassoHistory[m_LassoHistory.Count() - 1][1], 2, 0x644B77BE);
+						Whiteboard.DrawLine(m_LassoHistory[0][0], m_LassoHistory[0][1], m_LassoHistory[m_LassoHistory.Count() - 1][0], m_LassoHistory[m_LassoHistory.Count() - 1][1], 4, EditorColors.SELECT & 0xA0FFFFFF);
 					}
 					
 					break;

@@ -17,10 +17,10 @@ class ObjectNodeView: ScriptView
 		
 		Symbols icon = m_ObjectNode.GetIcon();
 		
-		Image.LoadImageFile(0, icon.Solid());
+		Image.LoadImageFile(0, icon.Regular());
 		Image.SetImage(0);
 		
-		Outline.LoadImageFile(0, icon.Thin());
+		Outline.LoadImageFile(0, icon.Solid());
 		Outline.SetImage(0);
 	}
 	
@@ -29,9 +29,9 @@ class ObjectNodeView: ScriptView
 		Outline.SetAlpha(state.IsHover());
 				
 		if (node.GetState().IsDragging() || node.GetState().IsActive()) {			
-			Image.SetColor(EditorColors.SELECT);
+			Outline.SetColor(EditorColors.SELECT);
 		} else {
-			Image.SetColor(ARGB(150, 255, 255, 255));
+			Outline.SetColor(ARGB(150, 255, 255, 255));
 		}
 		
 		if (state.IsDragging()) {
