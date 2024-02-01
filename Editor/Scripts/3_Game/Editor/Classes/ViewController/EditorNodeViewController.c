@@ -11,7 +11,7 @@ class TreeViewController: ViewController
 		
 		TreeView tree_view = TreeView.Cast(GetParent());
 		if (tree_view) {
-			tree_view.RecalculateSize();
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(tree_view.RecalculateSize);
 		}
 	}
 }

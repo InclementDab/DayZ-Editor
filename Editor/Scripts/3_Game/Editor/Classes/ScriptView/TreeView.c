@@ -56,7 +56,7 @@ class TreeView: ScriptView
 		CollapseIcon.SetImage(0);
 		Minimize.Show(state);
 		
-		RecalculateSize();
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);
 				
 		// you only want to open upper containers when lower ones are opened. propagate up /\
 		TreeNode parent = m_Node.GetParent();
@@ -68,7 +68,9 @@ class TreeView: ScriptView
 	void RecalculateSize()
 	{
 		float w, h, x, y;
-		Children.GetScreenSize(w, h);		
+		Children.Update();
+		Children.GetScreenSize(w, h);	
+		
 		m_LayoutRoot.GetScreenSize(x, y);
 		m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
 		m_LayoutRoot.Update();
@@ -93,7 +95,7 @@ class TreeView: ScriptView
 			applied = applied || m_TemplateController.ChildrenItems[i].ApplyFilter(filter);
 		}
 		
-		RecalculateSize();
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);
 		
 		m_LayoutRoot.Show(applied);
 		return applied;
@@ -282,11 +284,7 @@ class TreeView: ScriptView
 	}
 	
 	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
-	{
-		if (!RecursiveGetParent(reciever, "Root")) {
-			return false;
-		}
-		
+	{		
 		return false;
 	}
 	
@@ -309,9 +307,12 @@ class TreeView: ScriptView
 			return false;
 		}
 		
-		m_Node.Add(tree_view.GetNode());
+		TreeNode node = tree_view.GetNode();		
+		delete tree_view;
+		//GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);		
+		m_Node.Add(node);
 		return true;
-	}
+	}	
 	
 	TreeNode GetNode()
 	{
