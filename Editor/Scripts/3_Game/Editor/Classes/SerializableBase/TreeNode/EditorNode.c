@@ -155,6 +155,7 @@ class EditorNode: TreeNode
 		string category = "Unknown";
 		// handle config objects
 #ifndef WORKBENCH
+#ifndef SERVER
 		foreach (string path: config_paths) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
@@ -209,6 +210,7 @@ class EditorNode: TreeNode
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
 			this[PLACEABLES]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}		
+#endif
 #endif
 	}
 
