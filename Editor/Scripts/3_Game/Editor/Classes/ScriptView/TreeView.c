@@ -81,16 +81,19 @@ class TreeView: ScriptView
 		
 	// returns whether or not the filter was applied
 	bool ApplyFilter(string filter)
-	{
+	{		
 		filter.ToLower();
-	
+		
 		string name = m_Node.GetDisplayName();
 		name.ToLower();
 			
 		string uuid = m_Node.GetUUID();
 		uuid.ToLower();
 		
-		bool applied = name.Contains(filter) || uuid.Contains(filter) || filter.Contains(name) || filter.Contains(uuid);
+		string search_bar = EditorHud.SEARCH_BAR_DEFAULT;
+		search_bar.ToLower();
+				
+		bool applied = File.WildcardMatch(uuid, filter) || File.WildcardMatch(name, filter) || filter.Length() < 3 || search_bar.Contains(filter);
 		for (int i = 0; i < m_TemplateController.ChildrenItems.Count(); i++) {
 			applied = applied || m_TemplateController.ChildrenItems[i].ApplyFilter(filter);
 		}
