@@ -13,8 +13,14 @@ class FolderNode: TreeNode
 		
 		return true;
 	}
+	
+	override bool CanDelete()
+	{
+		return true;
+	}
+	
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING;
+		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING | TreeNodeState.FOCUS;
 	}
 }

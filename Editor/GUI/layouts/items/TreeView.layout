@@ -184,10 +184,38 @@ FrameWidgetClass Root {
          "exact text" 0
          "exact text size" 16
          "size to text h" 1
-         "size to text v" 0
+         "size to text v" 1
          "text valign" center
         }
        }
+      }
+     }
+    }
+    FrameWidgetClass Dot {
+     visible 0
+     ignorepointer 1
+     position 0 0
+     size 30 30
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     {
+      ImageWidgetClass DotImage {
+       ignorepointer 1
+       position 0 0
+       size 8 8
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       image0 "set:solid image:circle"
+       mode blend
+       "src alpha" 1
       }
      }
     }

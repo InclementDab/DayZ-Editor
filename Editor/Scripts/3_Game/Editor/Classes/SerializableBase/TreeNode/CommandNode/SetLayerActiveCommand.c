@@ -5,13 +5,13 @@ class SetLayerActiveCommand: CommandNode
 		super.OnStateChanged(state, total_state);
 		
 		if (state.IsActive() && total_state.IsActive()) {
-			foreach (TreeNode tree_node_active: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+			foreach (TreeNode tree_node_active: TreeNode.StateMachine[TreeNodeState.FOCUS]) {
 				FolderNode folder_node_active = FolderNode.Cast(tree_node_active);
 				if (!folder_node_active) {
 					continue;
 				}
 				
-				folder_node_active.RemoveState(TreeNodeState.ACTIVE);
+				folder_node_active.RemoveState(TreeNodeState.FOCUS);
 			}
 			
 			foreach (TreeNode tree_node: TreeNode.StateMachine[TreeNodeState.CONTEXT]) {
@@ -20,7 +20,7 @@ class SetLayerActiveCommand: CommandNode
 					continue;
 				}
 				
-				folder_node.AddState(TreeNodeState.ACTIVE);
+				folder_node.AddState(TreeNodeState.FOCUS);
 			}
 		}
 	}

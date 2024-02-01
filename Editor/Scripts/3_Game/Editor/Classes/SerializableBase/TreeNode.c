@@ -25,9 +25,10 @@ class TreeNodeState: int
 	static const int ACTIVE = 0x02;
 	static const int CONTEXT = 0x04;
 	static const int DRAGGING = 0x08;
-	
-	static const int ALL = HOVER | ACTIVE | CONTEXT | DRAGGING;
-	
+	static const int FOCUS = 0x10;
+	//static const int FOCUS = 0x20;
+	//static const int FOCUS = 0x40;
+		
 	bool IsEmpty()
 	{
 		return value == 0x00;
@@ -52,6 +53,11 @@ class TreeNodeState: int
 	{
 		return (value & DRAGGING) == DRAGGING;
 	}
+	
+	bool IsFocus()
+	{
+		return (value & FOCUS) == FOCUS;
+	}
 }
 
 typedef int TreeNodeState;
@@ -65,6 +71,7 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 		this[TreeNodeState.ACTIVE] = {};
 		this[TreeNodeState.CONTEXT] = {};
 		this[TreeNodeState.DRAGGING] = {};
+		this[TreeNodeState.FOCUS] = {};
 	}
 		
 	void AddAllStates(TreeNodeState state)
@@ -82,12 +89,10 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 	
 	void RemoveAllStates(TreeNodeState state)
 	{
-		foreach (TreeNodeState node_state, array<TreeNode> nodes: this) {
-			if (node_state != state) {
-				continue;
-			}
-			
-			foreach (TreeNode node: nodes) {				
+		array<TreeNode> nodes = {};
+		nodes.Copy(this[state]);
+		foreach (TreeNode node: nodes) {
+			if (node) {
 				node.RemoveState(state);
 			}
 		}
@@ -201,7 +206,7 @@ class TreeNode: SerializableBase
 			}
 		}
 	}
-					
+	
 	void AddState(TreeNodeState state)
 	{
 		state &= GetStateMask();
@@ -243,7 +248,7 @@ class TreeNode: SerializableBase
 			}
 		}
 		
-		if (state.IsContext()) {
+		if (state.IsContext() && total_state.IsContext()) {
 			EditorHud hud = GetEditor().GetHud();
 			hud.GetTemplateController().MenuItems.Clear();
 			

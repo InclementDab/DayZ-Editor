@@ -4,7 +4,7 @@ class AddLayerCommand: CommandNode
 	{
 		super.OnStateChanged(state, total_state);
 		
-		if (state.IsActive() && total_state.IsActive()) {
+		if (state.IsActive() && total_state.IsActive()) {			
 			GetEditor().GetPlacingDestination().Add(new FolderNode(UUID.Generate(), "layer0", Symbols.FOLDER));
 		}
 	}

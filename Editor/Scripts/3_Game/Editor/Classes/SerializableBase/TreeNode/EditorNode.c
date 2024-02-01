@@ -56,9 +56,9 @@ class EditorNode: TreeNode
 		m_Player = player;	
 		
 		// Load all default categories and placements
-		FolderNode edited_objects = new FolderNode(EDITS, "Layers", Symbols.LAYER_GROUP);
-		edited_objects.Add(new FolderNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
-		edited_objects.Add(new FolderNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
+		TreeNode edited_objects = new IndestructableFolderNode(EDITS, "Layers", Symbols.LAYER_GROUP);
+		edited_objects.Add(new IndestructableFolderNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
+		edited_objects.Add(new IndestructableFolderNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
 		
 		// default layer for now
 		edited_objects.AddState(TreeNodeState.ACTIVE);
@@ -204,16 +204,20 @@ class EditorNode: TreeNode
 					model_name = items[items.Count() - 1];
 				}
 				
+				Symbols symbol = Symbols.TRIANGLE;
 				category = "StaticObjects";
 				if ((items.Find("tree") != -1) || (items.Find("bush") != -1)) {
 					category = "Plants";
+					symbol = Symbols.TREE;
 				} else if (items.Find("clutter") != -1) {
 					category = "Clutter";
+					symbol = Symbols.TIRE_FLAT;
 				} else if (items.Find("rocks") != -1) {
 					category = "Rocks";
+					symbol = Symbols.MOUNTAIN;
 				}
 			
-				this[PLACEABLES][category].Add(new PlaceableNode(file.GetFullPath(), model_name, Symbols.CIRCLE_C));
+				this[PLACEABLES][category].Add(new PlaceableNode(file.GetFullPath(), model_name, symbol));
 			}
 		}
 
@@ -293,12 +297,13 @@ class EditorNode: TreeNode
 		}
 								
 		if (input.LocalPress_ID(UAUIBack)) {
+			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
 			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.ACTIVE);
 		}
 		
 		Raycast raycast = m_Camera.PerformCursorRaycast();
-		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {
-			// Clear our pressed buttons when we click in the world randomly, probably same with 
+		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {			
+			
 			if (!GetWidgetUnderCursor()) {
 				// reassigning because were gonna fuck with this statemachine array
 				array<TreeNode> nodes = {};
@@ -308,6 +313,8 @@ class EditorNode: TreeNode
 						node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
 					}
 				}
+				
+				TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
 			}		
 		}
 						
@@ -470,10 +477,9 @@ class EditorNode: TreeNode
 	
 	TreeNode GetPlacingDestination()
 	{
-		foreach (TreeNode tree_node_context: TreeNode.StateMachine[TreeNodeState.CONTEXT]) {
-			FolderNode folder_node_context = FolderNode.Cast(tree_node_context);
-			if (folder_node_context && folder_node_context.GetState().IsContext()) {
-				return folder_node_context;
+		foreach (TreeNode node: TreeNode.StateMachine[TreeNodeState.FOCUS]) {
+			if (node && node.GetState().IsContext()) {
+				return node;
 			}
 		}
 		

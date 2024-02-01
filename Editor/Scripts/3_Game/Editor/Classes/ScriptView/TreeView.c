@@ -4,7 +4,7 @@ class TreeView: ScriptView
 		
 	TextWidget Text;
 	
-	Widget Panel, Children, Outline, Texture, Collapse, Minimize;
+	Widget Panel, Children, Outline, Texture, Collapse, Minimize, Dot;
 	ImageWidget IconImage, CollapseIcon;
 	ButtonWidget CollapseButton;
 	
@@ -28,6 +28,7 @@ class TreeView: ScriptView
 	{
 		Panel.SetAlpha(node.GetState().IsActive());
 		Outline.SetAlpha(node.GetState().IsHover());
+		Dot.Show(node.GetState().IsFocus());
 	}
 	
 	void AddView(notnull TreeView view)
@@ -140,12 +141,27 @@ class TreeView: ScriptView
 			case Panel: {
 				switch (m_Node.GetInteractType()) {
 					case TreeNodeInteract.HOLD: {
-						m_Node.RemoveState(TreeNodeState.ACTIVE);
-						return true;
+						if (button == 0) {
+							m_Node.RemoveState(TreeNodeState.ACTIVE);
+							return true;
+						}
+						
+						break;
 					}
 					
 					case TreeNodeInteract.PRESS: {
-						m_Node.AddState(TreeNodeState.ACTIVE);
+						switch (button) {
+							case 0: {
+								m_Node.AddState(TreeNodeState.ACTIVE);
+								break;
+							}
+							
+							case 1: {
+								m_Node.AddState(TreeNodeState.CONTEXT);
+								break;
+							}
+						}
+						
 						return true;
 					}
 				}
