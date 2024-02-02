@@ -417,7 +417,6 @@ DevData.cs
 .key/InclementDab.bikey
 
 #Devils BS
-DayZEditor/Workbench/project.cfg
 DayZEditor/Workbench/dayz.gproj
 DayZEditor/Workbench/launch.bin
 desktop.ini
