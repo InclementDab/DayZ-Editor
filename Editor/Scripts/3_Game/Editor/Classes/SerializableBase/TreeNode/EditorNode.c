@@ -15,12 +15,9 @@ class EditorNode: TreeNode
 	PlayerIdentity Identity;
 	DayZPlayer Player;
 	
-	protected vector m_CursorNormal = vector.Aside;
 	protected EditorCamera m_Camera;
 	protected ref EditorHud	m_Hud;
-	
-	protected ref map<string, TreeNode> m_CommandShortcutMap = new map<string, TreeNode>();
-	
+		
 	//[TreeNode("SERVER\\Layers", "Layers", Symbols.LAYER_GROUP)]
 	static const string LAYERS = "Layers";
 	

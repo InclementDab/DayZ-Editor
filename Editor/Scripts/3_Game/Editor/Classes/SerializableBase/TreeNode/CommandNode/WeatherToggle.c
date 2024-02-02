@@ -5,8 +5,11 @@ class WeatherToggle: CommandNode
 		super.OnStateChanged(state, total_state);
 		
 		if (state.IsActive()) {
-			
-			View.ShowChildren(total_state.IsActive());
+			if (total_state.IsActive()) {
+				GetGame().GetWorld().SetDate(2007, 6, 1, 12, 0);
+			} else {
+				GetDayZGame().SetDate(DateTime.Now());
+			}
 		}
 	}
 	
