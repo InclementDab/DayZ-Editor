@@ -264,7 +264,7 @@ class EditorNode: TreeNode
 				TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
 			}		
 		}
-						
+								
 		foreach (string uuid, TreeNode node1: Children[PLACING].Children) {
 			ObjectNode object_node = ObjectNode.Cast(node1);
 			if (!object_node) {

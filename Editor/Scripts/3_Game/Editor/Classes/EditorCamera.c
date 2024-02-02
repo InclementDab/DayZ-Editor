@@ -36,7 +36,9 @@ class EditorCamera: Camera
 		}	
 		
 		Input input = GetGame().GetInput();
+		EditorNode editor = GetDayZGame().GetEditor();
 		if (raycast && raycast.Hit) {
+			
 			m_CursorObject = raycast.Hit;
 			ObjectNode object_node = ObjectNode.All[m_CursorObject];
 			if (object_node) {
@@ -46,6 +48,12 @@ class EditorCamera: Camera
 				
 				if (input.LocalPress_ID(UAFire)) {
 					object_node.AddState(TreeNodeState.ACTIVE);
+				}
+			} else {
+				editor.GetHud().SetCursor(string.Empty, m_CursorObject.GetShapeName());
+				
+				if (input.LocalDbl_ID(UAFire)) {
+					editor.GetPlacing().Add(new ObjectNode(UUID.Generate(), m_CursorObject.GetShapeName(), Symbols.SQUARE, m_CursorObject));
 				}
 			}
 		}
