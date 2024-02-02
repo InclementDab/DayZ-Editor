@@ -1,7 +1,7 @@
 class ObjectViewMap: ObjectView
 {
 	override void Update(float dt)
-	{
+	{				
 		MapWidget map_widget = MapWidget.Cast(m_LayoutRoot.GetParent());
 		if (!map_widget) {
 			return;

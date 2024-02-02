@@ -7,7 +7,7 @@ class EditorHudController: ViewController
 	ref ObservableCollection<ref TreeView> LeftListItems = new ObservableCollection<ref TreeView>(this);
 	ref ObservableCollection<ref TreeView> RightListItems = new ObservableCollection<ref TreeView>(this);
 		
-	ref ObservableCollection<ObjectView> MapMarkers = new ObservableCollection<ObjectView>(this);
+	ref ObservableCollection<ref ObjectView> MapMarkers = new ObservableCollection<ref ObjectView>(this);
 	
 	ref ObservableCollection<ref EditorFileHeadView> OpenFiles = new ObservableCollection<ref EditorFileHeadView>(this);
 		

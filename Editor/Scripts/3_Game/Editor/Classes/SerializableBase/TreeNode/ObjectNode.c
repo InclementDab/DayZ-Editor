@@ -8,7 +8,7 @@ class ObjectNode: TreeNode
 	protected ref map<ETransformationAxis, ref Plane> m_BoundingBoxSurfaces = new map<ETransformationAxis, ref Plane>();
 	protected ref map<ETransformationAxis, EditorSnapPoint> m_SnapFaces = new map<ETransformationAxis, EditorSnapPoint>();
 	
-	protected ref ObjectViewMap m_ObjectViewMap;
+	protected ObjectViewMap m_ObjectViewMap;
 	protected ref ObjectViewWorld m_ObjectViewWorld;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
@@ -189,8 +189,9 @@ class ObjectNode: TreeNode
 			}
 			
 			if (!m_ObjectViewMap) {
-				m_ObjectViewMap = new ObjectViewMap(this);
-				GetEditor().GetHud().GetTemplateController().MapMarkers.Insert(m_ObjectViewMap);
+				auto object_view_map = new ObjectViewMap(this);
+				GetEditor().GetHud().GetTemplateController().MapMarkers.Insert(object_view_map);
+				m_ObjectViewMap = object_view_map;
 			}
 		}
 		
@@ -260,11 +261,11 @@ class ObjectNode: TreeNode
 			}
 		}
 			
-		if (state.IsHover()) {	
-			if (total_state.IsHover()) {			
-				//m_GizmoXYZ = new GizmoXYZ(this);
+		if (state.IsActive()) {	
+			if (total_state.IsActive()) {			
+				m_GizmoXYZ = new GizmoXYZ(this);
 			} else {
-				//delete m_GizmoXYZ;
+				delete m_GizmoXYZ;
 			}
 		}
 	}
