@@ -1,4 +1,4 @@
-class DividerView: ScriptView
+class DividerView: MenuNode
 {
 	override string GetLayoutFile()
 	{

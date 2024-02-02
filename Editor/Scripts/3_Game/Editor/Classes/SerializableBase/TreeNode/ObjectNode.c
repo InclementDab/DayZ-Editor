@@ -10,7 +10,6 @@ class ObjectNode: TreeNode
 	protected ref map<ETransformationAxis, ref Plane> m_BoundingBoxSurfaces = new map<ETransformationAxis, ref Plane>();
 	protected ref map<ETransformationAxis, EditorSnapPoint> m_SnapFaces = new map<ETransformationAxis, EditorSnapPoint>();
 	
-	protected ref array<ref EditorPointView> m_PointViews = {};
 	protected ref ObjectNodeView m_ObjectNodeView;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
@@ -44,8 +43,6 @@ class ObjectNode: TreeNode
 		GetGame().ObjectDelete(m_CenterLine);
 		GetGame().ObjectDelete(m_TranslationGizmo);
 						
-		delete m_PointViews;
-		
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
 		}

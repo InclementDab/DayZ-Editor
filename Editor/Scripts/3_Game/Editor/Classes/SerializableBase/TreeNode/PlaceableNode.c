@@ -2,7 +2,7 @@ class PlaceableNode: TreeNode
 {
 	protected string m_ObjectUuid;
 	
-	override bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
+	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
 		return false;
 	}

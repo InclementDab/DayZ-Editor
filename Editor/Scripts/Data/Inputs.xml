@@ -17,6 +17,7 @@
             <input name="UAEditorCursor" loc="Toggle Cursor"/>
             <input name="UAEditorHud" loc="Toggle Hud"/>
             <input name="UAEditorControl" loc="Toggle Control"/>
+            <input name="UAEditorRename" loc="Rename"/>
         </actions>
         
         <sorting name="Editor" loc="EDITOR">
@@ -35,6 +36,7 @@
             <input name="UAEditorCursor"/>
             <input name="UAEditorHud"/>
             <input name="UAEditorControl"/>
+            <input name="UAEditorRename"/>
         </sorting>
     </inputs>
 
@@ -108,6 +110,9 @@
         </input>
         <input name="UAEditorControl">
             <btn name="kHome"/>
+        </input>
+        <input name="UAEditorRename">
+            <btn name="kF2"/>
         </input>
     </preset>
 </modded_inputs>

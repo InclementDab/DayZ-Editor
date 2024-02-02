@@ -2,7 +2,7 @@ class EditorHudController: ViewController
 {	
 	string Search;
 	
-	ref ObservableCollection<ref ScriptView> MenuItems = new ObservableCollection<ref ScriptView>(this);
+	ref ObservableCollection<ref MenuNode> MenuItems = new ObservableCollection<ref MenuNode>(this);
 	
 	ref ObservableCollection<ref TreeView> LeftListItems = new ObservableCollection<ref TreeView>(this);
 	ref ObservableCollection<ref TreeView> RightListItems = new ObservableCollection<ref TreeView>(this);

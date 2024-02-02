@@ -152,9 +152,10 @@ class TreeNode: SerializableBase
 	{
 	}
 		
-	bool CreateContextMenu(inout ObservableCollection<ref ScriptView> list_items)
+	bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
-		return false;
+		list_items.Insert(new TreeView(GetEditor().GetCommand("Rename")));
+		return true;
 	}
 			
 	void Synchronize(PlayerIdentity identity = null)
@@ -336,6 +337,11 @@ class TreeNode: SerializableBase
 	}
 	
 	bool CanDelete()
+	{
+		return false;
+	}
+	
+	bool CanRename()
 	{
 		return false;
 	}

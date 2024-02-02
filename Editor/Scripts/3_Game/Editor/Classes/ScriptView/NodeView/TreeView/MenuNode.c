@@ -1,4 +1,4 @@
-class MenuItemView: TreeView
+class MenuNode: TreeView
 {	
 	override void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
@@ -10,6 +10,6 @@ class MenuItemView: TreeView
 			} else {
 				WidgetAnimator.AnimateColor(Panel, EditorColors.BACKGROUND_1, 100);
 			}
-		}		
+		}	
 	}
 }

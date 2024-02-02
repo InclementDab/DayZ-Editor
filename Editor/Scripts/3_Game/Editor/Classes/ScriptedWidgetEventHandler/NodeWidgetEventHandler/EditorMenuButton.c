@@ -21,7 +21,7 @@ class EditorMenuButton: NodeWidgetEventHandler
 					continue;
 				}
 				
-				hud.GetTemplateController().MenuItems.Insert(new CommandMenuItem(command_node));
+				hud.GetTemplateController().MenuItems.Insert(new MenuNode(command_node));
 			}		
 		} else {
 			WidgetAnimator.Animate(Text, WidgetAnimatorProperty.COLOR_A, 200.0 / 255.0, 50);

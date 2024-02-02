@@ -1,21 +1,6 @@
 class EditorHud: ScriptView
-{	
+{		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
-	
-			static const string BRUSHED = "Brushed";
-		static const string HIDDEN = "Hidden";
-	
-	static const string COMMANDS = "Commands";
-		static const string TOOLS = "Tools";
-	
-	static const string MENUS = "Menus";
-	static const string HISTORY = "UndoRedo";
-	static const string PLACEABLES = "Placeables";
-	static const string DZ = "DZ";
-	static const string BRUSHES = "Brushes";
-	static const string PLACING = "Placing";
-	static const string RECYCLE = "Recycle";
-	
 	static const ref array<string> LEFT_NODES = { EditorNode.PLACEABLES, EditorNode.BRUSHES, EditorNode.DZ, EditorNode.COMMANDS, EditorNode.PLACING };
 	static const ref array<string> RIGHT_NODES = { EditorNode.HISTORY, EditorNode.LAYERS };
 	

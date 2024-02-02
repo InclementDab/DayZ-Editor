@@ -71,6 +71,7 @@ class EditorNode: TreeNode
 		this[COMMANDS].Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN));
 		this[COMMANDS].Add(new CommandNode("Paste", "Paste", Symbols.PASTE));
 		this[COMMANDS].Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT));
+		this[COMMANDS].Add(new RenameCommand("Rename", "Rename", string.Empty));
 		this[COMMANDS].Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN));
 		this[COMMANDS].Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK));
 		this[COMMANDS].Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK));

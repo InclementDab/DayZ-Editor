@@ -182,7 +182,7 @@ FrameWidgetClass Root {
        content_halign center
        content_valign center
        Columns 1
-       Rows 1
+       Rows 2
        {
         TextWidgetClass Text {
          visible 1
@@ -209,6 +209,32 @@ FrameWidgetClass Root {
          "size to text h" 1
          "size to text v" 1
          "text valign" center
+         {
+          EditBoxWidgetClass Edit {
+           visible 0
+           disabled 0
+           clipchildren 0
+           ignorepointer 1
+           position 0 0
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           draggable 0
+           scriptclass ""
+           style ServerBrowser
+           "no focus" 0
+           text "akfjvNl9YFJiXr9UoOUgK0ks6Yar_-L3NR1hDBsPPzw="
+           "limit visible" 1
+           "exact text" 1
+           font "gui/fonts/Metron"
+           "bold text" 0
+          }
+         }
         }
        }
       }

@@ -177,6 +177,7 @@ FrameWidgetClass Root {
   PanelWidgetClass Outline {
    ignorepointer 1
    color 0.3137 0.3137 0.3137 1
+   position -0.4 0
    size 1 1
    halign center_ref
    valign center_ref

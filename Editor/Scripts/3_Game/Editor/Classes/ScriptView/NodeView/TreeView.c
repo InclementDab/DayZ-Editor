@@ -3,6 +3,7 @@ class TreeView: NodeView
 	protected TreeViewController m_TemplateController;
 		
 	TextWidget Text;
+	EditBoxWidget Edit;
 	
 	Widget Panel, Wrapper, Children, Outline, Texture, Collapse, Minimize, Dot;
 	ImageWidget IconImage, CollapseIcon;
@@ -57,6 +58,7 @@ class TreeView: NodeView
 		if (state.IsContext()) {
 			hud.GetTemplateController().MenuItems.Clear();
 			if (node.GetState().IsContext() && m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
+				
 				hud.Menu.Show(true);
 				
 				int screen_x, screen_y;
@@ -89,6 +91,7 @@ class TreeView: NodeView
 	void SetText(string text)
 	{
 		Text.SetText(text);
+		Edit.SetText(text);
 				
 		float w, h;
 		Text.GetScreenSize(w, h);		
@@ -150,77 +153,18 @@ class TreeView: NodeView
 		m_LayoutRoot.Show(applied);
 		return applied;
 	}
-			
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{				
-		if (button != 0) {
-			return false;
-		}
-		
-		switch (w) {
-			case Minimize: {
-				ShowChildren(false);
-				return true;
-			}
-			
-			case Wrapper: {
-				switch (m_Node.GetInteractType()) {
-					case TreeNodeInteract.HOLD:
-					case TreeNodeInteract.PRESS: {
-						m_Node.AddState(TreeNodeState.ACTIVE);
-						return true;
-					}
-				}
-				
-				return false;
-			}
-		}
-				
-		return false;
-	}
 	
-	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	void EnableRename()
 	{
-		if (button != 0) {
-			return false;
-		}
-		
-		switch (w) {
-			case Wrapper: {
-				switch (m_Node.GetInteractType()) {					
-					case TreeNodeInteract.HOLD: {
-						if (button == 0) {
-							m_Node.RemoveState(TreeNodeState.ACTIVE);
-							return true;
-						}
-						
-						break;
-					}
-					
-					case TreeNodeInteract.PRESS: {
-						switch (button) {							
-							case 1: {
-								TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
-								m_Node.AddState(TreeNodeState.CONTEXT);
-								break;
-							}
-						}
-						
-						return true;
-					}
-				}
-				
-				return false;
-			}
-		}
-				
-		return false;
+		Text.SetAlpha(0.0);
+		Edit.Show(true);
+		SetFocus(Edit);
 	}
-	
+		
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		if (button != 0) {
-			return false;
+			return super.OnClick(w, x, y, button);
 		}
 		
 		switch (w) {
@@ -228,47 +172,11 @@ class TreeView: NodeView
 				ShowChildren(!Children.IsVisible());
 				return true;
 			}
+		}
+				
+		return super.OnClick(w, x, y, button);
+	}
 			
-			case Wrapper: {
-				switch (m_Node.GetInteractType()) {
-					case TreeNodeInteract.TOGGLE: {
-						if (m_Node.HasState(TreeNodeState.ACTIVE)) {
-							m_Node.RemoveState(TreeNodeState.ACTIVE);
-						} else {
-							m_Node.AddState(TreeNodeState.ACTIVE);
-						}
-						return true;
-					}
-				}
-				
-				return false;
-			}
-		}
-				
-		return false;
-	}
-		
-	override bool OnDoubleClick(Widget w, int x, int y, int button)
-	{
-		if (button != 0) {
-			return false;
-		}
-		
-		switch (w) {
-			case Wrapper: {
-				/*if (m_Node.HasState(TreeNodeState.ACTIVE)) {
-					m_Node.RemoveState(TreeNodeState.ACTIVE);
-				} else {
-					m_Node.AddState(TreeNodeState.ACTIVE);
-				}*/
-				
-				return false;
-			}
-		}
-		
-		return false;
-	}
-		
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		switch (w) {
@@ -281,14 +189,9 @@ class TreeView: NodeView
 				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 1.0, 100);
 				break;
 			}
-			
-			default: {
-				m_Node.AddState(TreeNodeState.HOVER);
-				break;
-			}
 		}
 		
-		return true;
+		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
@@ -303,14 +206,28 @@ class TreeView: NodeView
 				WidgetAnimator.Animate(Texture, WidgetAnimatorProperty.COLOR_A, 200.0 / 255.0, 100);
 				break;
 			}
-			
-			default: {
-				m_Node.RemoveState(TreeNodeState.HOVER);
+		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		switch (w) {
+			case Edit: {
+				if (finished) {
+					Text.SetText(Edit.GetText());
+					Text.SetAlpha(1.0);
+					Edit.Show(false);
+					SetFocus(null);
+					return true;
+				}
+				
 				break;
 			}
 		}
 		
-		return true;
+		return false;
 	}
 										
 	TreeViewController GetTemplateController()

@@ -16,6 +16,91 @@ class NodeView: ScriptView
 	{
 		return m_Node;
 	}
+		
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (m_Node.GetInteractType()) {
+			case TreeNodeInteract.HOLD: {
+				m_Node.AddState(TreeNodeState.ACTIVE);
+				return true;
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		if (!m_Node) {
+			return false;
+		}
+		
+		if (button == 1) {
+			m_Node.AddState(TreeNodeState.CONTEXT);
+			return true;
+		}
+		
+		if (button == 0) {
+			switch (m_Node.GetInteractType()) {
+				case TreeNodeInteract.HOLD: {
+					m_Node.RemoveState(TreeNodeState.ACTIVE);
+					return true;
+				}
+				
+				case TreeNodeInteract.ONCE:
+				case TreeNodeInteract.PRESS: {
+					m_Node.AddState(TreeNodeState.ACTIVE);									
+					return true;
+				}
+			}
+		}
+				
+		return false;
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (m_Node.GetInteractType()) {
+			case TreeNodeInteract.TOGGLE: {
+				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+					m_Node.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_Node.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+		}
+				
+		return false;
+	}
+		
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0 || !m_Node) {
+			return false;
+		}
+		
+		switch (m_Node.GetInteractType()) {
+			case TreeNodeInteract.DOUBLE: {
+				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+					m_Node.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_Node.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+		}
+		
+		return false;
+	}
 	
 	override bool OnDrag(Widget w, int x, int y)
 	{		
@@ -28,9 +113,26 @@ class NodeView: ScriptView
 		return false;
 	}
 	
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		if (m_Node) {
+			m_Node.AddState(TreeNodeState.HOVER);
+		}
+		
+		return super.OnMouseEnter(w, x, y);
+	}
+	
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		if (m_Node) {
+			m_Node.RemoveState(TreeNodeState.HOVER);
+		}
+				
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
+	
 	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
 	{
-		Print(reciever);
 		if (!RecursiveGetParent(reciever, "Root")) {
 			return false;
 		}
@@ -38,10 +140,7 @@ class NodeView: ScriptView
 		Class user_data;
 		reciever.GetUserData(user_data);
 		NodeView node_view = NodeView.Cast(user_data);
-		TreeNode node = node_view.GetNode();
-		
-		Print(reciever);
-		
+		TreeNode node = node_view.GetNode();		
 		return false;
 	}
 	
