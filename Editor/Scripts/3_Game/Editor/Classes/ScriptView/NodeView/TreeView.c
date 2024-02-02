@@ -5,9 +5,9 @@ class TreeView: NodeView
 	TextWidget Text;
 	EditBoxWidget Edit;
 	
-	Widget Panel, Wrapper, Children, Outline, Texture, Collapse, Minimize, Dot;
-	ImageWidget IconImage, CollapseIcon;
-	ButtonWidget CollapseButton;
+	Widget Panel, Wrapper, Children, Outline, Texture, Collapse, Minimize, Dot, Hide;
+	ImageWidget IconImage, CollapseIcon, HideIcon;
+	ButtonWidget CollapseButton, HideButton;
 	
 	protected bool m_IsBeingDragged;
 
@@ -15,6 +15,7 @@ class TreeView: NodeView
 	{
 		m_TemplateController = TreeViewController.Cast(m_Controller);		
 		SetText(m_Node.GetDisplayName());
+		Hide.Show(m_Node.GetStateMask().IsHidden());
 		
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
@@ -31,6 +32,22 @@ class TreeView: NodeView
 		
 		if (!node.GetState().IsDragging()) {
 			m_LayoutRoot.SetPos(0, 0);
+		}
+		
+		if (state.IsHidden()) {
+			if (node.GetState().IsHidden()) {
+				HideIcon.LoadImageFile(0, Symbols.EYE_LOW_VISION.Regular());
+			} else {
+				HideIcon.LoadImageFile(0, Symbols.EYE.Regular());
+			}
+			
+			HideIcon.SetImage(0);			
+			float alpha = 1.0 - (node.GetState().IsHidden() * 0.5);
+			IconImage.SetAlpha(alpha);
+			Text.SetAlpha(alpha);
+			Edit.SetAlpha(alpha);
+			CollapseIcon.SetAlpha(alpha);
+			HideIcon.SetAlpha(alpha);
 		}
 		
 		/*
@@ -172,6 +189,16 @@ class TreeView: NodeView
 		switch (w) {
 			case CollapseButton: {
 				ShowChildren(!Children.IsVisible());
+				return true;
+			}
+			
+			case HideButton: {
+				if (m_Node.HasState(TreeNodeState.HIDDEN)) {
+					m_Node.RemoveState(TreeNodeState.HIDDEN);
+				} else {
+					m_Node.AddState(TreeNodeState.HIDDEN);
+				}
+				
 				return true;
 			}
 		}

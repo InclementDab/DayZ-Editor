@@ -268,6 +268,14 @@ class ObjectNode: TreeNode
 				delete m_GizmoXYZ;
 			}
 		}
+		
+		if (state.IsHidden()) {
+			if (total_state.IsHidden()) {
+				m_Object.ClearFlags(EntityFlags.VISIBLE, true);
+			} else {
+				m_Object.SetFlags(EntityFlags.VISIBLE, true);
+			}
+		}
 	}
 			
 	bool GetGroundUnderObject(out vector position, out vector direction)
@@ -366,7 +374,7 @@ class ObjectNode: TreeNode
 	
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING;
+		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING | TreeNodeState.HIDDEN;
 	}
 							
 	Object GetObject() 

@@ -6,9 +6,10 @@ class WeatherToggle: CommandNode
 		
 		if (state.IsActive()) {
 			if (total_state.IsActive()) {
-				GetGame().GetWorld().SetDate(2007, 6, 1, 12, 0);
+				GetEditor().Date = DateTime.Create(2007, 6, 1, 12);
+				
 			} else {
-				GetDayZGame().SetDate(DateTime.Now());
+				GetEditor().Date = DateTime.Now(false);
 			}
 		}
 	}

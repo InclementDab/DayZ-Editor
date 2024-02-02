@@ -26,7 +26,7 @@ class TreeNodeState: int
 	static const int CONTEXT = 0x04;
 	static const int DRAGGING = 0x08;
 	static const int FOCUS = 0x10;
-	//static const int FOCUS = 0x20;
+	static const int HIDDEN = 0x20;
 	//static const int FOCUS = 0x40;
 		
 	bool IsEmpty()
@@ -57,6 +57,11 @@ class TreeNodeState: int
 	bool IsFocus()
 	{
 		return (value & FOCUS) == FOCUS;
+	}	
+	
+	bool IsHidden()
+	{
+		return (value & HIDDEN) == HIDDEN;
 	}
 }
 

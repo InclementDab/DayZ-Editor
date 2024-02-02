@@ -14,6 +14,7 @@ class EditorNode: TreeNode
 	
 	PlayerIdentity Identity;
 	DayZPlayer Player;
+	DateTime Date = DateTime.Now(false);
 	
 	protected EditorCamera m_Camera;
 	protected ref EditorHud	m_Hud;
@@ -36,7 +37,7 @@ class EditorNode: TreeNode
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 	
-	static const string CAMERAS = "Cameras";
+	static const string EDITORS = "Editors";
 	
 	void EditorNode(string uuid, string display_name, Symbols icon) 
 	{				
@@ -50,6 +51,7 @@ class EditorNode: TreeNode
 		Add(new TreeNode(BRUSHES, "Brushes", Symbols.BRUSH));
 		Add(new TreeNode(PLACING, "Placing", Symbols.FIREPLACE));
 		Add(new TreeNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));		
+		Add(new TreeNode(EDITORS, "Editors", Symbols.PEOPLE));		
 		
 		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
 		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
@@ -122,10 +124,6 @@ class EditorNode: TreeNode
 		// handle config objects
 #ifndef SERVER
 #ifndef WORKBENCH
-		
-		
-		//this[CAMERAS].Add(new CameraNode());
-		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 		string category = "Unknown";
 		foreach (string path: config_paths) {
@@ -197,25 +195,51 @@ class EditorNode: TreeNode
 		GetGame().ObjectDelete(m_Camera);
 	}
 	
+	override void Update(float dt)
+	{
+		super.Update(dt);
+		
+		GetDayZGame().SetDate(Date);
+	}
+	
+	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	{
+		super.OnStateChanged(state, total_state);
+		
+		if (state.IsActive()) {
+			if (total_state.IsActive()) {
+				m_Camera.SetActive(true);
+				m_Hud.Show(true);
+			} else {
+				m_Hud.Show(false);
+				
+				GetDayZGame().SelectPlayer(Identity, Player);
+				Hud hud = GetDayZGame().GetMission().GetHud();
+				hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
+				hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
+			}
+		}
+	}
+	
 	override void OnSynchronized()
 	{
 		super.OnSynchronized();
-		
+				
 #ifndef SERVER
-		if (!IsLocal()) {
-			return;
-		}
+		if (IsLocal()) {
+			if (!m_Hud) {
+				m_Hud = new EditorHud(this);
+			}
 		
-		m_Hud = new EditorHud(this);
-		
-		// how long until this is a node?? :/
-		if (!m_Camera) {		
-			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", Player.GetPosition() + "0 10 0", ECE_LOCAL));
-			m_Camera.SetActive(true);
-		}
+			// how long until this is a node?? :/
+			if (!m_Camera) {		
+				m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", Player.GetPosition() + "0 10 0", ECE_LOCAL));
+				m_Camera.SetActive(true);
+			}
+		}		
 #endif
 	}
-		
+	
 	void InsertHistory(string display_name, Symbols icon, TreeNode node, ScriptReadWriteContext data)
 	{
 		// Clear the stack first
@@ -242,6 +266,7 @@ class EditorNode: TreeNode
 		
 		serializer.Write(Identity);
 		serializer.Write(Player);
+		serializer.Write(Date);
 	}
 	
 	override bool Read(Serializer serializer, int version)
@@ -252,6 +277,7 @@ class EditorNode: TreeNode
 		
 		serializer.Read(Identity);	
 		serializer.Read(Player);			
+		serializer.Read(Date);			
 		return true;
 	}
 						
@@ -260,26 +286,7 @@ class EditorNode: TreeNode
 	{
 		SEffectManager.PlaySoundOnObject(sound_set, m_Camera);
 	}
-			
-	void SetActive(bool active)
-	{
-		if (!IsLocal()) {
-			return;
-		}
 		
-		if (active) {
-			m_Camera.SetActive(true);
-			m_Hud.Show(true);
-		} else {
-			m_Hud.Show(false);
-			
-			GetDayZGame().SelectPlayer(Identity, Player);
-			Hud hud = GetDayZGame().GetMission().GetHud();
-			hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
-			hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
-		}
-	}
-	
 	void Undo()
 	{
 		foreach (string uuid, TreeNode node: this[HISTORY].Children) {
@@ -451,6 +458,16 @@ class EditorNode: TreeNode
 	static int GetAutoSaveValue(float x)
 	{
 		return (5 * Math.Pow(x, 4) / 8) - (5 * Math.Pow(x, 3) / 12) - (45 * Math.Pow(x, 2) / 8) + (545 * x / 12) - 25;
+	}
+	
+	override TreeNodeState GetDefaultState()
+	{
+		return TreeNodeState.ACTIVE;
+	}
+
+	override TreeNodeState GetStateMask()
+	{
+		return TreeNodeState.ACTIVE | TreeNodeState.CONTEXT;
 	}
 					
 	EditorHud GetHud() 

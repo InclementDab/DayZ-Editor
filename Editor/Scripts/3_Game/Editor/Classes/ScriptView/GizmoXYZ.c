@@ -20,7 +20,7 @@ class GizmoXYZ: ScriptView
 		
 		Shape.CreateMatrix(gizmo_transform);
 		
-
+		return;
 							
 		float distance_to_target = vector.Distance(gizmo_transform[3], gizmo_transform[0].Multiply4(gizmo_transform[3]));								
 		float x, y;
@@ -68,5 +68,10 @@ class GizmoXYZ: ScriptView
 		screen_origin[2] = 0;
 		GetLayoutRoot().SetScreenPos(screen_origin[0], screen_origin[1]);
 		GetLayoutRoot().Update();
+	}
+	
+	override string GetLayoutFile()
+	{
+		return "Editor\\GUI\\layouts\\Gizmo\\XYZ.layout";
 	}
 }
