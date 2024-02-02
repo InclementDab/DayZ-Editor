@@ -198,6 +198,10 @@ class EditorNode: TreeNode
 		super.OnSynchronized();
 		
 #ifndef SERVER
+		if (!IsLocal()) {
+			return;
+		}
+		
 		m_Hud = new EditorHud(this);
 		
 		// how long until this is a node?? :/
