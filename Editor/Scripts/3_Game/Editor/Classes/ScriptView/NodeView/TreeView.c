@@ -5,7 +5,7 @@ class TreeView: NodeView
 	TextWidget Text;
 	EditBoxWidget Edit;
 	
-	Widget Panel, Wrapper, Children, Outline, Texture, Collapse, Minimize, Dot, Hide;
+	Widget Wrapper, Children, Outline, Texture, Collapse, Minimize, Dot, Hide;
 	ImageWidget IconImage, CollapseIcon, HideIcon;
 	ButtonWidget CollapseButton, HideButton;
 	
@@ -15,7 +15,7 @@ class TreeView: NodeView
 	{
 		m_TemplateController = TreeViewController.Cast(m_Controller);		
 		SetText(m_Node.GetDisplayName());
-		Hide.Show(m_Node.GetStateMask().IsHidden());
+		Hide.Show(m_Node.GetStateMask().IsSuppressed());
 		
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
@@ -34,15 +34,15 @@ class TreeView: NodeView
 			m_LayoutRoot.SetPos(0, 0);
 		}
 		
-		if (state.IsHidden()) {
-			if (node.GetState().IsHidden()) {
+		if (state.IsSuppressed()) {
+			if (node.GetState().IsSuppressed()) {
 				HideIcon.LoadImageFile(0, Symbols.EYE_LOW_VISION.Regular());
 			} else {
 				HideIcon.LoadImageFile(0, Symbols.EYE.Regular());
 			}
 			
 			HideIcon.SetImage(0);			
-			float alpha = 1.0 - (node.GetState().IsHidden() * 0.5);
+			float alpha = 1.0 - (node.GetState().IsSuppressed() * 0.5);
 			IconImage.SetAlpha(alpha);
 			Text.SetAlpha(alpha);
 			Edit.SetAlpha(alpha);
@@ -193,10 +193,10 @@ class TreeView: NodeView
 			}
 			
 			case HideButton: {
-				if (m_Node.HasState(TreeNodeState.HIDDEN)) {
-					m_Node.RemoveState(TreeNodeState.HIDDEN);
+				if (m_Node.HasState(TreeNodeState.SUPPRESSED)) {
+					m_Node.RemoveState(TreeNodeState.SUPPRESSED);
 				} else {
-					m_Node.AddState(TreeNodeState.HIDDEN);
+					m_Node.AddState(TreeNodeState.SUPPRESSED);
 				}
 				
 				return true;

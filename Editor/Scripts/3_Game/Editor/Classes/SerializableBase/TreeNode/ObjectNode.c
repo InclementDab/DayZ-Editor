@@ -246,6 +246,8 @@ class ObjectNode: TreeNode
 		return true;
 	}
 			
+	protected ref SuppressedObject m_SuppressedObject;
+	
 	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
 		super.OnStateChanged(state, total_state);
@@ -269,12 +271,16 @@ class ObjectNode: TreeNode
 			}
 		}
 		
-		if (state.IsHidden()) {
-			if (total_state.IsHidden()) {
-				m_Object.ClearFlags(EntityFlags.VISIBLE, true);
+		if (state.IsSuppressed()) {
+			RemoveState(TreeNodeState.ACTIVE);
+			
+			if (total_state.IsSuppressed()) {
+				m_SuppressedObject = new SuppressedObject(m_Object);
 			} else {
-				m_Object.SetFlags(EntityFlags.VISIBLE, true);
+				delete m_SuppressedObject;
 			}
+			
+			m_Object.Update();
 		}
 	}
 			
@@ -374,7 +380,7 @@ class ObjectNode: TreeNode
 	
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING | TreeNodeState.HIDDEN;
+		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING | TreeNodeState.SUPPRESSED;
 	}
 							
 	Object GetObject() 

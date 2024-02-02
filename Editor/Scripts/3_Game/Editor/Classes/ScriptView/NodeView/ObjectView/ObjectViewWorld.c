@@ -72,6 +72,6 @@ class ObjectViewWorld: ObjectView
 		
 		base_position = GetGame().GetScreenPos(m_ObjectNode.GetBasePoint());
 		m_LayoutRoot.SetPos(base_position[0] - 12.5, base_position[1] - 12.5);
-		m_LayoutRoot.Show(base_position[2] > 0);
+		m_LayoutRoot.Show(base_position[2] > 0 && !m_Node.GetState().IsSuppressed());
 	}
 }

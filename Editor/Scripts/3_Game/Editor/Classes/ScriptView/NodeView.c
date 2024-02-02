@@ -2,6 +2,9 @@ class NodeView: ScriptView
 {
 	protected TreeNode m_Node;
 	
+	// Primary interaction point!!
+	Widget Panel;
+	
 	void NodeView(TreeNode node)
 	{
 		m_Node = node;
@@ -23,23 +26,29 @@ class NodeView: ScriptView
 			return false;
 		}
 		
-		switch (m_Node.GetInteractType()) {
-			case TreeNodeInteract.HOLD: {
-				m_Node.AddState(TreeNodeState.ACTIVE);
-				return true;
-			}
-			
-			case TreeNodeInteract.TOGGLE: {
-				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
-					m_Node.RemoveState(TreeNodeState.ACTIVE);
-				} else {
-					m_Node.AddState(TreeNodeState.ACTIVE);
+		switch (w) {
+			case Panel: {
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.HOLD: {
+						m_Node.AddState(TreeNodeState.ACTIVE);
+						return true;
+					}
+					
+					case TreeNodeInteract.TOGGLE: {
+						if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+							m_Node.RemoveState(TreeNodeState.ACTIVE);
+						} else {
+							m_Node.AddState(TreeNodeState.ACTIVE);
+						}
+						return true;
+					}
+					
+					case TreeNodeInteract.PRESS: {
+						m_Node.AddState(TreeNodeState.ACTIVE);
+						return true;
+					}
 				}
-				return true;
-			}
-			
-			case TreeNodeInteract.PRESS: {
-				m_Node.AddState(TreeNodeState.ACTIVE);
+				
 				return true;
 			}
 		}
@@ -69,14 +78,18 @@ class NodeView: ScriptView
 			return false;
 		}
 		
-		switch (m_Node.GetInteractType()) {
-			case TreeNodeInteract.TOGGLE: {
-				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
-					m_Node.RemoveState(TreeNodeState.ACTIVE);
-				} else {
-					m_Node.AddState(TreeNodeState.ACTIVE);
+		switch (w) {
+			case Panel: {
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.TOGGLE: {
+						if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+							m_Node.RemoveState(TreeNodeState.ACTIVE);
+						} else {
+							m_Node.AddState(TreeNodeState.ACTIVE);
+						}
+						return true;
+					}
 				}
-				return true;
 			}
 		}
 				
@@ -89,14 +102,18 @@ class NodeView: ScriptView
 			return false;
 		}
 		
-		switch (m_Node.GetInteractType()) {
-			case TreeNodeInteract.DOUBLE: {
-				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
-					m_Node.RemoveState(TreeNodeState.ACTIVE);
-				} else {
-					m_Node.AddState(TreeNodeState.ACTIVE);
+		switch (w) {
+			case Panel: {
+				switch (m_Node.GetInteractType()) {
+					case TreeNodeInteract.DOUBLE: {
+						if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+							m_Node.RemoveState(TreeNodeState.ACTIVE);
+						} else {
+							m_Node.AddState(TreeNodeState.ACTIVE);
+						}
+						return true;
+					}
 				}
-				return true;
 			}
 		}
 		
@@ -116,7 +133,7 @@ class NodeView: ScriptView
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (m_Node) {
+		if (m_Node && w == Panel) {
 			m_Node.AddState(TreeNodeState.HOVER);
 		}
 		
@@ -125,7 +142,7 @@ class NodeView: ScriptView
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (m_Node) {
+		if (m_Node && !m_Node.HasState(TreeNodeState.ACTIVE)) {
 			m_Node.RemoveState(TreeNodeState.HOVER);
 		}
 				

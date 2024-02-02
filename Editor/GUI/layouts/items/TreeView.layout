@@ -190,7 +190,7 @@ FrameWidgetClass Root {
      visible 1
      disabled 0
      clipchildren 0
-     ignorepointer 1
+     ignorepointer 0
      color 0.0275 0.4353 0.5725 0
      position 67 0
      size 356 22
