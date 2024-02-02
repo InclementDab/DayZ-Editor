@@ -18,6 +18,8 @@ class EditorHud: ScriptView
 	// View Properties
 	Widget Left, Right, Inner, Tools, Menu, Top;
 	
+	MapWidget Map;
+	
 	// Layout Elements
 	Widget LeftDragZone, RightDragZone;
 	
@@ -406,7 +408,7 @@ class EditorHud: ScriptView
 		Notification.SetColor(color);
 		NotificationText.SetText(text);
 		
-		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.POSITION_Y, 0, 25, 90);
+		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.POSITION_Y, 0, 90);
 		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, 0.0, 1.0, 90);
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(HideNotification);
@@ -417,7 +419,7 @@ class EditorHud: ScriptView
 	
 	void HideNotification()
 	{
-		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, 0.0, 250);
+		WidgetAnimator.Animate(Notification, WidgetAnimatorProperty.COLOR_A, -20, 250);
 	}
 	
 	void ShowRuleOfThirds(bool state)

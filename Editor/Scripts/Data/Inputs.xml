@@ -18,6 +18,7 @@
             <input name="UAEditorHud" loc="Toggle Hud"/>
             <input name="UAEditorControl" loc="Toggle Control"/>
             <input name="UAEditorRename" loc="Rename"/>
+            <input name="UAEditorMap" loc="Toggle Map"/>
         </actions>
         
         <sorting name="Editor" loc="EDITOR">
@@ -37,6 +38,7 @@
             <input name="UAEditorHud"/>
             <input name="UAEditorControl"/>
             <input name="UAEditorRename"/>
+            <input name="UAEditorMap"/>
         </sorting>
     </inputs>
 
@@ -113,6 +115,9 @@
         </input>
         <input name="UAEditorRename">
             <btn name="kF2"/>
+        </input>
+        <input name="UAEditorMap">
+            <btn name="kM"/>
         </input>
     </preset>
 </modded_inputs>

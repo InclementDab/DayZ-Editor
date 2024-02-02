@@ -55,7 +55,7 @@ FrameWidgetClass Root {
      visible 1
      ignorepointer 1
      color 0.4549 0.5765 0.4549 1
-     position 0 0
+     position 0 -20
      size 1 20
      halign center_ref
      hexactpos 1

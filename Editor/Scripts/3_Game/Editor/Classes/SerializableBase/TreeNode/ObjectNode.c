@@ -16,7 +16,7 @@ class ObjectNode: TreeNode
 
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
 	
-	protected Object m_TranslationGizmo;
+	protected ref GizmoXYZ m_GizmoXYZ;
 	
 	void ObjectNode(string uuid, string display_name, Symbols icon, Object object, int flags = EFE_DEFAULT)
 	{
@@ -41,7 +41,6 @@ class ObjectNode: TreeNode
 		EditorBoundingBox.Destroy(m_Object);
 		GetGame().ObjectDelete(m_BBoxBase);
 		GetGame().ObjectDelete(m_CenterLine);
-		GetGame().ObjectDelete(m_TranslationGizmo);
 						
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
@@ -53,14 +52,7 @@ class ObjectNode: TreeNode
 	{		
 		vector transform[4];
 		m_Object.GetTransform(transform);
-		
-		if (m_TranslationGizmo) {
-			vector mat[4];
-			m_BoundingBoxSurfaces[ETransformationAxis.TOP].CreateMatrix(mat);
-			Math3D.MatrixMultiply4(transform, mat, mat);
-			m_TranslationGizmo.SetTransform(mat);
-		}
-		
+				
 		if (HasState(TreeNodeState.ACTIVE | TreeNodeState.HOVER)) {
 			for (int i = 0; i < 6; i++) {
 				// Debug
@@ -269,9 +261,9 @@ class ObjectNode: TreeNode
 			
 		if (state.IsHover()) {	
 			if (total_state.IsHover()) {			
-				//m_TranslationGizmo = GetGame().CreateObjectEx("TranslationGizmo", GetTopPoint(), ECE_LOCAL);
+				//m_GizmoXYZ = new GizmoXYZ(this);
 			} else {
-				//GetGame().ObjectDelete(m_TranslationGizmo);
+				//delete m_GizmoXYZ;
 			}
 		}
 	}

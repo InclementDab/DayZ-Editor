@@ -80,6 +80,7 @@ class EditorNode: TreeNode
 		this[COMMANDS].Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
 		this[COMMANDS].Add(new CursorToggle("Cursor", "Toggle Cursor", Symbols.ARROW_POINTER));
 		this[COMMANDS].Add(new HudToggle("Hud", "Toggle Hud", Symbols.EYE));
+		this[COMMANDS].Add(new MapToggle("Map", "Toggle Map", Symbols.MAP));
 		this[COMMANDS].Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT));
 		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
 				
@@ -496,33 +497,7 @@ class EditorNode: TreeNode
     	player.GetInventory().CreateInInventory("SledgeHammer");
 	    return player;
 	}
-			
-	// Just annoying
-	static string GetWorldName()
-	{
-		string world_name;
-		GetGame().GetWorldName(world_name);
-		return world_name;
-	}
-		
-	static vector GetMapCenterPosition()
-	{
-		TIntArray values();
-		GetGame().ConfigGetIntArray(string.Format("CfgWorlds %1 centerPosition", GetWorldName()), values);
-				
-		// they were playing the wrong game when they thought of this one
-		return Vector(values[0], values[2], values[1]);
-	}
-	
-	static vector GenerateSafeStartPosition(float radius = 2000.0)
-	{
-		vector position = GetMapCenterPosition();
-		position[0] = Math.RandomFloat(position[0] - radius, position[0] + radius);
-		position[2] = Math.RandomFloat(position[2] - radius, position[2] + radius);
-		position[1] = GetGame().SurfaceY(position[0], position[2]) + 25.0;		
-		return position;
-	}
-			
+					
 	static EditorHoliday GetCurrentHoliday()
 	{		
 		int year, month, day;
