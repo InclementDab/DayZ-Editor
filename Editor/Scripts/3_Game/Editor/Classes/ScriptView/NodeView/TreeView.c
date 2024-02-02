@@ -22,6 +22,8 @@ class TreeView: NodeView
 			
 	override void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
+		super.OnStateChanged(node, state);
+		
 		EditorHud hud = m_Node.GetEditor().GetHud();
 		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext() || node.GetState().IsDragging());
 		Outline.SetAlpha(node.GetState().IsHover());

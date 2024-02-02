@@ -30,6 +30,7 @@ FrameWidgetClass Root {
   }
   FrameWidgetClass Inner {
    visible 1
+   clipchildren 1
    ignorepointer 1
    position 0 0
    size 0 0
@@ -41,6 +42,8 @@ FrameWidgetClass Root {
    {
     MapWidgetClass Map {
      visible 0
+     clipchildren 1
+     ignorepointer 0
      size 1 1
      halign center_ref
      valign center_ref
@@ -50,6 +53,13 @@ FrameWidgetClass Root {
      vexactsize 0
      scaled 0
      fixaspect outside
+     draggable 0
+     scriptclass "ViewBinding"
+     {
+      ScriptParamsClass {
+       Binding_Name "MapMarkers"
+      }
+     }
     }
     PanelWidgetClass Notification {
      visible 1
@@ -3640,6 +3650,7 @@ FrameWidgetClass Root {
    clipchildren 0
    ignorepointer 1
    color 0.0588 0.0588 0.0588 1
+   position 0 0
    size 26 26
    hexactpos 1
    vexactpos 1
@@ -3647,55 +3658,11 @@ FrameWidgetClass Root {
    vexactsize 1
    priority 999
    {
-    ImageWidgetClass Background {
-     visible 1
+    WrapSpacerWidgetClass CursorWrapper {
      clipchildren 0
      ignorepointer 1
-     color 0.0588 0.0588 0.0588 1
-     position -9 -9
-     size 25 24
-     halign right_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-     image0 "set:regular image:left_right"
-     mode blend
-     "src alpha" 1
-     "clamp mode" clamp
-     "stretch mode" stretch_w_center
-     filter 1
-     {
-      ImageWidgetClass Foreground {
-       visible 1
-       clipchildren 0
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 0
-       image0 "set:thin image:left_right"
-       mode blend
-       "src alpha" 1
-       "clamp mode" clamp
-       "stretch mode" stretch_w_center
-       filter 1
-      }
-     }
-    }
-    GridSpacerWidgetClass CursorTooltip {
-     visible 0
-     clipchildren 0
-     ignorepointer 1
-     color 0.098 0.098 0.098 1
-     position -42 -44
-     size 0 32
+     position -225 -25
+     size 230 35
      halign right_ref
      valign bottom_ref
      hexactpos 1
@@ -3703,77 +3670,139 @@ FrameWidgetClass Root {
      hexactsize 1
      vexactsize 1
      scaled 1
-     style Colorable
-     Padding 0
-     Margin 6
-     "Size To Content H" 1
-     content_halign center
-     content_valign center
-     Columns 1
-     Rows 1
+     Padding 6
+     Margin 0
+     "Size To Content V" 1
      {
-      TextWidgetClass CursorTooltipName {
-       visible 1
+      ImageWidgetClass Background {
+       visible 0
+       clipchildren 0
        ignorepointer 1
-       size 76 24
-       halign center_ref
-       valign center_ref
+       color 0.0588 0.0588 0.0588 1
+       position -9 0
+       size 25 24
+       halign right_ref
+       valign bottom_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       text "TShirt (Colored Red)"
-       font "gui/fonts/Metron"
-       "exact text" 0
-       "size to text h" 1
-       "text halign" center
-       "text valign" center
-      }
-     }
-    }
-    PanelWidgetClass CursorEntity {
-     visible 0
-     ignorepointer 1
-     color 0.1176 0.1176 0.1176 1
-     position -50 -274
-     size 196 196
-     halign right_ref
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style rover_sim_colorable
-     {
-      ItemPreviewWidgetClass CursorEntityPreview {
-       ignorepointer 1
-       size 0.95 0.95
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       priority 200
-      }
-      ImageWidgetClass CursorEntityTexture {
-       ignorepointer 1
-       color 0.4471 0.5725 0.6863 1
-       size 0.95 0.95
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 1
-       fixaspect fixwidth
-       imageTexture "{E262CF82FD5DFF31}gui/textures/linear_gradient.edds"
-       mode additive
+       scaled 0
+       image0 "set:regular image:left_right"
+       mode blend
        "src alpha" 1
-       "stretch mode" stretch_w_h
-       filter 0
-       rotation 0 0 90
+       "clamp mode" clamp
+       "stretch mode" stretch_w_center
+       filter 1
+       {
+        ImageWidgetClass Foreground {
+         visible 1
+         clipchildren 0
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         image0 "set:thin image:left_right"
+         mode blend
+         "src alpha" 1
+         "clamp mode" clamp
+         "stretch mode" stretch_w_center
+         filter 1
+        }
+       }
+      }
+      GridSpacerWidgetClass CursorTooltip {
+       visible 0
+       clipchildren 0
+       ignorepointer 1
+       color 0.098 0.098 0.098 1
+       position -42 -44
+       size 0 32
+       halign right_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 1
+       style Colorable
+       Padding 0
+       Margin 6
+       "Size To Content H" 1
+       content_halign center
+       content_valign center
+       Columns 1
+       Rows 1
+       {
+        TextWidgetClass CursorTooltipName {
+         visible 1
+         ignorepointer 1
+         size 76 24
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "TShirt (Colored Red)"
+         font "gui/fonts/Metron"
+         "exact text" 0
+         "size to text h" 1
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      PanelWidgetClass CursorEntity {
+       visible 0
+       ignorepointer 1
+       color 0.1176 0.1176 0.1176 1
+       position -50 -274
+       size 196 196
+       halign right_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ItemPreviewWidgetClass CursorEntityPreview {
+         ignorepointer 1
+         size 0.95 0.95
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         priority 200
+        }
+        ImageWidgetClass CursorEntityTexture {
+         ignorepointer 1
+         color 0.4471 0.5725 0.6863 1
+         size 0.95 0.95
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 1
+         fixaspect fixwidth
+         imageTexture "{E262CF82FD5DFF31}gui/textures/linear_gradient.edds"
+         mode additive
+         "src alpha" 1
+         "stretch mode" stretch_w_h
+         filter 0
+         rotation 0 0 90
+        }
+       }
       }
      }
     }

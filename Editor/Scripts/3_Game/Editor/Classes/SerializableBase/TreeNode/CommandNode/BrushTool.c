@@ -20,11 +20,7 @@ class BrushTool: CommandNode
 	}
 	
 	override void Update(float dt)
-	{
-		if (!GetState().IsActive()) {
-			return;	
-		}
-		
+	{		
 		Raycast raycast = GetEditor().GetCamera().PerformCursorRaycast();
 		if (!raycast) {
 			return;

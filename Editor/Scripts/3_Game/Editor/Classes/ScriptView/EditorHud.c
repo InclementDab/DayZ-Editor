@@ -44,6 +44,7 @@ class EditorHud: ScriptView
 	
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
+	protected vector m_MapDrag;
 		
 	void EditorHud(notnull EditorNode editor)
 	{		
@@ -176,7 +177,7 @@ class EditorHud: ScriptView
 			switch (CurrentSelectionMode) {
 				case SelectionMode.LASSO: {
 					foreach (Object object, ObjectNode object_node: ObjectNode.All) {
-						ObjectNodeView view = object_node.GetObjectNodeView();
+						ObjectView view = object_node.GetObjectViewWorld();
 						
 						float x_node_screen, y_node_screen;
 						view.GetLayoutRoot().GetScreenPos(x_node_screen, y_node_screen);
@@ -244,11 +245,11 @@ class EditorHud: ScriptView
 	}
 
 	void SetCursor(Symbols cursor, string name = string.Empty, string type = string.Empty)
-	{		
+	{	
 		CursorTooltip.Show(name != string.Empty || type != string.Empty);
 		
 		m_TooltipObject = GetGame().CreateObjectEx(type, vector.Zero, ECE_LOCAL);
-	
+
 		CursorEntity.Show(false);
 		if (m_TooltipObject) {
 			EntityAI entity = EntityAI.Cast(m_TooltipObject);
@@ -261,12 +262,14 @@ class EditorHud: ScriptView
 		
 		CursorTooltipName.SetText(name);
 		
-		Foreground.LoadImageFile(0, cursor.Thin());
-		Foreground.SetImage(0);
-		Foreground.Show(name == string.Empty);
+		if (cursor != string.Empty) {
+			Foreground.LoadImageFile(0, cursor.Thin());
+			Foreground.SetImage(0);
+			Background.LoadImageFile(0, cursor.Solid());
+			Background.SetImage(0);
+		}
 		
-		Background.LoadImageFile(0, cursor.Solid());
-		Background.SetImage(0);
+		Foreground.Show(name == string.Empty);
 		Background.Show(name == string.Empty);
 		
 		
@@ -276,6 +279,10 @@ class EditorHud: ScriptView
 	
 	void ClearCursor()
 	{
+		Background.Show(false);
+		Foreground.Show(false);
+		CursorTooltip.Show(false);
+		CursorEntity.Show(false);
 		Cursor.Show(false);
 		GetGame().ObjectDelete(m_TooltipObject);
 	}
@@ -338,7 +345,7 @@ class EditorHud: ScriptView
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		switch (w) {
+		switch (w) {			
 			case LeftDragZone:
 			case RightDragZone: {
 				m_DraggedBar = w;

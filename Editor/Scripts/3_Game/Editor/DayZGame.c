@@ -5,30 +5,17 @@ modded class DayZGame
 	// Handled in DayZGame
 	static const int RPC_REQUEST_SYNC = 54364;
 	static const int RPC_NODE_SYNC = 54365;
-	
-	protected ref TreeNode m_Server = new TreeNode("SERVER", "Editors", Symbols.CAMERA_SECURITY);
-		
-#ifdef WORKBENCH
-	protected ref EditorNode w_Editor;
-#endif	
-		
-	void DayZGame()
-	{
-#ifdef WORKBENCH
-		w_Editor = new EditorNode("WORKBENCH", "Debug", Symbols.CAMERA_SECURITY);
-#endif
-	}
-		
+			
 	EditorNode GetEditor()
 	{
 #ifdef WORKBENCH
-		return w_Editor;
+		return TreeNode.ROOT;
 #endif
 		
 #ifdef SERVER
-		return m_Server;
+		return TreeNode.ROOT;
 #else		
-		return EditorNode.Cast(m_Server.Children[GetUserManager().GetTitleInitiator().GetUid()]);
+		return EditorNode.Cast(TreeNode.ROOT.Children[GetUserManager().GetTitleInitiator().GetUid()]);
 #endif
 	}
 			
@@ -50,7 +37,7 @@ modded class DayZGame
 	{				
 		switch (rpc_type) {			
 			case RPC_REQUEST_SYNC: {
-				m_Server.Synchronize(sender);
+				TreeNode.ROOT.Synchronize(sender);
 				break;
 			}
 				
@@ -60,7 +47,7 @@ modded class DayZGame
 					break;
 				}
 
-				TreeNode current = m_Server;
+				TreeNode current = TreeNode.ROOT;
 				for (int i = 0; i < tree_depth; i++) {
 					string uuid;
 					ctx.Read(uuid);
@@ -99,6 +86,7 @@ modded class DayZGame
 				} else {
 					current.OnSynchronized();
 				}
+				
 				break;
 			}
 		}
@@ -117,12 +105,12 @@ modded class DayZGame
 	void Recompile()
 	{
 		PlayerIdentity identity = GetPlayer().GetIdentity();
-		delete m_Server[identity.GetPlainId()];
+		delete TreeNode.ROOT[identity.GetPlainId()];
 		
 		EditorNode editor = new EditorNode(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular());
 		editor.Identity = identity;
 		editor.Player = GetPlayer();
-		m_Server[identity.GetPlainId()] = editor;
+		TreeNode.ROOT[identity.GetPlainId()] = editor;
 		
 		editor.OnSynchronized();
 	}

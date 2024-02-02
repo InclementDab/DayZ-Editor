@@ -19,12 +19,26 @@ class NodeView: ScriptView
 		
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
 		switch (m_Node.GetInteractType()) {
 			case TreeNodeInteract.HOLD: {
+				m_Node.AddState(TreeNodeState.ACTIVE);
+				return true;
+			}
+			
+			case TreeNodeInteract.TOGGLE: {
+				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
+					m_Node.RemoveState(TreeNodeState.ACTIVE);
+				} else {
+					m_Node.AddState(TreeNodeState.ACTIVE);
+				}
+				return true;
+			}
+			
+			case TreeNodeInteract.PRESS: {
 				m_Node.AddState(TreeNodeState.ACTIVE);
 				return true;
 			}
@@ -35,27 +49,14 @@ class NodeView: ScriptView
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (!m_Node) {
+		if (button != 0) {
 			return false;
 		}
 		
-		if (button == 1) {
-			m_Node.AddState(TreeNodeState.CONTEXT);
-			return true;
-		}
-		
-		if (button == 0) {
-			switch (m_Node.GetInteractType()) {
-				case TreeNodeInteract.HOLD: {
-					m_Node.RemoveState(TreeNodeState.ACTIVE);
-					return true;
-				}
-				
-				case TreeNodeInteract.ONCE:
-				case TreeNodeInteract.PRESS: {
-					m_Node.AddState(TreeNodeState.ACTIVE);									
-					return true;
-				}
+		switch (m_Node.GetInteractType()) {
+			case TreeNodeInteract.HOLD: {
+				m_Node.RemoveState(TreeNodeState.ACTIVE);
+				return true;
 			}
 		}
 				

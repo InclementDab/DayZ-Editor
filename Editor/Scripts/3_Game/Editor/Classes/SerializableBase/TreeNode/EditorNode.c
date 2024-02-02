@@ -39,6 +39,8 @@ class EditorNode: TreeNode
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 	
+	static const string CAMERAS = "Cameras";
+	
 	void EditorNode(string uuid, string display_name, Symbols icon) 
 	{				
 		// Load all default categories and placements
@@ -123,6 +125,10 @@ class EditorNode: TreeNode
 		// handle config objects
 #ifndef SERVER
 #ifndef WORKBENCH
+		
+		
+		//this[CAMERAS].Add(new CameraNode());
+		
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 		string category = "Unknown";
 		foreach (string path: config_paths) {
@@ -171,7 +177,7 @@ class EditorNode: TreeNode
 				}
 				
 				//Print(current);
-				Print(p3d);
+				//Print(p3d);
 				//Print(p3d_split[p3d_split.Count() - 1]);
 				current[p3d_split[p3d_split.Count() - 1]] = new PlaceableNode(p3d, p3d_split[p3d_split.Count() - 1], Symbols.TRIANGLE);
 			}
@@ -206,15 +212,7 @@ class EditorNode: TreeNode
 		m_Hud = new EditorHud(this);
 		
 		// how long until this is a node?? :/
-		if (!m_Camera) {
-			if (!Player) {
-				Player = DayZPlayer.Cast(Identity.GetPlayer());
-				if (Player) {
-					Error("Could not find player");
-					return;
-				}
-			}
-			
+		if (!m_Camera) {		
 			m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", Player.GetPosition() + "0 10 0", ECE_LOCAL));
 			m_Camera.SetActive(true);
 		}
@@ -240,100 +238,13 @@ class EditorNode: TreeNode
 		string uuid_generated = string.Format("History:%1", this[HISTORY].Children.Count());		
 		this[HISTORY][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon, node, data);
 	}
-	
-	override void Update(float timeslice)
-	{
-		Input input = GetGame().GetInput();
-		if (!m_Camera) {
-			return;
-		}
-								
-		if (input.LocalPress_ID(UAUIBack)) {
-			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
-			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.ACTIVE);
-		}
-		
-		Raycast raycast = m_Camera.PerformCursorRaycast();
-		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {			
-			
-			if (!GetWidgetUnderCursor()) {
-				// reassigning because were gonna fuck with this statemachine array
-				array<TreeNode> nodes = {};
-				nodes.Copy(TreeNode.StateMachine[TreeNodeState.ACTIVE]);
-				foreach (TreeNode node_to_deselect: nodes) {
-					if (node_to_deselect && node_to_deselect.GetInteractType() == TreeNodeInteract.PRESS) {
-						node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
-					}
-				}
-				
-				TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
-			}		
-		}
-								
-		foreach (string uuid, TreeNode node1: Children[PLACING].Children) {
-			ObjectNode object_node = ObjectNode.Cast(node1);
-			if (!object_node) {
-				continue;
-			}
-			
-			raycast = m_Camera.PerformCursorRaycast(object_node.GetObject());
-			if (!raycast) {
-				continue;
-			}
-			
-			vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
-			Math3D.MatrixOrthogonalize4(camera_orthogonal);	
-			
-			vector rotation_mat[3];
-			Math3D.MatrixIdentity3(rotation_mat);
-			if (input.LocalPress_ID(UAZoomInOptics)) {
-				Math3D.YawPitchRollMatrix(Vector(-15, 0, 0), rotation_mat);
-			}
-			
-			if (input.LocalPress_ID(UAZoomOutOptics)) {
-				Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
-			}
-			
-			Math3D.MatrixMultiply3(camera_orthogonal, rotation_mat, camera_orthogonal);
-			
-			//Shape.CreateMatrix(camera_orthogonal);
-			
-			m_CursorNormal = m_CursorNormal.Multiply3(rotation_mat);
-			
-			//Print(Placing.Count());
-			vector transform[4] = { m_CursorNormal, raycast.Bounce.Direction, m_CursorNormal * raycast.Bounce.Direction, raycast.Bounce.Position };
-			object_node.SetBaseTransform(transform);
-		}
-		
-		if (input.LocalPress_ID(UAZoomIn)) {
-			if (GetGame().GetUIManager().IsCursorVisible()) {				
-				vector camera_position = m_Camera.GetCursorRay().GetPoint(1000.0);
-				raycast = m_Camera.PerformCursorRaycast();
-				if (raycast) {
-					vector current_position = m_Camera.GetPosition();
-					float y_height = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
-					camera_position = raycast.Bounce.GetPoint(y_height);
-				}
-								
-				m_Camera.SetPosition(camera_position);
-				m_Camera.Update();
-			} else {
-				m_Camera.FieldOfView = GameConstants.DZPLAYER_CAMERA_FOV_EYEZOOM;
-			}
-		}
-		
-		if (input.LocalRelease_ID(UAZoomIn)) { 
-			m_Camera.FieldOfView = 1.0;
-		}
-	}
-				
+					
 	override void Write(Serializer serializer, int version)
 	{		
 		super.Write(serializer, version);
 		
 		serializer.Write(Identity);
 		serializer.Write(Player);
-		serializer.Write(m_Camera);
 	}
 	
 	override bool Read(Serializer serializer, int version)
@@ -343,8 +254,7 @@ class EditorNode: TreeNode
 		}
 		
 		serializer.Read(Identity);	
-		serializer.Read(Player);
-		serializer.Read(m_Camera);			
+		serializer.Read(Player);			
 		return true;
 	}
 						

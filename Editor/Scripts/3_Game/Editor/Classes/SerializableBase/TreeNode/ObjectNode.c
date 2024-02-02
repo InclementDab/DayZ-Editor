@@ -3,14 +3,13 @@ class ObjectNode: TreeNode
 	static const int VERSION = 1;
 	static ref map<Object, ObjectNode> All = new map<Object, ObjectNode>();
 		
-	protected Object m_Object;
-	protected ObjectNodeFlags m_Flags;
-		
+	protected Object m_Object;		
 	protected ref array<vector> m_Corners = {};
 	protected ref map<ETransformationAxis, ref Plane> m_BoundingBoxSurfaces = new map<ETransformationAxis, ref Plane>();
 	protected ref map<ETransformationAxis, EditorSnapPoint> m_SnapFaces = new map<ETransformationAxis, EditorSnapPoint>();
 	
-	protected ref ObjectNodeView m_ObjectNodeView;
+	protected ref ObjectViewMap m_ObjectViewMap;
+	protected ref ObjectViewWorld m_ObjectViewWorld;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 
@@ -18,9 +17,8 @@ class ObjectNode: TreeNode
 	
 	protected ref GizmoXYZ m_GizmoXYZ;
 	
-	void ObjectNode(string uuid, string display_name, Symbols icon, Object object, int flags = EFE_DEFAULT)
+	void ObjectNode(string uuid, string display_name, Symbols icon, Object object)
 	{
-		m_Flags = flags;
 		m_Object = object;
 		
 		if (!GetGame().IsDedicatedServer() && m_Object) {
@@ -185,8 +183,15 @@ class ObjectNode: TreeNode
 		
 	override TreeView CreateView()
 	{
-		if (Parent.GetUUID() != EditorNode.PLACING && !m_ObjectNodeView) {
-			m_ObjectNodeView = new ObjectNodeView(this);
+		if (Parent.GetUUID() != EditorNode.PLACING) {
+			if (!m_ObjectViewWorld) {
+				m_ObjectViewWorld = new ObjectViewWorld(this);
+			}
+			
+			if (!m_ObjectViewMap) {
+				m_ObjectViewMap = new ObjectViewMap(this);
+				GetEditor().GetHud().GetTemplateController().MapMarkers.Insert(m_ObjectViewMap);
+			}
 		}
 		
 		return super.CreateView();
@@ -211,8 +216,6 @@ class ObjectNode: TreeNode
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		serializer.Write(transform);
-		
-		serializer.Write(m_Flags);
 	}
 	
 	override bool Read(Serializer serializer, int version)
@@ -238,9 +241,7 @@ class ObjectNode: TreeNode
 			}
 		}
 				
-		m_Object.SetTransform(transform);		
-				
-		serializer.Read(m_Flags);
+		m_Object.SetTransform(transform);
 		return true;
 	}
 			
@@ -334,12 +335,6 @@ class ObjectNode: TreeNode
 		} else {
 			m_Object.ClearFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
 		}
-		
-		if (state) {
-			SetFlag(ObjectNodeFlags.HIDDEN);
-		} else {
-			ClearFlag(ObjectNodeFlags.HIDDEN);
-		}
 	}
 	
 	Param2<vector, vector> GetTransformArray() 
@@ -357,22 +352,7 @@ class ObjectNode: TreeNode
 		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
 		return result;
 	}
-			
-	void SetFlag(ObjectNodeFlags flag)
-	{
-		m_Flags |= flag;
-	}
-	
-	void ClearFlag(ObjectNodeFlags flag)
-	{
-		m_Flags &= ~flag;
-	}
-	
-	bool IsFlagEnabled(ObjectNodeFlags flag)
-	{
-		return ((m_Flags & flag) == flag);
-	}
-	
+		
 	override TreeNodeInteract GetInteractType()
 	{		
 		// This is pretty cool. inheritence with KEYBINDS??
@@ -387,20 +367,20 @@ class ObjectNode: TreeNode
 	{
 		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING;
 	}
-	
-	ObjectNodeFlags GetFlags()
-	{
-		return m_Flags;
-	}
-						
+							
 	Object GetObject() 
 	{		
 		return m_Object;
 	}
 	
-	ObjectNodeView GetObjectNodeView()
+	ObjectViewWorld GetObjectViewWorld()
 	{
-		return m_ObjectNodeView;
+		return m_ObjectViewWorld;
+	}
+	
+	ObjectViewMap GetObjectViewMap()
+	{
+		return m_ObjectViewMap;
 	}
 		
 	array<EditorSnapPoint> GetEditorSnapPoints()

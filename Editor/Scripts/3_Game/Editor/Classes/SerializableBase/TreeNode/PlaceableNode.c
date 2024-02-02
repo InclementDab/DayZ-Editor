@@ -1,7 +1,5 @@
 class PlaceableNode: TreeNode
 {
-	protected string m_ObjectUuid;
-	
 	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
 		return false;
@@ -12,32 +10,31 @@ class PlaceableNode: TreeNode
 		super.OnStateChanged(state, total_state);
 	
 		if (state.IsActive()) {	
-			if (total_state.IsActive() && m_ObjectUuid == string.Empty) {
+			if (total_state.IsActive()) {
 				vector matrix[4];
 				Math3D.MatrixIdentity4(matrix);
-				m_ObjectUuid = UUID.Generate();
-				ObjectNode node = new ObjectNode(m_ObjectUuid, m_UUID, GetIcon(), EditorNode.CreateObject(GetUUID(), matrix), EFE_DEFAULT);
+				ObjectNode node = new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), EditorNode.CreateObject(GetUUID(), matrix));
 				GetEditor().GetPlacing().Add(node);
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				ObjectNode object_node = ObjectNode.Cast(GetEditor().GetPlacing()[m_ObjectUuid]);
-				m_ObjectUuid = string.Empty;
-				GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
-				GetEditor().GetPlacingDestination().Add(object_node);
-				GetEditor().GetPlacingDestination().Synchronize();			
-				GetEditor().GetPlacing().Remove(object_node);
-				
-				object_node.AddState(TreeNodeState.ACTIVE);
-				
-				// remove it from placing
-				GetEditor().PlaySound(EditorSounds.PLOP);
-				
-				if (KeyState(KeyCode.KC_LSHIFT)) {
-					AddState(TreeNodeState.ACTIVE);
+				foreach (ObjectNode object_node: GetEditor()[EditorNode.PLACING].Children) {
+					GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
+					GetEditor().GetPlacingDestination().Add(object_node);
+					GetEditor().GetPlacingDestination().Synchronize();			
+					GetEditor().GetPlacing().Remove(object_node);
+					
+					object_node.AddState(TreeNodeState.ACTIVE);
+					
+					// remove it from placing
+					GetEditor().PlaySound(EditorSounds.PLOP);
+					
+					if (KeyState(KeyCode.KC_LSHIFT)) {
+						AddState(TreeNodeState.ACTIVE);
+					}
+					
+					GetUApi().SupressNextFrame(true);
 				}
-				
-				GetUApi().SupressNextFrame(true);
 			}
 		}
 	}

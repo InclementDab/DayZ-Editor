@@ -1,5 +1,7 @@
 class TreeNode: SerializableBase
 {
+	static const ref TreeNode ROOT = new TreeNode("", "", "");
+	
 	static const string PATH_SEPERATOR = "\\";
 	static ref TreeNodeStateMachine StateMachine = new TreeNodeStateMachine();
 		
@@ -22,17 +24,15 @@ class TreeNode: SerializableBase
 		m_DisplayName = display_name;
 		m_Icon = icon;
 
-		StateMachine[m_TreeNodeState].Insert(this);
+		if (StateMachine && StateMachine[m_TreeNodeState]) {
+			StateMachine[m_TreeNodeState].Insert(this);
+		}
 		
+#ifndef SERVER
 		m_Input = GetUApi().GetInputByName(GetInputName());
 		if (m_Input.ID() != -1) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateInputs);
 		}
-		
-#ifndef SERVER
-#ifndef WORKBENCH
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
-#endif
 #endif
 	}
 	
@@ -43,70 +43,11 @@ class TreeNode: SerializableBase
 		}
 		
 		delete View;
-		
-		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {
-			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateInputs);
-			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		}
 	}
 	
-	void Update(float dt)
-	{
-		// Please dont use me much :(
-	}
-	
-	protected void UpdateInputs()
-	{
-		switch (GetInteractType()) {
-			case TreeNodeInteract.ONCE:
-			case TreeNodeInteract.PRESS: {
-				if (m_Input.LocalPress()) {
-					AddState(TreeNodeState.ACTIVE);
-					break;
-				}
-				
-				break;
-			}
+	// Only runs when activated
+	void Update(float dt);
 			
-			case TreeNodeInteract.DOUBLE: {
-				if (m_Input.LocalDoubleClick()) {
-					AddState(TreeNodeState.ACTIVE);
-					break;
-				}
-				
-				break;
-			}
-			
-			case TreeNodeInteract.HOLD: {
-				if (m_Input.LocalHoldBegin()) {
-					AddState(TreeNodeState.ACTIVE);
-					break;
-				}
-				
-				if (m_Input.LocalRelease()) {
-					RemoveState(TreeNodeState.ACTIVE);
-					break;
-				}
-				
-				break;
-			}
-			
-			case TreeNodeInteract.TOGGLE: {
-				if (m_Input.LocalPress()) {
-					if (HasState(TreeNodeState.ACTIVE)) {
-						RemoveState(TreeNodeState.ACTIVE);
-					} else {
-						AddState(TreeNodeState.ACTIVE);
-					}
-					
-					break;
-				}
-				
-				break;
-			}
-		}
-	}
-		
 	void AddState(TreeNodeState state)
 	{
 		//PrintFormat("[%1], AddState=%2, StateMask=%3, Result=%4", m_UUID, typename.EnumToString(TreeNodeState, state), GetStateMask(), state & GetStateMask());
@@ -150,6 +91,13 @@ class TreeNode: SerializableBase
 	
 	void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
+		if (state.IsActive()) {
+			if (total_state.IsActive()) {
+				GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
+			} else {
+				GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+			}
+		}
 	}
 		
 	bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
@@ -205,7 +153,7 @@ class TreeNode: SerializableBase
 #ifndef SERVER
 #ifndef WORKBENCH
 		if (!View) {
-			Print("No view for " + m_UUID);
+			//Print("No view for " + m_UUID);
 		} else {
 			View.AddView(node.CreateView());
 		}
@@ -371,7 +319,6 @@ class TreeNode: SerializableBase
 			
 		int count;
 		serializer.Read(count);
-		//Print(count);
 		for (int i = 0; i < count; i++) {
 			string uuid;
 			serializer.Read(uuid);
@@ -471,6 +418,58 @@ class TreeNode: SerializableBase
 	array<string> GetXorSelections()
 	{
 		return {};
+	}
+	
+	protected void UpdateInputs()
+	{
+		switch (GetInteractType()) {
+			case TreeNodeInteract.ONCE:
+			case TreeNodeInteract.PRESS: {
+				if (m_Input.LocalPress()) {
+					AddState(TreeNodeState.ACTIVE);
+					break;
+				}
+				
+				break;
+			}
+			
+			case TreeNodeInteract.DOUBLE: {
+				if (m_Input.LocalDoubleClick()) {
+					AddState(TreeNodeState.ACTIVE);
+					break;
+				}
+				
+				break;
+			}
+			
+			case TreeNodeInteract.HOLD: {
+				if (m_Input.LocalHoldBegin()) {
+					AddState(TreeNodeState.ACTIVE);
+					break;
+				}
+				
+				if (m_Input.LocalRelease()) {
+					RemoveState(TreeNodeState.ACTIVE);
+					break;
+				}
+				
+				break;
+			}
+			
+			case TreeNodeInteract.TOGGLE: {
+				if (m_Input.LocalPress()) {
+					if (HasState(TreeNodeState.ACTIVE)) {
+						RemoveState(TreeNodeState.ACTIVE);
+					} else {
+						AddState(TreeNodeState.ACTIVE);
+					}
+					
+					break;
+				}
+				
+				break;
+			}
+		}
 	}
 				
 #ifdef DIAG_DEVELOPER
