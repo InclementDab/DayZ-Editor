@@ -6,12 +6,16 @@ modded class DayZGame
 	static const int RPC_REQUEST_SYNC = 54364;
 	static const int RPC_NODE_SYNC = 54365;
 			
+	void DayZGame()
+	{
+		SetMainMenuWorld("ChernarusPlus");
+	}
+	
 	EditorNode GetEditor()
 	{
 #ifdef WORKBENCH
 		return TreeNode.ROOT;
-#endif
-		
+#endif		
 #ifdef SERVER
 		return TreeNode.ROOT;
 #else		
@@ -21,6 +25,11 @@ modded class DayZGame
 			
 	override bool OnInitialize()
 	{
+		// this will never happen, maybe requestexit -1 
+		if (GetLoadState() != DayZLoadState.UNDEFINED) {
+			return false;
+		}
+
 		BiosUserManager manager = GetGame().GetUserManager();
 		if (manager && manager.GetTitleInitiator()) {
 			manager.SelectUserEx(manager.GetTitleInitiator());
@@ -29,8 +38,51 @@ modded class DayZGame
 		if (manager && manager.GetSelectedUser()) {
 			SetPlayerName(manager.GetSelectedUser().GetName());
 		}
+				
+		ParticleList.PreloadParticles();
+		RegisterProfilesOptions();
+
+		InitNotifications();
+		m_Visited = {};
+		GetProfileStringList("SB_Visited", m_Visited);
 		
-		return super.OnInitialize();
+		StartRandomCutscene(GetMainMenuWorld());
+				
+		string address, port, password;
+		if (GetCLIParam("connect", address)) {			
+			GetCLIParam("port", port);	
+			GetCLIParam("password", password);
+								
+			SetGameState(DayZGameState.CONNECTING);
+			SetLoadState(DayZLoadState.CONNECT_START);
+		
+			if (Connect(null, address, port.ToInt(), password)) {
+	            DisconnectSessionScript();
+			} else {
+				AddVisitedServer(address, port.ToInt());
+			}
+			
+			return true;
+		}
+		
+		string mission;
+		if (GetCLIParam("mission", mission)) {			
+			SetGameState(DayZGameState.IN_GAME);
+			SetLoadState(DayZLoadState.MISSION_START);	
+			PlayMission(mission);
+			return true;
+		}
+		
+		string party;
+		if (GetCLIParam("party", party)) {
+			if (manager) {
+				manager.ParsePartyAsync(party);
+			}
+			
+			return true;
+		}
+		
+		return true;
 	}
 	
 	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)

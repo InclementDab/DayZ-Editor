@@ -24,7 +24,6 @@ class CfgEditorScenes
 		{
 			camera_position[]={10474.4, 7.17196, 2299.57};
 			camera_direction[]={0.688174, -0.0973841, 0.71898};
-
 		};
 	};
 };

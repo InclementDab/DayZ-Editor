@@ -104,7 +104,7 @@ class TreeNode: SerializableBase
 		
 	bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
-		list_items.Insert(new TreeView(GetEditor().GetCommand("Rename")));
+		list_items.Insert(new MenuNode(GetEditor().GetCommand("Rename")));
 		return true;
 	}
 			

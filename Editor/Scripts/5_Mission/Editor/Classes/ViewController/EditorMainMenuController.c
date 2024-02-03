@@ -7,7 +7,7 @@ class EditorMainMenuController: ViewController
 	{
 		m_Scene = EditorMainMenuScene.GetRandomEntry(GetGame().GetWorldName());
 		
-		m_Camera = Camera.Cast(GetGame().CreateObject("staticcamera", m_Scene.CameraPosition));
+		m_Camera = Camera.Cast(GetGame().CreateObject("Camera", m_Scene.CameraPosition));
 		m_Camera.SetFOV(m_Scene.CameraFov);
 		m_Camera.SetActive(true);
 		m_Camera.SetDirection(m_Scene.CameraDirection);

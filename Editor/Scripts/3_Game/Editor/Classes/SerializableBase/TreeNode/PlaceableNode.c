@@ -13,12 +13,12 @@ class PlaceableNode: TreeNode
 			if (total_state.IsActive()) {
 				vector matrix[4];
 				Math3D.MatrixIdentity4(matrix);
-				ObjectNode node = new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), EditorNode.CreateObject(GetUUID(), matrix));
-				GetEditor().GetPlacing().Add(node);
+				GetEditor().GetPlacing().Add(new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), EditorNode.CreateObject(GetUUID(), matrix)));
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				foreach (ObjectNode object_node: GetEditor()[EditorNode.PLACING].Children) {
+				foreach (TreeNode node: GetEditor()[EditorNode.PLACING].Children) {
+					ObjectNode object_node = ObjectNode.Cast(node);
 					GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
 					GetEditor().GetPlacingDestination().Add(object_node);
 					GetEditor().GetPlacingDestination().Synchronize();			
