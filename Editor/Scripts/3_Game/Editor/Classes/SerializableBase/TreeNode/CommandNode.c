@@ -3,7 +3,7 @@ class CommandNode: TreeNode
 {
 	override TreeNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.PRESS;
+		return TreeNodeInteract.TOGGLE;
 	}
 	
 	override TreeNodeState GetStateMask()

@@ -6,9 +6,9 @@ class MenuNode: TreeView
 		
 		if (state.IsHover()) {
 			if (node.GetState().IsHover()) {
-				WidgetAnimator.AnimateColor(Panel, EditorColors.SELECT, 1);
+				WidgetAnimator.AnimateColor(Panel, EditorColor.SELECT, 1);
 			} else {
-				WidgetAnimator.AnimateColor(Panel, EditorColors.BACKGROUND_1, 100);
+				WidgetAnimator.AnimateColor(Panel, EditorColor.BACKGROUND_1, 100);
 			}
 		}	
 	}

@@ -5,7 +5,7 @@ class TreeView: NodeView
 	TextWidget Text;
 	EditBoxWidget Edit;
 	
-	Widget Wrapper, Collapse, Children, Outline, Texture, Minimize, Dot, Hide;
+	Widget Wrapper, Collapse, Children, Outline, Texture, Minimize, Hide, Icon;
 	ImageWidget IconImage, CollapseIcon, HideIcon;
 	ButtonWidget CollapseButton, HideButton;
 	
@@ -17,7 +17,7 @@ class TreeView: NodeView
 		SetText(m_Node.GetDisplayName());
 		Hide.Show(m_Node.GetStateMask().IsSuppressed());
 		Collapse.Show(m_Node.GetStateMask().IsExtend());
-		IconImage.Show(m_Node.GetStateMask().IsExtend());
+		Icon.Show(!m_Node.GetStateMask().IsExtend());
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
 	}
@@ -27,11 +27,11 @@ class TreeView: NodeView
 		super.OnStateChanged(node, state);
 		
 		EditorHud hud = m_Node.GetEditor().GetHud();
-		
-		
 		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext() || node.GetState().IsDragging());
 		Outline.SetAlpha(node.GetState().IsHover());
-		Dot.Show(node.GetState().IsFocus());
+		if (node.GetState().IsFocus()) {
+			Text.SetColor(EditorColor.FOCUS_1);
+		}
 		
 		if (!node.GetState().IsDragging()) {
 			m_LayoutRoot.SetPos(0, 0);
@@ -229,7 +229,7 @@ class TreeView: NodeView
 	{
 		switch (w) {
 			case CollapseButton: {
-				WidgetAnimator.AnimateColor(CollapseIcon, EditorColors.SELECT, 100);
+				WidgetAnimator.AnimateColor(CollapseIcon, EditorColor.SELECT, 100);
 				break;
 			}
 			

@@ -1,4 +1,4 @@
-class EditorHud: ScriptViewMenu
+class EditorHud: ScriptView
 {		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
 	static const ref array<string> LEFT_NODES = { EditorNode.PLACEABLES, EditorNode.BRUSHES, EditorNode.DZ, EditorNode.COMMANDS, EditorNode.PLACING };
@@ -104,11 +104,11 @@ class EditorHud: ScriptViewMenu
 					}
 					
 					for (int j = 0; j < m_LassoHistory.Count() - 1; j++) {
-						Whiteboard.DrawLine(m_LassoHistory[j][0], m_LassoHistory[j][1], m_LassoHistory[j + 1][0], m_LassoHistory[j + 1][1], 4, EditorColors.SELECT);
+						Whiteboard.DrawLine(m_LassoHistory[j][0], m_LassoHistory[j][1], m_LassoHistory[j + 1][0], m_LassoHistory[j + 1][1], 4, EditorColor.SELECT);
 					}
 					
 					if (m_LassoHistory.Count() > 2) {
-						Whiteboard.DrawLine(m_LassoHistory[0][0], m_LassoHistory[0][1], m_LassoHistory[m_LassoHistory.Count() - 1][0], m_LassoHistory[m_LassoHistory.Count() - 1][1], 4, EditorColors.SELECT & 0xA0FFFFFF);
+						Whiteboard.DrawLine(m_LassoHistory[0][0], m_LassoHistory[0][1], m_LassoHistory[m_LassoHistory.Count() - 1][0], m_LassoHistory[m_LassoHistory.Count() - 1][1], 4, EditorColor.SELECT & 0xA0FFFFFF);
 					}
 					
 					break;
@@ -228,11 +228,11 @@ class EditorHud: ScriptViewMenu
 			}
 			
 			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + top_height));
-			m_DraggedBar.GetChildren().SetColor(EditorColors.SELECT);
+			m_DraggedBar.GetChildren().SetColor(EditorColor.SELECT);
 		}
 		
 		if (input.LocalValue_ID(UAUIBack)) {
-			EnterChildMenu(MENU_INGAME);
+			//EnterChildMenu(MENU_INGAME);
 		}
 	}
 	

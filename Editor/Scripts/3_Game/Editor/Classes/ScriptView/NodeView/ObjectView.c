@@ -25,7 +25,7 @@ class ObjectView: NodeView
 		Outline.SetAlpha(state.IsHover());
 				
 		if (node.GetState().IsDragging() || node.GetState().IsActive()) {			
-			Outline.SetColor(EditorColors.SELECT);
+			Outline.SetColor(EditorColor.SELECT);
 		} else {
 			Outline.SetColor(ARGB(150, 255, 255, 255));
 		}
