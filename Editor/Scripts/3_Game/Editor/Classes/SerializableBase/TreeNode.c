@@ -1,5 +1,5 @@
 class DefaultNode: AttributeBase
-{
+{	
 	void DefaultNode(string display_name, Symbols symbol = string.Empty)
 	{
 		TreeNode.ROOT.Add(new TreeNode(Field.DefaultValue, display_name, symbol));
@@ -8,6 +8,7 @@ class DefaultNode: AttributeBase
 
 class TreeNode: SerializableBase
 {
+	static const string PATH_SEPERATOR = "\\";
 	static const ref TreeNode ROOT = new TreeNode(string.Empty, string.Empty, string.Empty);
 	
 	[DefaultNode("Mission")]
@@ -15,8 +16,6 @@ class TreeNode: SerializableBase
 	
 	[DefaultNode("Editors")]
 	static const string EDITORS = "Editors";
-	
-	static const string PATH_SEPERATOR = "\\";
 	
 	static ref TreeNodeStateMachine StateMachine = new TreeNodeStateMachine();
 		
@@ -38,11 +37,11 @@ class TreeNode: SerializableBase
 		m_UUID = uuid;
 		m_DisplayName = display_name;
 		m_Icon = icon;
-
+		
 		if (StateMachine && StateMachine[m_TreeNodeState]) {
 			StateMachine[m_TreeNodeState].Insert(this);
 		}
-		
+					
 #ifndef SERVER
 #ifndef WORKBENCH
 		m_Input = GetUApi().GetInputByName(GetInputName());
@@ -163,11 +162,28 @@ class TreeNode: SerializableBase
 	}
 	
 	void Set(string uuid, TreeNode node)
-	{
-		TreeNode former_parent = node.Parent;
+	{	
+		TreeNode context = this;
+		if (uuid.Contains("\\")) {
+			array<string> uuid_split = {};
+			uuid.Split("\\", uuid_split);
+			if (uuid_split[0] != m_UUID) {
+				Error("Attempting to set sub-children with invalid root. Did not match uuid");
+			}
+			
+			for (int i = 1; i < uuid_split.Count() - 1; i++) {				
+				if (!context.Children[uuid_split[i]]) {
+					context.Debug(0);
+					Error(string.Format("Invalid tree %1: token=%2", uuid, uuid_split[i]));
+					return;
+				}
+				
+				context = context.Children[uuid_split[i]];
+			}
+		}
 		
-		Children[uuid] = node;
-		node.Parent = this;
+		context.Children[uuid] = node;
+		node.Parent = context;
 		
 #ifndef SERVER
 #ifndef WORKBENCH
