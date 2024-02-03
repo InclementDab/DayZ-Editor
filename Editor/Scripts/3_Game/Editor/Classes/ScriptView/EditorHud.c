@@ -62,7 +62,7 @@ class EditorHud: ScriptView
 			m_TemplateController.RightListItems.Insert(editor[right].CreateView());
 		}
 		
-		m_TemplateController.RightListItems.Insert(TreeNode.ROOT[TreeNode.MISSION].CreateView());
+		m_TemplateController.RightListItems.Insert(TreeNode.ROOT[RootNode.MISSION].CreateView());
 	}
 	
 	void ~EditorHud()
@@ -427,7 +427,7 @@ class EditorHud: ScriptView
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(HideNotification);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(HideNotification, 1000 * duration);
 		
-		GetDayZGame().GetEditor().PlaySound("Lock_SoundSet");
+		m_Editor.PlaySound("Lock_SoundSet");
 	}
 	
 	void HideNotification()

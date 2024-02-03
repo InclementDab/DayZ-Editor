@@ -2,7 +2,7 @@ class LayerNode: TreeNode
 {
 	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
-		EditorNode editor = GetDayZGame().GetEditor();
+		EditorNode editor = GetEditor();
 		list_items.Insert(new MenuNode(editor.GetCommand("Cut")));
 		list_items.Insert(new MenuNode(editor.GetCommand("Copy")));
 		list_items.Insert(new MenuNode(editor.GetCommand("Paste")));

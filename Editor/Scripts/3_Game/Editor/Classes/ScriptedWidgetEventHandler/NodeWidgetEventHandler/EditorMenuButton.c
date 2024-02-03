@@ -2,7 +2,7 @@ class EditorMenuButton: NodeWidgetEventHandler
 {
 	override void OnStateChanged(TreeNode node, TreeNodeState state)
 	{
-		EditorHud hud = GetDayZGame().GetEditor().GetHud();
+		EditorHud hud = node.GetEditor().GetHud();
 		hud.Menu.Show(false);
 		hud.GetTemplateController().MenuItems.Clear();
 		

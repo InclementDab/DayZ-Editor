@@ -35,8 +35,8 @@ class EditorNode: TreeNode
 		static const string BRUSHED = "Brushed";
 		static const string HIDDEN = "Hidden";
 	
-	static const string COMMANDS = "Commands";
-		static const string TOOLS = "Tools";
+
+	static const string TOOLS = "Tools";
 	
 	static const string MENUS = "Menus";
 	static const string HISTORY = "UndoRedo";
@@ -50,7 +50,6 @@ class EditorNode: TreeNode
 	{				
 		// Load all default categories and placements
 		Add(new TreeNode(LAYERS, "Layers", Symbols.LAYER_GROUP));
-		Add(new TreeNode(COMMANDS, "Commands", Symbols.COMMAND));
 		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
 		Add(new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST));
 		Add(new TreeNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT));
@@ -59,44 +58,12 @@ class EditorNode: TreeNode
 		Add(new TreeNode(PLACING, "Placing", Symbols.FIREPLACE));
 		Add(new TreeNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));			
 		
-		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
-		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
-		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty));
-		this[COMMANDS].Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT));
-		this[COMMANDS].Add(new PianoCommand("Piano", "Drop Piano", Symbols.PIANO));
-		this[COMMANDS].Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED));
-		this[COMMANDS].Add(new CommandNode("Camera", "Camera", Symbols.CAMERA));
-		this[COMMANDS].Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED));
-		this[COMMANDS].Add(new CommandNode("Copy", "Copy", Symbols.COPY));
-		this[COMMANDS].Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS));
-		this[COMMANDS].Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH));
-		this[COMMANDS].Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
-		this[COMMANDS].Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO));
-		this[COMMANDS].Add(new CommandNode("Lock", "Lock", Symbols.LOCK));
-		this[COMMANDS].Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET));
-		this[COMMANDS].Add(new CommandNode("New", "New", Symbols.FILE));
-		this[COMMANDS].Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN));
-		this[COMMANDS].Add(new CommandNode("Paste", "Paste", Symbols.PASTE));
-		this[COMMANDS].Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT));
-		this[COMMANDS].Add(new RenameCommand("Rename", "Rename", string.Empty));
-		this[COMMANDS].Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN));
-		this[COMMANDS].Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK));
-		this[COMMANDS].Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK));
-		this[COMMANDS].Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT));
-		this[COMMANDS].Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN));
-		this[COMMANDS].Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
-		this[COMMANDS].Add(new CursorToggle("Cursor", "Toggle Cursor", Symbols.ARROW_POINTER));
-		this[COMMANDS].Add(new HudToggle("Hud", "Toggle Hud", Symbols.EYE));
-		this[COMMANDS].Add(new MapToggle("Map", "Toggle Map", Symbols.MAP));
-		this[COMMANDS].Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT));
-		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
-		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Symbols.XBOX));
-				
 		this[LAYERS].Add(new TreeNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
 		this[LAYERS].Add(new TreeNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
 		// default layer for now
 		this[LAYERS].AddState(TreeNodeState.ACTIVE);
 		
+		/*
 		this[COMMANDS].Add(new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX));
 		this[COMMANDS][TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
 		this[COMMANDS][TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
@@ -106,11 +73,11 @@ class EditorNode: TreeNode
 		this[MENUS].Add(new CommandNode("Edit", "Edit", Symbols.FILE_PEN));
 		this[MENUS].Add(new CommandNode("View", "View", Symbols.BINOCULARS));
 		this[MENUS].Add(new CommandNode("Mission", "Mission", Symbols.PERSON_RIFLE));
-		this[MENUS]["File"].Add(this[COMMANDS]["New"]);
-		this[MENUS]["File"].Add(this[COMMANDS]["Open"]);
-		this[MENUS]["File"].Add(this[COMMANDS]["Save"]);
-		this[MENUS]["File"].Add(this[COMMANDS]["SaveAs"]);
-		
+		this[MENUS]["File"].Add(TreeNode.ROOT[COMMANDS]["New"]);
+		this[MENUS]["File"].Add(TreeNode.ROOT[COMMANDS]["Open"]);
+		this[MENUS]["File"].Add(TreeNode.ROOT[COMMANDS]["Save"]);
+		this[MENUS]["File"].Add(TreeNode.ROOT[COMMANDS]["SaveAs"]);
+		*/
 		this[PLACEABLES].Add(new TreeNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
 		this[PLACEABLES].Add(new TreeNode("Plants", "Plants", Symbols.TREE));
 		this[PLACEABLES].Add(new TreeNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
@@ -126,7 +93,7 @@ class EditorNode: TreeNode
 		
 		this[BRUSHES].Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		this[BRUSHES].Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
-		this[BRUSHES].Add(this[COMMANDS]["Piano"]);
+		//this[BRUSHES].Add(this[COMMANDS]["Piano"]);
 
 #ifndef SERVER
 #ifndef WORKBENCH
@@ -500,12 +467,12 @@ class EditorNode: TreeNode
 	
 	TreeNode GetCommands()
 	{
-		return this[COMMANDS];
+		return TreeNode.ROOT[RootNode.COMMANDS];
 	}
 	
 	CommandNode GetCommand(string command)
 	{
-		return CommandNode.Cast(this[COMMANDS][command]);
+		return CommandNode.Cast(this[RootNode.COMMANDS][command]);
 	}
 	
 	TreeNode GetUndoRedo()

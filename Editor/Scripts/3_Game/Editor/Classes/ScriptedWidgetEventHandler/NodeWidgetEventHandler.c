@@ -9,7 +9,6 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	ButtonWidget Button;
 	ImageWidget Icon;
 	
-	
 	void OnWidgetScriptInit(Widget w)
 	{
 		m_LayoutRoot = w;
@@ -25,7 +24,9 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
 		if (Node != string.Empty) {
-			m_Node = GetDayZGame().GetEditor().Get(Node);
+			Print(Node);
+			m_Node = TreeNode.ROOT[Node];
+			Print(m_Node);
 			if (m_Node) {
 				if (Button) {
 					Button.SetHandler(this);

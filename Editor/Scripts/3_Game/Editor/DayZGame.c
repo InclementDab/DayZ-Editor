@@ -10,25 +10,13 @@ modded class DayZGame
 	{
 		SetMainMenuWorld("ChernarusPlus");
 	}
-	
-	EditorNode GetEditor()
-	{
-#ifdef WORKBENCH
-		return TreeNode.ROOT;
-#endif		
-#ifdef SERVER
-		return TreeNode.ROOT;
-#else		
-		return EditorNode.Cast(TreeNode.ROOT.Children[GetUserManager().GetTitleInitiator().GetUid()]);
-#endif
-	}
-	
+		
 	override void SetMissionPath(string path)
 	{
 		super.SetMissionPath(path);
 		
 		path.Replace("\\mission.c", "");
-		TreeNode.ROOT[TreeNode.MISSION].Add(new FileNode(Directory.MISSION, path, Symbols.MOUNTAIN));
+		TreeNode.ROOT[RootNode.MISSION].Add(new FileNode(Directory.MISSION, path, Symbols.MOUNTAIN));
 		TreeNode.ROOT.Synchronize();
 	}
 			
