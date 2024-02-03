@@ -3,11 +3,16 @@ class ObjectViewWorld: ObjectView
 	override void Update(float dt)
 	{
 		vector base_position = m_ObjectNode.GetBasePoint();
-		
-		Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
+						
+		float distance = vector.Distance(m_ObjectNode.GetEditor().GetCamera().GetPosition(), base_position);
 				
 		// Dragging
-		if (m_ObjectNode.HasState(TreeNodeState.DRAGGING) && raycast) {
+		if (m_ObjectNode.HasState(TreeNodeState.DRAGGING)) {
+			
+			Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
+			if (!raycast) {
+				return;
+			}
 			//raycast.Debug();
 			//Shape.CreateArrow(m_StartPosition.Bounce.Position, raycast.Bounce.Position, 1, COLOR_BLACK, ShapeFlags.ONCE);
 			

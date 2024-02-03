@@ -9,6 +9,14 @@
 
 class EditorNode: TreeNode
 {	
+	void LegacyLoad(notnull EditorSaveData save_data)
+	{
+		m_Camera.SetPosition(save_data.CameraPosition);
+		foreach (EditorObjectData data: save_data.EditorObjects) {
+			GetPlacingDestination().Add(data.CovertToNode());
+		}
+	}
+	
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	
 	PlayerIdentity Identity;
@@ -368,30 +376,7 @@ class EditorNode: TreeNode
 		
 		return GetNode(EditorNode.LAYERS);
 	}
-	
-    static float GetSolarDeclination(DateTime date) 
-	{			
-		DateTime delta = (date - DateTime.Create(date.GetYear(), 1, 1));
-        int day_of_year = DateTime.GetDays(delta.GetYear(), delta.GetMonth(), delta.GetDay()) + 1;
-        float declination = 23.45 * Math.Sin(Math.DEG2RAD * (360 * (day_of_year + 10) / 365));
-        return declination;
-	}
-	
-	DateTime SunniestDay(int year, float lattitude)
-	{
-		DateTime solstice_date = DateTime.Create(year, 6, 21);
-        float declination = GetSolarDeclination(solstice_date);
-
-        for (int i = -10; i < 11; i++) {
-            if ((GetSolarDeclination(solstice_date + DateTime.Create(i, 0, 0))) > declination) {
-                declination = GetSolarDeclination(solstice_date + DateTime.Create(i, 0, 0));
-                solstice_date = solstice_date + DateTime.Create(i, 0, 0);
-			}
-		}
-		
-        return solstice_date;
-	}
-			
+				
 	static Man CreateDefaultCharacter(string type, vector position)
 	{
 		if (GetGame().GetPlayer()) {

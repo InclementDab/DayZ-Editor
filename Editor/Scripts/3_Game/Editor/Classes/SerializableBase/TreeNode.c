@@ -140,12 +140,14 @@ class TreeNode: SerializableBase
 		return node != null;
 	}
 			
-	void Add(notnull TreeNode node)
+	void Add(TreeNode node)
 	{
-		Set(node.GetUUID(), node);
+		if (node) {
+			Set(node.GetUUID(), node);
+		}
 	}
 	
-	void Set(string uuid, notnull TreeNode node)
+	void Set(string uuid, TreeNode node)
 	{
 		TreeNode former_parent = node.Parent;
 		

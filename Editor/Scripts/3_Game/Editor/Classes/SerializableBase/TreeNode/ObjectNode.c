@@ -255,12 +255,12 @@ class ObjectNode: TreeNode
 		
 		if (state.IsHover() || state.IsActive()) {
 			if (total_state.IsHover() || total_state.IsActive()) {
-				//EditorBoundingBox.Create(m_Object);
+				EditorBoundingBox.Create(m_Object);
 				
 			}
 			
 			if (!total_state.IsHover() && !total_state.IsActive()) {
-				//EditorBoundingBox.Destroy(m_Object);
+				EditorBoundingBox.Destroy(m_Object);
 			}
 		}
 			

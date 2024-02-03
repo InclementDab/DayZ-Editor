@@ -15,15 +15,15 @@ class CfgEditorScenes
 	{
 		class Scene_Base
 		{
-			camera_position[]={217.75,8.20714,32.066399};
-			camera_direction[]={-0.60751998,0,0};
-			camera_fov=0.2;
+			camera_position[]={0, 0, 0};
+			camera_direction[]={0, 0, 0};
+			camera_fov=1.0;
 		};
 
 		class Settlement_Elektrozavodsk: Scene_Base
 		{
-			camera_position[]={10474.4, 7.17196, 2299.57};
-			camera_direction[]={0.688174, -0.0973841, 0.71898};
+			camera_position[]={10475.2, 10.8892, 2303.71};
+			camera_direction[]={0.635631, -0.110866, 0.763991};
 		};
 	};
 };

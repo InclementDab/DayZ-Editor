@@ -17,7 +17,7 @@ class EditorMainMenuScene: Managed
 		string root = string.Format("CfgEditorScenes %1", world_name);		
 		string child_name;
 		GetGame().ConfigGetChildName(root, index, child_name);
-		
+		Print(child_name);
 		string scene_name = string.Format("%1 %2", root, child_name);
 		scene.CameraPosition = GetGame().ConfigGetVector(scene_name + " camera_position");		
 		scene.CameraDirection = GetGame().ConfigGetVector(scene_name + " camera_direction");

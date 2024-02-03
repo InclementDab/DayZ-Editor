@@ -77,14 +77,6 @@ class Plane: Managed
 		vector p[2] = { Corner[0].Multiply4(mat), Corner[1].Multiply4(mat) };
 		Shape.CreateLines(COLOR_WHITE, ShapeFlags.ONCE, p, 2);
 		
-		
-		if (_debug) {
-			_debug.Delete();
-		}
-		
-		//_debug = GetGame().CreateObjectEx("jdTestBox1", plane_matrix[3], ECE_LOCAL);
-		
-		
 		Shape bbox = Shape.Create(ShapeType.BBOX, COLOR_RED_A, ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.ADDITIVE, Corner[0], Corner[1]);
 		bbox.SetMatrix(mat);
 		
