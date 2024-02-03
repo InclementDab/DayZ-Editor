@@ -19,8 +19,6 @@ class GizmoXYZ: ScriptView
 		m_ObjectNode.GetEditor().GetCamera().GetTransform(camera_transform);
 		
 		Shape.CreateMatrix(gizmo_transform);
-		
-		return;
 							
 		float distance_to_target = vector.Distance(gizmo_transform[3], gizmo_transform[0].Multiply4(gizmo_transform[3]));								
 		float x, y;

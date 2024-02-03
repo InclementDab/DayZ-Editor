@@ -1,4 +1,4 @@
-PanelWidgetClass Root {
+PanelWidgetClass Panel {
  visible 1
  ignorepointer 0
  position 0 0

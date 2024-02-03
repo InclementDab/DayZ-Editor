@@ -15,6 +15,8 @@ class EditorNode: TreeNode
 	PlayerIdentity Identity;
 	DayZPlayer Player;
 	DateTime Date = DateTime.Now(false);
+	// this isnt 'const' because climate change exists in DayZ
+	int Climate = ARGB(0 /* todo, low-precision forecast? */, GetGame().GetWeather().GetFog().GetActual() * 255, GetGame().GetWeather().GetRain().GetActual(), GetGame().GetWeather().GetOvercast().GetActual());
 	
 	protected EditorCamera m_Camera;
 	protected ref EditorHud	m_Hud;
@@ -200,6 +202,12 @@ class EditorNode: TreeNode
 		super.Update(dt);
 		
 		GetDayZGame().SetDate(Date);
+		
+		int _, f, r, o;
+		InverseARGB(Climate, _, f, r, o);
+		GetGame().GetWeather().GetFog().Set(f);
+		GetGame().GetWeather().GetRain().Set(r);
+		GetGame().GetWeather().GetOvercast().Set(o);
 	}
 	
 	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)

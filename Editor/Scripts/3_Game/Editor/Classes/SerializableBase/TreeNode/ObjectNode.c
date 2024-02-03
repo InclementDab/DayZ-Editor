@@ -51,6 +51,7 @@ class ObjectNode: TreeNode
 		vector transform[4];
 		m_Object.GetTransform(transform);
 				
+		return;
 		if (HasState(TreeNodeState.ACTIVE | TreeNodeState.HOVER)) {
 			for (int i = 0; i < 6; i++) {
 				// Debug
