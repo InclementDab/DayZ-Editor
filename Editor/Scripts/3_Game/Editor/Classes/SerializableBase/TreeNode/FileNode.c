@@ -42,7 +42,7 @@ class FileNode: TreeNode
 		
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.ACTIVE | TreeNodeState.HOVER;
+		return TreeNodeState.ACTIVE | TreeNodeState.HOVER | TreeNodeState.EXTEND;
 	}
 	
 	override TreeNodeInteract GetInteractType()

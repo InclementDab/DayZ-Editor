@@ -110,7 +110,7 @@ class TreeView: NodeView
 			}
 		}
 		
-		if (state.IsExtend()) {			
+		if (state.IsExtend()) {
 			Children.Show(node.GetState().IsExtend());
 			Children.Update(); //! importante
 			

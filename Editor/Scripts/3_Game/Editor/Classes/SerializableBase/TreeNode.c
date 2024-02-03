@@ -1,8 +1,23 @@
+class DefaultNode: AttributeBase
+{
+	void DefaultNode(string display_name, Symbols symbol = string.Empty)
+	{
+		TreeNode.ROOT.Add(new TreeNode(Field.DefaultValue, display_name, symbol));
+	}
+}
+
 class TreeNode: SerializableBase
 {
-	static const ref TreeNode ROOT = new TreeNode("", "", "");
+	static const ref TreeNode ROOT = new TreeNode(string.Empty, string.Empty, string.Empty);
+	
+	[DefaultNode("Mission")]
+	static const string MISSION = "Mission";
+	
+	[DefaultNode("Editors")]
+	static const string EDITORS = "Editors";
 	
 	static const string PATH_SEPERATOR = "\\";
+	
 	static ref TreeNodeStateMachine StateMachine = new TreeNodeStateMachine();
 		
 	protected string m_UUID;
@@ -193,11 +208,6 @@ class TreeNode: SerializableBase
 		
 		return node;
 	}
-
-	TreeNode GetNode(string uuid)
-	{
-		return this[uuid];
-	}
 	
 	TreeView CreateView()
 	{		
@@ -218,7 +228,7 @@ class TreeNode: SerializableBase
 		return ctx;
 	}
 	
-	// {uuid}{PATH_SEPERATOR}{uuid}
+	// {uuid}\\{uuid}
 	string GetFullPath()
 	{
 		string full_path;
@@ -376,7 +386,7 @@ class TreeNode: SerializableBase
 		
 	TreeNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.NONE;
+		return TreeNodeInteract.PRESS;
 	}
 	
 	bool HasState(TreeNodeState state)
@@ -480,7 +490,7 @@ class TreeNode: SerializableBase
 			tabs += "\t";
 		}
 		
-		PrintFormat("[%4]%3[%1] %2: State:%3", m_UUID, m_DisplayName, tabs, depth, m_TreeNodeState);
+		PrintFormat("%4:%3[%1] %2: State:%4", m_UUID, m_DisplayName, tabs, depth, m_TreeNodeState);
 		
 		foreach (string uuid, TreeNode node: Children) {
 			node.Debug(depth + 1);

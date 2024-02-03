@@ -61,6 +61,8 @@ class EditorHud: ScriptView
 		foreach (string right: RIGHT_NODES) {
 			m_TemplateController.RightListItems.Insert(editor[right].CreateView());
 		}
+		
+		m_TemplateController.RightListItems.Insert(TreeNode.ROOT[TreeNode.MISSION].CreateView());
 	}
 	
 	void ~EditorHud()

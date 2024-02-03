@@ -45,9 +45,7 @@ class EditorNode: TreeNode
 	static const string BRUSHES = "Brushes";
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
-	
-	static const string EDITORS = "Editors";
-	
+		
 	void EditorNode(string uuid, string display_name, Symbols icon) 
 	{				
 		// Load all default categories and placements
@@ -59,8 +57,7 @@ class EditorNode: TreeNode
 		Add(new TreeNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK));
 		Add(new TreeNode(BRUSHES, "Brushes", Symbols.BRUSH));
 		Add(new TreeNode(PLACING, "Placing", Symbols.FIREPLACE));
-		Add(new TreeNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));		
-		Add(new TreeNode(EDITORS, "Editors", Symbols.PEOPLE));		
+		Add(new TreeNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));			
 		
 		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
 		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
@@ -131,6 +128,8 @@ class EditorNode: TreeNode
 		this[BRUSHES].Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		this[BRUSHES].Add(this[COMMANDS]["Piano"]);
 
+#ifndef SERVER
+#ifndef WORKBENCH
 		float t = GetGame().GetTime();
 		for (int j = 0; j < 50; j++) {
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
@@ -155,8 +154,6 @@ class EditorNode: TreeNode
 		Print(string.Format("%1 nodes/second", (float)j / ((float)GetGame().GetTime() - t) * 1000.0 ));
 		
 		// handle config objects
-#ifndef SERVER
-#ifndef WORKBENCH
 		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
 		string category = "Unknown";
 		foreach (string path: config_paths) {
@@ -374,7 +371,7 @@ class EditorNode: TreeNode
 			}
 		}
 		
-		return GetNode(EditorNode.LAYERS);
+		return Get(EditorNode.LAYERS);
 	}
 				
 	static Man CreateDefaultCharacter(string type, vector position)

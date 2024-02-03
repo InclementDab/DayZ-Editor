@@ -25,7 +25,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
 		if (Node != string.Empty) {
-			m_Node = GetDayZGame().GetEditor().GetNode(Node);
+			m_Node = GetDayZGame().GetEditor().Get(Node);
 			if (m_Node) {
 				if (Button) {
 					Button.SetHandler(this);

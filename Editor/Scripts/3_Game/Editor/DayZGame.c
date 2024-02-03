@@ -22,6 +22,15 @@ modded class DayZGame
 		return EditorNode.Cast(TreeNode.ROOT.Children[GetUserManager().GetTitleInitiator().GetUid()]);
 #endif
 	}
+	
+	override void SetMissionPath(string path)
+	{
+		super.SetMissionPath(path);
+		
+		path.Replace("\\mission.c", "");
+		TreeNode.ROOT[TreeNode.MISSION].Add(new FileNode(Directory.MISSION, path, Symbols.MOUNTAIN));
+		TreeNode.ROOT.Synchronize();
+	}
 			
 	override bool OnInitialize()
 	{
@@ -157,12 +166,12 @@ modded class DayZGame
 	void Recompile()
 	{
 		PlayerIdentity identity = GetPlayer().GetIdentity();
-		delete TreeNode.ROOT[identity.GetPlainId()];
+		delete TreeNode.ROOT[TreeNode.EDITORS][identity.GetPlainId()];
 		
 		EditorNode editor = new EditorNode(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular());
 		editor.Identity = identity;
 		editor.Player = GetPlayer();
-		TreeNode.ROOT[identity.GetPlainId()] = editor;
+		TreeNode.ROOT[TreeNode.EDITORS][identity.GetPlainId()] = editor;
 		
 		editor.OnSynchronized();
 	}
