@@ -10,7 +10,6 @@
 class EditorNode: TreeNode
 {	
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
-	static const int DEFAULT_ENTITY_COUNT = 512;
 	
 	PlayerIdentity Identity;
 	DayZPlayer Player;
@@ -123,6 +122,29 @@ class EditorNode: TreeNode
 		this[BRUSHES].Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		this[BRUSHES].Add(this[COMMANDS]["Piano"]);
 
+		float t = GetGame().GetTime();
+		for (int j = 0; j < 50; j++) {
+			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
+			foreach (string p3d: p3d_files) {
+				TreeNode current = this;
+				array<string> p3d_split = {};
+				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
+				for (int k = 0; k < p3d_split.Count() - 1; k++) {
+					if (!current[p3d_split[k]]) {
+						current[p3d_split[k]] = new TreeNode(p3d_split[k], p3d_split[k], Symbols.FOLDER);
+					}
+					
+					//Print(string.Format("%1:%2", current.GetUUID(), p3d_split[k]));
+					current = current[p3d_split[k]];
+				}
+				
+				//PrintFormat("[%1] registering as %2", p3d, p3d_split[p3d_split.Count() - 1]);
+				current[p3d_split[p3d_split.Count() - 1]] = new PlaceableNode(p3d, p3d_split[p3d_split.Count() - 1], Symbols.TRIANGLE);
+			}
+		}
+		
+		Print(string.Format("%1 nodes/second", (float)j / ((float)GetGame().GetTime() - t) * 1000.0 ));
+		
 		// handle config objects
 #ifndef SERVER
 #ifndef WORKBENCH
@@ -152,32 +174,11 @@ class EditorNode: TreeNode
 					category = "Vehicles";
 				} else if (full_path.Find("Man") != -1 || (full_path.Find("DZ_LightAI"))) {
 					category = "AI";
+					continue; // for now, king
 				}
 				
 				this[PLACEABLES][category].Add(new PlaceableNode(type, type, this[PLACEABLES][category].GetIcon()));
 		    }
-		}
-		//473
-		for (int j = 0; j < 5; j++) {
-			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
-			foreach (string p3d: p3d_files) {
-				TreeNode current = this;
-				array<string> p3d_split = {};
-				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
-				for (int k = 0; k < p3d_split.Count() - 1; k++) {
-					Print(p3d_split[k]);
-					if (!current[p3d_split[k]]) {
-						current[p3d_split[k]] = new TreeNode(p3d_split[k], p3d_split[k], Symbols.FOLDER);
-					}
-					
-					current = current[p3d_split[k]];
-				}
-				
-				//Print(current);
-				//Print(p3d);
-				//Print(p3d_split[p3d_split.Count() - 1]);
-				current[p3d_split[p3d_split.Count() - 1]] = new PlaceableNode(p3d, p3d_split[p3d_split.Count() - 1], Symbols.TRIANGLE);
-			}
 		}
 		
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {

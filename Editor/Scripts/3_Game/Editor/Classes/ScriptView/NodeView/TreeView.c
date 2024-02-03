@@ -16,6 +16,7 @@ class TreeView: NodeView
 		m_TemplateController = TreeViewController.Cast(m_Controller);		
 		SetText(m_Node.GetDisplayName());
 		Hide.Show(m_Node.GetStateMask().IsSuppressed());
+		Collapse.Show(m_Node.GetStateMask().IsExtend());
 		
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
@@ -26,6 +27,8 @@ class TreeView: NodeView
 		super.OnStateChanged(node, state);
 		
 		EditorHud hud = m_Node.GetEditor().GetHud();
+		
+		
 		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext() || node.GetState().IsDragging());
 		Outline.SetAlpha(node.GetState().IsHover());
 		Dot.Show(node.GetState().IsFocus());
@@ -100,6 +103,23 @@ class TreeView: NodeView
 				hud.Menu.Show(false);
 			}
 		}
+		
+		if (state.IsExtend()) {			
+			Children.Show(node.GetState().IsExtend());
+			Children.Update(); //! importante
+			
+			Minimize.Show(node.GetState().IsExtend());
+			
+			CollapseIcon.LoadImageFile(0, Ternary<string>.If(!node.GetState().IsExtend(), Symbols.CIRCLE_PLUS.Regular(), Symbols.CIRCLE_MINUS.Regular()));
+			CollapseIcon.SetImage(0);
+			
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);
+						
+			// you only want to open upper containers when lower ones are opened. propagate up /\
+			if (m_Node.Parent && m_Node.Parent.View) {
+				m_Node.Parent.AddState(TreeNodeState.EXTEND);
+			}
+		}
 	}
 	
 	void AddView(notnull TreeView view)
@@ -116,24 +136,7 @@ class TreeView: NodeView
 		Text.GetScreenSize(w, h);		
 		Panel.SetScreenSize(w, h);
 	}
-		
-	void ShowChildren(bool state)
-	{		
-		Children.Show(state);
-		Children.Update(); //! importante
-		
-		CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, Symbols.CIRCLE_PLUS.Regular(), Symbols.CIRCLE_MINUS.Regular()));
-		CollapseIcon.SetImage(0);
-		Minimize.Show(state);
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);
-				
-		// you only want to open upper containers when lower ones are opened. propagate up /\
-		if (m_Node.Parent && m_Node.Parent.View) {
-			m_Node.Parent.View.ShowChildren(true);
-		}
-	}
-	
+			
 	void RecalculateSize()
 	{
 		float w, h, x, y;
@@ -188,7 +191,12 @@ class TreeView: NodeView
 		
 		switch (w) {
 			case CollapseButton: {
-				ShowChildren(!Children.IsVisible());
+				if (m_Node.HasState(TreeNodeState.EXTEND)) {
+					m_Node.RemoveState(TreeNodeState.EXTEND);
+				} else {
+					m_Node.AddState(TreeNodeState.EXTEND);
+				}
+
 				return true;
 			}
 			

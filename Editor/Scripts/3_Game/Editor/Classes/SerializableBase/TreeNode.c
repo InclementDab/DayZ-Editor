@@ -157,10 +157,6 @@ class TreeNode: SerializableBase
 		} else {
 			View.AddView(node.CreateView());
 		}
-		
-		if (former_parent && former_parent.View) {
-			former_parent.View.RecalculateSize();
-		}
 #endif
 #endif
 	}
@@ -371,7 +367,7 @@ class TreeNode: SerializableBase
 	// Override to enable different states
 	TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.EMPTY;
+		return TreeNodeState.EXTEND; // because everyone can have kids. collapse can auto hide
 	}
 		
 	TreeNodeInteract GetInteractType()

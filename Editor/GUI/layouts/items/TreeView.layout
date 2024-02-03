@@ -30,7 +30,9 @@ FrameWidgetClass Root {
    {
     FrameWidgetClass Collapse {
      visible 0
-     ignorepointer 0
+     disabled 0
+     inheritalpha 0
+     ignorepointer 1
      position 7 0
      size 30 30
      hexactpos 1

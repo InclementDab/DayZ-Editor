@@ -14,15 +14,6 @@ class FolderNode: TreeNode
 		return true;
 	}
 	
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
-	{
-		super.OnStateChanged(state, total_state);
-		
-		if (state.IsActive() && View) {
-			View.ShowChildren(total_state.IsActive());
-		}
-	}
-	
 	override TreeNodeInteract GetInteractType()
 	{
 		return TreeNodeInteract.DOUBLE;
@@ -35,6 +26,6 @@ class FolderNode: TreeNode
 		
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING | TreeNodeState.FOCUS;
+		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING | TreeNodeState.FOCUS | TreeNodeState.EXTEND;
 	}
 }

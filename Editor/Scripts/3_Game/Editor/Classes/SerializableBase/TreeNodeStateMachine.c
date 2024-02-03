@@ -27,7 +27,7 @@ class TreeNodeState: int
 	static const int DRAGGING = 0x08;
 	static const int FOCUS = 0x10;
 	static const int SUPPRESSED = 0x20;
-	//static const int FOCUS = 0x40;
+	static const int EXTEND = 0x40;
 		
 	bool IsEmpty()
 	{
@@ -63,6 +63,11 @@ class TreeNodeState: int
 	{
 		return (value & SUPPRESSED) == SUPPRESSED;
 	}
+	
+	bool IsExtend()
+	{
+		return (value & EXTEND) == EXTEND;
+	}
 }
 
 typedef int TreeNodeState;
@@ -78,6 +83,7 @@ class TreeNodeStateMachine: map<int, ref array<TreeNode>>
 		this[TreeNodeState.DRAGGING] = {};
 		this[TreeNodeState.FOCUS] = {};
 		this[TreeNodeState.SUPPRESSED] = {};
+		this[TreeNodeState.EXTEND] = {};
 	}
 		
 	void AddAllStates(TreeNodeState state)
