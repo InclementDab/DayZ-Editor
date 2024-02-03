@@ -1,4 +1,4 @@
-class FolderNode: TreeNode
+class LayerNode: TreeNode
 {
 	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{

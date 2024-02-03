@@ -1,4 +1,4 @@
-class IndestructableFolderNode: FolderNode
+class LockedLayerNode: LayerNode
 {	
 	override bool CanDelete()
 	{

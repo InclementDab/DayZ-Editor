@@ -51,7 +51,7 @@ class EditorNode: TreeNode
 	void EditorNode(string uuid, string display_name, Symbols icon) 
 	{				
 		// Load all default categories and placements
-		Add(new IndestructableFolderNode(LAYERS, "Layers", Symbols.LAYER_GROUP));
+		Add(new TreeNode(LAYERS, "Layers", Symbols.LAYER_GROUP));
 		Add(new TreeNode(COMMANDS, "Commands", Symbols.COMMAND));
 		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
 		Add(new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST));
@@ -95,8 +95,8 @@ class EditorNode: TreeNode
 		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
 		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Symbols.XBOX));
 				
-		this[LAYERS].Add(new IndestructableFolderNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
-		this[LAYERS].Add(new IndestructableFolderNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
+		this[LAYERS].Add(new TreeNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
+		this[LAYERS].Add(new TreeNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
 		// default layer for now
 		this[LAYERS].AddState(TreeNodeState.ACTIVE);
 		
@@ -368,7 +368,7 @@ class EditorNode: TreeNode
 		}
 		
 		foreach (TreeNode tree_node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
-			FolderNode folder_node = FolderNode.Cast(tree_node);
+			LayerNode folder_node = LayerNode.Cast(tree_node);
 			if (folder_node && folder_node.GetState().IsActive()) {
 				return folder_node;
 			}

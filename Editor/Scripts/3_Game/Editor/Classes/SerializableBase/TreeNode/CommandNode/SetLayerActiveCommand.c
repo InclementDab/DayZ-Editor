@@ -6,7 +6,7 @@ class SetLayerActiveCommand: CommandNode
 		
 		if (state.IsActive() && total_state.IsActive()) {
 			foreach (TreeNode tree_node_active: TreeNode.StateMachine[TreeNodeState.FOCUS]) {
-				FolderNode folder_node_active = FolderNode.Cast(tree_node_active);
+				LayerNode folder_node_active = LayerNode.Cast(tree_node_active);
 				if (!folder_node_active) {
 					continue;
 				}
@@ -15,7 +15,7 @@ class SetLayerActiveCommand: CommandNode
 			}
 			
 			foreach (TreeNode tree_node: TreeNode.StateMachine[TreeNodeState.CONTEXT]) {
-				FolderNode folder_node = FolderNode.Cast(tree_node);
+				LayerNode folder_node = LayerNode.Cast(tree_node);
 				if (!folder_node) {
 					continue;
 				}
