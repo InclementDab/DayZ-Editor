@@ -7,6 +7,6 @@ class IndestructableFolderNode: FolderNode
 		
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.HOVER | TreeNodeState.CONTEXT | TreeNodeState.FOCUS | TreeNodeState.ACTIVE;
+		return TreeNodeState.HOVER | TreeNodeState.CONTEXT | TreeNodeState.FOCUS | TreeNodeState.ACTIVE | TreeNodeState.EXTEND;
 	}
 }

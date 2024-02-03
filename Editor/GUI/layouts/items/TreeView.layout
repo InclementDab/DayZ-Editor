@@ -29,8 +29,9 @@ FrameWidgetClass Root {
    content_valign center
    {
     FrameWidgetClass Collapse {
-     visible 0
+     visible 1
      disabled 0
+     clipchildren 0
      inheritalpha 0
      ignorepointer 1
      position 7 0
@@ -44,7 +45,6 @@ FrameWidgetClass Root {
       ButtonWidgetClass CollapseButton {
        visible 1
        clipchildren 0
-       color 1 1 1 0.3922
        position 0 0
        size 16 16
        halign center_ref
@@ -63,7 +63,6 @@ FrameWidgetClass Root {
          visible 1
          clipchildren 0
          ignorepointer 1
-         color 1 1 1 0.5882
          position 0 0
          size 1 1
          halign center_ref
@@ -73,10 +72,46 @@ FrameWidgetClass Root {
          hexactsize 0
          vexactsize 0
          scaled 0
+         fixaspect outside
          scriptclass ""
-         image0 "set:regular image:circle_plus"
+         image0 "set:thin image:square_plus"
          mode additive
          "src alpha" 1
+         filter 1
+        }
+       }
+      }
+      PanelWidgetClass Minimize {
+       visible 1
+       ignorepointer 0
+       position 0 1
+       size 8 0
+       halign center_ref
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass ""
+       {
+        ImageWidgetClass Texture {
+         visible 1
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 0
+         scaled 0
+         scriptclass ""
+         image0 ""
+         mode additive
+         "src alpha" 1
+         "clamp mode" clamp
          filter 1
         }
        }
@@ -330,8 +365,8 @@ FrameWidgetClass Root {
    disabled 0
    clipchildren 0
    ignorepointer 1
-   position 18 30
-   size 0.99 1
+   position 30 30
+   size 1 1
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -345,39 +380,6 @@ FrameWidgetClass Root {
    {
     ScriptParamsClass {
      Binding_Name "ChildrenItems"
-    }
-   }
-  }
-  PanelWidgetClass Minimize {
-   visible 0
-   ignorepointer 0
-   position 0 6
-   size 8 1
-   hexactpos 1
-   vexactpos 1
-   hexactsize 1
-   vexactsize 0
-   scaled 0
-   scriptclass ""
-   {
-    ImageWidgetClass Texture {
-     visible 1
-     ignorepointer 1
-     color 1 1 1 0.5882
-     size 2 1
-     halign right_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 0
-     scaled 0
-     scriptclass ""
-     image0 ""
-     mode additive
-     "src alpha" 1
-     "clamp mode" clamp
-     filter 1
     }
    }
   }

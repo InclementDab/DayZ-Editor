@@ -1,4 +1,4 @@
-class EditorHud: ScriptView
+class EditorHud: ScriptViewMenu
 {		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
 	static const ref array<string> LEFT_NODES = { EditorNode.PLACEABLES, EditorNode.BRUSHES, EditorNode.DZ, EditorNode.COMMANDS, EditorNode.PLACING };
@@ -229,6 +229,10 @@ class EditorHud: ScriptView
 			
 			m_DraggedBar.GetParent().SetSize(distance_from_wall, y - (tools_height + top_height));
 			m_DraggedBar.GetChildren().SetColor(EditorColors.SELECT);
+		}
+		
+		if (input.LocalValue_ID(UAUIBack)) {
+			EnterChildMenu(MENU_INGAME);
 		}
 	}
 	

@@ -29,10 +29,12 @@ class TreeNode: SerializableBase
 		}
 		
 #ifndef SERVER
+#ifndef WORKBENCH
 		m_Input = GetUApi().GetInputByName(GetInputName());
 		if (m_Input.ID() != -1) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateInputs);
 		}
+#endif
 #endif
 	}
 	

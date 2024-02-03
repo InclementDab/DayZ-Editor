@@ -5,7 +5,7 @@ class TreeView: NodeView
 	TextWidget Text;
 	EditBoxWidget Edit;
 	
-	Widget Wrapper, Children, Outline, Texture, Collapse, Minimize, Dot, Hide;
+	Widget Wrapper, Collapse, Children, Outline, Texture, Minimize, Dot, Hide;
 	ImageWidget IconImage, CollapseIcon, HideIcon;
 	ButtonWidget CollapseButton, HideButton;
 	
@@ -17,7 +17,7 @@ class TreeView: NodeView
 		SetText(m_Node.GetDisplayName());
 		Hide.Show(m_Node.GetStateMask().IsSuppressed());
 		Collapse.Show(m_Node.GetStateMask().IsExtend());
-		
+		IconImage.Show(m_Node.GetStateMask().IsExtend());
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
 	}
@@ -110,7 +110,15 @@ class TreeView: NodeView
 			
 			Minimize.Show(node.GetState().IsExtend());
 			
-			CollapseIcon.LoadImageFile(0, Ternary<string>.If(!node.GetState().IsExtend(), Symbols.CIRCLE_PLUS.Regular(), Symbols.CIRCLE_MINUS.Regular()));
+			if (node.GetState().IsExtend()) {
+				IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());		
+			} else {
+				IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());		
+			}
+			
+			IconImage.SetImage(0);
+			
+			CollapseIcon.LoadImageFile(0, Ternary<string>.If(!node.GetState().IsExtend(), Symbols.SQUARE_PLUS.Thin(), Symbols.SQUARE_MINUS.Thin()));
 			CollapseIcon.SetImage(0);
 			
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);
@@ -147,7 +155,10 @@ class TreeView: NodeView
 		m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
 		m_LayoutRoot.Update();
 		
-		Collapse.Show(m_TemplateController.ChildrenItems.Count() > 0);
+		//Collapse.Show(m_TemplateController.ChildrenItems.Count() > 0);
+		
+		Minimize.SetScreenSize(8.0, h * Children.IsVisible());
+		Minimize.Show(Children.IsVisible());
 		Texture.Update();
 	}
 		

@@ -17,7 +17,7 @@ FrameWidgetClass Root {
  {
   CanvasWidgetClass Whiteboard {
    ignorepointer 1
-   position -0.00194 0.0004
+   position -0.00237 0.0004
    size 1 1
    halign center_ref
    valign center_ref
@@ -2150,6 +2150,63 @@ FrameWidgetClass Root {
          {
           ScriptParamsClass {
            Node "Commands\Afterlife"
+          }
+         }
+        }
+        FrameWidgetClass Console {
+         ignorepointer 1
+         position 0 0
+         size 42 42
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "EditorButton"
+         {
+          ButtonWidgetClass "Console.Button" {
+           visible 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass ""
+           style Empty
+           "no focus" 1
+           switch once
+           {
+            ImageWidgetClass "Console.Icon" {
+             ignorepointer 1
+             color 1 1 1 0.3922
+             size 32 32
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             image0 ""
+             mode blend
+             "src alpha" 1
+             "clamp mode" invalid
+             "stretch mode" none
+             "flip u" 0
+             filter 0
+             nocache 0
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Node "Commands\Console"
           }
          }
         }

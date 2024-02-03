@@ -85,6 +85,7 @@ class EditorNode: TreeNode
 		this[COMMANDS].Add(new MapToggle("Map", "Toggle Map", Symbols.MAP));
 		this[COMMANDS].Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT));
 		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
+		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Symbols.XBOX));
 				
 		this[LAYERS].Add(new IndestructableFolderNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
 		this[LAYERS].Add(new IndestructableFolderNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));

@@ -16,7 +16,7 @@ class FolderNode: TreeNode
 	
 	override TreeNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.DOUBLE;
+		return TreeNodeInteract.TOGGLE;
 	}
 	
 	override bool CanDelete()
