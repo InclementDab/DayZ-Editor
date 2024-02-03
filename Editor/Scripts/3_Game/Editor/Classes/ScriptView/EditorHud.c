@@ -62,7 +62,7 @@ class EditorHud: ScriptView
 			m_TemplateController.RightListItems.Insert(editor[right].CreateView());
 		}
 		
-		m_TemplateController.RightListItems.Insert(TreeNode.ROOT[RootNode.MISSION].CreateView());
+		m_TemplateController.RightListItems.Insert(GetDayZGame().GetSandbox()[Sandbox.FILES].CreateView());
 	}
 	
 	void ~EditorHud()

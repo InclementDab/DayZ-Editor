@@ -5,19 +5,28 @@ modded class DayZGame
 	// Handled in DayZGame
 	static const int RPC_REQUEST_SYNC = 54364;
 	static const int RPC_NODE_SYNC = 54365;
-			
+	
+	// Absolute ROOT unit
+	protected ref Sandbox m_Sandbox;
+	
 	void DayZGame()
 	{
 		SetMainMenuWorld("ChernarusPlus");
 	}
 		
+	Sandbox GetSandbox()
+	{
+		return m_Sandbox;
+	}
+	
 	override void SetMissionPath(string path)
 	{
 		super.SetMissionPath(path);
 		
-		path.Replace("\\mission.c", "");
-		TreeNode.ROOT[RootNode.MISSION].Add(new FileNode(Directory.MISSION, path, Symbols.MOUNTAIN));
-		TreeNode.ROOT.Synchronize();
+		string display_name = path;
+		display_name.Replace("\\mission.c", "");
+		
+		m_Sandbox = new Sandbox(path, display_name, Symbols.SHOVEL_SNOW);
 	}
 			
 	override bool OnInitialize()
@@ -44,7 +53,10 @@ modded class DayZGame
 		GetProfileStringList("SB_Visited", m_Visited);
 		
 		StartRandomCutscene(GetMainMenuWorld());
-				
+		
+		// Initialize the SANDBOX!
+		m_Sandbox = new Sandbox(string.Empty, string.Empty, string.Empty);
+		
 		string address, port, password;
 		if (GetCLIParam("connect", address)) {			
 			GetCLIParam("port", port);	
@@ -86,7 +98,7 @@ modded class DayZGame
 	{				
 		switch (rpc_type) {			
 			case RPC_REQUEST_SYNC: {
-				TreeNode.ROOT.Synchronize(sender);
+				GetDayZGame().GetSandbox().Synchronize(sender);
 				break;
 			}
 				
@@ -96,7 +108,7 @@ modded class DayZGame
 					break;
 				}
 
-				TreeNode current = TreeNode.ROOT;
+				TreeNode current = GetDayZGame().GetSandbox();
 				for (int i = 0; i < tree_depth; i++) {
 					string uuid;
 					ctx.Read(uuid);
@@ -154,12 +166,12 @@ modded class DayZGame
 	void Recompile()
 	{
 		PlayerIdentity identity = GetPlayer().GetIdentity();
-		delete TreeNode.ROOT[RootNode.EDITORS][identity.GetPlainId()];
+		delete GetDayZGame().GetSandbox().GetEditors()[identity.GetPlainId()];
 		
 		EditorNode editor = new EditorNode(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular());
 		editor.Identity = identity;
 		editor.Player = GetPlayer();
-		TreeNode.ROOT[RootNode.EDITORS][identity.GetPlainId()] = editor;
+		GetDayZGame().GetSandbox().GetEditors()[identity.GetPlainId()] = editor;
 		
 		editor.OnSynchronized();
 	}

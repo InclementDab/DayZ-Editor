@@ -73,10 +73,10 @@ class EditorNode: TreeNode
 		this[MENUS].Add(new CommandNode("Edit", "Edit", Symbols.FILE_PEN));
 		this[MENUS].Add(new CommandNode("View", "View", Symbols.BINOCULARS));
 		this[MENUS].Add(new CommandNode("Mission", "Mission", Symbols.PERSON_RIFLE));
-		this[MENUS]["File"].Add(TreeNode.ROOT[COMMANDS]["New"]);
-		this[MENUS]["File"].Add(TreeNode.ROOT[COMMANDS]["Open"]);
-		this[MENUS]["File"].Add(TreeNode.ROOT[COMMANDS]["Save"]);
-		this[MENUS]["File"].Add(TreeNode.ROOT[COMMANDS]["SaveAs"]);
+		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["New"]);
+		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["Open"]);
+		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["Save"]);
+		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["SaveAs"]);
 		*/
 		this[PLACEABLES].Add(new TreeNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
 		this[PLACEABLES].Add(new TreeNode("Plants", "Plants", Symbols.TREE));

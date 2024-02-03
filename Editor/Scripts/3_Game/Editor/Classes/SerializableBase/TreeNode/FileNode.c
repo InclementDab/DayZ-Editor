@@ -2,9 +2,9 @@ class FileNode: TreeNode
 {
 	protected FileSystem m_File;
 	
-	void FileNode(string uuid, string display_name, Symbols icon)
+	void FileNode(string uuid, string display_name, Symbols icon, string file)
 	{
-		m_File = m_UUID;
+		m_File = file;
 		
 		if (!m_File.Exists()) {
 			Error(string.Format("File not found %1", m_File));
@@ -25,10 +25,10 @@ class FileNode: TreeNode
 			case string.Empty: {
 				Directory directory = m_File;
 				array<string> files = directory.EnumerateFiles();
-				foreach (string file: files) {
-					string file_formatted = file;
+				foreach (string f: files) {
+					string file_formatted = f;
 					file_formatted.Replace(m_File, "");
-					Add(new FileNode(file, file_formatted, Symbols.FILE));
+					Add(new FileNode(UUID.Generate(), file_formatted, Symbols.FILE, f));
 				}
 				break;
 			}
