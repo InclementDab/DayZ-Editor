@@ -29,3 +29,21 @@ class CfgVehicles
 		hiddenSelections[] = {"BoundingBoxSelection"};
 	};
 };
+
+class CfgWorlds
+{
+	class DefaultWorld;
+	class Weather;
+	class CAWorld: DefaultWorld
+	{
+		class Weather: Weather
+		{
+			class VolFog
+			{
+				CameraFog = 0.0;
+				Item1[] = {0,0,0,0,0};
+				Item2[] = {0,0,0,0,0};
+			};
+		};
+	};
+};
