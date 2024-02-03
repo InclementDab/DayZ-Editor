@@ -1,7 +1,7 @@
-class EditorSounds: Managed
+class EditorSounds: Class
 {
-	static const string HIGHLIGHT = "Highlight_SoundSet";
-	static const string PLOP = "Plop_SoundSet";
-	static const string PLOPLOW = "PlopLow_SoundSet";
-	static const string PIANO_DROP = "PianoDrop_SoundSet";
+	static const string HIGHLIGHT = "Highlight";
+	static const string PLOP = "Plop";
+	static const string PLOPLOW = "PlopLow";
+	static const string PIANO_DROP = "PianoDrop";
 }

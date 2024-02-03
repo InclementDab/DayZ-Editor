@@ -1,5 +1,0 @@
-Particle {
- AlbedoMap "{BF74BFDEFBA5E98A}Editor/GUI/images/snow2.edds" 
- NormalMap "{A2B7A7A294824AE4}Editor/GUI/images/snow2_nohq.edds" 
- BlendMode Additive_AlphaModulate
-}

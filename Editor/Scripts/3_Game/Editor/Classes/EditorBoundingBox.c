@@ -44,7 +44,7 @@ class EditorBoundingBox: Managed
 				transform[j][j] = ((position[j] == line_centers[i][j]) * size[j]) + THICKNESS;						
 			}
 			 
-			Object bbox_line = GetGame().CreateObjectEx("jdTestBox1", line_centers[i], ECE_LOCAL);
+			Object bbox_line = GetGame().CreateObjectEx("Cube", line_centers[i], ECE_LOCAL);
 			bbox_line.SetTransform(transform);
 			bbox_line.Update();
 			
@@ -61,7 +61,7 @@ class EditorBoundingBox: Managed
 		
 		Object child = Object.Cast(object.GetChildren());
 		while (child) {
-			if (child.GetType() == "jdTestBox1") {
+			if (child.GetType() == "Cube") {
 				child.Delete();
 			}
 			
@@ -74,7 +74,7 @@ class EditorBoundingBox: Managed
 	{
 		Object child = Object.Cast(object.GetChildren());
 		while (child) {
-			if (child.GetType() == "jdTestBox1") {
+			if (child.GetType() == "Cube") {
 				return true;
 			}
 			

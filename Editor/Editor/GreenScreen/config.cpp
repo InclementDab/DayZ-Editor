@@ -1,6 +1,6 @@
 class CfgPatches
 {
-	class greenScreen
+	class Editor_GreenScreen
 	{
 		units[]={};
 		weapons[]={};
@@ -19,22 +19,19 @@ class CfgVehicles
 	class GreenScreen_Pink: HouseNoDestruct
 	{
 		scope=2;
-		displayName="greenScreen";
-		descriptionShort="Hype train is a hoax";
-		model="\Editor\Editor\GreenScreen\data\greenScreen_Pink.p3d";
+		displayName="Green Screen";
+		model="Editor\\Editor\\GreenScreen\\Pink.p3d";
 	};
 	class GreenScreen_Green: HouseNoDestruct
 	{
 		scope=2;
-		displayName="greenScreen";
-		descriptionShort="Hype train is a hoax";
-		model="\Editor\Editor\GreenScreen\data\greenScreen_Green.p3d";
+		displayName="Green Screen";
+		model="Editor\\Editor\\GreenScreen\\Green.p3d";
 	};
 	class GreenScreen_Blue: HouseNoDestruct
 	{
 		scope=2;
-		displayName="greenScreen";
-		descriptionShort="Hype train is a hoax";
-		model="\Editor\Editor\GreenScreen\data\greenScreen_Blue.p3d";
+		displayName="Green Screen";
+		model="Editor\\Editor\\GreenScreen\\Blue.p3d";
 	};
 };
