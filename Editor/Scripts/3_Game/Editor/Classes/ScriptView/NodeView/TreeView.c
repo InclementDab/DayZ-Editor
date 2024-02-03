@@ -20,6 +20,12 @@ class TreeView: NodeView
 		Icon.Show(!m_Node.GetStateMask().IsExtend());
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
+		
+		if (node.GetStateMask().IsDragging()) {
+			Wrapper.SetFlags(WidgetFlags.DRAGGABLE);
+		} else {
+			Wrapper.ClearFlags(WidgetFlags.DRAGGABLE);
+		}
 	}
 			
 	override void OnStateChanged(TreeNode node, TreeNodeState state)
