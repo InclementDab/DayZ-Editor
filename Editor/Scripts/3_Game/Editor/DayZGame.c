@@ -154,12 +154,12 @@ modded class DayZGame
 	void Recompile()
 	{
 		PlayerIdentity identity = GetPlayer().GetIdentity();
-		delete TreeNode.ROOT[TreeNode.EDITORS][identity.GetPlainId()];
+		delete TreeNode.ROOT[RootNode.EDITORS][identity.GetPlainId()];
 		
 		EditorNode editor = new EditorNode(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular());
 		editor.Identity = identity;
 		editor.Player = GetPlayer();
-		TreeNode.ROOT[TreeNode.EDITORS][identity.GetPlainId()] = editor;
+		TreeNode.ROOT[RootNode.EDITORS][identity.GetPlainId()] = editor;
 		
 		editor.OnSynchronized();
 	}

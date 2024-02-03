@@ -1,7 +1,7 @@
 class EditorHud: ScriptView
 {		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
-	static const ref array<string> LEFT_NODES = { EditorNode.PLACEABLES, EditorNode.BRUSHES, EditorNode.DZ, EditorNode.COMMANDS, EditorNode.PLACING };
+	static const ref array<string> LEFT_NODES = { EditorNode.PLACEABLES, EditorNode.BRUSHES, EditorNode.DZ, EditorNode.PLACING };
 	static const ref array<string> RIGHT_NODES = { EditorNode.HISTORY, EditorNode.LAYERS };
 	
 	protected EditorNode m_Editor;

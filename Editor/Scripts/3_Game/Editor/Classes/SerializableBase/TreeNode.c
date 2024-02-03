@@ -7,9 +7,17 @@ class DefaultNode: AttributeBase
 }
 
 class RootNode: TreeNode
-{	
+{
+	static const string MISSION = "Mission";
+	static const string EDITORS = "Editors";
+	static const string COMMANDS = "Commands";
+	
 	void RootNode(string uuid, string display_name, Symbols icon)
 	{
+		Add(new TreeNode(MISSION, "Mission", Symbols.FOLDER_USER));
+		Add(new TreeNode(EDITORS, "Editors", Symbols.PEOPLE_SIMPLE));
+		Add(new TreeNode(COMMANDS, "Commands", Symbols.COMMAND));
+				
 		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
 		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
 		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty));
@@ -43,6 +51,11 @@ class RootNode: TreeNode
 		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
 		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Symbols.XBOX));
 	}
+	
+	TreeNode GetCommand(string uuid)
+	{
+		return this[COMMANDS][uuid];
+	}
 }
 
 class TreeNode: SerializableBase
@@ -51,11 +64,7 @@ class TreeNode: SerializableBase
 	static const ref RootNode ROOT = new RootNode(string.Empty, string.Empty, string.Empty);
 	
 	static ref TreeNodeStateMachine StateMachine = new TreeNodeStateMachine();
-	
-	static const string MISSION = "Mission";
-	static const string EDITORS = "Editors";
-	static const string COMMANDS = "Commands";
-		
+			
 	protected string m_UUID;
 	protected UAInput m_Input;
 	protected TreeNodeInteract m_TreeNodeInteract = GetInteractType();
@@ -155,7 +164,7 @@ class TreeNode: SerializableBase
 		
 	bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
-		list_items.Insert(new MenuNode(GetEditor().GetCommand("Rename")));
+		list_items.Insert(new MenuNode(TreeNode.ROOT.GetCommand("Rename")));
 		return true;
 	}
 			

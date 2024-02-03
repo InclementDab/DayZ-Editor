@@ -192,10 +192,12 @@ class EditorNode: TreeNode
 			if (total_state.IsActive()) {
 				m_Camera.SetActive(true);
 				m_Hud.Show(true);
+				Player.GetInputController().SetDisabled(true);
 			} else {
 				m_Hud.Show(false);
 				
 				GetDayZGame().SelectPlayer(Identity, Player);
+				Player.GetInputController().SetDisabled(false);
 				Hud hud = GetDayZGame().GetMission().GetHud();
 				hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
 				hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
@@ -463,16 +465,6 @@ class EditorNode: TreeNode
 	TreeNode GetLayers()
 	{
 		return this[LAYERS];
-	}
-	
-	TreeNode GetCommands()
-	{
-		return TreeNode.ROOT[RootNode.COMMANDS];
-	}
-	
-	CommandNode GetCommand(string command)
-	{
-		return CommandNode.Cast(this[RootNode.COMMANDS][command]);
 	}
 	
 	TreeNode GetUndoRedo()

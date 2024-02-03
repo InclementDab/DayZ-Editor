@@ -2,14 +2,13 @@ class LayerNode: TreeNode
 {
 	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
-		EditorNode editor = GetEditor();
-		list_items.Insert(new MenuNode(editor.GetCommand("Cut")));
-		list_items.Insert(new MenuNode(editor.GetCommand("Copy")));
-		list_items.Insert(new MenuNode(editor.GetCommand("Paste")));
+		list_items.Insert(new MenuNode(TreeNode.ROOT.GetCommand("Cut")));
+		list_items.Insert(new MenuNode(TreeNode.ROOT.GetCommand("Copy")));
+		list_items.Insert(new MenuNode(TreeNode.ROOT.GetCommand("Paste")));
 		list_items.Insert(new DividerView(null));
 		
-		list_items.Insert(new MenuNode(editor.GetCommand("AddLayer")));
-		list_items.Insert(new MenuNode(editor.GetCommand("SetLayerActive")));
+		list_items.Insert(new MenuNode(TreeNode.ROOT.GetCommand("AddLayer")));
+		list_items.Insert(new MenuNode(TreeNode.ROOT.GetCommand("SetLayerActive")));
 		
 		return true;
 	}
