@@ -12,6 +12,10 @@ modded class DayZGame
 	void DayZGame()
 	{
 		SetMainMenuWorld("ChernarusPlus");
+		
+#ifdef WORKBENCH
+		m_Sandbox = new Sandbox(string.Empty, string.Empty, string.Empty);
+#endif
 	}
 		
 	Sandbox GetSandbox()

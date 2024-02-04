@@ -67,7 +67,8 @@ class Sandbox: TreeNode
 		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
 		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
 		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));	
-		
+
+#ifndef WORKBENCH
 #ifdef SERVER
 		array<string> mission_files = Directory.EnumerateFiles("$mission:");
 		foreach (File mission_file: mission_files) {
@@ -166,6 +167,7 @@ class Sandbox: TreeNode
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
 			this[SCRIPTED].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}	
+#endif
 	}
 	
 	TreeNode GetEditors()
