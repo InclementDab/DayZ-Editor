@@ -97,6 +97,8 @@ class EditorNode: TreeNode
 		GetGame().GetWeather().GetFog().Set(f);
 		GetGame().GetWeather().GetRain().Set(r);
 		GetGame().GetWeather().GetOvercast().Set(o);
+		
+		Player.GetInputController().SetDisabled(true);
 	}
 	
 	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
