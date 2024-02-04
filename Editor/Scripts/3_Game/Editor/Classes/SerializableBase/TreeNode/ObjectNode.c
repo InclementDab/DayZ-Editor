@@ -220,7 +220,10 @@ class ObjectNode: TreeNode
 		m_Object.GetTransform(transform);
 		serializer.Write(transform);
 		
-		m_SuppressedObject.Write(serializer, version);
+		serializer.Write(m_SuppressedObject != null);
+		if (m_SuppressedObject) {
+			m_SuppressedObject.Write(serializer, version);
+		}
 	}
 	
 	override bool Read(Serializer serializer, int version)
@@ -248,7 +251,12 @@ class ObjectNode: TreeNode
 				
 		m_Object.SetTransform(transform);
 		
-		m_SuppressedObject.Read(serializer, version);
+		bool suppressed;
+		serializer.Read(suppressed);
+		if (suppressed) {
+			m_SuppressedObject.Read(serializer, version);
+		}
+		
 		return true;
 	}
 		
@@ -277,7 +285,7 @@ class ObjectNode: TreeNode
 		
 		if (state.IsSuppressed()) {	
 			RemoveState(TreeNodeState.ACTIVE);
-			if (!total_state.IsSuppressed()) {
+			if (total_state.IsSuppressed()) {
 				m_SuppressedObject = new SuppressedObject(m_Object);
 			} else {
 				delete m_SuppressedObject;
