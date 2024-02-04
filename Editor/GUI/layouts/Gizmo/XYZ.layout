@@ -126,7 +126,7 @@ FrameWidgetClass Root {
    scaled 0
    mode blend
    "src alpha" 1
-   rotation 0 90 0
+   rotation 0 -90 0
    pivot 0 0
    {
     PanelWidgetClass ZPanel {
@@ -178,7 +178,6 @@ FrameWidgetClass Root {
    vexactsize 1
    scaled 0
    image0 "set:solid image:circle"
-   imageTexture ""
    mode blend
    "src alpha" 1
    "clamp mode" border

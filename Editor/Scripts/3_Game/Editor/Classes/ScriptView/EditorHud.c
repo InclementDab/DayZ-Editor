@@ -13,8 +13,9 @@ class EditorHud: ScriptView
 	ImageWidget Foreground, Background;
 	
 	Widget CursorEntity;
-	ItemPreviewWidget CursorEntityPreview;
-	protected Object m_TooltipObject;
+	RenderTargetWidget CursorEntityPreview;
+	RenderTargetWidget RenderTargetWidget0;
+	protected EntityAI m_TooltipEntity;
 		
 	// View Properties
 	Widget Left, Right, Inner, Tools, Menu, Top;
@@ -35,10 +36,7 @@ class EditorHud: ScriptView
 	TextWidget NotificationText;
 	
 	EditBoxWidget SearchBar;
-	
-	ItemPreviewWidget Item;
-	PlayerPreviewWidget Player;
-	
+		
 	SelectionMode CurrentSelectionMode = SelectionMode.BOX;
 	
 	protected ref array<vector> m_LassoHistory = {};
@@ -253,17 +251,29 @@ class EditorHud: ScriptView
 	void SetCursor(Symbols cursor, string name = string.Empty, string type = string.Empty)
 	{	
 		CursorTooltip.Show(name != string.Empty || type != string.Empty);
-		
-		m_TooltipObject = GetGame().CreateObjectEx(type, vector.Zero, ECE_LOCAL);
-
-		CursorEntity.Show(false);
-		if (m_TooltipObject) {
-			EntityAI entity = EntityAI.Cast(m_TooltipObject);
-			if (entity) {
-				CursorEntity.Show(true);
-				CursorEntityPreview.SetItem(entity);
-				CursorEntityPreview.SetView(entity.GetViewIndex());
-			}
+	
+		vector matrix[4];
+		Math3D.MatrixIdentity4(matrix);
+		Print(matrix);
+		Object child = EditorNode.CreateObject(type, matrix);
+		if (child) {
+			CursorEntity.Show(true);
+			
+			Object terrain;
+			vector hit, norm;
+			float frac;
+			//DayZPhysics.RayCastBullet(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + vector.Up * -1000, PhxInteractionLayers.TERRAIN, null, terrain, hit, norm, frac);
+			//Print(terrain.SetPosition("100 0 0"));
+			
+			SetWidgetWorld(CursorEntityPreview, child, 2);
+			//m_TooltipEntity = EntityAI.Cast(GetGame().CreateObjectEx("EntityAI", vector.Zero, ECE_LOCAL));
+			//m_TooltipEntity.AddChild(child, 0);
+			//
+			//CursorEntityPreview.SetItem(m_TooltipEntity);
+			//CursorEntityPreview.SetView(m_TooltipEntity.GetViewIndex());
+		} else {
+			//CursorEntity.Show(false);
+		//	SetWidgetWorld(CursorEntityPreview, null, 0);
 		}
 		
 		CursorTooltipName.SetText(name);
@@ -290,7 +300,7 @@ class EditorHud: ScriptView
 		CursorTooltip.Show(false);
 		CursorEntity.Show(false);
 		Cursor.Show(false);
-		GetGame().ObjectDelete(m_TooltipObject);
+		GetGame().ObjectDelete(m_TooltipEntity);
 	}
 			
 	override bool OnFocus(Widget w, int x, int y)

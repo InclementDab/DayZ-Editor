@@ -62,7 +62,7 @@ class Sandbox: TreeNode
 		this[COMMANDS].Add(new MapToggle("Map", "Toggle Map", Symbols.MAP));
 		this[COMMANDS].Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT));
 		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
-		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Symbols.XBOX));
+		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Brands.XBOX));
 		
 		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
 		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
