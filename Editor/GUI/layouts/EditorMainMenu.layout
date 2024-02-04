@@ -209,7 +209,7 @@ FrameWidgetClass Root {
        }
       }
       FrameWidgetClass Discord {
-       visible 0
+       visible 1
        ignorepointer 1
        size 36 36
        halign center_ref
