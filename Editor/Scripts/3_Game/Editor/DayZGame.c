@@ -26,11 +26,19 @@ modded class DayZGame
 	override void SetMissionPath(string path)
 	{
 		super.SetMissionPath(path);
-		
+		Print("Setting mission path " + path);
 		path.Replace("\\mission.c", "");
 		m_Sandbox = new Sandbox(path, path, Symbols.SHOVEL_SNOW);
 		
-		m_Sandbox.Add(new EditorNode("Server", "Server", Symbols.SERVER));
+		if (!GetGame().IsDedicatedServer()) {
+			EditorNode editor = new EditorNode(GetUserManager().GetTitleInitiator().GetUid(), GetUserManager().GetTitleInitiator().GetName(), Symbols.CAMERA);
+			editor.Player = GetPlayer();	
+			m_Sandbox.Add(editor);
+			
+			editor.OnSynchronized();
+		} else {
+			m_Sandbox.Add(new EditorNode("Server", "Server", Symbols.SERVER));
+		}
 	}
 			
 	override bool OnInitialize()
