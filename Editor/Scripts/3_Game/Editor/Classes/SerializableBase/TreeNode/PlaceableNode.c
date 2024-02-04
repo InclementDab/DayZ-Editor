@@ -17,7 +17,7 @@ class PlaceableNode: TreeNode
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				foreach (TreeNode node: GetEditor()[EditorNode.PLACING].Children) {
+				foreach (TreeNode node: GetEditor().GetPlacing().Children) {
 					ObjectNode object_node = ObjectNode.Cast(node);
 					GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
 					GetEditor().GetPlacingDestination().Add(object_node);
@@ -31,10 +31,10 @@ class PlaceableNode: TreeNode
 					
 					if (KeyState(KeyCode.KC_LSHIFT)) {
 						AddState(TreeNodeState.ACTIVE);
-					}
-					
-					GetUApi().SupressNextFrame(true);
+					}					
 				}
+				
+				GetUApi().SupressNextFrame(true);
 			}
 		}
 	}

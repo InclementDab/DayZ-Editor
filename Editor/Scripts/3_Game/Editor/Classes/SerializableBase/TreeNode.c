@@ -395,7 +395,7 @@ class TreeNode: SerializableBase
 		
 	TreeNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.PRESS;
+		return TreeNodeInteract.NONE;
 	}
 	
 	bool HasState(TreeNodeState state)

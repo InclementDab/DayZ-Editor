@@ -9,8 +9,7 @@ class CursorToggle: CommandNode
 		EditorCamera camera = editor.GetCamera();
 										
 		if (input.LocalPress_ID(UAUIBack)) {
-			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
-			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.ACTIVE);
+			//TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
 		}
 		
 		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {			
