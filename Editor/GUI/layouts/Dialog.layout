@@ -1,13 +1,17 @@
 FrameWidgetClass Root {
  position 0 0
- size 540 201
+ size 1078 527
+ halign center_ref
+ valign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
  scaled 0
+ draggable 0
  {
   PanelWidgetClass Background {
+   visible 1
    ignorepointer 1
    color 0.2353 0.2353 0.2353 1
    size 1 1
@@ -21,20 +25,22 @@ FrameWidgetClass Root {
    style rover_sim_colorable
   }
   PanelWidgetClass Header {
-   ignorepointer 1
+   ignorepointer 0
    color 0.1176 0.1176 0.0588 1
-   size 1 26
+   size 1 32
    halign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
    scaled 0
+   fixaspect outside
+   draggable 1
    style rover_sim_colorable
    {
     FrameWidgetClass Icon {
      ignorepointer 1
-     size 25 25
+     size 32 32
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -43,8 +49,8 @@ FrameWidgetClass Root {
      {
       ImageWidgetClass IconImage {
        ignorepointer 1
-       color 1 1 1 0.3922
-       size 17 17
+       color 0.8745 0.8196 0.6549 1
+       size 24 24
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -52,19 +58,22 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
-       image0 "set:solid image:file"
+       image0 "set:solid image:folder"
        mode blend
        "src alpha" 1
        "stretch mode" none
+       "flip u" 1
+       "flip v" 0
        filter 0
+       rotation 0 0 90
       }
      }
     }
     GridSpacerWidgetClass HeaderCenter {
      visible 1
      ignorepointer 1
-     position 37 0
-     size 154 26
+     position 37 2
+     size 154 28
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -88,7 +97,7 @@ FrameWidgetClass Root {
        hexactsize 1
        vexactsize 1
        scaled 0
-       text "New File.."
+       text "File Explorer"
        font "gui/fonts/MetronBook"
        "size to text h" 1
        "text halign" center
@@ -98,20 +107,22 @@ FrameWidgetClass Root {
     }
     GridSpacerWidgetClass WindowButtonGrid {
      ignorepointer 1
-     size 132 24
+     size 72 32
      halign right_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 0
+     Padding 0
+     Margin 0
      content_halign center
      Columns 2
      Rows 1
      {
       ButtonWidgetClass Minimize {
        position 0 0
-       size 17 17
+       size 22 22
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -141,7 +152,7 @@ FrameWidgetClass Root {
       ButtonWidgetClass Exit {
        color 0.6863 0.2588 0.2588 1
        position 0 0
-       size 17 17
+       size 22 22
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -154,7 +165,7 @@ FrameWidgetClass Root {
         ImageWidgetClass ExitIcon {
          ignorepointer 1
          position 0 0
-         size 14 14
+         size 17 17
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -172,12 +183,854 @@ FrameWidgetClass Root {
       }
      }
     }
+    PanelWidgetClass Divider {
+     ignorepointer 1
+     color 0 0 0 0.7843
+     size 1 1
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+    }
+   }
+  }
+  WrapSpacerWidgetClass Navigation {
+   visible 1
+   ignorepointer 1
+   color 0.1765 0.1765 0.1765 1
+   position 0 32
+   size 1 32
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   style Colorable
+   Padding 0
+   Margin 0
+   content_valign center
+   {
+    FrameWidgetClass Ancestors {
+     ignorepointer 1
+     position 0 0
+     size 0.75 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     {
+      GridSpacerWidgetClass AncestorsSpacer {
+       ignorepointer 1
+       size 0.8 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       Padding 6
+       Margin 4
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 1
+       Rows 1
+       {
+        PanelWidgetClass AncestorsPanel {
+         ignorepointer 1
+         size 295 24
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         style Outline_1px
+         {
+          GridSpacerWidgetClass AncestorWrapper {
+           ignorepointer 1
+           size 1 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           Padding 0
+           Margin 0
+           "Size To Content H" 1
+           content_valign center
+           Columns 4
+           Rows 1
+           {
+            FrameWidgetClass RootFrame {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 22 24
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             {
+              ImageWidgetClass RootIcon {
+               ignorepointer 1
+               color 0.8745 0.8196 0.6549 1
+               size 16 16
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scaled 0
+               image0 "set:solid image:folder"
+               mode blend
+               "src alpha" 1
+               filter 1
+              }
+             }
+            }
+            GridSpacerWidgetClass FolderHeader {
+             ignorepointer 1
+             position 0 0
+             size 1 24
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             Padding 0
+             Margin 0
+             "Size To Content H" 1
+             content_valign center
+             Columns 100
+             Rows 1
+             {
+              FrameWidgetClass FrameWidget0 {
+               ignorepointer 1
+               position 0 0
+               size 25 24
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               {
+                ImageWidgetClass ImageWidget0 {
+                 ignorepointer 1
+                 size 12 12
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 fixaspect fixwidth
+                 image0 "set:solid image:caret_right"
+                 mode blend
+                 "src alpha" 1
+                }
+               }
+              }
+              GridSpacerWidgetClass HeaderCenter0 {
+               visible 1
+               ignorepointer 1
+               size 145 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scaled 0
+               Padding 0
+               Margin 4
+               "Size To Content H" 1
+               content_halign center
+               content_valign center
+               Columns 1
+               Rows 1
+               {
+                TextWidgetClass HeaderText0 {
+                 ignorepointer 1
+                 size 54 0
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 text "File Explorer"
+                 font "gui/fonts/MetronBook"
+                 "size to text h" 1
+                 "size to text v" 1
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass FrameWidget1 {
+               ignorepointer 1
+               position 0 0
+               size 25 24
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               {
+                ImageWidgetClass ImageWidget1 {
+                 ignorepointer 1
+                 size 12 12
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 fixaspect fixwidth
+                 image0 "set:solid image:caret_right"
+                 mode blend
+                 "src alpha" 1
+                }
+               }
+              }
+              GridSpacerWidgetClass HeaderCenter1 {
+               visible 1
+               ignorepointer 1
+               size 145 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scaled 0
+               Padding 0
+               Margin 4
+               "Size To Content H" 1
+               content_halign center
+               content_valign center
+               Columns 1
+               Rows 1
+               {
+                TextWidgetClass HeaderText1 {
+                 ignorepointer 1
+                 size 54 0
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 text "File Explorer"
+                 font "gui/fonts/MetronBook"
+                 "size to text h" 1
+                 "size to text v" 1
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass FrameWidget2 {
+               ignorepointer 1
+               position 0 0
+               size 25 24
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               {
+                ImageWidgetClass ImageWidget2 {
+                 ignorepointer 1
+                 size 12 12
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 fixaspect fixwidth
+                 image0 "set:solid image:caret_right"
+                 mode blend
+                 "src alpha" 1
+                }
+               }
+              }
+              GridSpacerWidgetClass HeaderCenter2 {
+               visible 1
+               ignorepointer 1
+               size 145 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scaled 0
+               Padding 0
+               Margin 4
+               "Size To Content H" 1
+               content_halign center
+               content_valign center
+               Columns 1
+               Rows 1
+               {
+                TextWidgetClass HeaderText2 {
+                 ignorepointer 1
+                 size 54 0
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 text "File Explorer"
+                 font "gui/fonts/MetronBook"
+                 "size to text h" 1
+                 "size to text v" 1
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass FrameWidget3 {
+               ignorepointer 1
+               position 0 0
+               size 25 24
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               {
+                ImageWidgetClass ImageWidget3 {
+                 ignorepointer 1
+                 size 12 12
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 fixaspect fixwidth
+                 image0 "set:solid image:caret_right"
+                 mode blend
+                 "src alpha" 1
+                }
+               }
+              }
+              GridSpacerWidgetClass HeaderCenter3 {
+               visible 1
+               ignorepointer 1
+               size 145 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scaled 0
+               Padding 0
+               Margin 4
+               "Size To Content H" 1
+               content_halign center
+               content_valign center
+               Columns 1
+               Rows 1
+               {
+                TextWidgetClass HeaderText3 {
+                 ignorepointer 1
+                 size 54 0
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 text "File Explorer"
+                 font "gui/fonts/MetronBook"
+                 "size to text h" 1
+                 "size to text v" 1
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+              FrameWidgetClass FrameWidget4 {
+               ignorepointer 1
+               position 0 0
+               size 25 24
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               {
+                ImageWidgetClass ImageWidget4 {
+                 ignorepointer 1
+                 size 12 12
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 fixaspect fixwidth
+                 image0 "set:solid image:caret_right"
+                 mode blend
+                 "src alpha" 1
+                }
+               }
+              }
+              GridSpacerWidgetClass HeaderCenter4 {
+               visible 1
+               ignorepointer 1
+               size 145 24
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scaled 0
+               Padding 0
+               Margin 4
+               "Size To Content H" 1
+               content_halign center
+               content_valign center
+               Columns 1
+               Rows 1
+               {
+                TextWidgetClass HeaderText4 {
+                 ignorepointer 1
+                 size 54 0
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 text "File Explorer"
+                 font "gui/fonts/MetronBook"
+                 "size to text h" 1
+                 "size to text v" 1
+                 "text halign" center
+                 "text valign" center
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass Buttons2 {
+       visible 1
+       ignorepointer 1
+       size 0.1 24
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       fixaspect fixwidth
+       Padding 0
+       Margin 0
+       content_halign center
+       content_valign center
+       Columns 2
+       Rows 1
+       {
+        FrameWidgetClass Navback {
+         visible 1
+         ignorepointer 1
+         size 0.05 24
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scaled 0
+         fixaspect fixwidth
+         {
+          ButtonWidgetClass NavbackButton {
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           {
+            ImageWidgetClass NavbackIcon {
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             fixaspect inside
+             image0 "set:regular image:arrow_left"
+             mode additive
+             "src alpha" 1
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Refresh {
+         visible 1
+         ignorepointer 1
+         size 0.05 24
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scaled 0
+         fixaspect fixwidth
+         {
+          ButtonWidgetClass RefreshButton {
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           style Empty
+           "no focus" 1
+           {
+            ImageWidgetClass RefreshIcon {
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             fixaspect inside
+             image0 "set:regular image:arrows_rotate"
+             mode additive
+             "src alpha" 1
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass Buttons {
+       visible 1
+       ignorepointer 1
+       size 0.1 12
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       Padding 6
+       Margin 4
+       "Size To Content V" 1
+       Columns 2
+       Rows 1
+       {
+        FrameWidgetClass Back {
+         position 0 0
+         size 21 21
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         fixaspect fixwidth
+         {
+          ButtonWidgetClass Back0 {
+           position 0 0
+           size 21 21
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           style Empty
+           "no focus" 1
+           {
+            ImageWidgetClass BackIcon0 {
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:regular image:arrow_left"
+             mode additive
+             "src alpha" 1
+            }
+           }
+          }
+         }
+        }
+        FrameWidgetClass Forward {
+         position 0 0
+         size 21 21
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         fixaspect fixwidth
+         {
+          ButtonWidgetClass Forward0 {
+           position 0 0
+           size 21 21
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           style Empty
+           "no focus" 1
+           {
+            ImageWidgetClass ForwardIcon0 {
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 0
+             image0 "set:regular image:arrow_right"
+             mode blend
+             "src alpha" 1
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass Search {
+     ignorepointer 1
+     position 0 0
+     size 0.25 1
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     {
+      GridSpacerWidgetClass Search0 {
+       ignorepointer 1
+       size 1 32
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       Padding 6
+       Margin 6
+       content_halign center
+       content_valign center
+       Columns 1
+       Rows 1
+       {
+        PanelWidgetClass SearchPanel0 {
+         ignorepointer 1
+         color 1 1 1 0.3922
+         position 0 0
+         size 146 16
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         style Outline_1px
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  FrameWidgetClass Inner {
+   visible 1
+   ignorepointer 1
+   position 0 64
+   size 1 322
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+   {
+    PanelWidgetClass Tree {
+     ignorepointer 1
+     color 0.1569 0.1569 0.1569 1
+     position 0 0
+     size 0.43 1
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     style rover_sim_colorable
+     {
+      GridSpacerWidgetClass TreeWrapper {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 0
+       Padding 12
+       Margin 12
+       content_halign center
+       content_valign center
+       Columns 1
+       Rows 1
+       {
+        ScrollWidgetClass TreeScroll {
+         ignorepointer 1
+         size 48 48
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         style blank
+         "Scrollbar V" 1
+         {
+          WrapSpacerWidgetClass TreeContent {
+           ignorepointer 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 0
+           scriptclass "ViewBinding"
+           Padding 0
+           Margin 0
+           {
+            ScriptParamsClass {
+             Binding_Name "Folders"
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass Files {
+     ignorepointer 1
+     color 0.3059 0.3059 0.3059 1
+     position 0 0
+     size 0.57 1
+     halign right_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     style rover_sim_colorable
+    }
+    PanelWidgetClass Drag {
+     ignorepointer 0
+     position 0.439 0
+     size 6 1
+     valign bottom_ref
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 0
+     scaled 0
+     draggable 0
+     {
+      PanelWidgetClass DragTexture {
+       ignorepointer 1
+       color 1 1 1 0.7843
+       size 2 1
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       scaled 0
+       style rover_sim_colorable
+      }
+     }
+    }
+    PanelWidgetClass PanelWidget1 {
+     ignorepointer 1
+     color 0 0 0 0.7843
+     size 1 1
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+    }
    }
   }
   PanelWidgetClass Outline {
+   visible 1
    ignorepointer 1
-   color 0.3137 0.3137 0.3137 1
-   position -0.4 0
+   color 0.7843 0.7843 0.7843 1
+   position 0 0
    size 1 1
    halign center_ref
    valign center_ref
@@ -189,8 +1042,10 @@ FrameWidgetClass Root {
    style Outline_1px
   }
   PanelWidgetClass Footer {
+   visible 1
    ignorepointer 1
-   color 0.4706 0.4706 0.4706 1
+   color 0.2157 0.2157 0.2157 1
+   position 0 0
    size 1 16
    halign center_ref
    valign bottom_ref
@@ -200,6 +1055,20 @@ FrameWidgetClass Root {
    vexactsize 1
    scaled 0
    style rover_sim_colorable
+   {
+    TextWidgetClass MachineName {
+     ignorepointer 1
+     position 4 2
+     size 141 12
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     scriptclass ""
+    }
+   }
   }
  }
 }
