@@ -35,7 +35,7 @@ FrameWidgetClass Root {
    vexactsize 1
    scaled 0
    fixaspect outside
-   draggable 1
+   draggable 0
    style rover_sim_colorable
    {
     FrameWidgetClass Icon {
@@ -1069,6 +1069,48 @@ FrameWidgetClass Root {
      scriptclass ""
     }
    }
+  }
+  PanelWidgetClass North {
+   ignorepointer 0
+   size 1 6
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+  }
+  PanelWidgetClass South {
+   ignorepointer 0
+   size 1 6
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scaled 0
+  }
+  PanelWidgetClass East {
+   ignorepointer 0
+   size 6 1
+   halign right_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   scaled 0
+  }
+  PanelWidgetClass West {
+   ignorepointer 0
+   size 6 1
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   scaled 0
   }
  }
 }

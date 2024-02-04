@@ -134,7 +134,7 @@ class EditorNode: TreeNode
 			}
 		
 			// how long until this is a node?? :/
-			if (!m_Camera) {		
+			if (!m_Camera) {		 
 				m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", Player.GetPosition() + "0 10 0", ECE_LOCAL));
 				m_Camera.SetActive(true);
 			}
@@ -321,7 +321,7 @@ class EditorNode: TreeNode
 		if (type.Contains("\\") || type.Contains("/")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, true);
 		} else {
-			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL | ECE_INITAI | ECE_CREATEPHYSICS | ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_UPDATEPATHGRAPH);
+			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL * !GetGame().IsServer() | ECE_INITAI | ECE_CREATEPHYSICS | ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_UPDATEPATHGRAPH | ECE_OBJECT_SWAP);
 		}
 		
 		if (!object) {
@@ -339,11 +339,6 @@ class EditorNode: TreeNode
 		return (5 * Math.Pow(x, 4) / 8) - (5 * Math.Pow(x, 3) / 12) - (45 * Math.Pow(x, 2) / 8) + (545 * x / 12) - 25;
 	}
 	
-	override TreeNodeState GetDefaultState()
-	{
-		return TreeNodeState.ACTIVE;
-	}
-
 	override TreeNodeState GetStateMask()
 	{
 		return TreeNodeState.ACTIVE | TreeNodeState.CONTEXT;

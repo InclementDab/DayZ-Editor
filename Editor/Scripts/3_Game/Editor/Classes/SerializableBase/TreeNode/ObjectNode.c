@@ -15,6 +15,8 @@ class ObjectNode: TreeNode
 
 	protected ref array<EditorSnapPoint> m_EditorSnapPoints = {};
 	
+	protected ref SuppressedObject m_SuppressedObject;
+	
 	protected ref GizmoXYZ m_GizmoXYZ;
 	
 	void ObjectNode(string uuid, string display_name, Symbols icon, Object object)
@@ -50,9 +52,8 @@ class ObjectNode: TreeNode
 	{		
 		vector transform[4];
 		m_Object.GetTransform(transform);
-				
-		return;
-		if (HasState(TreeNodeState.ACTIVE | TreeNodeState.HOVER)) {
+
+		if (HasState(TreeNodeState.DRAGGING)) {
 			for (int i = 0; i < 6; i++) {
 				// Debug
 				m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
@@ -218,6 +219,8 @@ class ObjectNode: TreeNode
 		vector transform[4];
 		m_Object.GetTransform(transform);
 		serializer.Write(transform);
+		
+		m_SuppressedObject.Write(serializer, version);
 	}
 	
 	override bool Read(Serializer serializer, int version)
@@ -244,44 +247,44 @@ class ObjectNode: TreeNode
 		}
 				
 		m_Object.SetTransform(transform);
+		
+		m_SuppressedObject.Read(serializer, version);
 		return true;
 	}
-			
-	protected ref SuppressedObject m_SuppressedObject;
-	
+		
 	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
 		super.OnStateChanged(state, total_state);
 		
 		if (state.IsHover() || state.IsActive()) {
 			if (total_state.IsHover() || total_state.IsActive()) {
-				EditorBoundingBox.Create(m_Object);
+				//EditorBoundingBox.Create(m_Object);
 				
 			}
 			
 			if (!total_state.IsHover() && !total_state.IsActive()) {
-				EditorBoundingBox.Destroy(m_Object);
+				//EditorBoundingBox.Destroy(m_Object);
 			}
 		}
 			
 		if (state.IsActive()) {	
 			if (total_state.IsActive()) {			
-				m_GizmoXYZ = new GizmoXYZ(this);
+				//m_GizmoXYZ = new GizmoXYZ(this);
 			} else {
-				delete m_GizmoXYZ;
+				//delete m_GizmoXYZ;
 			}
 		}
 		
-		if (state.IsSuppressed()) {
+		if (state.IsSuppressed()) {	
 			RemoveState(TreeNodeState.ACTIVE);
-			
-			if (total_state.IsSuppressed()) {
+			if (!total_state.IsSuppressed()) {
 				m_SuppressedObject = new SuppressedObject(m_Object);
 			} else {
 				delete m_SuppressedObject;
 			}
 			
 			m_Object.Update();
+			Synchronize();
 		}
 	}
 			

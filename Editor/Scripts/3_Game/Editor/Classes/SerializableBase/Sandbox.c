@@ -17,7 +17,7 @@ class Sandbox: TreeNode
 	
 	void Sandbox(string uuid, string display_name, Symbols icon)
 	{
-		Add(new FileNode(FILES, "Files", Symbols.FOLDER_USER, "$mission:"));
+		Add(new FileNode(FILES, "Files", Symbols.FOLDER_USER, "$mission:"));		
 		Add(new TreeNode(EDITORS, "Editors", Symbols.PEOPLE_SIMPLE));
 		Add(new TreeNode(COMMANDS, "Commands", Symbols.COMMAND));
 		Add(new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX));
@@ -67,7 +67,45 @@ class Sandbox: TreeNode
 		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
 		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
 		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));	
+		
+#ifdef SERVER
+		array<string> mission_files = Directory.EnumerateFiles("$mission:");
+		foreach (File mission_file: mission_files) {
+			switch (mission_file.GetExtension()) {
+				case ".xml": {
+					this[FILES].Add(new FileNode(mission_file, mission_file, Symbols.FILE_XML, mission_file));
+					break;
+				}
 				
+				case ".json": {
+					this[FILES].Add(new FileNode(mission_file, mission_file, Symbols.FILE_CODE, mission_file));
+					break;
+				}
+				
+				/*
+				case string.Format(".%1", GetDayZGame().GetWorldNameEx(false)):
+				case string.Empty: {
+					array<string> files = Directory.EnumerateFiles(mission_file);
+					foreach (string f: files) {
+						string file_formatted = f;
+						file_formatted.Replace(m_File, "");
+						file_formatted.Replace("$mission:\\", "");
+						file_formatted.Replace("\\", "");
+						this[FILES].Add(new FileNode(file_formatted, file_formatted, Symbols.FILE, f));
+					}
+					
+					break;
+				}*/
+				
+				default: {
+					this[FILES].Add(new FileNode(mission_file, mission_file, Symbols.FILE, mission_file));
+					break;
+				}
+			}
+		}
+#endif
+		
+		
 		float t = GetGame().GetTime();
 		for (int j = 0; j < 473; j++) {
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");

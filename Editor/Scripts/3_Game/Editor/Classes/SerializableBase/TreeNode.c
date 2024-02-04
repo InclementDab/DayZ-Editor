@@ -161,7 +161,7 @@ class TreeNode: SerializableBase
 #ifndef SERVER
 #ifndef WORKBENCH
 		if (!View) {
-			//Print("No view for " + m_UUID);
+			Print("No view for " + m_UUID);
 		} else {
 			View.AddView(node.CreateView());
 		}
@@ -237,7 +237,7 @@ class TreeNode: SerializableBase
 	}
 	
 	// Crutch code
-	EditorNode GetEditor()
+	static EditorNode GetEditor()
 	{
 		if (GetGame().IsServer()) {
 			return EditorNode.Cast(GetDayZGame().GetSandbox()["Server"]);

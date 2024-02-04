@@ -10,6 +10,8 @@ class EditorDialog: ScriptViewMenu
 	TextWidget MachineName;
 	
 	Widget Header, Navigation, Inner, Outline, Footer, Drag, DragTexture, Tree, Files;
+	
+	Widget North, South, East, West;
 	TextWidget HeaderText;
 	
 	void EditorDialog()
@@ -21,10 +23,16 @@ class EditorDialog: ScriptViewMenu
 	{
 		super.Update(dt);
 		
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+				
+		float x, y;
+		m_LayoutRoot.GetScreenPos(x, y);		
+			
 		float w, h;
-		m_LayoutRoot.GetScreenSize(h, w);
+		m_LayoutRoot.GetScreenSize(w, h);
 		
-		float footer_h, footer_w;
+		float footer_w, footer_h;
 		Footer.GetScreenSize(footer_w, footer_h);
 		
 		// nav + header = 64
@@ -38,7 +46,6 @@ class EditorDialog: ScriptViewMenu
 		Files.SetSize(1.0 - drag_x, 1.0);
 		
 		Drag.Update();
-		
 	}
 	
 	void OnBackExecute(ButtonCommandArgs args)
@@ -80,7 +87,7 @@ class EditorDialog: ScriptViewMenu
 	}
 	
 	override bool OnDragging(Widget w, int x, int y, Widget reciever)
-	{		
+	{				
 		return true;
 	}
 	
@@ -89,6 +96,12 @@ class EditorDialog: ScriptViewMenu
 		switch (w) {
 			case Drag: {
 				WidgetAnimator.AnimateColor(DragTexture, EditorColor.SELECT, 50);
+				break;
+			}
+			
+			case North:
+			case South: {
+				
 				break;
 			}
 		}
@@ -110,7 +123,6 @@ class EditorDialog: ScriptViewMenu
 	
 	override bool OnDraggingOver(Widget w, int x, int y, Widget reciever)
 	{
-		
 		return true;
 	}
 		
