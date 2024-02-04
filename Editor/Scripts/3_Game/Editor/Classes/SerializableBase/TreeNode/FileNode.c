@@ -7,7 +7,7 @@ class FileNode: TreeNode
 		m_File = file;
 		
 		if (!m_File.Exists()) {
-			Error(string.Format("File not found %1", m_File));
+			//Error(string.Format("File not found %1", m_File));
 		}
 		
 		switch (m_File.GetExtension()) {
@@ -22,14 +22,15 @@ class FileNode: TreeNode
 				break;
 			}
 			
+			case string.Format(".%1", GetDayZGame().GetWorldNameEx(false)):
 			case string.Empty: {
-				Directory directory = m_File;
-				array<string> files = directory.EnumerateFiles();
+				array<string> files = Directory.EnumerateFiles(m_File);
 				foreach (string f: files) {
 					string file_formatted = f;
 					file_formatted.Replace(m_File, "");
-					Add(new FileNode(UUID.Generate(), file_formatted, Symbols.FILE, f));
+					Add(new FileNode(f, file_formatted, Symbols.FILE, f));
 				}
+				
 				break;
 			}
 			
@@ -42,9 +43,9 @@ class FileNode: TreeNode
 		
 	override TreeNodeState GetStateMask()
 	{
-		return TreeNodeState.ACTIVE | TreeNodeState.HOVER | TreeNodeState.EXTEND;
+		return  TreeNodeState.ACTIVE | TreeNodeState.HOVER | TreeNodeState.EXTEND;
 	}
-	
+		
 	override TreeNodeInteract GetInteractType()
 	{
 		return TreeNodeInteract.PRESS;

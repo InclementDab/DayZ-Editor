@@ -2,7 +2,7 @@ class EditorHud: ScriptView
 {		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
 	static const ref array<string> RIGHT_NODES = { EditorNode.BRUSHES, EditorNode.PLACING, EditorNode.HISTORY, EditorNode.LAYERS };
-	static const ref array<string> LEFT_NODES = { Sandbox.STRUCTURES, Sandbox.WEAPONS, Sandbox.MAN, Sandbox.AI, Sandbox.VEHICLES, Sandbox.ITEMS, Sandbox.SCRIPTED, Sandbox.FILES };
+	static const ref array<string> LEFT_NODES = { Sandbox.DZ, Sandbox.STRUCTURES, Sandbox.WEAPONS, Sandbox.MAN, Sandbox.AI, Sandbox.VEHICLES, Sandbox.ITEMS, Sandbox.SCRIPTED, Sandbox.FILES };
 	
 	protected EditorNode m_Editor;
 	protected Sandbox m_Sandbox;
@@ -292,33 +292,7 @@ class EditorHud: ScriptView
 		Cursor.Show(false);
 		GetGame().ObjectDelete(m_TooltipObject);
 	}
-		
-	void OnDiscordButtonExecute(ButtonCommandArgs args)
-	{
-		
-	}
-	
-	void OnAfterlifeExecute(ButtonCommandArgs args)
-	{
-		array<Object> objects = {};
-		GetGame().GetObjectsAtPosition(GetGame().GetCurrentCameraPosition(), 300, objects, null);
-		
-		foreach (Object object: objects) {
-			bool hidden = CF.ObjectManager.IsMapObjectHidden(object);
 			
-			if (hidden) {
-				CF.ObjectManager.UnhideMapObject(object, false);
-			} else {
-				CF.ObjectManager.HideMapObject(object, false);
-			}
-		}	
-	}
-	
-	void OnCreateNewFolder(ButtonCommandArgs args)
-	{
-		//m_TemplateController.RightListItems.Insert(new TreeView("New Folder", null));
-	}
-	
 	override bool OnFocus(Widget w, int x, int y)
 	{
 		switch (w) {

@@ -128,6 +128,7 @@ class EditorNode: TreeNode
 				
 #ifndef SERVER
 		if (IsLocal()) {
+			delete m_Hud;
 			if (!m_Hud) {
 				m_Hud = new EditorHud(this);
 			}

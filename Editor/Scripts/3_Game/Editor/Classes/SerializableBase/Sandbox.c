@@ -8,6 +8,7 @@ class Sandbox: TreeNode
 	
 	static const string STRUCTURES = "Structures";	
 	static const string WEAPONS = "Weapons";
+	static const string DZ = "DZ";
 	static const string MAN = "Man";
 	static const string AI = "AI";
 	static const string VEHICLES = "Vehicles";
@@ -15,8 +16,8 @@ class Sandbox: TreeNode
 	static const string SCRIPTED = "Scripted";
 	
 	void Sandbox(string uuid, string display_name, Symbols icon)
-	{		
-		Add(new FileNode(FILES, "Files", Symbols.FOLDER_USER, uuid));
+	{
+		Add(new FileNode(FILES, "Files", Symbols.FOLDER_USER, "$mission:"));
 		Add(new TreeNode(EDITORS, "Editors", Symbols.PEOPLE_SIMPLE));
 		Add(new TreeNode(COMMANDS, "Commands", Symbols.COMMAND));
 		Add(new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX));
@@ -24,6 +25,7 @@ class Sandbox: TreeNode
 		
 		Add(new TreeNode(WEAPONS, "Weapons", Symbols.GUN));
 		Add(new TreeNode(STRUCTURES, "Structures", Symbols.HOUSE));
+		Add(new TreeNode(DZ, "DZ", Symbols.SQUARE_Z));
 		Add(new TreeNode(MAN, "People", Symbols.PERSON));
 		Add(new TreeNode(AI, "AI", Symbols.COW));
 		Add(new TreeNode(VEHICLES, "Vehicles", Symbols.CAR));
@@ -65,15 +67,17 @@ class Sandbox: TreeNode
 		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
 		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
 		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));	
-		
+				
 		float t = GetGame().GetTime();
-		for (int j = 0; j < 50; j++) {
+		for (int j = 0; j < 473; j++) {
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
+			p3d_files.Debug();
 			foreach (string p3d: p3d_files) {
-				TreeNode current = this;
+				TreeNode current = this[DZ];
 				array<string> p3d_split = {};
 				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
-				for (int k = 0; k < p3d_split.Count() - 1; k++) {
+				for (int k = 1; k < p3d_split.Count() - 1; k++) {
+					//Print(p3d_split[k]);
 					if (!current[p3d_split[k]]) {
 						current[p3d_split[k]] = new TreeNode(p3d_split[k], p3d_split[k], Symbols.FOLDER);
 					}

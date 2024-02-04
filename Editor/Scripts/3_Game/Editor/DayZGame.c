@@ -23,10 +23,10 @@ modded class DayZGame
 	{
 		super.SetMissionPath(path);
 		
-		string display_name = path;
-		display_name.Replace("\\mission.c", "");
+		path.Replace("\\mission.c", "");
+		m_Sandbox = new Sandbox(path, path, Symbols.SHOVEL_SNOW);
 		
-		m_Sandbox = new Sandbox(path, display_name, Symbols.SHOVEL_SNOW);
+		m_Sandbox.Add(new EditorNode("Server", "Server", Symbols.SERVER));
 	}
 			
 	override bool OnInitialize()

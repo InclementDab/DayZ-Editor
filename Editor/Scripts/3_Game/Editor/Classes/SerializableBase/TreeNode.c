@@ -154,28 +154,9 @@ class TreeNode: SerializableBase
 	}
 	
 	void Set(string uuid, TreeNode node)
-	{	
-		TreeNode context = this;
-		if (uuid.Contains("\\")) {
-			array<string> uuid_split = {};
-			uuid.Split("\\", uuid_split);
-			if (uuid_split[0] != m_UUID) {
-				Error("Attempting to set sub-children with invalid root. Did not match uuid");
-			}
-			
-			for (int i = 1; i < uuid_split.Count() - 1; i++) {				
-				if (!context.Children[uuid_split[i]]) {
-					context.Debug(0);
-					Error(string.Format("Invalid tree %1: token=%2", uuid, uuid_split[i]));
-					return;
-				}
-				
-				context = context.Children[uuid_split[i]];
-			}
-		}
-		
-		context.Children[uuid] = node;
-		node.Parent = context;
+	{		
+		Children[uuid] = node;
+		node.Parent = this;
 		
 #ifndef SERVER
 #ifndef WORKBENCH
@@ -258,6 +239,10 @@ class TreeNode: SerializableBase
 	// Crutch code
 	EditorNode GetEditor()
 	{
+		if (GetGame().IsServer()) {
+			return EditorNode.Cast(GetDayZGame().GetSandbox()["Server"]);
+		}
+		
 		return EditorNode.Cast(GetDayZGame().GetSandbox().GetEditors().Get(GetGame().GetUserManager().GetTitleInitiator().GetUid()));
 	}
 	
