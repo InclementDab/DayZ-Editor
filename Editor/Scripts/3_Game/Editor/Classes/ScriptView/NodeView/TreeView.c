@@ -17,7 +17,7 @@ class TreeView: NodeView
 		SetText(m_Node.GetDisplayName());
 		Hide.Show(m_Node.GetStateMask().IsSuppressed());
 		Collapse.Show(m_Node.GetStateMask().IsExtend());
-		Icon.Show(!m_Node.GetStateMask().IsExtend());
+		Icon.Show(m_Node.GetStateMask().IsExtend());
 		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
 		IconImage.SetImage(0);
 		

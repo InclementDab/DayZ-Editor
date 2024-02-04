@@ -255,9 +255,10 @@ class TreeNode: SerializableBase
 	{
 	}
 	
+	// Crutch code
 	EditorNode GetEditor()
 	{
-		return EditorNode.Cast(FindParentOfType(EditorNode));
+		return EditorNode.Cast(GetDayZGame().GetSandbox().GetEditors().Get(GetGame().GetUserManager().GetTitleInitiator().GetUid()));
 	}
 	
 	TreeNode FindParentOfType(typename type)

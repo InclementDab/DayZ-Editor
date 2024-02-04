@@ -1,6 +1,6 @@
 class WeatherToggle: CommandNode
 {
-	protected int m_PreviousWeather;
+	protected int m_PreviousWeather = 0xFFFFFFFF;
 	
 	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{

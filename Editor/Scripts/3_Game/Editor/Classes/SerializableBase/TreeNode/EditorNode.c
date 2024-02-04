@@ -35,13 +35,10 @@ class EditorNode: TreeNode
 		static const string BRUSHED = "Brushed";
 		static const string HIDDEN = "Hidden";
 	
-
-	static const string TOOLS = "Tools";
 	
 	static const string MENUS = "Menus";
 	static const string HISTORY = "UndoRedo";
 	static const string PLACEABLES = "Placeables";
-	static const string DZ = "DZ";
 	static const string BRUSHES = "Brushes";
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
@@ -50,7 +47,6 @@ class EditorNode: TreeNode
 	{				
 		// Load all default categories and placements
 		Add(new TreeNode(LAYERS, "Layers", Symbols.LAYER_GROUP));
-		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
 		Add(new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST));
 		Add(new TreeNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT));
 		Add(new TreeNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK));
@@ -64,10 +60,6 @@ class EditorNode: TreeNode
 		this[LAYERS].AddState(TreeNodeState.ACTIVE);
 		
 		/*
-		this[COMMANDS].Add(new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX));
-		this[COMMANDS][TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
-		this[COMMANDS][TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
-		this[COMMANDS][TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));		
 		
 		this[MENUS].Add(new CommandNode("File", "File", Symbols.FILE_SPREADSHEET));
 		this[MENUS].Add(new CommandNode("Edit", "Edit", Symbols.FILE_PEN));
@@ -78,87 +70,10 @@ class EditorNode: TreeNode
 		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["Save"]);
 		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["SaveAs"]);
 		*/
-		this[PLACEABLES].Add(new TreeNode("Unknown", "Unknown", Symbols.CHESS_QUEEN));
-		this[PLACEABLES].Add(new TreeNode("Plants", "Plants", Symbols.TREE));
-		this[PLACEABLES].Add(new TreeNode("Rocks", "Rocks", Symbols.HILL_ROCKSLIDE));
-		this[PLACEABLES].Add(new TreeNode("Clutter", "Clutter", Symbols.TRASH));
-		this[PLACEABLES].Add(new TreeNode("Structures", "Structures", Symbols.HOUSE));
-		this[PLACEABLES].Add(new TreeNode("Wrecks", "Wrecks", Symbols.CAR_BURST));
-		this[PLACEABLES].Add(new TreeNode("AI", "AI", Symbols.PERSON));
-		this[PLACEABLES].Add(new TreeNode("Water", "Water", Symbols.WATER));
-		this[PLACEABLES].Add(new TreeNode("Vehicles", "Vehicles", Symbols.CAR));
-		this[PLACEABLES].Add(new TreeNode("StaticObjects", "Static Objects", Symbols.OBJECT_INTERSECT));
-		this[PLACEABLES].Add(new TreeNode("DynamicObjects", "Dynamic Objects", Symbols.SHIRT));
-		this[PLACEABLES].Add(new TreeNode("ScriptedObjects", "Scripted Objects", Symbols.CODE));
 		
 		this[BRUSHES].Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
 		this[BRUSHES].Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
 		//this[BRUSHES].Add(this[COMMANDS]["Piano"]);
-
-#ifndef SERVER
-#ifndef WORKBENCH
-		float t = GetGame().GetTime();
-		for (int j = 0; j < 50; j++) {
-			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
-			foreach (string p3d: p3d_files) {
-				TreeNode current = this;
-				array<string> p3d_split = {};
-				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
-				for (int k = 0; k < p3d_split.Count() - 1; k++) {
-					if (!current[p3d_split[k]]) {
-						current[p3d_split[k]] = new TreeNode(p3d_split[k], p3d_split[k], Symbols.FOLDER);
-					}
-					
-					//Print(string.Format("%1:%2", current.GetUUID(), p3d_split[k]));
-					current = current[p3d_split[k]];
-				}
-				
-				//PrintFormat("[%1] registering as %2", p3d, p3d_split[p3d_split.Count() - 1]);
-				current[p3d_split[p3d_split.Count() - 1]] = new PlaceableNode(p3d, p3d_split[p3d_split.Count() - 1], Symbols.TRIANGLE);
-			}
-		}
-		
-		Print(string.Format("%1 nodes/second", (float)j / ((float)GetGame().GetTime() - t) * 1000.0 ));
-		
-		// handle config objects
-		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-		string category = "Unknown";
-		foreach (string path: config_paths) {
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
-				string type;
-		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2) {
-					continue;
-				}
-				
-				if (GetDayZGame().IsForbiddenItem(type)) {
-					continue;
-				}
-				
-				array<string> full_path = {};
-				GetGame().ConfigGetFullPath(path + " " + type, full_path);
-				
-				category = "Unknown";
-				if ((full_path.Find("Weapon_Base") != -1) || (full_path.Find("Inventory_Base")) != -1) {
-					category = "DynamicObjects";
-				} else if (full_path.Find("HouseNoDestruct") != -1) {
-					category = "Structures";
-				} else if (full_path.Find("Car") != -1) {
-					category = "Vehicles";
-				} else if (full_path.Find("Man") != -1 || (full_path.Find("DZ_LightAI"))) {
-					category = "AI";
-					continue; // for now, king
-				}
-				
-				this[PLACEABLES][category].Add(new PlaceableNode(type, type, this[PLACEABLES][category].GetIcon()));
-		    }
-		}
-		
-		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
-			this[PLACEABLES]["ScriptedObjects"].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
-		}		
-#endif
-#endif
 	}
 
 	void ~EditorNode() 
@@ -177,8 +92,8 @@ class EditorNode: TreeNode
 		
 		GetDayZGame().SetDate(Date);
 		
-		int _, f, r, o;
-		InverseARGB(Climate, _, f, r, o);
+		float _, f, r, o;
+		InverseARGBF(Climate, _, f, r, o);
 		GetGame().GetWeather().GetFog().Set(f);
 		GetGame().GetWeather().GetRain().Set(r);
 		GetGame().GetWeather().GetOvercast().Set(o);

@@ -1,10 +1,11 @@
 class EditorHud: ScriptView
 {		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
-	static const ref array<string> LEFT_NODES = { EditorNode.PLACEABLES, EditorNode.BRUSHES, EditorNode.DZ, EditorNode.PLACING };
-	static const ref array<string> RIGHT_NODES = { EditorNode.HISTORY, EditorNode.LAYERS };
+	static const ref array<string> RIGHT_NODES = { EditorNode.BRUSHES, EditorNode.PLACING, EditorNode.HISTORY, EditorNode.LAYERS };
+	static const ref array<string> LEFT_NODES = { Sandbox.STRUCTURES, Sandbox.WEAPONS, Sandbox.MAN, Sandbox.AI, Sandbox.VEHICLES, Sandbox.ITEMS, Sandbox.SCRIPTED, Sandbox.FILES };
 	
 	protected EditorNode m_Editor;
+	protected Sandbox m_Sandbox;
 	protected EditorHudController m_TemplateController;
 	
 	Widget Cursor, CursorTooltip;
@@ -49,20 +50,19 @@ class EditorHud: ScriptView
 	void EditorHud(notnull EditorNode editor)
 	{		
 		m_Editor = editor;
+		m_Sandbox = GetDayZGame().GetSandbox();
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 				
 		GetGame().GetMission().GetHud().ShowHudUI(false);
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 			
 		foreach (string left: LEFT_NODES) {
-			m_TemplateController.LeftListItems.Insert(editor[left].CreateView());
+			m_TemplateController.LeftListItems.Insert(m_Sandbox[left].CreateView());
 		}
 		
 		foreach (string right: RIGHT_NODES) {
 			m_TemplateController.RightListItems.Insert(editor[right].CreateView());
 		}
-		
-		m_TemplateController.RightListItems.Insert(GetDayZGame().GetSandbox()[Sandbox.FILES].CreateView());
 	}
 	
 	void ~EditorHud()

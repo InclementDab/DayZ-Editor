@@ -13,7 +13,6 @@ class CursorToggle: CommandNode
 			TreeNode.StateMachine.RemoveAllStates(TreeNodeState.ACTIVE);
 		}
 		
-		Raycast raycast = camera.PerformCursorRaycast();
 		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {			
 			
 			if (!GetWidgetUnderCursor()) {
@@ -36,7 +35,7 @@ class CursorToggle: CommandNode
 				continue;
 			}
 			
-			raycast = camera.PerformCursorRaycast(object_node.GetObject());
+			Raycast raycast = camera.PerformCursorRaycast(object_node.GetObject());
 			if (!raycast) {
 				continue;
 			}
@@ -68,11 +67,11 @@ class CursorToggle: CommandNode
 		if (input.LocalPress_ID(UAZoomIn)) {
 			if (GetGame().GetUIManager().IsCursorVisible()) {				
 				vector camera_position = camera.GetCursorRay().GetPoint(1000.0);
-				raycast = camera.PerformCursorRaycast();
-				if (raycast) {
+				Raycast raycast2 = camera.PerformCursorRaycast();
+				if (raycast2) {
 					vector current_position = camera.GetPosition();
 					float y_height = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
-					camera_position = raycast.Bounce.GetPoint(y_height);
+					camera_position = raycast2.Bounce.GetPoint(y_height);
 				}
 								
 				camera.SetPosition(camera_position);
