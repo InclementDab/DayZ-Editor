@@ -69,7 +69,7 @@ class GizmoXYZ: ScriptView
 		
 		DbgUI.Text(angles.ToString());
 				
-		m_LayoutRoot.SetRotation(angles[0], angles[1], angles[2]);
+		m_LayoutRoot.SetRotation(angles[1], 0,0);
 		
 		//GetLayoutRoot().SetRotation(m_SavedAngles[0], m_SavedAngles[1], m_SavedAngles[2]);
 	

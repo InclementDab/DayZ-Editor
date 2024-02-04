@@ -279,9 +279,9 @@ class ObjectNode: TreeNode
 			
 		if (state.IsActive()) {	
 			if (total_state.IsActive()) {			
-				//m_GizmoXYZ = new GizmoXYZ(this);
+				m_GizmoXYZ = new GizmoXYZ(this);
 			} else {
-				//delete m_GizmoXYZ;
+				delete m_GizmoXYZ;
 			}
 		}
 		

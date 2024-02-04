@@ -30,7 +30,7 @@ modded class DayZGame
 		path.Replace("\\mission.c", "");
 		m_Sandbox = new Sandbox(path, path, Symbols.SHOVEL_SNOW);
 		
-		if (!GetGame().IsDedicatedServer()) {
+		if (!GetGame().IsDedicatedServer() && !GetGame().IsMultiplayer()) {
 			EditorNode editor = new EditorNode(GetUserManager().GetTitleInitiator().GetUid(), GetUserManager().GetTitleInitiator().GetName(), Symbols.CAMERA);
 			editor.Player = GetPlayer();	
 			m_Sandbox.Add(editor);
