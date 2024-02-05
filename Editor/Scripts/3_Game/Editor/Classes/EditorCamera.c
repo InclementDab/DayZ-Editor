@@ -12,6 +12,8 @@ class EditorCamera: Camera
 	protected vector m_ViewDragBasis[3];
 	protected Object m_CursorObject;
 	
+	protected ref array<ref Town> m_Towns = {};
+	
 	void EditorCamera()
 	{
 		SetEventMask(EntityEvent.FRAME);
@@ -61,7 +63,7 @@ class EditorCamera: Camera
 		
 		m_LinearVelocity += Vector(input.LocalValue_ID(UAMoveRight) 	- input.LocalValue_ID(UAMoveLeft), 
 									input.LocalValue_ID(UAMoveUp) 		- input.LocalValue_ID(UAMoveDown), 
-									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * 7.5 * timeSlice * (1 + input.LocalValue_ID(UATurbo) * 2.5) * (1 - (input.LocalValue_ID(UALookAround) * 0.85));
+									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * 18.5 * timeSlice * (1 + input.LocalValue_ID(UATurbo) * 2.5) * (1 - (input.LocalValue_ID(UALookAround) * 0.85));
 		
 		vector view_delta = vector.Forward;
 		
