@@ -72,7 +72,9 @@ class EditorHud: ScriptView
 		super.Update(dt);
 		
 		Widget root_widget = EnScriptVar<Widget>.Get(GetGame().GetMission(), "m_HudRootWidget");
-		root_widget.Show(!m_Editor.IsActive());
+		if (root_widget) {
+			root_widget.Show(!m_Editor.IsActive());
+		}
 		
 		int x, y;
 		GetScreenSize(x, y);
