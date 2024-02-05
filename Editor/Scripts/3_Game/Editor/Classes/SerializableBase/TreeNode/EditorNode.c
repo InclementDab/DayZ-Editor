@@ -321,7 +321,7 @@ class EditorNode: TreeNode
 		if (type.Contains("\\") || type.Contains("/")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, transform[3], transform[2].VectorToAngles(), 1.0, true);
 		} else {
-			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL * !GetGame().IsServer() | ECE_INITAI | ECE_CREATEPHYSICS | ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_UPDATEPATHGRAPH | ECE_OBJECT_SWAP);
+			object = GetGame().CreateObjectEx(type, transform[3], ECE_LOCAL | ECE_INITAI | ECE_CREATEPHYSICS | ECE_KEEPHEIGHT | ECE_NOSURFACEALIGN | ECE_UPDATEPATHGRAPH | ECE_OBJECT_SWAP);
 		}
 		
 		if (!object) {
