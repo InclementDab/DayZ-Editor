@@ -6,7 +6,7 @@ class DeleteCommand: CommandNode
 		
 		if (total_state.IsActive()) {
 			foreach (TreeNode node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
-				if (!node.CanDelete()) {
+				if (!node || !node.CanDelete()) {
 					continue;
 				}
 				
