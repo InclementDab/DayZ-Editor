@@ -13,8 +13,7 @@ class EditorHud: ScriptView
 	ImageWidget Foreground, Background;
 	
 	Widget CursorEntity;
-	RenderTargetWidget CursorEntityPreview;
-	RenderTargetWidget RenderTargetWidget0;
+	ItemPreviewWidget CursorEntityPreview;
 	protected EntityAI m_TooltipEntity;
 		
 	// View Properties
@@ -254,26 +253,14 @@ class EditorHud: ScriptView
 	
 		vector matrix[4];
 		Math3D.MatrixIdentity4(matrix);
-		Print(matrix);
 		Object child = EditorNode.CreateObject(type, matrix);
-		if (child) {
+		m_TooltipEntity = EntityAI.Cast(child);
+		if (m_TooltipEntity) {
 			CursorEntity.Show(true);
-			
-			Object terrain;
-			vector hit, norm;
-			float frac;
-			//DayZPhysics.RayCastBullet(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + vector.Up * -1000, PhxInteractionLayers.TERRAIN, null, terrain, hit, norm, frac);
-			//Print(terrain.SetPosition("100 0 0"));
-			
-			SetWidgetWorld(CursorEntityPreview, child, 2);
-			//m_TooltipEntity = EntityAI.Cast(GetGame().CreateObjectEx("EntityAI", vector.Zero, ECE_LOCAL));
-			//m_TooltipEntity.AddChild(child, 0);
-			//
-			//CursorEntityPreview.SetItem(m_TooltipEntity);
-			//CursorEntityPreview.SetView(m_TooltipEntity.GetViewIndex());
+			CursorEntityPreview.SetItem(m_TooltipEntity);
+			CursorEntityPreview.SetView(m_TooltipEntity.GetViewIndex());
 		} else {
-			//CursorEntity.Show(false);
-		//	SetWidgetWorld(CursorEntityPreview, null, 0);
+			CursorEntity.Show(false);
 		}
 		
 		CursorTooltipName.SetText(name);

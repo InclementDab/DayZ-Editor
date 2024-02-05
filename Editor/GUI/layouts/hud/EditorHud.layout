@@ -3829,7 +3829,8 @@ FrameWidgetClass Root {
        vexactsize 1
        style rover_sim_colorable
        {
-        RenderTargetWidgetClass CursorEntityPreview {
+        ItemPreviewWidgetClass CursorEntityPreview {
+         clipchildren 1
          ignorepointer 1
          size 0.95 0.95
          halign center_ref
@@ -3838,9 +3839,8 @@ FrameWidgetClass Root {
          vexactpos 1
          hexactsize 0
          vexactsize 0
+         scaled 1
          priority 200
-         refresh 1
-         offset 0
         }
         ImageWidgetClass CursorEntityTexture {
          ignorepointer 1

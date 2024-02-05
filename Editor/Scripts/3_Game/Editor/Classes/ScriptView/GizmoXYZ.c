@@ -77,13 +77,9 @@ class GizmoXYZ: ScriptView
 		//m_RayView.GetLayoutRoot().SetSize(width, height);
 		
 		vector screen_origin = GetGame().GetScreenPos(gizmo_transform[3]);
-		
-		if (screen_origin[2] < 0) {
-			//return;
-		}
-		
 		screen_origin[2] = 0;
 		GetLayoutRoot().SetScreenPos(screen_origin[0], screen_origin[1]);
+		GetLayoutRoot().Show(screen_origin[2] > 0);
 		GetLayoutRoot().Update();
 	}
 		
