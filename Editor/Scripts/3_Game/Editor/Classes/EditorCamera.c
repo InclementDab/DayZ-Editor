@@ -12,8 +12,6 @@ class EditorCamera: Camera
 	protected vector m_ViewDragBasis[3];
 	protected Object m_CursorObject;
 	
-	protected ref array<ref Town> m_Towns = {};
-	
 	void EditorCamera()
 	{
 		SetEventMask(EntityEvent.FRAME);

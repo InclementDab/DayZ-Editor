@@ -1,36 +1,88 @@
+class ConfigObjectEntry: ConfigObject
+{
+	[ConfigEntryAttribute("scope")]
+	int Scope;
+	
+	[ConfigEntryAttribute("model")]
+	string Model;
+}
+
 class Sandbox: TreeNode
 {
-	// structure of actual mission files
-	static const string FILES = "Files";
-	static const string EDITORS = "Editors";
-	static const string COMMANDS = "Commands";
-	static const string TOOLS = "Tools";
+	static const ref array<string> FORBIDDEN_ITEMS = { 
+		"TestObject",
+		"ItemOptics", 
+		"AKM_TESTBED", 
+		"Red9", 
+		"QuickieBow", 
+		"LargeTentBackPack", 
+		"SurvivorMale_Base", 
+		"SurvivorFemale_Base", 
+		"Land_VASICore", 
+		"FlagCarrierCore"
+	};
 	
-	static const string STRUCTURES = "Structures";	
-	static const string WEAPONS = "Weapons";
+	// structure of actual mission files
+	static const string MISSION = "Mission";
+	TreeNode GetMission()
+	{
+		return this[MISSION];
+	}
+	
+	static const string EDITORS = "Editors";
+	TreeNode GetEditors()
+	{
+		return this[EDITORS];
+	}
+		
+	static const string COMMANDS = "Commands";
+	TreeNode GetCommand(string uuid)
+	{
+		return this[COMMANDS][uuid];
+	}
+	
+	static const string TOOLS = "Tools";
+	TreeNode GetTool(string uuid)
+	{
+		return this[TOOLS][uuid];
+	}
+	
 	static const string DZ = "DZ";
-	static const string MAN = "Man";
-	static const string AI = "AI";
+	TreeNode GetStaticObjects()
+	{
+		return this[DZ];
+	}
+	
 	static const string VEHICLES = "Vehicles";
-	static const string ITEMS = "Items";
+	TreeNode GetDynamicObjects()
+	{
+		return this[VEHICLES];
+	}
+	
+	static const string WEAPONS = "Weapons";
+	TreeNode GetWeapons()
+	{
+		return this[WEAPONS];
+	}
+	
 	static const string SCRIPTED = "Scripted";
+	TreeNode GetScripted()
+	{
+		return this[SCRIPTED];
+	}
 	
 	void Sandbox(string uuid, string display_name, Symbols icon)
-	{
-		Add(new FileNode(FILES, "Files", Symbols.FOLDER_USER, "$mission:"));		
+	{		
+		Add(new FileNode(MISSION, "Mission", Symbols.FOLDER, "$mission:"));
+		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
+		Add(new TreeNode(VEHICLES, "CfgVehicles", Symbols.FOLDER));
+		Add(new TreeNode(WEAPONS, "CfgWeapons", Symbols.FOLDER));
+		Add(new TreeNode(SCRIPTED, "Scripted Entities", Symbols.FOLDER));
+		
 		Add(new TreeNode(EDITORS, "Editors", Symbols.PEOPLE_SIMPLE));
 		Add(new TreeNode(COMMANDS, "Commands", Symbols.COMMAND));
 		Add(new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX));
-		Add(new TreeNode(SCRIPTED, "Scripted Objects", Symbols.CODE));
 		
-		Add(new TreeNode(WEAPONS, "Weapons", Symbols.GUN));
-		Add(new TreeNode(STRUCTURES, "Structures", Symbols.HOUSE));
-		Add(new TreeNode(DZ, "DZ", Symbols.SQUARE_Z));
-		Add(new TreeNode(MAN, "People", Symbols.PERSON));
-		Add(new TreeNode(AI, "AI", Symbols.COW));
-		Add(new TreeNode(VEHICLES, "Vehicles", Symbols.CAR));
-		Add(new TreeNode(ITEMS, "Items", Symbols.COUCH));
-				
 		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
 		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
 		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty));
@@ -68,18 +120,37 @@ class Sandbox: TreeNode
 		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
 		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));	
 
+		
+		for (int i = 0; i < GetGame().ConfigGetChildrenCount(CFG_VEHICLESPATH); i++) {
+			string name;
+	        GetGame().ConfigGetChildName(CFG_VEHICLESPATH, i, name);
+			if (FORBIDDEN_ITEMS.Find(name) != -1) {
+				continue;
+			}
+			
+			ConfigObjectEntry entry = ConfigObjectEntry(string.Format("%1 %2", CFG_VEHICLESPATH, name));
+			Print(entry.Scope);
+			Print(entry.GetName());
+			
+			//array<string> full_path = {};
+			//GetGame().ConfigGetFullPath(string.Format("%1 %2", CFG_VEHICLESPATH, name), full_path);
+			//this[category].Add(new PlaceableNode(name, name, this[category].GetIcon()));
+	    }
+	
+		
+		
 #ifndef WORKBENCH
 #ifdef SERVER
 		array<string> mission_files = Directory.EnumerateFiles("$mission:");
 		foreach (File mission_file: mission_files) {
 			switch (mission_file.GetExtension()) {
 				case ".xml": {
-					this[FILES].Add(new FileNode(mission_file, mission_file, Symbols.FILE_XML, mission_file));
+					this[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE_XML, mission_file));
 					break;
 				}
 				
 				case ".json": {
-					this[FILES].Add(new FileNode(mission_file, mission_file, Symbols.FILE_CODE, mission_file));
+					this[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE_CODE, mission_file));
 					break;
 				}
 				
@@ -99,7 +170,7 @@ class Sandbox: TreeNode
 				}*/
 				
 				default: {
-					this[FILES].Add(new FileNode(mission_file, mission_file, Symbols.FILE, mission_file));
+					this[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE, mission_file));
 					break;
 				}
 			}
@@ -131,52 +202,18 @@ class Sandbox: TreeNode
 		}
 		
 		Print(string.Format("%1 nodes/second", (float)j / ((float)GetGame().GetTime() - t) * 1000.0 ));
-		
-		// handle config objects
-		array<string> config_paths = { CFG_VEHICLESPATH, CFG_WEAPONSPATH };
-		foreach (string path: config_paths) {
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
-				string type;
-		        GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(string.Format("%1 %2 scope", path, type)) < 2 || GetDayZGame().IsForbiddenItem(type)) {
-					continue;
-				}
-				
-				array<string> full_path = {};
-				GetGame().ConfigGetFullPath(string.Format("%1 %2", path, type), full_path);
-				
-				string category = "idk bro u tell me";
-				if (full_path.Find("Weapon_Base") != -1) {
-					category = WEAPONS;
-				} else if (full_path.Find("HouseNoDestruct") != -1) {
-					category = STRUCTURES;
-				} else if (full_path.Find("Car") != -1) {
-					category = VEHICLES;
-				} else if (full_path.Find("Man") != -1) {
-					category = MAN;
-				} else if (full_path.Find("DZ_LightAI")) {
-					category = AI; 
-				} else if ((full_path.Find("Inventory_Base")) != -1) {
-					category = ITEMS;
-				} else PrintFormat("Couldnt find a home for %1, %2", type, path);
-				
-				this[category].Add(new PlaceableNode(type, type, this[category].GetIcon()));
-		    }
-		}	
-		
+
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
 			this[SCRIPTED].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3));
 		}	
 #endif
 	}
-	
-	TreeNode GetEditors()
+		
+	static bool IsForbiddenItem(string model)
 	{
-		return this[EDITORS];
-	}
-	
-	TreeNode GetCommand(string uuid)
-	{
-		return this[COMMANDS][uuid];
+		
+		
+		//! Everything is fine... I hope... :pain:
+		return false;
 	}
 }

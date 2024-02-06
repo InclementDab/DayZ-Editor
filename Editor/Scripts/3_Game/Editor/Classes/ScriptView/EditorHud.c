@@ -2,7 +2,7 @@ class EditorHud: ScriptView
 {		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
 	static const ref array<string> RIGHT_NODES = { EditorNode.BRUSHES, EditorNode.PLACING, EditorNode.HISTORY, EditorNode.LAYERS };
-	static const ref array<string> LEFT_NODES = { Sandbox.DZ, Sandbox.STRUCTURES, Sandbox.WEAPONS, Sandbox.MAN, Sandbox.AI, Sandbox.VEHICLES, Sandbox.ITEMS, Sandbox.SCRIPTED, Sandbox.FILES, Sandbox.EDITORS };
+	static const ref array<string> LEFT_NODES = { Sandbox.DZ, Sandbox.VEHICLES, Sandbox.WEAPONS, Sandbox.SCRIPTED, Sandbox.EDITORS, Sandbox.MISSION };
 	
 	protected EditorNode m_Editor;
 	protected Sandbox m_Sandbox;

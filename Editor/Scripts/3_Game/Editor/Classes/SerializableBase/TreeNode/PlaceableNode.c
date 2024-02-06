@@ -1,10 +1,5 @@
 class PlaceableNode: TreeNode
-{
-	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
-	{
-		return false;
-	}
-	
+{	
 	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
 	{
 		super.OnStateChanged(state, total_state);
