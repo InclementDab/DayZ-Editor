@@ -118,9 +118,9 @@ class Sandbox: TreeNode
 		
 		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
 		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
-		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));	
-
+		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));			
 		
+#ifndef WORKBENCH
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount(CFG_VEHICLESPATH); i++) {
 			string name;
 	        GetGame().ConfigGetChildName(CFG_VEHICLESPATH, i, name);
@@ -136,10 +136,7 @@ class Sandbox: TreeNode
 			//GetGame().ConfigGetFullPath(string.Format("%1 %2", CFG_VEHICLESPATH, name), full_path);
 			//this[category].Add(new PlaceableNode(name, name, this[category].GetIcon()));
 	    }
-	
 		
-		
-#ifndef WORKBENCH
 #ifdef SERVER
 		array<string> mission_files = Directory.EnumerateFiles("$mission:");
 		foreach (File mission_file: mission_files) {
