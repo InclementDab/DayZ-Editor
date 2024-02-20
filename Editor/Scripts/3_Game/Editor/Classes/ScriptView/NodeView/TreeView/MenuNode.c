@@ -1,6 +1,6 @@
 class MenuNode: TreeView
 {	
-	override void OnStateChanged(TreeNode node, TreeNodeState state)
+	override void OnStateChanged(Node node, NodeState state)
 	{
 		super.OnStateChanged(node, state);
 		

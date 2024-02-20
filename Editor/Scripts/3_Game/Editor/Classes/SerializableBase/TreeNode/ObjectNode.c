@@ -1,4 +1,4 @@
-class ObjectNode: TreeNode
+class ObjectNode: SandboxNode
 {
 	static const int VERSION = 1;
 	static ref map<Object, ObjectNode> All = new map<Object, ObjectNode>();
@@ -19,7 +19,7 @@ class ObjectNode: TreeNode
 	
 	protected ref GizmoXYZ m_GizmoXYZ;
 	
-	void ObjectNode(string uuid, string display_name, Symbols icon, Object object)
+	void ObjectNode(UUID uuid, Object object = null)
 	{
 		m_Object = object;
 		
@@ -55,7 +55,7 @@ class ObjectNode: TreeNode
 		vector transform[4];
 		m_Object.GetTransform(transform);
 
-		if (HasState(TreeNodeState.DRAGGING)) {
+		if (HasState(NodeState.DRAGGING)) {
 			for (int i = 0; i < 6; i++) {
 				// Debug
 				m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
@@ -185,6 +185,7 @@ class ObjectNode: TreeNode
 #endif
 	}
 		
+	/*
 	override TreeView CreateView()
 	{
 		if (Parent.GetUUID() != EditorNode.PLACING) {
@@ -200,13 +201,8 @@ class ObjectNode: TreeNode
 		}
 		
 		return super.CreateView();
-	}
-	
-	override bool CanDelete()
-	{
-		return true;
-	}
-		
+	}*/
+			
 	override void Write(Serializer serializer, int version)
 	{
 		super.Write(serializer, version);
@@ -262,9 +258,21 @@ class ObjectNode: TreeNode
 		return true;
 	}
 		
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
+		
+		switch (node_state) {
+			case NodeState.ACTIVE: {
+				if (state) {
+					m_GizmoXYZ = new GizmoXYZ(this);
+				} else {
+					delete m_GizmoXYZ;
+				}
+				
+				break;
+			}
+		}
 		
 		if (state.IsHover() || state.IsActive()) {
 			if (total_state.IsHover() || total_state.IsActive()) {
@@ -279,14 +287,14 @@ class ObjectNode: TreeNode
 			
 		if (state.IsActive()) {	
 			if (total_state.IsActive()) {			
-				m_GizmoXYZ = new GizmoXYZ(this);
+				
 			} else {
 				delete m_GizmoXYZ;
 			}
 		}
 		
 		if (state.IsSuppressed()) {	
-			RemoveState(TreeNodeState.ACTIVE);
+			RemoveState(NodeState.ACTIVE);
 			if (total_state.IsSuppressed()) {
 				m_SuppressedObject = new SuppressedObject(m_Object);
 			} else {
@@ -380,21 +388,6 @@ class ObjectNode: TreeNode
 		result[1] = Math.AbsFloat(clip_info[0][1]) + Math.AbsFloat(clip_info[1][1]);
 		result[2] = Math.AbsFloat(clip_info[0][2]) + Math.AbsFloat(clip_info[1][2]);
 		return result;
-	}
-		
-	override TreeNodeInteract GetInteractType()
-	{		
-		// This is pretty cool. inheritence with KEYBINDS??
-		if (GetDayZGame().IsLeftCtrlDown()) {
-			return TreeNodeInteract.TOGGLE;
-		}
-		
-		return TreeNodeInteract.PRESS;
-	}
-	
-	override TreeNodeState GetStateMask()
-	{
-		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING | TreeNodeState.SUPPRESSED;
 	}
 							
 	Object GetObject() 

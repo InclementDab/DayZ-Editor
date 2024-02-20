@@ -1,12 +1,7 @@
 class LockedLayerNode: LayerNode
-{	
-	override bool CanDelete()
+{			
+	override NodeState GetStateMask()
 	{
-		return false;
-	}
-		
-	override TreeNodeState GetStateMask()
-	{
-		return TreeNodeState.HOVER | TreeNodeState.CONTEXT | TreeNodeState.FOCUS | TreeNodeState.ACTIVE | TreeNodeState.EXTEND;
+		return NodeState.HOVER | NodeState.CONTEXT | NodeState.FOCUS | NodeState.ACTIVE | NodeState.EXTEND;
 	}
 }

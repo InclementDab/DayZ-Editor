@@ -1,6 +1,6 @@
-class PlaceableNode: TreeNode
+class PlaceableNode: SandboxNode
 {	
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(state, total_state);
 	
@@ -12,20 +12,20 @@ class PlaceableNode: TreeNode
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				foreach (TreeNode node: GetEditor().GetPlacing().Children) {
+				foreach (SandboxNode node: GetEditor().GetPlacing().Children) {
 					ObjectNode object_node = ObjectNode.Cast(node);
 					GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
 					GetEditor().GetPlacingDestination().Add(object_node);
 					GetEditor().GetPlacingDestination().Synchronize();			
 					GetEditor().GetPlacing().Remove(object_node);
 					
-					object_node.AddState(TreeNodeState.ACTIVE);
+					object_node.AddState(NodeState.ACTIVE);
 					
 					// remove it from placing
 					GetEditor().PlaySound(EditorSounds.PLOP);
 					
 					if (KeyState(KeyCode.KC_LSHIFT)) {
-						AddState(TreeNodeState.ACTIVE);
+						AddState(NodeState.ACTIVE);
 					}					
 				}
 				
@@ -34,13 +34,13 @@ class PlaceableNode: TreeNode
 		}
 	}
 	
-	override TreeNodeState GetStateMask()
+	override NodeState GetStateMask()
 	{
-		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING;
+		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAGGING;
 	}
 	
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.PRESS;
+		return SandboxNodeInteract.PRESS;
 	}
 }

@@ -1,12 +1,12 @@
 class CreateFolder: CommandNode
 {
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(state, total_state);
 	}
 	
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.PRESS;
+		return SandboxNodeInteract.PRESS;
 	}
 }

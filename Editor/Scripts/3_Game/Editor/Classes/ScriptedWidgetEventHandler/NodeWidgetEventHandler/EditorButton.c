@@ -1,12 +1,12 @@
 class EditorButton: NodeWidgetEventHandler
 {
-	override void OnStateChanged(TreeNode node, TreeNodeState state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{		
-		if (state.IsHover()) {
-			if (node.GetState().IsHover()) {
-				node.GetEditor().GetHud().SetCursor(node.GetIcon(), node.GetDisplayName(), node.GetShortcutString());
+		if (node_state.IsHover()) {
+			if (state) {
+				m_Node.GetEditor().GetHud().SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetShortcutString());
 			} else {
-				node.GetEditor().GetHud().ClearCursor();
+				m_Node.GetEditor().GetHud().ClearCursor();
 			}
 		}
 		

@@ -7,7 +7,7 @@ class ConfigObjectEntry: ConfigObject
 	string Model;
 }
 
-class Sandbox: TreeNode
+class Sandbox: SandboxNode
 {
 	static const ref array<string> FORBIDDEN_ITEMS = { 
 		"TestObject",
@@ -24,64 +24,64 @@ class Sandbox: TreeNode
 	
 	// structure of actual mission files
 	static const string MISSION = "Mission";
-	TreeNode GetMission()
+	Node GetMission()
 	{
 		return this[MISSION];
 	}
 	
 	static const string EDITORS = "Editors";
-	TreeNode GetEditors()
+	Node GetEditors()
 	{
 		return this[EDITORS];
 	}
 		
 	static const string COMMANDS = "Commands";
-	TreeNode GetCommand(string uuid)
+	Node GetCommand(string uuid)
 	{
 		return this[COMMANDS][uuid];
 	}
 	
 	static const string TOOLS = "Tools";
-	TreeNode GetTool(string uuid)
+	Node GetTool(string uuid)
 	{
 		return this[TOOLS][uuid];
 	}
 	
 	static const string DZ = "DZ";
-	TreeNode GetStaticObjects()
+	Node GetStaticObjects()
 	{
 		return this[DZ];
 	}
 	
 	static const string VEHICLES = "Vehicles";
-	TreeNode GetDynamicObjects()
+	Node GetDynamicObjects()
 	{
 		return this[VEHICLES];
 	}
 	
 	static const string WEAPONS = "Weapons";
-	TreeNode GetWeapons()
+	Node GetWeapons()
 	{
 		return this[WEAPONS];
 	}
 	
 	static const string SCRIPTED = "Scripted";
-	TreeNode GetScripted()
+	Node GetScripted()
 	{
 		return this[SCRIPTED];
 	}
 	
-	void Sandbox(string uuid, string display_name, Symbols icon)
+	void Sandbox(UUID uuid)
 	{		
 		Add(new FileNode(MISSION, "Mission", Symbols.FOLDER, "$mission:"));
-		Add(new TreeNode(DZ, "DZ", Symbols.FOLDER));
-		Add(new TreeNode(VEHICLES, "CfgVehicles", Symbols.FOLDER));
-		Add(new TreeNode(WEAPONS, "CfgWeapons", Symbols.FOLDER));
-		Add(new TreeNode(SCRIPTED, "Scripted Entities", Symbols.FOLDER));
+		Add(new Node(DZ, "DZ", Symbols.FOLDER));
+		Add(new Node(VEHICLES, "CfgVehicles", Symbols.FOLDER));
+		Add(new Node(WEAPONS, "CfgWeapons", Symbols.FOLDER));
+		Add(new Node(SCRIPTED, "Scripted Entities", Symbols.FOLDER));
 		
-		Add(new TreeNode(EDITORS, "Editors", Symbols.PEOPLE_SIMPLE));
-		Add(new TreeNode(COMMANDS, "Commands", Symbols.COMMAND));
-		Add(new TreeNode(TOOLS, "Tools", Symbols.TOOLBOX));
+		Add(new Node(EDITORS, "Editors", Symbols.PEOPLE_SIMPLE));
+		Add(new Node(COMMANDS, "Commands", Symbols.COMMAND));
+		Add(new Node(TOOLS, "Tools", Symbols.TOOLBOX));
 		
 		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
 		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));

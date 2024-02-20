@@ -7,7 +7,7 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
-class EditorNode: TreeNode
+class EditorNode: SandboxNode
 {	
 	void LegacyLoad(notnull EditorSaveData save_data)
 	{
@@ -43,7 +43,7 @@ class EditorNode: TreeNode
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 		
-	void EditorNode(string uuid, string display_name, Symbols icon) 
+	void EditorNode(UUID uuid) 
 	{				
 		// Load all default categories and placements
 		Add(new TreeNode(LAYERS, "Layers", Symbols.LAYER_GROUP));
@@ -57,7 +57,7 @@ class EditorNode: TreeNode
 		this[LAYERS].Add(new TreeNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
 		this[LAYERS].Add(new TreeNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
 		// default layer for now
-		this[LAYERS].AddState(TreeNodeState.ACTIVE);
+		this[LAYERS].AddState(NodeState.ACTIVE);
 		
 		/*
 		
@@ -101,7 +101,7 @@ class EditorNode: TreeNode
 		Player.GetInputController().SetDisabled(true);
 	}
 	
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(state, total_state);
 		
@@ -142,10 +142,10 @@ class EditorNode: TreeNode
 #endif
 	}
 	
-	void InsertHistory(string display_name, Symbols icon, TreeNode node, ScriptReadWriteContext data)
+	void InsertHistory(string display_name, Symbols icon, Node node, ScriptReadWriteContext data)
 	{
 		// Clear the stack first
-		foreach (string uuid, TreeNode undo_redo_node: this[HISTORY].Children) {	
+		foreach (string uuid, Node undo_redo_node: this[HISTORY].Children) {	
 			EditorFootprint footprint = EditorFootprint.Cast(undo_redo_node);
 			if (!footprint) {
 				continue;
@@ -243,15 +243,15 @@ class EditorNode: TreeNode
 		return false;
 	}
 	
-	TreeNode GetPlacingDestination()
+	Node GetPlacingDestination()
 	{
-		foreach (TreeNode node: TreeNode.StateMachine[TreeNodeState.FOCUS]) {
+		foreach (Node node: Node.StateMachine[NodeState.FOCUS]) {
 			if (node && node.GetState().IsContext()) {
 				return node;
 			}
 		}
 		
-		foreach (TreeNode tree_node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+		foreach (Node tree_node: Node.StateMachine[NodeState.ACTIVE]) {
 			LayerNode folder_node = LayerNode.Cast(tree_node);
 			if (folder_node && folder_node.GetState().IsActive()) {
 				return folder_node;
@@ -339,9 +339,9 @@ class EditorNode: TreeNode
 		return (5 * Math.Pow(x, 4) / 8) - (5 * Math.Pow(x, 3) / 12) - (45 * Math.Pow(x, 2) / 8) + (545 * x / 12) - 25;
 	}
 	
-	override TreeNodeState GetStateMask()
+	override NodeState GetStateMask()
 	{
-		return TreeNodeState.ACTIVE | TreeNodeState.CONTEXT;
+		return NodeState.ACTIVE | NodeState.CONTEXT;
 	}
 					
 	EditorHud GetHud() 
@@ -369,43 +369,43 @@ class EditorNode: TreeNode
 		return GetGame() && GetGame().GetUserManager() && GetGame().GetUserManager().GetTitleInitiator() && m_UUID == GetGame().GetUserManager().GetTitleInitiator().GetUid();
 	}
 		
-	TreeNode FindNodeFromObject(Object object)
+	Node FindNodeFromObject(Object object)
 	{
 		// Do this better! searching!!!
 		return ObjectNode.All[object];
 	}
 		
-	TreeNode GetLayers()
+	Node GetLayers()
 	{
 		return this[LAYERS];
 	}
 	
-	TreeNode GetUndoRedo()
+	Node GetUndoRedo()
 	{
 		return this[HISTORY];
 	}
 	
-	TreeNode GetPlaceables()
+	Node GetPlaceables()
 	{
 		return this[PLACEABLES];
 	}
 	
-	TreeNode GetBrushes()
+	Node GetBrushes()
 	{
 		return this[BRUSHES];
 	}
 	
-	TreeNode GetMenu(string menu)
+	Node GetMenu(string menu)
 	{
 		return this[MENUS][menu];
 	}
 	
-	TreeNode GetRecycle()
+	Node GetRecycle()
 	{
 		return this[RECYCLE];
 	}
 	
-	TreeNode GetPlacing()
+	Node GetPlacing()
 	{
 		return this[PLACING];
 	}

@@ -84,7 +84,7 @@ class EditorHud: ScriptView
 		
 		Input input = GetGame().GetInput();	
 		
-		if (input.LocalPress_ID(UAFire) && TreeNode.StateMachine[TreeNodeState.HOVER].Count() == 0) {
+		if (input.LocalPress_ID(UAFire) && TreeNode.StateMachine[NodeState.HOVER].Count() == 0) {
 			m_DragX = mouse_x;
 			m_DragY = mouse_y;
 		}
@@ -184,7 +184,7 @@ class EditorHud: ScriptView
 						view.GetLayoutRoot().GetScreenPos(x_node_screen, y_node_screen);
 						if (m_LassoHistory.Count() > 0) {							
 							if (IsPointInPolygon(x_node_screen, y_node_screen, m_LassoHistory)) {
-								object_node.AddState(TreeNodeState.ACTIVE);
+								object_node.AddState(NodeState.ACTIVE);
 							}
 						}
 					}

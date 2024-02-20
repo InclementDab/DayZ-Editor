@@ -31,7 +31,7 @@ class EditorCamera: Camera
 		// This always ends up being a mess
 		ObjectNode object_node_leave = ObjectNode.All[m_CursorObject];
 		if (object_node_leave) {
-			object_node_leave.RemoveState(TreeNodeState.HOVER);
+			object_node_leave.RemoveState(NodeState.HOVER);
 		}	
 		
 		m_CursorObject = null;
@@ -43,12 +43,12 @@ class EditorCamera: Camera
 			m_CursorObject = raycast.Hit;
 			ObjectNode object_node = ObjectNode.All[m_CursorObject];
 			if (object_node) {
-				if (!object_node.HasState(TreeNodeState.HOVER)) {
-					object_node.AddState(TreeNodeState.HOVER);
+				if (!object_node.HasState(NodeState.HOVER)) {
+					object_node.AddState(NodeState.HOVER);
 				}
 				
 				if (input.LocalPress_ID(UAFire)) {
-					object_node.AddState(TreeNodeState.ACTIVE);
+					object_node.AddState(NodeState.ACTIVE);
 				}
 			} else {
 				editor.GetHud().SetCursor(string.Empty, m_CursorObject.GetShapeName());

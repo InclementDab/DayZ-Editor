@@ -6,7 +6,7 @@ class BrushTool: CommandNode
 	
 	protected float m_Radius = 10.0;
 	
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(state, total_state);
 		
@@ -19,6 +19,7 @@ class BrushTool: CommandNode
 		}
 	}
 	
+	/*
 	override void Update(float dt)
 	{		
 		Raycast raycast = GetEditor().GetCamera().PerformCursorRaycast();
@@ -77,8 +78,8 @@ class BrushTool: CommandNode
 		return {};
 	}
 	
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.TOGGLE;
+		return SandboxNodeInteract.TOGGLE;
 	}
 }

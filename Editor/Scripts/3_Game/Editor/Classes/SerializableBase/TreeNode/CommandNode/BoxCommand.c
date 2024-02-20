@@ -1,6 +1,6 @@
 class BoxCommand: CommandNode
 {
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(state, total_state);
 		
@@ -14,13 +14,13 @@ class BoxCommand: CommandNode
 		return { "Lasso", "Ellipse" };
 	}
 	
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.PRESS;
+		return SandboxNodeInteract.PRESS;
 	}
 	
-	override TreeNodeState GetDefaultState()
+	override NodeState GetDefaultState()
 	{
-		return TreeNodeState.ACTIVE;
+		return NodeState.ACTIVE;
 	}
 }

@@ -1,19 +1,19 @@
-class FileNode: TreeNode
+class FileNode: SandboxNode
 {
 	protected FileSystem m_File;
 	
-	void FileNode(string uuid, string display_name, Symbols icon, string file)
+	void FileNode(UUID uuid, string display_name, Symbols icon, string file)
 	{
 		m_File = file;
 	}
 		
-	override TreeNodeState GetStateMask()
+	override NodeState GetStateMask()
 	{
-		return  TreeNodeState.ACTIVE | TreeNodeState.HOVER | TreeNodeState.EXTEND;
+		return  NodeState.ACTIVE | NodeState.HOVER | NodeState.EXTEND;
 	}
 		
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.PRESS;
+		return SandboxNodeInteract.PRESS;
 	}
 }

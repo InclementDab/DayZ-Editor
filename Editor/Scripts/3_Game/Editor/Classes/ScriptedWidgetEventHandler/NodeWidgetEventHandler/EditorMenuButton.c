@@ -1,6 +1,6 @@
 class EditorMenuButton: NodeWidgetEventHandler
 {
-	override void OnStateChanged(TreeNode node, TreeNodeState state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		EditorHud hud = node.GetEditor().GetHud();
 		hud.Menu.Show(false);

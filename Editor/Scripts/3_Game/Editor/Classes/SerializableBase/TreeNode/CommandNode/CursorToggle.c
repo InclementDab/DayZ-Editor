@@ -9,7 +9,7 @@ class CursorToggle: CommandNode
 		EditorCamera camera = editor.GetCamera();
 										
 		if (input.LocalPress_ID(UAUIBack)) {
-			//TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
+			//TreeNode.StateMachine.RemoveAllStates(NodeState.CONTEXT);
 		}
 		
 		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {			
@@ -17,14 +17,14 @@ class CursorToggle: CommandNode
 			if (!GetWidgetUnderCursor()) {
 				// reassigning because were gonna fuck with this statemachine array
 				array<TreeNode> nodes = {};
-				nodes.Copy(TreeNode.StateMachine[TreeNodeState.ACTIVE]);
+				nodes.Copy(TreeNode.StateMachine[NodeState.ACTIVE]);
 				foreach (TreeNode node_to_deselect: nodes) {
-					if (node_to_deselect && node_to_deselect.GetInteractType() == TreeNodeInteract.PRESS) {
-						node_to_deselect.RemoveState(TreeNodeState.ACTIVE);
+					if (node_to_deselect && node_to_deselect.GetInteractType() == SandboxNodeInteract.PRESS) {
+						node_to_deselect.RemoveState(NodeState.ACTIVE);
 					}
 				}
 				
-				TreeNode.StateMachine.RemoveAllStates(TreeNodeState.CONTEXT);
+				TreeNode.StateMachine.RemoveAllStates(NodeState.CONTEXT);
 			}		
 		}
 		
@@ -85,7 +85,7 @@ class CursorToggle: CommandNode
 		}
 	}
 	
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(state, total_state);
 	
@@ -96,8 +96,8 @@ class CursorToggle: CommandNode
 		GetGame().GetUIManager().ShowCursor(total_state.IsActive());
 	}
 	
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.TOGGLE;
+		return SandboxNodeInteract.TOGGLE;
 	}
 }

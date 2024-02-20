@@ -5,8 +5,8 @@ class RotateTool: CommandNode
 		return { "Scale", "Translate" };
 	}
 	
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.TOGGLE;
+		return SandboxNodeInteract.TOGGLE;
 	}
 }

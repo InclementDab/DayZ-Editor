@@ -11,7 +11,7 @@ class TreeView: NodeView
 	
 	protected bool m_IsBeingDragged;
 
-	void TreeView(TreeNode node)
+	void TreeView(Node node)
 	{
 		m_TemplateController = TreeViewController.Cast(m_Controller);		
 		SetText(m_Node.GetDisplayName());
@@ -28,7 +28,7 @@ class TreeView: NodeView
 		}
 	}
 			
-	override void OnStateChanged(TreeNode node, TreeNodeState state)
+	override void OnStateChanged(Node node, NodeState state)
 	{
 		super.OnStateChanged(node, state);
 		
@@ -70,7 +70,7 @@ class TreeView: NodeView
 				}
 				
 				if (state ^ xor_node.GetState()) {
-					//xor_node.RemoveState(TreeNodeState.ACTIVE);
+					//xor_node.RemoveState(NodeState.ACTIVE);
 				}
 			}
 		}*/
@@ -131,7 +131,7 @@ class TreeView: NodeView
 						
 			// you only want to open upper containers when lower ones are opened. propagate up /\
 			if (m_Node.Parent && m_Node.Parent.View) {
-				m_Node.Parent.AddState(TreeNodeState.EXTEND);
+				m_Node.Parent.AddState(NodeState.EXTEND);
 			}
 		}
 	}
@@ -208,20 +208,20 @@ class TreeView: NodeView
 		
 		switch (w) {
 			case CollapseButton: {
-				if (m_Node.HasState(TreeNodeState.EXTEND)) {
-					m_Node.RemoveState(TreeNodeState.EXTEND);
+				if (m_Node.HasState(NodeState.EXTEND)) {
+					m_Node.RemoveState(NodeState.EXTEND);
 				} else {
-					m_Node.AddState(TreeNodeState.EXTEND);
+					m_Node.AddState(NodeState.EXTEND);
 				}
 
 				return true;
 			}
 			
 			case HideButton: {
-				if (m_Node.HasState(TreeNodeState.SUPPRESSED)) {
-					m_Node.RemoveState(TreeNodeState.SUPPRESSED);
+				if (m_Node.HasState(NodeState.SUPPRESSED)) {
+					m_Node.RemoveState(NodeState.SUPPRESSED);
 				} else {
-					m_Node.AddState(TreeNodeState.SUPPRESSED);
+					m_Node.AddState(NodeState.SUPPRESSED);
 				}
 				
 				return true;

@@ -61,7 +61,7 @@ class GizmoXYZ: ScriptView
 		vector matrix[4];
 		Math3D.MatrixInvMultiply4(camera_transform, ident, matrix);
 		Math3D.MatrixMultiply3(matrix, gizmo_transform, matrix);
-		Math3D.MatrixMultiply3(matrix, perspective_matrix, matrix);
+		//Math3D.MatrixMultiply3(matrix, perspective_matrix, matrix);
 		
 		vector angles = Math3D.MatrixToAngles(matrix);
 		X.SetSort(1);
@@ -69,14 +69,14 @@ class GizmoXYZ: ScriptView
 		
 		DbgUI.Text(angles.ToString());
 				
-		m_LayoutRoot.SetRotation(angles[1], 0,0);
+		m_LayoutRoot.SetRotation(0, 0, 0);
 		
 		//GetLayoutRoot().SetRotation(m_SavedAngles[0], m_SavedAngles[1], m_SavedAngles[2]);
 	
 		float height = 24;
 		//m_RayView.GetLayoutRoot().SetSize(width, height);
 		
-		vector screen_origin = GetGame().GetScreenPos(gizmo_transform[3]);
+		vector screen_origin = GetGame().GetScreenPos(matrix[3]);
 		screen_origin[2] = 0;
 		GetLayoutRoot().SetScreenPos(screen_origin[0], screen_origin[1]);
 		GetLayoutRoot().Show(screen_origin[2] > 0);

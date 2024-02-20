@@ -1,18 +1,18 @@
 class RenameCommand: CommandNode
 {
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(total_state, state);
 		
 		if (state.IsActive() && total_state.IsActive()) {			
-			foreach (TreeNode node: TreeNode.StateMachine[TreeNodeState.ACTIVE]) {
+			foreach (TreeNode node: TreeNode.StateMachine[NodeState.ACTIVE]) {
 				node.View.EnableRename();
 			}
 		}
 	}
 		
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.PRESS;
+		return SandboxNodeInteract.PRESS;
 	}
 }

@@ -1,7 +1,7 @@
 class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 {
-	reference string Node;
-	protected TreeNode m_Node;
+	reference string Path;
+	protected SandboxNode m_Node;
 	
 	protected Widget m_LayoutRoot;
 	
@@ -23,8 +23,8 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");				
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
-		if (Node != string.Empty) {
-			m_Node = GetDayZGame().GetSandbox()[Node];
+		if (Path != string.Empty) {
+			m_Node = SandboxNode.Cast(GetDayZGame().GetSandbox()[Path]);
 			if (m_Node) {
 				if (Button) {
 					Button.SetHandler(this);
@@ -36,12 +36,12 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 				}
 				
 				m_Node.State_OnChanged.Insert(OnStateChanged);
-				OnStateChanged(m_Node, m_Node.GetDefaultState());
+				OnStateChanged(m_Node.GetDefaultState(), true);
 			}
 		}
 	}
 	
-	void OnStateChanged(TreeNode node, TreeNodeState state)
+	void OnStateChanged(NodeState node_state, bool state)
 	{
 	}
 	
@@ -52,8 +52,8 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		}
 		
 		switch (m_Node.GetInteractType()) {
-			case TreeNodeInteract.HOLD: {
-				m_Node.AddState(TreeNodeState.ACTIVE);
+			case SandboxNodeInteract.HOLD: {
+				m_Node.AddState(NodeState.ACTIVE);
 				return true;
 			}
 		}
@@ -68,20 +68,20 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		}
 		
 		if (button == 1) {
-			m_Node.AddState(TreeNodeState.CONTEXT);
+			m_Node.AddState(NodeState.CONTEXT);
 			return true;
 		}
 		
 		if (button == 0) {
 			switch (m_Node.GetInteractType()) {
-				case TreeNodeInteract.HOLD: {
-					m_Node.RemoveState(TreeNodeState.ACTIVE);
+				case SandboxNodeInteract.HOLD: {
+					m_Node.RemoveState(NodeState.ACTIVE);
 					return true;
 				}
 				
-				case TreeNodeInteract.ONCE:
-				case TreeNodeInteract.PRESS: {
-					m_Node.AddState(TreeNodeState.ACTIVE);									
+				case SandboxNodeInteract.ONCE:
+				case SandboxNodeInteract.PRESS: {
+					m_Node.AddState(NodeState.ACTIVE);									
 					return true;
 				}
 			}
@@ -97,11 +97,11 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		}
 		
 		switch (m_Node.GetInteractType()) {
-			case TreeNodeInteract.TOGGLE: {
-				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
-					m_Node.RemoveState(TreeNodeState.ACTIVE);
+			case SandboxNodeInteract.TOGGLE: {
+				if (m_Node.HasState(NodeState.ACTIVE)) {
+					m_Node.RemoveState(NodeState.ACTIVE);
 				} else {
-					m_Node.AddState(TreeNodeState.ACTIVE);
+					m_Node.AddState(NodeState.ACTIVE);
 				}
 				return true;
 			}
@@ -117,11 +117,11 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		}
 		
 		switch (m_Node.GetInteractType()) {
-			case TreeNodeInteract.DOUBLE: {
-				if (m_Node.HasState(TreeNodeState.ACTIVE)) {
-					m_Node.RemoveState(TreeNodeState.ACTIVE);
+			case SandboxNodeInteract.DOUBLE: {
+				if (m_Node.HasState(NodeState.ACTIVE)) {
+					m_Node.RemoveState(NodeState.ACTIVE);
 				} else {
-					m_Node.AddState(TreeNodeState.ACTIVE);
+					m_Node.AddState(NodeState.ACTIVE);
 				}
 				return true;
 			}
@@ -133,7 +133,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		if (m_Node) {
-			m_Node.AddState(TreeNodeState.HOVER);
+			m_Node.AddState(NodeState.HOVER);
 		}
 		
 		return super.OnMouseEnter(w, x, y);
@@ -142,7 +142,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (m_Node) {
-			m_Node.RemoveState(TreeNodeState.HOVER);
+			m_Node.RemoveState(NodeState.HOVER);
 		}
 				
 		return super.OnMouseLeave(w, enterW, x, y);

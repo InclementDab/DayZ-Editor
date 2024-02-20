@@ -1,32 +1,32 @@
 class SetLayerActiveCommand: CommandNode
 {
-	override void OnStateChanged(TreeNodeState state, TreeNodeState total_state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(state, total_state);
 		
 		if (state.IsActive() && total_state.IsActive()) {
-			foreach (TreeNode tree_node_active: TreeNode.StateMachine[TreeNodeState.FOCUS]) {
+			foreach (TreeNode tree_node_active: TreeNode.StateMachine[NodeState.FOCUS]) {
 				LayerNode folder_node_active = LayerNode.Cast(tree_node_active);
 				if (!folder_node_active) {
 					continue;
 				}
 				
-				folder_node_active.RemoveState(TreeNodeState.FOCUS);
+				folder_node_active.RemoveState(NodeState.FOCUS);
 			}
 			
-			foreach (TreeNode tree_node: TreeNode.StateMachine[TreeNodeState.CONTEXT]) {
+			foreach (TreeNode tree_node: TreeNode.StateMachine[NodeState.CONTEXT]) {
 				LayerNode folder_node = LayerNode.Cast(tree_node);
 				if (!folder_node) {
 					continue;
 				}
 				
-				folder_node.AddState(TreeNodeState.FOCUS);
+				folder_node.AddState(NodeState.FOCUS);
 			}
 		}
 	}
 		
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.PRESS;
+		return SandboxNodeInteract.PRESS;
 	}
 }

@@ -6,7 +6,7 @@ class ObjectView: NodeView
 	ButtonWidget Button;
 	ImageWidget Image, Outline;
 	
-	void ObjectView(TreeNode node)
+	void ObjectView(Node node)
 	{
 		m_ObjectNode = ObjectNode.Cast(node);		
 		Symbols icon = m_ObjectNode.GetIcon();
@@ -18,7 +18,7 @@ class ObjectView: NodeView
 		Outline.SetImage(0);
 	}
 	
-	override void OnStateChanged(TreeNode node, TreeNodeState state)
+	override void OnStateChanged(Node node, NodeState state)
 	{
 		super.OnStateChanged(node, state);
 		

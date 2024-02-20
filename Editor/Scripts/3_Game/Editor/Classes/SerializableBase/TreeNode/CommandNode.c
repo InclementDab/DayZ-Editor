@@ -1,13 +1,13 @@
 // I think its wise... it wasnt...
-class CommandNode: TreeNode
+class CommandNode: SandboxNode
 {
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.TOGGLE;
+		return SandboxNodeInteract.TOGGLE;
 	}
 	
-	override TreeNodeState GetStateMask()
+	override NodeState GetStateMask()
 	{
-		return TreeNodeState.ACTIVE | TreeNodeState.HOVER;
+		return NodeState.ACTIVE | NodeState.HOVER;
 	}
 }

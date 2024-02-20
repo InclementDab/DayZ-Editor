@@ -2,9 +2,10 @@ class PianoCommand: CommandNode
 {
 	protected Object m_PianoInstance;
 	
+	/*
 	override void Update(float dt)
 	{
-		if (!m_TreeNodeState.IsActive()) {
+		if (!m_NodeState.IsActive()) {
 			return;
 		}
 		
@@ -14,7 +15,7 @@ class PianoCommand: CommandNode
 		}
 		
 		
-	}
+	}*/
 	
 	protected void SpawnPianoDrop(vector position)
 	{
@@ -29,13 +30,13 @@ class PianoCommand: CommandNode
 		
 	}
 		
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.TOGGLE;
+		return SandboxNodeInteract.TOGGLE;
 	}
 	
-	override TreeNodeState GetStateMask()
+	override NodeState GetStateMask()
 	{
-		return TreeNodeInteract.PRESS;
+		return SandboxNodeInteract.PRESS;
 	}
 }

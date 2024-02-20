@@ -7,7 +7,7 @@ class ObjectViewWorld: ObjectView
 		float distance = vector.Distance(m_ObjectNode.GetEditor().GetCamera().GetPosition(), base_position);
 				
 		// Dragging
-		if (m_ObjectNode.HasState(TreeNodeState.DRAGGING)) {
+		if (m_ObjectNode.HasState(NodeState.DRAGGING)) {
 			
 			Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
 			if (!raycast) {

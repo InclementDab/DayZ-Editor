@@ -1,14 +1,14 @@
-class EditorFootprint: TreeNode
+class EditorFootprint: SandboxNode
 {
 	protected bool m_IsUndone;
 	
 	// Either ONE is null, OR THE OTHER, NEVER BOTH... 
-	TreeNode Pointer;
+	SandboxNode Pointer;
 	ref ScriptReadWriteContext Copy;
-	protected TreeNode m_PointerParent;
+	protected SandboxNode m_PointerParent;
 	protected string m_Path;
 	
-	void EditorFootprint(string uuid, string display_name, Symbols icon, TreeNode pointer, ScriptReadWriteContext copy)
+	void EditorFootprint(UUID uuid, string display_name, Symbols icon, SandboxNode pointer, ScriptReadWriteContext copy)
 	{
 		// Can be null
 		Pointer = pointer;

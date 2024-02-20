@@ -1,4 +1,4 @@
-class LayerNode: TreeNode
+class LayerNode: SandboxNode
 {
 	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
@@ -13,18 +13,13 @@ class LayerNode: TreeNode
 		return true;
 	}
 	
-	override TreeNodeInteract GetInteractType()
+	override SandboxNodeInteract GetInteractType()
 	{
-		return TreeNodeInteract.TOGGLE;
-	}
-	
-	override bool CanDelete()
-	{
-		return true;
+		return SandboxNodeInteract.TOGGLE;
 	}
 		
-	override TreeNodeState GetStateMask()
+	override NodeState GetStateMask()
 	{
-		return TreeNodeState.HOVER | TreeNodeState.ACTIVE | TreeNodeState.CONTEXT | TreeNodeState.DRAGGING | TreeNodeState.FOCUS | TreeNodeState.EXTEND;
+		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAGGING | NodeState.FOCUS | NodeState.EXTEND;
 	}
 }
