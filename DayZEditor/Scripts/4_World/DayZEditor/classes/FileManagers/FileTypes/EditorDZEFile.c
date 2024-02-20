@@ -84,7 +84,7 @@ class EditorDZEFile: EditorFileType
 				return;
 			}
 			
-			data.Write(file_serializer);
+			data.Write(file_serializer, EditorSaveData.Version);
 			file_serializer.Close();
 			
 		} else {
