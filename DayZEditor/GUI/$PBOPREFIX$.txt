@@ -1,0 +1,6 @@
+//<'GUI.pbo' properties via Mikero's dos tools, dll version 9.44>
+prefix=DayZEditor\GUI;
+Mikero=DePbo.dll.9.36;
+version=23071122;
+//PboType=Arma Addon;
+//</properties>

@@ -1,4 +1,4 @@
-class EditorInventoryEditorCamera: ScriptedCamera
+class EditorInventoryEditorCamera: Camera
 {
 	protected ref Timer m_LerpTimer = new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected Object m_Target;
@@ -15,10 +15,6 @@ class EditorInventoryEditorCamera: ScriptedCamera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		if (GetEditor().GetCurrentControl() != this) {
-			return;
-		}
-		
 		if (!m_Target || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
 			return;
 		}

@@ -30,7 +30,7 @@ class EditorWorldObject
 		if (type.Contains("\\")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
 		} else {
-			object = GetGame().CreateObjectEx(type, position, ECE_SETUP);
+			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
 		}
 		
 		if (!object) { 
@@ -38,15 +38,17 @@ class EditorWorldObject
 			return null;
 		}
 		
-		
+		// Needed for AI Placement			
 		EntityAI entity_ai;
 		if (Class.CastTo(entity_ai, object)) {
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, true);
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, false);
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 37, false, true);
-		}
+			entity_ai.DisableSimulation(true);
 						
-		object.SetPosition(position);
+			// weeeeeeee
+			if (GetEditor().Settings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0)) {
+				entity_ai.OnDebugSpawn();
+			}
+		}		
+		
 		object.SetOrientation(orientation);
 		object.SetScale(scale);
 		object.Update();		

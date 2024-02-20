@@ -15,4 +15,9 @@ class EditorEnvironmentControlCommand: EditorAsyncCommand
 	{
 		return "set:dayz_gui image:icon_sun";
 	}
+	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_I };
+	}
 }

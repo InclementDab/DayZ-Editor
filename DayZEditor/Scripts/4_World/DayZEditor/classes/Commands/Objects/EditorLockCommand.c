@@ -11,6 +11,11 @@ class EditorLockCommand: EditorCommand
 		return true;
 	}
 	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_L };
+	}
+	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_LOCK";

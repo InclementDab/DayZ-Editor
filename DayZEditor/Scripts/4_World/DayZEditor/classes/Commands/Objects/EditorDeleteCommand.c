@@ -31,4 +31,9 @@ class EditorDeleteCommand: EditorCommand
 	{
 		return "#STR_EDITOR_DELETE";
 	}
+	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_DELETE };
+	}
 }

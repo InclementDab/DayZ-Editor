@@ -1,4 +1,4 @@
-class EditorHud: ScriptView
+class EditorHud: ScriptViewTemplate<EditorHudController>
 {
 	protected bool m_IsBoxSelectActive;
 	
@@ -18,7 +18,9 @@ class EditorHud: ScriptView
 	
 	void EditorHud()
 	{	
-		EditorLog.Trace("EditorHud");		
+		EditorLog.Trace("EditorHud");
+		EditorMapWidget.Show(false);
+		
 		ShowScreenLogs(GetEditor().Settings.ShowScreenLogs);
 	}
 	
@@ -26,78 +28,38 @@ class EditorHud: ScriptView
 	{
 		delete CameraMapMarker;
 	}
-	
-	override void Update(float dt)
-	{
-		super.Update(dt);
-		
-		// kinda cursed but double inputs. maybe have a handler if you want more ui shit (loooot editor)
-		if (GetEditor().IsInventoryEditorActive() || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
-			return;
-		}
-		
-		Input input = GetGame().GetInput();
-		if (input.LocalPress("EditorToggleCursor")) {
-			if (!EditorMapWidget.IsVisible() && (!CurrentDialog || !GetEditor().Settings.LockCameraDuringDialogs)) {
-				ShowCursor(!IsCursorVisible());
-			}
-		}
-		
-		if (input.LocalPress("EditorToggleUI")) {			
-			Show(!IsVisible());
-		}
-		
-		if (input.LocalPress("EditorToggleMap")) {
-			EditorMapWidget.Show(!EditorMapWidget.IsVisible());
-			ShowCursor(true);
-			EditorEvents.MapToggled(this, EditorMapWidget, EditorMapWidget.IsVisible());
-		}
-	}
 
 	override void Show(bool show) 
 	{
 		EditorLog.Trace("EditorHud::Show");
-		m_LayoutRoot.Show(show);
+		if (m_LayoutRoot) {
+			m_LayoutRoot.Show(show);
+		}
 		
 		if (CurrentDialog) {
 			CurrentDialog.GetLayoutRoot().Show(show);
 		}
-		
-		if (IsCursorVisible() && !show) {
-			ShowCursor(false);
-		}
-		
-		PlayerBase controlled_player = GetEditor().GetCurrentControlPlayer();
-		Hud hud = GetGame().GetMission().GetHud();
-		hud.ShowHudUI(g_Game.GetProfileOption(EDayZProfilesOptions.HUD) && !show && controlled_player != null);
-		hud.ShowQuickbarUI(g_Game.GetProfileOption(EDayZProfilesOptions.QUICKBAR) && !show && controlled_player != null);
 	}
 	
 	override bool IsVisible() 
 	{
 		return m_LayoutRoot.IsVisible();
 	}
-		
+	
+	void ToggleCursor() 
+	{		
+		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+	}
+	
 	void ShowCursor(bool state) 
 	{
 		GetGame().GetUIManager().ShowCursor(state);
-		
-		// If player is active
-		PlayerBase controlled_player = GetEditor().GetCurrentControlPlayer();
-		if (controlled_player) {
-			controlled_player.DisableSimulation(IsCursorVisible());
-		}
 		
 		if (!state) {
 			delete CurrentTooltip;
 			delete CurrentMenu;
 			SetFocus(null);
 		}
-	}
-	
-	bool IsCursorVisible()
-	{
-		return GetGame().GetUIManager().IsCursorVisible();
 	}
 		
 	void ShowScreenLogs(bool state)
@@ -135,7 +97,13 @@ class EditorHud: ScriptView
 		GetMousePos(x, y);
 		thread _DelayedDragBoxCheck(x, y);		
 	}
-
+	
+	void ScrollToListItem(EditorListItem list_item)
+	{
+		
+		//VScrollToWidget(list_item.GetLayoutRoot());
+	}
+	
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
 		int drag_box_color = GetEditor().Settings.SelectionColor;
@@ -210,16 +178,6 @@ class EditorHud: ScriptView
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/layouts/hud/EditorHud.layout";
-	}
-	
-	override typename GetControllerType()
-	{
-		return EditorHudController;
-	}
-	
-	EditorHudController GetTemplateController()
-	{
-		return EditorHudController.Cast(m_Controller);
 	}
 	
 	// Modal Menu Control

@@ -22,4 +22,9 @@ class EditorCopyPositionCommand: EditorCommand
 	{
 		return "#STR_EDITOR_CMD_COPY_POS";
 	}
+		
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_P };
+	}
 }

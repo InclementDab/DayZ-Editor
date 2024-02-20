@@ -1,3 +1,12 @@
+////////////////////////////////////////////////////////////////////
+//DeRap: config.bin
+//Produced from mikero's Dos Tools Dll version 9.44
+//https://mikero.bytex.digital/Downloads
+//'now' is Tue Feb 20 16:27:24 2024 : 'file' last modified on Tue Jul 11 22:28:03 2023
+////////////////////////////////////////////////////////////////////
+
+#define _ARMA_
+
 class CfgPatches
 {
 	class Editor_GUI
@@ -369,7 +378,7 @@ class RscMapControl: DayZMapControl
 	maxSatelliteAlpha = 0.85;
 	alphaFadeStartScale = 2;
 	alphaFadeEndScale = 2;
-	colorLevels[]={0.64999998,0.60000002,0.44999999,0.94999999};
+	colorLevels[] = {0.65,0.6,0.45,0.95};
 	colorBackground[] = {0.969,0.957,0.949,1.0};
 	colorSea[] = {0.467,0.631,0.851,0.5};
 	colorForest[] = {0.624,0.78,0.388,0.5};
@@ -411,7 +420,7 @@ class RscMapControl: DayZMapControl
 	{
 		lineWidthThin = 0.008;
 		lineWidthThick = 0.014;
-		lineDistanceMin = 3e-005;
+		lineDistanceMin = 3e-05;
 		lineLengthMin = 5;
 	};
 	class Legend

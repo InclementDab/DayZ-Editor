@@ -21,11 +21,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override void Update(float dt)
 	{
-		if (!GetEditor().GetEditorHud().IsVisible()) {
-			m_LayoutRoot.Show(false);
-			return;
-		}
-		
 		vector position = GetPosition();	
 		float distance = vector.Distance(GetGame().GetCurrentCameraPosition(), position);
 		if (m_Editor.Settings.MarkerViewDistance < distance) {

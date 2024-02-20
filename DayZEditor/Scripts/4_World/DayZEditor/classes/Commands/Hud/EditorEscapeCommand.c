@@ -23,11 +23,6 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
-		if (m_Editor.IsPromptedForObjectSelection()) {
-			m_Editor.PromptForObjectSelection(null);
-			return true;
-		}
-		
 		if (m_Editor.GetSelectedObjects().Count() > 0) {
 			m_Editor.ClearSelection();
 			return true;
@@ -49,14 +44,19 @@ class EditorEscapeCommand: EditorCommand
 		} 
 
 		if (g_Game.GetMission().IsPaused()) {
-			m_Editor.GetEditorHud().Show(m_Editor.GetCurrentControl() == m_Editor.GetCamera());
 			g_Game.GetMission().Continue();
+			m_Editor.GetEditorHud().Show(true);
 			return true;
 		} 
 		
-		m_Editor.GetEditorHud().Show(false);
 		g_Game.GetMission().Pause();
+		m_Editor.GetEditorHud().Show(false);
 		return true;
+	}
+	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_ESCAPE };
 	}
 	
 	override string GetName() 

@@ -15,4 +15,9 @@ class EditorSelectAllCommand: EditorCommand
 	{
 		return "#STR_EDITOR_SELECT_ALL";
 	}
+		
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_A };
+	}
 }

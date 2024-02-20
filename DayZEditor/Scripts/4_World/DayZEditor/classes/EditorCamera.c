@@ -8,13 +8,9 @@ class EditorCameraLight: SpotLightBase
 	}
 }
 
-class ScriptedCamera: Camera
-{
-	void OnSelectCamera();
-}
 
 // make option Q and E go up and down no matter orientation
-class EditorCamera: ScriptedCamera
+class EditorCamera: Camera
 {
 	static const float TELEPORT_LERP_DISTANCE = 1000;
 	
@@ -87,19 +83,6 @@ class EditorCamera: ScriptedCamera
 			LerpCameraPosition(position, 0.1);
 		}
 	}
-	
-	override void OnSelectCamera()
-	{
-		super.OnSelectCamera();
-		
-		MoveEnabled = true;
-		LookEnabled = true;
-		
-		// literally just for startup
-		if (GetEditor().GetEditorHud()) {
-			GetEditor().GetEditorHud().Show(true);
-		}
-	}
 
 	void OnTargetSelected( Object target )
 	{
@@ -132,9 +115,14 @@ class EditorCamera: ScriptedCamera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		if (GetEditor().GetCurrentControl() != this) {
-			return;
+		//EditorLog.Trace("EditorCamera::EOnFrame");
+		/*if (SendUpdateAccumalator > 0.5){
+			//GetGame().UpdateSpectatorPosition(GetPosition());
+
+			SendUpdateAccumalator = 0;
 		}
+			
+		SendUpdateAccumalator = SendUpdateAccumalator + timeSlice;*/
 		
 		vector original_position_unchanged;
 		vector transform[4];
@@ -144,20 +132,6 @@ class EditorCamera: ScriptedCamera
 		Input input = GetGame().GetInput();
 		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
 			return;
-		}
-		
-		// teleportation logic
-		if (input.LocalPress("UAZoomIn")) {	
-			vector mouse_pos = Vector(Editor.CurrentMousePosition[0], GetGame().SurfaceY(Editor.CurrentMousePosition[0], Editor.CurrentMousePosition[2]), Editor.CurrentMousePosition[2]);
-			vector camera_current_pos = GetPosition();
-			float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
-			
-			// check if water is under mouse, to stop from teleporting under water			
-			if (GetEditor().IsSurfaceWater(mouse_pos)) {
-				SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
-			} else {
-				SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
-			}
 		}
 		
 		if (!KeyState(KeyCode.KC_LCONTROL)) {
@@ -245,11 +219,24 @@ class EditorCamera: ScriptedCamera
 		}
 				
 		SetTransform(transform);
-		GetEditor().Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km		
+		GetEditor().Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
+		
+		if (HideCursorOnDrag) {
+			if (input.LocalPress("UATempRaiseWeapon")) {
+				GetEditor().GetEditorHud().ShowCursor(false);
+				
+			}
+			
+			if (input.LocalRelease("UATempRaiseWeapon")) {
+				GetEditor().GetEditorHud().ShowCursor(true);
+			}
+		}
+		
 		
 		orientation = GetOrientation();
 		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
-			angularVelocity = angularVelocity * Smoothing;
+			
+			angularVelocity = angularVelocity * Smoothing;			
 			float temp_cam_rot_speed = Math.Lerp(Mouse_Sens, Mouse_Sens * 0.01, Smoothing);
 			angularVelocity[0] = angularVelocity[0] + ( yawDiff * temp_cam_rot_speed * 10 );
 			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * temp_cam_rot_speed * 10);

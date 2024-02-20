@@ -1,7 +1,5 @@
 modded class PlayerBase
 {	
-	static PlayerBase s_LastControlledPlayer;
-	
 	static map<string, int> GetEmoteList()
 	{
 		map<string, int> emotes();
@@ -14,28 +12,14 @@ modded class PlayerBase
 		
 		return emotes;
 	}
-		
-	override void EOnFrame(IEntity other, float timeSlice)
-	{
-		GetInputController().SetDisabled(GetEditor().GetCurrentControl() != this);
-	}
-		
-	override void OnSelectPlayer()
-	{
-		super.OnSelectPlayer();
-		
-		s_LastControlledPlayer = this;
-		
-		GetEditor().GetEditorHud().Show(false);
-	}
 	
 	override void EEKilled(Object killer)
 	{
-		super.EEKilled(killer);
+		//super.EEKilled(killer);
 		
 		// Quick! Before he stops breathing
-		if (this == GetEditor().GetCurrentControl()) {
-			GetEditor().ControlCamera(GetEditor().GetCamera());
+		if (this == PlayerBase.Cast(GetGame().GetPlayer())) {
+			GetEditor().SetActive(true);
 		}
 	}
 	

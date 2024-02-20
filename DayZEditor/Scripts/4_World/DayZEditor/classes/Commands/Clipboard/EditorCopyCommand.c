@@ -17,4 +17,9 @@ class EditorCopyCommand: EditorCommand
 	{
 		return "set:dayz_editor_gui image:copy";
 	}
+	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_C };
+	}
 }

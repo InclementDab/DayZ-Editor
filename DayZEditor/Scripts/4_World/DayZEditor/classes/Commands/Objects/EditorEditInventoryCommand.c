@@ -8,6 +8,7 @@ class EditorEditInventoryCommand: EditorCommand
 			return false;
 		}
 		
+		m_Editor.SetActive(false);
 		m_Editor.StartInventoryEditor(data.param1);
 		return true;
 	}

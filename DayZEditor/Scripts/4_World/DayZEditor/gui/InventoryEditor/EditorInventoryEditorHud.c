@@ -19,45 +19,16 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 		//m_Camera.LerpToPosition(target_pos, 1.0);
 		m_Camera.SetPosition(target_pos);
 		m_Camera.Update();
-			
-		m_TemplateController.SetEntity(m_Entity);
+		GetGame().SelectPlayer(null, null);
+
+		m_Camera.SetActive(true);
 		
-		GetEditor().ControlCamera(m_Camera);
-		GetEditor().GetEditorHud().Show(false);
+		m_TemplateController.SetEntity(m_Entity);
 	}
 	
 	void ~EditorInventoryEditorHud()
 	{
-		// fallback
-		if (GetEditor().GetCurrentControl() == m_Camera) {
-			GetEditor().ControlCamera();
-		}
-		
 		GetGame().ObjectDelete(m_Camera);
-	}
-	
-	override void Update(float dt)
-	{
-		super.Update(dt);
-		
-		Input input = GetGame().GetInput();
-		// another hack. input management needs to be moved to commands, all im saayyinn
-		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
-			return;
-		}
-		
-		if (input.LocalPress("UAUIBack")) {
-			GetEditor().ControlCamera();
-			Close();
-		}
-		
-		if (input.LocalPress("EditorToggleUI")) {			
-			m_LayoutRoot.Show(!m_LayoutRoot.IsVisible());
-		}
-		
-		if (input.LocalPress("EditorToggleCursor")) {
-			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
-		}
 	}
 	
 	void ClearExecute(ButtonCommandArgs args)
@@ -82,20 +53,18 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 	}
 	
 	void OpenInventoryExecute(ButtonCommandArgs args)
-	{
-		PlayerBase player = PlayerBase.Cast(m_Entity);
-		// only supporting players, i cba to fuck with car inventories
-		if (!player) {
-			return;
-		}
+	{		
+		GetGame().SelectPlayer(null, GetGame().GetPlayer());
+		GetGame().GetPlayer().DisableSimulation(false);
+		GetGame().GetPlayer().GetInputController().SetDisabled(false);
+		GetGame().GetMission().ShowInventory();		
 		
-		GetEditor().ControlPlayer(player);
 		Close();
 	}
 	
 	void ExitExecute(ButtonCommandArgs args)
 	{
-		GetEditor().ControlCamera();
+		GetEditor().SetActive(true);
 		Close();
 	}
 	
@@ -156,9 +125,9 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 	
 	override bool UseMouse()
 	{
-		return true;
+		return false;
 	}
-		
+	
 	EntityAI GetEntity()
 	{
 		return m_Entity;
