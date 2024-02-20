@@ -65,7 +65,7 @@ class EditorPlaceableItem: Managed
 		placeable_item.Category = EditorPlaceableItemCategory.CONFIG;
 		
 		string model;
-		GetWorkbenchGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
+		GetGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
 		placeable_item.Model = new CF_File(model);
 		if (!placeable_item.Model.IsValid()) {
 			return null;

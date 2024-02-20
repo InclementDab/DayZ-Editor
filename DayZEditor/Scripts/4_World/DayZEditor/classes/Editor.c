@@ -1408,8 +1408,8 @@ class Editor: Managed
 			GetEditor().Clear();
 		}
 				
-		EditorLog.Debug("Deleting %1 Objects", save_data.EditorDeletedObjects.Count().ToString());		
-		foreach (EditorDeletedObjectData id: save_data.EditorDeletedObjects) {
+		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());		
+		foreach (EditorDeletedObjectData id: save_data.EditorHiddenObjects) {
 			if (HideMapObject(id, false)) {
 				deleted_objects++;
 			}
@@ -1431,12 +1431,12 @@ class Editor: Managed
 			error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
 		}
 		
-		if (deleted_objects < save_data.EditorDeletedObjects.Count()) {
+		if (deleted_objects < save_data.EditorHiddenObjects.Count()) {
 			if (error_message != string.Empty) {
 				error_message += "	";
 			}
 			
-			error_message += string.Format("Failed to delete %1 objects", save_data.EditorDeletedObjects.Count() - deleted_objects);
+			error_message += string.Format("Failed to delete %1 objects", save_data.EditorHiddenObjects.Count() - deleted_objects);
 		}
 		
 		if (error_message != string.Empty) {
@@ -1446,7 +1446,7 @@ class Editor: Managed
 			// Disable auto save since we loaded a shit file
 			Settings.AutoSaveTimer = -1;
 		} else {
-			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorDeletedObjects.Count()), COLOR_GREEN);
+			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
 		}
 	}
 	
@@ -1476,7 +1476,7 @@ class Editor: Managed
 		
 		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
-			save_data.EditorDeletedObjects.Insert(deleted_object.GetData());
+			save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
 		}
 		
 		return save_data;

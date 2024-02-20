@@ -10,6 +10,8 @@ class EditorCommand: RelayCommand
 	protected Editor m_Editor;
 	protected ref Param m_Param;
 	string Text;
+	
+	protected bool m_CanExecute;
 
 	override bool Execute(Class sender, CommandArgs args) 
 	{
@@ -32,7 +34,13 @@ class EditorCommand: RelayCommand
 		return false;
 	}
 	
-	override void CanExecuteChanged(bool state) 
+	void SetCanExecute(bool state)
+	{
+		m_CanExecute = state;
+		CanExecuteChanged(m_CanExecute);
+	}
+	
+	void CanExecuteChanged(bool state) 
 	{
 		//EditorLog.Trace("CanExecuteChanged: %1 - %2", state.ToString(), m_ViewBinding.GetLayoutRoot().GetName());
 		

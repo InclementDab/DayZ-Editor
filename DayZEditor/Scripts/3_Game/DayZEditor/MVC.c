@@ -1,4 +1,4 @@
-modded class MVC
+modded class DayZGame
 {
 	override void RegisterConversionTemplates(out TypeConversionHashMap type_conversions)
 	{
