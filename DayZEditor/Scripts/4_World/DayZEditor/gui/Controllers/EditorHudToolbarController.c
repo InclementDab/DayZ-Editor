@@ -1,8 +1,6 @@
 class EditorHudToolbarController: EditorControllerBase
 {
-	static const string NOTIFICATION_SOUND = "Notification_SoundSet";
-	
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
+	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData;
 
 	float BrushRadius = 65;
 	float BrushDensity = 0.25;
@@ -25,17 +23,26 @@ class EditorHudToolbarController: EditorControllerBase
 	protected ImageWidget CollisionButton_Icon;
 	protected ImageWidget CameraLightButton_Icon;
 	
-	ButtonWidget BrushToggleButton;
-	TextWidget NotificationText;
+	protected ButtonWidget BrushToggleButton;
+			
+	void ~EditorHudToolbarController()
+	{
+		delete BrushTypeBoxData;
+	}
 	
-	Widget NotificationPanel;
-				
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
-				
+		
+		BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
+
+		if (!m_Editor) {
+			m_Editor = GetEditor();
+		}
+		
 #ifndef COMPONENT_SYSTEM
 		// Load Brushes		
+		
 		string brush_file = m_Editor.Settings.EditorBrushFile;
 		if (brush_file.Contains("'")) {
 			// bi wtf
@@ -56,20 +63,10 @@ class EditorHudToolbarController: EditorControllerBase
 #endif		
 	}
 	
-	void ShowNotification(string text, int color, float duration)
-	{
-		NotificationPanel.SetColor(color);
-		NotificationText.SetText(text);
-		
-		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, -25, 100);
-		SEffectManager.PlaySoundOnObject(NOTIFICATION_SOUND, GetEditor().GetCamera());
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(NotificationPanel.SetPos, (duration * 1000) + 100, false, 0, 0, true);
-	}
-	
 	// Brush Management
 	void ReloadBrushes(string filename)
 	{
+		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
 		BrushToggleButtonState = false;
 		NotifyPropertyChanged("BrushToggleButtonState");
 		
@@ -80,7 +77,9 @@ class EditorHudToolbarController: EditorControllerBase
 	
 	override void PropertyChanged(string property_name)
 	{
+		//EditorLog.Trace("EditorHudToolbarController::PropertyChanged %1", property_name);
 		switch (property_name) {
+			
 			case "BrushToggleButtonState":
 			case "BrushTypeSelection": {
 				

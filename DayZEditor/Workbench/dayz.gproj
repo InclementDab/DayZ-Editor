@@ -87,7 +87,6 @@ GameProjectClass {
 						"DayZEditor/Scripts/5_Mission"
 						"JM/CF/defines"
 						"JM/CF/scripts/5_Mission"
-						"DayZEditor/GUI"
 					}
 					EntryPoint "CreateMission"
 				}
