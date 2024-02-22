@@ -55,7 +55,7 @@ class ObjectNode: NamedNode
 		vector transform[4];
 		m_Object.GetTransform(transform);
 
-		if (HasState(NodeState.DRAGGING)) {
+		if (HasState(NodeState.DRAG)) {
 			for (int i = 0; i < 6; i++) {
 				// Debug
 				m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
@@ -274,35 +274,32 @@ class ObjectNode: NamedNode
 			}
 		}
 		
-		if (state.IsHover() || state.IsActive()) {
-			if (total_state.IsHover() || total_state.IsActive()) {
-				//EditorBoundingBox.Create(m_Object);
-				
-			}
-			
-			if (!total_state.IsHover() && !total_state.IsActive()) {
+		if (node_state.IsHover() || node_state.IsActive()) {
+			if (state) {
+				//EditorBoundingBox.Create(m_Object);				
+			} else {
 				//EditorBoundingBox.Destroy(m_Object);
 			}
 		}
 			
-		if (state.IsActive()) {	
-			if (total_state.IsActive()) {			
+		if (node_state.IsActive()) {	
+			if (state) {			
 				
 			} else {
 				delete m_GizmoXYZ;
 			}
 		}
 		
-		if (state.IsSuppressed()) {	
+		if (node_state.IsSuppress()) {	
 			RemoveState(NodeState.ACTIVE);
-			if (total_state.IsSuppressed()) {
+			if (node_state.IsSuppress()) {
 				m_SuppressedObject = new SuppressedObject(m_Object);
 			} else {
 				delete m_SuppressedObject;
 			}
 			
 			m_Object.Update();
-			Synchronize();
+			SetSynchDirty();
 		}
 	}
 			

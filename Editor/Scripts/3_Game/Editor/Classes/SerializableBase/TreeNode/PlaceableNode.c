@@ -2,21 +2,21 @@ class PlaceableNode: NamedNode
 {	
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 	
-		if (state.IsActive()) {	
-			if (total_state.IsActive()) {
+		if (node_state.IsActive()) {	
+			if (state) {
 				vector matrix[4];
 				Math3D.MatrixIdentity4(matrix);
-				GetEditor().GetPlacing().Add(new ObjectNode(UUID.Generate(), m_UUID, GetIcon(), EditorNode.CreateObject(GetUUID(), matrix)));
+				GetEditor().GetPlacing().Add(new ObjectNode(UUID.Generate(), m_UUID, Icon, LinearColor.WHITE, EditorNode.CreateObject(GetUUID(), matrix)));
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				foreach (SandboxNode node: GetEditor().GetPlacing().Children) {
+				foreach (Node node: GetEditor().GetPlacing().Children) {
 					ObjectNode object_node = ObjectNode.Cast(node);
-					GetEditor().InsertHistory(string.Format("Undo Place %1", object_node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, object_node, null);
+					GetEditor().InsertHistory(object_node, null);
 					GetEditor().GetPlacingDestination().Add(object_node);
-					GetEditor().GetPlacingDestination().Synchronize();			
+					GetEditor().GetPlacingDestination().SetSynchDirty();			
 					GetEditor().GetPlacing().Remove(object_node);
 					
 					object_node.AddState(NodeState.ACTIVE);
@@ -36,7 +36,7 @@ class PlaceableNode: NamedNode
 	
 	override NodeState GetStateMask()
 	{
-		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAGGING;
+		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAG;
 	}
 	
 	override SandboxNodeInteract GetInteractType()

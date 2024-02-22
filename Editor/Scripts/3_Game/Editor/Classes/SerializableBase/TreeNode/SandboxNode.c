@@ -24,23 +24,13 @@ modded class Node
 	{
 		return EditorNode.Cast(FindAncestor(EditorNode));
 	}	
-	
-	void Node(UUID uuid)
-	{
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
-	}
-	
+			
 	bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
 		//list_items.Insert(new MenuNode(GetDayZGame().GetSandbox().GetCommand("Rename")));
 		return true;
 	}
-	
-	void Update(float dt)
-	{
 		
-	}
-	
 	override void AddState(NodeState state)
 	{
 		if ((GetStateMask() & state) != 0) {
@@ -62,7 +52,7 @@ modded class Node
 	
 	NodeState GetStateMask()
 	{
-		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAGGING | NodeState.SUPPRESSED;
+		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAG | NodeState.SUPPRESS;
 	}
 	
 	array<string> GetXorSelections()

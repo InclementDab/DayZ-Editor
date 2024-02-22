@@ -84,7 +84,7 @@ class EditorHud: ScriptView
 		
 		Input input = GetGame().GetInput();	
 		
-		if (input.LocalPress_ID(UAFire) && Node.StateMachine[NodeState.HOVER].Count() == 0) {
+		if (input.LocalPress_ID(UAFire) && Node.States[NodeState.HOVER].Count() == 0) {
 			m_DragX = mouse_x;
 			m_DragY = mouse_y;
 		}
@@ -123,7 +123,7 @@ class EditorHud: ScriptView
 					Whiteboard.DrawLine(x_avg, m_DragY, x_avg, mouse_y, mouse_x - m_DragX, 0x644B77BE);		
 					
 					
-					/*foreach (TreeNode node: TreeNode.All) {
+					/*foreach (Node node: Node.All) {
 						if (node && node.GetNodeView()) {
 							float x_n, y_n;
 							node.GetNodeView().GetLayoutRoot().GetScreenPos(x_n, y_n);

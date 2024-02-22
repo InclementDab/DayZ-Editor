@@ -7,7 +7,7 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
-class EditorNode: Node
+class EditorNode: NamedNode
 {	
 	void LegacyLoad(notnull EditorSaveData save_data)
 	{
@@ -28,10 +28,10 @@ class EditorNode: Node
 	protected EditorCamera m_Camera;
 	protected ref EditorHud	m_Hud;
 		
-	//[TreeNode("SERVER\\Layers", "Layers", Symbols.LAYER_GROUP)]
+	//[Node("SERVER\\Layers", "Layers", Symbols.LAYER_GROUP)]
 	static const string LAYERS = "Layers";
 	
-		//[TreeNode("SERVER\\Layers\\Brushed", "Brushed", Symbols.PAINTBRUSH)];
+		//[Node("SERVER\\Layers\\Brushed", "Brushed", Symbols.PAINTBRUSH)];
 		static const string BRUSHED = "Brushed";
 		static const string HIDDEN = "Hidden";
 	
@@ -43,19 +43,19 @@ class EditorNode: Node
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 		
-	void EditorNode(UUID uuid) 
+	void EditorNode(UUID uuid, string display_name, Symbols icon, LinearColor color) 
 	{				
 		// Load all default categories and placements
-		Add(new NamedNode(LAYERS, "Layers", Symbols.LAYER_GROUP));
-		Add(new NamedNode(MENUS, "Menus", Symbols.SQUARE_LIST));
-		Add(new NamedNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT));
-		Add(new NamedNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK));
-		Add(new NamedNode(BRUSHES, "Brushes", Symbols.BRUSH));
-		Add(new NamedNode(PLACING, "Placing", Symbols.FIREPLACE));
-		Add(new NamedNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));			
+		Add(new NamedNode(LAYERS, "Layers", Symbols.LAYER_GROUP, LinearColor.WHITE));
+		Add(new NamedNode(MENUS, "Menus", Symbols.SQUARE_LIST, LinearColor.WHITE));
+		Add(new NamedNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT, LinearColor.WHITE));
+		Add(new NamedNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK, LinearColor.WHITE));
+		Add(new NamedNode(BRUSHES, "Brushes", Symbols.BRUSH, LinearColor.WHITE));
+		Add(new NamedNode(PLACING, "Placing", Symbols.FIREPLACE, LinearColor.WHITE));
+		Add(new NamedNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE, LinearColor.WHITE));
 		
-		this[LAYERS].Add(new NamedNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
-		this[LAYERS].Add(new NamedNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
+		this[LAYERS].Add(new NamedNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH, LinearColor.WHITE));
+		this[LAYERS].Add(new NamedNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH, LinearColor.WHITE));
 		// default layer for now
 		this[LAYERS].AddState(NodeState.ACTIVE);
 		
@@ -71,24 +71,20 @@ class EditorNode: Node
 		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["SaveAs"]);
 		*/
 		
-		this[BRUSHES].Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES));
-		this[BRUSHES].Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT));
+		this[BRUSHES].Add(new BetulaPendula_Brush("BetulaPendula_Brush", "Betula Pendula", Symbols.TREES, LinearColor.WHITE));
+		this[BRUSHES].Add(new LightningBrush("LightningBrush", "Lightning Brush", Symbols.BOLT, LinearColor.WHITE));
 		//this[BRUSHES].Add(this[COMMANDS]["Piano"]);
 	}
 
 	void ~EditorNode() 
-	{
-		if (GetGame() && GetGame().GetUpdateQueue(CALL_CATEGORY_GUI)) {
-			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
-		}
-		
+	{		
 		delete m_Hud;
 		GetGame().ObjectDelete(m_Camera);
 	}
 	
-	override void Update(float dt)
+	override void EUpdate(float dt)
 	{
-		super.Update(dt);
+		super.EUpdate(dt);
 		
 		GetDayZGame().SetDate(Date);
 		
@@ -103,10 +99,10 @@ class EditorNode: Node
 	
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 		
-		if (state.IsActive()) {
-			if (total_state.IsActive()) {
+		if (node_state.IsActive()) {
+			if (state) {
 				m_Camera.SetActive(true);
 				m_Hud.Show(true);
 				Player.GetInputController().SetDisabled(true);
@@ -142,7 +138,7 @@ class EditorNode: Node
 #endif
 	}
 	
-	void InsertHistory(string display_name, Symbols icon, Node node, ScriptReadWriteContext data)
+	void InsertHistory(Node node, ScriptReadWriteContext data)
 	{
 		// Clear the stack first
 		foreach (string uuid, Node undo_redo_node: this[HISTORY].Children) {	
@@ -159,7 +155,7 @@ class EditorNode: Node
 		}
 		
 		string uuid_generated = string.Format("History:%1", this[HISTORY].Children.Count());		
-		this[HISTORY][uuid_generated] = new EditorFootprint(uuid_generated, display_name, icon, node, data);
+		this[HISTORY][uuid_generated] = new EditorFootprint(uuid_generated, node, data);
 	}
 					
 	override void Write(Serializer serializer, int version)
@@ -191,7 +187,7 @@ class EditorNode: Node
 		
 	void Undo()
 	{
-		foreach (string uuid, TreeNode node: this[HISTORY].Children) {
+		foreach (string uuid, Node node: this[HISTORY].Children) {
 			EditorFootprint footprint = EditorFootprint.Cast(node);
 			if (!footprint) {
 				continue;
@@ -221,7 +217,7 @@ class EditorNode: Node
 	
 	bool CanUndo() 
 	{
-		foreach (string uuid, TreeNode node: this[HISTORY].Children) {
+		foreach (string uuid, Node node: this[HISTORY].Children) {
 			EditorFootprint footprint = EditorFootprint.Cast(node);
 			if (footprint && !footprint.IsUndone()) {
 				return true;
@@ -245,15 +241,15 @@ class EditorNode: Node
 	
 	Node GetPlacingDestination()
 	{
-		foreach (Node node: Node.StateMachine[NodeState.FOCUS]) {
-			if (node && node.GetState().IsContext()) {
+		foreach (Node node: Node.States[NodeState.ACTIVE]) {
+			if (node) {
 				return node;
 			}
 		}
 		
-		foreach (Node tree_node: Node.StateMachine[NodeState.ACTIVE]) {
+		foreach (Node tree_node: Node.States[NodeState.ACTIVE]) {
 			LayerNode folder_node = LayerNode.Cast(tree_node);
-			if (folder_node && folder_node.GetState().IsActive()) {
+			if (folder_node) {
 				return folder_node;
 			}
 		}

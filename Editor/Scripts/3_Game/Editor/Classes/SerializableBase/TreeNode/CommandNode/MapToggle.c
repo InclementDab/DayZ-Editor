@@ -2,11 +2,11 @@ class MapToggle: CommandNode
 {
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 		
 		EditorHud hud = GetEditor().GetHud();
 		if (hud) {
-			hud.Map.Show(total_state.IsActive());
+			hud.Map.Show(state);
 		}
 	}
 	

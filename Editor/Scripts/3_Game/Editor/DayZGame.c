@@ -13,8 +13,8 @@ modded class DayZGame
 	{
 		SetMainMenuWorld("ChernarusPlus");
 		
-#ifdef WORKBENCH
-		m_Sandbox = new Sandbox(string.Empty, string.Empty, string.Empty);
+#ifdef COMPONENT_SYSTEM
+		m_Sandbox = new Sandbox(string.Empty);
 #endif
 	}
 		
@@ -28,16 +28,16 @@ modded class DayZGame
 		super.SetMissionPath(path);
 		Print("Setting mission path " + path);
 		path.Replace("\\mission.c", "");
-		m_Sandbox = new Sandbox(path, path, Symbols.SHOVEL_SNOW);
+		m_Sandbox = new Sandbox(path);
 		
 		if (!GetGame().IsDedicatedServer() && !GetGame().IsMultiplayer()) {
-			EditorNode editor = new EditorNode(GetUserManager().GetTitleInitiator().GetUid(), GetUserManager().GetTitleInitiator().GetName(), Symbols.CAMERA);
+			EditorNode editor = new EditorNode(GetUserManager().GetTitleInitiator().GetUid(), GetUserManager().GetTitleInitiator().GetName(), Symbols.CAMERA, LinearColor.WHITE);
 			editor.Player = GetPlayer();	
 			m_Sandbox.Add(editor);
 			
 			editor.OnSynchronized();
 		} else {
-			m_Sandbox.Add(new EditorNode("Server", "Server", Symbols.SERVER));
+			m_Sandbox.Add(new EditorNode("Server", "Server", Symbols.SERVER, LinearColor.WHITE));
 		}
 	}
 			
@@ -67,7 +67,7 @@ modded class DayZGame
 		StartRandomCutscene(GetMainMenuWorld());
 		
 		// Initialize the SANDBOX!
-		m_Sandbox = new Sandbox(string.Empty, string.Empty, string.Empty);
+		m_Sandbox = new Sandbox(string.Empty);
 		
 		string address, port, password;
 		if (GetCLIParam("connect", address)) {			
@@ -105,68 +105,7 @@ modded class DayZGame
 		
 		return true;
 	}
-	
-	override void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
-	{				
-		switch (rpc_type) {			
-			case RPC_REQUEST_SYNC: {
-				GetDayZGame().GetSandbox().Synchronize(sender);
-				break;
-			}
-				
-			case RPC_NODE_SYNC: {	
-				int tree_depth;
-				if (!ctx.Read(tree_depth)) {
-					break;
-				}
-
-				TreeNode current = GetDayZGame().GetSandbox();
-				for (int i = 0; i < tree_depth; i++) {
-					string uuid;
-					ctx.Read(uuid);
-					
-					string type;
-					ctx.Read(type);
-					
-					TreeNode node = current[uuid];
-					if (!node) {
-						node = TreeNode.Cast(type.ToType().Spawn());
-						if (!node) {
-							Error("Invalid node type " + type);
-							continue;
-						}
-						
-						current[uuid] = node;
-						node.Parent = current[uuid];
-					}
-					
-					current = current[uuid];
-				}
-								
-				current.Read(ctx, 0);
-				
-				// Who do we sync back to?
-				if (GetGame().IsDedicatedServer()) {
-					array<PlayerIdentity> identities = {};
-					GetGame().GetPlayerIndentities(identities);
-					foreach (PlayerIdentity identity: identities) {
-						
-						// The client that sent the original RPC will not recieve it back - they are the most recent commit
-						if (sender.GetId() != identity.GetId()) {
-							current.Synchronize(identity);
-						}
-					}	
-				} else {
-					current.OnSynchronized();
-				}
-				
-				break;
-			}
-		}
-		
-		super.OnRPC(sender, target, rpc_type, ctx);
-	}
-		
+			
 	ref array<ref Param3<string, vector, float>> DebugTexts = {};
 	
 	void DebugDrawText(string text, vector pos, float size)
@@ -180,7 +119,7 @@ modded class DayZGame
 		PlayerIdentity identity = GetPlayer().GetIdentity();
 		delete GetDayZGame().GetSandbox().GetEditors()[identity.GetPlainId()];
 		
-		EditorNode editor = new EditorNode(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular());
+		EditorNode editor = new EditorNode(identity.GetPlainId(), identity.GetFullName(), Symbols.CAMERA.Regular(), LinearColor.WHITE);
 		editor.Identity = identity;
 		editor.Player = GetPlayer();
 		GetDayZGame().GetSandbox().GetEditors()[identity.GetPlainId()] = editor;

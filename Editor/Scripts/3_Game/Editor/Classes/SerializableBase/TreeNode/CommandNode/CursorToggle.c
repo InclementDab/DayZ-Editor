@@ -2,33 +2,33 @@ class CursorToggle: CommandNode
 {
 	protected vector m_CursorAside = vector.Aside;
 	
-	override void Update(float timeslice)
+	override void EUpdate(float timeslice)
 	{
 		Input input = GetGame().GetInput();
 		EditorNode editor = GetEditor();
 		EditorCamera camera = editor.GetCamera();
 										
 		if (input.LocalPress_ID(UAUIBack)) {
-			//TreeNode.StateMachine.RemoveAllStates(NodeState.CONTEXT);
+			//Node.States.RemoveAllStates(NodeState.CONTEXT);
 		}
 		
 		if (input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) {			
 			
 			if (!GetWidgetUnderCursor()) {
 				// reassigning because were gonna fuck with this statemachine array
-				array<TreeNode> nodes = {};
-				nodes.Copy(TreeNode.StateMachine[NodeState.ACTIVE]);
-				foreach (TreeNode node_to_deselect: nodes) {
+				array<Node> nodes = {};
+				nodes.Copy(Node.States[NodeState.ACTIVE]);
+				foreach (Node node_to_deselect: nodes) {
 					if (node_to_deselect && node_to_deselect.GetInteractType() == SandboxNodeInteract.PRESS) {
 						node_to_deselect.RemoveState(NodeState.ACTIVE);
 					}
 				}
 				
-				TreeNode.StateMachine.RemoveAllStates(NodeState.CONTEXT);
+				//Node.Root.RemoveAllStates(NodeState.CONTEXT);
 			}		
 		}
 		
-		foreach (string uuid, TreeNode node1: editor.GetPlacing().Children) {
+		foreach (string uuid, Node node1: editor.GetPlacing().Children) {
 			ObjectNode object_node = ObjectNode.Cast(node1);
 			if (!object_node) {
 				continue;
@@ -87,13 +87,13 @@ class CursorToggle: CommandNode
 	
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 	
 		if (GetEditor().GetHud()) {
 			GetEditor().GetHud().ClearCursor();
 		}
 		
-		GetGame().GetUIManager().ShowCursor(total_state.IsActive());
+		GetGame().GetUIManager().ShowCursor(state);
 	}
 	
 	override SandboxNodeInteract GetInteractType()

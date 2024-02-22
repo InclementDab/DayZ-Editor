@@ -2,9 +2,9 @@ class LassoCommand: CommandNode
 {
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 		
-		if (state.IsActive() && total_state.IsActive() && GetEditor().GetHud()) {
+		if (node_state.IsActive() && state && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.LASSO;
 		}
 	}

@@ -31,17 +31,11 @@ GameProjectClass {
 				"Editor/gui/icons/tree.imageset"
 				"Editor/gui/icons/icons.imageset"
 				"DabsFramework/gui/imagesets/prefabs.imageset"
-
 				"DabsFramework/gui/icons/brands.imageset"
-				"DabsFramework/gui/icons/duotone.imageset"
 				"DabsFramework/gui/icons/light.imageset"
 				"DabsFramework/gui/icons/regular.imageset"
-				"DabsFramework/gui/icons/sharp_light.imageset"
-				"DabsFramework/gui/icons/sharp_regular.imageset"
-				"DabsFramework/gui/icons/sharp_solid.imageset"
-				"DabsFramework/gui/icons/sharp_thin.imageset"
-				"DabsFramework/gui/icons/sharp_solid.imageset"
-				"DabsFramework/gui/icons/sharp_thin.imageset"
+				"DabsFramework/gui/icons/solid.imageset"
+				"DabsFramework/gui/icons/thin.imageset"
 			}
 			widgetStyles {
 				"gui/looknfeel/dayzwidgets.styles" 
@@ -58,6 +52,7 @@ GameProjectClass {
 						"Editor/Scripts/1_Core"
 						"JM/CF/defines"
 						"JM/CF/scripts/1_Core"
+						"JM/COT/scripts/1_Core"
 					}
 					EntryPoint ""
 				}
@@ -67,6 +62,7 @@ GameProjectClass {
 						"scripts/2_GameLib"
 						"JM/CF/defines"
 						"JM/CF/scripts/2_GameLib"
+						"JM/COT/scripts/2_GameLib"
 					}
 					EntryPoint ""
 				}
@@ -79,6 +75,7 @@ GameProjectClass {
 						"Editor/Scripts/3_Game"
 						"JM/CF/defines"
 						"JM/CF/scripts/3_Game"
+						"JM/COT/scripts/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
@@ -91,6 +88,7 @@ GameProjectClass {
 						"Editor/Scripts/4_World"
 						"JM/CF/defines"
 						"JM/CF/scripts/4_World"
+						"JM/COT/scripts/4_World"
 					}
 					EntryPoint ""
 				}
@@ -103,7 +101,7 @@ GameProjectClass {
 						"Editor/Scripts/5_Mission"
 						"JM/CF/defines"
 						"JM/CF/scripts/5_Mission"
-						"Editor/GUI"
+						"JM/COT/scripts/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}

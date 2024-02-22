@@ -9,7 +9,7 @@ class ObjectView: NodeView
 	void ObjectView(Node node)
 	{
 		m_ObjectNode = ObjectNode.Cast(node);		
-		Symbols icon = m_ObjectNode.GetIcon();
+		Symbols icon = m_ObjectNode.Icon;
 		
 		Image.LoadImageFile(0, icon.Regular());
 		Image.SetImage(0);
@@ -18,20 +18,24 @@ class ObjectView: NodeView
 		Outline.SetImage(0);
 	}
 	
-	override void OnStateChanged(Node node, NodeState state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(node, state);
+		super.OnStateChanged(node_state, state);
 		
-		Outline.SetAlpha(state.IsHover());
+		if (node_state.IsHover()) {
+			Outline.SetAlpha(state);
+		}
 				
-		if (node.GetState().IsDragging() || node.GetState().IsActive()) {			
-			Outline.SetColor(EditorColor.SELECT);
-		} else {
-			Outline.SetColor(ARGB(150, 255, 255, 255));
+		if (node_state.IsDrag() || state) {
+			if (state) {
+				Outline.SetColor(EditorColor.SELECT);
+			} else {
+				Outline.SetColor(ARGB(150, 255, 255, 255));
+			}
 		}
 		
-		if (state.IsDragging()) {
-			if (node.GetState().IsDragging()) {
+		if (node_state.IsDrag()) {
+			if (state) {
 				m_ObjectNode.GetEditor().GetHud().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
 			} else {
 				m_ObjectNode.GetEditor().GetHud().ClearCursor();

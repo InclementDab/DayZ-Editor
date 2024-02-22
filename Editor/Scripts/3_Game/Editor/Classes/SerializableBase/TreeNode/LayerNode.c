@@ -20,6 +20,6 @@ class LayerNode: NamedNode
 		
 	override NodeState GetStateMask()
 	{
-		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAGGING | NodeState.FOCUS | NodeState.EXTEND;
+		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAG | NodeState.EXTEND;
 	}
 }

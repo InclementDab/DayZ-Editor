@@ -2,18 +2,18 @@ class DeleteCommand: CommandNode
 {
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 		
-		if (total_state.IsActive()) {
-			foreach (TreeNode node: TreeNode.StateMachine[NodeState.ACTIVE]) {
-				if (!node || !node.CanDelete()) {
+		if (node_state.IsActive() && state) {
+			foreach (Node node: Node.States[NodeState.ACTIVE]) {
+				if (!node) {
 					continue;
 				}
 				
-				GetEditor().InsertHistory(string.Format("Undo Delete %1", node.GetUUID()), Symbols.CLOCK_ROTATE_LEFT, null, node.CreateCopy());
+				GetEditor().InsertHistory(null, node.CreateCopy());
 				
-				node.Parent.Remove(node.GetUUID());
-				node.Parent.Synchronize();
+				node.GetParent().Remove(node.GetUUID());
+				node.GetParent().SetSynchDirty();
 				GetEditor().PlaySound(EditorSounds.HIGHLIGHT);
 			}
 		}

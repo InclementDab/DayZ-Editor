@@ -1,11 +1,11 @@
 class MenuNode: TreeView
 {	
-	override void OnStateChanged(Node node, NodeState state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(node, state);
+		super.OnStateChanged(node_state, state);
 		
-		if (state.IsHover()) {
-			if (node.GetState().IsHover()) {
+		if (node_state.IsHover()) {
+			if (state) {
 				WidgetAnimator.AnimateColor(Panel, EditorColor.SELECT, 1);
 			} else {
 				WidgetAnimator.AnimateColor(Panel, EditorColor.BACKGROUND_1, 100);

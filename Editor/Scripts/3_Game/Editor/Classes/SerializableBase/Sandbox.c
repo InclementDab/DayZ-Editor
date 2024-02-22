@@ -73,52 +73,52 @@ class Sandbox: Node
 	
 	void Sandbox(UUID uuid)
 	{		
-		Add(new FileNode(MISSION, "Mission", Symbols.FOLDER, "$mission:"));
-		Add(new Node(DZ, "DZ", Symbols.FOLDER));
-		Add(new Node(VEHICLES, "CfgVehicles", Symbols.FOLDER));
-		Add(new Node(WEAPONS, "CfgWeapons", Symbols.FOLDER));
-		Add(new Node(SCRIPTED, "Scripted Entities", Symbols.FOLDER));
+		Add(new FileNode(MISSION, "Mission", Symbols.FOLDER, LinearColor.WHITE, "$mission:"));
+		Add(new NamedNode(DZ, "DZ", Symbols.FOLDER, LinearColor.WHITE));
+		Add(new NamedNode(VEHICLES, "CfgVehicles", Symbols.FOLDER, LinearColor.WHITE));
+		Add(new NamedNode(WEAPONS, "CfgWeapons", Symbols.FOLDER, LinearColor.WHITE));
+		Add(new NamedNode(SCRIPTED, "Scripted Entities", Symbols.FOLDER, LinearColor.WHITE));
 		
-		Add(new Node(EDITORS, "Editors", Symbols.PEOPLE_SIMPLE));
-		Add(new Node(COMMANDS, "Commands", Symbols.COMMAND));
-		Add(new Node(TOOLS, "Tools", Symbols.TOOLBOX));
+		Add(new NamedNode(EDITORS, "Editors", Symbols.PEOPLE_SIMPLE, LinearColor.WHITE));
+		Add(new NamedNode(COMMANDS, "Commands", Symbols.COMMAND, LinearColor.WHITE));
+		Add(new NamedNode(TOOLS, "Tools", Symbols.TOOLBOX, LinearColor.WHITE));
 		
-		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST));
-		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS));
-		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty));
-		this[COMMANDS].Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT));
-		this[COMMANDS].Add(new PianoCommand("Piano", "Drop Piano", Symbols.PIANO));
-		this[COMMANDS].Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED));
-		this[COMMANDS].Add(new CommandNode("Camera", "Camera", Symbols.CAMERA));
-		this[COMMANDS].Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED));
-		this[COMMANDS].Add(new CommandNode("Copy", "Copy", Symbols.COPY));
-		this[COMMANDS].Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS));
-		this[COMMANDS].Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH));
-		this[COMMANDS].Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE));
-		this[COMMANDS].Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO));
-		this[COMMANDS].Add(new CommandNode("Lock", "Lock", Symbols.LOCK));
-		this[COMMANDS].Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET));
-		this[COMMANDS].Add(new CommandNode("New", "New", Symbols.FILE));
-		this[COMMANDS].Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN));
-		this[COMMANDS].Add(new CommandNode("Paste", "Paste", Symbols.PASTE));
-		this[COMMANDS].Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT));
-		this[COMMANDS].Add(new RenameCommand("Rename", "Rename", string.Empty));
-		this[COMMANDS].Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN));
-		this[COMMANDS].Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK));
-		this[COMMANDS].Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK));
-		this[COMMANDS].Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT));
-		this[COMMANDS].Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN));
-		this[COMMANDS].Add(new WeatherToggle("Weather", "Weather", Symbols.SUN));
-		this[COMMANDS].Add(new CursorToggle("Cursor", "Toggle Cursor", Symbols.ARROW_POINTER));
-		this[COMMANDS].Add(new HudToggle("Hud", "Toggle Hud", Symbols.EYE));
-		this[COMMANDS].Add(new MapToggle("Map", "Toggle Map", Symbols.MAP));
-		this[COMMANDS].Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT));
-		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS));
-		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Brands.XBOX));
+		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST, LinearColor.WHITE));
+		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS, LinearColor.WHITE));
+		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, LinearColor.WHITE));
+		this[COMMANDS].Add(new PianoCommand("Piano", "Drop Piano", Symbols.PIANO, LinearColor.WHITE));
+		this[COMMANDS].Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, LinearColor.WHITE));
+		this[COMMANDS].Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Copy", "Copy", Symbols.COPY, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS, LinearColor.WHITE));
+		this[COMMANDS].Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE, LinearColor.WHITE));
+		this[COMMANDS].Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Lock", "Lock", Symbols.LOCK, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("New", "New", Symbols.FILE, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Paste", "Paste", Symbols.PASTE, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT, LinearColor.WHITE));
+		this[COMMANDS].Add(new RenameCommand("Rename", "Rename", string.Empty, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, LinearColor.WHITE));
+		this[COMMANDS].Add(new WeatherToggle("Weather", "Weather", Symbols.SUN, LinearColor.WHITE));
+		this[COMMANDS].Add(new CursorToggle("Cursor", "Toggle Cursor", Symbols.ARROW_POINTER, LinearColor.WHITE));
+		this[COMMANDS].Add(new HudToggle("Hud", "Toggle Hud", Symbols.EYE, LinearColor.WHITE));
+		this[COMMANDS].Add(new MapToggle("Map", "Toggle Map", Symbols.MAP, LinearColor.WHITE));
+		this[COMMANDS].Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT, LinearColor.WHITE));
+		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS, LinearColor.WHITE));
+		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Brands.XBOX, LinearColor.WHITE));
 		
-		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT));
-		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE));
-		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE));			
+		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT, LinearColor.WHITE));
+		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE, LinearColor.WHITE));
+		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE, LinearColor.WHITE));
 		
 #ifndef WORKBENCH
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount(CFG_VEHICLESPATH); i++) {
@@ -180,13 +180,13 @@ class Sandbox: Node
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
 			p3d_files.Debug();
 			foreach (string p3d: p3d_files) {
-				TreeNode current = this[DZ];
+				Node current = this[DZ];
 				array<string> p3d_split = {};
 				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
 				for (int k = 1; k < p3d_split.Count() - 1; k++) {
 					//Print(p3d_split[k]);
 					if (!current[p3d_split[k]]) {
-						current[p3d_split[k]] = new TreeNode(p3d_split[k], p3d_split[k], Symbols.FOLDER);
+						current[p3d_split[k]] = new Node(p3d_split[k], p3d_split[k], Symbols.FOLDER);
 					}
 					
 					//Print(string.Format("%1:%2", current.GetUUID(), p3d_split[k]));

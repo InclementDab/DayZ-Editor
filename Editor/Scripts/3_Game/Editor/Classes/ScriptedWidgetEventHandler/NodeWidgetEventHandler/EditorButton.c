@@ -12,7 +12,7 @@ class EditorButton: NodeWidgetEventHandler
 		
 		if (Icon) {
 			int color = ARGB(100 + node_state.IsHover() * 155.0, 255, 255, 255);
-			if (node_state.IsActive()) {
+			if (state) {
 				color = m_LayoutRoot.GetColor();
 				//Icon.LoadImageFile(0, node.GetIcon().Solid());
 			} else {

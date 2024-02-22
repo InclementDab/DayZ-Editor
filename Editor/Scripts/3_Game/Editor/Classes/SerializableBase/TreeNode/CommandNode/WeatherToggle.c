@@ -4,10 +4,10 @@ class WeatherToggle: CommandNode
 	
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 		
-		if (state.IsActive()) {
-			if (total_state.IsActive()) {
+		if (node_state.IsActive()) {
+			if (state) {
 				GetEditor().Date = DateTime.Create(2007, 6, 1, 12);
 				m_PreviousWeather = GetEditor().Climate;
 				GetEditor().Climate = 0x00000000; // fixes climate change

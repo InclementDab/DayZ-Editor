@@ -8,10 +8,10 @@ class BrushTool: CommandNode
 	
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 		
-		if (state.IsActive()) {
-			if (total_state.IsActive()) {
+		if (state) {
+			if (state) {
 				m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);
 			} else {
 				GetGame().ObjectDelete(m_Ring);

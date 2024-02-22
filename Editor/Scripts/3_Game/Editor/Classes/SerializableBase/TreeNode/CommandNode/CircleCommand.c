@@ -2,9 +2,9 @@ class EllipseCommand: CommandNode
 {
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 		
-		if (total_state.IsActive() && GetEditor().GetHud()) {
+		if (state && state && GetEditor().GetHud()) {
 			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
 		}
 	}

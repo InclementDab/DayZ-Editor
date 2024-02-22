@@ -11,7 +11,7 @@ class EditorMenuButton: NodeWidgetEventHandler
 		m_LayoutRoot.GetScreenSize(w, h);
 	
 		m_Node.GetEditor().GetHud().ClearCursor();
-		if (node_state.IsActive()) {
+		if (state) {
 				if (state) {
 				hud.Menu.SetScreenPos(x, y + h);
 				hud.Menu.Show(true);

@@ -2,10 +2,10 @@ class ControlToggle: CommandNode
 {
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(state, total_state);
+		super.OnStateChanged(node_state, state);
 
-		if (state.IsActive()) {
-			if (total_state.IsActive()) {				
+		if (node_state.IsActive()) {
+			if (state) {				
 				GetEditor().AddState(NodeState.ACTIVE);
 			} else {
 				GetEditor().RemoveState(NodeState.ACTIVE);

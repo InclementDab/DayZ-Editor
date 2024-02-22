@@ -1,7 +1,8 @@
 class TreeView: NodeView
 {
 	protected TreeViewController m_TemplateController;
-		
+	protected NamedNode m_NamedNode;
+	
 	TextWidget Text;
 	EditBoxWidget Edit;
 	
@@ -13,45 +14,46 @@ class TreeView: NodeView
 
 	void TreeView(Node node)
 	{
+		m_NamedNode = NamedNode.Cast(node);
 		m_TemplateController = TreeViewController.Cast(m_Controller);		
-		SetText(m_Node.GetDisplayName());
-		Hide.Show(m_Node.GetStateMask().IsSuppressed());
-		Collapse.Show(m_Node.GetStateMask().IsExtend());
-		Icon.Show(m_Node.GetStateMask().IsExtend());
-		IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());
+		SetText(m_NamedNode.DisplayName);
+		Hide.Show(m_NamedNode.GetState().IsSuppress());
+		Collapse.Show(m_NamedNode.GetState().IsExtend());
+		Icon.Show(m_NamedNode.GetState().IsExtend());
+		IconImage.LoadImageFile(0, m_NamedNode.Icon.Regular());
 		IconImage.SetImage(0);
 		
-		if (node.GetStateMask().IsDragging()) {
+		if (node.GetState().IsDrag()) {
 			Wrapper.SetFlags(WidgetFlags.DRAGGABLE);
 		} else {
 			Wrapper.ClearFlags(WidgetFlags.DRAGGABLE);
 		}
 	}
 			
-	override void OnStateChanged(Node node, NodeState state)
+	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		super.OnStateChanged(node, state);
+		super.OnStateChanged(node_state, state);
 		
 		EditorHud hud = m_Node.GetEditor().GetHud();
-		Panel.SetAlpha(node.GetState().IsActive() || node.GetState().IsContext() || node.GetState().IsDragging());
-		Outline.SetAlpha(node.GetState().IsHover());
-		if (node.GetState().IsFocus()) {
-			Text.SetColor(EditorColor.FOCUS_1);
-		}
+		Panel.SetAlpha(state || node_state.IsContext() || node_state.IsDrag());
+		Outline.SetAlpha(node_state.IsHover());
+		//if (node_state.IsFocus()) {
+		//	Text.SetColor(EditorColor.FOCUS_1);
+		//}
 		
-		if (!node.GetState().IsDragging()) {
+		if (!node_state.IsDrag()) {
 			m_LayoutRoot.SetPos(0, 0);
 		}
 		
-		if (state.IsSuppressed()) {
-			if (node.GetState().IsSuppressed()) {
+		if (node_state.IsSuppress()) {
+			if (state) {
 				HideIcon.LoadImageFile(0, Symbols.EYE_LOW_VISION.Regular());
 			} else {
 				HideIcon.LoadImageFile(0, Symbols.EYE.Regular());
 			}
 			
 			HideIcon.SetImage(0);			
-			float alpha = 1.0 - (node.GetState().IsSuppressed() * 0.5);
+			float alpha = 1.0 - (node_state.IsSuppress() * 0.5);
 			IconImage.SetAlpha(alpha);
 			Text.SetAlpha(alpha);
 			Edit.SetAlpha(alpha);
@@ -63,29 +65,29 @@ class TreeView: NodeView
 		if (state.IsActive()) {
 			array<string> xor_selections = GetXorSelections();
 			foreach (string xor: xor_selections) {
-				TreeNode xor_node = Parent[xor];
+				Node xor_node = Parent[xor];
 				if (!xor_node) {
 					Error(string.Format("[%1] couldnt find node to xor %2", m_UUID, xor));
 					continue;
 				}
 				
-				if (state ^ xor_node.GetState()) {
+				if (state ^ xor_node_state) {
 					//xor_node.RemoveState(NodeState.ACTIVE);
 				}
 			}
 		}*/
 		
-		if (state.IsHover()) {
-			if (node.GetState().IsHover()) {
-				hud.SetCursor(m_Node.GetIcon(), m_Node.GetDisplayName(), m_Node.GetUUID());	
+		if (node_state.IsHover()) {
+			if (state) {
+				hud.SetCursor(m_NamedNode.Icon, m_NamedNode.DisplayName, m_Node.GetUUID());	
 			} else {
 				hud.ClearCursor();
 			}
 		}
 		
-		if (state.IsContext()) {
+		if (node_state.IsContext()) {
 			hud.GetTemplateController().MenuItems.Clear();
-			if (node.GetState().IsContext() && m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
+			if (state && m_Node.CreateContextMenu(hud.GetTemplateController().MenuItems)) {
 				
 				hud.Menu.Show(true);
 				
@@ -110,28 +112,30 @@ class TreeView: NodeView
 			}
 		}
 		
-		if (state.IsExtend()) {
-			Children.Show(node.GetState().IsExtend());
+		if (node_state.IsExtend()) {
+			Children.Show(state);
 			Children.Update(); //! importante
 			
-			Minimize.Show(node.GetState().IsExtend());
+			Minimize.Show(state);
 			
-			if (node.GetState().IsExtend()) {
-				IconImage.LoadImageFile(0, m_Node.GetIcon().Solid());		
+			if (state) {
+				IconImage.LoadImageFile(0, m_NamedNode.Icon.Solid());		
 			} else {
-				IconImage.LoadImageFile(0, m_Node.GetIcon().Regular());		
+				IconImage.LoadImageFile(0, m_NamedNode.Icon.Regular());		
 			}
 			
 			IconImage.SetImage(0);
 			
-			CollapseIcon.LoadImageFile(0, Ternary<string>.If(!node.GetState().IsExtend(), Symbols.SQUARE_PLUS.Thin(), Symbols.SQUARE_MINUS.Thin()));
+			CollapseIcon.LoadImageFile(0, Ternary<string>.If(!state, Symbols.SQUARE_PLUS.Thin(), Symbols.SQUARE_MINUS.Thin()));
 			CollapseIcon.SetImage(0);
 			
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(RecalculateSize);
 						
 			// you only want to open upper containers when lower ones are opened. propagate up /\
-			if (m_Node.Parent && m_Node.Parent.View) {
-				m_Node.Parent.AddState(NodeState.EXTEND);
+			if (m_Node.GetParent()) {
+				foreach (NodeView view: m_Node.GetParent().Views) {
+					view.GetNode().AddState(NodeState.EXTEND);
+				}
 			}
 		}
 	}
@@ -173,7 +177,7 @@ class TreeView: NodeView
 	{		
 		filter.ToLower();
 		
-		string name = m_Node.GetDisplayName();
+		string name = m_NamedNode.DisplayName;
 		name.ToLower();
 			
 		string uuid = m_Node.GetUUID();
@@ -218,10 +222,10 @@ class TreeView: NodeView
 			}
 			
 			case HideButton: {
-				if (m_Node.HasState(NodeState.SUPPRESSED)) {
-					m_Node.RemoveState(NodeState.SUPPRESSED);
+				if (m_Node.HasState(NodeState.SUPPRESS)) {
+					m_Node.RemoveState(NodeState.SUPPRESS);
 				} else {
-					m_Node.AddState(NodeState.SUPPRESSED);
+					m_Node.AddState(NodeState.SUPPRESS);
 				}
 				
 				return true;

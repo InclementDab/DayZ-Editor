@@ -7,7 +7,7 @@ class ObjectViewWorld: ObjectView
 		float distance = vector.Distance(m_ObjectNode.GetEditor().GetCamera().GetPosition(), base_position);
 				
 		// Dragging
-		if (m_ObjectNode.HasState(NodeState.DRAGGING)) {
+		if (m_ObjectNode.HasState(NodeState.DRAG)) {
 			
 			Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
 			if (!raycast) {
@@ -77,6 +77,6 @@ class ObjectViewWorld: ObjectView
 		
 		base_position = GetGame().GetScreenPos(m_ObjectNode.GetBasePoint());
 		m_LayoutRoot.SetPos(base_position[0] - 12.5, base_position[1] - 12.5);
-		m_LayoutRoot.Show(base_position[2] > 0 && !m_Node.GetState().IsSuppressed());
+		m_LayoutRoot.Show(base_position[2] > 0 && !m_Node.GetState().IsSuppress());
 	}
 }
