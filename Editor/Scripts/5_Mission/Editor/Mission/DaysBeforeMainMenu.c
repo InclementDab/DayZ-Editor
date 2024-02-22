@@ -1,4 +1,4 @@
-modded class MissionMainMenu
+modded class DaysBeforeMainMenu
 {
 	protected ref EditorMainMenu m_EditorMainMenu;
 		

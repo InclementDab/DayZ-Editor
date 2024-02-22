@@ -4,8 +4,8 @@ class EditorHudController: ViewController
 	
 	ref ObservableCollection<ref MenuNode> MenuItems = new ObservableCollection<ref MenuNode>(this);
 	
-	ref ObservableCollection<ref TreeView> LeftListItems = new ObservableCollection<ref TreeView>(this);
-	ref ObservableCollection<ref TreeView> RightListItems = new ObservableCollection<ref TreeView>(this);
+	ref ObservableCollection<ref NamedNodeView> LeftListItems = new ObservableCollection<ref NamedNodeView>(this);
+	ref ObservableCollection<ref NamedNodeView> RightListItems = new ObservableCollection<ref NamedNodeView>(this);
 		
 	ref ObservableCollection<ref ObjectView> MapMarkers = new ObservableCollection<ref ObjectView>(this);
 	

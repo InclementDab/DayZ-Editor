@@ -14,7 +14,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		m_LayoutRoot = w;
 		m_LayoutRoot.SetHandler(this);
 	
-#ifdef WORKBENCH
+#ifdef COMPONENT_SYSTEM
 		if (!GetDayZGame()) {
 			return;
 		}
@@ -24,7 +24,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
 		if (Path != string.Empty) {
-			m_Node = NamedNode.Cast(GetDayZGame().GetSandbox()[Path]);
+			m_Node = NamedNode.Cast(DaysBefore.Root[Path]);
 			if (m_Node) {
 				if (Button) {
 					Button.SetHandler(this);

@@ -7,7 +7,7 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
-class EditorNode: NamedNode
+class EditorNode: Node
 {	
 	void LegacyLoad(notnull EditorSaveData save_data)
 	{
@@ -43,8 +43,11 @@ class EditorNode: NamedNode
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 		
-	void EditorNode(UUID uuid, string display_name, Symbols icon, LinearColor color) 
-	{				
+	void EditorNode(UUID uuid, PlayerIdentity identity, DayZPlayer player) 
+	{
+		Identity = identity;
+		Player = player;
+		
 		// Load all default categories and placements
 		Add(new NamedNode(LAYERS, "Layers", Symbols.LAYER_GROUP, LinearColor.WHITE));
 		Add(new NamedNode(MENUS, "Menus", Symbols.SQUARE_LIST, LinearColor.WHITE));

@@ -1,12 +1,10 @@
-class TreeView: NodeView
+class TreeView: NamedNodeView
 {
 	protected TreeViewController m_TemplateController;
-	protected NamedNode m_NamedNode;
 	
-	TextWidget Text;
 	EditBoxWidget Edit;
 	
-	Widget Wrapper, Collapse, Children, Outline, Texture, Minimize, Hide, Icon;
+	Widget Wrapper, Collapse, Children, Outline, Texture, Minimize, Hide;
 	ImageWidget IconImage, CollapseIcon, HideIcon;
 	ButtonWidget CollapseButton, HideButton;
 	
@@ -14,7 +12,6 @@ class TreeView: NodeView
 
 	void TreeView(Node node)
 	{
-		m_NamedNode = NamedNode.Cast(node);
 		m_TemplateController = TreeViewController.Cast(m_Controller);		
 		SetText(m_NamedNode.DisplayName);
 		Hide.Show(m_NamedNode.GetState().IsSuppress());
@@ -173,7 +170,7 @@ class TreeView: NodeView
 	}
 		
 	// returns whether or not the filter was applied
-	bool ApplyFilter(string filter)
+	override bool ApplyFilter(string filter)
 	{		
 		filter.ToLower();
 		

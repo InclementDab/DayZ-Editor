@@ -1,4 +1,4 @@
-modded class MissionGameplay
+modded class DaysBeforeGameplay
 {		
 	override void OnUpdate(float timeslice)
 	{

@@ -16,9 +16,9 @@ class GizmoXYZ: ScriptView
 		vector gizmo_transform[4] = {};
 		m_ObjectNode.GetObject().GetTransform(gizmo_transform);
 		gizmo_transform[3] = m_ObjectNode.GetTopPoint();
-		Shape.CreateMatrix(gizmo_transform);	
+		Shape.CreateMatrix(gizmo_transform);
 		
-		Camera camera = GetDayZGame().GetSandbox().GetEditor().GetCamera();
+		Camera camera = Camera.GetCurrentCamera();
 		if (!camera) {
 			return;
 		}
