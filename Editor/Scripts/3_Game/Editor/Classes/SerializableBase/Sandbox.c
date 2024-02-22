@@ -24,49 +24,49 @@ modded class DaysBefore
 	
 	// structure of actual mission files
 	static const string MISSION = "Mission";
-	Node GetMission()
+	static Node GetMission()
 	{
 		return Root[MISSION];
 	}
 	
 	static const string EDITORS = "Editors";
-	Node GetEditors()
+	static Node GetEditor(notnull PlayerIdentity identity)
 	{
-		return Root[EDITORS];
+		return Root[EDITORS][identity.GetId()];
 	}
 		
 	static const string COMMANDS = "Commands";
-	Node GetCommand(string uuid)
+	static Node GetCommand(string uuid)
 	{
 		return Root[COMMANDS][uuid];
 	}
 	
 	static const string TOOLS = "Tools";
-	Node GetTool(string uuid)
+	static Node GetTool(string uuid)
 	{
 		return Root[TOOLS][uuid];
 	}
 	
 	static const string DZ = "DZ";
-	Node GetStaticObjects()
+	static Node GetStaticObjects()
 	{
 		return Root[DZ];
 	}
 	
 	static const string VEHICLES = "Vehicles";
-	Node GetDynamicObjects()
+	static Node GetDynamicObjects()
 	{
 		return Root[VEHICLES];
 	}
 	
 	static const string WEAPONS = "Weapons";
-	Node GetWeapons()
+	static Node GetWeapons()
 	{
 		return Root[WEAPONS];
 	}
 	
 	static const string SCRIPTED = "Scripted";
-	Node GetScripted()
+	static Node GetScripted()
 	{
 		return Root[SCRIPTED];
 	}
@@ -142,12 +142,12 @@ modded class DaysBefore
 		foreach (File mission_file: mission_files) {
 			switch (mission_file.GetExtension()) {
 				case ".xml": {
-					this[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE_XML, mission_file));
+					Root[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE_XML, LinearColor.WHITE, mission_file));
 					break;
 				}
 				
 				case ".json": {
-					this[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE_CODE, mission_file));
+					Root[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE_CODE, LinearColor.WHITE, mission_file));
 					break;
 				}
 				
@@ -167,7 +167,7 @@ modded class DaysBefore
 				}*/
 				
 				default: {
-					this[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE, mission_file));
+					Root[MISSION].Add(new FileNode(mission_file, mission_file, Symbols.FILE, LinearColor.WHITE, mission_file));
 					break;
 				}
 			}
@@ -180,7 +180,7 @@ modded class DaysBefore
 			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
 			p3d_files.Debug();
 			foreach (string p3d: p3d_files) {
-				Node current = this[DZ];
+				Node current = Root[DZ];
 				array<string> p3d_split = {};
 				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
 				for (int k = 1; k < p3d_split.Count() - 1; k++) {
@@ -201,16 +201,8 @@ modded class DaysBefore
 		Print(string.Format("%1 nodes/second", (float)j / ((float)GetGame().GetTime() - t) * 1000.0 ));
 
 		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
-			this[SCRIPTED].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3, LinearColor.WHITE));
+			Root[SCRIPTED].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3, LinearColor.WHITE));
 		}	
 #endif
-	}
-		
-	static bool IsForbiddenItem(string model)
-	{
-		
-		
-		//! Everything is fine... I hope... :pain:
-		return false;
 	}
 }

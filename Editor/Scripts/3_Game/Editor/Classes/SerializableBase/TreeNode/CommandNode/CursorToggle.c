@@ -6,6 +6,8 @@ class CursorToggle: CommandNode
 	{
 		Input input = GetGame().GetInput();
 		EditorNode editor = GetEditor();
+		return;
+		
 		EditorCamera camera = editor.GetCamera();
 										
 		if (input.LocalPress_ID(UAUIBack)) {
