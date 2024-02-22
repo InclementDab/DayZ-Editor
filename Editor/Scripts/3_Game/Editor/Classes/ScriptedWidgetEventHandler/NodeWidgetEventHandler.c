@@ -36,7 +36,6 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 				}
 				
 				m_Node.State_OnChanged.Insert(OnStateChanged);
-				OnStateChanged(m_Node.GetDefaultState(), true);
 			}
 		}
 	}

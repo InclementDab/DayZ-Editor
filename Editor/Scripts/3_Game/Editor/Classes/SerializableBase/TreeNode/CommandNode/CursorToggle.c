@@ -6,7 +6,10 @@ class CursorToggle: CommandNode
 	{
 		Input input = GetGame().GetInput();
 		EditorNode editor = DaysBefore.GetEditor();
-		return;
+		
+		if (!GetState().IsActive()) {
+			return;
+		}
 		
 		EditorCamera camera = editor.GetCamera();
 										

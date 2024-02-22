@@ -257,7 +257,12 @@ class ObjectNode: NamedNode
 		
 		return true;
 	}
-		
+	
+	override NodeState GetStateMask()
+	{
+		return NodeState.ACTIVE | NodeState.CONTEXT | NodeState.SUPPRESS | NodeState.HOVER | NodeState.VIEW_MAP | NodeState.VIEW_WORLD | NodeState.VIEW_TREE | NodeState.SYNC_DIRTY | NodeState.CLIENT_AUTH;
+	}
+	
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(node_state, state);

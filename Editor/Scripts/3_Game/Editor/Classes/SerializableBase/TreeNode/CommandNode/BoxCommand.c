@@ -18,9 +18,4 @@ class BoxCommand: CommandNode
 	{
 		return SandboxNodeInteract.PRESS;
 	}
-	
-	override NodeState GetDefaultState()
-	{
-		return NodeState.ACTIVE;
-	}
 }

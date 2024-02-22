@@ -33,8 +33,6 @@ class EditorNode: Node
 	static const ref array<string> CATEGORIES = { "Unknown", "Plants", "Rocks", "Clutter", "Structures", "Wrecks", "AI", "Water", "Vehicles", "StaticObjects", "DynamicObjects", "ScriptedObjects" };
 	
 	PlayerIdentity Identity;
-	DayZPlayer Player;
-	DateTime Date = DateTime.Now(false);
 	// this isnt 'const' because climate change exists in DayZ
 	int Climate = ARGB(0 /* todo, low-precision forecast? */, GetGame().GetWeather().GetFog().GetActual() * 255, GetGame().GetWeather().GetRain().GetActual(), GetGame().GetWeather().GetOvercast().GetActual());
 	
@@ -64,10 +62,9 @@ class EditorNode: Node
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 		
-	void EditorNode(UUID uuid, PlayerIdentity identity = null, DayZPlayer player = null) 
+	void EditorNode(UUID uuid, PlayerIdentity identity = null) 
 	{
 		Identity = identity;
-		Player = player;
 		
 #ifndef SERVER
 		Add(new NamedNode(DZ, "DZ", Symbols.FOLDER, LinearColor.WHITE));
@@ -240,60 +237,43 @@ class EditorNode: Node
 	
 	override void EUpdate(float dt)
 	{
-		super.EUpdate(dt);
+		if (!GetState().IsActive()) {
+			return;
+		}
 		
-		GetDayZGame().SetDate(Date);
+		Input input = GetGame().GetInput();
+		if (input.LocalPress("UAEditorCursor")) {
+			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible()); 
+		}
 		
-		float _, f, r, o;
-		InverseARGBF(Climate, _, f, r, o);
-		GetGame().GetWeather().GetFog().Set(f);
-		GetGame().GetWeather().GetRain().Set(r);
-		GetGame().GetWeather().GetOvercast().Set(o);
-		
-		Player.GetInputController().SetDisabled(true);
 	}
-	
+		
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(node_state, state);
 		
-		if (node_state.IsActive()) {
+#ifndef SERVER
+		if (node_state.IsActive() && IsLocal()) {
 			if (state) {
+				m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", GetGame().GetPlayer().GetPosition() + "0 10 0", ECE_LOCAL));
 				m_Camera.SetActive(true);
-				m_Hud.Show(true);
-				Player.GetInputController().SetDisabled(true);
-			} else {
-				m_Hud.Show(false);
+				m_Hud = new EditorHud(this);
+				GetGame().GetPlayer().GetInputController().SetDisabled(true);				
 				
-				GetDayZGame().SelectPlayer(Identity, Player);
-				Player.GetInputController().SetDisabled(false);
+			} else {
+				delete m_Hud;
+				GetGame().ObjectDelete(m_Camera);
+				
+				GetDayZGame().SelectPlayer(Identity, GetGame().GetPlayer());
+				GetGame().GetPlayer().GetInputController().SetDisabled(false);
 				Hud hud = GetDayZGame().GetMission().GetHud();
 				hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
 				hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
 			}
 		}
-	}
-	
-	override void OnSynchronized()
-	{
-		super.OnSynchronized();
-				
-#ifndef SERVER
-		if (IsLocal()) {
-			delete m_Hud;
-			if (!m_Hud) {
-				m_Hud = new EditorHud(this);
-			}
-		
-			// how long until this is a node?? :/
-			if (!m_Camera) {		 
-				m_Camera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", Player.GetPosition() + "0 10 0", ECE_LOCAL));
-				m_Camera.SetActive(true);
-			}
-		}		
 #endif
 	}
-	
+		
 	void InsertHistory(Node node, ScriptReadWriteContext data)
 	{
 		// Clear the stack first
@@ -319,8 +299,6 @@ class EditorNode: Node
 		super.Write(serializer, version);
 		
 		serializer.Write(Identity);
-		serializer.Write(Player);
-		serializer.Write(Date);
 	}
 	
 	override bool Read(Serializer serializer, int version)
@@ -329,9 +307,7 @@ class EditorNode: Node
 			return false;
 		}
 		
-		serializer.Read(Identity);	
-		serializer.Read(Player);			
-		serializer.Read(Date);			
+		serializer.Read(Identity);							
 		return true;
 	}
 						
@@ -493,7 +469,7 @@ class EditorNode: Node
 	
 	override NodeState GetStateMask()
 	{
-		return NodeState.ACTIVE | NodeState.CONTEXT;
+		return NodeState.ACTIVE | NodeState.CONTEXT | NodeState.SYNC_DIRTY | NodeState.CLIENT_AUTH;
 	}
 					
 	EditorHud GetHud() 
