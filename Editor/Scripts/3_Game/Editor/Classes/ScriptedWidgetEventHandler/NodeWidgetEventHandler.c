@@ -1,7 +1,7 @@
 class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 {
 	reference string Path;
-	protected SandboxNode m_Node;
+	protected NamedNode m_Node;
 	
 	protected Widget m_LayoutRoot;
 	
@@ -24,14 +24,14 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
 		if (Path != string.Empty) {
-			m_Node = SandboxNode.Cast(GetDayZGame().GetSandbox()[Path]);
+			m_Node = NamedNode.Cast(GetDayZGame().GetSandbox()[Path]);
 			if (m_Node) {
 				if (Button) {
 					Button.SetHandler(this);
 				}
 				
 				if (Icon) {
-					Icon.LoadImageFile(0, m_Node.GetIcon().Regular());
+					Icon.LoadImageFile(0, m_Node.Icon.Regular());
 					Icon.SetImage(0);
 				}
 				

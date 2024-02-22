@@ -1,5 +1,5 @@
 // I think its wise... it wasnt...
-class CommandNode: SandboxNode
+class CommandNode: NamedNode
 {
 	override SandboxNodeInteract GetInteractType()
 	{

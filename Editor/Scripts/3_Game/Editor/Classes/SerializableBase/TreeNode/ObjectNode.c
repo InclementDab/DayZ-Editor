@@ -1,4 +1,4 @@
-class ObjectNode: SandboxNode
+class ObjectNode: NamedNode
 {
 	static const int VERSION = 1;
 	static ref map<Object, ObjectNode> All = new map<Object, ObjectNode>();
@@ -19,7 +19,7 @@ class ObjectNode: SandboxNode
 	
 	protected ref GizmoXYZ m_GizmoXYZ;
 	
-	void ObjectNode(UUID uuid, Object object = null)
+	void ObjectNode(UUID uuid, string display_name, Symbols icon, LinearColor color, Object object = null)
 	{
 		m_Object = object;
 		

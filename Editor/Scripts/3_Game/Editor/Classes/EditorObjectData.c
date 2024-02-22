@@ -12,6 +12,6 @@ modded class EditorObjectData
 		object.SetPosition(Position);
 		object.SetOrientation(Orientation);
 		object.SetScale(Scale);
-		return new ObjectNode(UUID.Generate(), object);
+		return new ObjectNode(UUID.Generate(), object.GetDebugName(), Symbols.TREE, LinearColor.WHITE, object);
 	}
 }

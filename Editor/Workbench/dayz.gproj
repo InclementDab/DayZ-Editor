@@ -75,6 +75,7 @@ GameProjectClass {
 					Paths {
 						"DabsFramework/Scripts/3_Game"
 						"scripts/3_Game"
+						"DaysBefore/Scripts/3_Game"
 						"Editor/Scripts/3_Game"
 						"JM/CF/defines"
 						"JM/CF/scripts/3_Game"
@@ -86,6 +87,7 @@ GameProjectClass {
 					Paths {
 						"DabsFramework/Scripts/4_World"
 						"scripts/4_World"
+						"DaysBefore/Scripts/4_World"
 						"Editor/Scripts/4_World"
 						"JM/CF/defines"
 						"JM/CF/scripts/4_World"
@@ -97,6 +99,7 @@ GameProjectClass {
 					Paths {
 						"DabsFramework/Scripts/5_Mission"
 						"scripts/5_Mission"
+						"DaysBefore/Scripts/5_Mission"
 						"Editor/Scripts/5_Mission"
 						"JM/CF/defines"
 						"JM/CF/scripts/5_Mission"

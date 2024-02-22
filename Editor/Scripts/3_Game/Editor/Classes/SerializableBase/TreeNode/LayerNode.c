@@ -1,4 +1,4 @@
-class LayerNode: SandboxNode
+class LayerNode: NamedNode
 {
 	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{

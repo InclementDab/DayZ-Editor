@@ -7,7 +7,7 @@ class ConfigObjectEntry: ConfigObject
 	string Model;
 }
 
-class Sandbox: SandboxNode
+class Sandbox: Node
 {
 	static const ref array<string> FORBIDDEN_ITEMS = { 
 		"TestObject",

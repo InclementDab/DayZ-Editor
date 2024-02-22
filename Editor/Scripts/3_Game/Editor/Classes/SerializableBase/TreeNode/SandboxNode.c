@@ -18,9 +18,14 @@ enum SandboxNodeInteract
 	TOGGLE // ying and yang
 };
 
-class SandboxNode: Node
+modded class Node
 {
-	void SandboxNode(UUID uuid)
+	EditorNode GetEditor()
+	{
+		return EditorNode.Cast(FindAncestor(EditorNode));
+	}	
+	
+	void Node(UUID uuid)
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
 	}
@@ -65,7 +70,7 @@ class SandboxNode: Node
 		return {};
 	}
 	
-	NodeState GetDefaultState()
+	override NodeState GetDefaultState()
 	{
 		return NodeState.ACTIVE;
 	}

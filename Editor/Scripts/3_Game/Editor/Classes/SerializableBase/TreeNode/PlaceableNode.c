@@ -1,4 +1,4 @@
-class PlaceableNode: SandboxNode
+class PlaceableNode: NamedNode
 {	
 	override void OnStateChanged(NodeState node_state, bool state)
 	{

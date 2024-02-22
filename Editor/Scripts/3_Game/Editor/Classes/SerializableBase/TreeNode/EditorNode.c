@@ -7,7 +7,7 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
-class EditorNode: SandboxNode
+class EditorNode: Node
 {	
 	void LegacyLoad(notnull EditorSaveData save_data)
 	{
@@ -46,16 +46,16 @@ class EditorNode: SandboxNode
 	void EditorNode(UUID uuid) 
 	{				
 		// Load all default categories and placements
-		Add(new TreeNode(LAYERS, "Layers", Symbols.LAYER_GROUP));
-		Add(new TreeNode(MENUS, "Menus", Symbols.SQUARE_LIST));
-		Add(new TreeNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT));
-		Add(new TreeNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK));
-		Add(new TreeNode(BRUSHES, "Brushes", Symbols.BRUSH));
-		Add(new TreeNode(PLACING, "Placing", Symbols.FIREPLACE));
-		Add(new TreeNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));			
+		Add(new NamedNode(LAYERS, "Layers", Symbols.LAYER_GROUP));
+		Add(new NamedNode(MENUS, "Menus", Symbols.SQUARE_LIST));
+		Add(new NamedNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT));
+		Add(new NamedNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK));
+		Add(new NamedNode(BRUSHES, "Brushes", Symbols.BRUSH));
+		Add(new NamedNode(PLACING, "Placing", Symbols.FIREPLACE));
+		Add(new NamedNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE));			
 		
-		this[LAYERS].Add(new TreeNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
-		this[LAYERS].Add(new TreeNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
+		this[LAYERS].Add(new NamedNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH));
+		this[LAYERS].Add(new NamedNode(HIDDEN, "Hidden", Symbols.PAINTBRUSH));
 		// default layer for now
 		this[LAYERS].AddState(NodeState.ACTIVE);
 		

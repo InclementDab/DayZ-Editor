@@ -84,7 +84,7 @@ class EditorHud: ScriptView
 		
 		Input input = GetGame().GetInput();	
 		
-		if (input.LocalPress_ID(UAFire) && TreeNode.StateMachine[NodeState.HOVER].Count() == 0) {
+		if (input.LocalPress_ID(UAFire) && Node.StateMachine[NodeState.HOVER].Count() == 0) {
 			m_DragX = mouse_x;
 			m_DragY = mouse_y;
 		}
