@@ -1,6 +1,6 @@
 class TreeViewController: ViewController
 {
-	ref ObservableCollectionNonRef<TreeView> ChildrenItems = new ObservableCollectionNonRef<TreeView>(this);
+	ref ObservableCollection<ref NodeTreeView> ChildrenItems = new ObservableCollection<ref NodeTreeView>(this);
 				
 	Widget Collapse;
 	

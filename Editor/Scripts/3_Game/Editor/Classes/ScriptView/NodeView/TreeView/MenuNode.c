@@ -1,4 +1,4 @@
-class MenuNode: TreeView
+class MenuNode: NodeTreeView
 {	
 	override void OnStateChanged(NodeState node_state, bool state)
 	{

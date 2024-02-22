@@ -52,11 +52,11 @@ class EditorHud: ScriptView
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 			
 		foreach (string left: LEFT_NODES) {
-			m_TemplateController.LeftListItems.Insert(DaysBefore.GetEditor()[left].CreateView());
+			m_TemplateController.LeftListItems.Insert(editor[left].CreateTreeView());
 		}
 		
 		foreach (string right: RIGHT_NODES) {
-			m_TemplateController.RightListItems.Insert(DaysBefore.GetEditor()[right].CreateView());
+			m_TemplateController.RightListItems.Insert(editor[right].CreateTreeView());
 		}
 	}
 	

@@ -1,6 +1,6 @@
 class EditorDialogController: ViewController
 {
-	ref ObservableCollection<ref TreeView> Folders = new ObservableCollection<ref TreeView>(this);
+	ref ObservableCollection<ref NodeTreeView> Folders = new ObservableCollection<ref NodeTreeView>(this);
 }
 
 class EditorDialog: ScriptViewMenu
