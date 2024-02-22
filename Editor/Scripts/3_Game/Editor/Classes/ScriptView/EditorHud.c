@@ -2,7 +2,7 @@ class EditorHud: ScriptView
 {		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
 	static const ref array<string> RIGHT_NODES = { EditorNode.BRUSHES, EditorNode.PLACING, EditorNode.HISTORY, EditorNode.LAYERS };
-	static const ref array<string> LEFT_NODES = { DaysBefore.DZ, DaysBefore.VEHICLES, DaysBefore.WEAPONS, DaysBefore.SCRIPTED, DaysBefore.EDITORS, DaysBefore.MISSION };
+	static const ref array<string> LEFT_NODES = { EditorNode.DZ, EditorNode.VEHICLES, EditorNode.WEAPONS, EditorNode.SCRIPTED, EditorNode.MISSION };
 	
 	protected EditorNode m_Editor;
 	protected EditorHudController m_TemplateController;
@@ -52,11 +52,11 @@ class EditorHud: ScriptView
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 			
 		foreach (string left: LEFT_NODES) {
-			m_TemplateController.LeftListItems.Insert(DaysBefore.Root[left].CreateView());
+			m_TemplateController.LeftListItems.Insert(DaysBefore.GetEditor()[left].CreateView());
 		}
 		
 		foreach (string right: RIGHT_NODES) {
-			m_TemplateController.RightListItems.Insert(DaysBefore.Root[right].CreateView());
+			m_TemplateController.RightListItems.Insert(DaysBefore.GetEditor()[right].CreateView());
 		}
 	}
 	
