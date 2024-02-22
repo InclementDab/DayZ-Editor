@@ -4,7 +4,7 @@ class HudToggle: CommandNode
 	{
 		super.OnStateChanged(node_state, state);
 		
-		EditorHud hud = GetEditor().GetHud();
+		EditorHud hud = DaysBefore.GetEditor().GetHud();
 		if (hud) {
 			hud.Show(state);
 		}

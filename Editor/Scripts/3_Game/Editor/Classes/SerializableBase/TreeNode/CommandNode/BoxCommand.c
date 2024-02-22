@@ -4,8 +4,8 @@ class BoxCommand: CommandNode
 	{
 		super.OnStateChanged(node_state, state);
 		
-		if (state && state && GetEditor().GetHud()) {
-			GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
+		if (state && state && DaysBefore.GetEditor().GetHud()) {
+			DaysBefore.GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
 		}
 	}
 	

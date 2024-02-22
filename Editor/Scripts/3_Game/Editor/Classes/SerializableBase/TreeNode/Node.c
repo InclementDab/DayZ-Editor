@@ -19,12 +19,7 @@ enum SandboxNodeInteract
 };
 
 modded class Node
-{
-	EditorNode GetEditor()
-	{
-		return DaysBefore.GetEditor(GetGame().GetPlayer().GetIdentity());
-	}	
-			
+{			
 	bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
 	{
 		//list_items.Insert(new MenuNode(GetDayZGame().GetSandbox().GetCommand("Rename")));

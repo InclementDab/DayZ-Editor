@@ -5,7 +5,7 @@ class AddLayerCommand: CommandNode
 		super.OnStateChanged(node_state, state);
 		
 		if (state && state) {			
-			GetEditor().GetPlacingDestination().Add(new LayerNode(UUID.Generate(), "layer0", Symbols.FOLDER, LinearColor.WHITE));
+			DaysBefore.GetEditor().GetPlacingDestination().Add(new LayerNode(UUID.Generate(), "layer0", Symbols.FOLDER, LinearColor.WHITE));
 		}
 	}
 		

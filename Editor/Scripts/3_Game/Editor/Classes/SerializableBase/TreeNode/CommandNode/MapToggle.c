@@ -4,7 +4,7 @@ class MapToggle: CommandNode
 	{
 		super.OnStateChanged(node_state, state);
 		
-		EditorHud hud = GetEditor().GetHud();
+		EditorHud hud = DaysBefore.GetEditor().GetHud();
 		if (hud) {
 			hud.Map.Show(state);
 		}

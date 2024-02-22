@@ -36,9 +36,9 @@ class ObjectView: NodeView
 		
 		if (node_state.IsDrag()) {
 			if (state) {
-				m_ObjectNode.GetEditor().GetHud().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
+				DaysBefore.GetEditor().GetHud().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
 			} else {
-				m_ObjectNode.GetEditor().GetHud().ClearCursor();
+				DaysBefore.GetEditor().GetHud().ClearCursor();
 			}
 		}
 	}

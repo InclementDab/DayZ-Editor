@@ -4,12 +4,12 @@ class ObjectViewWorld: ObjectView
 	{
 		vector base_position = m_ObjectNode.GetBasePoint();
 						
-		float distance = vector.Distance(m_ObjectNode.GetEditor().GetCamera().GetPosition(), base_position);
+		float distance = vector.Distance(DaysBefore.GetEditor().GetCamera().GetPosition(), base_position);
 				
 		// Dragging
 		if (m_ObjectNode.HasState(NodeState.DRAG)) {
 			
-			Raycast raycast = m_ObjectNode.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
+			Raycast raycast = DaysBefore.GetEditor().GetCamera().PerformCursorRaycast(m_ObjectNode.GetObject());
 			if (!raycast) {
 				return;
 			}

@@ -8,21 +8,21 @@ class PlaceableNode: NamedNode
 			if (state) {
 				vector matrix[4];
 				Math3D.MatrixIdentity4(matrix);
-				GetEditor().GetPlacing().Add(new ObjectNode(UUID.Generate(), m_UUID, Icon, LinearColor.WHITE, EditorNode.CreateObject(GetUUID(), matrix)));
+				DaysBefore.GetEditor().GetPlacing().Add(new ObjectNode(UUID.Generate(), m_UUID, Icon, LinearColor.WHITE, EditorNode.CreateObject(GetUUID(), matrix)));
 				
 				GetUApi().SupressNextFrame(true);
 			} else {
-				foreach (Node node: GetEditor().GetPlacing().Children) {
+				foreach (Node node: DaysBefore.GetEditor().GetPlacing().Children) {
 					ObjectNode object_node = ObjectNode.Cast(node);
-					GetEditor().InsertHistory(object_node, null);
-					GetEditor().GetPlacingDestination().Add(object_node);
-					GetEditor().GetPlacingDestination().SetSynchDirty();			
-					GetEditor().GetPlacing().Remove(object_node);
+					DaysBefore.GetEditor().InsertHistory(object_node, null);
+					DaysBefore.GetEditor().GetPlacingDestination().Add(object_node);
+					DaysBefore.GetEditor().GetPlacingDestination().SetSynchDirty();			
+					DaysBefore.GetEditor().GetPlacing().Remove(object_node);
 					
 					object_node.AddState(NodeState.ACTIVE);
 					
 					// remove it from placing
-					GetEditor().PlaySound(EditorSounds.PLOP);
+					DaysBefore.GetEditor().PlaySound(EditorSounds.PLOP);
 					
 					if (KeyState(KeyCode.KC_LSHIFT)) {
 						AddState(NodeState.ACTIVE);

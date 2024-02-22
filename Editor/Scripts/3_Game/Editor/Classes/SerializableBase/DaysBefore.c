@@ -9,6 +9,15 @@ class ConfigObjectEntry: ConfigObject
 
 modded class DaysBefore
 {
+	static const string MISSION = "Mission";
+	static const string EDITORS = "Editors";
+	static const string COMMANDS = "Commands";
+	static const string TOOLS = "Tools";
+	static const string DZ = "DZ";
+	static const string VEHICLES = "Vehicles";
+	static const string WEAPONS = "Weapons";
+	static const string SCRIPTED = "Scripted";
+
 	static const ref array<string> FORBIDDEN_ITEMS = { 
 		"TestObject",
 		"ItemOptics", 
@@ -21,55 +30,6 @@ modded class DaysBefore
 		"Land_VASICore", 
 		"FlagCarrierCore"
 	};
-	
-	// structure of actual mission files
-	static const string MISSION = "Mission";
-	static Node GetMission()
-	{
-		return Root[MISSION];
-	}
-	
-	static const string EDITORS = "Editors";
-	static Node GetEditor(notnull PlayerIdentity identity)
-	{
-		return Root[EDITORS][identity.GetId()];
-	}
-		
-	static const string COMMANDS = "Commands";
-	static Node GetCommand(string uuid)
-	{
-		return Root[COMMANDS][uuid];
-	}
-	
-	static const string TOOLS = "Tools";
-	static Node GetTool(string uuid)
-	{
-		return Root[TOOLS][uuid];
-	}
-	
-	static const string DZ = "DZ";
-	static Node GetStaticObjects()
-	{
-		return Root[DZ];
-	}
-	
-	static const string VEHICLES = "Vehicles";
-	static Node GetDynamicObjects()
-	{
-		return Root[VEHICLES];
-	}
-	
-	static const string WEAPONS = "Weapons";
-	static Node GetWeapons()
-	{
-		return Root[WEAPONS];
-	}
-	
-	static const string SCRIPTED = "Scripted";
-	static Node GetScripted()
-	{
-		return Root[SCRIPTED];
-	}
 	
 	void DaysBefore(string path)
 	{
@@ -204,5 +164,51 @@ modded class DaysBefore
 			Root[SCRIPTED].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3, LinearColor.WHITE));
 		}	
 #endif
+	}
+	
+	// structure of actual mission files
+	static Node GetMission()
+	{
+		return Root[MISSION];
+	}
+	
+	static Node GetEditors()
+	{
+		return Root[EDITORS];
+	}
+	
+	static EditorNode GetEditor()
+	{
+		return EditorNode.Cast(Root[EDITORS][GetGame().GetUserManager().GetTitleInitiator().GetUid()]);
+	}
+		
+	static Node GetCommand(string uuid)
+	{
+		return Root[COMMANDS][uuid];
+	}
+	
+	static Node GetTool(string uuid)
+	{
+		return Root[TOOLS][uuid];
+	}
+	
+	static Node GetStaticObjects()
+	{
+		return Root[DZ];
+	}
+	
+	static Node GetDynamicObjects()
+	{
+		return Root[VEHICLES];
+	}
+	
+	static Node GetWeapons()
+	{
+		return Root[WEAPONS];
+	}
+	
+	static Node GetScripted()
+	{
+		return Root[SCRIPTED];
 	}
 }

@@ -6,9 +6,9 @@ class ControlToggle: CommandNode
 
 		if (node_state.IsActive()) {
 			if (state) {				
-				GetEditor().AddState(NodeState.ACTIVE);
+				DaysBefore.GetEditor().AddState(NodeState.ACTIVE);
 			} else {
-				GetEditor().RemoveState(NodeState.ACTIVE);
+				DaysBefore.GetEditor().RemoveState(NodeState.ACTIVE);
 			}
 		}
 	}

@@ -2,7 +2,7 @@ class EditorMenuButton: NodeWidgetEventHandler
 {
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
-		EditorHud hud = m_Node.GetEditor().GetHud();
+		EditorHud hud = DaysBefore.GetEditor().GetHud();
 		hud.Menu.Show(false);
 		hud.GetTemplateController().MenuItems.Clear();
 		
@@ -10,7 +10,7 @@ class EditorMenuButton: NodeWidgetEventHandler
 		m_LayoutRoot.GetScreenPos(x, y);
 		m_LayoutRoot.GetScreenSize(w, h);
 	
-		m_Node.GetEditor().GetHud().ClearCursor();
+		DaysBefore.GetEditor().GetHud().ClearCursor();
 		if (state) {
 				if (state) {
 				hud.Menu.SetScreenPos(x, y + h);
@@ -30,7 +30,7 @@ class EditorMenuButton: NodeWidgetEventHandler
 		}
 		
 		if (node_state.IsHover() && state) {
-			m_Node.GetEditor().GetHud().SetCursor(m_Node.Icon, m_Node.DisplayName);
+			DaysBefore.GetEditor().GetHud().SetCursor(m_Node.Icon, m_Node.DisplayName);
 		}
 	}
 }

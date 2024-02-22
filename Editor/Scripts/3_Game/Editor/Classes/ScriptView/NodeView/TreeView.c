@@ -31,7 +31,7 @@ class TreeView: NamedNodeView
 	{
 		super.OnStateChanged(node_state, state);
 		
-		EditorHud hud = m_Node.GetEditor().GetHud();
+		EditorHud hud = DaysBefore.GetEditor().GetHud();
 		Panel.SetAlpha(state || node_state.IsContext() || node_state.IsDrag());
 		Outline.SetAlpha(node_state.IsHover());
 		//if (node_state.IsFocus()) {

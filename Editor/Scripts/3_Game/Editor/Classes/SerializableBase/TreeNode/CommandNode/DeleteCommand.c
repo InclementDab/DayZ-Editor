@@ -10,11 +10,11 @@ class DeleteCommand: CommandNode
 					continue;
 				}
 				
-				GetEditor().InsertHistory(null, node.CreateCopy());
+				DaysBefore.GetEditor().InsertHistory(null, node.CreateCopy());
 				
 				node.GetParent().Remove(node.GetUUID());
 				node.GetParent().SetSynchDirty();
-				GetEditor().PlaySound(EditorSounds.HIGHLIGHT);
+				DaysBefore.GetEditor().PlaySound(EditorSounds.HIGHLIGHT);
 			}
 		}
 	}

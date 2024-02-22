@@ -8,12 +8,12 @@ class WeatherToggle: CommandNode
 		
 		if (node_state.IsActive()) {
 			if (state) {
-				GetEditor().Date = DateTime.Create(2007, 6, 1, 12);
-				m_PreviousWeather = GetEditor().Climate;
-				GetEditor().Climate = 0x00000000; // fixes climate change
+				DaysBefore.GetEditor().Date = DateTime.Create(2007, 6, 1, 12);
+				m_PreviousWeather = DaysBefore.GetEditor().Climate;
+				DaysBefore.GetEditor().Climate = 0x00000000; // fixes climate change
 			} else {
-				GetEditor().Date = DateTime.Now(false);
-				GetEditor().Climate = m_PreviousWeather;
+				DaysBefore.GetEditor().Date = DateTime.Now(false);
+				DaysBefore.GetEditor().Climate = m_PreviousWeather;
 			}
 		}
 	}

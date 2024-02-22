@@ -19,7 +19,7 @@ class PianoCommand: CommandNode
 	
 	protected void SpawnPianoDrop(vector position)
 	{
-		GetEditor().PlaySound(EditorSounds.PIANO_DROP);
+		DaysBefore.GetEditor().PlaySound(EditorSounds.PIANO_DROP);
 		
 		//GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SpawnPiano, 3900, false, position + "0 30 0");
 	}

@@ -4,9 +4,9 @@ class EditorButton: NodeWidgetEventHandler
 	{		
 		if (node_state.IsHover()) {
 			if (state) {
-				//m_Node.GetEditor().GetHud().SetCursor(m_Node.Icon, m_Node.GetDisplayName(), m_Node.GetShortcutString());
+				//DaysBefore.GetEditor().GetHud().SetCursor(m_Node.Icon, m_Node.GetDisplayName(), m_Node.GetShortcutString());
 			} else {
-				//m_Node.GetEditor().GetHud().ClearCursor();
+				//DaysBefore.GetEditor().GetHud().ClearCursor();
 			}
 		}
 		

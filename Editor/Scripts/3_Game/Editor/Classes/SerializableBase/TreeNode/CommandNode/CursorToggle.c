@@ -5,7 +5,7 @@ class CursorToggle: CommandNode
 	override void EUpdate(float timeslice)
 	{
 		Input input = GetGame().GetInput();
-		EditorNode editor = GetEditor();
+		EditorNode editor = DaysBefore.GetEditor();
 		return;
 		
 		EditorCamera camera = editor.GetCamera();
@@ -91,8 +91,8 @@ class CursorToggle: CommandNode
 	{
 		super.OnStateChanged(node_state, state);
 	
-		if (GetEditor().GetHud()) {
-			GetEditor().GetHud().ClearCursor();
+		if (DaysBefore.GetEditor().GetHud()) {
+			DaysBefore.GetEditor().GetHud().ClearCursor();
 		}
 		
 		GetGame().GetUIManager().ShowCursor(state);
