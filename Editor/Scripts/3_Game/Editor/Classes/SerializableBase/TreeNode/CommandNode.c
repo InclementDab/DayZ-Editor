@@ -10,4 +10,9 @@ class CommandNode: NamedNode
 	{
 		return NodeState.ACTIVE | NodeState.HOVER;
 	}
+	
+	array<string> GetXorSelections()
+	{
+		return {};
+	}
 }

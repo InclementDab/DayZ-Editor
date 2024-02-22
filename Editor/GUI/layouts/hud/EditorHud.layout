@@ -1154,7 +1154,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\New"
+           Path "Commands\New"
           }
          }
         }
@@ -1208,7 +1208,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Open"
+           Path "Commands\Open"
           }
          }
         }
@@ -1262,7 +1262,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Save"
+           Path "Commands\Save"
           }
          }
         }
@@ -1317,7 +1317,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\SaveAs"
+           Path "Commands\SaveAs"
           }
          }
         }
@@ -1417,7 +1417,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Cut"
+           Path "Commands\Cut"
           }
          }
         }
@@ -1471,7 +1471,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Copy"
+           Path "Commands\Copy"
           }
          }
         }
@@ -1525,7 +1525,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Paste"
+           Path "Commands\Paste"
           }
          }
         }
@@ -1626,7 +1626,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Lock"
+           Path "Commands\Lock"
           }
          }
         }
@@ -1680,7 +1680,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Unlock"
+           Path "Commands\Unlock"
           }
          }
         }
@@ -1781,7 +1781,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Magnet"
+           Path "Commands\Magnet"
           }
          }
         }
@@ -1835,7 +1835,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Ground"
+           Path "Commands\Ground"
           }
          }
         }
@@ -1889,7 +1889,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Snap"
+           Path "Commands\Snap"
           }
          }
         }
@@ -1991,7 +1991,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Weather"
+           Path "Commands\Weather"
           }
          }
         }
@@ -2045,7 +2045,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Camera"
+           Path "Commands\Camera"
           }
          }
         }
@@ -2149,7 +2149,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Afterlife"
+           Path "Commands\Afterlife"
           }
          }
         }
@@ -2206,7 +2206,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Console"
+           Path "Commands\Console"
           }
          }
         }
@@ -2489,7 +2489,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Box"
+           Path "Commands\Box"
           }
          }
         }
@@ -2549,7 +2549,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Ellipse"
+           Path "Commands\Ellipse"
           }
          }
         }
@@ -2607,7 +2607,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Lasso"
+           Path "Commands\Lasso"
           }
          }
         }
@@ -2712,7 +2712,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Tools\\Translate"
+           Path "Commands\Tools\Translate"
           }
          }
         }
@@ -2772,7 +2772,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Tools\\Rotate"
+           Path "Commands\Tools\Rotate"
           }
          }
         }
@@ -2830,7 +2830,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Tools\\Scale"
+           Path "Commands\Tools\Scale"
           }
          }
         }
@@ -2935,7 +2935,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Bolt"
+           Path "Commands\Bolt"
           }
          }
         }
@@ -3122,7 +3122,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\AddLayer"
+           Path "Commands\AddLayer"
           }
          }
         }
@@ -3222,7 +3222,7 @@ FrameWidgetClass Root {
        }
        {
         ScriptParamsClass {
-         Path "Menus\\File"
+         Path "Menus\File"
         }
        }
       }
@@ -3281,7 +3281,7 @@ FrameWidgetClass Root {
        }
        {
         ScriptParamsClass {
-         Path "Menus\\Edit"
+         Path "Menus\Edit"
         }
        }
       }
@@ -3341,7 +3341,7 @@ FrameWidgetClass Root {
        }
        {
         ScriptParamsClass {
-         Path "Menus\\View"
+         Path "Menus\View"
         }
        }
       }
@@ -3400,7 +3400,7 @@ FrameWidgetClass Root {
        }
        {
         ScriptParamsClass {
-         Path "Menus\\View"
+         Path "Menus\View"
         }
        }
       }
@@ -3519,7 +3519,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Undo"
+           Path "Commands\Undo"
           }
          }
         }
@@ -3572,7 +3572,7 @@ FrameWidgetClass Root {
          }
          {
           ScriptParamsClass {
-           Path "Commands\\Redo"
+           Path "Commands\Redo"
           }
          }
         }

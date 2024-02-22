@@ -64,12 +64,12 @@ class EditorNode: Node
 	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 		
-	void EditorNode(UUID uuid, PlayerIdentity identity, DayZPlayer player) 
+	void EditorNode(UUID uuid, PlayerIdentity identity = null, DayZPlayer player = null) 
 	{
 		Identity = identity;
 		Player = player;
 		
-		Add(new FileNode(MISSION, "Mission", Symbols.FOLDER, LinearColor.WHITE, "$mission:"));
+#ifndef SERVER
 		Add(new NamedNode(DZ, "DZ", Symbols.FOLDER, LinearColor.WHITE));
 		Add(new NamedNode(VEHICLES, "CfgVehicles", Symbols.FOLDER, LinearColor.WHITE));
 		Add(new NamedNode(WEAPONS, "CfgWeapons", Symbols.FOLDER, LinearColor.WHITE));
@@ -77,8 +77,7 @@ class EditorNode: Node
 		
 		Add(new NamedNode(COMMANDS, "Commands", Symbols.COMMAND, LinearColor.WHITE));
 		Add(new NamedNode(TOOLS, "Tools", Symbols.TOOLBOX, LinearColor.WHITE));
-
-#ifndef SERVER
+		
 		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST, LinearColor.WHITE));
 		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS, LinearColor.WHITE));
 		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty, LinearColor.WHITE));
@@ -115,7 +114,6 @@ class EditorNode: Node
 		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT, LinearColor.WHITE));
 		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE, LinearColor.WHITE));
 		this[TOOLS].Add(new ScaleTool("Scale", "Scale Mode", Symbols.ARROWS_MAXIMIZE, LinearColor.WHITE));
-#endif
 		
 #ifndef COMPONENT_SYSTEM
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount(CFG_VEHICLESPATH); i++) {
@@ -126,15 +124,47 @@ class EditorNode: Node
 			}
 			
 			ConfigObjectEntry entry = ConfigObjectEntry(string.Format("%1 %2", CFG_VEHICLESPATH, name));
-			Print(entry.Scope);
-			Print(entry.GetName());
+			//Print(entry.Scope);
+			//Print(entry.GetName());
 			
 			//array<string> full_path = {};
 			//GetGame().ConfigGetFullPath(string.Format("%1 %2", CFG_VEHICLESPATH, name), full_path);
 			//this[category].Add(new PlaceableNode(name, name, this[category].GetIcon()));
 	    }
+				
 		
-#ifdef SERVER
+		float t = GetGame().GetTime();
+		for (int j = 0; j < 473; j++) {
+			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
+			//p3d_files.Debug();
+			foreach (string p3d: p3d_files) {
+				Node current = this[DZ];
+				array<string> p3d_split = {};
+				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
+				for (int k = 1; k < p3d_split.Count() - 1; k++) {
+					//Print(p3d_split[k]);
+					if (!current[p3d_split[k]]) {
+						current.Add(new NamedNode(p3d_split[k], p3d_split[k], Symbols.FOLDER, LinearColor.WHITE));
+					}
+					
+					//Print(string.Format("%1:%2", current.GetUUID(), p3d_split[k]));
+					current = current[p3d_split[k]];
+				}
+				
+				//PrintFormat("[%1] registering as %2", p3d, p3d_split[p3d_split.Count() - 1]);
+				current.Add(new PlaceableNode(p3d, p3d_split[p3d_split.Count() - 1], Symbols.TRIANGLE, LinearColor.WHITE));
+			}
+		}
+		
+		Print(string.Format("%1 nodes/second", (float)j / ((float)GetGame().GetTime() - t) * 1000.0 ));
+
+		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
+			this[SCRIPTED].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3, LinearColor.WHITE));
+		}	
+#endif
+		
+#else
+		Add(new FileNode(MISSION, "Mission", Symbols.FOLDER, LinearColor.WHITE, "$mission:"));
 		array<string> mission_files = Directory.EnumerateFiles("$mission:");
 		foreach (File mission_file: mission_files) {
 			switch (mission_file.GetExtension()) {
@@ -169,37 +199,6 @@ class EditorNode: Node
 				}
 			}
 		}
-#endif
-		
-		
-		float t = GetGame().GetTime();
-		for (int j = 0; j < 473; j++) {
-			array<string> p3d_files = Directory.EnumerateFiles("DZ\\" + DayZGame.P3D_DIRECTORIES[j], "*.p3d");
-			p3d_files.Debug();
-			foreach (string p3d: p3d_files) {
-				Node current = this[DZ];
-				array<string> p3d_split = {};
-				p3d.Split(Directory.PATH_SEPERATOR, p3d_split);
-				for (int k = 1; k < p3d_split.Count() - 1; k++) {
-					//Print(p3d_split[k]);
-					if (!current[p3d_split[k]]) {
-						current[p3d_split[k]] = new NamedNode(p3d_split[k], p3d_split[k], Symbols.FOLDER, LinearColor.WHITE);
-					}
-					
-					//Print(string.Format("%1:%2", current.GetUUID(), p3d_split[k]));
-					current = current[p3d_split[k]];
-				}
-				
-				//PrintFormat("[%1] registering as %2", p3d, p3d_split[p3d_split.Count() - 1]);
-				current[p3d_split[p3d_split.Count() - 1]] = new PlaceableNode(p3d, p3d_split[p3d_split.Count() - 1], Symbols.TRIANGLE, LinearColor.WHITE);
-			}
-		}
-		
-		Print(string.Format("%1 nodes/second", (float)j / ((float)GetGame().GetTime() - t) * 1000.0 ));
-
-		foreach (Param3<typename, string, string> scripted_instance: RegisterScriptedEntity.Instances) {
-			this[SCRIPTED].Add(new PlaceableNode(scripted_instance.param1.ToString(), scripted_instance.param2, scripted_instance.param3, LinearColor.WHITE));
-		}	
 #endif
 		
 		// Load all default categories and placements
