@@ -31,21 +31,13 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 
 	override void Show(bool show) 
 	{
-		EditorLog.Trace("EditorHud::Show");
-		if (m_LayoutRoot) {
-			m_LayoutRoot.Show(show);
-		}
+		super.Show(show);
 		
 		if (CurrentDialog) {
 			CurrentDialog.GetLayoutRoot().Show(show);
 		}
 	}
-	
-	override bool IsVisible() 
-	{
-		return m_LayoutRoot.IsVisible();
-	}
-	
+		
 	void ToggleCursor() 
 	{		
 		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
