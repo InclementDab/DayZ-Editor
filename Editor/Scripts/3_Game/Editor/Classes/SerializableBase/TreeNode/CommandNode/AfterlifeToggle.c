@@ -44,6 +44,11 @@ class AfterlifeToggle: NamedNode
 		SetSynchDirty();
 	}
 	
+	override NodeState GetStateMask()
+	{
+		return super.GetStateMask() | NodeState.CLIENT_AUTH;
+	}
+	
 	override NodeInteractType GetInteractMask()
 	{
 		return NodeInteractType.PRESS;

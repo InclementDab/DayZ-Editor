@@ -4,8 +4,9 @@ class BoxCommand: NamedNode
 	{
 		super.OnInteract(interact_type, widget);
 		
+		EditorNode editor = EditorNode.Cast(FindAncestor(EditorNode));
 		if (interact_type & NodeInteractType.PRESS) {
-			DaysBefore.GetEditor().GetHud().CurrentSelectionMode = SelectionMode.BOX;
+			editor.GetHud().CurrentSelectionMode = SelectionMode.BOX;
 		}
 	}
 	

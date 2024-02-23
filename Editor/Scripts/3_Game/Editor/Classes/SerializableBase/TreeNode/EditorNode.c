@@ -65,16 +65,17 @@ class EditorNode: Node
 	{
 		Identity = identity;
 		
+		// Synchronized, bud
+		Add(new NamedNode(COMMANDS, "Commands", Symbols.COMMAND, LinearColor.WHITE));
+		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST, LinearColor.WHITE));
+		
 #ifndef SERVER
 		Add(new NamedNode(DZ, "DZ", Symbols.FOLDER, LinearColor.WHITE));
 		Add(new NamedNode(VEHICLES, "CfgVehicles", Symbols.FOLDER, LinearColor.WHITE));
 		Add(new NamedNode(WEAPONS, "CfgWeapons", Symbols.FOLDER, LinearColor.WHITE));
 		Add(new NamedNode(SCRIPTED, "Scripted Entities", Symbols.FOLDER, LinearColor.WHITE));
+		Add(new NamedNode(TOOLS, "Tools", Symbols.TOOLBOX, LinearColor.WHITE));	
 		
-		Add(new NamedNode(COMMANDS, "Commands", Symbols.COMMAND, LinearColor.WHITE));
-		Add(new NamedNode(TOOLS, "Tools", Symbols.TOOLBOX, LinearColor.WHITE));
-		
-		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST, LinearColor.WHITE));
 		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS, LinearColor.WHITE));
 		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty, LinearColor.WHITE));
 		this[COMMANDS].Add(new NamedNode("Bolt", "Lightning Bolt", Symbols.BOLT, LinearColor.WHITE));
@@ -99,7 +100,6 @@ class EditorNode: Node
 		this[COMMANDS].Add(new NamedNode("Undo", "Undo", Symbols.ROTATE_LEFT, LinearColor.WHITE));
 		this[COMMANDS].Add(new NamedNode("Unlock", "Unlock", Symbols.LOCK_OPEN, LinearColor.WHITE));
 		this[COMMANDS].Add(new WeatherToggle("Weather", "Weather", Symbols.SUN, LinearColor.WHITE));
-		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS, LinearColor.WHITE));
 		this[COMMANDS].Add(new NamedNode("Console", "Toggle Console", Brands.XBOX, LinearColor.WHITE));
 		
 		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT, LinearColor.WHITE));

@@ -8,7 +8,9 @@ class PlaceableNode: NamedNode
 	};
 	
 	ref ObjectNode Placing;
-		
+	
+	protected vector m_ModifierStart;
+	
 	override void EUpdate(float dt)
 	{
 		super.EUpdate(dt);
@@ -16,7 +18,7 @@ class PlaceableNode: NamedNode
 		if (!Placing) {
 			return;
 		}
-		
+				
 		Input input = GetGame().GetInput();
 		EditorNode editor = EditorNode.Cast(FindAncestor(EditorNode));
 		Raycast raycast = editor.GetCamera().PerformCursorRaycast(Placing.GetObject());
@@ -24,43 +26,57 @@ class PlaceableNode: NamedNode
 			return;
 		}
 		
-		/*
-		if (input.GetInputByID(UAVehicleTurbo).LocalPress()) {
+		if (input.LocalPress_ID(UAVehicleTurbo)) {
 			
-		}*/
-		vector raycast_orthogonal[4] = { 
-			(raycast.Source.Direction * raycast.Bounce.Direction).Normalized(), 
-			raycast.Bounce.Direction, 
-			raycast.Source.Direction, 
-			raycast.Source.Position 
+			return;
+		}
+		
+		if (input.LocalPress_ID(UATempRaiseWeapon)) {
+			if (!KeyState(KeyCode.KC_LCONTROL)) {
+				RemoveState(NodeState.ACTIVE);
+				return;
+			}
+			
+			m_ModifierStart = raycast.Bounce.Position;
+			return;
+		}
+		
+		if (input.LocalValue_ID(UATempRaiseWeapon)) {
+			
+		}
+		
+		if (input.LocalRelease_ID(UATempRaiseWeapon)) {
+			Offset[3] = raycast.Bounce.Position - m_ModifierStart;
+			return;
+		}
+		
+		vector transform[4] = {
+			"1 0 0",
+			"0 1 0",
+			"0 0 1", 
+			raycast.Bounce.Position
 		};
+	
+		vector rotation_mat[4] = {
+			"1 0 0",
+			"0 1 0",
+			"0 0 1",
+			"0 0 0"
+		};
+		float rotation_y = 21 * (input.LocalValue_ID(UAZoomInOptics) + input.LocalValue_ID(UAZoomOutOptics) * -1);
+		Math3D.YawPitchRollMatrix(Vector(rotation_y, 0, 0), rotation_mat);
+		Math3D.MatrixMultiply4(rotation_mat, Offset, Offset);
+
+		Math3D.MatrixMultiply4(transform, Offset, transform);
 		
-		
-		//Math3D.MatrixOrthogonalize4(raycast_orthogonal);	
-		
-		vector rotation_mat[3];
-		Math3D.MatrixIdentity3(rotation_mat);
-		
-		
-		if (input.LocalPress_ID(UAZoomInOptics)) {
-			Math3D.YawPitchRollMatrix(Vector(-15, 0, 0), rotation_mat);
-			Math3D.MatrixMultiply3(Offset, rotation_mat, Offset);
-		}
-		
-		if (input.LocalPress_ID(UAZoomOutOptics)) {
-			Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
-			Math3D.MatrixMultiply3(Offset, rotation_mat, Offset);
-		}
-				
-		Math3D.MatrixMultiply4(raycast_orthogonal, Offset, raycast_orthogonal);
-		
-		//Shape.CreateMatrix(raycast_orthogonal);
+		Shape.CreateMatrix(transform);
 		
 		//m_CursorAside = m_CursorAside.Multiply3(rotation_mat);
 		
 		//Print(Placing.Count());
 		//vector transform[4] = { m_CursorAside, raycast.Bounce.Direction, m_CursorAside * raycast.Bounce.Direction, raycast.Bounce.Position };
-		Placing.SetBaseTransform(raycast_orthogonal);
+
+		Placing.SetBaseTransform(transform);
 	
 		if (input.LocalPress_ID(UAFire)) {
 			editor.InsertHistory(Placing, null);
@@ -78,12 +94,6 @@ class PlaceableNode: NamedNode
 			} else {
 				RemoveState(NodeState.ACTIVE);
 			}
-			
-			GetUApi().SupressNextFrame(true);
-		}
-		
-		if (input.LocalPress_ID(UATempRaiseWeapon)) {
-			delete Placing;
 		}
 	}
 	
@@ -96,8 +106,6 @@ class PlaceableNode: NamedNode
 				vector matrix[4];
 				Math3D.MatrixIdentity4(matrix);
 				Placing = new ObjectNode(UUID.Generate(), m_UUID, Icon, LinearColor.WHITE, EditorNode.CreateObject(GetUUID(), matrix));
-	
-				GetUApi().SupressNextFrame(true);
 			} else {
 				delete Placing;
 			}
@@ -106,7 +114,7 @@ class PlaceableNode: NamedNode
 		
 	override NodeState GetStateMask()
 	{
-		return NodeState.ACTIVE | NodeState.VIEW_TREE | NodeState.CLIENT_AUTH | NodeState.SYNC_DIRTY;
+		return NodeState.ACTIVE | NodeState.CLIENT_AUTH | NodeState.SYNC_DIRTY;
 	}
 
 	override void OnInteract(NodeInteractType interact_type, Widget widget = null)
@@ -115,14 +123,18 @@ class PlaceableNode: NamedNode
 		
 		if (interact_type & NodeInteractType.PRESS) {
 			if (!KeyState(KeyCode.KC_LSHIFT)) {
-				Node.States.Clear(NodeState.ACTIVE);
+				
+				// Causes freeze crash
+				//Node.ClearStates(NodeState.ACTIVE);
 			}
 			
 			if (KeyState(KeyCode.KC_LCONTROL)) {
 				ToggleState(NodeState.ACTIVE);
 			} else {
 				AddState(NodeState.ACTIVE);
-			}			
+			}		
+			
+			GetUApi().SupressNextFrame(true);	
 		}
 	}
 	

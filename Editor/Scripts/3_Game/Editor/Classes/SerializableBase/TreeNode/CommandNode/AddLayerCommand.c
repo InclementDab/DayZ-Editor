@@ -4,9 +4,10 @@ class AddLayerCommand: NamedNode
 	{
 		super.OnInteract(interact_type, widget);
 		
+		EditorNode editor = EditorNode.Cast(FindAncestor(EditorNode));
 		if (interact_type & NodeInteractType.CLICK) {
-			
-			DaysBefore.GetEditor().GetLayers().Add(new LayerNode(UUID.Generate(), "layer0", Symbols.FOLDER, LinearColor.WHITE));
+			editor.GetLayers().Add(new LayerNode(UUID.Generate(), "layer0", Symbols.FOLDER, LinearColor.WHITE));
+			editor.SetSynchDirty();
 		}
 	}
 	

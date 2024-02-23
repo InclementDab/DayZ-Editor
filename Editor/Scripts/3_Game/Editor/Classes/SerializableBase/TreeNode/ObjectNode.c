@@ -213,17 +213,7 @@ class ObjectNode: NamedNode
 		
 		return true;
 	}
-	
-	override NodeState GetStateMask()
-	{
-		return NodeState.ACTIVE | NodeState.SUPPRESS | NodeState.VIEW_MAP | NodeState.VIEW_WORLD | NodeState.VIEW_TREE | NodeState.SYNC_DIRTY | NodeState.CLIENT_AUTH;
-	}
-	
-	override NodeInteractType GetInteractMask()
-	{
-		return NodeInteractType.HOVER | NodeInteractType.DRAG | NodeInteractType.CONTEXT | NodeInteractType.PRESS | NodeInteractType.DOUBLE;
-	}
-	
+		
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(node_state, state);
@@ -475,5 +465,15 @@ class ObjectNode: NamedNode
 	array<EditorSnapPoint> GetEditorSnapPoints()
 	{
 		return m_EditorSnapPoints;
+	}
+	
+	override NodeState GetStateMask()
+	{
+		return super.GetStateMask() | NodeState.SUPPRESS | NodeState.CLIENT_AUTH;
+	}
+	
+	override NodeInteractType GetInteractMask()
+	{
+		return NodeInteractType.HOVER | NodeInteractType.DRAG | NodeInteractType.CONTEXT | NodeInteractType.PRESS | NodeInteractType.DOUBLE;
 	}
 }
