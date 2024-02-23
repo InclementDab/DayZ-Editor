@@ -42,6 +42,7 @@ class EditorHud: ScriptView
 	protected Widget m_DraggedBar;
 	protected int m_DragX = -1, m_DragY = -1;
 	protected vector m_MapDrag;
+	protected vector m_CursorAside = vector.Aside;
 		
 	void EditorHud(notnull EditorNode editor)
 	{		
@@ -64,14 +65,46 @@ class EditorHud: ScriptView
 		}
 	}
 	
-	void ~EditorHud()
+	void CreateContextMenu(Node node)
 	{
-		SetCursorWidget(null);
+		m_TemplateController.MenuItems.Clear();
+			
+		array<Node> context_nodes = node.GetContextMenu();
+		if (context_nodes.Count() == 0) {
+			Menu.Show(false);
+			return;
+		}
+		
+		Menu.Show(true);
+		foreach (Node context_node: context_nodes) {
+			m_TemplateController.MenuItems.Insert(context_node.CreateTreeView());
+		}
+
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);
+		
+		int x, y;
+		GetMousePos(x, y);
+		
+		float menu_w, menu_h;
+		Menu.GetScreenSize(menu_w, menu_h);
+						
+		x = Math.Min(x, screen_x - 15 - menu_w);
+		x = Math.Max(15 + menu_w, x);
+		
+		y = Math.Min(y, screen_y - 15 - menu_h);
+		y = Math.Max(15 + menu_h, y);
+		
+		Menu.SetScreenPos(x, y);
 	}
 	
 	override void Update(float dt)
 	{
 		super.Update(dt);
+		
+		if (!m_Editor.IsActive() || !m_LayoutRoot.IsVisible()) {
+			return;
+		}
 		
 		Widget root_widget = EnScriptVar<Widget>.Get(GetGame().GetMission(), "m_HudRootWidget");
 		if (root_widget) {
@@ -86,9 +119,76 @@ class EditorHud: ScriptView
 		
 		Input input = GetGame().GetInput();	
 		
-		if (input.LocalPress_ID(UAFire) && Node.States[NodeState.HOVER].Count() == 0) {
+		if (input.LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
 			m_DragX = mouse_x;
 			m_DragY = mouse_y;
+		}
+				
+		if (input.LocalPress("UAEditorCursor")) {
+			GetGame().GetUIManager().ShowUICursor(!GetGame().GetUIManager().IsCursorVisible()); 
+		}
+		
+		EditorCamera camera = m_Editor.GetCamera();
+												
+		if ((input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) && !GetWidgetUnderCursor()) {
+			m_TemplateController.MenuItems.Clear();
+			Menu.Show(false);	
+		}
+		
+		foreach (string uuid, Node node1: m_Editor.GetPlacing().Children) {
+			ObjectNode object_node = ObjectNode.Cast(node1);
+			if (!object_node) {
+				continue;
+			}
+			
+			Raycast raycast = camera.PerformCursorRaycast(object_node.GetObject());
+			if (!raycast) {
+				continue;
+			}
+			
+			vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
+			Math3D.MatrixOrthogonalize4(camera_orthogonal);	
+			
+			vector rotation_mat[3];
+			Math3D.MatrixIdentity3(rotation_mat);
+			if (input.LocalPress_ID(UAZoomInOptics)) {
+				Math3D.YawPitchRollMatrix(Vector(-15, 0, 0), rotation_mat);
+			}
+			
+			if (input.LocalPress_ID(UAZoomOutOptics)) {
+				Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
+			}
+			
+			Math3D.MatrixMultiply3(camera_orthogonal, rotation_mat, camera_orthogonal);
+			
+			//Shape.CreateMatrix(camera_orthogonal);
+			
+			m_CursorAside = m_CursorAside.Multiply3(rotation_mat);
+			
+			//Print(Placing.Count());
+			vector transform[4] = { m_CursorAside, raycast.Bounce.Direction, m_CursorAside * raycast.Bounce.Direction, raycast.Bounce.Position };
+			object_node.SetBaseTransform(transform);
+		}
+		
+		if (input.LocalPress_ID(UAZoomIn)) {
+			if (GetGame().GetUIManager().IsCursorVisible()) {				
+				vector camera_position = camera.GetCursorRay().GetPoint(1000.0);
+				Raycast raycast2 = camera.PerformCursorRaycast();
+				if (raycast2) {
+					vector current_position = camera.GetPosition();
+					float y_height = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
+					camera_position = raycast2.Bounce.GetPoint(y_height);
+				}
+								
+				camera.SetPosition(camera_position);
+				camera.Update();
+			} else {
+				camera.FieldOfView = GameConstants.DZPLAYER_CAMERA_FOV_EYEZOOM;
+			}
+		}
+		
+		if (input.LocalRelease_ID(UAZoomIn)) { 
+			camera.FieldOfView = 1.0;
 		}
 		
 		Whiteboard.Clear();
@@ -179,14 +279,14 @@ class EditorHud: ScriptView
 
 			switch (CurrentSelectionMode) {
 				case SelectionMode.LASSO: {
-					foreach (Object object, ObjectNode object_node: ObjectNode.All) {
-						ObjectView view = object_node.GetObjectViewWorld();
+					foreach (Object object, ObjectNode object_node_lasso: ObjectNode.All) {
+						ObjectNodeWorldView view = object_node_lasso.GetObjectViewWorld();
 						
 						float x_node_screen, y_node_screen;
 						view.GetLayoutRoot().GetScreenPos(x_node_screen, y_node_screen);
 						if (m_LassoHistory.Count() > 0) {							
 							if (IsPointInPolygon(x_node_screen, y_node_screen, m_LassoHistory)) {
-								object_node.AddState(NodeState.ACTIVE);
+								object_node_lasso.AddState(NodeState.ACTIVE);
 							}
 						}
 					}
@@ -346,6 +446,11 @@ class EditorHud: ScriptView
 		}
 		
 		return super.OnChange(w, x, y, finished);
+	}
+	
+	vector GetCursorAside()
+	{
+		return m_CursorAside;
 	}
 							
 	void ShowNotification(string text, int color = -9137292, float duration = 4.0)

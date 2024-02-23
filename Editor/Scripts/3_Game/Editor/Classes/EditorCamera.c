@@ -27,38 +27,9 @@ class EditorCamera: Camera
 		
 		vector transform[4];
 		GetTransform(transform);
-
-		// This always ends up being a mess
-		ObjectNode object_node_leave = ObjectNode.All[m_CursorObject];
-		if (object_node_leave) {
-			object_node_leave.RemoveState(NodeState.HOVER);
-		}	
-		
-		m_CursorObject = null;
 		
 		Input input = GetGame().GetInput();
-		
-		/*EditorNode editor = GetDayZGame().GetEditor();
-		if (raycast && raycast.Hit) {
-			m_CursorObject = raycast.Hit;
-			ObjectNode object_node = ObjectNode.All[m_CursorObject];
-			if (object_node) {
-				if (!object_node.HasState(NodeState.HOVER)) {
-					object_node.AddState(NodeState.HOVER);
-				}
-				
-				if (input.LocalPress_ID(UAFire)) {
-					object_node.AddState(NodeState.ACTIVE);
-				}
-			} else {
-				editor.GetHud().SetCursor(string.Empty, m_CursorObject.GetShapeName());
-				
-				if (input.LocalDbl_ID(UAFire)) {
-					editor.GetPlacing().Add(new ObjectNode(UUID.Generate(), m_CursorObject.GetShapeName(), Symbols.SQUARE, m_CursorObject));
-				}
-			}
-		}*/
-		
+	
 		m_LinearVelocity += Vector(input.LocalValue_ID(UAMoveRight) 	- input.LocalValue_ID(UAMoveLeft), 
 									input.LocalValue_ID(UAMoveUp) 		- input.LocalValue_ID(UAMoveDown), 
 									input.LocalValue_ID(UAMoveForward) 	- input.LocalValue_ID(UAMoveBack)) * 18.5 * timeSlice * (1 + input.LocalValue_ID(UATurbo) * 2.5) * (1 - (input.LocalValue_ID(UALookAround) * 0.85));

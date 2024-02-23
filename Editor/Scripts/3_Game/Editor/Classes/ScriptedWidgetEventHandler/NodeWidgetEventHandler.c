@@ -24,9 +24,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
 		if (Path != string.Empty) {
-			Print(Path);
 			m_Node = NamedNode.Cast(DaysBefore.GetEditor().Get(Path));
-			Print(m_Node);
 			if (m_Node) {
 				if (Button) {
 					Button.SetHandler(this);
@@ -38,6 +36,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 				}
 				
 				m_Node.State_OnChanged.Insert(OnStateChanged);
+				m_Node.Interact_OnComplete.Insert(OnInteractComplete);
 			}
 		}
 	}
@@ -46,95 +45,123 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	{
 	}
 	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		if (button != 0 || !m_Node) {
-			return false;
+	void OnInteractComplete(NodeInteractType interact_type)
+	{		
+		if (interact_type & NodeInteractType.ENTER) {
+			WidgetAnimator.AnimateColor(Icon, m_Node.Color.With(3, 255), 100);
+			GetDayZGame().SetCursor(m_Node.Icon, m_Node.DisplayName);
+			
+			Icon.LoadImageFile(0, m_Node.Icon.Solid());
+			Icon.SetImage(0);
 		}
 		
-		switch (m_Node.GetInteractType()) {
-			case SandboxNodeInteract.HOLD: {
-				m_Node.AddState(NodeState.ACTIVE);
-				return true;
-			}
+		if (interact_type & NodeInteractType.LEAVE) {
+			WidgetAnimator.AnimateColor(Icon, LinearColor.WHITE.With(3, 100), 100);
+			GetDayZGame().SetCursor();
+			
+			Icon.LoadImageFile(0, m_Node.Icon.Regular());
+			Icon.SetImage(0);
+		}
+		
+		if (interact_type & NodeInteractType.CONTEXT) {
+			DaysBefore.GetEditor().GetHud().CreateContextMenu(m_Node);
+		}
+	}	
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{		
+		int interact_mask = m_Node.GetInteractMask();
+
+		if (button == 0 && interact_mask & (NodeInteractType.ONCE | NodeInteractType.PRESS)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.ONCE | NodeInteractType.PRESS));
+			return true;
+		}
+		
+		if (button == 0 && interact_mask & NodeInteractType.HOLD) {
+			m_Node.OnInteract(interact_mask & NodeInteractType.HOLD);
+			return true;
+		}
+		
+		if (button == 1 && interact_mask & NodeInteractType.CONTEXT) {
+			m_Node.OnInteract(interact_mask & NodeInteractType.CONTEXT);
+			return true;
 		}
 				
-		return false;
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (!m_Node) {
-			return false;
-		}
-		
-		if (button == 1) {
-			m_Node.AddState(NodeState.CONTEXT);
+		int interact_mask = m_Node.GetInteractMask();
+
+		if (button == 0 && interact_mask & (NodeInteractType.PRESS | NodeInteractType.RELEASE)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.PRESS | NodeInteractType.RELEASE));
 			return true;
 		}
-		
-		if (button == 0) {
-			switch (m_Node.GetInteractType()) {
-				case SandboxNodeInteract.HOLD: {
-					m_Node.RemoveState(NodeState.ACTIVE);
-					return true;
-				}
 				
-				case SandboxNodeInteract.ONCE:
-				case SandboxNodeInteract.PRESS: {
-					m_Node.AddState(NodeState.ACTIVE);									
-					return true;
-				}
-			}
-		}
-				
-		return false;
+		return super.OnMouseButtonUp(w, x, y, button);
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
-			return false;
+		int interact_mask = m_Node.GetInteractMask();
+		if (button == 0 && interact_mask & (NodeInteractType.CLICK)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.CLICK));
+			return true;
 		}
 		
-		switch (m_Node.GetInteractType()) {
-			case SandboxNodeInteract.TOGGLE: {
-				if (m_Node.HasState(NodeState.ACTIVE)) {
-					m_Node.RemoveState(NodeState.ACTIVE);
-				} else {
-					m_Node.AddState(NodeState.ACTIVE);
-				}
-				return true;
-			}
-		}
-				
-		return false;
+		return super.OnClick(w, x, y, button);
 	}
 		
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0 || !m_Node) {
-			return false;
+		int interact_mask = m_Node.GetInteractMask();
+
+		if (button == 0 && interact_mask & (NodeInteractType.DOUBLE)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.DOUBLE));
+			return true;
 		}
-		
-		switch (m_Node.GetInteractType()) {
-			case SandboxNodeInteract.DOUBLE: {
-				if (m_Node.HasState(NodeState.ACTIVE)) {
-					m_Node.RemoveState(NodeState.ACTIVE);
-				} else {
-					m_Node.AddState(NodeState.ACTIVE);
-				}
-				return true;
-			}
-		}
-		
-		return false;
+
+		return super.OnDoubleClick(w, x, y, button);
 	}
+	
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		int interact_mask = m_Node.GetInteractMask();
+		if (interact_mask & (NodeInteractType.DRAG_START)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.DRAG_START));
+		}
 		
+		return super.OnDrag(w, x, y);
+	}
+	
+	override bool OnDragging(Widget w, int x, int y, Widget reciever)
+	{		
+		int interact_mask = m_Node.GetInteractMask();
+		if (interact_mask & (NodeInteractType.DRAG)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.DRAG));
+		}
+		
+		return super.OnDragging(w, x, y, reciever);
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		int interact_mask = m_Node.GetInteractMask();
+		if (interact_mask & (NodeInteractType.DROP)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.DROP));
+		}
+		
+		return super.OnDrop(w, x, y, reciever);
+	}
+	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (m_Node) {
-			m_Node.AddState(NodeState.HOVER);
+		int interact_mask = m_Node.GetInteractMask();
+
+		if (interact_mask & (NodeInteractType.ENTER)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.ENTER));
+			return true;
 		}
 		
 		return super.OnMouseEnter(w, x, y);
@@ -142,8 +169,10 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (m_Node) {
-			m_Node.RemoveState(NodeState.HOVER);
+		int interact_mask = m_Node.GetInteractMask();
+		if (interact_mask & (NodeInteractType.LEAVE)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.LEAVE));
+			return true;
 		}
 				
 		return super.OnMouseLeave(w, enterW, x, y);

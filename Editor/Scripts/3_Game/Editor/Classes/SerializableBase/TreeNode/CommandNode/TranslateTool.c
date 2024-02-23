@@ -1,12 +1,14 @@
-class TranslateTool: CommandNode
+class TranslateTool: NamedNode
 {	
-	override array<string> GetXorSelections()
+	override void OnInteract(NodeInteractType interact_type)
 	{
-		return { "Scale", "Rotate" };
+		super.OnInteract(interact_type);
+		
+		ToggleState(NodeState.ACTIVE);
 	}
 	
-	override SandboxNodeInteract GetInteractType()
+	override NodeInteractType GetInteractMask()
 	{
-		return SandboxNodeInteract.TOGGLE;
+		return NodeInteractType.PRESS;
 	}
 }

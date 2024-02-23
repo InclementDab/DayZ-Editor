@@ -1,25 +1,34 @@
 class LayerNode: NamedNode
-{
-	override bool CreateContextMenu(inout ObservableCollection<ref MenuNode> list_items)
+{	
+	override array<Node> GetContextMenu()
 	{
-		list_items.Insert(new MenuNode(DaysBefore.GetEditor().GetCommand("Cut")));
-		list_items.Insert(new MenuNode(DaysBefore.GetEditor().GetCommand("Copy")));
-		list_items.Insert(new MenuNode(DaysBefore.GetEditor().GetCommand("Paste")));
-		list_items.Insert(new DividerView(null));
-		
-		list_items.Insert(new MenuNode(DaysBefore.GetEditor().GetCommand("AddLayer")));
-		list_items.Insert(new MenuNode(DaysBefore.GetEditor().GetCommand("SetLayerActive")));
-		
-		return true;
+		return { 
+			DaysBefore.GetEditor().GetCommand("Cut"),
+			DaysBefore.GetEditor().GetCommand("Copy"),
+			DaysBefore.GetEditor().GetCommand("Paste"),
+			DaysBefore.GetEditor().GetCommand("AddLayer"),
+			DaysBefore.GetEditor().GetCommand("SetLayerActive"),
+		};
 	}
-	
-	override SandboxNodeInteract GetInteractType()
-	{
-		return SandboxNodeInteract.TOGGLE;
-	}
-		
+			
 	override NodeState GetStateMask()
 	{
-		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAG | NodeState.EXTEND;
+		return NodeState.ACTIVE | NodeState.EXTEND;
+	}
+	
+	override NodeInteractType GetInteractMask()
+	{
+		return NodeInteractType.ENTER | NodeInteractType.LEAVE | NodeInteractType.CONTEXT | NodeInteractType.DRAG_START | NodeInteractType.DRAG | NodeInteractType.DROP | NodeInteractType.CLICK;
+	}
+	
+	override void OnInteract(NodeInteractType interact_type)
+	{
+		super.OnInteract(interact_type);
+		
+		if (interact_type & NodeInteractType.CLICK) {
+			foreach (Node child: Children) {
+				child.AddState(NodeState.ACTIVE);
+			}
+		}
 	}
 }

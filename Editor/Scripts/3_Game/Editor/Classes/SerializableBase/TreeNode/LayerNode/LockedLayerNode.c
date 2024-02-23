@@ -2,6 +2,11 @@ class LockedLayerNode: LayerNode
 {			
 	override NodeState GetStateMask()
 	{
-		return NodeState.HOVER | NodeState.CONTEXT | NodeState.ACTIVE | NodeState.EXTEND;
+		return NodeState.ACTIVE | NodeState.EXTEND;
+	}
+	
+	override NodeInteractType GetInteractMask()
+	{
+		return NodeInteractType.ENTER | NodeInteractType.LEAVE | NodeInteractType.CONTEXT;
 	}
 }

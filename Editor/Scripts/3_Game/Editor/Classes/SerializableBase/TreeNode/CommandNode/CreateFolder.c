@@ -1,12 +1,14 @@
-class CreateFolder: CommandNode
+class CreateFolder: NamedNode
 {
-	override void OnStateChanged(NodeState node_state, bool state)
+	override void OnInteract(NodeInteractType interact_type)
 	{
-		super.OnStateChanged(node_state, state);
+		super.OnInteract(interact_type);
+		
+		
 	}
 	
-	override SandboxNodeInteract GetInteractType()
+	override NodeInteractType GetInteractMask()
 	{
-		return SandboxNodeInteract.PRESS;
+		return NodeInteractType.PRESS;
 	}
 }

@@ -8,8 +8,7 @@ class ObjectNode: NamedNode
 	protected ref map<ETransformationAxis, ref Plane> m_BoundingBoxSurfaces = new map<ETransformationAxis, ref Plane>();
 	protected ref map<ETransformationAxis, EditorSnapPoint> m_SnapFaces = new map<ETransformationAxis, EditorSnapPoint>();
 	
-	protected ObjectViewMap m_ObjectViewMap;
-	protected ref ObjectViewWorld m_ObjectViewWorld;
+	protected ref ObjectNodeWorldView m_WorldView;
 	
 	protected Object m_BBoxLines[12], m_BBoxBase, m_CenterLine;		
 
@@ -45,8 +44,6 @@ class ObjectNode: NamedNode
 		foreach (auto snap_point: m_EditorSnapPoints) {
 			snap_point.Delete();
 		}
-		
-		delete m_ObjectViewMap;
 	}
 	
 #ifdef DIAG_DEVELOPER	
@@ -54,31 +51,6 @@ class ObjectNode: NamedNode
 	{		
 		vector transform[4];
 		m_Object.GetTransform(transform);
-
-		if (HasState(NodeState.DRAG)) {
-			for (int i = 0; i < 6; i++) {
-				// Debug
-				m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
-			}
-			
-			for (int j = 0; j < 6; j++) {
-				// Generates each direction vector
-				vector direction = vector.Zero;
-				direction[j % 3] = 1 * ((j > 2) * -2 + 1);
-				
-			}
-			
-			vector min_max2[2];
-			m_Object.GetCollisionBox(min_max2);
-			if (min_max2[0].Length() > 0) {
-				Shape.CreateSphere(COLOR_YELLOW, ShapeFlags.ONCE, min_max2[0].Multiply4(transform), 0.1);
-				Shape.CreateSphere(COLOR_YELLOW, ShapeFlags.ONCE, min_max2[1].Multiply4(transform), 0.1);
-			}
-			
-			if (m_Object.GetCollisionRadius() > 0) {
-				Shape.CreateSphere(COLOR_GREEN_A, ShapeFlags.TRANSP | ShapeFlags.ONCE, transform[3], m_Object.GetCollisionRadius());
-			}
-		}
 		
 		ScriptedEntity scripted_entity = ScriptedEntity.Cast(m_Object);
 		if (scripted_entity) {
@@ -109,6 +81,8 @@ class ObjectNode: NamedNode
 	{
 		m_Object = object;
 		All[m_Object] = this;
+		
+		m_WorldView = new ObjectNodeWorldView(this);
 		
 		vector transform[4];
 		m_Object.GetTransform(transform);
@@ -184,25 +158,7 @@ class ObjectNode: NamedNode
 #endif
 #endif
 	}
-		
-	/*
-	override TreeView CreateView()
-	{
-		if (Parent.GetUUID() != EditorNode.PLACING) {
-			if (!m_ObjectViewWorld) {
-				m_ObjectViewWorld = new ObjectViewWorld(this);
-			}
-			
-			if (!m_ObjectViewMap) {
-				auto object_view_map = new ObjectViewMap(this);
-				GetEditor().GetHud().GetTemplateController().MapMarkers.Insert(object_view_map);
-				m_ObjectViewMap = object_view_map;
-			}
-		}
-		
-		return super.CreateView();
-	}*/
-			
+					
 	override void Write(Serializer serializer, int version)
 	{
 		super.Write(serializer, version);
@@ -260,7 +216,12 @@ class ObjectNode: NamedNode
 	
 	override NodeState GetStateMask()
 	{
-		return NodeState.ACTIVE | NodeState.CONTEXT | NodeState.SUPPRESS | NodeState.HOVER | NodeState.VIEW_MAP | NodeState.VIEW_WORLD | NodeState.VIEW_TREE | NodeState.SYNC_DIRTY | NodeState.CLIENT_AUTH;
+		return NodeState.ACTIVE | NodeState.SUPPRESS | NodeState.VIEW_MAP | NodeState.VIEW_WORLD | NodeState.VIEW_TREE | NodeState.SYNC_DIRTY | NodeState.CLIENT_AUTH;
+	}
+	
+	override NodeInteractType GetInteractMask()
+	{
+		return NodeInteractType.ENTER | NodeInteractType.LEAVE | NodeInteractType.DRAG_START | NodeInteractType.DRAG | NodeInteractType.DROP | NodeInteractType.CONTEXT | NodeInteractType.PRESS | NodeInteractType.DOUBLE;
 	}
 	
 	override void OnStateChanged(NodeState node_state, bool state)
@@ -278,15 +239,7 @@ class ObjectNode: NamedNode
 				break;
 			}
 		}
-		
-		if (node_state.IsHover() || node_state.IsActive()) {
-			if (state) {
-				//EditorBoundingBox.Create(m_Object);				
-			} else {
-				//EditorBoundingBox.Destroy(m_Object);
-			}
-		}
-			
+					
 		if (node_state.IsActive()) {	
 			if (state) {			
 				
@@ -305,6 +258,124 @@ class ObjectNode: NamedNode
 			
 			m_Object.Update();
 		}
+	}
+	
+	override void OnInteract(NodeInteractType interact_type)
+	{
+		super.OnInteract(interact_type);
+		
+		if (interact_type & NodeInteractType.DRAG_START) {
+			GetDayZGame().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
+		}
+		
+		if (interact_type & NodeInteractType.DROP) {
+			GetDayZGame().SetCursor();
+		}
+		
+		if (interact_type & NodeInteractType.ENTER) {
+			EditorBoundingBox.Create(m_Object);				
+		}
+		
+		if (interact_type & NodeInteractType.LEAVE) {
+			EditorBoundingBox.Destroy(m_Object);
+		}
+		
+		if (interact_type & NodeInteractType.DRAG) {
+			vector transform[4];
+			GetBaseTransform(transform);
+			
+			Raycast raycast = DaysBefore.GetEditor().GetCamera().PerformCursorRaycast(m_Object);
+			if (!raycast) {
+				return;
+			}
+			//raycast.Debug();
+			//Shape.CreateArrow(m_StartPosition.Bounce.Position, raycast.Bounce.Position, 1, COLOR_BLACK, ShapeFlags.ONCE);
+			
+			Input input = GetGame().GetInput();
+
+				
+			if (KeyState(KeyCode.KC_LSHIFT)) {
+				
+				Plane face = GetBoundingFace(ETransformationAxis.BOTTOM);
+				face.Debug("Cursor intersection", transform);
+				
+				vector point = face.Intersect(raycast.Source, transform);
+				GetDayZGame().DebugDrawText("Intersection", point, 1);
+				
+				vector new_forward = (point - transform[3]).Normalized();
+				vector aside = (transform[1] * new_forward).Normalized();
+				
+				transform = { aside, transform[1], aside * transform[1], transform[3] };
+				
+				
+				Shape.CreateMatrix(transform);
+				
+				//Math3D.MatrixOrthogonalize3(transform);
+				//Print(transform);
+				SetBaseTransform(transform);
+				
+				//vector p1 = Vector(2, 0, 2).Multiply4(transform);
+				//vector p2 = Vector(-2, 0, -2).Multiply4(transform);
+				
+				//Shape.Create(ShapeType.BBOX, COLOR_GREEN, ShapeFlags.WIREFRAME | ShapeFlags.ONCE | ShapeFlags.TRANSP | ShapeFlags.ADDITIVE, p1, p2);
+			}
+			
+						// Held distance placing
+			else if (KeyState(KeyCode.KC_LMENU)) {
+				Debug.DrawSphere(raycast.Source.Position, vector.Distance(raycast.Source.Position, transform[3]), COLOR_RED, ShapeFlags.ADDITIVE | ShapeFlags.WIREFRAME | ShapeFlags.ONCE);
+				
+				vector v3 = vector.Up * raycast.Source.Direction;
+				
+				DbgUI.Text(v3.ToString());
+				Shape.CreateArrow(raycast.Source.Position + raycast.Source.Direction,  raycast.Source.Position + raycast.Source.Direction + v3, 0.5, COLOR_BLUE, ShapeFlags.ONCE);
+				
+				float dist_z = vector.Dot(((raycast.Source.Position - transform[3]) * vector.Up), v3) / v3.LengthSq();
+				DbgUI.Text(vector.Dot(((raycast.Source.Position - transform[3]) * vector.Up), v3).ToString());
+				DbgUI.Text(dist_z.ToString());
+				
+				transform = { transform[0], transform[1], transform[2], raycast.Source.Position + raycast.Source.Direction * dist_z };
+				SetBaseTransform(transform);
+			} 
+			
+			// Any distance placing
+			else {
+				float delta_y = transform[3][1] - raycast.Bounce.Position[1];
+				vector cursor_aside = DaysBefore.GetEditor().GetHud().GetCursorAside();
+				transform = { cursor_aside, raycast.Bounce.Direction, (cursor_aside * raycast.Bounce.Direction).Normalized(), raycast.Bounce.Position };				
+				SetBaseTransform(transform);
+			}
+			
+#ifdef DIAG_DEVELOPER
+			for (int i = 0; i < 6; i++) {
+				// Debug
+				m_BoundingBoxSurfaces[i].Debug(typename.EnumToString(ETransformationAxis, i) + i.ToString(), transform);	
+			}
+			
+			for (int j = 0; j < 6; j++) {
+				// Generates each direction vector
+				vector direction = vector.Zero;
+				direction[j % 3] = 1 * ((j > 2) * -2 + 1);
+				
+			}
+			
+			vector min_max2[2];
+			m_Object.GetCollisionBox(min_max2);
+			if (min_max2[0].Length() > 0) {
+				Shape.CreateSphere(COLOR_YELLOW, ShapeFlags.ONCE, min_max2[0].Multiply4(transform), 0.1);
+				Shape.CreateSphere(COLOR_YELLOW, ShapeFlags.ONCE, min_max2[1].Multiply4(transform), 0.1);
+			}
+			
+			if (m_Object.GetCollisionRadius() > 0) {
+				Shape.CreateSphere(COLOR_GREEN_A, ShapeFlags.TRANSP | ShapeFlags.ONCE, transform[3], m_Object.GetCollisionRadius());
+			}
+#endif
+			
+		}
+	}
+			
+	override ObjectNodeMapView CreateMapView(MapView map_view)
+	{
+		return new ObjectNodeMapView(this, map_view);
 	}
 			
 	bool GetGroundUnderObject(out vector position, out vector direction)
@@ -396,14 +467,9 @@ class ObjectNode: NamedNode
 		return m_Object;
 	}
 	
-	ObjectViewWorld GetObjectViewWorld()
+	ObjectNodeWorldView GetObjectViewWorld()
 	{
-		return m_ObjectViewWorld;
-	}
-	
-	ObjectViewMap GetObjectViewMap()
-	{
-		return m_ObjectViewMap;
+		return m_WorldView;
 	}
 		
 	array<EditorSnapPoint> GetEditorSnapPoints()

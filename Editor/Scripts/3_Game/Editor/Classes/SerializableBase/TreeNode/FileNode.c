@@ -9,11 +9,18 @@ class FileNode: NamedNode
 		
 	override NodeState GetStateMask()
 	{
-		return  NodeState.ACTIVE | NodeState.HOVER | NodeState.EXTEND;
+		return  NodeState.ACTIVE | NodeState.EXTEND;
 	}
 		
-	override SandboxNodeInteract GetInteractType()
+	override void OnInteract(NodeInteractType interact_type)
 	{
-		return SandboxNodeInteract.PRESS;
+		super.OnInteract(interact_type);
+		
+		ToggleState(NodeState.ACTIVE);
+	}
+	
+	override NodeInteractType GetInteractMask()
+	{
+		return NodeInteractType.PRESS;
 	}
 }

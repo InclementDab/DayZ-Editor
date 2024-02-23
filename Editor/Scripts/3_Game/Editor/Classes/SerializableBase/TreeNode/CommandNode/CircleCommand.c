@@ -1,21 +1,16 @@
-class EllipseCommand: CommandNode
+class EllipseCommand: NamedNode
 {
-	override void OnStateChanged(NodeState node_state, bool state)
+	override void OnInteract(NodeInteractType interact_type)
 	{
-		super.OnStateChanged(node_state, state);
+		super.OnInteract(interact_type);
 		
-		if (state && state && DaysBefore.GetEditor().GetHud()) {
+		if (interact_type & NodeInteractType.PRESS) {
 			DaysBefore.GetEditor().GetHud().CurrentSelectionMode = SelectionMode.ELLIPSE;
 		}
 	}
 	
-	override array<string> GetXorSelections()
+	override NodeInteractType GetInteractMask()
 	{
-		return { "Box", "Lasso" };
-	}
-	
-	override SandboxNodeInteract GetInteractType()
-	{
-		return SandboxNodeInteract.PRESS;
+		return NodeInteractType.PRESS;
 	}
 }

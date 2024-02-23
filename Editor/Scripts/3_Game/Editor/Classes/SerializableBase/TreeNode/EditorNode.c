@@ -234,20 +234,7 @@ class EditorNode: Node
 		delete m_Hud;
 		GetGame().ObjectDelete(m_Camera);
 	}
-	
-	override void EUpdate(float dt)
-	{
-		if (!GetState().IsActive()) {
-			return;
-		}
-		
-		Input input = GetGame().GetInput();
-		if (input.LocalPress("UAEditorCursor")) {
-			GetGame().GetUIManager().ShowUICursor(!GetGame().GetUIManager().IsCursorVisible()); 
-		}
-		
-	}
-		
+			
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(node_state, state);
@@ -469,7 +456,7 @@ class EditorNode: Node
 	
 	override NodeState GetStateMask()
 	{
-		return NodeState.ACTIVE | NodeState.CONTEXT | NodeState.SYNC_DIRTY | NodeState.CLIENT_AUTH;
+		return NodeState.ACTIVE | NodeState.SYNC_DIRTY | NodeState.CLIENT_AUTH;
 	}
 					
 	EditorHud GetHud() 

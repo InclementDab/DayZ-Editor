@@ -1,9 +1,9 @@
-class SetLayerActiveCommand: CommandNode
+class SetLayerActiveCommand: NamedNode
 {
 	override void OnStateChanged(NodeState node_state, bool state)
 	{
 		super.OnStateChanged(node_state, state);
-		
+		/*
 		if (node_state.IsActive() && state) {
 			foreach (Node tree_node_active: Node.States[NodeState.ACTIVE]) {
 				LayerNode folder_node_active = LayerNode.Cast(tree_node_active);
@@ -22,11 +22,18 @@ class SetLayerActiveCommand: CommandNode
 				
 				folder_node.AddState(NodeState.ACTIVE);
 			}
-		}
+		}*/
 	}
 		
-	override SandboxNodeInteract GetInteractType()
+	override void OnInteract(NodeInteractType interact_type)
 	{
-		return SandboxNodeInteract.PRESS;
+		super.OnInteract(interact_type);
+		
+		
+	}
+	
+	override NodeInteractType GetInteractMask()
+	{
+		return NodeInteractType.PRESS;
 	}
 }

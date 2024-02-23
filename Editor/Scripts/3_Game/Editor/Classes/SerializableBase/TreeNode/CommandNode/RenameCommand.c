@@ -1,18 +1,21 @@
-class RenameCommand: CommandNode
-{
-	override void OnStateChanged(NodeState node_state, bool state)
+class RenameCommand: NamedNode
+{	
+	override void OnInteract(NodeInteractType interact_type)
 	{
-		super.OnStateChanged(node_state, state);
+		super.OnInteract(interact_type);
 		
-		if (node_state.IsActive() && state) {			
-			foreach (Node node: Node.States[NodeState.ACTIVE]) {
-				//node.View.EnableRename();
+		if (interact_type & NodeInteractType.PRESS) {
+			foreach (NodeView node_view: Views) {
+				NamedNodeView named_node_view = NamedNodeView.Cast(node_view);
+				if (named_node_view) {
+					named_node_view.EnableRename();
+				}
 			}
 		}
 	}
-		
-	override SandboxNodeInteract GetInteractType()
+	
+	override NodeInteractType GetInteractMask()
 	{
-		return SandboxNodeInteract.PRESS;
+		return NodeInteractType.PRESS;
 	}
 }

@@ -1,12 +1,3 @@
-class ScaleTool: CommandNode
+class ScaleTool: NamedNode
 {
-	override array<string> GetXorSelections()
-	{
-		return { "Translate", "Rotate" };
-	}
-	
-	override SandboxNodeInteract GetInteractType()
-	{
-		return SandboxNodeInteract.TOGGLE;
-	}
 }

@@ -1,4 +1,4 @@
-class DividerView: MenuNode
+class MenuDividerView: MenuNodeView
 {
 	override string GetLayoutFile()
 	{

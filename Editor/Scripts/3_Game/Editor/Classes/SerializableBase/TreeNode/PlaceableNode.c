@@ -36,11 +36,18 @@ class PlaceableNode: NamedNode
 	
 	override NodeState GetStateMask()
 	{
-		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAG | NodeState.VIEW_TREE | NodeState.CLIENT_AUTH | NodeState.SYNC_DIRTY;
+		return NodeState.ACTIVE | NodeState.VIEW_TREE | NodeState.CLIENT_AUTH | NodeState.SYNC_DIRTY;
+	}
+
+	override void OnInteract(NodeInteractType interact_type)
+	{
+		super.OnInteract(interact_type);
+		
+		ToggleState(NodeState.ACTIVE);
 	}
 	
-	override SandboxNodeInteract GetInteractType()
+	override NodeInteractType GetInteractMask()
 	{
-		return SandboxNodeInteract.PRESS;
+		return NodeInteractType.PRESS | NodeInteractType.CONTEXT | NodeInteractType.DRAG_START | NodeInteractType.DRAG | NodeInteractType.DROP | NodeInteractType.ENTER | NodeInteractType.LEAVE;
 	}
 }

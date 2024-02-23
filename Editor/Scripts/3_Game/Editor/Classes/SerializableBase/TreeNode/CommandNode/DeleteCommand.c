@@ -1,21 +1,19 @@
-class DeleteCommand: CommandNode
+class DeleteCommand: NamedNode
 {
-	override void OnStateChanged(NodeState node_state, bool state)
+	override void OnInteract(NodeInteractType interact_type)
 	{
-		super.OnStateChanged(node_state, state);
+		super.OnInteract(interact_type);
 		
-		if (node_state.IsActive() && state) {
-			foreach (Node node: Node.States[NodeState.ACTIVE]) {
-				if (!node) {
-					continue;
-				}
-				
-				DaysBefore.GetEditor().InsertHistory(null, node.CreateCopy());
-				
-				node.GetParent().Remove(node.GetUUID());
-				node.GetParent().SetSynchDirty();
-				DaysBefore.GetEditor().PlaySound(EditorSounds.HIGHLIGHT);
-			}
+		if (interact_type & NodeInteractType.PRESS) {
+			DaysBefore.GetEditor().InsertHistory(null, CreateCopy());
+			GetParent().Remove(GetUUID());
+			GetParent().SetSynchDirty();
+			DaysBefore.GetEditor().PlaySound(EditorSounds.HIGHLIGHT);
 		}
+	}
+	
+	override NodeInteractType GetInteractMask()
+	{
+		return NodeInteractType.PRESS;
 	}
 }

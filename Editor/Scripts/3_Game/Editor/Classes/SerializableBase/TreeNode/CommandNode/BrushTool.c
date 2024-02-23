@@ -1,4 +1,4 @@
-class BrushTool: CommandNode
+class BrushTool: NamedNode
 {
 	static const float ENTITY_COUNT_PER_SEC = 15.0;
 	
@@ -10,13 +10,27 @@ class BrushTool: CommandNode
 	{
 		super.OnStateChanged(node_state, state);
 		
-		if (state) {
+		if (node_state.IsActive()) {
 			if (state) {
 				m_Ring = GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL);
 			} else {
 				GetGame().ObjectDelete(m_Ring);
 			}
 		}
+	}
+	
+	override void OnInteract(NodeInteractType interact_type)
+	{
+		super.OnInteract(interact_type);
+		
+		if (interact_type & NodeInteractType.PRESS) {
+			ToggleState(NodeState.ACTIVE);
+		}
+	}
+	
+	override NodeInteractType GetInteractMask()
+	{
+		return NodeInteractType.PRESS;
 	}
 	
 	/*
@@ -76,10 +90,5 @@ class BrushTool: CommandNode
 	array<string> GetBrushedTypes()
 	{
 		return {};
-	}
-	
-	override SandboxNodeInteract GetInteractType()
-	{
-		return SandboxNodeInteract.TOGGLE;
 	}
 }

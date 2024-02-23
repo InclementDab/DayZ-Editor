@@ -1,16 +1,16 @@
-class AddLayerCommand: CommandNode
-{
-	override void OnStateChanged(NodeState node_state, bool state)
+class AddLayerCommand: NamedNode
+{	
+	override void OnInteract(NodeInteractType interact_type)
 	{
-		super.OnStateChanged(node_state, state);
+		super.OnInteract(interact_type);
 		
-		if (state && state) {			
+		if (interact_type & NodeInteractType.CLICK) {
 			DaysBefore.GetEditor().GetPlacingDestination().Add(new LayerNode(UUID.Generate(), "layer0", Symbols.FOLDER, LinearColor.WHITE));
 		}
 	}
-		
-	override SandboxNodeInteract GetInteractType()
+	
+	override NodeInteractType GetInteractMask()
 	{
-		return SandboxNodeInteract.PRESS;
+		return NodeInteractType.CLICK;
 	}
 }
