@@ -243,7 +243,7 @@ class EditorNode: Node
 		
 		Input input = GetGame().GetInput();
 		if (input.LocalPress("UAEditorCursor")) {
-			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible()); 
+			GetGame().GetUIManager().ShowUICursor(!GetGame().GetUIManager().IsCursorVisible()); 
 		}
 		
 	}
@@ -262,13 +262,13 @@ class EditorNode: Node
 				
 			} else {
 				delete m_Hud;
-				GetGame().ObjectDelete(m_Camera);
 				
 				GetDayZGame().SelectPlayer(Identity, GetGame().GetPlayer());
 				GetGame().GetPlayer().GetInputController().SetDisabled(false);
 				Hud hud = GetDayZGame().GetMission().GetHud();
 				hud.ShowHudUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.HUD));
 				hud.ShowQuickbarUI(GetDayZGame().GetProfileOption(EDayZProfilesOptions.QUICKBAR));
+				GetGame().ObjectDelete(m_Camera);
 			}
 		}
 #endif

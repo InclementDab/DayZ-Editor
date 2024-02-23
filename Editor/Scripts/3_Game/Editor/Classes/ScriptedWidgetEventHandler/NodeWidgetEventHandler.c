@@ -24,7 +24,9 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
 		if (Path != string.Empty) {
+			Print(Path);
 			m_Node = NamedNode.Cast(DaysBefore.GetEditor().Get(Path));
+			Print(m_Node);
 			if (m_Node) {
 				if (Button) {
 					Button.SetHandler(this);

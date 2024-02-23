@@ -4,39 +4,39 @@ class PlaceableNode: NamedNode
 	{
 		super.OnStateChanged(node_state, state);
 	
+		EditorNode editor = EditorNode.Cast(FindAncestor(EditorNode));
+		
 		if (node_state.IsActive()) {	
 			if (state) {
 				vector matrix[4];
 				Math3D.MatrixIdentity4(matrix);
-				DaysBefore.GetEditor().GetPlacing().Add(new ObjectNode(UUID.Generate(), m_UUID, Icon, LinearColor.WHITE, EditorNode.CreateObject(GetUUID(), matrix)));
-				
-				GetUApi().SupressNextFrame(true);
+				editor.GetPlacing().Add(new ObjectNode(UUID.Generate(), m_UUID, Icon, LinearColor.WHITE, EditorNode.CreateObject(GetUUID(), matrix)));
 			} else {
 				foreach (Node node: DaysBefore.GetEditor().GetPlacing().Children) {
 					ObjectNode object_node = ObjectNode.Cast(node);
-					DaysBefore.GetEditor().InsertHistory(object_node, null);
-					DaysBefore.GetEditor().GetPlacingDestination().Add(object_node);
-					DaysBefore.GetEditor().GetPlacingDestination().SetSynchDirty();			
-					DaysBefore.GetEditor().GetPlacing().Remove(object_node);
+					editor.InsertHistory(object_node, null);
+					editor.GetPlacingDestination().Add(object_node);	
+					editor.GetPlacing().Remove(object_node);
 					
 					object_node.AddState(NodeState.ACTIVE);
+					object_node.SetSynchDirty();
 					
 					// remove it from placing
-					DaysBefore.GetEditor().PlaySound(EditorSounds.PLOP);
+					editor.PlaySound(EditorSounds.PLOP);
 					
 					if (KeyState(KeyCode.KC_LSHIFT)) {
 						AddState(NodeState.ACTIVE);
 					}					
 				}
-				
-				GetUApi().SupressNextFrame(true);
 			}
+			
+			GetUApi().SupressNextFrame(true);
 		}
 	}
 	
 	override NodeState GetStateMask()
 	{
-		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAG;
+		return NodeState.HOVER | NodeState.ACTIVE | NodeState.CONTEXT | NodeState.DRAG | NodeState.VIEW_TREE | NodeState.CLIENT_AUTH | NodeState.SYNC_DIRTY;
 	}
 	
 	override SandboxNodeInteract GetInteractType()

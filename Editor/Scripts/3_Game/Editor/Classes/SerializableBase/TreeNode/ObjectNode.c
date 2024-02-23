@@ -304,7 +304,6 @@ class ObjectNode: NamedNode
 			}
 			
 			m_Object.Update();
-			SetSynchDirty();
 		}
 	}
 			

@@ -10,7 +10,7 @@ class EditorMenuButton: NodeWidgetEventHandler
 		m_LayoutRoot.GetScreenPos(x, y);
 		m_LayoutRoot.GetScreenSize(w, h);
 	
-		DaysBefore.GetEditor().GetHud().ClearCursor();
+		GetDayZGame().SetCursor();
 		if (state) {
 				if (state) {
 				hud.Menu.SetScreenPos(x, y + h);
@@ -30,7 +30,7 @@ class EditorMenuButton: NodeWidgetEventHandler
 		}
 		
 		if (node_state.IsHover() && state) {
-			DaysBefore.GetEditor().GetHud().SetCursor(m_Node.Icon, m_Node.DisplayName);
+			GetDayZGame().SetCursor(m_Node.Icon, m_Node.DisplayName);
 		}
 	}
 }

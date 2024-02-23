@@ -70,7 +70,7 @@ class EditorCamera: Camera
 		if (!GetGame().GetUIManager().IsCursorVisible()) {
 			vector view = Vector(input.LocalValue_ID(UAAimRight) - input.LocalValue_ID(UAAimLeft), 
 					input.LocalValue_ID(UAAimUp) - input.LocalValue_ID(UAAimDown), 
-					0) * timeSlice;
+					0) * timeSlice * 5;
 			
 			// We need a delta vector created in camera coordinate space.
 			// this is a vector that points forward towards the looking direction of the next frame

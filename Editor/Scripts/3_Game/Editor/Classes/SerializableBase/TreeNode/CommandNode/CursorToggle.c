@@ -7,7 +7,7 @@ class CursorToggle: CommandNode
 		Input input = GetGame().GetInput();
 		EditorNode editor = DaysBefore.GetEditor();
 		
-		if (!GetState().IsActive()) {
+		if (!editor.GetState().IsActive()) {
 			return;
 		}
 		
@@ -24,7 +24,7 @@ class CursorToggle: CommandNode
 				array<Node> nodes = {};
 				nodes.Copy(Node.States[NodeState.ACTIVE]);
 				foreach (Node node_to_deselect: nodes) {
-					if (node_to_deselect && node_to_deselect.GetInteractType() == SandboxNodeInteract.PRESS) {
+					if (node_to_deselect && node_to_deselect.IsInherited(PlaceableNode) && node_to_deselect.GetInteractType() == SandboxNodeInteract.PRESS) {
 						node_to_deselect.RemoveState(NodeState.ACTIVE);
 					}
 				}
@@ -89,18 +89,7 @@ class CursorToggle: CommandNode
 			camera.FieldOfView = 1.0;
 		}
 	}
-	
-	override void OnStateChanged(NodeState node_state, bool state)
-	{
-		super.OnStateChanged(node_state, state);
-	
-		if (DaysBefore.GetEditor().GetHud()) {
-			DaysBefore.GetEditor().GetHud().ClearCursor();
-		}
-		
-		GetGame().GetUIManager().ShowCursor(state);
-	}
-	
+
 	override SandboxNodeInteract GetInteractType()
 	{
 		return SandboxNodeInteract.TOGGLE;

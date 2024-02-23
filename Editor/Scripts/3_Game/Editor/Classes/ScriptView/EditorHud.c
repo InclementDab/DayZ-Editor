@@ -52,11 +52,15 @@ class EditorHud: ScriptView
 		GetGame().GetMission().GetHud().ShowQuickbarUI(false);
 			
 		foreach (string left: LEFT_NODES) {
-			m_TemplateController.LeftListItems.Insert(editor[left].CreateTreeView());
+			if (editor[left].GetStateMask().IsVisibleInTree()) {
+				m_TemplateController.LeftListItems.Insert(editor[left].CreateTreeView());
+			}
 		}
 		
 		foreach (string right: RIGHT_NODES) {
-			m_TemplateController.RightListItems.Insert(editor[right].CreateTreeView());
+			if (editor[right].GetStateMask().IsVisibleInTree()) {
+				m_TemplateController.RightListItems.Insert(editor[right].CreateTreeView());
+			}
 		}
 	}
 	
@@ -199,7 +203,7 @@ class EditorHud: ScriptView
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
 			m_DraggedBar.GetChildren().SetColor(COLOR_WHITE);
 			m_DraggedBar = null;
-			ClearCursor();
+			GetDayZGame().SetCursor();
 		}		
 				
 		float top_width, top_height;
@@ -245,49 +249,6 @@ class EditorHud: ScriptView
         }
 
         return inside;
-	}
-
-	void SetCursor(Symbols cursor, string name = string.Empty, string type = string.Empty)
-	{	
-		CursorTooltip.Show(name != string.Empty || type != string.Empty);
-	
-		vector matrix[4];
-		Math3D.MatrixIdentity4(matrix);
-		Object child = EditorNode.CreateObject(type, matrix);
-		m_TooltipEntity = EntityAI.Cast(child);
-		if (m_TooltipEntity) {
-			CursorEntity.Show(true);
-			CursorEntityPreview.SetItem(m_TooltipEntity);
-			CursorEntityPreview.SetView(m_TooltipEntity.GetViewIndex());
-		} else {
-			CursorEntity.Show(false);
-		}
-		
-		CursorTooltipName.SetText(name);
-		
-		if (cursor != string.Empty) {
-			Foreground.LoadImageFile(0, cursor.Thin());
-			Foreground.SetImage(0);
-			Background.LoadImageFile(0, cursor.Solid());
-			Background.SetImage(0);
-		}
-		
-		Foreground.Show(name == string.Empty);
-		Background.Show(name == string.Empty);
-		
-		
-		Cursor.Show(true);
-		SetCursorWidget(Cursor);
-	}
-	
-	void ClearCursor()
-	{
-		Background.Show(false);
-		Foreground.Show(false);
-		CursorTooltip.Show(false);
-		CursorEntity.Show(false);
-		Cursor.Show(false);
-		GetGame().ObjectDelete(m_TooltipEntity);
 	}
 			
 	override bool OnFocus(Widget w, int x, int y)
@@ -342,7 +303,7 @@ class EditorHud: ScriptView
 		switch (w) {
 			case LeftDragZone:
 			case RightDragZone: {
-				SetCursor(Symbols.LEFT_RIGHT);
+				GetDayZGame().SetCursor(Symbols.LEFT_RIGHT);
 				break;
 			}
 		}
@@ -356,7 +317,7 @@ class EditorHud: ScriptView
 			case LeftDragZone:
 			case RightDragZone: {
 				if (!m_DraggedBar) {
-					ClearCursor();
+					GetDayZGame().ClearCursor();
 				}
 				
 				break;
