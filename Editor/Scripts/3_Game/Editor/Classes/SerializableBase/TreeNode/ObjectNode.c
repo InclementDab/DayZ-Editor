@@ -260,16 +260,16 @@ class ObjectNode: NamedNode
 		}
 	}
 	
-	override void OnInteract(NodeInteractType interact_type)
+	override void OnInteract(NodeInteractType interact_type, Widget widget = null)
 	{
-		super.OnInteract(interact_type);
+		super.OnInteract(interact_type, widget);
 		
 		if (interact_type & NodeInteractType.DRAG_START) {
 			GetDayZGame().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
 		}
 		
 		if (interact_type & NodeInteractType.DROP) {
-			GetDayZGame().SetCursor();
+			GetDayZGame().ClearCursor();
 		}
 		
 		if (interact_type & NodeInteractType.ENTER) {

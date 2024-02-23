@@ -63,7 +63,7 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		
 		if (interact_type & NodeInteractType.LEAVE) {
 			WidgetAnimator.AnimateColor(Icon, LinearColor.WHITE.With(3, 100), 100);
-			GetDayZGame().SetCursor();
+			GetDayZGame().ClearCursor();
 			
 			Icon.LoadImageFile(0, m_Node.Icon.Regular());
 			Icon.SetImage(0);

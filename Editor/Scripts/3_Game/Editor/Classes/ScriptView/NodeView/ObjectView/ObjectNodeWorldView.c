@@ -7,11 +7,19 @@ class ObjectNodeWorldView: NamedNodeView
 		m_ObjectNode = ObjectNode.Cast(node);
 	}
 	
-	override void OnInteract(NodeInteractType interact_type)
+	override void OnInteract(NodeInteractType interact_type, Widget widget = null)
 	{
-		super.OnInteract(interact_type);
+		super.OnInteract(interact_type, widget);
 		
+		if (interact_type & NodeInteractType.ENTER) {
+			WidgetAnimator.AnimateColor(Icon, EditorColor.SELECT, 100);
+			WidgetAnimator.AnimateColor(IconOutline, m_ObjectNode.Color, 100);
+		}
 		
+		if (interact_type & NodeInteractType.LEAVE && !m_ObjectNode.GetState().IsActive()) {
+			WidgetAnimator.AnimateColor(Icon, LinearColor.Create(15, 15, 15), 100);
+			WidgetAnimator.AnimateColor(IconOutline, LinearColor.WHITE, 100);
+		}
 	}
 	
 	override void Update(float dt)

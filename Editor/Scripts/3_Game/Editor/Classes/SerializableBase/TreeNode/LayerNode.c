@@ -21,9 +21,9 @@ class LayerNode: NamedNode
 		return NodeInteractType.ENTER | NodeInteractType.LEAVE | NodeInteractType.CONTEXT | NodeInteractType.DRAG_START | NodeInteractType.DRAG | NodeInteractType.DROP | NodeInteractType.CLICK;
 	}
 	
-	override void OnInteract(NodeInteractType interact_type)
+	override void OnInteract(NodeInteractType interact_type, Widget widget = null)
 	{
-		super.OnInteract(interact_type);
+		super.OnInteract(interact_type, widget);
 		
 		if (interact_type & NodeInteractType.CLICK) {
 			foreach (Node child: Children) {

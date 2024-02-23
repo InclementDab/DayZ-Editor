@@ -168,6 +168,10 @@ class EditorHud: ScriptView
 			Menu.Show(false);	
 		}
 		
+		if (input.LocalPress_ID(UATempRaiseWeapon) && !GetWidgetUnderCursor()) {
+			
+		}
+		
 		foreach (string uuid, Node node1: m_Editor.GetPlacing().Children) {
 			ObjectNode object_node = ObjectNode.Cast(node1);
 			if (!object_node) {
@@ -353,7 +357,7 @@ class EditorHud: ScriptView
 		if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && m_DraggedBar) {
 			m_DraggedBar.GetChildren().SetColor(COLOR_WHITE);
 			m_DraggedBar = null;
-			GetDayZGame().SetCursor();
+			GetDayZGame().ClearCursor();
 		}		
 				
 		float top_width, top_height;

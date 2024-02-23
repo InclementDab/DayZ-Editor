@@ -12,6 +12,9 @@ class EditorCamera: Camera
 	protected vector m_ViewDragBasis[3];
 	protected Object m_CursorObject;
 	
+	
+	protected vector m_PointerDirectionDragStart;
+	
 	void EditorCamera()
 	{
 		SetEventMask(EntityEvent.FRAME);
@@ -52,38 +55,23 @@ class EditorCamera: Camera
 		} 
 		
 		else if (input.LocalPress_ID(UATempRaiseWeapon)) {
-			m_ViewDragAside = (GetGame().GetPointerDirection() * transform[1]).Normalized();
-			m_ViewDragUp = transform[1];
-			m_ViewDragDirection = GetGame().GetPointerDirection();
+			m_PointerDirectionDragStart = GetGame().GetPointerDirection();
+			GetDayZGame().SetCursor(Symbols.VECTOR_CIRCLE, m_PointerDirectionDragStart.ToString());
 		}
 		
 		else if (input.LocalValue_ID(UATempRaiseWeapon)) {
-			vector offset_matrix[3] = { m_ViewDragAside, m_ViewDragUp, m_ViewDragDirection };
-			Math3D.MatrixOrthogonalize3(offset_matrix);
+			vector local_pointer_direction_start = m_PointerDirectionDragStart.InvMultiply3(transform);
 			
-			vector pointer_dir = GetGame().GetPointerDirection().InvMultiply3(offset_matrix).Normalized();
-			vector up_dir = transform[1].InvMultiply3(offset_matrix).Normalized();
-			//Print(up_dir);
-			
-			vector test[3] = { pointer_dir, up_dir, up_dir * pointer_dir };			
-			//Math3D.MatrixInvMultiply3(transform, test, transform);
-			//view_delta = pointer_dir.Multiply3(transform);
-			
-			////Print(view_delta);
-			//transform = { view_delta, vector.Up, view_delta * vector.Up, m_LinearVelocity.Multiply4(transform) };
+			DbgUI.Text(local_pointer_direction_start.ToString());
 			
 			
-			/*
-			vector pointer_aside = GetGame().GetPointerDirection().InvMultiply3(offset_matrix2).Normalized();
-			//Print(pointer_dir);
-			Print(pointer_aside);
-			//Print(pointer_aside * pointer_dir);
-			vector movement_matrix[3] = { pointer_dir, vector.Up, pointer_dir * vector.Up };
-			
-			//Print(movement_matrix);
-			Math3D.MatrixMultiply3(transform, movement_matrix, transform);*/
-			
-		} else {
+		}
+		
+		else if (input.LocalRelease_ID(UATempRaiseWeapon)) {
+			GetDayZGame().ClearCursor();
+		}
+		
+		else {
 			transform[3] = m_LinearVelocity.Multiply4(transform);
 		}
 		

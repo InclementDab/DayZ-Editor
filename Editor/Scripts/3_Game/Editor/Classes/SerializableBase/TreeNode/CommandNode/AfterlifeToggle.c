@@ -36,9 +36,9 @@ class AfterlifeToggle: NamedNode
 		} 
 	}
 	
-	override void OnInteract(NodeInteractType interact_type)
+	override void OnInteract(NodeInteractType interact_type, Widget widget = null)
 	{
-		super.OnInteract(interact_type);
+		super.OnInteract(interact_type, widget);
 		
 		ToggleState(NodeState.ACTIVE);
 		SetSynchDirty();

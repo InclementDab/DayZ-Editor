@@ -20,9 +20,9 @@ class PlaceableNode: NamedNode
 		return NodeState.ACTIVE | NodeState.VIEW_TREE | NodeState.CLIENT_AUTH | NodeState.SYNC_DIRTY;
 	}
 
-	override void OnInteract(NodeInteractType interact_type)
+	override void OnInteract(NodeInteractType interact_type, Widget widget = null)
 	{
-		super.OnInteract(interact_type);
+		super.OnInteract(interact_type, widget);
 		
 		if (interact_type & NodeInteractType.PRESS) {
 			ToggleState(NodeState.ACTIVE);

@@ -20,6 +20,6 @@ class ObjectNodeMapView: NamedNodeMapView
 	
 	override string GetLayoutFile()
 	{
-		return "Editor\\GUI\\layouts\\Marker.layout";
+		return "DaysBefore\\GUI\\layouts\\Map\\Marker.layout";
 	}
 }
