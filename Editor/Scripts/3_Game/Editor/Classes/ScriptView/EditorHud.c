@@ -124,6 +124,26 @@ class EditorHud: ScriptView
 			m_DragY = mouse_y;
 		}
 				
+		
+		/*
+		     <input name="UAEditorCopy"/>
+            <input name="UAEditorCut"/>
+            <input name="UAEditorDelete"/>
+            <input name="UAEditorLock"/>
+            <input name="UAEditorNew"/>
+            <input name="UAEditorOpen"/>
+            <input name="UAEditorPaste"/>
+            <input name="UAEditorRedo"/>
+            <input name="UAEditorSaveAs"/>
+            <input name="UAEditorSave"/>
+            <input name="UAEditorUndo"/>
+            <input name="UAEditorUnlock"/>
+            <input name="UAEditorCursor"/>
+            <input name="UAEditorHud"/>
+            <input name="UAEditorControl"/>
+            <input name="UAEditorRename"/>
+            <input name="UAEditorMap"/>
+		*/
 		if (input.LocalPress("UAEditorCursor")) {
 			GetGame().GetUIManager().ShowUICursor(!GetGame().GetUIManager().IsCursorVisible()); 
 		}

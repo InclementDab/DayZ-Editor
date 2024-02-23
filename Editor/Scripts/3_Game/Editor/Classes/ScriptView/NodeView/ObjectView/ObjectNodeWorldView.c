@@ -7,6 +7,13 @@ class ObjectNodeWorldView: NamedNodeView
 		m_ObjectNode = ObjectNode.Cast(node);
 	}
 	
+	override void OnInteract(NodeInteractType interact_type)
+	{
+		super.OnInteract(interact_type);
+		
+		
+	}
+	
 	override void Update(float dt)
 	{
 		super.Update(dt);
@@ -18,7 +25,6 @@ class ObjectNodeWorldView: NamedNodeView
 		m_LayoutRoot.Show(base_position[2] > 0 && !m_Node.GetState().IsSuppress());
 	}
 	
-		
 	override string GetLayoutFile()
 	{
 		return "Editor\\GUI\\layouts\\Marker.layout";

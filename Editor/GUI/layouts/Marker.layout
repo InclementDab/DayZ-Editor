@@ -1,4 +1,4 @@
-PanelWidgetClass Panel {
+GridSpacerWidgetClass Panel {
  visible 1
  ignorepointer 0
  position 0 0
@@ -10,38 +10,60 @@ PanelWidgetClass Panel {
  scaled 0
  draggable 1
  "no focus" 0
+ Padding 6
+ Margin 6
+ "Size To Content H" 1
+ "Size To Content V" 1
+ content_halign center
+ content_valign center
+ Columns 1
+ Rows 1
  {
-  ImageWidgetClass Outline {
-   ignorepointer 1
-   color 0.7843 0.7843 0.7843 1
-   size 1 1
-   halign center_ref
-   valign center_ref
+  PanelWidgetClass IconFrame {
+   visible 1
+   ignorepointer 0
+   position 0 0
+   size 25 25
    hexactpos 1
    vexactpos 1
-   hexactsize 0
-   vexactsize 0
+   hexactsize 1
+   vexactsize 1
    scaled 0
-   image0 "set:thin image:camera"
-   mode blend
-   "src alpha" 1
-   filter 1
-  }
-  ImageWidgetClass Image {
-   ignorepointer 1
-   color 1 1 1 0.5882
-   size 0.99 1
-   halign center_ref
-   valign center_ref
-   hexactpos 1
-   vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   scaled 0
-   image0 "set:solid image:camera"
-   mode blend
-   "src alpha" 1
-   filter 1
+   draggable 1
+   "no focus" 0
+   {
+    ImageWidgetClass Icon {
+     ignorepointer 1
+     color 0.0588 0.0588 0.0588 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     image0 "set:solid image:camera"
+     mode blend
+     "src alpha" 1
+     filter 1
+    }
+    ImageWidgetClass IconOutline {
+     ignorepointer 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     image0 "set:regular image:camera"
+     mode blend
+     "src alpha" 1
+     filter 1
+    }
+   }
   }
  }
 }

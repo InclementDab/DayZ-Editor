@@ -85,7 +85,6 @@ class EditorNode: Node
 		this[COMMANDS].Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED, LinearColor.WHITE));
 		this[COMMANDS].Add(new NamedNode("Copy", "Copy", Symbols.COPY, LinearColor.WHITE));
 		this[COMMANDS].Add(new NamedNode("Cut", "Cut", Symbols.SCISSORS, LinearColor.WHITE));
-		this[COMMANDS].Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH, LinearColor.WHITE));
 		this[COMMANDS].Add(new NamedNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE, LinearColor.WHITE));
 		this[COMMANDS].Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO, LinearColor.WHITE));
 		this[COMMANDS].Add(new NamedNode("Lock", "Lock", Symbols.LOCK, LinearColor.WHITE));
