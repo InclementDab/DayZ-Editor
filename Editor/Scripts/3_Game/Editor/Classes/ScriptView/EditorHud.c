@@ -128,6 +128,19 @@ class EditorHud: ScriptView
 			GetGame().GetUIManager().ShowUICursor(!GetGame().GetUIManager().IsCursorVisible()); 
 		}
 		
+		if (input.LocalPress("UAEditorDelete")) {
+			foreach (Node active_node: Node.States[NodeState.ACTIVE]) {
+				Node parent_node = active_node.GetParent();
+				if (parent_node) {
+					parent_node.SetSynchDirty();
+					parent_node.Remove(active_node.GetUUID());
+				}
+				
+				delete active_node;
+				PlaySound(EditorSounds.HIGHLIGHT);
+			}
+		}
+				
 		EditorCamera camera = m_Editor.GetCamera();
 												
 		if ((input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) && !GetWidgetUnderCursor()) {
@@ -168,6 +181,23 @@ class EditorHud: ScriptView
 			//Print(Placing.Count());
 			vector transform[4] = { m_CursorAside, raycast.Bounce.Direction, m_CursorAside * raycast.Bounce.Direction, raycast.Bounce.Position };
 			object_node.SetBaseTransform(transform);
+			
+			if (input.LocalPress_ID(UAFire)) {
+				m_Editor.InsertHistory(object_node, null);
+				m_Editor.GetPlacingDestination().Add(object_node);	
+				m_Editor.GetPlacing().Remove(object_node);
+				
+				object_node.AddState(NodeState.ACTIVE);
+				object_node.SetSynchDirty();
+				
+				// remove it from placing
+				PlaySound(EditorSounds.PLOP);
+				
+				if (KeyState(KeyCode.KC_LSHIFT)) {
+					
+					//AddState(NodeState.ACTIVE);
+				}
+			}
 		}
 		
 		if (input.LocalPress_ID(UAZoomIn)) {
@@ -464,7 +494,7 @@ class EditorHud: ScriptView
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(HideNotification);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(HideNotification, 1000 * duration);
 		
-		m_Editor.PlaySound("Lock_SoundSet");
+		PlaySound("Lock_SoundSet");
 	}
 	
 	void HideNotification()
@@ -517,6 +547,12 @@ class EditorHud: ScriptView
 		//ObjectHoverText.SetText(string.Empty);
 		return true;
 	}	
+	
+	// EditorSounds is helpful
+	void PlaySound(string sound_set)
+	{
+		SEffectManager.PlaySoundOnObject(sound_set, m_Editor.GetCamera());
+	}
 	
 	/*
 	static string GetFriendlyObjectName(notnull Object object, int component_index)

@@ -4,7 +4,7 @@ class ObjectNodeWorldView: NamedNodeView
 	
 	void ObjectNodeWorldView(Node node)
 	{
-		m_ObjectNode = ObjectNode.Cast(m_ObjectNode);
+		m_ObjectNode = ObjectNode.Cast(node);
 	}
 	
 	override void Update(float dt)

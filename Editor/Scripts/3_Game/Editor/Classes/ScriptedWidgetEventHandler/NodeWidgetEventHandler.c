@@ -23,22 +23,28 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 		Button = FindWidget<ButtonWidget>.SearchDown(m_LayoutRoot, "Button");				
 		Icon = FindWidget<ImageWidget>.SearchDown(m_LayoutRoot, "Icon");		
 		Text = FindWidget<TextWidget>.SearchDown(m_LayoutRoot, "Text");		
-		if (Path != string.Empty) {
-			m_Node = NamedNode.Cast(DaysBefore.GetEditor().Get(Path));
-			if (m_Node) {
-				if (Button) {
-					Button.SetHandler(this);
-				}
-				
-				if (Icon) {
-					Icon.LoadImageFile(0, m_Node.Icon.Regular());
-					Icon.SetImage(0);
-				}
-				
-				m_Node.State_OnChanged.Insert(OnStateChanged);
-				m_Node.Interact_OnComplete.Insert(OnInteractComplete);
-			}
+		if (Path == string.Empty) {
+			delete this;
+			return;
 		}
+		
+		m_Node = NamedNode.Cast(DaysBefore.GetEditor().Get(Path));
+		if (!m_Node) {
+			delete this;
+			return;
+		}
+		
+		if (Button) {
+			Button.SetHandler(this);
+		}
+		
+		if (Icon) {
+			Icon.LoadImageFile(0, m_Node.Icon.Regular());
+			Icon.SetImage(0);
+		}
+		
+		m_Node.State_OnChanged.Insert(OnStateChanged);
+		m_Node.Interact_OnComplete.Insert(OnInteractComplete);
 	}
 	
 	void OnStateChanged(NodeState node_state, bool state)

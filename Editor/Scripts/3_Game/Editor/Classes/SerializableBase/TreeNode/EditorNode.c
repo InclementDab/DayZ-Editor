@@ -78,35 +78,31 @@ class EditorNode: Node
 		this[COMMANDS].Add(new AfterlifeToggle("Afterlife", "View Hidden", Symbols.GHOST, LinearColor.WHITE));
 		this[COMMANDS].Add(new AddLayerCommand("AddLayer", "Add Layer", Symbols.LAYER_PLUS, LinearColor.WHITE));
 		this[COMMANDS].Add(new SetLayerActiveCommand("SetLayerActive", "Set Layer Active", string.Empty, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Bolt", "Lightning Bolt", Symbols.BOLT, LinearColor.WHITE));
-		this[COMMANDS].Add(new PianoCommand("Piano", "Drop Piano", Symbols.PIANO, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Bolt", "Lightning Bolt", Symbols.BOLT, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Piano", "Drop Piano", Symbols.PIANO, LinearColor.WHITE));
 		this[COMMANDS].Add(new BoxCommand("Box", "Box Selection", Symbols.SQUARE_DASHED, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Camera", "Camera", Symbols.CAMERA, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Camera", "Camera", Symbols.CAMERA, LinearColor.WHITE));
 		this[COMMANDS].Add(new EllipseCommand("Ellipse", "Ellipse Selection", Symbols.CIRCLE_DASHED, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Copy", "Copy", Symbols.COPY, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Cut", "Cut", Symbols.SCISSORS, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Copy", "Copy", Symbols.COPY, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Cut", "Cut", Symbols.SCISSORS, LinearColor.WHITE));
 		this[COMMANDS].Add(new DeleteCommand("Delete", "Delete", Symbols.TRASH, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Ground", "Ground Mode", Symbols.IMAGE_LANDSCAPE, LinearColor.WHITE));
 		this[COMMANDS].Add(new LassoCommand("Lasso", "Lasso Select", Symbols.LASSO, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Lock", "Lock", Symbols.LOCK, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Magnet", "Magnet", Symbols.MAGNET, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("New", "New", Symbols.FILE, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Open", "Open", Symbols.FOLDER_OPEN, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Paste", "Paste", Symbols.PASTE, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Redo", "Redo", Symbols.ROTATE_RIGHT, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Lock", "Lock", Symbols.LOCK, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Magnet", "Magnet", Symbols.MAGNET, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("New", "New", Symbols.FILE, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Open", "Open", Symbols.FOLDER_OPEN, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Paste", "Paste", Symbols.PASTE, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Redo", "Redo", Symbols.ROTATE_RIGHT, LinearColor.WHITE));
 		this[COMMANDS].Add(new RenameCommand("Rename", "Rename", string.Empty, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Save", "Save", Symbols.FLOPPY_DISK, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Snap", "Snapping Mode", Symbols.THUMBTACK, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Undo", "Undo", Symbols.ROTATE_LEFT, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Unlock", "Unlock", Symbols.LOCK_OPEN, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("SaveAs", "Save As", Symbols.FLOPPY_DISK_PEN, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Save", "Save", Symbols.FLOPPY_DISK, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Snap", "Snapping Mode", Symbols.THUMBTACK, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Undo", "Undo", Symbols.ROTATE_LEFT, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Unlock", "Unlock", Symbols.LOCK_OPEN, LinearColor.WHITE));
 		this[COMMANDS].Add(new WeatherToggle("Weather", "Weather", Symbols.SUN, LinearColor.WHITE));
-		this[COMMANDS].Add(new CursorToggle("Cursor", "Toggle Cursor", Symbols.ARROW_POINTER, LinearColor.WHITE));
-		this[COMMANDS].Add(new HudToggle("Hud", "Toggle Hud", Symbols.EYE, LinearColor.WHITE));
-		this[COMMANDS].Add(new MapToggle("Map", "Toggle Map", Symbols.MAP, LinearColor.WHITE));
-		this[COMMANDS].Add(new ControlToggle("Control", "Toggle Control", Symbols.PERSON_PREGNANT, LinearColor.WHITE));
 		this[COMMANDS].Add(new CreateFolder("CreateFolder", "Create Folder", Symbols.FOLDER_PLUS, LinearColor.WHITE));
-		this[COMMANDS].Add(new CommandNode("Console", "Toggle Console", Brands.XBOX, LinearColor.WHITE));
+		this[COMMANDS].Add(new NamedNode("Console", "Toggle Console", Brands.XBOX, LinearColor.WHITE));
 		
 		this[TOOLS].Add(new TranslateTool("Translate", "Translation Mode", Symbols.UP_DOWN_LEFT_RIGHT, LinearColor.WHITE));
 		this[TOOLS].Add(new RotateTool("Rotate", "Rotation Mode", Symbols.ROTATE, LinearColor.WHITE));
@@ -214,10 +210,10 @@ class EditorNode: Node
 		
 		/*
 		
-		this[MENUS].Add(new CommandNode("File", "File", Symbols.FILE_SPREADSHEET));
-		this[MENUS].Add(new CommandNode("Edit", "Edit", Symbols.FILE_PEN));
-		this[MENUS].Add(new CommandNode("View", "View", Symbols.BINOCULARS));
-		this[MENUS].Add(new CommandNode("Mission", "Mission", Symbols.PERSON_RIFLE));
+		this[MENUS].Add(new NamedNode("File", "File", Symbols.FILE_SPREADSHEET));
+		this[MENUS].Add(new NamedNode("Edit", "Edit", Symbols.FILE_PEN));
+		this[MENUS].Add(new NamedNode("View", "View", Symbols.BINOCULARS));
+		this[MENUS].Add(new NamedNode("Mission", "Mission", Symbols.PERSON_RIFLE));
 		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["New"]);
 		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["Open"]);
 		this[MENUS]["File"].Add(GetDayZGame().GetSandbox()[COMMANDS]["Save"]);
@@ -233,6 +229,11 @@ class EditorNode: Node
 	{		
 		delete m_Hud;
 		GetGame().ObjectDelete(m_Camera);
+	}
+	
+	override void RegisterKeyBindings(inout map<string, NodeInteractType> key_bindings)
+	{
+		super.RegisterKeyBindings(key_bindings);
 	}
 			
 	override void OnStateChanged(NodeState node_state, bool state)
@@ -297,13 +298,7 @@ class EditorNode: Node
 		serializer.Read(Identity);							
 		return true;
 	}
-						
-	// EditorSounds is helpful
-	void PlaySound(string sound_set)
-	{
-		SEffectManager.PlaySoundOnObject(sound_set, m_Camera);
-	}
-		
+								
 	void Undo()
 	{
 		foreach (string uuid, Node node: this[HISTORY].Children) {
