@@ -1,7 +1,7 @@
 class EditorHud: ScriptView
 {		
 	static const string SEARCH_BAR_DEFAULT = "Search...";
-	static const ref array<string> RIGHT_NODES = { EditorNode.BRUSHES, EditorNode.PLACING, EditorNode.HISTORY, EditorNode.LAYERS };
+	static const ref array<string> RIGHT_NODES = { EditorNode.BRUSHES, EditorNode.HISTORY, EditorNode.LAYERS };
 	static const ref array<string> LEFT_NODES = { EditorNode.DZ, EditorNode.VEHICLES, EditorNode.WEAPONS, EditorNode.SCRIPTED };
 	
 	protected EditorNode m_Editor;
@@ -117,13 +117,7 @@ class EditorHud: ScriptView
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 		
-		Input input = GetGame().GetInput();	
-		
-		if (input.LocalPress_ID(UAFire) && !GetWidgetUnderCursor()) {
-			m_DragX = mouse_x;
-			m_DragY = mouse_y;
-		}
-				
+		Input input = GetGame().GetInput();					
 		
 		/*
 		     <input name="UAEditorCopy"/>
@@ -162,68 +156,27 @@ class EditorHud: ScriptView
 		}
 				
 		EditorCamera camera = m_Editor.GetCamera();
-												
-		if ((input.LocalPress_ID(UAFire) || input.LocalPress_ID(UAUIBack)) && !GetWidgetUnderCursor()) {
-			m_TemplateController.MenuItems.Clear();
-			Menu.Show(false);	
-		}
+							
+		// Left click logic
+		if (input.LocalPress_ID(UAFire)) {
+			// Clear menus & start dragging
+			if (!GetWidgetUnderCursor()) {
+				m_DragX = mouse_x;
+				m_DragY = mouse_y;
+				
+				m_TemplateController.MenuItems.Clear();
+				Menu.Show(false);
+			}
+		}		
 		
-		if (input.LocalPress_ID(UATempRaiseWeapon) && !GetWidgetUnderCursor()) {
+		// Right click logic
+		if (input.LocalPress_ID(UATempRaiseWeapon)) {			
 			
-		}
-		
-		foreach (string uuid, Node node1: m_Editor.GetPlacing().Children) {
-			ObjectNode object_node = ObjectNode.Cast(node1);
-			if (!object_node) {
-				continue;
-			}
-			
-			Raycast raycast = camera.PerformCursorRaycast(object_node.GetObject());
-			if (!raycast) {
-				continue;
-			}
-			
-			vector camera_orthogonal[4] = { raycast.Source.Direction * raycast.Bounce.Direction, raycast.Bounce.Direction, raycast.Source.Direction, raycast.Source.Position };
-			Math3D.MatrixOrthogonalize4(camera_orthogonal);	
-			
-			vector rotation_mat[3];
-			Math3D.MatrixIdentity3(rotation_mat);
-			if (input.LocalPress_ID(UAZoomInOptics)) {
-				Math3D.YawPitchRollMatrix(Vector(-15, 0, 0), rotation_mat);
-			}
-			
-			if (input.LocalPress_ID(UAZoomOutOptics)) {
-				Math3D.YawPitchRollMatrix(Vector(15, 0, 0), rotation_mat);
-			}
-			
-			Math3D.MatrixMultiply3(camera_orthogonal, rotation_mat, camera_orthogonal);
-			
-			//Shape.CreateMatrix(camera_orthogonal);
-			
-			m_CursorAside = m_CursorAside.Multiply3(rotation_mat);
-			
-			//Print(Placing.Count());
-			vector transform[4] = { m_CursorAside, raycast.Bounce.Direction, m_CursorAside * raycast.Bounce.Direction, raycast.Bounce.Position };
-			object_node.SetBaseTransform(transform);
-			
-			if (input.LocalPress_ID(UAFire)) {
-				m_Editor.InsertHistory(object_node, null);
-				m_Editor.GetPlacingDestination().Add(object_node);	
-				m_Editor.GetPlacing().Remove(object_node);
+			if (!GetWidgetUnderCursor()) {
 				
-				object_node.AddState(NodeState.ACTIVE);
-				object_node.SetSynchDirty();
-				
-				// remove it from placing
-				PlaySound(EditorSounds.PLOP);
-				
-				if (KeyState(KeyCode.KC_LSHIFT)) {
-					
-					//AddState(NodeState.ACTIVE);
-				}
 			}
 		}
-		
+				
 		if (input.LocalPress_ID(UAZoomIn)) {
 			if (GetGame().GetUIManager().IsCursorVisible()) {				
 				vector camera_position = camera.GetCursorRay().GetPoint(1000.0);

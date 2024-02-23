@@ -13,7 +13,7 @@ class EditorNode: Node
 	{
 		m_Camera.SetPosition(save_data.CameraPosition);
 		foreach (EditorObjectData data: save_data.EditorObjects) {
-			GetPlacingDestination().Add(data.CovertToNode());
+			GetLayers().Add(data.CovertToNode());
 		}
 	}
 	
@@ -59,7 +59,6 @@ class EditorNode: Node
 	static const string HISTORY = "UndoRedo";
 	static const string PLACEABLES = "Placeables";
 	static const string BRUSHES = "Brushes";
-	static const string PLACING = "Placing";
 	static const string RECYCLE = "Recycle";
 		
 	void EditorNode(UUID uuid, PlayerIdentity identity = null) 
@@ -199,7 +198,6 @@ class EditorNode: Node
 		Add(new NamedNode(HISTORY, "History", Symbols.CLOCK_ROTATE_LEFT, LinearColor.WHITE));
 		Add(new NamedNode(PLACEABLES, "Placeable Objects", Symbols.ADDRESS_BOOK, LinearColor.WHITE));
 		Add(new NamedNode(BRUSHES, "Brushes", Symbols.BRUSH, LinearColor.WHITE));
-		Add(new NamedNode(PLACING, "Placing", Symbols.FIREPLACE, LinearColor.WHITE));
 		Add(new NamedNode(RECYCLE, "Recycle Bin", Symbols.BIN_RECYCLE, LinearColor.WHITE));
 		
 		this[LAYERS].Add(new NamedNode(BRUSHED, "Brushed", Symbols.PAINTBRUSH, LinearColor.WHITE));
@@ -351,25 +349,7 @@ class EditorNode: Node
 		
 		return false;
 	}
-	
-	Node GetPlacingDestination()
-	{
-		foreach (Node node: Node.States[NodeState.ACTIVE]) {
-			if (node) {
-				return node;
-			}
-		}
-		
-		foreach (Node tree_node: Node.States[NodeState.ACTIVE]) {
-			LayerNode folder_node = LayerNode.Cast(tree_node);
-			if (folder_node) {
-				return folder_node;
-			}
-		}
-		
-		return Get(EditorNode.LAYERS);
-	}
-				
+					
 	static Man CreateDefaultCharacter(string type, vector position)
 	{
 		if (GetGame().GetPlayer()) {
@@ -512,11 +492,6 @@ class EditorNode: Node
 	Node GetRecycle()
 	{
 		return this[RECYCLE];
-	}
-	
-	Node GetPlacing()
-	{
-		return this[PLACING];
 	}
 	
 	// structure of actual mission files

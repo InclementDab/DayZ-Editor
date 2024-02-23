@@ -5,7 +5,8 @@ class AddLayerCommand: NamedNode
 		super.OnInteract(interact_type, widget);
 		
 		if (interact_type & NodeInteractType.CLICK) {
-			DaysBefore.GetEditor().GetPlacingDestination().Add(new LayerNode(UUID.Generate(), "layer0", Symbols.FOLDER, LinearColor.WHITE));
+			
+			DaysBefore.GetEditor().GetLayers().Add(new LayerNode(UUID.Generate(), "layer0", Symbols.FOLDER, LinearColor.WHITE));
 		}
 	}
 	

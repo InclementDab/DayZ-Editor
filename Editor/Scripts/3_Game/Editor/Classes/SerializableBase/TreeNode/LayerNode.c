@@ -18,7 +18,7 @@ class LayerNode: NamedNode
 	
 	override NodeInteractType GetInteractMask()
 	{
-		return NodeInteractType.ENTER | NodeInteractType.LEAVE | NodeInteractType.CONTEXT | NodeInteractType.DRAG_START | NodeInteractType.DRAG | NodeInteractType.DROP | NodeInteractType.CLICK;
+		return NodeInteractType.HOVER | NodeInteractType.CONTEXT | NodeInteractType.DRAG | NodeInteractType.CLICK;
 	}
 	
 	override void OnInteract(NodeInteractType interact_type, Widget widget = null)

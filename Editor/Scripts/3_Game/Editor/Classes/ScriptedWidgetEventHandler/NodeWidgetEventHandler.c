@@ -144,8 +144,8 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	override bool OnDragging(Widget w, int x, int y, Widget reciever)
 	{		
 		int interact_mask = m_Node.GetInteractMask();
-		if (interact_mask & (NodeInteractType.DRAG)) {
-			m_Node.OnInteract(interact_mask & (NodeInteractType.DRAG));
+		if (interact_mask & (NodeInteractType.DRAGGING)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.DRAGGING));
 		}
 		
 		return super.OnDragging(w, x, y, reciever);
@@ -154,8 +154,8 @@ class NodeWidgetEventHandler: ScriptedWidgetEventHandler
 	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
 		int interact_mask = m_Node.GetInteractMask();
-		if (interact_mask & (NodeInteractType.DROP)) {
-			m_Node.OnInteract(interact_mask & (NodeInteractType.DROP));
+		if (interact_mask & (NodeInteractType.DRAG_END)) {
+			m_Node.OnInteract(interact_mask & (NodeInteractType.DRAG_END));
 		}
 		
 		return super.OnDrop(w, x, y, reciever);

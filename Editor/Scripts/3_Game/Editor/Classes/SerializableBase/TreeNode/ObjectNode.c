@@ -221,7 +221,7 @@ class ObjectNode: NamedNode
 	
 	override NodeInteractType GetInteractMask()
 	{
-		return NodeInteractType.ENTER | NodeInteractType.LEAVE | NodeInteractType.DRAG_START | NodeInteractType.DRAG | NodeInteractType.DROP | NodeInteractType.CONTEXT | NodeInteractType.PRESS | NodeInteractType.DOUBLE;
+		return NodeInteractType.HOVER | NodeInteractType.DRAG | NodeInteractType.CONTEXT | NodeInteractType.PRESS | NodeInteractType.DOUBLE;
 	}
 	
 	override void OnStateChanged(NodeState node_state, bool state)
@@ -268,7 +268,7 @@ class ObjectNode: NamedNode
 			GetDayZGame().SetCursor(Symbols.UP_DOWN_LEFT_RIGHT);
 		}
 		
-		if (interact_type & NodeInteractType.DROP) {
+		if (interact_type & NodeInteractType.DRAG_END) {
 			GetDayZGame().ClearCursor();
 		}
 		
@@ -280,7 +280,7 @@ class ObjectNode: NamedNode
 			EditorBoundingBox.Destroy(m_Object);
 		}
 		
-		if (interact_type & NodeInteractType.DRAG) {
+		if (interact_type & NodeInteractType.DRAGGING) {
 			vector transform[4];
 			GetBaseTransform(transform);
 			
