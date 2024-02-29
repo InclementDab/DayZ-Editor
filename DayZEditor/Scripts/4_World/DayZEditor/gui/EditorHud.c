@@ -28,6 +28,22 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{
 		delete CameraMapMarker;
 	}
+	
+	override void Update(float dt)
+	{
+		super.Update(dt);
+				
+		Input input = GetGame().GetInput();
+		
+		if (input.LocalPress("EditorToggleUI")) {
+			if (GetEditor().IsInventoryEditorActive()) {
+				GetEditor().GetInventoryEditorHud().GetLayoutRoot().Show(!GetEditor().GetInventoryEditorHud().GetLayoutRoot().IsVisible());
+				return;
+			}
+			
+			Show(!IsVisible());
+		}
+	}
 
 	override void Show(bool show) 
 	{

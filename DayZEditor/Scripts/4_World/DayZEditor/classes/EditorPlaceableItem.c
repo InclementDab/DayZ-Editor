@@ -5,83 +5,88 @@ enum EditorPlaceableItemCategory
 	SCRIPTED = 2
 }
 
-class EditorPlaceableItem: Managed
-{		
+class EditorPlaceableItem : Managed
+{
 	string Type; // Item Type
 	string Path; // config path
 	EditorPlaceableItemCategory Category;
-	
+
 	ref CF_File Model;
-		
+
 	private void EditorPlaceableItem()
 	{
 	}
-		
+
 	void ~EditorPlaceableItem()
 	{
 		delete Model;
 	}
-	
+
 	string GetName()
 	{
-		switch (Category) {
+		switch (Category)
+		{
 			case EditorPlaceableItemCategory.SCRIPTED:
 			case EditorPlaceableItemCategory.CONFIG: return Type;
 			case EditorPlaceableItemCategory.STATIC: return Model.GetFileName();
 		}
-		
+
 		return string.Empty;
 	}
-	
+
 	string GetSpawnType()
 	{
-		switch (Category) {
+		switch (Category)
+		{
 			case EditorPlaceableItemCategory.SCRIPTED:
 			case EditorPlaceableItemCategory.CONFIG: return Type;
 			case EditorPlaceableItemCategory.STATIC: return Model.GetFullPath();
 		}
-		
+
 		return string.Empty;
 	}
-	
+
 	static EditorPlaceableItem Create(CF_File p3d)
 	{
-		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
+
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
 		placeable_item.Model = p3d;
 		placeable_item.Category = EditorPlaceableItemCategory.STATIC;
 		return placeable_item;
 	}
-	
+
 	// CAN RETURN NULL
 	static EditorPlaceableItem Create(string config_path, string config_type)
 	{
-		if (IsForbiddenItem(config_type)) {
+		if (IsForbiddenItem(config_type))
+		{
 			return null;
 		}
-		
-		EditorPlaceableItem placeable_item = new EditorPlaceableItem();	
-		placeable_item.Path = config_path; 
+
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
+		placeable_item.Path = config_path;
 		placeable_item.Type = config_type;
 		placeable_item.Category = EditorPlaceableItemCategory.CONFIG;
-		
+
 		string model;
 		GetGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
 		placeable_item.Model = new CF_File(model);
-		if (!placeable_item.Model.IsValid()) {
+		if (!placeable_item.Model.IsValid())
+		{
 			return null;
-		}		
-				
+		}
+
 		return placeable_item;
 	}
-	
+
 	static EditorPlaceableItem Create(typename scripted_type)
-	{		
-		EditorPlaceableItem placeable_item = new EditorPlaceableItem();		
+	{
+		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
 		placeable_item.Type = scripted_type.ToString();
 		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
 		return placeable_item;
 	}
-	
+
 	// If model volume is 0, return false
 	private static bool IsValidObject(Object target)
 	{
@@ -89,11 +94,12 @@ class EditorPlaceableItem: Managed
 		target.ClippingInfo(size);
 		return (Math.AbsFloat(size[0][0]) + Math.AbsFloat(size[1][0]) + Math.AbsFloat(size[0][1]) + Math.AbsFloat(size[1][1]) + Math.AbsFloat(size[0][2]) + Math.AbsFloat(size[1][2]) > 0);
 	}
-		
+
 	static string GetIcon(ModStructure mod_info)
 	{
 		//EditorLog.Trace("EditorPlaceableItem::GetIcon");
-		if (mod_info) {
+		if (mod_info)
+		{
 			string logo = mod_info.GetModLogo();
 			if (logo == string.Empty)
 				logo = mod_info.GetModLogoSmall();
@@ -102,12 +108,12 @@ class EditorPlaceableItem: Managed
 			if (logo == string.Empty)
 				logo = mod_info.GetModActionURL();
 			if (logo != string.Empty)
-				return logo;	
+				return logo;
 		}
 		// default
 		return LIST_ITEM_DEFAULT_ICON;
 	}
-	
+
 	static bool IsForbiddenItem(string model)
 	{
 		//! In theory should be safe but just in case
@@ -124,7 +130,17 @@ class EditorPlaceableItem: Managed
 		if (GetGame().IsKindOf(model, "GP25Base")) return true;
 		if (GetGame().IsKindOf(model, "M203Base")) return true;
 		if (model == "ItemOptics_Base") return true;
-		
+
+		//? Added a few more to the list
+		/* 
+		Give console Error: SCRIPT    (E): [WeaponStableState::ValidateMuzzleArray] :: 
+		[ERROR] :: Muzzle array validation has failed. Please set up the correct muzzle states by overriding InitMuzzleArray.
+		*/
+		if (model == "Groza") return true;
+		if (model == "PM73Rak") return true;
+		if (model == "Trumpet") return true;
+		//TODO add the abstract models 
+
 		//! Everything is fine... I hope... :pain:
 		return false;
 	}
