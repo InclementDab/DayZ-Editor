@@ -8,21 +8,21 @@ class EditorClientModule: JMModuleBase
 {
 	protected Editor m_Editor;
 	
-	protected int m_KonamiCodeProgress;
-	protected float m_KonamiCodeCooldown;
+	// protected int m_KonamiCodeProgress;
+	// protected float m_KonamiCodeCooldown;
 	
-	static const ref array<int> KONAMI_CODE = {
-		KeyCode.KC_UP,
-		KeyCode.KC_UP,
-		KeyCode.KC_DOWN,
-		KeyCode.KC_DOWN,
-		KeyCode.KC_LEFT,
-		KeyCode.KC_RIGHT,
-		KeyCode.KC_LEFT,
-		KeyCode.KC_RIGHT,
-		KeyCode.KC_B,
-		KeyCode.KC_A
-	};
+	// static const ref array<int> KONAMI_CODE = {
+	// 	KeyCode.KC_UP,
+	// 	KeyCode.KC_UP,
+	// 	KeyCode.KC_DOWN,
+	// 	KeyCode.KC_DOWN,
+	// 	KeyCode.KC_LEFT,
+	// 	KeyCode.KC_RIGHT,
+	// 	KeyCode.KC_LEFT,
+	// 	KeyCode.KC_RIGHT,
+	// 	KeyCode.KC_B,
+	// 	KeyCode.KC_A
+	// };
 	
 	void EditorClientModule() 
 	{
@@ -91,12 +91,12 @@ class EditorClientModule: JMModuleBase
 		}*/
 	}
 	
-	private void CheckKonamiCode(int progress)
-	{
-		if (m_KonamiCodeProgress == progress) {
-			m_KonamiCodeProgress = 0;
-		}
-	}
+	// private void CheckKonamiCode(int progress)
+	// {
+	// 	if (m_KonamiCodeProgress == progress) {
+	// 		m_KonamiCodeProgress = 0;
+	// 	}
+	// }
 	
 	override bool IsServer() 
 	{
@@ -120,7 +120,7 @@ class EditorClientModule: JMModuleBase
 	{
 		EditorLog.Trace("Editor::OnMissionLoaded");
 		
-		g_Game.ReportProgress("Mission Loaded");
+		g_Game.ReportProgress("Editor Mission Loaded");
 		
 		vector center_pos = Editor.GetMapCenterPosition();
 		PlayerBase player = Editor.CreateDefaultCharacter(GetGame().CreateRandomPlayer(), Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
@@ -129,13 +129,13 @@ class EditorClientModule: JMModuleBase
 			return;
 		}
 
-		// Check if COM is running, because that means theres crackheads afoot!
-		string com_check = "CommunityOfflineClient";
-		if (com_check.ToType()) {
-			EditorLog.Error("The DayZ Editor cannot run with COM enabled, disable it in your Parameters file and restart the game with ONLY the DayZ Editor");
-			GetGame().GetUIManager().ShowDialog("Community Offline Mode Enabled", "The DayZ Editor cannot run with COM enabled, disable it in your Parameters file and restart the game with ONLY the DayZ Editor", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
-			return;
-		}
+		// // Check if COM is running, because that means theres crackheads afoot!
+		// string com_check = "CommunityOfflineClient";
+		// if (com_check.ToType()) {
+		// 	EditorLog.Error("The DayZ Editor cannot run with COM enabled, disable it in your Parameters file and restart the game with ONLY the DayZ Editor");
+		// 	GetGame().GetUIManager().ShowDialog("Community Offline Mode Enabled", "The DayZ Editor cannot run with COM enabled, disable it in your Parameters file and restart the game with ONLY the DayZ Editor", 76, DBT_OK, DBB_NONE, DMT_INFO, GetGame().GetUIManager().GetMenu());
+		// 	return;
+		// }
 		
 		EditorLog.Info("Loading Offline Editor...");
 		m_Editor = Editor.Create(player);
@@ -146,12 +146,12 @@ class EditorClientModule: JMModuleBase
 	private bool ShouldProcessInput(UAInput input)
 	{
 		// Check if LocalPress, Check if LControl is pressed, Check if game is focused
-		return (m_Editor && input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
+		return (m_Editor && input.LocalPress() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)));
 	}
 	
 	private bool ShouldProcessQuickInput(UAInput input)
 	{
-		return (m_Editor && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget));
+		return (m_Editor && input.LocalValue() && !KeyState(KeyCode.KC_LCONTROL) && GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD) && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)));
 	}
 	
 	private void OnEditorToggleActive(UAInput input)
@@ -190,12 +190,13 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleUI");
 				
+		//TODO Doesn't work
 		if (m_Editor.IsInventoryEditorActive()) {
 			m_Editor.GetInventoryEditorHud().GetLayoutRoot().Show(!m_Editor.GetInventoryEditorHud().GetLayoutRoot().IsVisible());
 			return;
 		}
 		
-		m_Editor.GetEditorHud().Show(!m_Editor.GetEditorHud().IsVisible());
+		// m_Editor.GetEditorHud().Show(!m_Editor.GetEditorHud().IsVisible());
 		
 		EditorObjectMap placed_objects =  m_Editor.GetPlacedObjects();
 		foreach (int id, EditorObject editor_object: placed_objects) {
@@ -205,6 +206,7 @@ class EditorClientModule: JMModuleBase
 			}
 		}
 		
+		//TODO Doesn't work
 		// If player is active
 		if (!m_Editor.IsActive()) {
 			m_Editor.GetEditorHud().ShowCursor(m_Editor.GetEditorHud().IsVisible());

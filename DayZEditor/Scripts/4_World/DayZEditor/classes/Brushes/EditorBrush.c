@@ -128,6 +128,7 @@ class EditorBrush
 				continue;
 			}
 
+			//TODO config objects can have magnet. P3D need to stay zeroed 
 			vector ori = "0 0 0";
 			ori[0] = Math.RandomFloatInclusive(0, 360);
 
