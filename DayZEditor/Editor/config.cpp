@@ -99,7 +99,7 @@ class CfgVehicles
 		scope = 1;
 		model = "\DayZEditor\Editor\BrushBase.p3d";
 		hiddenSelections[] = {"BrushBase"};
-		hiddenSelectionTextures[] = { "DayZEditor\\Editor\\data\\BrushDelete.paa" };
+		hiddenSelectionTextures[] = { "DayZEditor\Editor\data\BrushDelete.paa" };
 		shadow = 0;
 	};
 
