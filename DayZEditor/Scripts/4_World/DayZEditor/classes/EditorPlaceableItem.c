@@ -139,7 +139,29 @@ class EditorPlaceableItem : Managed
 		if (model == "Groza") return true;
 		if (model == "PM73Rak") return true;
 		if (model == "Trumpet") return true;
-		//TODO add the abstract models 
+		//! abstract models 
+		if (model == "Building") return true;
+		if (model == "CarDoor") return true;
+		if (model == "NonStrategic") return true;
+		if (model == "Strategic") return true;
+		if (model == "NonStrategic_Base") return true;
+		if (model == "House") return true;
+		if (model == "HouseNoDestruct") return true;
+		if (model == "HouseHighCost") return true;
+		if (model == "Ruins") return true;
+		if (model == "EffectArea") return true;
+		if (model == "SurrenderDummyItem") return true;
+		if (model == "Head") return true;
+		if (model == "Church") return true;
+		if (model == "Land_Wreck_Car_TwoDoors") return true;
+		if (model == "Land_Wreck_Car_ThreeDoors") return true;
+		if (model == "EditorLootPoint") return true;
+		if (model == "BoundingBoxBase") return true;
+		if (model == "BrushBase") return true;
+		if (model == "RotationWidget") return true;
+		if (model == "M79DummyOptics") return true;
+		if (model == "AugOptic") return true;
+		if (model == "ThingEffect") return true;
 
 		//! Everything is fine... I hope... :pain:
 		return false;
