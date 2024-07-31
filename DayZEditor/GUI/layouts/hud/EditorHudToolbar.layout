@@ -1332,6 +1332,85 @@ WrapSpacerWidgetClass ToolbarWrapper {
         }
        }
       }
+      PanelWidgetClass BrushWidthFrame {
+       visible 0
+       ignorepointer 1
+       position 0 0
+       size 140 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       scriptclass "ViewBinding"
+       {
+        PanelWidgetClass BrushWidthSliderBackground {
+         visible 1
+         ignorepointer 1
+         color 0.1373 0.1373 0.1373 1
+         position 0 0
+         size 0.857 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         style rover_sim_colorable
+        }
+        SliderWidgetClass BrushWidthSlider {
+         visible 1
+         color 1 1 1 0.1961
+         position 0 0
+         size 0.857 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         maximum 6
+         step 0.01
+         current 3
+         "fill in" 1
+         "listen to input" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "BrushWidth"
+           Two_Way_Binding 1
+           Relay_Command "m_Editor.CommandManager.BrushWidthCommand"
+          }
+         }
+        }
+        TextWidgetClass BrushWidthText {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 0.4 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         text "0"
+         font "gui/fonts/metron"
+         "text halign" center
+         "text valign" center
+         {
+          ScriptParamsClass {
+           Binding_Name "BrushWidth"
+          }
+         }
+        }
+       }
+       {
+        ScriptParamsClass {
+            Relay_Command "m_Editor.CommandManager.BrushWidthCommand"
+        }
+       }
+      }
       FrameWidgetClass Section4 {
        ignorepointer 1
        size 0.016 1

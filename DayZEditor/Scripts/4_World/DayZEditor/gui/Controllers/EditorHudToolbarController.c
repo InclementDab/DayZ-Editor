@@ -4,6 +4,7 @@ class EditorHudToolbarController: EditorControllerBase
 
 	float BrushRadius = 65;
 	float BrushDensity = 0.25;
+	float BrushWidth = 6.0;
 	
 	bool BrushToggleButtonState;
 	int BrushTypeSelection;
@@ -94,9 +95,11 @@ class EditorHudToolbarController: EditorControllerBase
 			}
 			
 			case "BrushRadius":
-			case "BrushDensity": {
+			case "BrushDensity":
+			case "BrushWidth": {
 				EditorBrush.BrushRadius = BrushRadius / 2;
 				EditorBrush.BrushDensity = BrushDensity;
+				EditorBrush.BrushWidth = BrushWidth;
 				break;
 			}
 			
@@ -196,6 +199,14 @@ class EditorHudToolbarController: EditorControllerBase
 				NotifyPropertyChanged("BrushDensity");
 				break;
 			}			
+
+			case "BrushWidthText": 
+			case "BrushDensitrySlider": {
+				BrushWidth += direction;
+				BrushWidth = Math.Clamp(BrushWidth, 0, 12);
+				NotifyPropertyChanged("BrushWidth");
+				break;
+			}
 		}
 		
 		return false;

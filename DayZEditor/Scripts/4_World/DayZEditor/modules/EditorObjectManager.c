@@ -97,79 +97,30 @@ class EditorObjectManagerModule : JMModuleBase
 				continue;
 			}
 			
-			EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(file);
-			m_PlaceableObjects.Insert(placeable_item_p3d);
 			
-			if (!m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()]) {
-				m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()] = new array<EditorPlaceableItem>();
-			}
-			
-			m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()].Insert(placeable_item_p3d);
 		}*/
 
+		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
+		
+		
+		foreach (string model_path: paths) {
+			array<string> p3d_files = Directory.EnumerateFiles(model_path, "*.p3d");
+			foreach (string p3d_file: p3d_files) {
 
-		//TODO All the P3D into static arrays
-		const array<string> P3DRocks =
-		{
-			"DZ\\rocks\\rock_apart1.p3d",
-			"DZ\\rocks\\rock_apart2.p3d",
-			"DZ\\rocks\\rock_bright_apart1.p3d",
-			"DZ\\rocks\\rock_bright_apart2.p3d",
-			"DZ\\rocks\\rock_bright_monolith1.p3d",
-			"DZ\\rocks\\rock_bright_monolith2.p3d",
-			"DZ\\rocks\\rock_bright_monolith3.p3d",
-			"DZ\\rocks\\rock_bright_monolith4.p3d",
-			"DZ\\rocks\\rock_bright_spike1.p3d",
-			"DZ\\rocks\\rock_bright_spike2.p3d",
-			"DZ\\rocks\\rock_bright_spike3.p3d",
-			"DZ\\rocks\\rock_bright_wallh1.p3d",
-			"DZ\\rocks\\rock_bright_wallh2.p3d",
-			"DZ\\rocks\\rock_bright_wallh3.p3d",
-			"DZ\\rocks\\rock_bright_wallv.p3d",
-			"DZ\\rocks\\rock_monolith1.p3d",
-			"DZ\\rocks\\rock_monolith2.p3d",
-			"DZ\\rocks\\rock_monolith3.p3d",
-			"DZ\\rocks\\rock_monolith4.p3d",
-			"DZ\\rocks\\rock_spike1.p3d",
-			"DZ\\rocks\\rock_spike2.p3d",
-			"DZ\\rocks\\rock_spike3.p3d",
-			"DZ\\rocks\\rock_wallh1.p3d",
-			"DZ\\rocks\\rock_wallh2.p3d",
-			"DZ\\rocks\\rock_wallh3.p3d",
-			"DZ\\rocks\\rock_wallv.p3d",
-			"DZ\\rocks\\stone1.p3d",
-			"DZ\\rocks\\stone2.p3d",
-			"DZ\\rocks\\stone3.p3d",
-			"DZ\\rocks\\stone4.p3d",
-			"DZ\\rocks\\stone5.p3d",
-			"DZ\\rocks\\stone5_Trail_B.p3d",
-			"DZ\\rocks\\stone5_Trail_G.p3d",
-			"DZ\\rocks\\stone5_Trail_R.p3d",
-			"DZ\\rocks\\stone5_Trail_Y.p3d",
-			"DZ\\rocks\\stones_erosion.p3d",
-			"DZ\\rocks_bliss\\rock_wallh4.p3d",
-			"DZ\\rocks_bliss\\rock_wallh5.p3d",
-			"DZ\\rocks_bliss\\rock_wallh6.p3d",
-			"DZ\\rocks_bliss\\stone10.p3d",
-			"DZ\\rocks_bliss\\stone10_moss.p3d",
-			"DZ\\rocks_bliss\\stone6.p3d",
-			"DZ\\rocks_bliss\\stone6_moss.p3d",
-			"DZ\\rocks_bliss\\stone7.p3d",
-			"DZ\\rocks_bliss\\stone7_moss.p3d",
-			"DZ\\rocks_bliss\\stone7_Trail_B.p3d",
-			"DZ\\rocks_bliss\\stone7_Trail_G.p3d",
-			"DZ\\rocks_bliss\\stone7_Trail_R.p3d",
-			"DZ\\rocks_bliss\\stone7_Trail_Y.p3d",
-			"DZ\\rocks_bliss\\stone8.p3d",
-			"DZ\\rocks_bliss\\stone8_carving.p3d",
-			"DZ\\rocks_bliss\\stone8_moss.p3d",
-			"DZ\\rocks_bliss\\stone9.p3d",
-			"DZ\\rocks_bliss\\stone9_moss.p3d"
-		};
-
-		//const array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
-		//foreach (string model_path: paths) {
-
+				// reformat and proper the p3d file
+				p3d_file = SystemPath.Format(p3d_file);
+				
+				EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(p3d_file);
+				m_PlaceableObjects.Insert(placeable_item_p3d);
+				
+				if (!m_PlaceableObjectsByP3d[p3d_file]) {
+					m_PlaceableObjectsByP3d[p3d_file] = {};
+				}
+				
+				m_PlaceableObjectsByP3d[p3d_file].Insert(placeable_item_p3d);
+			}
+		}
+		/*
 		//TODO Figure out how to insert them again
 		foreach (string p3d:P3DRocks){
 			array<ref CF_File> files = { };
@@ -194,7 +145,7 @@ class EditorObjectManagerModule : JMModuleBase
 					m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()].Insert(placeable_item_p3d);
 				}
 			}
-		}
+		}*/
 		//}
 
 

@@ -41,11 +41,6 @@ class EditorLogEntry: ScriptViewTemplate<EditorLogEntryController>
 		//GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(Delete, 15000);
 	}
 	
-	void Delete()
-	{
-		delete this;
-	}
-	
 	override string GetLayoutFile()
 	{
 		return "DayZEditor/GUI/layouts/items/EditorLogEntry.layout";

@@ -26,6 +26,7 @@ class EditorCommandManager
 	EditorCommand BrushToggleCommand;
 	EditorCommand BrushDensityCommand;
 	EditorCommand BrushRadiusCommand;
+	EditorCommand BrushWidthCommand;
 	EditorCommand CameraTrackAddNode;
 	EditorCommand CameraTrackRun;
 	EditorCommand CameraToggleLight;
@@ -84,6 +85,7 @@ class EditorCommandManager
 		BrushToggleCommand = RegisterCommand(EditorBrushToggleCommand);
 		BrushDensityCommand = RegisterCommand(EditorBrushDensityCommand);
 		BrushRadiusCommand = RegisterCommand(EditorBrushRadiusCommand);
+		BrushWidthCommand = RegisterCommand(EditorBrushWidthCommand);
 	
 		CameraToggleLight = RegisterCommand(EditorToggleLightCommand);
 		RegisterCommand(EditorResetAlignmentCommand);

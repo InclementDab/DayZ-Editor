@@ -11,15 +11,8 @@ class EditorPlaceableItem : Managed
 	string Path; // config path
 	EditorPlaceableItemCategory Category;
 
-	ref CF_File Model;
-
 	private void EditorPlaceableItem()
 	{
-	}
-
-	void ~EditorPlaceableItem()
-	{
-		delete Model;
 	}
 
 	string GetName()
@@ -28,7 +21,7 @@ class EditorPlaceableItem : Managed
 		{
 			case EditorPlaceableItemCategory.SCRIPTED:
 			case EditorPlaceableItemCategory.CONFIG: return Type;
-			case EditorPlaceableItemCategory.STATIC: return Model.GetFileName();
+			case EditorPlaceableItemCategory.STATIC: return Path;
 		}
 
 		return string.Empty;
@@ -40,22 +33,22 @@ class EditorPlaceableItem : Managed
 		{
 			case EditorPlaceableItemCategory.SCRIPTED:
 			case EditorPlaceableItemCategory.CONFIG: return Type;
-			case EditorPlaceableItemCategory.STATIC: return Model.GetFullPath();
+			case EditorPlaceableItemCategory.STATIC: return Path;
 		}
 
 		return string.Empty;
 	}
 
-	static EditorPlaceableItem Create(CF_File p3d)
+	static EditorPlaceableItem Create(string p3d_file)
 	{
 
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
-		placeable_item.Model = p3d;
+		placeable_item.Type = string.Format("p3d:%1", p3d_file);
+		placeable_item.Path = p3d_file;
 		placeable_item.Category = EditorPlaceableItemCategory.STATIC;
 		return placeable_item;
 	}
 
-	// CAN RETURN NULL
 	static EditorPlaceableItem Create(string config_path, string config_type)
 	{
 		if (IsForbiddenItem(config_type))
@@ -67,14 +60,6 @@ class EditorPlaceableItem : Managed
 		placeable_item.Path = config_path;
 		placeable_item.Type = config_type;
 		placeable_item.Category = EditorPlaceableItemCategory.CONFIG;
-
-		string model;
-		GetGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
-		placeable_item.Model = new CF_File(model);
-		if (!placeable_item.Model.IsValid())
-		{
-			return null;
-		}
 
 		return placeable_item;
 	}

@@ -24,6 +24,7 @@ class EditorBrushToggleCommand: EditorCommand
 				
 				m_Editor.CommandManager[EditorBrushRadiusCommand].SetCanExecute(button_state);
 				m_Editor.CommandManager[EditorBrushDensityCommand].SetCanExecute(button_state);
+				m_Editor.CommandManager[EditorBrushWidthCommand].SetCanExecute(button_state);
 				
 				break;
 			}

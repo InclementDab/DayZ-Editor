@@ -6,6 +6,7 @@ class EditorBrush
 
 	static float BrushRadius = 10;
 	static float BrushDensity = 0.5;
+	static float BrushWidth = 6;
 
 	// Private members
 	private vector m_LastMousePosition;
@@ -45,55 +46,51 @@ class EditorBrush
 
 	void UpdateBrush()
 	{
-		if (GetEditor().IsPlacing())
-		{
+		if (GetEditor().IsPlacing()) {
 			return;
 		}
-
-		set<Object> o;
-		vector CurrentMousePosition = MousePosToRay(o, null, GetEditor().Settings.ObjectViewDistance, 0, true);
-
+		
 		Input input = GetGame().GetInput();
+		Ray ray = new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetPointerDirection());
+		
+		Raycast ray_cast = ray.PerformRaycastRVEX(BrushRadius / 100, GetEditor().Settings.ObjectViewDistance, ObjIntersectView, null, true);
+		if (ray_cast && ray_cast.Bounce) {
+			vector transform[4] = {
+				Vector(BrushRadius / 10, 0, 0),
+				Vector(0, BrushRadius / 10, 0),
+				Vector(0, 0, BrushRadius / 10),
+				ray_cast.Bounce.Position
+			};
 
-		vector transform[4] = {
-			Vector(BrushRadius / 10, 0, 0),
-			Vector(0, BrushRadius / 10, 0),
-			Vector(0, 0, BrushRadius / 10),
-			CurrentMousePosition
-		};
-
-		m_BrushDecal.SetTransform(transform);
-
-		//if (GetEditor().GetUIManager().IsCursorOverUI()) return;
-		/*
-		if (input.LocalPress("UAFire")) {
+			m_BrushDecal.SetTransform(transform);
 			
-		}*/
-
-		if (GetWidgetUnderCursor())
-		{
-			return;
-		}
-
-		if (input.LocalPress("UAFire"))
-		{
-			OnMouseDown(CurrentMousePosition);
-		}
-
-		if (input.LocalValue("UAFire"))
-		{
-			DuringMouseDown(CurrentMousePosition);
-		}
-
-		if (input.LocalRelease("UAFire"))
-		{
-			OnMouseUp(CurrentMousePosition);
+			if (GetWidgetUnderCursor()) {
+				return;
+			}
+	
+			if (input.LocalPress("UAFire"))
+			{
+				OnMouseDown(ray_cast.Bounce.Position);
+			}
+	
+			if (input.LocalValue("UAFire"))
+			{
+				DuringMouseDown(ray_cast.Bounce.Position);
+			}
+	
+			if (input.LocalRelease("UAFire"))
+			{
+				OnMouseUp(ray_cast.Bounce.Position);
+			}
 		}
 	}
 
 	void DuringMouseDown(vector position)
 	{
-
+		if (!m_BrushData) {
+			return;
+		}
+		
 		if (vector.Distance(m_LastMousePosition, position) < (BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
 
@@ -110,42 +107,41 @@ class EditorBrush
 			flags |= EditorObjectFlags.LISTITEM;
 		}
 
-		for (int i = 0; i < BrushDensity * 10; i++)
-		{
-
+		for (int i = 0; i < Math.Sqrt(BrushDensity) * 24; i++) {
 			vector pos = position;
 			pos[0] = pos[0] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
 			pos[2] = pos[2] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
-
-			if (!m_BrushData)
-			{
-				continue;
-			}
+			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
 
 			EditorBrushObject object_name = m_BrushData.GetRandomObject();
-			if (!object_name)
-			{
+			if (!object_name) {
 				continue;
 			}
 
 			//TODO config objects can have magnet. P3D need to stay zeroed 
 			vector ori = "0 0 0";
 			ori[0] = Math.RandomFloatInclusive(0, 360);
+			ori[1] = Math.RandomFloatInclusive(-4, 4);
+			ori[2] = Math.RandomFloatInclusive(-4, 4);
+
+			array<Object> objects = {};
+			GetGame().GetObjectsAtPosition3D(pos, BrushWidth, objects, null);
+			if (objects.Count() > 0) {
+				continue;
+			}
 
 			Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
-			if (!brushed_object)
-			{
+			if (!brushed_object) {
 				continue;
 			}
 
 			vector size = ObjectGetSize(brushed_object);
-
-
 			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
 
 			// just for u boba
 			//brushed_object.SetPosition(pos);
 			//brushed_object.SetDirection(direction);
+			brushed_object.SetScale(Math.RandomFloat(object_name.MinScale, object_name.MaxScale));
 			created_data.Insert(EditorObjectData.Create(brushed_object, flags));
 		}
 
