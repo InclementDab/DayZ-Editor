@@ -51,8 +51,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
        imageTexture "{1A57E6DE48397D04}DayZEditor/GUI/images/dayz_editor_icon_black.edds"
        mode blend
        "src alpha" 1
-       "no wrap" 1
-       stretch 1
+       "clamp mode" clamp
+       "stretch mode" stretch_w_h
       }
      }
     }
@@ -244,11 +244,43 @@ WrapSpacerWidgetClass ToolbarWrapper {
    style rover_sim_colorable
    "next up" ""
    {
+    PanelWidgetClass NotificationPanel {
+     ignorepointer 1
+     color 0.2588 0.6863 0.3647 1
+     position 0 0
+     size 1 24
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass NotificationText {
+       visible 1
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scriptclass ""
+       text "NotificationText"
+       font "gui/fonts/metron"
+       "text halign" center
+       "text valign" center
+      }
+     }
+    }
     WrapSpacerWidgetClass ToolsWrapper {
      visible 1
      clipchildren 0
      ignorepointer 1
-     color 0.0118 0.0118 0.0118 0.3922
+     color 0.1176 0.1176 0.1176 1
      size 1 1
      halign center_ref
      valign center_ref
@@ -256,7 +288,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     style Outline
+     style Colorable
      Padding 1
      Margin 5
      content_valign center
@@ -338,8 +370,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
            imageTexture "{9D99EDE9BFE0A0F4}DayZEditor/GUI/icons/icon_new2.edds"
            mode blend
            "src alpha" 1
-           "no wrap" 1
-           stretch 1
+           "clamp mode" clamp
+           "stretch mode" stretch_w_h
            filter 0
           }
          }
@@ -383,8 +415,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
            imageTexture "{F60B1EEFA69CEB68}DayZEditor/GUI/icons/icon_folder.edds"
            mode additive
            "src alpha" 1
-           "no wrap" 1
-           stretch 1
+           "clamp mode" clamp
+           "stretch mode" stretch_w_h
            filter 0
           }
          }
@@ -428,8 +460,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
            imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
            mode additive
            "src alpha" 1
-           "no wrap" 1
-           stretch 1
+           "clamp mode" clamp
+           "stretch mode" stretch_w_h
            filter 0
           }
          }
@@ -516,8 +548,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:undo"
            mode additive
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            filter 0
           }
          }
@@ -556,8 +587,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:redo"
            mode additive
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            "flip u" 0
            filter 0
            "Transition width" 0
@@ -643,8 +673,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:cut"
            mode additive
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            "flip u" 0
            filter 0
            "Transition width" 0
@@ -690,8 +719,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:copy"
            mode additive
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            "flip u" 1
            filter 0
            pivot 0.5 0.5
@@ -737,8 +765,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:paste"
            mode additive
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            "flip u" 1
            filter 0
            "Transition width" 0
@@ -825,8 +852,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:magnet"
            mode blend
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            filter 0
           }
          }
@@ -868,8 +894,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:ground"
            mode blend
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            filter 0
           }
          }
@@ -912,8 +937,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:snapping"
            mode blend
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            filter 0
           }
          }
@@ -957,8 +981,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_editor_gui image:collision"
            mode blend
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            filter 0
           }
          }
@@ -1044,8 +1067,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            image0 "set:dayz_gui image:icon_sun"
            mode blend
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            filter 1
           }
          }
@@ -1407,7 +1429,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        }
        {
         ScriptParamsClass {
-            Relay_Command "m_Editor.CommandManager.BrushWidthCommand"
+         Relay_Command "m_Editor.CommandManager.BrushWidthCommand"
         }
        }
       }

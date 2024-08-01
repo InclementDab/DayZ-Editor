@@ -18,6 +18,9 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	Widget RightbarCollapsePanel, LeftbarCollapsePanel;
 
+	Widget NotificationPanel;
+	TextWidget NotificationText;
+
 	protected Widget m_DragWidget;
 	
 	CanvasWidget EditorCanvas;
@@ -158,13 +161,18 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		LoggerFrame.Show(state);
 	}
 		
-	void CreateNotification(string text, int color = -4301218, float duration = 4)
+	void CreateNotification(string text, LinearColor color = 0xFF7CFC00, float duration = 4.0)
 	{
-		EditorLog.Trace("EditorHud::CreateNotification");
-		
-		EditorNotification notification = new EditorNotification(text, color);
-		
-		notification.Play(duration);
+		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, -24, 100);
+		NotificationPanel.SetColor(color.With(3, 200));
+		NotificationText.SetText(text);
+
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CleanupNotification, duration * 1000);
+	}
+
+	protected void CleanupNotification()
+	{
+		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, 0, 100);
 	}
 	
 	bool IsMapVisible()
@@ -226,6 +234,10 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 				
 				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
 				foreach (EditorObject editor_object: placed_objects) {					
+					if (!editor_object) {
+						continue;
+					}
+
 					float marker_x, marker_y;
 					EditorObjectMarker object_marker = editor_object.GetMarker();
 					if (object_marker) {
