@@ -43,6 +43,15 @@ class EditorHandData
 	vector OrientationOffset;
 }
 
+enum EEditorRaycastFlags
+{
+	DEFAULT = 0,
+	COLLIDE_TERRAIN_EXCLUSIVE = 1,
+	COLLIDE_TERRAIN = 2,
+	COLLIDE_BUILDING = 4,
+	COLLIDE_PRECISE = 8
+};
+
 typedef map<ref EditorWorldObject, ref EditorHandData> EditorHandMap;
 
 class Editor: Managed
@@ -119,6 +128,45 @@ class Editor: Managed
 	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
 	bool										KEgg; // oh?
+	
+	Ray GetCameraRay()
+	{
+		return new Ray(m_EditorCamera.GetPosition(), m_EditorCamera.GetDirection());
+	}
+	
+	Ray GetCursorRay()
+	{
+		return new Ray(m_EditorCamera.GetPosition(), GetDayZGame().GetPointerDirection());
+	}
+		
+	Raycast GetCameraRaycast(Object ignore = null, bool ground_only = false)
+	{
+		return PerformRaycast(GetCameraRay(), ignore, Settings.ObjectViewDistance, ground_only);
+	}
+	
+	Raycast GetCursorRaycast(Object ignore = null, bool ground_only = false)
+	{
+		return PerformRaycast(GetCursorRay(), ignore, Settings.ObjectViewDistance, ground_only);
+	}
+
+	protected Raycast PerformRaycast(notnull Ray source_ray, Object ignore, float distance, bool ground_only)
+	{
+		Raycast camera_raycast;
+		const int interaction_layers = -1;
+		if (!ground_only) {
+			camera_raycast = source_ray.PerformRaycast(ignore, distance, interaction_layers);
+		}
+
+		if (!camera_raycast) {
+			camera_raycast = source_ray.PerformRaycastRV(ignore, null, 0, distance, ObjIntersectView, ground_only);
+		}
+
+		if (!camera_raycast) {
+			camera_raycast = source_ray.PerformRaycastRVEX(0, distance, ObjIntersectView, { ignore }, ground_only);
+		}
+		
+		return camera_raycast;
+	}
 	
 	private void Editor(PlayerBase player) 
 	{		

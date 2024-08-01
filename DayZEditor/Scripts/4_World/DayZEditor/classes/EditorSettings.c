@@ -43,7 +43,7 @@ class EditorSettings: ProfileSettings
 	// Loot Settings
 	string EditorProtoFile 			= Editor.ROOT_DIRECTORY + "MapGroupProto.xml";
 	
-	LogLevel SelectedLogLevel 		= LogLevel.INFO;
+	LogLevel SelectedLogLevel 		= LogLevel.WARNING;
 
 	// Its a pseduo-controller, preferences dialogs!!
 	void PropertyChanged(string property_name)

@@ -28,6 +28,7 @@ FrameWidgetClass EditorFrame {
    {
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
+     color 0.0588 0.0588 0.0588 1
      position 0 -0.00026
      size 1 1
      halign center_ref
@@ -48,6 +49,7 @@ FrameWidgetClass EditorFrame {
      vexactpos 0
      hexactsize 1
      vexactsize 0
+     scaled 0
      Padding 0
      Margin 0
      {
@@ -126,8 +128,7 @@ FrameWidgetClass EditorFrame {
                image0 ""
                mode blend
                "src alpha" 1
-               "no wrap" 1
-               stretch 0
+               "clamp mode" clamp
                filter 1
                {
                 ScriptParamsClass {
@@ -388,16 +389,42 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
+        PanelWidgetClass LeftbarDrag {
+         ignorepointer 0
+         size 12 1
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style blank
+         {
+          PanelWidgetClass LeftbarDrag0 {
+           ignorepointer 1
+           color 0.1569 0.1569 0.1569 1
+           position 0 0
+           size 2 1
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           style rover_sim_colorable
+          }
+         }
+        }
        }
       }
       PanelWidgetClass LeftbarCollapsePanel {
        visible 1
        ignorepointer 1
        position 0 0
-       size 0.075 1
+       size 24 1
        hexactpos 0
        vexactpos 0
-       hexactsize 0
+       hexactsize 1
        vexactsize 0
        priority 1
        {
@@ -451,6 +478,7 @@ FrameWidgetClass EditorFrame {
      vexactpos 0
      hexactsize 1
      vexactsize 0
+     scaled 0
      style Colorable
      Padding 0
      Margin 0
@@ -677,8 +705,7 @@ FrameWidgetClass EditorFrame {
              image0 ""
              mode blend
              "src alpha" 1
-             "no wrap" 1
-             stretch 0
+             "clamp mode" clamp
              filter 1
              {
               ScriptParamsClass {
@@ -720,16 +747,39 @@ FrameWidgetClass EditorFrame {
           }
          }
         }
+        PanelWidgetClass RightbarDrag {
+         ignorepointer 0
+         size 12 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style blank
+         {
+          PanelWidgetClass RightbarDrag0 {
+           ignorepointer 1
+           color 0.1569 0.1569 0.1569 1
+           size 2 1
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           style rover_sim_colorable
+          }
+         }
+        }
        }
       }
       PanelWidgetClass RightbarCollapsePanel {
        clipchildren 1
        ignorepointer 1
        position 0 0
-       size 0.075 1
+       size 24 1
        hexactpos 0
        vexactpos 0
-       hexactsize 0
+       hexactsize 1
        vexactsize 0
        priority 1
        {
@@ -763,8 +813,6 @@ FrameWidgetClass EditorFrame {
            imageTexture "{26FF075FC9718107}dta/gui/gui/imagesets/dayz_gui.edds"
            mode blend
            "src alpha" 1
-           "no wrap" 0
-           stretch 0
            "flip u" 0
            "flip v" 0
            nocache 1
@@ -1205,8 +1253,6 @@ FrameWidgetClass EditorFrame {
            image0 "set:dayz_editor_gui image:camera"
            mode additive
            "src alpha" 0
-           "no wrap" 0
-           stretch 0
            "flip u" 0
            "flip v" 0
            filter 1

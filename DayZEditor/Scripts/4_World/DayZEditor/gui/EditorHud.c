@@ -1,11 +1,23 @@
 class EditorHud: ScriptViewTemplate<EditorHudController>
 {
+	const float DEFAULT_BAR_HEIGHT_PCT = 0.93;
+	const float DEFAULT_BAR_WIDTH_PX = 310;
+
+	const float BAR_WIDTH_MINIMUM_PX = 100;
+	const float BAR_WIDTH_MAXIMUM_PX = 900;
+
 	protected bool m_IsBoxSelectActive;
 	
 	// Layout Elements
 	Widget NotificationFrame;
 	Widget MapContainer;
 	Widget LoggerFrame;
+
+	Widget LeftbarWrapper, RightbarWrapper;
+	Widget LeftbarDrag, RightbarDrag;
+	Widget LeftbarDrag0, RightbarDrag0;
+
+	protected Widget m_DragWidget;
 	
 	CanvasWidget EditorCanvas;
 	
@@ -33,8 +45,17 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{
 		super.Update(dt);
 				
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);
+
 		Input input = GetGame().GetInput();
+		UAInputAPI input_api = GetUApi();
 		
+		Widget widget_under_cursor = GetWidgetUnderCursor();
+
 		if (input.LocalPress("EditorToggleUI")) {
 			if (GetEditor().IsInventoryEditorActive()) {
 				GetEditor().GetInventoryEditorHud().GetLayoutRoot().Show(!GetEditor().GetInventoryEditorHud().GetLayoutRoot().IsVisible());
@@ -42,6 +63,65 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			}
 			
 			Show(!IsVisible());
+		}
+
+		float wr_s_w, wr_s_h;		
+		switch (widget_under_cursor) {
+			case LeftbarDrag: {
+				if (input_api.GetInputByID(UAFire).LocalPress()) {
+					m_DragWidget = LeftbarWrapper;
+				}
+				
+				if (input_api.GetInputByID(UAFire).LocalDoubleClick()) {
+					LeftbarWrapper.GetSize(wr_s_w, wr_s_h);
+					LeftbarWrapper.SetSize(DEFAULT_BAR_WIDTH_PX, wr_s_h);
+				}
+				
+				break;
+			}
+
+			case RightbarDrag: {
+				if (input_api.GetInputByID(UAFire).LocalPress()) {
+					m_DragWidget = RightbarWrapper;
+				}
+
+				if (input_api.GetInputByID(UAFire).LocalDoubleClick()) {
+					LeftbarWrapper.GetSize(wr_s_w, wr_s_h);
+					RightbarWrapper.SetSize(DEFAULT_BAR_WIDTH_PX, wr_s_h);
+				}
+
+				break;
+			}
+		}
+		
+		if (input_api.GetInputByID(UAFire).LocalRelease()) {
+			m_DragWidget = null;
+		}
+
+		if (m_DragWidget) {
+			switch (m_DragWidget) {
+				case LeftbarWrapper: {
+					LeftbarDrag0.SetColor(LinearColor.SLATE_BLUE);
+					LeftbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
+					LeftbarWrapper.SetScreenSize(Math.Clamp(mouse_x, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
+					break;
+				}
+
+				case RightbarWrapper: {
+					RightbarDrag0.SetColor(LinearColor.SLATE_BLUE);
+					RightbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
+					RightbarWrapper.SetScreenSize(Math.Clamp(screen_x - mouse_x, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
+					break;
+				}
+			}			
+									
+		} else {
+			if (widget_under_cursor == LeftbarDrag || widget_under_cursor == RightbarDrag) {
+				widget_under_cursor.GetChildren().SetColor(LinearColor.LIGHT_GRAY);
+			} else {
+				LeftbarDrag0.SetColor(LinearColor.Create(40, 40, 40));
+				RightbarDrag0.SetColor(LinearColor.Create(40, 40, 40));
+			}
 		}
 	}
 
