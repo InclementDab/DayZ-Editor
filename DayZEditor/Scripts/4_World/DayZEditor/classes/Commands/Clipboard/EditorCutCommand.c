@@ -3,8 +3,13 @@ class EditorCutCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		GetEditor().GetEditorHud().CreateNotification(string.Format("Cut %1 items to clipboard!", GetEditor().GetSelectedObjects().Count()), COLOR_SALMON);
-		EditorClipboard.Cut();
+
+		auto selected_objects = GetEditor().GetSelectedObjects();
+		if (selected_objects.Count() > 0) {
+			int selected_object_count = EditorClipboard.Cut(selected_objects.GetValueArray());
+			GetEditor().GetEditorHud().CreateNotification(string.Format("%1 entities cut to clipboard", selected_object_count), LinearColor.AQUA);
+		}
+
 		return true;
 	}
 	

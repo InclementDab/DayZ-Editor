@@ -23,6 +23,7 @@ class EditorSettings: ProfileSettings
 	bool PreloadObjects				= false;	
 	bool ShowScreenLogs				= true;
 	bool HighPrecisionCollision		= false;
+	bool MinifyCopyData				= false;
 	bool DebugMode 					= false;
 	
 	// Marker Settings
@@ -111,6 +112,7 @@ class EditorSettings: ProfileSettings
 		PreloadObjects				= false;
 		ShowScreenLogs				= true;
 		DebugMode 					= false;
+		MinifyCopyData = false;
 		
 		MarkerPrimaryColor			= COLOR_WHITE_A;
 		HighlightColor				= COLOR_SALMON;

@@ -14,11 +14,49 @@ enum EDragFlags
 class EditorObjectDragHandler: EditorDragHandler
 {
 	protected float m_LastAngle;
+
+	protected EDragFlags GetDragFlags()
+	{
+		EDragFlags flags;
+
+		// todo, stupid
+		if (KeyState(KeyCode.KC_LMENU)) {
+			flags |= EDragFlags.AXIS_LOCK_Y;
+		}
+
+		return flags;
+	}
+
+	// we will accept vector4, but the transposition operation will only take place on the first 
+	protected void MatrixTranspose3(vector src[3], out vector dst[3])
+	{
+		const int N = 3;
+		const int M = 3;
+		for (int n = 0; n < N * M; n++) {
+			int i = n / N;
+			int j = n % N;
+			dst[n] = src[M * j + i];
+		}
+	}
+
+	protected void MatrixTranspose4(vector src[4], out vector dst[4])
+	{
+		const int N = 3;
+		const int M = 3;
+		for (int n = 0; n < N * M; n++) {
+			int i = n / N;
+			int j = n % N;
+			dst[n] = src[M * j + i];
+		}
+	}
 	
 	protected override void OnDragging(notnull EditorObject target, notnull array<EditorObject> additional_drag_targets)
 	{
-		vector transform[4];
-		target.GetTransform(transform);
+		vector target_transform[4];
+		target.GetTransform(target_transform);
+
+		vector cursor_transform[4];
+		GetEditor().GetCursorTransform(cursor_transform);
 
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 
@@ -34,6 +72,24 @@ class EditorObjectDragHandler: EditorDragHandler
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;
 		}
+
+		vector transform_ground_projection = ProjectToGround(target_transform);
+
+		vector test_transform[4];
+		//Math3D.MatrixMultiply3(cursor_transform, target_transform, test_transform);
+
+		//MatrixTranspose4(target_transform, test_transform);
+		//test_transform[3] = target_transform[3];
+
+		//cursor_transform[3] = target_transform[3];
+
+		//Shape.CreateMatrix(test_transform);
+		//Shape.CreateMatrix(cursor_transform);
+		
+		target_transform[3] = cursor_pos;
+		
+		
+		/*
 		
 		vector size, ground_position, surface_normal, local_dir, local_ori;
 		vector deltapos = target.GetPosition();
@@ -43,6 +99,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
 		float angle;
 		int i;
+		
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
 		if (KeyState(KeyCode.KC_LMENU)) {
@@ -134,8 +191,8 @@ class EditorObjectDragHandler: EditorDragHandler
 		}
 		
 		m_LastAngle = angle;
-		
-		target.SetTransform(transform);
+		*/
+		target.SetTransform(target_transform);
 	}
 	
 	static vector GetAveragePosition(EditorObjectMap objects)

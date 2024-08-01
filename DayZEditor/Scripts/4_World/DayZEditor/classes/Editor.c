@@ -129,6 +129,18 @@ class Editor: Managed
 	
 	bool										KEgg; // oh?
 	
+	// Returns a ray, on surface, pointing in the direction of the surface normal
+	Ray GetMapRay(float y_offset = 0.0)
+	{
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+
+		vector map_position_screen = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		map_position_screen[1] = GetGame().SurfaceY(map_position_screen[0], map_position_screen[2]) + y_offset;
+		vector map_direction_screen = GetGame().SurfaceGetNormal(map_position_screen[0], map_position_screen[2]);
+		return new Ray(map_position_screen, map_direction_screen);
+	}
+
 	Ray GetCameraRay()
 	{
 		return new Ray(m_EditorCamera.GetPosition(), m_EditorCamera.GetDirection());
@@ -147,6 +159,32 @@ class Editor: Managed
 	Raycast GetCursorRaycast(Object ignore = null, bool ground_only = false)
 	{
 		return PerformRaycast(GetCursorRay(), ignore, Settings.ObjectViewDistance, ground_only);
+	}
+
+	// Returns a top-down raycast, height defined by y_offset_raycast
+	Raycast GetMapCursorRaycast(Object ignore = null, bool ground_only = false, float y_offset_raycast = 100.0)
+	{
+		Ray map_ray = GetMapRay(y_offset_raycast);
+		map_ray.Direction = -vector.Up;
+		return PerformRaycast(map_ray, ignore, Settings.ObjectViewDistance, ground_only);
+	}
+
+	void GetCameraTransform(out vector transform[4])
+	{
+		m_EditorCamera.GetTransform(transform);
+	}
+
+	void GetCursorTransform(out vector transform[4])
+	{
+		vector forward = GetGame().GetPointerDirection();
+		vector aside = (vector.Up * forward).Normalized();
+		vector up = (forward * aside).Normalized();
+		transform = {
+			aside,
+			up,
+			forward,
+			m_EditorCamera.GetPosition()
+		};
 	}
 
 	protected Raycast PerformRaycast(notnull Ray source_ray, Object ignore, float distance, bool ground_only)
@@ -168,6 +206,11 @@ class Editor: Managed
 		return camera_raycast;
 	}
 	
+	bool IsMapActive()
+	{
+		return m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible();
+	}
+
 	private void Editor(PlayerBase player) 
 	{		
 		EditorLog.Trace("Editor");
@@ -338,7 +381,7 @@ class Editor: Managed
 					if (ObjectUnderCursor) { 
 						OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
 					}
-					
+
 					OnMouseEnterObject(target, x, y, component_index);
 					ObjectUnderCursor = target;
 					ComponentUnderCursor = component_index;
@@ -1143,6 +1186,10 @@ class Editor: Managed
 			
 			// Cache Data (for undo / redo)
 			if (!editor_object_data) continue;
+
+			// Create a copy to avoid reference loss
+			// todo:
+			//EditorObjectData editor_object_data_copy = editor_object_data.CreateCopy();
 			m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
 			
 			// Create Object
@@ -1159,7 +1206,6 @@ class Editor: Managed
 		if (create_undo) {
 			InsertAction(action);
 		}
-
 		
 		return object_set;
 	}
@@ -1176,6 +1222,21 @@ class Editor: Managed
 		if (create_undo) {
 			InsertAction(action);
 		}
+	}
+	
+	// If you want to directly delete without undo, get the object manager and do it there
+	void DeleteObjects(notnull array<EditorObject> editor_objects)
+	{
+		EditorAction action = new EditorAction("Create", "Delete");
+		foreach (EditorObject editor_object: editor_objects) {
+			if (!editor_object.Locked) {
+				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+				m_ObjectManager.DeleteObject(editor_object);
+			}
+		}
+		
+		InsertAction(action);
 	}
 	
 	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)

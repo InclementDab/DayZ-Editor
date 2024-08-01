@@ -92,6 +92,10 @@ class EditorObject: EditorWorldObject
 			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);			
 			m_Data.WorldObject = m_WorldObject;
 		}
+
+		if (!m_Data.Attachments) {
+			m_Data.Attachments = {};
+		}
 		
 		m_WorldObject = m_Data.WorldObject;
 				
@@ -336,6 +340,10 @@ class EditorObject: EditorWorldObject
 			// Update Attachments
 			EntityAI entity = EntityAI.Cast(m_WorldObject);
 			if (entity) {
+				if (!m_Data.Attachments) {
+					m_Data.Attachments = {};
+				}
+
 				m_Data.Attachments.Clear();
 				array<EntityAI> attachments = {};
 				for (int i = 0; i < entity.GetInventory().AttachmentCount(); i++) {			
