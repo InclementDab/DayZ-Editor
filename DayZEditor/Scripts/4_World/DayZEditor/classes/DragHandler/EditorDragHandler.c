@@ -1,61 +1,59 @@
-class EditorDragHandler
+class EditorDragHandler: Managed
 {
-	protected Editor m_Editor;
-	protected EditorObject m_EditorObject;
-	void EditorDragHandler(EditorObject target)
+	protected EditorObject m_Target;
+	protected ref array<EditorObject> m_AdditionalDragTargets = {};
+	protected ref EditorAction m_RewindAction;
+
+	void OnDragStart(notnull EditorObject target, array<EditorObject> additional_targets = null)
 	{
-		m_EditorObject = target;
-		m_Editor = GetEditor();
+		m_Target = target;
+		if (additional_targets) {
+			m_AdditionalDragTargets = additional_targets;
+		}
+
+		m_RewindAction = new EditorAction("SetTransform", "SetTransform");
+		m_RewindAction.InsertUndoParameter(m_Target.GetTransformArray());
+
+		foreach (EditorObject selected_object: m_AdditionalDragTargets) {
+			m_RewindAction.InsertUndoParameter(selected_object.GetTransformArray());
+		}
+
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_OnDragging);
 	}
 	
-	void OnDragStart()
+	void OnDragFinish()
 	{
-		thread _OnDragging();
-	}
-	
-	void OnDragFinish();
-	
-	private void _OnDragging()
-	{
-		EditorAction drag_undo = new EditorAction("SetTransform", "SetTransform");
-		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
-		foreach (EditorObject selected_object: selected_objects) {
-			drag_undo.InsertUndoParameter(selected_object.GetTransformArray());
-			
-			if (EntityAI.Cast(selected_object.GetWorldObject())) {
-				EntityAI.Cast(selected_object.GetWorldObject()).DisableSimulation(true);
-			}
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_OnDragging);
+
+		m_RewindAction.InsertRedoParameter(m_Target.GetTransformArray());
+		foreach (EditorObject selected_object: m_AdditionalDragTargets) {
+			m_RewindAction.InsertRedoParameter(selected_object.GetTransformArray());
 		}
 		
+		GetEditor().InsertAction(m_RewindAction);
+		
+		m_Target = null;
+		m_AdditionalDragTargets = {};
+	}
+	
+	protected void _OnDragging()
+	{
 		vector transform[4];
-		m_EditorObject.GetTransform(transform);
-		// hmm
-		//m_Editor.AddInHand(m_EditorObject);
+		m_Target.GetTransform(transform);
 		
-		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK && !(GetMouseState(MouseState.RIGHT) & MB_PRESSED_MASK)) {
-			OnDragging(transform, m_EditorObject);
-			m_EditorObject.SetTransform(transform);
-			Sleep(10);
-		} 
-		
-		foreach (EditorObject selected_object_post: selected_objects) {
-			drag_undo.InsertRedoParameter(selected_object_post.GetTransformArray());
-			
-			if (EntityAI.Cast(selected_object_post.GetWorldObject())) {
-				EntityAI.Cast(selected_object_post.GetWorldObject()).DisableSimulation(!selected_object_post.Simulate);
-			}
+		UAInputAPI input = GetUApi();
+		if (input.GetInputByID(UAFire).LocalValue()) {
+			OnDragging(m_Target, m_AdditionalDragTargets);
 		}
-		
-		GetEditor().InsertAction(drag_undo);
-		
-		// hmmm
-		//m_Editor.RemoveFromHand(m_EditorObject);
-		OnDragFinish();
+
+		if (input.GetInputByID(UAFire).LocalRelease()) {
+			OnDragFinish();
+		}
 	}
 	
-	void OnDragging(out vector transform[4], notnull EditorObject target);
+	protected void OnDragging(notnull EditorObject target, notnull array<EditorObject> additional_drag_targets);
 	
-	vector GetGroundPosition(vector transform[4])
+	protected static vector ProjectToGround(vector transform[4])
 	{
 		// Raycast ground below object
 		vector ground, ground_dir; 

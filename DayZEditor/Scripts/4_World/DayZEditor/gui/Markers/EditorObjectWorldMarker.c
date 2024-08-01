@@ -8,7 +8,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
 		m_MapWidget = m_Editor.GetEditorHud().EditorMapWidget;
-		m_DragHandler = new EditorObjectDragHandler(m_EditorObject);
+		m_DragHandler = new EditorObjectDragHandler();
 		EditorEvents.OnMapToggled.Insert(OnEditorMapToggled);
 		
 		GetScreenSize(m_ScreenX, m_ScreenY);

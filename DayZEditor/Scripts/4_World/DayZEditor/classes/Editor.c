@@ -338,6 +338,7 @@ class Editor: Managed
 					if (ObjectUnderCursor) { 
 						OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
 					}
+					
 					OnMouseEnterObject(target, x, y, component_index);
 					ObjectUnderCursor = target;
 					ComponentUnderCursor = component_index;

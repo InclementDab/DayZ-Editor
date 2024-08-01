@@ -15,7 +15,7 @@ class EditorPlacedListItem: EditorListItem
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
 		m_EditorObject = editor_object;
 		
-		m_DragHandler = new EditorObjectDragHandler(m_EditorObject);
+		m_DragHandler = new EditorObjectDragHandler();
 		
 		m_TemplateController.Label = m_EditorObject.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("Label");
@@ -155,7 +155,10 @@ class EditorPlacedListItem: EditorListItem
 	{
 		EditorLog.Trace("EditorPlacedListItem::OnDrag");	
 		GetEditor().SelectObject(m_EditorObject);
-		m_DragHandler.OnDragStart();
+		array<EditorObject> additional_drag_targets = m_Editor.GetSelectedObjects().GetValueArray();
+		additional_drag_targets.RemoveItem(m_EditorObject);
+		
+		m_DragHandler.OnDragStart(m_EditorObject, additional_drag_targets);
 		
 		return true;
 	}

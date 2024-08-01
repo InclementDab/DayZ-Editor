@@ -183,9 +183,12 @@ class EditorObjectMarker: EditorMarker
 			int dist_x = Math.AbsInt(x - c_x);
 			int dist_y = Math.AbsInt(y - c_y);
 			
-			if (dist_x + dist_y > DRAG_THRESHOLD) {
+			if (Math.Sqrt(dist_x * dist_x + dist_y * dist_y) > DRAG_THRESHOLD) {
 				m_Editor.SelectObject(m_EditorObject);
-				m_DragHandler.OnDragStart();
+				
+				array<EditorObject> additional_drag_targets = m_Editor.GetSelectedObjects().GetValueArray();
+				additional_drag_targets.RemoveItem(m_EditorObject);
+				m_DragHandler.OnDragStart(m_EditorObject, additional_drag_targets);
 				return;
 			}
 			
