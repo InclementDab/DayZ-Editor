@@ -113,7 +113,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 					RightbarDrag0.SetColor(LinearColor.SLATE_BLUE);
 					RightbarCollapsePanel.GetScreenSize(wr_col_s_w, wr_col_s_h);
 					RightbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
-					RightbarWrapper.SetScreenSize(Math.Clamp(screen_x - mouse_x + wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
+					RightbarWrapper.SetScreenSize(Math.Clamp(screen_x - mouse_x - wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
 					break;
 				}
 			}			
