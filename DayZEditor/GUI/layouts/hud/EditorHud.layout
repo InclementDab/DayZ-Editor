@@ -44,7 +44,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 1
      ignorepointer 1
      position 0 0.055
-     size 310 0.93
+     size 340 0.93
      hexactpos 0
      vexactpos 0
      hexactsize 1
@@ -426,6 +426,7 @@ FrameWidgetClass EditorFrame {
        vexactpos 0
        hexactsize 1
        vexactsize 0
+       scaled 0
        priority 1
        {
         ButtonWidgetClass LeftbarHide {
@@ -472,7 +473,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 0
      position 0 0.055
-     size 310 0.93
+     size 340 0.93
      halign right_ref
      hexactpos 0
      vexactpos 0
@@ -781,6 +782,7 @@ FrameWidgetClass EditorFrame {
        vexactpos 0
        hexactsize 1
        vexactsize 0
+       scaled 0
        priority 1
        {
         ButtonWidgetClass RightbarHide {

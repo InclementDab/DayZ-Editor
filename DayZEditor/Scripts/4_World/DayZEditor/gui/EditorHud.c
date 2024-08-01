@@ -1,10 +1,9 @@
 class EditorHud: ScriptViewTemplate<EditorHudController>
 {
-	const float DEFAULT_BAR_HEIGHT_PCT = 0.93;
-	const float DEFAULT_BAR_WIDTH_PX = 310;
+	const float DEFAULT_BAR_WIDTH_PX = 340.0;
 
-	const float BAR_WIDTH_MINIMUM_PX = 100;
-	const float BAR_WIDTH_MAXIMUM_PX = 900;
+	const float BAR_WIDTH_MINIMUM_PX = 100.0;
+	const float BAR_WIDTH_MAXIMUM_PX = 900.0;
 
 	protected bool m_IsBoxSelectActive;
 	
@@ -16,6 +15,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	Widget LeftbarWrapper, RightbarWrapper;
 	Widget LeftbarDrag, RightbarDrag;
 	Widget LeftbarDrag0, RightbarDrag0;
+	
+	Widget RightbarCollapsePanel, LeftbarCollapsePanel;
 
 	protected Widget m_DragWidget;
 	
@@ -65,7 +66,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			Show(!IsVisible());
 		}
 
-		float wr_s_w, wr_s_h;		
+		float wr_s_w, wr_s_h, wr_col_s_w, wr_col_s_h;
 		switch (widget_under_cursor) {
 			case LeftbarDrag: {
 				if (input_api.GetInputByID(UAFire).LocalPress()) {
@@ -102,15 +103,17 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			switch (m_DragWidget) {
 				case LeftbarWrapper: {
 					LeftbarDrag0.SetColor(LinearColor.SLATE_BLUE);
+					LeftbarCollapsePanel.GetScreenSize(wr_col_s_w, wr_col_s_h);
 					LeftbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
-					LeftbarWrapper.SetScreenSize(Math.Clamp(mouse_x, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
+					LeftbarWrapper.SetScreenSize(Math.Clamp(mouse_x + wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
 					break;
 				}
 
 				case RightbarWrapper: {
 					RightbarDrag0.SetColor(LinearColor.SLATE_BLUE);
+					RightbarCollapsePanel.GetScreenSize(wr_col_s_w, wr_col_s_h);
 					RightbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
-					RightbarWrapper.SetScreenSize(Math.Clamp(screen_x - mouse_x, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
+					RightbarWrapper.SetScreenSize(Math.Clamp(screen_x - mouse_x + wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
 					break;
 				}
 			}			
