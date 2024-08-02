@@ -58,17 +58,6 @@ class EditorCameraDialog: EditorDialogBase
 
 	void ResetDefaultExecute()
 	{
-		EditorLog.Trace("EditorCameraDialog::ResetDefaultExecute");
-		
-		m_EditorCamera.Blur = 0;
-		m_EditorCamera.FOV = 1;
-		m_EditorCamera.NearPlane = 0;
-		
-		m_EditorCamera.PropertyChanged("Blur");
-		m_EditorCamera.PropertyChanged("FOV");
-		m_EditorCamera.PropertyChanged("NearPlane");
-		
-		PPEffects.ResetAll();
 	}
 	
 	override string GetIcon() 

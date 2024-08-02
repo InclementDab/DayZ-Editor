@@ -36,8 +36,6 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		PrefabBaseController<bool> controller = m_AutoSaveToggle.GetPrefabController();
 		m_AutoSaveTimer.GetLayoutRoot().Show(controller.Value);
 		
-		general_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", m_Editor.Settings, "ViewDistance", 1, 20000));
-		general_group.Insert(new SliderPrefab("#STR_EDITOR_OBJECT_VIEW_DISTANCE", m_Editor.Settings, "ObjectViewDistance", 1, 8000));
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_QUICK_MOVE_STEP", m_Editor.Settings, "QuickMoveStepSize", 0.01));	
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_QUICK_MOVE_FOLLOWS", m_Editor.Settings, "QuickMoveFollowsCamera"));	
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SPAWN_ITEMS_WITH_ATTACHMENTS", m_Editor.Settings, "SpawnItemsWithAttachments"));	
@@ -66,8 +64,9 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		advanced_group.Insert(new EditBoxPrefab("#STR_EDITOR_LOOT_SPAWN_FILE", m_Editor.Settings, "EditorProtoFile"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_MODAL_DIALOGS", m_Editor.Settings, "LockCameraDuringDialogs"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_PRELOAD_OBJECTS", m_Editor.Settings, "PreloadObjects"));
-		advanced_group.Insert(new CheckBoxPrefab("Show Objects with Scope 0", m_Editor.Settings, "ShowScopeZeroObjects"));
+		advanced_group.Insert(new CheckBoxPrefab("Scope 0 Objects", m_Editor.Settings, "ShowScopeZeroObjects"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_HIGH_PRECISION_COLLISION", m_Editor.Settings, "HighPrecisionCollision"));
+		advanced_group.Insert(new CheckBoxPrefab("Minify Clipboard Data", m_Editor.Settings, "MinifyCopyData"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_DEBUG_MODE", m_Editor.Settings, "DebugMode"));
 		
 		GroupPrefab colors_group = new GroupPrefab("#STR_EDITOR_THEMES", m_Editor.Settings, string.Empty);

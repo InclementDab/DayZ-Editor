@@ -1,3 +1,16 @@
+enum ECameraLockFlag
+{
+	NONE = 0,
+
+	LOCK_MOVE = 1,
+	LOCK_LOOK = 2,
+
+	INVERT_MOVE = 4,
+	INVERT_LOOK = 8,
+
+	LOCK = 3,
+}
+
 class EditorCameraLight: SpotLightBase
 {
 	void EditorCameraLight()
@@ -8,60 +21,41 @@ class EditorCameraLight: SpotLightBase
 	}
 }
 
-
-// make option Q and E go up and down no matter orientation
 class EditorCamera: Camera
 {
-	static const float TELEPORT_LERP_DISTANCE = 1000;
-	
+	protected EditorCameraSettings m_EditorCameraSettings;
 	protected EditorCameraLight m_EditorCameraLight;
-	
-	float FOV = 1;
-	float DOFDistance;
-	float DOFBlur;
-	float Blur;
-	float Vignette;
-	float Sharpness;
-	float NearPlane;
-	float Exposure;
-	
-	float Smoothing = 0;
-	
-	float Speed = GetEditor().Settings.CameraSpeed;
-	float Boost_Multiplier = 6.5;
-	float Drag = 0.05;
-	float Mouse_Sens = 35.0;
-	
-	float SendUpdateAccumalator = 0.0;
-	
-	bool LookEnabled = true;
-	bool MoveEnabled = true;
 
-	Object SelectedTarget;
-	vector TargetPosition;
-	vector linearVelocity;
-	vector angularVelocity;
-	vector orientation;
+	const float FOV_MIN = 0.0174533; // 1 deg
+	const float FOV_MAX = 2.44346; // 140 deg
+	const float FOV_DEFAULT = 1.25664; // 75 deg
+	const float FOV_ZOOM_AMT = -0.6544985; // -37.5 deg
+
+	const float MAX_LOOK_Y_DEG = 87.0;
+	const float MIN_LOOK_Y_DEG = -87.0;
+
+	const float EXPOSURE_MIN = 0.0;
+	const float EXPOSURE_MAX = 3.0;
+	const float EXPOSURE_DEFAULT = 1.0;
+
+	const float SMOOTHING_MIN = 0.0;
+	const float SMOOTHING_MAX = 1.0;
+	const float SMOOTHING_DEFAULT = 0.0;
+
+	const int VIEW_DISTANCE_DEFAULT = 800;
+	const int VIEW_DISTANCE_MIN = 120;
+	const int VIEW_DISTANCE_MAX = 12000;
+
+	const float TURBO_MULTIPLIER = 2.5;
+	const float SLOW_MULTIPLIER = 0.2;
 	
-	int ColorCorrection = COLOR_WHITE;
-	
-	bool HideCursorOnDrag;
-	
+	const float TELEPORT_LERP_DISTANCE = 1000;
+
 	void EditorCamera()
 	{
-		EditorLog.Trace("EditorCamera");
-		SetEventMask(EntityEvent.FRAME);
-		SelectTarget(null);
-		
-		NearPlane = GetNearPlane();
-		Exposure = GetGame().GetWorld().GetEyeAccom();
+		m_EditorCameraSettings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
 	}
 
-	void ~EditorCamera()
-	{
-		SelectTarget(null);
-	}
-	
 	void SetLightState(bool state)
 	{
 		if (state) {
@@ -72,209 +66,175 @@ class EditorCamera: Camera
 			GetGame().ObjectDelete(m_EditorCameraLight);
 		}
 	}
-	
-	// Safe and easy position set, used for teleporting
-	void SendToPosition(vector position)
-	{
-		if (vector.Distance(position, GetPosition()) > TELEPORT_LERP_DISTANCE) {
-			SetPosition(position);
-			Update();
-		} else {
-			LerpCameraPosition(position, 0.1);
-		}
-	}
 
-	void OnTargetSelected( Object target )
+	EditorCameraSettings GetSettings()
 	{
-		EditorLog.Trace("OnTargetSelected");
+		return m_EditorCameraSettings;
 	}
+}
 
-	void OnTargetDeselected(Object target)
-	{
-		EditorLog.Trace("OnTargetDeselected");
-	}
+[RegisterProfileSetting(EditorCameraSettings, "EDITOR")]
+class EditorCameraSettings: ProfileSettings
+{
+	[RegisterProfileSettingSlider("CAMERA", "ViewDistance", "View Distance", EditorCamera.VIEW_DISTANCE_MIN, EditorCamera.VIEW_DISTANCE_MAX)]
+	float ViewDistance = EditorCamera.VIEW_DISTANCE_DEFAULT;
 
-	private bool IsTargeting = false;
-	void SelectTarget(Object target)
-	{
-		EditorLog.Trace("ActiveCamera::SelectTarget");
-		if (target != SelectedTarget && target != null) {
-			TargetPosition = target.GetPosition();
-			IsTargeting = true;
-			OnTargetSelected(target);
-			
-		} else if (target == null) {
-			TargetPosition = vector.Zero;
-			IsTargeting = false;
-			OnTargetDeselected(SelectedTarget);
-			
-		}
+	[RegisterProfileSettingSlider("CAMERA", "FieldOfView", "Field Of View", EditorCamera.FOV_MIN, EditorCamera.FOV_MAX)]
+	float FieldOfView = EditorCamera.FOV_DEFAULT;
 
-		SelectedTarget = target;
-	}
+	[RegisterProfileSettingSlider("CAMERA", "ExposureLevel", "Exposure Level", EditorCamera.EXPOSURE_MIN, EditorCamera.EXPOSURE_MAX)]
+	float ExposureLevel = EditorCamera.EXPOSURE_DEFAULT;
+
+	[RegisterProfileSettingSlider("CAMERA", "SmoothingLevel", "Smoothing Level", EditorCamera.SMOOTHING_MIN, EditorCamera.SMOOTHING_MAX)]
+	float SmoothingLevel = EditorCamera.SMOOTHING_DEFAULT;
+
+	[RegisterProfileSettingMultistate("CAMERA", "AllowUnderEarth", "Camera Below Surface", {"NO", "YES"})]
+	bool AllowUnderEarth = false;
+
+	[RegisterProfileSettingMultistate("CAMERA", "LegacyCamera", "Classic Camera", {"DISABLED", "ENABLED"}, true)]
+	bool LegacyCamera = false;
+}
+
+// make option Q and E go up and down no matter orientation
+class EditorCamera_V2: EditorCamera
+{	
+	protected float m_CameraFovVelocity[1];
+	protected float m_CameraFovActual;
+
+	float DOFDistance;
+	float DOFBlur;
+	float Blur;
+	float Vignette;
+	float Sharpness;
 		
+	float Speed = GetEditor().Settings.CameraSpeed;
+	float Boost_Multiplier = 6.5;
+	float Drag = 0.05;
+	const float Mouse_Sens = 35.0;
+	
+	float SendUpdateAccumalator = 0.0;
+	
+	protected vector m_LinearVelocity, m_AngularVelocity;
+	
+	int ColorCorrection = COLOR_WHITE;
+	
+	void EditorCamera_V2()
+	{
+		SetEventMask(EntityEvent.FRAME);
+		
+		m_CameraFovActual = m_EditorSettings.FieldOfView;
+	}
+	
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		//EditorLog.Trace("EditorCamera::EOnFrame");
-		/*if (SendUpdateAccumalator > 0.5){
-			//GetGame().UpdateSpectatorPosition(GetPosition());
-
-			SendUpdateAccumalator = 0;
-		}
-			
-		SendUpdateAccumalator = SendUpdateAccumalator + timeSlice;*/
-		
-		vector original_position_unchanged;
 		vector transform[4];
 		GetTransform(transform);
-		original_position_unchanged = transform[3];
 
-		Input input = GetGame().GetInput();
-		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
-			return;
-		}
+		UAInputAPI input = GetUApi();
 		
-		if (!KeyState(KeyCode.KC_LCONTROL)) {
-			float forward = input.LocalValue("EditorCameraForward") - input.LocalValue("EditorCameraBack");
-			float strafe = input.LocalValue("EditorCameraRight") - input.LocalValue("EditorCameraLeft");
-			float altitude = input.LocalValue("EditorCameraUp") - input.LocalValue("EditorCameraDown");
-		}
-		
-		float yawDiff = input.LocalValue("UAAimLeft") - input.LocalValue("UAAimRight");
-		float pitchDiff = input.LocalValue("UAAimDown") - input.LocalValue("UAAimUp");
-		float zoomAmt = input.LocalValue("EditorCameraZoomIn") - input.LocalValue("EditorCameraZoomOut");
-		
-		if (KeyState(KeyCode.KC_C)) { //C = CameraSpeed modifier
-			float speedInc = 0;
-			
-			if (input.LocalValue("EditorCameraToolSpeedIncrease" )) {
-				speedInc = input.LocalValue("EditorCameraToolSpeedIncrease") * 0 + 10;
+		ECameraLockFlag camera_lock = GetEditor().GetCameraLockFlags();
+		vector movement;
+		if ((camera_lock & ECameraLockFlag.LOCK_MOVE) == 0) {
+			float forward = input.GetInputByID(UAMoveForward).LocalValue() - input.GetInputByID(UAMoveBack).LocalValue();
+			float strafe = input.GetInputByID(UAMoveRight).LocalValue() - input.GetInputByID(UAMoveLeft).LocalValue();
+			float altitude = input.GetInputByID(UAMoveUp).LocalValue() - input.GetInputByID(UAMoveDown).LocalValue();
+			movement = Vector(strafe, altitude, forward);
+
+			if (camera_lock & ECameraLockFlag.INVERT_MOVE) {
+				movement = -movement;
 			}
-			
-			if (input.LocalValue("EditorCameraToolSpeedDecrease" )) {
-				speedInc = input.LocalValue("EditorCameraToolSpeedDecrease") * 0 + -10;			
-			}		
 		}
-		
-		if (KeyState(KeyCode.KC_LSHIFT)) {
-			zoomAmt *= 0.1;
+
+		vector rotation;
+		float zoom;
+		float fov;
+		bool teleport;
+		if ((camera_lock & ECameraLockFlag.LOCK_LOOK) == 0) {
+			float yaw = input.GetInputByID(UAAimLeft).LocalValue() - input.GetInputByID(UAAimRight).LocalValue();
+			float pitch = input.GetInputByID(UAAimDown).LocalValue() - input.GetInputByID(UAAimUp).LocalValue();
+			float roll = 0;
+
+			rotation = Vector(yaw, pitch, roll);
+			zoom = input.GetInputByID(UAZoomIn).LocalValue() * !GetDayZGame().IsLeftCtrlDown();
+			fov = (Math.PI / 40) * (input.GetInputByID(UABuldZoomIn).LocalValue() - input.GetInputByID(UABuldZoomOut).LocalValue());
+			teleport = input.GetInputByID(UAZoomIn).LocalPress() * GetDayZGame().IsLeftCtrlDown();
+
+			if (camera_lock & ECameraLockFlag.INVERT_LOOK) {
+				rotation = -rotation;
+			}
 		} else {
-			zoomAmt *= 0.01;
+			teleport = input.GetInputByID(UAZoomIn).LocalPress();
 		}
+				
+		float speed = input.GetInputByID(UATurbo).LocalValue() - input.GetInputByID(UAWalkRunTemp).LocalValue();
 		
-		vector current_position = GetPosition();
-		float current_altitude = current_position[1] - GetGame().SurfaceY(current_position[0], current_position[2]);
-		
-		if (zoomAmt != 0)
-			speedInc = 0;
-
-		bool shouldRoll = false;
-		bool decreaseSpeeds = input.LocalValue("EditorCameraSlow");
-		bool increaseSpeeds = input.LocalValue("EditorCameraTurbo");
-		
-		FOV = Math.Clamp(GetCurrentFOV() + zoomAmt, 0.01, 5);
-		SetFOV(FOV);
-
-		if (input.LocalValue("EditorCameraZoomReset")) {
-			SetFOV(1);
+		if (fov != 0) {
+			m_EditorCameraSettings.FieldOfView = Math.Clamp(m_EditorCameraSettings.FieldOfView + fov, FOV_MIN, FOV_MAX);
+			m_EditorCameraSettings.Save();
 		}
-		
-		if (MoveEnabled && !g_Game.GetMission().IsPaused()) {
-						
-			if (Boost_Multiplier > 0) {
-				Speed += speedInc;
-				
-				//speed can become negative so stop that
-				if (Speed < 0) {
-					Speed = 2;
-				}
-				
-				//speed has no uper limit
-				if (Speed > 500) {
-					Speed = 500;
-				}
-				
-				float cam_speed = Speed;
-				if (decreaseSpeeds) {
-					cam_speed = cam_speed * 0.1;	
-				}
 
-				if (increaseSpeeds) {
-					cam_speed = (cam_speed * Boost_Multiplier) * (0.2 + (transform[3][1])/600) ;
-				}
+		if (teleport) {
+			Ray cursor_ray = GetEditor().GetCursorRay();
+			Raycast cursor_ray_cast = GetEditor().GetCursorRaycast();
+			if (cursor_ray_cast) {
+				transform[3] = cursor_ray_cast.Bounce.GetPoint(100.0);
+			} else if (cursor_ray) {
+				transform[3] = cursor_ray.GetPoint(m_EditorCameraSettings.ViewDistance);
 			}
-			
-			linearVelocity = linearVelocity * Smoothing;
-			float temp_cam_speed = Math.Lerp(cam_speed, cam_speed * 0.01, Smoothing);
-			linearVelocity = linearVelocity + (transform[0] * strafe * temp_cam_speed);
-			linearVelocity = linearVelocity + (transform[1] * altitude * temp_cam_speed);
-			linearVelocity = linearVelocity + (transform[2] * forward * temp_cam_speed);
-
-			transform[3] = transform[3] + ( linearVelocity * timeSlice );
-
+		}
+		
+		if (speed > 0) {
+			speed *= TURBO_MULTIPLIER;
+		} else if (speed < 0) {
+			speed /= -TURBO_MULTIPLIER;
+		} else {
+			speed = 1.0;
 		}
 
-		if (!GetEditor().Settings.AllowBelowGround) {
-			transform[3][1] = Math.Max(GetGame().SurfaceY(transform[3][0], transform[3][2]) + 0.1, transform[3][1]);
+		// m/s
+		speed *= 120.0;
+
+		// Process Angular Velocity, use angle addition. hope YawPitchRollMatrix normalizes it
+		vector orientation = GetOrientation();
+		
+		m_AngularVelocity = m_AngularVelocity + (rotation * Math.RAD2DEG * 2);
+		orientation = orientation - m_AngularVelocity * timeSlice;
+		orientation[1] = Math.Clamp(orientation[1], MIN_LOOK_Y_DEG, MAX_LOOK_Y_DEG);
+
+		vector ypr_matrix[3];
+		// normalize it
+		Math3D.YawPitchRollMatrix(orientation, ypr_matrix);
+		copyarray(transform, ypr_matrix);
+
+		// Process linear velocity
+		m_LinearVelocity = m_LinearVelocity + transform[0] * movement[0] * speed;
+		m_LinearVelocity = m_LinearVelocity + transform[1] * movement[1] * speed;
+		m_LinearVelocity = m_LinearVelocity + transform[2] * movement[2] * speed;
+
+		transform[3] = transform[3] + (m_LinearVelocity * timeSlice);
+
+		if (!m_EditorCameraSettings.AllowUnderEarth) {
+			transform[3][1] = Math.Max(GetGame().SurfaceY(transform[3][0], transform[3][2]) + GetNearPlane() * 2, transform[3][1]);
 		}
-				
+
+		m_AngularVelocity = m_AngularVelocity * m_EditorCameraSettings.SmoothingLevel;
+		m_LinearVelocity = m_LinearVelocity * m_EditorCameraSettings.SmoothingLevel;
+		
+		// FOV velocity
+		float p[1];
+		copyarray(p, m_CameraFovVelocity);		
+		m_CameraFovActual = Math.SmoothCD(m_CameraFovActual, m_EditorCameraSettings.FieldOfView + zoom * FOV_ZOOM_AMT, p, 0.05, 800 * (m_EditorCameraSettings.SmoothingLevel + 0.5), timeSlice);
+
+		// Apply
+		SetFOV(m_CameraFovActual);
 		SetTransform(transform);
-		GetEditor().Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
-		
-		if (HideCursorOnDrag) {
-			if (input.LocalPress("UATempRaiseWeapon")) {
-				GetEditor().GetEditorHud().ShowCursor(false);
-				
-			}
-			
-			if (input.LocalRelease("UATempRaiseWeapon")) {
-				GetEditor().GetEditorHud().ShowCursor(true);
-			}
-		}
-		
-		
-		orientation = GetOrientation();
-		if ((input.LocalValue("UATempRaiseWeapon") || !GetGame().GetUIManager().IsCursorVisible()) && LookEnabled) {
-			
-			angularVelocity = angularVelocity * Smoothing;			
-			float temp_cam_rot_speed = Math.Lerp(Mouse_Sens, Mouse_Sens * 0.01, Smoothing);
-			angularVelocity[0] = angularVelocity[0] + ( yawDiff * temp_cam_rot_speed * 10 );
-			angularVelocity[1] = angularVelocity[1] + ( pitchDiff * temp_cam_rot_speed * 10);
-			
-			if (shouldRoll) {
-				angularVelocity[2] = angularVelocity[2] + (speedInc * temp_cam_rot_speed * 10);
-			}
-			
-			
-			orientation[0] = orientation[0] - (angularVelocity[0] * timeSlice);
-			orientation[1] = orientation[1] - (angularVelocity[1] * timeSlice);
-			orientation[2] = orientation[2] - (angularVelocity[2] * timeSlice);
+		GetGame().GetWorld().SetEyeAccom(m_EditorCameraSettings.ExposureLevel);
+		GetGame().GetWorld().SetViewDistance(m_EditorCameraSettings.ViewDistance);
+		GetGame().GetWorld().SetObjectViewDistance(m_EditorCameraSettings.ViewDistance);
 
-			orientation[0] = Math.NormalizeAngle(orientation[0]);
-			orientation[1] = Math.Clamp(orientation[1], -89.9, 89.9);
-		}
-		
-		orientation[2] = Math.NormalizeAngle(GetEditor().Settings.CameraTilt); //orientation[2]	
-		SetOrientation(orientation);
-
-		if (IsTargeting) {
-			LookAt(TargetPosition);
-		}
-		
-		//EditorLog.Trace("EditorCamera::EOnFrame-");
+		GetEditor().Statistics.EditorDistanceFlown += timeSlice * speed;
 	}
 
-	void AngleToQuat( float angle, vector dir, out float d[4] )
-	{
-		float sin = Math.Sin( angle * 0.5 * Math.DEG2RAD );
-		float cos = Math.Cos( angle * 0.5 * Math.DEG2RAD );
-
-		d[3] = cos;
-		d[2] = dir[2] * sin;
-		d[1] = dir[1] * sin;
-		d[0] = dir[0] * sin;
-	}
-	
 	void LerpCameraPosition(vector targetpos, float time)
 	{
 		thread _LerpCameraPosition(GetPosition(), targetpos, time);
@@ -282,7 +242,7 @@ class EditorCamera: Camera
 	
 	private void _LerpCameraPosition(vector startpos, vector targetpos, float time)
 	{
-		MoveEnabled = false;
+		GetEditor().SetCameraLockFlag(ECameraLockFlag.LOCK_MOVE);
 		
 		int td = 0;
 		while (td < time * 1000) {
@@ -293,55 +253,6 @@ class EditorCamera: Camera
 			Sleep(10);
 		}
 		
-		MoveEnabled = true;
-	}
-	
-	void PropertyChanged(string property_name)
-	{
-		switch (property_name) {
-						
-			case "FOV": {
-				SetFOV(FOV);
-				break;
-			}			
-			
-			case "NearPlane": {
-				SetNearPlane(NearPlane);
-				break;
-			}			
-			
-			case "DOFBlur":
-			case "DOFDistance": {
-				SetFocus(DOFDistance, DOFBlur);
-				break;
-			}
-			
-			case "Vignette": {
-				PPEffects.SetVignette(Vignette, 0, 0, 0, 255);
-				break;
-			}
-			
-			case "Blur": {
-				PPEffects.SetBlur(Blur);
-				break;
-			}
-			
-			case "Sharpness": {	
-				GetGame().GetWorld().GetMaterial("Graphics/Materials/postprocess/filmgrainNV").SetParam("Sharpness", Sharpness);
-				break;
-			}
-			
-			case "Exposure": {
-				GetGame().GetWorld().SetEyeAccom(Exposure);
-				break;
-			}
-			
-			case "ColorCorrection": {
-				float a, r, g, b;
-				InverseARGBF(ColorCorrection, a, r, g, b);
-				PPEffects.SetColorizationNV(r, g, b);
-				break;
-			}
-		}		
+		GetEditor().ClearCameraLockFlag(ECameraLockFlag.LOCK_MOVE);
 	}
 }

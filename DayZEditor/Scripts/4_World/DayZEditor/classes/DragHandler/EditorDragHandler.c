@@ -53,12 +53,39 @@ class EditorDragHandler: Managed
 	
 	protected void OnDragging(notnull EditorObject target, notnull array<EditorObject> additional_drag_targets);
 	
-	protected static vector ProjectToGround(vector transform[4])
+	// Raycast ground below object
+	static vector ProjectToGround(vector transform[4])
 	{
-		// Raycast ground below object
 		vector ground, ground_dir; 
 		int component;
 		DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, ground, ground_dir, component, null, null, null, false, true);
 		return ground;
+	}
+
+	// Raycast ground below object, (UNTESTED)
+	static bool ProjectToGround4(vector transform[4], out vector result[4])
+	{
+		vector pos, up; 
+		int component;
+		if (!DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, pos, up, component, null, null, null, false, true)) {
+			return false;
+		}
+
+		vector aside;
+		if (up == vector.Up) {
+			aside = vector.Aside;
+		} else {
+			aside = (up * vector.Up).Normalized();
+		}
+
+		vector forward = (up * aside).Normalized();
+		result = {
+			aside,
+			up,
+			forward,
+			pos
+		};
+
+		return true;
 	}
 }

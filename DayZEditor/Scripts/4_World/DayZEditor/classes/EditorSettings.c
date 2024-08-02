@@ -1,9 +1,6 @@
 [RegisterProfileSetting(EditorSettings)]
 class EditorSettings: ProfileSettings
 {	
-	// General Settings
-	float ViewDistance 				= 3000;
-	float ObjectViewDistance 		= 3000;
 	bool AutoSaveEnabled			= true;
 	float AutoSaveTimer 			= 240;
 	float QuickMoveStepSize			= 0.1;
@@ -55,17 +52,7 @@ class EditorSettings: ProfileSettings
 				EditorLog.Warning("Changed log level to %1", typename.EnumToString(LogLevel, SelectedLogLevel));
 				break;
 			}
-			
-			case "ViewDistance":
-			case "ObjectViewDistance": {
-				// This might break, not sure
-				GetGame().GetWorld().SetPreferredViewDistance(ViewDistance);
-				
-				GetGame().GetWorld().SetViewDistance(ViewDistance);
-				GetGame().GetWorld().SetObjectViewDistance(ObjectViewDistance);
-				break;
-			}
-			
+						
 			case "ShowScreenLogs": {
 				GetEditor().GetEditorHud().ShowScreenLogs(ShowScreenLogs);
 				break;
@@ -82,12 +69,7 @@ class EditorSettings: ProfileSettings
 				
 				break;
 			}
-			
-			case "CameraSpeed": {
-				GetEditor().GetCamera().Speed = CameraSpeed;
-				break;
-			}
-			
+						
 			case "RuleOfThirds": {
 				GetEditor().GetEditorHud().ShowRuleOfThirds(RuleOfThirds);
 				break;
@@ -100,8 +82,6 @@ class EditorSettings: ProfileSettings
 		QuickMoveStepSize			= 0.1; // dont know what this does (not changed)
 		CameraSpeed					= 0.05; // 25
 		CameraTilt					= 0.5; // 0
-		ViewDistance 				= 0.065; // 3000 .15
-		ObjectViewDistance 			= 0.135; // 3000
 		MarkerViewDistance 			= 0.2; // 1000
 		
 		AutoSaveEnabled				= true;

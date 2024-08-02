@@ -10,12 +10,7 @@ class EditorDialogCategoryBase: DialogCategoryBase
 			m_EditorHud = m_Editor.GetEditorHud();	
 		}
 		
-		if (m_Editor && m_Editor.Settings.LockCameraDuringDialogs) {
-			m_Editor.GetCamera().MoveEnabled = false;
-			m_Editor.GetCamera().LookEnabled = false;
-			m_EditorHud.ShowCursor(true);
-		}
-		
+		m_EditorHud.ShowCursor(true);
 		if (EditorHud.CurrentDialog) {
 			EditorHud.CurrentDialog.CloseDialog();
 		}
@@ -42,12 +37,8 @@ class EditorDialogCategoryBase: DialogCategoryBase
 			m_EditorHud.RegisterLastDialogPosition(this);
 		}
 		
-		if (m_Editor) {
-			m_Editor.GetCamera().MoveEnabled = true;
-			m_Editor.GetCamera().LookEnabled = true;
-			if (m_EditorHud) {
-				m_EditorHud.ShowCursor(true);
-			}
+		if (m_EditorHud) {
+			m_EditorHud.ShowCursor(true);
 		}
 	}
 	

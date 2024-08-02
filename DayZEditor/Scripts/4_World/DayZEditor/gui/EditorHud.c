@@ -163,10 +163,12 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		
 	void CreateNotification(string text, LinearColor color = 0xFF7CFC00, float duration = 4.0)
 	{
+		WidgetAnimator.CancelAnimate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y);
 		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, -24, 100);
 		NotificationPanel.SetColor(color.With(3, 200));
 		NotificationText.SetText(text);
 
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(CleanupNotification);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CleanupNotification, duration * 1000);
 	}
 

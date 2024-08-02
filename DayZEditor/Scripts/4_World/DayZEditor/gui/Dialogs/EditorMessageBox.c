@@ -1,4 +1,3 @@
-
 class EditorMessageBox: MessageBox
 {
 	protected Editor m_Editor;
@@ -14,8 +13,6 @@ class EditorMessageBox: MessageBox
 		}
 		
 		m_EditorHud = m_Editor.GetEditorHud();			
-		m_Editor.GetCamera().MoveEnabled = false;
-		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
 		
 		if (EditorHud.CurrentDialog) {
@@ -33,8 +30,6 @@ class EditorMessageBox: MessageBox
 			return;
 		}
 		
-		m_Editor.GetCamera().MoveEnabled = true;
-		m_Editor.GetCamera().LookEnabled = true;
 		m_EditorHud.ShowCursor(true);
 	}
 	

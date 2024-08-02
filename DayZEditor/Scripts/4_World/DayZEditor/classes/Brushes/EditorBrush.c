@@ -53,7 +53,7 @@ class EditorBrush
 		Input input = GetGame().GetInput();
 		Ray ray = new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetPointerDirection());
 		
-		Raycast ray_cast = ray.PerformRaycastRVEX(BrushRadius / 100, GetEditor().Settings.ObjectViewDistance, ObjIntersectView, null, true);
+		Raycast ray_cast = ray.PerformRaycastRVEX(BrushRadius / 100, GetEditor().GetCamera().GetSettings().ViewDistance, ObjIntersectView, null, true);
 		if (ray_cast && ray_cast.Bounce) {
 			vector transform[4] = {
 				Vector(BrushRadius / 10, 0, 0),

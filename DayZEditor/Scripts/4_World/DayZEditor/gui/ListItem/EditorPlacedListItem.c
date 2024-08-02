@@ -102,14 +102,19 @@ class EditorPlacedListItem: EditorListItem
 			
 			case MouseState.MIDDLE: {
 				EditorCamera camera = GetEditor().GetCamera();
-				vector pos = m_EditorObject.GetPosition();
-				pos[1] = pos[1] + 10;
-				camera.SendToPosition(pos);
+
+				vector camera_transform[4];
+				camera.GetTransform(camera_transform);
+				Math3D.MatrixInverse3(camera_transform);
+				camera_transform[3] = m_EditorObject.GetPosition();
+
+				vector new_position = Vector(4.0, 4.0, 4.0).Multiply4(camera_transform);
+				camera.SetPosition(new_position);
+				camera.LookAt(m_EditorObject.GetPosition());
 				return true;
 			}
 			
 			case MouseState.RIGHT: {
-				
 				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
 					GetEditor().ClearSelection();
 				}

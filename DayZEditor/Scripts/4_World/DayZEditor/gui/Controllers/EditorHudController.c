@@ -536,43 +536,7 @@ class EditorHudController: EditorControllerBase
 
 		return false;
 	}
-	
-	override bool OnFocus(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnFocus");
-		
-		switch (w) {
 			
-			case LeftbarSearchBar: {
-				m_Editor.GetCamera().MoveEnabled = false;
-				break;
-			}
-			case PlacedSearchEditbox:
-				m_Editor.GetCamera().MoveEnabled = false;
-				break;
-		}
-		
-		return false;
-	}
-	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnFocusLost");
-		
-		switch (w) {
-			
-			case LeftbarSearchBar: {
-				m_Editor.GetCamera().MoveEnabled = true;
-				break;
-			}
-			case PlacedSearchEditbox:
-				m_Editor.GetCamera().MoveEnabled = true;
-				break;
-		}
-		
-		return false;
-	}
-		
 	void SetInfoObjectPosition(vector position)
 	{
 		obj_x = position[0];

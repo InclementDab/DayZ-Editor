@@ -21,13 +21,13 @@ class EditorDumpSceneCommand: EditorCommand
 		camera_data += string.Format("CameraOrientation[]={%1, %2, %3};\n", ori[0], ori[1], ori[2]);
 		camera_data += string.Format("PlayerPosition[]={%1, %2, %3};\n", player_pos[0], player_pos[1], player_pos[2]);
 		camera_data += string.Format("PlayerOrientation[]={%1, %2, %3};\n", player_ori[0], player_ori[1], player_ori[2]);
-		camera_data += string.Format("fov=%1;\n", camera.FOV);
-		camera_data += string.Format("DOFDistance=%1;\n", camera.DOFDistance);
-		camera_data += string.Format("DOFBlur=%1;\n", camera.DOFBlur);
-		camera_data += string.Format("Blur=%1;\n", camera.Blur);
-		camera_data += string.Format("Vignette=%1;\n", camera.Vignette);
-		camera_data += string.Format("Sharpness=%1;\n", camera.Sharpness);
-		camera_data += string.Format("NearPlane=%1;\n", camera.NearPlane);
+		camera_data += string.Format("fov=%1;\n", camera.GetSettings().FieldOfView);
+		//camera_data += string.Format("DOFDistance=%1;\n", camera.DOFDistance);
+		//camera_data += string.Format("DOFBlur=%1;\n", camera.DOFBlur);
+		//camera_data += string.Format("Blur=%1;\n", camera.Blur);
+		//camera_data += string.Format("Vignette=%1;\n", camera.Vignette);
+		//camera_data += string.Format("Sharpness=%1;\n", camera.Sharpness);
+		camera_data += string.Format("NearPlane=%1;\n", camera.GetNearPlane());
 		
 		camera_data += string.Format("date[]={%1, %2, %3, %4, %5};\n", year, month, day, hour, minute);
 		camera_data += string.Format("overcast=%1;\n", over);

@@ -66,7 +66,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		array<Object> raycast_excludes = {};
 		raycast_excludes.Insert(target.GetWorldObject());
 
-		Raycast cursor_raycast = cursor_ray.PerformRaycastRVEX(0, GetEditor().Settings.ViewDistance, ObjIntersectView, raycast_excludes, !use_building_collisions);
+		Raycast cursor_raycast = cursor_ray.PerformRaycastRVEX(0, GetEditor().GetCamera().GetSettings().ViewDistance, ObjIntersectView, raycast_excludes, !use_building_collisions);
 
 		vector cursor_pos = cursor_ray.GetPoint(10.0);
 		if (cursor_raycast) {
@@ -75,7 +75,7 @@ class EditorObjectDragHandler: EditorDragHandler
 
 		vector transform_ground_projection = ProjectToGround(target_transform);
 
-		vector test_transform[4];
+		//vector test_transform[4];
 		//Math3D.MatrixMultiply3(cursor_transform, target_transform, test_transform);
 
 		//MatrixTranspose4(target_transform, test_transform);
@@ -86,11 +86,10 @@ class EditorObjectDragHandler: EditorDragHandler
 		//Shape.CreateMatrix(test_transform);
 		//Shape.CreateMatrix(cursor_transform);
 		
-		target_transform[3] = cursor_pos;
+		//target_transform[3] = cursor_pos;
 		
-		
-		/*
-		
+		vector transform[4];
+		target.GetTransform(transform);
 		vector size, ground_position, surface_normal, local_dir, local_ori;
 		vector deltapos = target.GetPosition();
 		size = target.GetSize();
@@ -191,7 +190,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		}
 		
 		m_LastAngle = angle;
-		*/
+		
 		target.SetTransform(target_transform);
 	}
 	

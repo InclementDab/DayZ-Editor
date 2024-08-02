@@ -43,15 +43,6 @@ class EditorHandData
 	vector OrientationOffset;
 }
 
-enum EEditorRaycastFlags
-{
-	DEFAULT = 0,
-	COLLIDE_TERRAIN_EXCLUSIVE = 1,
-	COLLIDE_TERRAIN = 2,
-	COLLIDE_BUILDING = 4,
-	COLLIDE_PRECISE = 8
-};
-
 typedef map<ref EditorWorldObject, ref EditorHandData> EditorHandMap;
 
 class Editor: Managed
@@ -153,12 +144,12 @@ class Editor: Managed
 		
 	Raycast GetCameraRaycast(Object ignore = null, bool ground_only = false)
 	{
-		return PerformRaycast(GetCameraRay(), ignore, Settings.ObjectViewDistance, ground_only);
+		return PerformRaycast(GetCameraRay(), ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
 	}
 	
 	Raycast GetCursorRaycast(Object ignore = null, bool ground_only = false)
 	{
-		return PerformRaycast(GetCursorRay(), ignore, Settings.ObjectViewDistance, ground_only);
+		return PerformRaycast(GetCursorRay(), ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
 	}
 
 	// Returns a top-down raycast, height defined by y_offset_raycast
@@ -166,7 +157,7 @@ class Editor: Managed
 	{
 		Ray map_ray = GetMapRay(y_offset_raycast);
 		map_ray.Direction = -vector.Up;
-		return PerformRaycast(map_ray, ignore, Settings.ObjectViewDistance, ground_only);
+		return PerformRaycast(map_ray, ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
 	}
 
 	void GetCameraTransform(out vector transform[4])
@@ -211,6 +202,47 @@ class Editor: Managed
 		return m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible();
 	}
 
+	protected ECameraLockFlag m_CameraLockFlags;
+	void SetCameraLockFlag(ECameraLockFlag flag)
+	{
+		m_CameraLockFlags |= flag;
+	}
+
+	void ClearCameraLockFlag(ECameraLockFlag flag)
+	{
+		m_CameraLockFlags &= ~flag;
+	}
+
+	ECameraLockFlag GetCameraLockFlags(bool use_override = false)
+	{
+		ECameraLockFlag processed_flags;
+		if (GetGame().GetUIManager().IsCursorVisible()) {
+			if (!GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue()) {
+				processed_flags |= ECameraLockFlag.LOCK_LOOK;
+			} else {
+				//processed_flags |= ECameraLockFlag.INVERT_LOOK;
+			}
+		}
+
+		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
+			processed_flags |= ECameraLockFlag.LOCK;
+		}
+
+		if (g_Game.GetMission().IsPaused()) {
+			processed_flags |= ECameraLockFlag.LOCK;
+		}
+		
+		if (EditorHud.CurrentDialog || EditorHud.CurrentMenu) {
+			processed_flags |= ECameraLockFlag.LOCK;
+		}
+
+		if (!use_override) {
+			processed_flags |= m_CameraLockFlags;
+		}
+		
+		return processed_flags;
+	}
+
 	private void Editor(PlayerBase player) 
 	{		
 		EditorLog.Trace("Editor");
@@ -240,7 +272,13 @@ class Editor: Managed
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Initializing Camera");
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+		EditorCameraSettings camera_settings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+		string camera_type = "EditorCamera_V2";
+		if (camera_settings.LegacyCamera) {
+			camera_type = "EditorCameraClassic";
+		}
+
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
 		
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
@@ -276,12 +314,7 @@ class Editor: Managed
 				
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
-		
-		// Just some stuff to do on load
-		GetGame().GetWorld().SetPreferredViewDistance(Settings.ViewDistance);		
-		GetGame().GetWorld().SetViewDistance(Settings.ViewDistance);
-		GetGame().GetWorld().SetObjectViewDistance(Settings.ObjectViewDistance);
-		
+				
 		// Register Player Object as a hidden EditorObject
 		//CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER, false);
 		
@@ -353,7 +386,7 @@ class Editor: Managed
 				vector _;
 				int __;
 				vector collision_ray_start = GetGame().GetCurrentCameraPosition();
-				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * Settings.ViewDistance;
+				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * m_EditorCamera.GetSettings().ViewDistance;
 				set<Object> results = new set<Object>();
 				if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
 					//collision_ignore = results[0];
@@ -365,15 +398,14 @@ class Editor: Managed
 			}
 			
 			// Yeah, enfusions dumb, i know
-			bool should_precice = (Settings.HighPrecisionCollision || m_LootEditMode);																					// High precision is experimental, but we want it on for LootEditor since its only placing the cylinders!
-			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode, should_precice);
+			CurrentMousePosition = MousePosToRay(obj, collision_ignore, m_EditorCamera.GetSettings().ViewDistance, 0, !CollisionMode, m_LootEditMode);
 		}
 		
 		if (!IsPlacing()) {			
 			vector hit_pos, hit_normal;
 			int component_index;		
 			set<Object> collisions = new set<Object>;
-			DayZPhysics.RaycastRV(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * Settings.ObjectViewDistance, hit_pos, hit_normal, component_index, collisions);
+			DayZPhysics.RaycastRV(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * m_EditorCamera.GetSettings().ViewDistance, hit_pos, hit_normal, component_index, collisions);
 			
 			Object target = collisions[0];
 			if (target) {
@@ -653,19 +685,22 @@ class Editor: Managed
 				if (IsPlayerActive()) {
 					return false;
 				}
-				
-				// teleportation logic
-				vector mouse_pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
-				vector camera_current_pos = m_EditorCamera.GetPosition();
-				float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
-				
-				// check if water is under mouse, to stop from teleporting under water			
-				if (IsSurfaceWater(mouse_pos)) {
-					m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
-					break;
-				} 
+								
+				EditorCameraClassic classic_camera = EditorCameraClassic.Cast(m_EditorCamera);
+				if (classic_camera) {
+					// teleportation logic
+					vector mouse_pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
+					vector camera_current_pos = m_EditorCamera.GetPosition();
+					float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
+					// check if water is under mouse, to stop from teleporting under water			
+					if (IsSurfaceWater(mouse_pos)) {
+						classic_camera.SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
+						break;
+					} 
 					
-				m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
+					classic_camera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
+				}
+
 				return true;
 			}
 			
@@ -754,12 +789,7 @@ class Editor: Managed
 		if (m_EditorInventoryEditorHud) {
 			delete m_EditorInventoryEditorHud;
 		}
-		
-		if (m_EditorCamera) {
-			m_EditorCamera.LookEnabled = m_Active;
-			m_EditorCamera.MoveEnabled = m_Active;			
-		}
-		
+				
 		if (m_Active) {
 			m_EditorCamera.SetActive(true);
 		} else {
@@ -928,7 +958,6 @@ class Editor: Managed
 		m_LootEditTarget.SetPosition(Vector(0, LootYOffset, 0));
 		m_LootEditTarget.SetOrientation(Vector(90, 0, 0));
 		
-		GetCamera().Speed = 10;
 		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
 		m_EditorCamera.SetPosition(Vector(10, LootYOffset, 10));
 		m_EditorCamera.LookAt(Vector(0, LootYOffset, 0));	
@@ -1056,7 +1085,6 @@ class Editor: Managed
 		delete m_EditorMapGroupProto;
 		
 		GetGame().ObjectDelete(m_LootEditTarget);
-		GetCamera().Speed = 60;
 		m_EditorCamera.SetPosition(m_PositionBeforeLootEditMode);
 
 		m_LootEditMode = false;
