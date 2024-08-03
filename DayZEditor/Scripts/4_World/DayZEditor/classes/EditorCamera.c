@@ -122,7 +122,7 @@ class EditorCamera_V2: EditorCamera
 	{
 		SetEventMask(EntityEvent.FRAME);
 		
-		m_CameraFovActual = m_EditorSettings.FieldOfView;
+		m_CameraFovActual = m_EditorCameraSettings.FieldOfView;
 	}
 	
 	override void EOnFrame(IEntity other, float timeSlice)
