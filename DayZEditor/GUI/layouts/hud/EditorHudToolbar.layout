@@ -333,6 +333,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
        "Size To Content V" 1
        content_halign center
        content_valign center
+       Columns 4
        Rows 1
        {
         ButtonWidgetClass NewButton {
@@ -357,8 +358,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
            clipchildren 1
            inheritalpha 1
            ignorepointer 1
+           color 1 1 1 0.7843
            position 0 0
-           size 1 1
+           size 0.8 0.8
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -366,8 +368,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
-           image0 ""
-           imageTexture "{9D99EDE9BFE0A0F4}DayZEditor/GUI/icons/icon_new2.edds"
+           image0 "set:solid image:file"
+           imageTexture ""
            mode blend
            "src alpha" 1
            "clamp mode" clamp
@@ -402,8 +404,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
            visible 1
            inheritalpha 1
            ignorepointer 1
+           color 1 1 1 0.7843
            position 0 0
-           size 1 1
+           size 0.8 0.8
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -411,8 +414,8 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
-           image0 ""
-           imageTexture "{F60B1EEFA69CEB68}DayZEditor/GUI/icons/icon_folder.edds"
+           image0 "set:solid image:folder_open"
+           imageTexture ""
            mode additive
            "src alpha" 1
            "clamp mode" clamp
@@ -447,8 +450,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
            visible 1
            inheritalpha 1
            ignorepointer 1
+           color 1 1 1 0.7843
            position 0 0
-           size 1 1
+           size 0.8 0.8
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -456,8 +460,53 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
-           image0 ""
-           imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
+           image0 "set:solid image:floppy_disk"
+           imageTexture ""
+           mode additive
+           "src alpha" 1
+           "clamp mode" clamp
+           "stretch mode" stretch_w_h
+           filter 0
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.SaveCommand"
+          }
+         }
+        }
+        ButtonWidgetClass SaveAsButton {
+         visible 1
+         clipchildren 0
+         color 0.7529 0.3686 0.3255 1
+         position 0 0
+         size 33 33
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text_offset 0 0
+         switch normal
+         {
+          ImageWidgetClass SaveAsButton_Icon {
+           visible 1
+           inheritalpha 1
+           ignorepointer 1
+           color 1 1 1 0.7843
+           position 0 0
+           size 0.8 0.8
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           draggable 0
+           image0 "set:solid image:floppy_disk_pen"
            mode additive
            "src alpha" 1
            "clamp mode" clamp
@@ -536,8 +585,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
            disabled 0
            inheritalpha 1
            ignorepointer 1
+           color 1 1 1 0.7843
            position 0 0
-           size 1 1
+           size 0.8 0.8
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -545,7 +595,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            draggable 0
-           image0 "set:dayz_editor_gui image:undo"
+           image0 "set:solid image:arrow_rotate_left"
            mode additive
            "src alpha" 1
            "clamp mode" clamp
@@ -576,15 +626,16 @@ WrapSpacerWidgetClass ToolbarWrapper {
           ImageWidgetClass RedoButton_Icon {
            inheritalpha 1
            ignorepointer 1
+           color 1 1 1 0.7843
            position 0 0
-           size 1 1
+           size 0.8 0.8
            halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           image0 "set:dayz_editor_gui image:redo"
+           image0 "set:solid image:arrow_rotate_right"
            mode additive
            "src alpha" 1
            "clamp mode" clamp
@@ -662,15 +713,16 @@ WrapSpacerWidgetClass ToolbarWrapper {
            visible 1
            inheritalpha 1
            ignorepointer 1
+           color 1 1 1 0.7843
            position 0 0
-           size 1 1
+           size 0.8 0.8
            halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           image0 "set:dayz_editor_gui image:cut"
+           image0 "set:solid image:scissors"
            mode additive
            "src alpha" 1
            "clamp mode" clamp
@@ -706,8 +758,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
            visible 1
            inheritalpha 1
            ignorepointer 1
+           color 1 1 1 0.7843
            position 0 0
-           size 1 1
+           size 0.8 0.8
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -716,7 +769,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            vexactsize 0
            scaled 1
            scriptclass ""
-           image0 "set:dayz_editor_gui image:copy"
+           image0 "set:solid image:copy"
            mode additive
            "src alpha" 1
            "clamp mode" clamp
@@ -753,8 +806,9 @@ WrapSpacerWidgetClass ToolbarWrapper {
            visible 1
            inheritalpha 1
            ignorepointer 1
+           color 1 1 1 0.7843
            position 0 0
-           size 1 1
+           size 0.8 0.8
            halign center_ref
            valign center_ref
            hexactpos 1
@@ -762,7 +816,7 @@ WrapSpacerWidgetClass ToolbarWrapper {
            hexactsize 0
            vexactsize 0
            scriptclass ""
-           image0 "set:dayz_editor_gui image:paste"
+           image0 "set:solid image:paste"
            mode additive
            "src alpha" 1
            "clamp mode" clamp

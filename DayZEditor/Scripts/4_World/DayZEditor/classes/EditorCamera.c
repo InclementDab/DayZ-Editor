@@ -132,6 +132,10 @@ class EditorCamera_V2: EditorCamera
 
 		UAInputAPI input = GetUApi();
 		
+		if (!IsActive()) {
+			return;
+		}
+		
 		ECameraLockFlag camera_lock = GetEditor().GetCameraLockFlags();
 		vector movement;
 		if ((camera_lock & ECameraLockFlag.LOCK_MOVE) == 0) {
@@ -174,8 +178,8 @@ class EditorCamera_V2: EditorCamera
 		}
 
 		if (teleport) {
-			Ray cursor_ray = GetEditor().GetCursorRay();
-			Raycast cursor_ray_cast = GetEditor().GetCursorRaycast();
+			Ray cursor_ray = GetEditor().GetCursorRayModeSafe();
+			Raycast cursor_ray_cast = GetEditor().GetCursorRaycastModeSafe();
 			if (cursor_ray_cast) {
 				transform[3] = cursor_ray_cast.Bounce.GetPoint(100.0);
 			} else if (cursor_ray) {

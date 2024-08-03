@@ -141,6 +141,15 @@ class Editor: Managed
 	{
 		return new Ray(m_EditorCamera.GetPosition(), GetDayZGame().GetPointerDirection());
 	}
+
+	Ray GetCursorRayModeSafe()
+	{
+		if (IsMapActive()) {
+			return GetMapRay();
+		}
+
+		return GetCursorRay();
+	}
 		
 	Raycast GetCameraRaycast(Object ignore = null, bool ground_only = false)
 	{
@@ -158,6 +167,15 @@ class Editor: Managed
 		Ray map_ray = GetMapRay(y_offset_raycast);
 		map_ray.Direction = -vector.Up;
 		return PerformRaycast(map_ray, ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
+	}
+
+	Raycast GetCursorRaycastModeSafe(Object ignore = null, bool ground_only = false)
+	{
+		if (IsMapActive()) {
+			return GetMapCursorRaycast(ignore, ground_only);
+		}
+
+		return GetCursorRaycast(ignore, ground_only);
 	}
 
 	void GetCameraTransform(out vector transform[4])
@@ -220,7 +238,7 @@ class Editor: Managed
 			if (!GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue()) {
 				processed_flags |= ECameraLockFlag.LOCK_LOOK;
 			} else {
-				//processed_flags |= ECameraLockFlag.INVERT_LOOK;
+				processed_flags |= ECameraLockFlag.INVERT_LOOK;
 			}
 		}
 
@@ -234,6 +252,10 @@ class Editor: Managed
 		
 		if (EditorHud.CurrentDialog || EditorHud.CurrentMenu) {
 			processed_flags |= ECameraLockFlag.LOCK;
+		}
+
+		if (GetDayZGame().IsLeftCtrlDown()) {
+			processed_flags |= ECameraLockFlag.LOCK_MOVE;
 		}
 
 		if (!use_override) {
@@ -401,7 +423,7 @@ class Editor: Managed
 			CurrentMousePosition = MousePosToRay(obj, collision_ignore, m_EditorCamera.GetSettings().ViewDistance, 0, !CollisionMode, m_LootEditMode);
 		}
 		
-		if (!IsPlacing()) {			
+		if (!IsPlacing() && !GetWidgetUnderCursor()) {			
 			vector hit_pos, hit_normal;
 			int component_index;		
 			set<Object> collisions = new set<Object>;
