@@ -69,6 +69,12 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			Show(!IsVisible());
 		}
 
+		bool is_curtain_open = m_TemplateController.LeftbarFrame.IsVisible() || m_TemplateController.RightbarFrame.IsVisible();
+		if (input_api.GetInputByID(UAGear).LocalPress()) {
+			m_TemplateController.LeftbarFrame.Show(!is_curtain_open);
+			m_TemplateController.RightbarFrame.Show(!is_curtain_open);
+		}
+
 		float wr_s_w, wr_s_h, wr_col_s_w, wr_col_s_h;
 		switch (widget_under_cursor) {
 			case LeftbarDrag: {

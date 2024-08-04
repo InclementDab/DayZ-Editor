@@ -7,6 +7,8 @@ enum ECameraLockFlag
 
 	INVERT_MOVE = 4,
 	INVERT_LOOK = 8,
+	
+	PAN_LOOK = 16,
 
 	LOCK = 3,
 }
@@ -91,6 +93,9 @@ class EditorCameraSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("CAMERA", "AllowUnderEarth", "Camera Below Surface", {"NO", "YES"})]
 	bool AllowUnderEarth = false;
 
+	[RegisterProfileSettingMultistate("CAMERA", "InvertCamera", "Inverted Camera", {"NO", "YES"})]
+	bool InvertCamera = false;
+
 	[RegisterProfileSettingMultistate("CAMERA", "LegacyCamera", "Classic Camera", {"DISABLED", "ENABLED"}, true)]
 	bool LegacyCamera = false;
 }
@@ -159,9 +164,9 @@ class EditorCamera_V2: EditorCamera
 			float roll = 0;
 
 			rotation = Vector(yaw, pitch, roll);
-			zoom = input.GetInputByID(UAZoomIn).LocalValue() * !GetDayZGame().IsLeftCtrlDown();
+			zoom = input.GetInputByID(UAZoomIn).LocalValue() * !(camera_lock & ECameraLockFlag.LOCK_MOVE);
 			fov = (Math.PI / 40) * (input.GetInputByID(UABuldZoomIn).LocalValue() - input.GetInputByID(UABuldZoomOut).LocalValue());
-			teleport = input.GetInputByID(UAZoomIn).LocalPress() * GetDayZGame().IsLeftCtrlDown();
+			teleport = input.GetInputByID(UAZoomIn).LocalPress() * (camera_lock & ECameraLockFlag.LOCK_MOVE);
 
 			if (camera_lock & ECameraLockFlag.INVERT_LOOK) {
 				rotation = -rotation;
@@ -169,8 +174,16 @@ class EditorCamera_V2: EditorCamera
 		} else {
 			teleport = input.GetInputByID(UAZoomIn).LocalPress();
 		}
-				
-		float speed = input.GetInputByID(UATurbo).LocalValue() - input.GetInputByID(UAWalkRunTemp).LocalValue();
+							
+		float speed = input.GetInputByID(UATurbo).LocalValue() - input.GetInputByID(UALookAround).LocalValue();
+
+		if (camera_lock & ECameraLockFlag.PAN_LOOK) {
+			vector offset_matrix[3]; 
+			Math3D.YawPitchRollMatrix(Vector(0, 270, 180), offset_matrix);
+
+			movement = movement + rotation.Multiply3(offset_matrix);;
+			rotation = vector.Zero;
+		}
 		
 		if (fov != 0) {
 			m_EditorCameraSettings.FieldOfView = Math.Clamp(m_EditorCameraSettings.FieldOfView + fov, FOV_MIN, FOV_MAX);

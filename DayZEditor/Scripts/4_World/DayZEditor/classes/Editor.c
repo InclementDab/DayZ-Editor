@@ -235,10 +235,16 @@ class Editor: Managed
 	{
 		ECameraLockFlag processed_flags;
 		if (GetGame().GetUIManager().IsCursorVisible()) {
-			if (!GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue()) {
-				processed_flags |= ECameraLockFlag.LOCK_LOOK;
+			if (GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue()) {
+				if (m_EditorCamera.GetSettings().InvertCamera) {
+					processed_flags |= ECameraLockFlag.INVERT_LOOK;
+				}
 			} else {
-				processed_flags |= ECameraLockFlag.INVERT_LOOK;
+				processed_flags |= ECameraLockFlag.LOCK_LOOK;
+			}
+		} else {
+			if (GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue()) {
+				processed_flags |= ECameraLockFlag.PAN_LOOK;
 			}
 		}
 

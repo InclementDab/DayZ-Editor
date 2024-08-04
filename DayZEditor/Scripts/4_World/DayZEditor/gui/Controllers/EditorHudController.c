@@ -39,13 +39,13 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
 
 	// View Properties
-	protected Widget LeftbarFrame;
+	Widget LeftbarFrame;
 	protected ImageWidget LeftbarHideIcon;
 	
 	ScrollWidget LeftbarScroll;
 	ScrollWidget RightbarScroll;
 	
-	protected Widget RightbarFrame;
+	Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
 	
 	protected WrapSpacerWidget RightbarPlacementsList;
