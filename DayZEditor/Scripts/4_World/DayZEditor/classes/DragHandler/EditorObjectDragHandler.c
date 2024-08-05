@@ -54,7 +54,7 @@ class EditorObjectDragHandler: EditorDragHandler
 	{
 		vector target_transform[4];
 		target.GetTransform(target_transform);
-
+Print(target_transform);
 		vector cursor_transform[4];
 		GetEditor().GetCursorTransform(cursor_transform);
 
@@ -191,7 +191,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		
 		m_LastAngle = angle;
 		
-		target.SetTransform(target_transform);
+		target.SetTransform(transform);
 	}
 	
 	static vector GetAveragePosition(EditorObjectMap objects)
