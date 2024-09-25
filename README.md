@@ -1,40 +1,34 @@
-# DayZ Editor
+![dayz editor](https://i.imgur.com/cLCON3V.png)
 
-The DayZ Editor is a 3D Map editing tool. Designed for creating environments, playing with mechanics, or just general fooling around (we even have a paint brush for trees!)
+<b> DayZ Editor is a 3D Map editing tool designed for creating environments, playing with mechanics, or just general fooling around (we even have a paint brush for trees!) </b>
 
-**REUPLOAD / REPACKING WITHOUT EXPLICIT PERMISSION IS STRICTLY PROHIBITED. ALL VERSIONS FOUND ON THE WORKSHOP WILL BE ACTIONED AND YOUR STEAM ACCOUNT WILL BE BLACKLISTED FROM EDITOR USAGE**
+<details open>
+  <summary><h3><b>General Wiki </b></h3></summary>
+  
+-   [Installing the mod](./2.-Installing-DayZ-Editor)
+-   [How to use the Editor](https://github.com/InclementDab/DayZ-Editor/wiki/%5B3%5D-How-to-use-the-Editor)
+-   [Shortcut Keys](./4.-Shortcuts)
+</details>
 
-![Why are you reading this? GO USE IT!](https://i.imgur.com/UsYQXZz.jpg)
+<details open>
+  <summary><h3><b>Mapping </b></h3></summary>
 
-## How to join
+-   [How to import mapping](https://github.com/InclementDab/DayZ-Editor/wiki/%5B6%5D-Importing)
+-   [How to export mapping](https://github.com/InclementDab/DayZ-Editor/wiki/%5B7%5D-Exporting-to-Server)
+-   [Brush Tool](https://github.com/InclementDab/DayZ-Editor/wiki/%5B5%5D-Brush-Tool)
+-   [Loot Editing](https://github.com/InclementDab/DayZ-Editor/wiki/%5B8%5D-Loot-Editing)
+</details>
 
-[Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=2250764298)
+<details open>
+  <summary><h3><b>Modding </b></h3></summary>
 
-[Direct Download](https://github.com/InclementDab/DayZ-Editor/releases)
+-   [DayZ Editor Scripts repository](https://github.com/InclementDab/DayZ-Editor/tree/master/DayZEditor)
+</details>
 
-1.) Drag @DayZ-Editor into your DayZ directory
+> [!CAUTION]
+> Reupload / Repacking without explicit permission is strictly prohibited.  
+> All versions found on the Workshop will be actioned and the Steam account will be blacklisted from Editor usage.
 
-2.) Open DayZ Launcher, go to "Mods" tab, click "Add Local Mod"
-
-3.) Navigate to your @DayZ-Editor folder, and select folder
-
-4.) Run game!
-
-## Want to load your edits in a server?
-
-[DayZ Editor Loader](https://github.com/InclementDab/DayZ-Editor-Loader) Mod makes that very easy!
-
-## Need a full tutorial?
-
-[Full Video Tutorial](https://youtu.be/uAytoN0lntY)
-
-## Links
-[Discord](https://discord.com/invite/5g742yH)
-
-[Twitter](https://twitter.com/InclementDab)
-
-[Patreon](https://www.patreon.com/inclementdab)
-
-[Paypal](https://www.paypal.me/InclementDab)
-
-[Twitch](https://www.twitch.tv/inclementdab)
+> [!NOTE]
+> DayZ Editor is a big project on top of an everchanging game, expect some bugs and problems!  
+> For any bug report, feedback, suggestions and questions join our [<img src="https://cdn.discordapp.com/attachments/1150169207787507734/1196738719357599744/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png?ex=65b8b8c9&is=65a643c9&hm=b7a152caf927ab5d3ca979ccfa948592b04d3de0b4f35662a48ace216de7b4c7&" width="21" height="16"> Discord](https://discord.gg/z65nVkU)
