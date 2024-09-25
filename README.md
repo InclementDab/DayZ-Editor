@@ -5,9 +5,9 @@
 <details open>
   <summary><h3><b>General Wiki </b></h3></summary>
   
--   [Installing the mod](./2.-Installing-DayZ-Editor)
+-   [Installing the mod](https://github.com/InclementDab/DayZ-Editor/wiki/2.-Installing-DayZ-Editor)
 -   [How to use the Editor](https://github.com/InclementDab/DayZ-Editor/wiki/%5B3%5D-How-to-use-the-Editor)
--   [Shortcut Keys](./4.-Shortcuts)
+-   [Shortcut Keys](https://github.com/InclementDab/DayZ-Editor/wiki/4.-Shortcuts)
 </details>
 
 <details open>
