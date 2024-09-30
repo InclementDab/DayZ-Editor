@@ -82,7 +82,7 @@ class Editor: Managed
 	
 	// private references
 	protected EditorHudController 					m_EditorHudController;
-	protected EditorObjectManagerModule 			m_ObjectManager;	
+	protected ref EditorObjectManagerModule 			m_ObjectManager;	
 	protected EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	protected int 									m_LastMouseDown;
@@ -311,7 +311,7 @@ class Editor: Managed
 		// Object Manager
 		g_Game.ReportProgress("Initializing Object Manager");
 		EditorLog.Info("Initializing Object Manager");
-		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
+		m_ObjectManager 	= new EditorObjectManagerModule(this);
 		
 		// Camera Track Manager
 		g_Game.ReportProgress("Initializing Camera Track Manager");

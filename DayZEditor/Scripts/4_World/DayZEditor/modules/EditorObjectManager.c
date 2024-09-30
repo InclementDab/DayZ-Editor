@@ -1,4 +1,4 @@
-class EditorObjectManagerModule : JMModuleBase
+class EditorObjectManagerModule : Managed
 {
 	// strong reference to objects, insert and remove expectedly
 	protected ref map<int, ref EditorObject> m_EditorObjectRefs;
@@ -28,10 +28,8 @@ class EditorObjectManagerModule : JMModuleBase
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
 
-	override void Init()
+	void EditorObjectManagerModule(Editor editor)
 	{
-		super.Init();
-
 		EditorLog.Trace("EditorObjectManager::Init");
 		m_WorldObjectIndex = new EditorObjectMap();
 		m_PlacedObjects = new EditorObjectMap();
@@ -60,8 +58,8 @@ class EditorObjectManagerModule : JMModuleBase
 			{
 				string type;
 				GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1)
-				{ // (GetEditor().Settings && !GetEditor().Settings.ShowScopeZeroObjects)
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2 || (editor.Settings && !editor.Settings.ShowScopeZeroObjects))
+				{
 					continue;
 				}
 
@@ -319,12 +317,6 @@ class EditorObjectManagerModule : JMModuleBase
 		GetEditor().Statistics.Save();
 	}
 
-	override void OnMissionStart()
-	{
-		// On Load unhide em all
-		CF.ObjectManager.UnhideAllMapObjects();
-	}
-
 	bool IsObjectHidden(EditorDeletedObject deleted_object)
 	{
 		return (IsObjectHidden(deleted_object.GetID()));
@@ -402,15 +394,5 @@ class EditorObjectManagerModule : JMModuleBase
 		EditorLog.Debug("EditorObjectManager Debug Info");
 		EditorLog.Debug(m_EditorObjectRefs.Count().ToString());
 		EditorLog.Debug(m_EditorDeletedObjectRefs.Count().ToString());
-	}
-
-	override bool IsClient()
-	{
-		return true;
-	}
-
-	override bool IsServer()
-	{
-		return true;
 	}
 }

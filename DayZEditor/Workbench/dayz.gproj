@@ -54,6 +54,7 @@ GameProjectClass {
 						"scripts/2_GameLib"
 						"JM/CF/defines"
 						"JM/CF/scripts/2_GameLib"
+						"DabsFramework/Scripts/2_GameLib"
 					}
 					EntryPoint ""
 				}

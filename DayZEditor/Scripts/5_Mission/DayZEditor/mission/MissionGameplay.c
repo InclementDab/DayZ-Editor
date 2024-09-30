@@ -77,4 +77,12 @@ modded class MissionGameplay
 		super.HideInventory();
 		m_Hud.InventoryShown = false;
 	}
+	
+	
+	override void OnMissionStart()
+	{
+		super.OnMissionStart();
+		// On Load unhide em all
+		CF.ObjectManager.UnhideAllMapObjects();
+	}
 }
