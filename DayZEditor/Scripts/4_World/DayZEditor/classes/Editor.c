@@ -120,7 +120,127 @@ class Editor: Managed
 	
 	bool										KEgg; // oh?
 	
-	// Returns a ray, on surface, pointing in the direction of the surface normal
+	private void Editor(PlayerBase player) 
+	{		
+		EditorLog.Trace("Editor");
+		g_Game.ReportProgress("Loading Editor");
+
+		g_Editor = this;
+		m_Player = player;
+
+#ifdef SERVER
+		for (int i = 0; i < 100; i++) {
+            Print("[EDITOR][ERROR] SERVER ADMINISTRATOR ERROR! DAYZ EDITOR SHOULD NOT BE LOADED ON THE SERVER!");
+		}
+		
+		delete g_Editor;
+		return;
+#endif
+				
+		// Player god mode
+		m_Player.SetAllowDamage(false);
+
+		// Initialize the profiles/editor directory;		
+		MakeDirectory(ROOT_DIRECTORY);
+		
+		// Init Statistics
+		m_StatisticsSaveTimer.Run(10.0, this, "OnStatisticsSave", null, true);
+								
+		// Camera Init
+		EditorLog.Info("Initializing Camera");
+		g_Game.ReportProgress("Initializing Camera");
+		EditorCameraSettings camera_settings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+		string camera_type = "EditorCamera_V2";
+		if (camera_settings.LegacyCamera) {
+			camera_type = "EditorCameraClassic";
+		}
+
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+		
+		// Object Manager
+		g_Game.ReportProgress("Initializing Object Manager");
+		EditorLog.Info("Initializing Object Manager");
+		m_ObjectManager 	= new EditorObjectManagerModule(this);
+		
+		// Camera Track Manager
+		g_Game.ReportProgress("Initializing Camera Track Manager");
+		EditorLog.Info("Initializing Camera Track Manager");
+		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
+		
+		// Command Manager
+		g_Game.ReportProgress("Initializing Command Manager");
+		EditorLog.Info("Initializing Command Manager");
+		CommandManager 		= new EditorCommandManager();
+		CommandManager.Init();
+		
+		// Needs to exist on clients for Undo / Redo syncing
+		m_SessionCache 			= new map<int, ref EditorObjectData>();
+		m_DeletedSessionCache   = new map<int, ref EditorDeletedObjectData>();
+		m_ActionStack 			= new EditorActionStack();
+		
+		// Init Hud
+		g_Game.ReportProgress("Initializing Hud");
+		m_EditorHud 		= new EditorHud();
+		EditorLog.Info("Initializing Hud");
+		m_EditorHudController = m_EditorHud.GetTemplateController();		
+		// Add camera marker to newly created hud
+		m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
+		m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
+		
+		m_Mission = GetGame().GetMission();
+				
+		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
+				
+		// Register Player Object as a hidden EditorObject
+		//CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER, false);
+		
+		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
+		
+		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
+	}
+	
+	void ~Editor() 
+	{
+		EditorLog.Trace("~Editor");
+		
+		// Fallback
+		if (GetGame() && m_Mission) {
+			// Causing more trouble than its worth, null ptrs
+			// fix if you need to delete editor safely when running for some reason (MP?)
+			//SetActive(false);
+		}
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
+		
+		Settings.Save();
+		Statistics.Save();
+		
+		delete m_EditorHud;
+		delete m_EditorInventoryEditorHud;
+		delete m_EditorBrush;
+		delete m_SessionCache;
+		delete m_DeletedSessionCache;
+		delete m_PlacingObjects;
+		delete m_RecentlyOpenedFiles;
+		GetGame().ObjectDelete(m_EditorCamera);
+	}
+	
+	static Editor Create(PlayerBase player)
+	{
+		EditorLog.Trace("Editor::Create");
+		g_Editor = new Editor(player);
+		return g_Editor;
+	}
+	
+	static void Destroy()
+	{
+		EditorLog.Trace("Editor::Destroy");
+		delete g_Editor;
+	}
+	
+		// Returns a ray, on surface, pointing in the direction of the surface normal
 	Ray GetMapRay(float y_offset = 0.0)
 	{
 		int mouse_x, mouse_y;
@@ -269,126 +389,6 @@ class Editor: Managed
 		}
 		
 		return processed_flags;
-	}
-
-	private void Editor(PlayerBase player) 
-	{		
-		EditorLog.Trace("Editor");
-		g_Game.ReportProgress("Loading Editor");
-
-		g_Editor = this;
-		m_Player = player;
-
-#ifdef SERVER
-		for (int i = 0; i < 100; i++) {
-            Print("[EDITOR][ERROR] SERVER ADMINISTRATOR ERROR! DAYZ EDITOR SHOULD NOT BE LOADED ON THE SERVER!");
-		}
-		
-		delete g_Editor;
-		return;
-#endif
-				
-		// Player god mode
-		m_Player.SetAllowDamage(false);
-
-		// Initialize the profiles/editor directory;		
-		MakeDirectory(ROOT_DIRECTORY);
-		
-		// Init Statistics
-		m_StatisticsSaveTimer.Run(10.0, this, "OnStatisticsSave", null, true);
-								
-		// Camera Init
-		EditorLog.Info("Initializing Camera");
-		g_Game.ReportProgress("Initializing Camera");
-		EditorCameraSettings camera_settings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
-		string camera_type = "EditorCamera_V2";
-		if (camera_settings.LegacyCamera) {
-			camera_type = "EditorCameraClassic";
-		}
-
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
-		
-		// Object Manager
-		g_Game.ReportProgress("Initializing Object Manager");
-		EditorLog.Info("Initializing Object Manager");
-		m_ObjectManager 	= new EditorObjectManagerModule(this);
-		
-		// Camera Track Manager
-		g_Game.ReportProgress("Initializing Camera Track Manager");
-		EditorLog.Info("Initializing Camera Track Manager");
-		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
-		
-		// Command Manager
-		g_Game.ReportProgress("Initializing Command Manager");
-		EditorLog.Info("Initializing Command Manager");
-		CommandManager 		= new EditorCommandManager();
-		CommandManager.Init();
-		
-		// Needs to exist on clients for Undo / Redo syncing
-		m_SessionCache 			= new map<int, ref EditorObjectData>();
-		m_DeletedSessionCache   = new map<int, ref EditorDeletedObjectData>();
-		m_ActionStack 			= new EditorActionStack();
-		
-		// Init Hud
-		g_Game.ReportProgress("Initializing Hud");
-		m_EditorHud 		= new EditorHud();
-		EditorLog.Info("Initializing Hud");
-		m_EditorHudController = m_EditorHud.GetTemplateController();		
-		// Add camera marker to newly created hud
-		m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
-		m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
-		
-		m_Mission = GetGame().GetMission();
-				
-		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
-				
-		// Register Player Object as a hidden EditorObject
-		//CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER, false);
-		
-		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
-		
-		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
-	}
-	
-	void ~Editor() 
-	{
-		EditorLog.Trace("~Editor");
-		
-		// Fallback
-		if (GetGame() && m_Mission) {
-			// Causing more trouble than its worth, null ptrs
-			// fix if you need to delete editor safely when running for some reason (MP?)
-			//SetActive(false);
-		}
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
-		
-		Settings.Save();
-		Statistics.Save();
-		
-		delete m_EditorHud;
-		delete m_EditorInventoryEditorHud;
-		delete m_EditorBrush;
-		delete m_SessionCache;
-		delete m_DeletedSessionCache;
-		delete m_PlacingObjects;
-		delete m_RecentlyOpenedFiles;
-		GetGame().ObjectDelete(m_EditorCamera);
-	}
-	
-	static Editor Create(PlayerBase player)
-	{
-		EditorLog.Trace("Editor::Create");
-		g_Editor = new Editor(player);
-		return g_Editor;
-	}
-	
-	static void Destroy()
-	{
-		EditorLog.Trace("Editor::Destroy");
-		delete g_Editor;
 	}
 		
 	void OnStatisticsSave()
