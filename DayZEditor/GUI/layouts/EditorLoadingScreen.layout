@@ -37,47 +37,9 @@ FrameWidgetClass LoadingFrame {
      imageTexture "{0DBE2630AF5047FD}gui/textures/loading_screens/loading_screen_3_co.edds"
      mode blend
      "src alpha" 0
-     stretch 1
+     "stretch mode" stretch_w_h
      "Transition width" 1
      Progress 0
-    }
-    ImageWidgetClass ImageLogoMid {
-     visible 1
-     inheritalpha 1
-     color 0.1176 0.1176 0.1176 0.7843
-     position 40 78
-     size 480 270
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     fixaspect outside
-     image0 "DayZEditor/gui/images/logo_editor_big.edds"
-     mode blend
-     "src alpha" 1
-     "no wrap" 1
-     stretch 1
-     filter 0
-     nocache 0
-    }
-    ImageWidgetClass ImageLogoCorner {
-     visible 1
-     inheritalpha 1
-     color 1 1 1 0.8627
-     position 37 75
-     size 480 270
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     fixaspect outside
-     image0 "DayZEditor/gui/images/logo_editor_big.edds"
-     mode blend
-     "src alpha" 1
-     "no wrap" 1
-     stretch 1
-     filter 1
-     nocache 0
     }
     ImageWidgetClass ImageLoadingIcon {
      visible 0
@@ -96,7 +58,6 @@ FrameWidgetClass LoadingFrame {
      image0 "set:dayz_gui image:icon_refresh"
      mode additive
      "src alpha" 1
-     "no wrap" 0
      filter 1
      nocache 0
     }
@@ -104,7 +65,7 @@ FrameWidgetClass LoadingFrame {
      ignorepointer 1
      color 0 0 0 0.549
      position 0 0
-     size 1 0.12
+     size 1 0.09
      halign center_ref
      valign bottom_ref
      hexactpos 0
@@ -116,7 +77,7 @@ FrameWidgetClass LoadingFrame {
       ProgressBarWidgetClass LoadingBar {
        ignorepointer 1
        position 0 25
-       size 1 6
+       size 1 5
        halign center_ref
        hexactpos 1
        vexactpos 1
@@ -126,10 +87,12 @@ FrameWidgetClass LoadingFrame {
        current 45
       }
       TextWidgetClass ProgressText {
+       position 0 8
        size 1 0.3
        halign center_ref
        valign center_ref
-       font "gui/fonts/system"
+       vexactpos 1
+       font "gui/fonts/MetronBook"
        "exact text" 0
        "text halign" center
        "text valign" center
@@ -153,20 +116,85 @@ FrameWidgetClass LoadingFrame {
      "size to text v" 1
      wrap 1
     }
-    TextWidgetClass ImageCredit {
+    WrapSpacerWidgetClass WrapSpacerWidget0 {
      ignorepointer 1
-     position 37 350
-     size 480 40
+     color 0.1333 0.0902 0.0902 0.1569
+     position 14 24
+     size 480 48
+     halign right_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     text "credit"
-     font "gui/fonts/etelkatextpro"
-     "size to text h" 0
-     "size to text v" 0
-     "text halign" center
-     "text valign" center
+     Padding 6
+     Margin 6
+     "Size To Content V" 1
+     content_halign center
+     {
+      PanelWidgetClass FrameWidget0 {
+       visible 1
+       ignorepointer 1
+       position 0 0
+       size 440 260
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ImageWidgetClass ImageLogoMid {
+         visible 1
+         inheritalpha 1
+         color 0.1176 0.1176 0.1176 0.7843
+         position 2 2
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "DayZEditor/gui/images/logo_editor_big.edds"
+         mode blend
+         "src alpha" 1
+         "clamp mode" clamp
+         "stretch mode" stretch_w_h
+         filter 0
+         nocache 0
+        }
+        ImageWidgetClass ImageLogoCorner {
+         visible 1
+         inheritalpha 1
+         color 1 1 1 0.8627
+         position 0 0
+         size 1 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         image0 "DayZEditor/gui/images/logo_editor_big.edds"
+         mode blend
+         "src alpha" 1
+         "clamp mode" clamp
+         "stretch mode" stretch_w_h
+         filter 1
+         nocache 0
+        }
+       }
+      }
+      TextWidgetClass ImageCredit {
+       ignorepointer 1
+       position 35 308
+       size 365 40
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "creditcreditcreditcreditcreditcreditcredit"
+       font "gui/fonts/MetronBook"
+       "size to text h" 1
+       "size to text v" 0
+       "text halign" center
+       "text valign" center
+      }
+     }
     }
    }
   }
