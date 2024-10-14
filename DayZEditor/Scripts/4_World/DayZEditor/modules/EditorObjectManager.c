@@ -109,13 +109,13 @@ class EditorObjectManagerModule : Managed
 				p3d_file = SystemPath.Format(p3d_file);
 				
 				EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(p3d_file);
-				m_PlaceableObjects.Insert(placeable_item_p3d);
+				//m_PlaceableObjects.Insert(placeable_item_p3d);
 				
 				if (!m_PlaceableObjectsByP3d[p3d_file]) {
 					m_PlaceableObjectsByP3d[p3d_file] = {};
 				}
 				
-				m_PlaceableObjectsByP3d[p3d_file].Insert(placeable_item_p3d);
+				//m_PlaceableObjectsByP3d[p3d_file].Insert(placeable_item_p3d);
 			}
 		}
 		/*
@@ -151,24 +151,6 @@ class EditorObjectManagerModule : Managed
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkPointLight));
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase));
-	}
-
-	static void RecursiveGetFiles(string directory, inout array<ref CF_File> files, string pattern = "*")
-	{
-		array<ref CF_File> directories = { };
-		// first get all directories and recurse them
-		if (CF_Directory.GetFiles(directory + "*", directories, FindFileFlags.ARCHIVES))
-		{
-			foreach (CF_File subdirectory: directories) {
-				if (subdirectory.IsDirectory())
-				{
-					Print(subdirectory.GetFullPath() + "/");
-					RecursiveGetFiles(subdirectory.GetFullPath() + "/", files, pattern);
-				}
-			}
-		}
-
-		CF_Directory.GetFiles(directory + pattern, files, FindFileFlags.ARCHIVES);
 	}
 
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
