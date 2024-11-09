@@ -23,6 +23,7 @@ class EditorPlaceableListItem: EditorListItem
 		
 		if (GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1) {
 			m_TemplateController.Favorite = true;
+			ListItemFavorites.Show(true);
 			m_TemplateController.NotifyPropertyChanged("Favorite");
 		}
 		

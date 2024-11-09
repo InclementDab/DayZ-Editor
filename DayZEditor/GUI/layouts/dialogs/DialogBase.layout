@@ -1,7 +1,7 @@
 WrapSpacerWidgetClass EditorDialog {
  clipchildren 1
  ignorepointer 1
- color 0.0588 0.0941 0.0941 1
+ color 0.1412 0.1569 0.1804 1
  position 0 0
  size 0.35 0
  halign center_ref
@@ -37,7 +37,7 @@ WrapSpacerWidgetClass EditorDialog {
    {
     PanelWidgetClass TitleBar {
      ignorepointer 1
-     color 0.4196 0.6471 1 0.9412
+     color 0 0.4784 0.8 1
      size 1 25
      halign center_ref
      hexactpos 1

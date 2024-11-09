@@ -5,7 +5,7 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	protected ButtonWidget ListItemShow;
 	
 	// Can be null!
-	protected ButtonWidget ListItemFavorites;
+	protected CheckBoxWidget ListItemFavorites;
 	
 	void Select() 
 	{

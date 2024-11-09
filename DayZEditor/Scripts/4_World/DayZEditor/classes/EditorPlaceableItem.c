@@ -14,6 +14,11 @@ class EditorPlaceableItem : Managed
 	private void EditorPlaceableItem()
 	{
 	}
+	
+	bool IsFavorite()
+	{
+		return GetEditor().GetSettings().FavoriteItems.Find(Type) != -1;
+	}
 
 	string GetName()
 	{

@@ -41,7 +41,7 @@ WrapSpacerWidgetClass ListItem {
      disabled 0
      clipchildren 1
      ignorepointer 1
-     position 20 0
+     position 24 0
      size 1 1
      valign center_ref
      hexactpos 1
@@ -69,8 +69,8 @@ WrapSpacerWidgetClass ListItem {
      visible 0
      inheritalpha 0
      color 1 0.8431 0 1
-     position 4 -1
-     size 16 16
+     position 1 0
+     size 22 22
      valign center_ref
      hexactpos 1
      vexactpos 1

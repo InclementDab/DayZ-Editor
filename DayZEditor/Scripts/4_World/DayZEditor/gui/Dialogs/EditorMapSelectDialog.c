@@ -20,7 +20,7 @@ class EditorMapSelectDialog: EditorDialogBase
 			m_ListBoxPrefab.InsertItem(name, name);
 		}
 		
-		AddContent(new TextBoxPrefab("NOTE: The Editor automatically detects custom map mods. Just load them.", null, "hint"));    
+		AddContent(new MessageBoxPrefab("NOTE: The Editor automatically detects custom map mods. Just load them.")); 
 		
 		m_SelectButton = AddButton("Select", DialogResult.OK);
 		//m_SelectButton.Button.Enable(false);

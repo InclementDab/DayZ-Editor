@@ -408,7 +408,9 @@ class EditorInventoryEditorController: ViewController
 			
 			case "SearchBarLeft": {
 				for (int j = 0; j < WearableItems.Count(); j++) {
-					WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarLeft)); 
+					if (WearableItems[j] && WearableItems[j].GetLayoutRoot()) {
+						WearableItems[j].GetLayoutRoot().Show(WearableItems[j].FilterType(SearchBarLeft)); 
+					}
 				}
 				
 				AttachmentSelectorScrollbar.VScrollToPos(0);

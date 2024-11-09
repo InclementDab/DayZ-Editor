@@ -29,6 +29,17 @@ modded class MissionGameplay
 	
 	override void OnKeyPress(int key)
 	{			
+		if (IsPaused() && key == KeyCode.KC_ESCAPE && GetEditor()) {
+			UIScriptedMenu menu = GetGame().GetUIManager().GetMenu();
+			if (menu && menu.GetID() == MENU_INGAME) {
+				GetEditor().SetActive(true);
+			}
+
+			Continue();
+
+			return;
+		}
+
 		if (!GetEditor() || !GetEditor().OnKeyPress(key)) {
 			super.OnKeyPress(key);
 		}	

@@ -201,6 +201,10 @@ class Editor: Managed
 		
 		GetDayZGame().Event_OnActivateMessage.Insert(OnActivateMessage);
 		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
+		
+		if (!GetSettings().HasRequestedNotToSeeDonationDialog) {
+			thread ShowDonationDialog();
+		}
 
 		m_AutoSaveTimer.Run(GetSettings().AutoSaveTimer, this, "OnAutoSaveTimer");
 	}
@@ -868,7 +872,10 @@ class Editor: Managed
 					continue;
 				}
 				
-				editor_object.GetMarker().Show(m_Active);			
+				if (editor_object.GetMarker()) {
+					editor_object.GetMarker().Show(m_Active);			
+				}
+				
 				editor_object.HideBoundingBox();
 			}
 		}	
@@ -1891,6 +1898,14 @@ class Editor: Managed
 		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		GetGame().SaveProfile();
 	}
+	
+	protected void ShowDonationDialog()
+	{
+		GetGame().GetUIManager().ShowCursor(true);
+		
+		EditorOneTimeDonationDialog dialog = new EditorOneTimeDonationDialog("Support DayZ Editor");
+		dialog.ShowDialog();
+	}
 		
 	string GetSaveFile()
 	{
@@ -1922,7 +1937,7 @@ class Editor: Managed
 		m_ObjectManager.SelectObject(target);
 
 		// should this be here?
-		m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
+		//m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
 	}
 	
 	void DeselectObject(EditorObject target) 
@@ -1931,7 +1946,7 @@ class Editor: Managed
 
 		delete m_CurrentGizmo;
 		if (m_ObjectManager.GetSelectedObjects().Count()) {
-			m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
+			//m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
 		}
 	}
 	
@@ -1941,7 +1956,7 @@ class Editor: Managed
 
 		delete m_CurrentGizmo;
 		if (m_ObjectManager.GetSelectedObjects().Count()) {
-			m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
+			//m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
 		}
 	}
 		

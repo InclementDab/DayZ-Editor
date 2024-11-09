@@ -3,7 +3,7 @@ class EditorFileDialog: EditorDialogBase
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
 	// strong reference, since ListBox cant strong ref it
 	protected autoptr ListBoxPrefab<string> m_ListBoxPrefab;
-	protected ref DropdownListPrefab<string> m_FileTypes = new DropdownListPrefab<string>("File Type", this, "m_FileTypeString");
+	protected ref DropdownListPrefab<string> m_FileTypes;
 	protected string m_CurrentDirectory;
 	protected FileSettingsBase m_FileSettings;
 	protected string m_Filter, m_FileTypeString;
@@ -13,7 +13,7 @@ class EditorFileDialog: EditorDialogBase
 		m_Filter = filter;		
 		m_FileSettings = file_settings;
 		m_EditBoxPrefab = new EditBoxPrefab("#STR_EDITOR_FILE", m_Controller, default_value);
-	 
+	 	//m_FileTypes = new DropdownListPrefab<string>("File Type", this, "m_FileTypeString");
 		m_ListBoxPrefab = new ListBoxPrefab<string>();
 		m_ListBoxPrefab.Event_OnClick.Insert(OnListItemClick);
 		m_ListBoxPrefab.Event_OnDoubleClick.Insert(OnListItemDoubleClick);
@@ -24,7 +24,7 @@ class EditorFileDialog: EditorDialogBase
 			array<ref Param2<string, string>> valid_extensions = {};
 			m_FileSettings.GetFileType().GetValidExtensions(valid_extensions);
 			foreach (Param2<string, string> valid_extension: valid_extensions) {
-				m_FileTypes.Set(string.Format("%1 (%2)", valid_extension.param1, valid_extension.param2), valid_extension.param2);
+				//m_FileTypes.Set(string.Format("%1 (%2)", valid_extension.param1, valid_extension.param2), valid_extension.param2);
 			}
 
 			array<ref ScriptView> extra_settings = {};
@@ -41,7 +41,7 @@ class EditorFileDialog: EditorDialogBase
 
 		LoadFileDirectory(Editor.ROOT_DIRECTORY, m_Filter);
 
-		AddContent(m_FileTypes);
+		//AddContent(m_FileTypes);
 		AddContent(m_EditBoxPrefab);
 		AddButton(button_name, DialogResult.OK);
 		AddButton(DialogResult.Cancel);

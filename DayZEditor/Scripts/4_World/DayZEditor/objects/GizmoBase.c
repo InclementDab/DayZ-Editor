@@ -6,7 +6,7 @@ class EditorGizmo: Managed
 class EditorTranslationGizmo: EditorGizmo
 {
 	protected ref EditorObjectMap m_ObjectList;
-	protected ref array<GizmoBase> m_Gizmos = {};
+	protected ref array<Object> m_Gizmos = {};
 
 	void EditorTranslationGizmo(EditorObjectMap object_map)
 	{

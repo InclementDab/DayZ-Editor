@@ -44,6 +44,8 @@ class EditorSettings: ProfileSettings
 	LogLevel SelectedLogLevel 		= LogLevel.WARNING;
 	
 	ref array<string> FavoriteItems = {};
+	
+	bool HasRequestedNotToSeeDonationDialog = false;
 
 	// Its a pseduo-controller, preferences dialogs!!
 	void PropertyChanged(string property_name)

@@ -124,21 +124,29 @@ class EditorHudController: EditorControllerBase
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
 			// Makes stuff look good when first loading
 			switch (placeable_item.Category) {
-				
 				case EditorPlaceableItemCategory.CONFIG: {
-					//EditorLog.Info("Initializing CONFIG");
-					LeftbarSpacerConfig.Insert(new EditorPlaceableListItem(placeable_item));
+					if (placeable_item.IsFavorite()) {
+						LeftbarSpacerConfig.InsertAt(new EditorPlaceableListItem(placeable_item), 0);
+					} else {
+						LeftbarSpacerConfig.Insert(new EditorPlaceableListItem(placeable_item));
+					}
 					break;
 				}
 				case EditorPlaceableItemCategory.STATIC: {
-					//EditorLog.Info("Initializing STATIC");
-					LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
+					if (placeable_item.IsFavorite()) {
+						LeftbarSpacerConfig.InsertAt(new EditorPlaceableListItem(placeable_item), 0);
+					} else {
+						LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
+					}
 					break;
 				}
 				//? fall-through removed 
 				case EditorPlaceableItemCategory.SCRIPTED: {
-					//EditorLog.Info("Initializing SCRIPTED");
-					LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
+					if (placeable_item.IsFavorite()) {
+						LeftbarSpacerStatic.InsertAt(new EditorPlaceableListItem(placeable_item), 0);
+					} else {
+						LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
+					}
 					break;
 				}
 			}
