@@ -34,9 +34,7 @@ class EditorWorldObject
 			return null;
 		}
 
-		//TODO Object returns model name, need to add a fallback to the path
 		Object object;
-
 		if (File.WildcardMatch(type, "*.p3d"))
 		{
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
@@ -54,6 +52,12 @@ class EditorWorldObject
 			return null;
 		}
 
+		object.SetFlags(EntityFlags.VISIBLE, true);
+		object.SetPosition(position);
+		object.SetOrientation(orientation);
+		object.SetScale(scale);
+		object.Update();
+		
 		// Needed for AI Placement			
 		EntityAI entity_ai;
 		if (Class.CastTo(entity_ai, object))
@@ -67,11 +71,6 @@ class EditorWorldObject
 			}
 		}
 
-		object.SetFlags(EntityFlags.VISIBLE, true);
-		object.SetPosition(position);
-		object.SetOrientation(orientation);
-		object.SetScale(scale);
-		object.Update();
 		return object;
 	}
 	static bool ValidateObjectPath(string path)
