@@ -18,7 +18,7 @@ class EditorTranslationGizmo: EditorGizmo
 		EditorObject first_object = m_ObjectList.GetElement(0);
 		vector gizmo_center = first_object.GetTopCenter();
 
-		GizmoBase gizmo_x = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowX", gizmo_center, ECE_NONE));
+		Object gizmo_x = GetGame().CreateObjectEx("GizmoArrowX", gizmo_center, ECE_NONE);
 		vector gizmo_x_mat[4] = {
 			-vector.Forward,
 			vector.Aside,
@@ -29,7 +29,7 @@ class EditorTranslationGizmo: EditorGizmo
 		gizmo_x.Update();
 		m_Gizmos.Insert(gizmo_x);
 
-		GizmoBase gizmo_y = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowY", gizmo_center, ECE_NONE));
+		Object gizmo_y = GetGame().CreateObjectEx("GizmoArrowY", gizmo_center, ECE_NONE);
 		vector gizmo_y_mat[4] = {
 			"1 0 0",
 			"0 1 0",
@@ -40,7 +40,7 @@ class EditorTranslationGizmo: EditorGizmo
 		gizmo_y.Update();
 		m_Gizmos.Insert(gizmo_y);
 
-		GizmoBase gizmo_z = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowZ", gizmo_center, ECE_NONE));
+		Object gizmo_z = GetGame().CreateObjectEx("GizmoArrowZ", gizmo_center, ECE_NONE);
 		vector gizmo_z_mat[4] = {
 			vector.Aside,
 			vector.Forward,
@@ -62,7 +62,7 @@ class EditorTranslationGizmo: EditorGizmo
 	}
 }
 
-class GizmoBase: EntityAI
+class GizmoBase: House
 {		
 	void OnIntersectMouse(Ray ray)
 	{
