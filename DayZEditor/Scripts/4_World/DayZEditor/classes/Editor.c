@@ -195,6 +195,7 @@ class Editor: Managed
 		// Register Player Object as a hidden EditorObject
 		CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER | EditorObjectFlags.NOSAVE, false);
 		m_Player.SetPosition(m_Player.GetPosition());
+		m_Player.SetFlags(EntityFlags.VISIBLE, true);
 		
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);

@@ -64,8 +64,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 			Show(false);
 			return;
 		}
-
-		if (input.LocalPress("EditorToggleUI")) {		
+		
+		if (input.LocalPress("EditorToggleUI") && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget))) {		
 			Show(!IsVisible());
 		}
 		

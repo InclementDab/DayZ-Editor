@@ -176,8 +176,6 @@ class EditorClientModule: JMModuleBase
 			return;
 		}
 		
-		
-		
 		m_Editor.GetEditorHud().ToggleCursor();
 	}	
 	
@@ -185,7 +183,7 @@ class EditorClientModule: JMModuleBase
 	{		
 		if (!ShouldProcessInput(input)) return;
 		EditorLog.Trace("Editor::OnEditorToggleUI");
-				
+						
 		//TODO Doesn't work
 		if (m_Editor.IsInventoryEditorActive()) {
 			m_Editor.GetInventoryEditorHud().GetLayoutRoot().Show(!m_Editor.GetInventoryEditorHud().GetLayoutRoot().IsVisible());
