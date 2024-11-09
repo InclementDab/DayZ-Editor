@@ -148,7 +148,6 @@ class EditorCamera_V2: EditorCamera
 			float strafe = input.GetInputByID(UAMoveRight).LocalValue() - input.GetInputByID(UAMoveLeft).LocalValue();
 			float altitude = input.GetInputByID(UAMoveUp).LocalValue() - input.GetInputByID(UAMoveDown).LocalValue();
 			movement = Vector(strafe, altitude, forward);
-
 			if (camera_lock & ECameraLockFlag.INVERT_MOVE) {
 				movement = -movement;
 			}

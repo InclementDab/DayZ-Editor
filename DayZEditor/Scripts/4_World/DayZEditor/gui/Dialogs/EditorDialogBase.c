@@ -10,7 +10,9 @@ class EditorDialogBase: DialogBase
 			m_EditorHud = m_Editor.GetEditorHud();	
 		}
 		
-		m_EditorHud.ShowCursor(true);
+		if (m_EditorHud) {
+			m_EditorHud.ShowCursor(true);
+		}
 		
 		if (EditorHud.CurrentDialog) {
 			EditorHud.CurrentDialog.CloseDialog();

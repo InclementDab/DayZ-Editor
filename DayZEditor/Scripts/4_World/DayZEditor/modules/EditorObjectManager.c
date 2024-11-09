@@ -58,7 +58,7 @@ class EditorObjectManagerModule : Managed
 			{
 				string type;
 				GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 2 && !(editor.Settings && editor.Settings.ShowScopeZeroObjects))
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1 && editor.Settings && !editor.Settings.ShowScopeZeroObjects)
 				{
 					continue;
 				}
