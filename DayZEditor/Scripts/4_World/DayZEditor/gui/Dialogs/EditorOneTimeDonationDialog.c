@@ -13,7 +13,7 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 		AddContent(m_TextBox);
 		AddContent(m_NeverShowAgain);
 		
-		AddButton(new DialogButton("Support Us", "OnDonateButton"));
+		AddButton(new DialogButton("Support Dab!", "OnDonateButton"));
 		AddButton(new DialogButton("Join Discord", "OnDiscordButton"));
 		AddButton(new DialogButton("Close", "OnCloseButton"));
 	}

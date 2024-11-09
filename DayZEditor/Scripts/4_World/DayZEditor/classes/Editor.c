@@ -208,6 +208,9 @@ class Editor: Managed
 		}
 
 		m_AutoSaveTimer.Run(GetSettings().AutoSaveTimer, this, "OnAutoSaveTimer");
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
+		GetSettings().TimesOpened++;
 	}
 	
 	void ~Editor() 
@@ -1901,9 +1904,7 @@ class Editor: Managed
 	}
 	
 	protected void ShowDonationDialog()
-	{
-		GetGame().GetUIManager().ShowCursor(true);
-		
+	{		
 		EditorOneTimeDonationDialog dialog = new EditorOneTimeDonationDialog("Support DayZ Editor");
 		dialog.ShowDialog();
 	}

@@ -46,6 +46,7 @@ class EditorSettings: ProfileSettings
 	ref array<string> FavoriteItems = {};
 	
 	bool HasRequestedNotToSeeDonationDialog = false;
+	int TimesOpened;
 
 	// Its a pseduo-controller, preferences dialogs!!
 	void PropertyChanged(string property_name)
