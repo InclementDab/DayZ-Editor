@@ -98,23 +98,24 @@ class EditorObjectManagerModule : Managed
 			
 		}*/
 
-		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
-		
-		
+		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/plants_sakhal", "DZ/rocks", "DZ/rocks_bliss", "DZ/rocks_sakhal" };
+
+
 		foreach (string model_path: paths) {
 			array<string> p3d_files = Directory.EnumerateFiles(model_path, "*.p3d");
 			foreach (string p3d_file: p3d_files) {
 
 				// reformat and proper the p3d file
 				p3d_file = SystemPath.Format(p3d_file);
-				
+
 				EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(p3d_file);
 				m_PlaceableObjects.Insert(placeable_item_p3d);
-				
-				if (!m_PlaceableObjectsByP3d[p3d_file]) {
-					m_PlaceableObjectsByP3d[p3d_file] = {};
+
+				if (!m_PlaceableObjectsByP3d[p3d_file])
+				{
+					m_PlaceableObjectsByP3d[p3d_file] = { };
 				}
-				
+
 				m_PlaceableObjectsByP3d[p3d_file].Insert(placeable_item_p3d);
 			}
 		}

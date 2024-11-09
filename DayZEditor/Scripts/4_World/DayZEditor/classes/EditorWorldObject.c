@@ -3,12 +3,15 @@ class EditorWorldObject
 	static const ref array<string> VALID_PATHS = {
 		"DZ\\plants",
 		"DZ\\plants_bliss",
+		"DZ\\plants_sakhal",
 		"DZ\\rocks",
 		"DZ\\rocks_bliss",
+		"DZ\\rocks_sakhal",
 		"DZ/plants",
 		"DZ/plants_bliss",
 		"DZ/rocks",
 		"DZ/rocks_bliss",
+		"DZ/rocks_sakhal",
 	};
 
 	protected Object m_WorldObject;
@@ -34,18 +37,21 @@ class EditorWorldObject
 
 		//TODO Object returns model name, need to add a fallback to the path
 		Object object;
-		
-		if (File.WildcardMatch(type, "*.p3d")) {
+
+		if (File.WildcardMatch(type, "*.p3d"))
+		{
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
 			object.SetPosition(position);
 			object.SetOrientation(orientation);
 			Print(" object:" + object.GetType() + ":");
 		}
-		else {
+		else
+		{
 			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
 		}
 
-		if (!object) {
+		if (!object)
+		{
 			EditorLog.Warning("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}
