@@ -1415,7 +1415,7 @@ FrameWidgetClass EditorFrame {
      }
     }
     FrameWidgetClass LoggerFrame {
-     visible 1
+     visible 0
      ignorepointer 1
      position 290 21
      size 425 230

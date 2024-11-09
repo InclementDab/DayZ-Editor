@@ -50,7 +50,7 @@ class EditorInitFile: EditorFileType
 					scale = tokens[7].ToFloat();
 				}
 								
-				save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[1], tokens[3].ToVector(), tokens[5].ToVector(), 1, EditorObjectFlags.ALL));
+				save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[1], tokens[3].ToVector(), tokens[5].ToVector(), 1, EFE_DEFAULT));
 			}
 		}        
 

@@ -996,7 +996,7 @@ class Editor: Managed
 				return null;
 			}
 			
-			EditorObjectData editor_object_data = EditorObjectData.Create(editor_hologram.GetPlaceableItem().GetSpawnType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
+			EditorObjectData editor_object_data = EditorObjectData.Create(editor_hologram.GetPlaceableItem().GetSpawnType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EFE_DEFAULT);
 			if (!editor_object_data) {
 				EditorLog.Warning("Invalid Object data from %1", entity.GetType());
 				return null;
@@ -1253,7 +1253,7 @@ class Editor: Managed
 		m_AutoSaveTimer.Run(Math.Max(GetSettings().AutoSaveTimer, 60), this, "OnAutoSaveTimer");
 	}
 	
-	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
+	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject " + target);	
 		return CreateObject(EditorObjectData.Create(target, flags), create_undo);
