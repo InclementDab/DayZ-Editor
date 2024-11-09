@@ -2,6 +2,9 @@ modded class DayZGame
 {
 	// args: string
 	ref ScriptInvoker OnProgressReport;
+
+	ref ScriptInvoker Event_OnActivateMessage = new ScriptInvoker();
+	ref ScriptInvoker Event_OnDeactivateMessage = new ScriptInvoker();
 		
 	void DayZGame()
 	{	
@@ -26,5 +29,19 @@ modded class DayZGame
 	override void ConnectFromCLI()
 	{
 		GetGame().GetUIManager().ShowDialog("Editor Error!", "You cannot run the DayZ Editor in a multiplayer environment. Launch the tool via the \"Open Editor\" button on the main menu!", 1, DBT_OK, DBB_OK, DMT_EXCLAMATION, null);
+	}
+
+	override void OnActivateMessage()
+	{
+		super.OnActivateMessage();
+
+		Event_OnActivateMessage.Invoke();
+	}
+
+	override void OnDeactivateMessage()
+	{
+		super.OnDeactivateMessage();
+
+		Event_OnDeactivateMessage.Invoke();
 	}
 }

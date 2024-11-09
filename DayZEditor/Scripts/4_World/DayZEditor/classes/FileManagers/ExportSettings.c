@@ -9,7 +9,7 @@ class ExportSettings: FileSettingsBase
 	
 	override void GetFileSettings(out array<ref ScriptView> settings)
 	{
-		switch (m_FileType) {
+		switch (m_FileType.Type()) {
 			case EditorDZEFile: {
 				settings.Insert(new CheckBoxPrefab("Binarized", this, "Binarized"));
 				break;

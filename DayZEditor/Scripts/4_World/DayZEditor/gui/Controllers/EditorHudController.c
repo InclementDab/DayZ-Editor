@@ -152,10 +152,10 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
 		
 		// Just a quickset on the color
-		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+		PlacementsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
 		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));		
 		
-		LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
+		LeftbarCategoryConfig.SetColor(m_Editor.GetSettings().SelectionColor);
 		LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
 #endif
 		
@@ -284,7 +284,7 @@ class EditorHudController: EditorControllerBase
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
-				PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+				PlacementsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				RightbarScroll.VScrollToPos(0);
 				break;
@@ -299,7 +299,7 @@ class EditorHudController: EditorControllerBase
 				RightbarDeletionsList.Show(CategoryDeletions);
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				DeletionsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+				DeletionsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}			
@@ -313,7 +313,7 @@ class EditorHudController: EditorControllerBase
 				LeftbarPlacementsConfig.Show(CategoryConfig);
 				LeftbarPlacementsStatic.Show(CategoryStatic);
 				
-				LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
+				LeftbarCategoryConfig.SetColor(m_Editor.GetSettings().SelectionColor);
 				LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
 				LeftbarScroll.VScrollToPos(0);
 				break;
@@ -328,7 +328,7 @@ class EditorHudController: EditorControllerBase
 				LeftbarPlacementsStatic.Show(CategoryStatic);
 				
 				LeftbarCategoryConfig.SetColor(ARGB(255, 60, 60, 60));
-				LeftbarCategoryStatic.SetColor(m_Editor.Settings.SelectionColor);
+				LeftbarCategoryStatic.SetColor(m_Editor.GetSettings().SelectionColor);
 				LeftbarScroll.VScrollToPos(0);
 				break;
 			}
@@ -461,7 +461,7 @@ class EditorHudController: EditorControllerBase
 	// im not adding a trace to this lol
 	void OnEditorLog(LogLevel level, string message)
 	{
-		if (!m_Editor || !m_Editor.Settings || level < m_Editor.Settings.SelectedLogLevel) {
+		if (!m_Editor || !m_Editor.GetSettings() || level < m_Editor.GetSettings().SelectedLogLevel) {
 			return;
 		}
 		

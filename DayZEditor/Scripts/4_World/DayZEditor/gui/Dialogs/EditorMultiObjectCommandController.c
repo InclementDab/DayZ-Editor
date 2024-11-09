@@ -38,7 +38,6 @@ class EditorMultiObjectCommandController
 	float Health = 100;
 	bool Locked;
 	bool Physics;
-	bool Simulate = true;
 	bool AllowDamage = false;
 	bool Collision = true;
 	bool EditorOnly = false;
@@ -112,11 +111,6 @@ class EditorMultiObjectCommandController
 				
 				case "Physics": {
 					editor_object.Physics = Physics;
-					break;
-				}
-				
-				case "Simulate": {
-					editor_object.Simulate = Simulate;
 					break;
 				}
 				

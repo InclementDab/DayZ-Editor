@@ -34,6 +34,13 @@ class EditorCOMFile: EditorFileType
 	{
 		return ".json";
 	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("Text File", "*.txt"));
+		valid_extensions.Insert(new Param2<string, string>("Community Offline Json", "*.json"));
+	}
 }
 
 class COMImportData

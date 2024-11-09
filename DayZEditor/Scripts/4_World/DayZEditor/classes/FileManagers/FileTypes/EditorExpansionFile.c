@@ -128,6 +128,13 @@ class EditorExpansionFile: EditorFileType
 	{
 		return ".map";
 	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("Text File", "*.txt"));
+		valid_extensions.Insert(new Param2<string, string>("Expansion Map", "*.map"));
+	}
 	
 	override bool CanDoDeletion()
 	{

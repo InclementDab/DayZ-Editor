@@ -54,4 +54,11 @@ class EditorMapGroupPosFile: EditorFileType
 	{
 		return ".xml";
 	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("Text File", "*.txt"));
+		valid_extensions.Insert(new Param2<string, string>("MapGroupPos", "*.xml"));
+	}
 }

@@ -97,6 +97,12 @@ class EditorDZEFile: EditorFileType
 		return ".dze";
 	}
 
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("DayZ Editor", "*.dze"));
+	}
+
 	override bool CanDoDeletion()
 	{
 		return true;

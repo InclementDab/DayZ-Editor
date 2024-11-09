@@ -1,7 +1,7 @@
 WrapSpacerWidgetClass EditorDialog {
  clipchildren 1
  ignorepointer 1
- color 0.0588 0.0588 0.0588 1
+ color 0.0588 0.0941 0.0941 1
  position 0 0
  size 0.35 0
  halign center_ref
@@ -61,8 +61,8 @@ WrapSpacerWidgetClass EditorDialog {
        image0 ""
        mode blend
        "src alpha" 1
-       "no wrap" 1
-       stretch 1
+       "clamp mode" clamp
+       "stretch mode" stretch_w_h
        filter 1
        {
         ScriptParamsClass {
@@ -141,10 +141,10 @@ WrapSpacerWidgetClass EditorDialog {
    }
   }
   WrapSpacerWidgetClass DialogButtons {
-   ignorepointer 1
+   ignorepointer 0
    color 0.7059 0.7059 0.7059 1
    position 0 0
-   size 1 60
+   size 1 36
    halign center_ref
    hexactpos 0
    vexactpos 0
@@ -169,7 +169,7 @@ WrapSpacerWidgetClass EditorDialog {
    keepsafezone 0
    color 0.3137 0.3137 0.3137 0.5882
    position 0 0
-   size 0.97 235
+   size 0.97 312
    halign center_ref
    valign center_ref
    hexactpos 1

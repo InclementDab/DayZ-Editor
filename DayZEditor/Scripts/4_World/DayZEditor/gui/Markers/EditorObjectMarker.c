@@ -112,22 +112,22 @@ class EditorObjectMarker: EditorMarker
 	void Select() 
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
-		SetColor(m_Editor.Settings.SelectionColor);
-		SetOutlineColor(m_Editor.Settings.MarkerPrimaryColor);
+		SetColor(m_Editor.GetSettings().SelectionColor);
+		SetOutlineColor(m_Editor.GetSettings().MarkerPrimaryColor);
 	}
 	
 	void Highlight()
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
-		SetColor(m_Editor.Settings.MarkerPrimaryColor);
-		SetOutlineColor(m_Editor.Settings.HighlightColor);
+		SetColor(m_Editor.GetSettings().MarkerPrimaryColor);
+		SetOutlineColor(m_Editor.GetSettings().HighlightColor);
 	}
 	
 	void Deselect() 
 	{
 		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		SetColor(m_Editor.Settings.MarkerPrimaryColor);
-		SetOutlineColor(m_Editor.Settings.MarkerPrimaryColor);
+		SetColor(m_Editor.GetSettings().MarkerPrimaryColor);
+		SetOutlineColor(m_Editor.GetSettings().MarkerPrimaryColor);
 	}
 	
 	bool IsSelected() 
@@ -144,7 +144,7 @@ class EditorObjectMarker: EditorMarker
 			}
 		}
 		
-		if (m_Editor.Settings.MarkerTooltips && !m_Editor.IsPlacing()) {
+		if (m_Editor.GetSettings().MarkerTooltips && !m_Editor.IsPlacing()) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DoTooltipCheck, 500);
 		}
 		return super.OnMouseEnter(w, x, y);
@@ -159,7 +159,7 @@ class EditorObjectMarker: EditorMarker
 			}
 		}
 		
-		if (m_Editor.Settings.MarkerTooltips) {
+		if (m_Editor.GetSettings().MarkerTooltips) {
 			GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		}
 		

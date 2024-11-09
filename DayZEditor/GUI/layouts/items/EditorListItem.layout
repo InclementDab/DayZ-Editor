@@ -4,7 +4,7 @@ WrapSpacerWidgetClass ListItem {
  ignorepointer 1
  color 0.0196 0.0196 0.0196 0
  position 0 0
- size 1 0.02
+ size 1 0.023
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -41,7 +41,7 @@ WrapSpacerWidgetClass ListItem {
      disabled 0
      clipchildren 1
      ignorepointer 1
-     position 18 0
+     position 20 0
      size 1 1
      valign center_ref
      hexactpos 1
@@ -92,10 +92,6 @@ WrapSpacerWidgetClass ListItem {
      Relay_Command "ListItemExecute"
     }
    }
-  }
- }
- {
-  ScriptParamsClass {
   }
  }
 }

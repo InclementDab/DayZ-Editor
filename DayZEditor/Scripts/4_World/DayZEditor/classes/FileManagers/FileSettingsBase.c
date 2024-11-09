@@ -1,12 +1,27 @@
-class FileSettingsBase
+class FileSettingsBase: Managed
 {
-	protected typename m_FileType;
+	protected ref EditorFileType m_FileType;
 	void SetFileType(typename type)
 	{
-		m_FileType = type;
+		if (!type.IsInherited(EditorFileType)) {
+			Error("Invalid type specified");
+			return;
+		}
+
+		m_FileType = EditorFileType.Cast(type.Spawn());
 	}
 	
-	string GetSettingsName();
+	EditorFileType GetFileType()
+	{
+		return m_FileType;
+	}
 	
-	void GetFileSettings(out array<ref ScriptView> settings);
+	string GetSettingsName()
+	{
+		return string.Empty;
+	}
+	
+	void GetFileSettings(out array<ref ScriptView> settings)
+	{
+	}
 }

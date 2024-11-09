@@ -119,7 +119,7 @@ class EditorCamera_V2: EditorCamera
 	float Vignette;
 	float Sharpness;
 		
-	float Speed = GetEditor().Settings.CameraSpeed;
+	float Speed = GetEditor().GetSettings().CameraSpeed;
 	float Boost_Multiplier = 6.5;
 	float Drag = 0.05;
 	const float Mouse_Sens = 35.0;
@@ -251,7 +251,7 @@ class EditorCamera_V2: EditorCamera
 		GetGame().GetWorld().SetViewDistance(m_EditorCameraSettings.ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(m_EditorCameraSettings.ViewDistance);
 		
-		GetEditor().Statistics.EditorDistanceFlown += timeSlice * speed;
+		GetEditor().GetStatistics().EditorDistanceFlown += timeSlice * speed;
 	}
 
 	void LerpCameraPosition(vector targetpos, float time)

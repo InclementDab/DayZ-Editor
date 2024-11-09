@@ -1,6 +1,6 @@
 class EditorHud: ScriptViewTemplate<EditorHudController>
 {
-	const float DEFAULT_BAR_WIDTH_PX = 340.0;
+	const float DEFAULT_BAR_WIDTH_PX = 380.0;
 
 	const float BAR_WIDTH_MINIMUM_PX = 100.0;
 	const float BAR_WIDTH_MAXIMUM_PX = 900.0;
@@ -37,7 +37,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		EditorLog.Trace("EditorHud");
 		EditorMapWidget.Show(false);
 		
-		ShowScreenLogs(GetEditor().Settings.ShowScreenLogs);
+		ShowScreenLogs(GetEditor().GetSettings().ShowScreenLogs);
 	}
 	
 	void ~EditorHud()
@@ -59,14 +59,21 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		UAInputAPI input_api = GetUApi();
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
+		
+		if (GetEditor().IsInventoryEditorActive()) {
+			Show(false);
+			return;
+		}
 
-		if (input.LocalPress("EditorToggleUI")) {
-			if (GetEditor().IsInventoryEditorActive()) {
-				GetEditor().GetInventoryEditorHud().GetLayoutRoot().Show(!GetEditor().GetInventoryEditorHud().GetLayoutRoot().IsVisible());
-				return;
-			}
-			
+		if (input.LocalPress("EditorToggleUI")) {		
 			Show(!IsVisible());
+		}
+		
+		// Dont want to toggle cursor on map
+		if (input.LocalPress("EditorToggleCursor")) {
+			if (!EditorMapWidget.IsVisible() && !(EditorHud.CurrentDialog && GetEditor().GetSettings().LockCameraDuringDialogs)) {	
+				ToggleCursor();
+			}
 		}
 
 		bool is_curtain_open = m_TemplateController.LeftbarFrame.IsVisible() || m_TemplateController.RightbarFrame.IsVisible();
@@ -213,7 +220,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	private void _DelayedDragBoxCheck(int start_x, int start_y)
 	{
-		int drag_box_color = GetEditor().Settings.SelectionColor;
+		int drag_box_color = GetEditor().GetSettings().SelectionColor;
 		
 		int a, r, g, b;
 		InverseARGB(drag_box_color, a, r, g, b);
@@ -254,7 +261,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 						//i think only checking if within cone of box select not distance
 						if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
 							//check if within markerviewdistance to allow selection.
-							if (vector.Distance(editor_object.GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.Settings.MarkerViewDistance) {
+							if (vector.Distance(editor_object.GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.GetSettings().MarkerViewDistance) {
 								g_Editor.SelectObject(editor_object);
 							}
 						}
@@ -306,6 +313,11 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		}
 		
 		CurrentTooltip = current_tooltip;
+	}
+	
+	void ClearCurrentTooltip()
+	{
+		delete CurrentTooltip;
 	}
 		
 	// Dialog Control

@@ -61,7 +61,7 @@ class EditorWorldObject
 			entity_ai.DisableSimulation(true);
 
 			// weeeeeeee
-			if (GetEditor().Settings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0))
+			if (GetEditor().GetSettings().SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0))
 			{
 				entity_ai.OnDebugSpawn();
 			}

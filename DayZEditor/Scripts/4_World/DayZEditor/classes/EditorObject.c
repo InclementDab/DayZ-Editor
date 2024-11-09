@@ -29,7 +29,6 @@ class EditorObject: EditorWorldObject
 	bool Show = true;
 	bool Locked;
 	bool Physics;
-	bool Simulate = true;
 	bool AllowDamage = false;
 	bool Collision = true;
 	bool EditorOnly = false;
@@ -124,7 +123,6 @@ class EditorObject: EditorWorldObject
 		
 		// Version 3
 		Locked = m_Data.Locked;
-		Simulate = m_Data.Simulate;
 		EditorOnly = m_Data.EditorOnly;
 		AllowDamage = m_Data.AllowDamage;
 		
@@ -182,7 +180,6 @@ class EditorObject: EditorWorldObject
 		// This is deliberately split due to issues with null errors, but i have to assign
 		// Locked higher up or it gets set to 0 always. this is a mess, please fix
 		PropertyChanged("Locked");
-		PropertyChanged("Simulate");
 		PropertyChanged("EditorOnly");
 		PropertyChanged("AllowDamage");
 		
@@ -331,7 +328,6 @@ class EditorObject: EditorWorldObject
 			
 			m_Data.Locked = Locked;
 			m_Data.EditorOnly = EditorOnly;
-			m_Data.Simulate = Simulate;
 			m_Data.AllowDamage = AllowDamage;
 			
 			// Update Attachments
@@ -428,15 +424,7 @@ class EditorObject: EditorWorldObject
 				GetEditor().GetEditorHud().GetController().PropertyChanged("ControlPlayerState");
 				break;
 			}
-			
-			case "Simulate": {
-				EntityAI ai = EntityAI.Cast(m_WorldObject);
-				if (ai) {
-					ai.DisableSimulation(!Simulate);
-				}
-				break;
-			}
-			
+						
 			case "Animate": {
 				PlayerBase emote_player = PlayerBase.Cast(m_WorldObject);
 				if (emote_player) {
@@ -567,7 +555,7 @@ class EditorObject: EditorWorldObject
 		DestroyBoundingBox();
 		
 		// Global Settings Check		
-		if (!enable || !GetEditor().Settings.ShowBoundingBoxes) {
+		if (!enable || !GetEditor().GetSettings().ShowBoundingBoxes) {
 			return;
 		}
 		
@@ -706,7 +694,7 @@ class EditorObject: EditorWorldObject
 		EditorLog.Trace("EditorObject::ShowBoundingBox");
 		
 		// Global Settings Check
-		if (!GetEditor().Settings.ShowBoundingBoxes) return;
+		if (!GetEditor().GetSettings().ShowBoundingBoxes) return;
 		
 		// quick and dirty bugfix
 		if (!_boundingBoxesCreated) {

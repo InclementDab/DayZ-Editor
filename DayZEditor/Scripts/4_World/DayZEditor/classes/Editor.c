@@ -65,8 +65,6 @@ class Editor: Managed
 	
 	// public properties
 	ref EditorCommandManager 					CommandManager;
-	EditorSettings Settings 	= EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
-	EditorStatistics Statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 	
 	// protected Editor Members
 	protected ref EditorHud							m_EditorHud;
@@ -86,6 +84,7 @@ class Editor: Managed
 	protected EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	protected int 									m_LastMouseDown;
+	protected bool m_MouseVisibleOnClose;
 	protected MouseState							m_LastMouseInput = -1;
 	protected bool 									m_Active;
 	// todo: change this to some EditorFile struct that manages this better
@@ -101,7 +100,7 @@ class Editor: Managed
 	
 	bool 										CameraLight;
 
-	static const string 						Version = "1.30." + GetBuildNumber();
+	static const string 						Version = "1.31." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -193,12 +192,16 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
 				
 		// Register Player Object as a hidden EditorObject
-		//CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER, false);
+		CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER | EditorObjectFlags.NOSAVE, false);
+		m_Player.SetPosition(m_Player.GetPosition());
 		
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
 		
-		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
+		GetDayZGame().Event_OnActivateMessage.Insert(OnActivateMessage);
+		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
+
+		m_AutoSaveTimer.Run(GetSettings().AutoSaveTimer, this, "OnAutoSaveTimer");
 	}
 	
 	void ~Editor() 
@@ -214,8 +217,8 @@ class Editor: Managed
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
 		
-		Settings.Save();
-		Statistics.Save();
+		GetSettings().Save();
+		GetStatistics().Save();
 		
 		delete m_EditorHud;
 		delete m_EditorInventoryEditorHud;
@@ -238,6 +241,21 @@ class Editor: Managed
 	{
 		EditorLog.Trace("Editor::Destroy");
 		delete g_Editor;
+	}
+
+	void OnActivateMessage()
+	{
+		if (m_EditorHud && EditorHud.CurrentDialog) {
+			GetGame().GetUIManager().ShowCursor(true);
+		} else {
+			GetGame().GetUIManager().ShowCursor(m_MouseVisibleOnClose);
+		}
+	}
+
+	void OnDeactivateMessage()
+	{
+		m_MouseVisibleOnClose = GetGame().GetUIManager().IsCursorVisible();
+		m_PlacingObjects.Clear();
 	}
 	
 		// Returns a ray, on surface, pointing in the direction of the surface normal
@@ -393,7 +411,7 @@ class Editor: Managed
 		
 	void OnStatisticsSave()
 	{
-		Statistics.Save();
+		GetStatistics().Save();
 	}
 	
 	void Update(float timeslice)
@@ -575,7 +593,7 @@ class Editor: Managed
 			}
 		}
 		
-		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera) {
+		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !GetWidgetUnderCursor()) {
 			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
 				GetCamera().GetSettings().Speed += Math.Ln(GetCamera().GetSettings().Speed + 1);
 			}
@@ -820,6 +838,7 @@ class Editor: Managed
 	}
 	
 	// Call to enable / disable editor
+	// this code is TERRIBLE 11/9
 	void SetActive(bool active)
 	{	
 		EditorLog.Info("Set Active %1", active.ToString());		
@@ -1002,13 +1021,13 @@ class Editor: Managed
 		m_EditorCamera.SetPosition(Vector(10, LootYOffset, 10));
 		m_EditorCamera.LookAt(Vector(0, LootYOffset, 0));	
 		
-		if (!FileExist(Settings.EditorProtoFile)) {
+		if (!FileExist(GetSettings().EditorProtoFile)) {
 			EditorLog.Info("EditorProtoFile not found! Copying...");
-			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", Settings.EditorProtoFile);
+			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", GetSettings().EditorProtoFile);
 		}
 		
 		m_EditorMapGroupProto = new EditorMapGroupProto(m_LootEditTarget); 
-		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, Settings.EditorProtoFile);
+		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, GetSettings().EditorProtoFile);
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
@@ -1036,8 +1055,11 @@ class Editor: Managed
 		
 		PlayerBase player;
 		if (Class.CastTo(player, entity)) {
-			player.OnInventoryMenuOpen();
 			player.GetInputController().SetDisabled(true);
+		}
+		
+		if (GetPlayer()) {
+			GetPlayer().GetInputController().SetDisabled(true);
 		}
 		
 		SetMissionHud(false);	
@@ -1206,11 +1228,11 @@ class Editor: Managed
 	
 	protected void OnAutoSaveTimer()
 	{		
-		if (EditorSaveFile != string.Empty && Settings.AutoSaveEnabled) {
+		if (EditorSaveFile != string.Empty && GetSettings().AutoSaveEnabled) {
 			CommandManager[EditorSaveCommand].Execute(this, null);
 		}
 		
-		m_AutoSaveTimer.Run(Math.Max(Settings.AutoSaveTimer, 60), this, "OnAutoSaveTimer");
+		m_AutoSaveTimer.Run(Math.Max(GetSettings().AutoSaveTimer, 60), this, "OnAutoSaveTimer");
 	}
 	
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
@@ -1361,7 +1383,7 @@ class Editor: Managed
 			InsertAction(action);
 		}
 		
-		Statistics.EditorRemovedObjects++;
+		GetStatistics().EditorRemovedObjects++;
 		
 		m_ObjectManager.HideMapObject(map_object);
 		
@@ -1457,7 +1479,7 @@ class Editor: Managed
 				action.InsertRedoParameter(new Param1<int>(id));
 			}
 			
-			Statistics.EditorRemovedObjects++;
+			GetStatistics().EditorRemovedObjects++;
 			m_ObjectManager.UnhideMapObject(deleted_object);
 		}
 		
@@ -1468,7 +1490,7 @@ class Editor: Managed
 		
 	void Clear()
 	{
-		Statistics.Save();
+		GetStatistics().Save();
 		EditorSaveFile = string.Empty;	
 		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
 		m_ActionStack.Clear();
@@ -1718,7 +1740,7 @@ class Editor: Managed
 			m_EditorHud.CreateNotification(error_message, COLOR_YELLOW);
 			
 			// Disable auto save since we loaded a shit file
-			Settings.AutoSaveTimer = -1;
+			GetSettings().AutoSaveTimer = -1;
 		} else {
 			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
 		}
@@ -1742,7 +1764,7 @@ class Editor: Managed
 		
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
-				if (editor_object.GetType() != string.Empty) {
+				if (editor_object.GetType() != string.Empty && !(editor_object.GetFlags() & EditorObjectFlags.NOSAVE)) {
 					save_data.EditorObjects.Insert(editor_object.GetData());
 				}
 			}
@@ -1881,7 +1903,7 @@ class Editor: Managed
 			
 	void UpdateStatTime(int passed_time)
 	{
-		Statistics.EditorPlayTime += passed_time;
+		GetStatistics().EditorPlayTime += passed_time;
 	}
 	
 	void SelectObject(EditorObject target) 
@@ -2059,5 +2081,20 @@ class Editor: Managed
 	PlayerBase GetPlayer()
 	{
 		return m_Player;
+	}
+	
+	EditorSettings GetSettings()
+	{
+		return EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+	}
+	
+	EditorStatistics GetStatistics()
+	{
+		return EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
+	}
+
+	EditorCameraSettings GetCameraSettings()
+	{
+		return EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
 	}
 }

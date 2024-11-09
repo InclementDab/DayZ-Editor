@@ -44,7 +44,6 @@ class EditorClientModule: JMModuleBase
 						
 		// Keybinds
 		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
-		RegisterBinding(new JMModuleBinding("OnEditorToggleCursor", "EditorToggleCursor"));
 		RegisterBinding(new JMModuleBinding("OnEditorToggleUI", "EditorToggleUI"));
 		RegisterBinding(new JMModuleBinding("OnEditorTeleportPlayerToCursor", "EditorTeleportPlayerToCursor"));
 		
@@ -177,10 +176,7 @@ class EditorClientModule: JMModuleBase
 			return;
 		}
 		
-		// Dont want to toggle cursor on map
-		if (m_Editor.GetEditorHud().EditorMapWidget.IsVisible() || (EditorHud.CurrentDialog && m_Editor.Settings.LockCameraDuringDialogs)) {
-			return;
-		}
+		
 		
 		m_Editor.GetEditorHud().ToggleCursor();
 	}	
@@ -290,12 +286,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectForward");
 		
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GetSettings().QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
 		
-		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+		if (m_Editor.GetSettings().QuickMoveFollowsCamera) {
 			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * value);
 		} else {
 			QuickTransformObjects(Vector(0, 0, value));
@@ -331,12 +327,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectBackward");
 		
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GetSettings().QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
 		
-		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+		if (m_Editor.GetSettings().QuickMoveFollowsCamera) {
 			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * -value);
 		} else {
 			QuickTransformObjects(Vector(0, 0, -value));
@@ -348,12 +344,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectLeft");
 		
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GetSettings().QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
 		
-		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+		if (m_Editor.GetSettings().QuickMoveFollowsCamera) {
 			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * vector.Up * value);
 		} else {
 			QuickTransformObjects(Vector(-value, 0, 0));
@@ -365,12 +361,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectRight");
 		
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GetSettings().QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
 		
-		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+		if (m_Editor.GetSettings().QuickMoveFollowsCamera) {
 			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * vector.Up * -value);
 		} else {
 			QuickTransformObjects(Vector(value, 0, 0));
@@ -382,12 +378,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectUp");
 		
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GetSettings().QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
 		
-		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+		if (m_Editor.GetSettings().QuickMoveFollowsCamera) {
 			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * vector.Aside * value);
 		} else {
 			QuickTransformObjects(Vector(0, value, 0));
@@ -399,12 +395,12 @@ class EditorClientModule: JMModuleBase
 		if (!ShouldProcessQuickInput(input)) return;
 		//EditorLog.Trace("Editor::OnEditorMoveObjectDown");
 		
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GetSettings().QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
 		
-		if (m_Editor.Settings.QuickMoveFollowsCamera) {
+		if (m_Editor.GetSettings().QuickMoveFollowsCamera) {
 			QuickTransformObjects(m_Editor.GetCamera().GetDirection() * vector.Aside * -value);
 		} else {
 			QuickTransformObjects(Vector(0, -value, 0));
@@ -417,7 +413,7 @@ class EditorClientModule: JMModuleBase
 	{
 		//if (!ShouldProcessQuickInput(input)) return;
 		
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GetSettings().QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
@@ -440,7 +436,7 @@ class EditorClientModule: JMModuleBase
 	{
 		//if (!ShouldProcessQuickInput(input)) return;
 		
-		float value = m_Editor.Settings.QuickMoveStepSize;
+		float value = m_Editor.GetSettings().QuickMoveStepSize;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
@@ -463,7 +459,7 @@ class EditorClientModule: JMModuleBase
 	{
 		//if (!ShouldProcessQuickInput(input)) return;
 		
-		float value = m_Editor.Settings.QuickMoveStepSize * 0.1;
+		float value = m_Editor.GetSettings().QuickMoveStepSize * 0.1;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}
@@ -479,7 +475,7 @@ class EditorClientModule: JMModuleBase
 	{
 		//if (!ShouldProcessQuickInput(input)) return;
 		
-		float value = m_Editor.Settings.QuickMoveStepSize * 0.1;
+		float value = m_Editor.GetSettings().QuickMoveStepSize * 0.1;
 		if (GetGame().GetInput().LocalValue("EditorCameraSlow")) {
 			value *= 0.025;
 		}

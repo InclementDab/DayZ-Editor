@@ -42,6 +42,8 @@ class EditorSettings: ProfileSettings
 	string EditorProtoFile 			= Editor.ROOT_DIRECTORY + "MapGroupProto.xml";
 	
 	LogLevel SelectedLogLevel 		= LogLevel.WARNING;
+	
+	ref array<string> FavoriteItems = {};
 
 	// Its a pseduo-controller, preferences dialogs!!
 	void PropertyChanged(string property_name)

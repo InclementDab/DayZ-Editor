@@ -73,14 +73,14 @@ class CfgVehicles
 	};
 	class GizmoArrow : GizmoBase
 	{
-		scope = 0;
+		scope = 1;
 		model = "\DayZEditor\Editor\TranslationWidget.p3d";
 		shadow = 0;
 	};
 
 	class GizmoCenter : GizmoBase
 	{
-		scope = 0;
+		scope = 1;
 		model = "\DayZEditor\Editor\TranslationCenter.p3d";
 		shadow = 0;
 	};

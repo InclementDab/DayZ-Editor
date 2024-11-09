@@ -21,6 +21,11 @@ class EditorPlaceableListItem: EditorListItem
 		EditorEvents.OnRemoveFromHand.Insert(OnStopPlacing);
 #endif
 		
+		if (GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1) {
+			m_TemplateController.Favorite = true;
+			m_TemplateController.NotifyPropertyChanged("Favorite");
+		}
+		
 		GetLayoutRoot().ClearFlags(WidgetFlags.DRAGGABLE);
 	}
 	
@@ -120,7 +125,12 @@ class EditorPlaceableListItem: EditorListItem
 		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;
 		
 		if (m_PlaceableItem && !IsBlacklistedItem(m_PlaceableItem.Type)) {
-			tooltip.SetContent(GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE));
+			Object preview = GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE);
+			if (preview) {
+				tooltip.SetContent(preview);
+			} else {
+				tooltip.SetContent(m_PlaceableItem.Type);
+			}
 		}		
 		
 		GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
@@ -186,21 +196,22 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnFavoriteToggle(CheckBoxCommandArgs args)
 	{
-		array<string> favorite_items = {};
-		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		EditorLog.Debug("Toggling Favorite Favorite %1", m_PlaceableItem.Type);
-		if (!m_TemplateController.Favorite) {
-			favorite_items.Insert(m_PlaceableItem.Type);
+
+		EditorSettings settings = GetEditor().GetSettings();
+		if (!args.GetCheckBoxState()) {
+			int index = settings.FavoriteItems.Find(m_PlaceableItem.Type);
+			if (index != -1) {
+				settings.FavoriteItems.Remove(index);
+				settings.Save();
+			}
 		} else {
-			// fixes a bug where several versions of an item were being placed in
-			while (favorite_items.Find(m_PlaceableItem.Type) != -1) {
-				favorite_items.Remove(favorite_items.Find(m_PlaceableItem.Type));					
+			if (settings.FavoriteItems.Find(m_PlaceableItem.Type) == -1) {
+				settings.FavoriteItems.Insert(m_PlaceableItem.Type);
+				settings.Save();
 			}
 		}
-		
-		Print(favorite_items.Count());
-		GetGame().SetProfileStringList("EditorFavoriteItems", favorite_items);
-		GetGame().SaveProfile();
+
 		return true;
 	}
 }

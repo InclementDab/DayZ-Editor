@@ -20,6 +20,7 @@ class EditorMessageBox: MessageBox
 		}
 		
 		EditorHud.CurrentDialog = this;
+		m_EditorHud.ClearCurrentTooltip();
 	}
 	
 	private void ~EditorMessageBox()

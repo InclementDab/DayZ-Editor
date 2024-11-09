@@ -4,7 +4,7 @@ class EditorReloadBrushesCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().BrushTypeBoxData.Clear();
-		m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().ReloadBrushes(m_Editor.Settings.EditorBrushFile);
+		m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().ReloadBrushes(m_Editor.GetSettings().EditorBrushFile);
 		return true;
 	}
 	

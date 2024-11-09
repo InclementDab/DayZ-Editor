@@ -1,9 +1,13 @@
-class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorController>
+class EditorInventoryEditorHud: ScriptViewMenu
 {
 	static const string FILE_EXTENSION = ".dzeinv";
 	
+	protected EditorInventoryEditorController m_TemplateController;
+	
 	protected EditorInventoryEditorCamera m_Camera;
 	protected EntityAI m_Entity;
+
+	Widget OpenInventoryOutline;
 	
 	void EditorInventoryEditorHud(notnull EntityAI entity)
 	{
@@ -19,16 +23,39 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 		//m_Camera.LerpToPosition(target_pos, 1.0);
 		m_Camera.SetPosition(target_pos);
 		m_Camera.Update();
-		GetGame().SelectPlayer(null, null);
+		//GetGame().SelectPlayer(null, null);
 
 		m_Camera.SetActive(true);
 		
+		m_TemplateController = EditorInventoryEditorController.Cast(m_Controller);
 		m_TemplateController.SetEntity(m_Entity);
 	}
 	
 	void ~EditorInventoryEditorHud()
 	{
 		GetGame().ObjectDelete(m_Camera);
+	}
+	
+	override void Update(float dt)
+	{
+		super.Update(dt);
+		
+		Input input = GetGame().GetInput();
+		if (input.LocalPress("EditorToggleUI")) {
+			Show(!IsVisible());
+		}
+		
+		if (input.LocalPress("EditorToggleCursor")) {
+			GetGame().GetUIManager().ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
+		}
+
+		PlayerBase player_entity = PlayerBase.Cast(m_Entity);
+		OpenInventoryOutline.Show(player_entity != null);
+	}
+	
+	override typename GetControllerType()
+	{
+		return EditorInventoryEditorController;
 	}
 	
 	void ClearExecute(ButtonCommandArgs args)
@@ -54,18 +81,16 @@ class EditorInventoryEditorHud: ScriptViewMenuTemplate<EditorInventoryEditorCont
 	
 	void OpenInventoryExecute(ButtonCommandArgs args)
 	{		
-		GetGame().SelectPlayer(null, GetGame().GetPlayer());
-		GetGame().GetPlayer().DisableSimulation(false);
-		GetGame().GetPlayer().GetInputController().SetDisabled(false);
-		GetGame().GetMission().ShowInventory();		
-		
-		Close();
+		PlayerBase player_entity = PlayerBase.Cast(m_Entity);
+		if (player_entity) {
+			GetEditor().SetPlayer(player_entity);
+			GetEditor().SetActive(false);
+		}
 	}
 	
 	void ExitExecute(ButtonCommandArgs args)
 	{
-		GetEditor().SetActive(true);
-		Close();
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetEditor().SetActive, 0, false, true);
 	}
 	
 	void ImportExecute(ButtonCommandArgs args)

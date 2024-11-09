@@ -11,7 +11,7 @@ class EditorCameraClassic: EditorCamera
 	
 	float Smoothing = 0;
 	
-	float Speed = GetEditor().Settings.CameraSpeed;
+	float Speed = GetEditor().GetSettings().CameraSpeed;
 	float Boost_Multiplier = 6.5;
 	float Drag = 0.05;
 	float Mouse_Sens = 35.0;
@@ -187,12 +187,12 @@ class EditorCameraClassic: EditorCamera
 
 		}
 
-		if (!GetEditor().Settings.AllowBelowGround) {
+		if (!GetEditor().GetSettings().AllowBelowGround) {
 			transform[3][1] = Math.Max(GetGame().SurfaceY(transform[3][0], transform[3][2]) + 0.1, transform[3][1]);
 		}
 				
 		SetTransform(transform);
-		GetEditor().Statistics.EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
+		GetEditor().GetStatistics().EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
 		
 		if (HideCursorOnDrag) {
 			if (input.LocalPress("UATempRaiseWeapon")) {
@@ -227,7 +227,7 @@ class EditorCameraClassic: EditorCamera
 			orientation[1] = Math.Clamp(orientation[1], -89.9, 89.9);
 		}
 		
-		orientation[2] = Math.NormalizeAngle(GetEditor().Settings.CameraTilt); //orientation[2]	
+		orientation[2] = Math.NormalizeAngle(GetEditor().GetSettings().CameraTilt); //orientation[2]	
 		SetOrientation(orientation);
 
 		if (IsTargeting) {

@@ -25,7 +25,7 @@ class EditorClipboard
 		}
 	
 		string clipboard_data = JsonFileLoader<array<EditorObjectData>>.JsonMakeData(world_objects);
-		if (GetEditor().Settings.MinifyCopyData) {
+		if (GetEditor().GetSettings().MinifyCopyData) {
 			clipboard_data.Replace("\r", "");
 			clipboard_data.Replace("\t", "");
 			clipboard_data.Replace("\n", "");

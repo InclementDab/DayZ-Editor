@@ -89,9 +89,10 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	void OnSelected() 
 	{
 		IsSelected = true;
-		CameraTrackGroupWrapper.SetColor(m_Editor.Settings.SelectionColor);
-		MainContainerWrapper.SetColor(m_Editor.Settings.HighlightColor);
-		CameraTrackOptionButton.SetColor(m_Editor.Settings.MarkerPrimaryColor);
+		CameraTrackGroupWrapper.SetColor(m_Editor.GetSettings().SelectionColor);
+		MainContainerWrapper.SetColor(m_Editor.GetSettings().HighlightColor);
+		CameraTrackOptionButton.SetColor(m_Editor.GetSettings().MarkerPrimaryColor);
+
 	}
 		
 	void OnDeselected() 

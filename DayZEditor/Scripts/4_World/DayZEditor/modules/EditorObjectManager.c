@@ -58,7 +58,7 @@ class EditorObjectManagerModule : Managed
 			{
 				string type;
 				GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1 && editor.Settings && !editor.Settings.ShowScopeZeroObjects)
+				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1 && editor.GetSettings() && !editor.GetSettings().ShowScopeZeroObjects)
 				{
 					continue;
 				}
@@ -103,24 +103,6 @@ class EditorObjectManagerModule : Managed
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase));
 	}
 
-	static void RecursiveGetFiles(string directory, inout array<ref CF_File> files, string pattern = "*")
-	{
-		array<ref CF_File> directories = { };
-		// first get all directories and recurse them
-		if (CF_Directory.GetFiles(directory + "*", directories, FindFileFlags.ARCHIVES))
-		{
-			foreach (CF_File subdirectory: directories) {
-				if (subdirectory.IsDirectory())
-				{
-					Print(subdirectory.GetFullPath() + "/");
-					RecursiveGetFiles(subdirectory.GetFullPath() + "/", files, pattern);
-				}
-			}
-		}
-
-		CF_Directory.GetFiles(directory + pattern, files, FindFileFlags.ARCHIVES);
-	}
-
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{
 		EditorLog.Trace("EditorObjectManager::CreateObject");
@@ -139,7 +121,7 @@ class EditorObjectManagerModule : Managed
 
 		EditorEvents.ObjectCreated(this, editor_object);
 
-		GetEditor().Statistics.EditorPlacedObjects++;
+		GetEditor().GetStatistics().EditorPlacedObjects++;
 		return editor_object;
 	}
 
@@ -206,7 +188,7 @@ class EditorObjectManagerModule : Managed
 
 		m_DeletedObjects.InsertEditorDeletedObject(target);
 
-		GetEditor().Statistics.EditorRemovedObjects++;
+		GetEditor().GetStatistics().EditorRemovedObjects++;
 	}
 
 	void UnhideMapObject(int target)
@@ -264,7 +246,7 @@ class EditorObjectManagerModule : Managed
 
 		m_EditorObjectRefs.Clear();
 		m_EditorDeletedObjectRefs.Clear();
-		GetEditor().Statistics.Save();
+		GetEditor().GetStatistics().Save();
 	}
 
 	bool IsObjectHidden(EditorDeletedObject deleted_object)

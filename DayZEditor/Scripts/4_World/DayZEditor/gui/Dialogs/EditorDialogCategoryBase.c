@@ -16,6 +16,7 @@ class EditorDialogCategoryBase: DialogCategoryBase
 		}
 		
 		EditorHud.CurrentDialog = this;
+		m_EditorHud.ClearCurrentTooltip();
 		
 		//! Set Dialog to last saved position
 		if (m_EditorHud.GetLastDialogPosition(this)) {
