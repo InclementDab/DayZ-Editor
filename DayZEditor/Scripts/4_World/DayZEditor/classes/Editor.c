@@ -73,6 +73,7 @@ class Editor: Managed
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
+	protected ref EditorGizmo m_CurrentGizmo;
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorActionStack 				m_ActionStack;
@@ -889,6 +890,11 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
+		GizmoBase gizmo = GizmoBase.Cast(target);
+		if (gizmo) {
+			gizmo.OnIntersectMouse(GetCursorRay());
+		}
+
 		m_EditorHudController.ObjectReadoutName = GetObjectName(target, component_index);
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		
@@ -904,6 +910,11 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{
+		GizmoBase gizmo = GizmoBase.Cast(target);
+		if (gizmo) {
+			gizmo.OnUnintersectMouse(GetCursorRay());
+		}
+
 		m_EditorHudController.ObjectReadoutName = "";
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		return true;
@@ -1909,21 +1920,36 @@ class Editor: Managed
 	void SelectObject(EditorObject target) 
 	{
 		m_ObjectManager.SelectObject(target);
+
+		// should this be here?
+		m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
 	}
 	
 	void DeselectObject(EditorObject target) 
 	{
 		m_ObjectManager.DeselectObject(target);
+
+		delete m_CurrentGizmo;
+		if (m_ObjectManager.GetSelectedObjects().Count()) {
+			m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
+		}
 	}
 	
 	void ToggleSelection(EditorObject target) 
 	{
 		m_ObjectManager.ToggleSelection(target);
+
+		delete m_CurrentGizmo;
+		if (m_ObjectManager.GetSelectedObjects().Count()) {
+			m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
+		}
 	}
 		
 	void ClearSelection() 
 	{
 		m_ObjectManager.ClearSelection();
+
+		delete m_CurrentGizmo;
 	}
 	
 	void SelectHiddenObject(EditorDeletedObject target)

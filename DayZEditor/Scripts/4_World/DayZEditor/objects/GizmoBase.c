@@ -1,133 +1,118 @@
-class GizmoBase: Inventory_Base
+class EditorGizmo: Managed
 {
-	void GizmoBase()
+
+}
+
+class EditorTranslationGizmo: EditorGizmo
+{
+	protected ref EditorObjectMap m_ObjectList;
+	protected ref array<GizmoBase> m_Gizmos = {};
+
+	void EditorTranslationGizmo(EditorObjectMap object_map)
 	{
-		EditorLog.Trace("GizmoBase");
-	}
-	
-	void ~GizmoBase()
-	{
-		EditorLog.Trace("~GizmoBase");
-	}
-		
-	void ResetColor()
-	{
-		SetColor(GetColor());
+		m_ObjectList = object_map;
+		if (m_ObjectList.Count() == 0) {
+			return;
+		}
+
+		EditorObject first_object = m_ObjectList.GetElement(0);
+		vector gizmo_center = first_object.GetTopCenter();
+
+		GizmoBase gizmo_x = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowX", gizmo_center, ECE_NONE));
+		vector gizmo_x_mat[4] = {
+			-vector.Forward,
+			vector.Aside,
+			-vector.Up,
+			gizmo_center
+		};
+		gizmo_x.SetTransform(gizmo_x_mat);
+		gizmo_x.Update();
+		m_Gizmos.Insert(gizmo_x);
+
+		GizmoBase gizmo_y = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowY", gizmo_center, ECE_NONE));
+		vector gizmo_y_mat[4] = {
+			"1 0 0",
+			"0 1 0",
+			"0 0 1",
+			gizmo_center
+		};
+		gizmo_y.SetTransform(gizmo_y_mat);
+		gizmo_y.Update();
+		m_Gizmos.Insert(gizmo_y);
+
+		GizmoBase gizmo_z = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowZ", gizmo_center, ECE_NONE));
+		vector gizmo_z_mat[4] = {
+			vector.Aside,
+			vector.Forward,
+			-vector.Up,
+			gizmo_center
+		};
+		gizmo_y.SetTransform(gizmo_z_mat);
+		gizmo_z.Update();
+		m_Gizmos.Insert(gizmo_z);
 	}
 
-	void SetColor(string color)
-	{	
-		SetObjectTexture(GetHiddenSelectionIndex("main"), color);
-	}
-	
-	string GetColor() 
+	void ~EditorTranslationGizmo()
 	{
-		return "#(argb,8,8,3)color(0,0,0,1.0,co)";
+		foreach (Object gizmo: m_Gizmos) {
+			if (gizmo) {
+				gizmo.Delete();
+			}
+		}
+	}
+}
+
+class GizmoBase: EntityAI
+{		
+	void OnIntersectMouse(Ray ray)
+	{
 	}
 	
-	void OnMouseEnter();
-	
-	void OnMouseLeave();
-	
-	void OnDragStart();
-	
-	void OnDragFinish();
-	
+	void OnUnintersectMouse(Ray ray)
+	{
+	}
 }
 
 
-class GizmoArrow: GizmoBase
+class GizmoArrowX: GizmoBase
 {
-	
+	override void OnIntersectMouse(Ray ray)
+	{
+		SetObjectTexture(GetHiddenSelectionIndex("main"), "(argb,8,8,3)color(0.5,0.5,0.5,1.0,co)");
+	}
+
+	override void OnUnintersectMouse(Ray ray)
+	{
+		SetObjectTexture(GetHiddenSelectionIndex("main"), "(argb,8,8,3)color(1,1,0,1.0,co)");
+	}
+}
+
+class GizmoArrowY: GizmoBase
+{
+	override void OnIntersectMouse(Ray ray)
+	{
+		SetObjectTexture(GetHiddenSelectionIndex("main"), "(argb,8,8,3)color(0.5,0.5,0.5,1.0,co)");
+	}
+
+	override void OnUnintersectMouse(Ray ray)
+	{
+		SetObjectTexture(GetHiddenSelectionIndex("main"), "(argb,8,8,3)color(1,1,0,1.0,co)");
+	}
+}
+
+class GizmoArrowZ: GizmoBase
+{
+	override void OnIntersectMouse(Ray ray)
+	{
+		SetObjectTexture(GetHiddenSelectionIndex("main"), "(argb,8,8,3)color(0.5,0.5,0.5,1.0,co)");
+	}
+
+	override void OnUnintersectMouse(Ray ray)
+	{
+		SetObjectTexture(GetHiddenSelectionIndex("main"), "(argb,8,8,3)color(1,1,0,1.0,co)");
+	}
 }
 
 class GizmoCenter: GizmoBase
 {
-	override string GetColor()
-	{
-		return "#(argb,8,8,3)color(0.5,0.5,0.5,1.0,CO)";
-	}
-}
-
-class GizmoX: GizmoArrow
-{
-	override string GetColor()
-	{
-		return "#(argb,8,8,3)color(1,0,0,1.0,co)";
-	}
-}
-
-class GizmoY: GizmoArrow
-{
-	override string GetColor()
-	{
-		return "#(argb,8,8,3)color(0,1,0,1.0,co)";
-	}
-}
-
-class GizmoZ: GizmoArrow
-{
-	override string GetColor()
-	{
-		return "#(argb,8,8,3)color(0,0,1,1.0,co)";
-	}
-}
-
-class EditorGizmo
-{
-	protected ref Timer m_Timer = new Timer(CALL_CATEGORY_SYSTEM);
-	
-	ref array<GizmoBase> m_GizmoBaseParts = {};
-	
-	// trade position for object
-	void EditorGizmo(vector position)
-	{	
-		Print("EditorGizmo");
-		m_GizmoBaseParts.Insert(GizmoBase.Cast(GetGame().CreateObjectEx("GizmoCenter", position, ECE_LOCAL)));
-		m_GizmoBaseParts.Insert(GizmoBase.Cast(GetGame().CreateObjectEx("GizmoX", position, ECE_LOCAL)));
-		m_GizmoBaseParts.Insert(GizmoBase.Cast(GetGame().CreateObjectEx("GizmoY", position, ECE_LOCAL)));
-		m_GizmoBaseParts.Insert(GizmoBase.Cast(GetGame().CreateObjectEx("GizmoZ", position, ECE_LOCAL)));
-		
-		foreach (GizmoBase gb: m_GizmoBaseParts) {
-			gb.ResetColor();
-		}
-		
-		// X
-		m_GizmoBaseParts[2].SetOrientation("0 0 90");
-		m_GizmoBaseParts[2].Update();
-		
-		// Y
-		m_GizmoBaseParts[3].SetOrientation("-90 0 90");
-		m_GizmoBaseParts[3].Update();
-		
-		m_Timer.Run(0.01, this, "UpdateFrame", null, true);
-	}
-	
-	void ~EditorGizmo()
-	{
-		Print("~EditorGizmo");
-		m_Timer.Stop();
-		delete m_Timer;
-		
-		foreach (GizmoBase gb: m_GizmoBaseParts) {
-			gb.Delete();
-		}
-	}
-	
-	private void UpdateFrame()
-	{
-		Object obj = Editor.GetObjectUnderCursor();
-		GizmoBase gizmo_base;
-		
-		//Print(obj);
-		
-		foreach (GizmoBase gb: m_GizmoBaseParts) {
-			gb.ResetColor();
-		}
-		
-		// Set yellow
-		if (Class.CastTo(gizmo_base, obj)) {
-			//gizmo_base.SetColor("#(argb,8,8,3)color(1,1,0,1.0,co)");
-		}
-	}
 }

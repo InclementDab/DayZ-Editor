@@ -64,20 +64,37 @@ class CfgVehicles
 		model = "\DayZEditor\Editor\xmas_gift_blue2.p3d";
 	};
 
-	class Inventory_Base;
-	class GizmoBase : Inventory_Base
+	class GizmoBase : HouseNoDestruct
 	{
 		scope = 0;
 		hiddenSelections[] = {"main"};
 		shadow = 0;
 	};
-	class GizmoArrow : GizmoBase
+	
+	class GizmoArrowX: GizmoBase
 	{
 		scope = 1;
-		model = "\DayZEditor\Editor\TranslationWidget.p3d";
+		model = "\DayZEditor\Editor\TranslationWidgetX.p3d";
+		hiddenSelections[] = {"main"};
 		shadow = 0;
 	};
 
+	class GizmoArrowY: GizmoBase
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\TranslationWidgetY.p3d";
+		hiddenSelections[] = {"main"};
+		shadow = 0;
+	};
+
+	class GizmoArrowZ: GizmoBase
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\TranslationWidgetZ.p3d";
+		hiddenSelections[] = {"main"};
+		shadow = 0;
+	};
+	
 	class GizmoCenter : GizmoBase
 	{
 		scope = 1;
@@ -85,7 +102,7 @@ class CfgVehicles
 		shadow = 0;
 	};
 
-	class RotationWidget : Inventory_Base
+	class RotationWidget : GizmoBase
 	{
 		scope = 1;
 		itemSize[]={16,16};
@@ -94,7 +111,7 @@ class CfgVehicles
 		shadow = 0;
 	};
 
-	class BrushBase : Inventory_Base
+	class BrushBase : HouseNoDestruct
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\BrushBase.p3d";
