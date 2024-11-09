@@ -107,6 +107,7 @@ class EditorBrush
 			flags |= EditorObjectFlags.LISTITEM;
 		}
 
+		map<int, ref Param2<vector, EditorBrushObject>> brushes_data = new map<int, ref Param2<vector, EditorBrushObject>>();
 		for (int i = 0; i < Math.Sqrt(BrushDensity) * 24; i++) {
 			vector pos = position;
 			pos[0] = pos[0] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
@@ -130,22 +131,26 @@ class EditorBrush
 				continue;
 			}
 
-			Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
-			if (!brushed_object) {
-				continue;
-			}
-
-			vector size = ObjectGetSize(brushed_object);
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
+			EditorObjectData brushed_object_data = EditorObjectData.Create(object_name.Name, pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale), EFE_BRUSHED);
+			
+			// pass onto second pass
+			brushes_data[brushed_object_data.GetID()] = new Param2<vector, EditorBrushObject>(pos, object_name);
 
 			// just for u boba
-			//brushed_object.SetPosition(pos);
-			//brushed_object.SetDirection(direction);
-			brushed_object.SetScale(Math.RandomFloat(object_name.MinScale, object_name.MaxScale));
-			created_data.Insert(EditorObjectData.Create(brushed_object, flags));
+			created_data.Insert(brushed_object_data);
 		}
 
-		GetEditor().CreateObjects(created_data, true);
+		EditorObjectMap object_map = GetEditor().CreateObjects(created_data, true);
+		foreach (int id, EditorObject editor_object_brushed: object_map) {
+			if (editor_object_brushed) {
+				vector new_pos = brushes_data[id].param1;
+				vector size = ObjectGetSize(editor_object_brushed.GetWorldObject());
+				new_pos[1] = GetGame().SurfaceY(new_pos[0], new_pos[2]) + size[1] - 0.5 + brushes_data[id].param2.ZOffset;
+				editor_object_brushed.SetScale(Math.RandomFloat(brushes_data[id].param2.MinScale, brushes_data[id].param2.MaxScale));
+				editor_object_brushed.SetPosition(new_pos);
+			}
+			
+		}
 	}
 
 	void OnMouseUp(vector position)

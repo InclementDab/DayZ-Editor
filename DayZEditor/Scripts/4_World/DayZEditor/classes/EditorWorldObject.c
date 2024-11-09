@@ -34,18 +34,18 @@ class EditorWorldObject
 
 		//TODO Object returns model name, need to add a fallback to the path
 		Object object;
-		if (type.Contains("\\"))
-		{
+		
+		if (File.WildcardMatch(type, "*.p3d")) {
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
+			object.SetPosition(position);
+			object.SetOrientation(orientation);
 			Print(" object:" + object.GetType() + ":");
 		}
-		else
-		{
+		else {
 			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
 		}
 
-		if (!object)
-		{
+		if (!object) {
 			EditorLog.Warning("EditorWorldObject: Invalid Object %1", type);
 			return null;
 		}

@@ -9,6 +9,7 @@ class EditorObject: EditorWorldObject
 	protected Object 		m_BBoxBase;
 	protected Object 		m_CenterLine;
 	protected Object		m_BasePoint;
+	protected vector m_VectorBasePoint;
 	
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 	
@@ -160,11 +161,7 @@ class EditorObject: EditorWorldObject
 		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
 		
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-		m_BasePoint = GetGame().CreateObjectEx("BoundingBoxBase", base_point, ECE_NONE);
-		m_BasePoint.SetScale(0.001);
-		m_BasePoint.ClearFlags(EntityFlags.VISIBLE | EntityFlags.SOLID | EntityFlags.TOUCHTRIGGERS, true);
-
-		AddChild(m_BasePoint, -1, true);
+		m_VectorBasePoint = base_point;
 		
 		// Bounding Box
 		EnableBoundingBox(IsBoundingBoxEnabled());
@@ -660,7 +657,7 @@ class EditorObject: EditorWorldObject
 	
 	float GetYDistance()
 	{
-		return ((GetPosition() - m_BasePoint.GetPosition())[1]);
+		return -m_VectorBasePoint[1];
 	}
 	
 	float GetAngle()

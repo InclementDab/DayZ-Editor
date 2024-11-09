@@ -1,6 +1,12 @@
 static Object SpawnObject(string type, vector position, vector orientation, float scale = 1.0)
 {
-    Object obj = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS);
+    Object obj;
+    if (type.Contains(".p3d")) {
+        obj = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale, false);
+    } else {        
+        obj = GetGame().CreateObjectEx(type, type, ECE_SETUP | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_WORLD | ECE_NOPERSISTENCY_CHAR);
+    }
+
     if (!obj) {
         Error("Failed to create object " + type);
         return null;
