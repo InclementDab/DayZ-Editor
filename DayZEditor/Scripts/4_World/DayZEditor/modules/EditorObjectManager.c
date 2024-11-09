@@ -72,80 +72,30 @@ class EditorObjectManagerModule : Managed
 				m_PlaceableObjects.Insert(placeable_item);
 				m_PlaceableObjectsByType[placeable_item.Type] = placeable_item;
 
-
-				//? Why is this needed here? 
-				// if (!m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()])
-				// {
-				// 	m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()] = new array<EditorPlaceableItem>();
-				// }
-
-				// m_PlaceableObjectsByP3d[placeable_item.Model.GetFileName()].Insert(placeable_item);
 			}
 		}
 
-		// handle static p3d objects
-		/*
-		array<ref CF_File> files = {};
-		// i want to search the WHOLE FUCKING GAME but i CANT
-		RecursiveGetFiles("*", files, "\\*.p3d");
-		
-		foreach (CF_File file: files) {
-			Print(file.GetFileName());
-			if (file.GetExtension() != ".p3d") {
-				continue;
-			}
-			
-			
-		}*/
+		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/plants_sakhal", "DZ/rocks", "DZ/rocks_bliss", "DZ/rocks_sakhal" };
 
-		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/rocks", "DZ/rocks_bliss" };
-		
-		
+		// handle static objects
 		foreach (string model_path: paths) {
 			array<string> p3d_files = Directory.EnumerateFiles(model_path, "*.p3d");
 			foreach (string p3d_file: p3d_files) {
 
 				// reformat and proper the p3d file
 				p3d_file = SystemPath.Format(p3d_file);
-				
+
 				EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(p3d_file);
 				m_PlaceableObjects.Insert(placeable_item_p3d);
-				
-				if (!m_PlaceableObjectsByP3d[p3d_file]) {
-					m_PlaceableObjectsByP3d[p3d_file] = {};
+
+				if (!m_PlaceableObjectsByP3d[p3d_file])
+				{
+					m_PlaceableObjectsByP3d[p3d_file] = { };
 				}
-				
+
 				m_PlaceableObjectsByP3d[p3d_file].Insert(placeable_item_p3d);
 			}
 		}
-		/*
-		//TODO Figure out how to insert them again
-		foreach (string p3d:P3DRocks){
-			array<ref CF_File> files = { };
-
-
-			if (CF_Directory.GetFiles(p3d, files, FindFileFlags.ARCHIVES))
-			{
-
-				foreach (CF_File file: files) {
-					EditorLog.Info("Reading Path");
-					Print(file.GetFileName());
-					Print(file.GetFullPath());
-
-					EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(file);
-					m_PlaceableObjects.Insert(placeable_item_p3d);
-
-					if (!m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()])
-					{
-						m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()] = new array<EditorPlaceableItem>();
-					}
-
-					m_PlaceableObjectsByP3d[placeable_item_p3d.Model.GetFileName()].Insert(placeable_item_p3d);
-				}
-			}
-		}*/
-		//}
-
 
 		// Statics that belong to Editor / DF
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
