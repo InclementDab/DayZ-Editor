@@ -575,6 +575,18 @@ class Editor: Managed
 			}
 		}
 		
+		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera) {
+			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
+				GetCamera().GetSettings().Speed += Math.Ln(GetCamera().GetSettings().Speed + 1);
+			}
+			
+			if (input.LocalValue("EditorCameraToolSpeedDecrease")) {
+				GetCamera().GetSettings().Speed -= Math.Ln(GetCamera().GetSettings().Speed + 1);
+			}
+			
+			GetCamera().GetSettings().Speed = Math.Clamp(GetCamera().GetSettings().Speed, EditorCamera.SPEED_MIN, EditorCamera.SPEED_MAX);
+		}
+		
 		// This is all the logic that controls inventory hud, not a fan but it works
 		// update: it doesnt work
 		// update 2: it works

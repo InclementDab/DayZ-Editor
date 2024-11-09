@@ -104,6 +104,7 @@ class EditorPlaceableItem : Managed
 		//! In theory should be safe but just in case
 		if (model.Contains("Fx")) return true;
 		if (model == "ItemOptics") return true;
+		if (model == "Access") return true;
 
 		//! Cursed items
 		if (model == "AKM_TESTBED") return true;

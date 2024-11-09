@@ -109,11 +109,13 @@ class EditorBrush
 
 		map<int, ref Param2<vector, EditorBrushObject>> brushes_data = new map<int, ref Param2<vector, EditorBrushObject>>();
 		for (int i = 0; i < Math.Sqrt(BrushDensity) * 24; i++) {
-			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]);
-
+			float edge_length = BrushRadius; // whatever the size of your box is
+			float radius_random = Math.Sqrt(Math.RandomFloat01()) * edge_length;
+			float theta_random = Math.RandomFloat01() * Math.PI2;
+			float x_random = position[0] + radius_random * Math.Cos(theta_random);
+			float z_random = position[2] + radius_random * Math.Sin(theta_random);
+			vector point = { x_random, GetGame().SurfaceY(x_random, z_random), z_random };
+			
 			EditorBrushObject object_name = m_BrushData.GetRandomObject();
 			if (!object_name) {
 				continue;
@@ -126,15 +128,15 @@ class EditorBrush
 			ori[2] = Math.RandomFloatInclusive(-4, 4);
 
 			array<Object> objects = {};
-			GetGame().GetObjectsAtPosition3D(pos, BrushWidth, objects, null);
+			GetGame().GetObjectsAtPosition3D(point, BrushWidth, objects, null);
 			if (objects.Count() > 0) {
 				continue;
 			}
 
-			EditorObjectData brushed_object_data = EditorObjectData.Create(object_name.Name, pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale), EditorObjectFlags.OBJECTMARKER);
+			EditorObjectData brushed_object_data = EditorObjectData.Create(object_name.Name, point, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale), EditorObjectFlags.OBJECTMARKER);
 			
 			// pass onto second pass
-			brushes_data[brushed_object_data.GetID()] = new Param2<vector, EditorBrushObject>(pos, object_name);
+			brushes_data[brushed_object_data.GetID()] = new Param2<vector, EditorBrushObject>(point, object_name);
 
 			// just for u boba
 			created_data.Insert(brushed_object_data);

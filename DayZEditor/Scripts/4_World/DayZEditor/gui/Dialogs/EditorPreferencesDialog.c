@@ -43,11 +43,14 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_SCREEN_LOGS", m_Editor.Settings, "ShowScreenLogs"));
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_BOUNDING_BOXES", m_Editor.Settings, "ShowBoundingBoxes"));
 		
+		
 		GroupPrefab camera_group = new GroupPrefab("#STR_EDITOR_CAMERA", m_Editor.Settings, string.Empty);
-		camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_SPEED", m_Editor.Settings, "CameraSpeed", 0, 500));
-		camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_TILT", m_Editor.Settings, "CameraTilt", -90, 90));
-		camera_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_RULE_OF_THIRDS", m_Editor.Settings, "RuleOfThirds"));
-		camera_group.Insert(new CheckBoxPrefab("Allow Below Ground", m_Editor.Settings, "AllowBelowGround"));
+		if (GetEditor().GetCamera().GetSettings().LegacyCamera) {
+			camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_SPEED", m_Editor.Settings, "CameraSpeed", 0, 500));
+			camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_TILT", m_Editor.Settings, "CameraTilt", -90, 90));
+			camera_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_RULE_OF_THIRDS", m_Editor.Settings, "RuleOfThirds"));
+			camera_group.Insert(new CheckBoxPrefab("Allow Below Ground", m_Editor.Settings, "AllowBelowGround"));
+		}
 		
 		GroupPrefab marker_group = new GroupPrefab("#STR_EDITOR_MARKERS", m_Editor.Settings, string.Empty);
 		marker_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_TOOLTIPS", m_Editor.Settings, "MarkerTooltips"));
@@ -77,9 +80,11 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		general_category.AddContent(general_group);
 		AddContent(general_category);
 		
-		DialogCategoryListItem camera_category("#STR_EDITOR_CAMERA");
-		camera_category.AddContent(camera_group);
-		AddContent(camera_category);
+		if (GetEditor().GetCamera().GetSettings().LegacyCamera) {
+			DialogCategoryListItem camera_category("#STR_EDITOR_CAMERA");
+			camera_category.AddContent(camera_group);
+			AddContent(camera_category);
+		}
 		
 		DialogCategoryListItem marker_category("#STR_EDITOR_MARKERS");
 		marker_category.AddContent(marker_group);

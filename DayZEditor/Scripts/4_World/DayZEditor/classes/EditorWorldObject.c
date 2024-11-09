@@ -26,7 +26,6 @@ class EditorWorldObject
 	{
 		type = type.Trim();
 		type.Replace("\/", "\\");
-		Print(" Type:" + type + ":");
 		if (type == string.Empty)
 		{
 			return null;
@@ -39,7 +38,6 @@ class EditorWorldObject
 			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
 			object.SetPosition(position);
 			object.SetOrientation(orientation);
-			Print(" object:" + object.GetType() + ":");
 		}
 		else {
 			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);

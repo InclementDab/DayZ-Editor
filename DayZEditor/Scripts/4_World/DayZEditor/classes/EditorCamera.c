@@ -52,6 +52,10 @@ class EditorCamera: Camera
 	const float SLOW_MULTIPLIER = 0.2;
 	
 	const float TELEPORT_LERP_DISTANCE = 1000;
+	
+	const float SPEED_DEFAULT = 60;
+	const float SPEED_MAX = 300;
+	const float SPEED_MIN = 1;
 
 	void EditorCamera()
 	{
@@ -80,6 +84,9 @@ class EditorCameraSettings: ProfileSettings
 {
 	[RegisterProfileSettingSlider("CAMERA", "ViewDistance", "View Distance", EditorCamera.VIEW_DISTANCE_MIN, EditorCamera.VIEW_DISTANCE_MAX)]
 	float ViewDistance = EditorCamera.VIEW_DISTANCE_DEFAULT;
+	
+	[RegisterProfileSettingSlider("CAMERA", "Speed", "Camera Speed (m/s)", EditorCamera.SPEED_MIN, EditorCamera.SPEED_MAX)]
+	float Speed = EditorCamera.SPEED_DEFAULT;
 
 	[RegisterProfileSettingSlider("CAMERA", "FieldOfView", "Field Of View", EditorCamera.FOV_MIN, EditorCamera.FOV_MAX)]
 	float FieldOfView = EditorCamera.FOV_DEFAULT;
@@ -174,7 +181,14 @@ class EditorCamera_V2: EditorCamera
 			teleport = input.GetInputByID(UAZoomIn).LocalPress();
 		}
 							
-		float speed = input.GetInputByID(UATurbo).LocalValue() - input.GetInputByID(UALookAround).LocalValue();
+		float speed = m_EditorCameraSettings.Speed;
+		if (input.GetInputByID(UATurbo).LocalValue()) {
+			speed *= TURBO_MULTIPLIER;
+		}
+		
+		if (input.GetInputByID(UALookAround).LocalValue()) {
+			speed /= TURBO_MULTIPLIER;
+		}
 
 		if (camera_lock & ECameraLockFlag.PAN_LOOK) {
 			vector offset_matrix[3]; 
@@ -198,18 +212,7 @@ class EditorCamera_V2: EditorCamera
 				transform[3] = cursor_ray.GetPoint(m_EditorCameraSettings.ViewDistance);
 			}
 		}
-		
-		if (speed > 0) {
-			speed *= TURBO_MULTIPLIER;
-		} else if (speed < 0) {
-			speed /= -TURBO_MULTIPLIER;
-		} else {
-			speed = 1.0;
-		}
-
-		// m/s
-		speed *= 120.0;
-
+				
 		// Process Angular Velocity, use angle addition. hope YawPitchRollMatrix normalizes it
 		vector orientation = GetOrientation();
 		
@@ -247,7 +250,7 @@ class EditorCamera_V2: EditorCamera
 		GetGame().GetWorld().SetEyeAccom(m_EditorCameraSettings.ExposureLevel);
 		GetGame().GetWorld().SetViewDistance(m_EditorCameraSettings.ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(m_EditorCameraSettings.ViewDistance);
-
+		
 		GetEditor().Statistics.EditorDistanceFlown += timeSlice * speed;
 	}
 
