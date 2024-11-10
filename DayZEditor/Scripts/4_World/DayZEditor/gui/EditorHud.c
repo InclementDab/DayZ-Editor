@@ -32,11 +32,11 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	
 	EditBoxWidget LeftbarSearchBar;
 	
-	void EditorHud()
+	void EditorHud(notnull Editor editor)
 	{	
 		EditorLog.Trace("EditorHud");
 		EditorMapWidget.Show(false);
-		
+				
 		ShowScreenLogs(GetEditor().GetSettings().ShowScreenLogs);
 	}
 	
@@ -151,6 +151,11 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		if (CurrentDialog) {
 			CurrentDialog.GetLayoutRoot().Show(show);
 		}
+	}
+	
+	void SetEditorMode(eEditorMode editor_mode)
+	{
+		//@ stub
 	}
 		
 	void ToggleCursor() 

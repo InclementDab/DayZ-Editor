@@ -29,7 +29,7 @@ FrameWidgetClass EditorFrame {
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
-     position 0 -0.00026
+     position 0.00023 0.00091
      size 1 1
      halign center_ref
      valign center_ref
@@ -170,7 +170,7 @@ FrameWidgetClass EditorFrame {
             }
            }
           }
-          PanelWidgetClass SearchFavoriteTabPanel {
+          WrapSpacerWidgetClass SearchFavoriteTabPanel {
            ignorepointer 1
            color 0.1176 0.1176 0.1176 1
            position 0 34
@@ -180,7 +180,10 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 1
-           style rover_sim_colorable
+           style Colorable
+           Padding 0
+           Margin 0
+           "Size To Content V" 1
            {
             ButtonWidgetClass FavoritesTabButton {
              color 0.2941 0.4667 0.7451 1
@@ -220,6 +223,89 @@ FrameWidgetClass EditorFrame {
              {
               ScriptParamsClass {
                Binding_Name "FavoritesToggle"
+               Two_Way_Binding 1
+              }
+             }
+            }
+            ButtonWidgetClass ShowPrivateButton {
+             color 0.2941 0.4667 0.7451 1
+             position 0 0
+             size 1 22
+             halign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 1
+             scriptclass "ViewBinding"
+             style Default
+             font "gui/fonts/etelkatextpro"
+             "text color" 0.7451 0.7451 0.7451 1
+             switch toggle
+             {
+              WrapSpacerWidgetClass WrapSpacerWidget0 {
+               ignorepointer 1
+               position 0 4
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               Padding 0
+               Margin 0
+               "Size To Content V" 1
+               content_halign center
+               content_valign center
+               {
+                TextWidgetClass ShowPrivateText {
+                 visible 1
+                 clipchildren 0
+                 inheritalpha 0
+                 ignorepointer 1
+                 position 0 0
+                 size 1 14
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 0
+                 vexactsize 1
+                 scaled 1
+                 text "Private Objects"
+                 font "gui/fonts/sdf_MetronLight24"
+                 "text offset" -12 0
+                 "italic text" 0
+                 "exact text" 0
+                 "size to text h" 1
+                 "size to text v" 0
+                 "text halign" center
+                 "text valign" center
+                }
+                CheckBoxWidgetClass ShowPrivateCheck {
+                 position 0 0
+                 size 14 14
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 1
+                 scriptclass "ViewBinding"
+                 {
+                  ScriptParamsClass {
+                   Binding_Name "ShowPrivate"
+                   Two_Way_Binding 0
+                  }
+                 }
+                }
+               }
+              }
+             }
+             {
+              ScriptParamsClass {
+               Binding_Name "ShowPrivate"
                Two_Way_Binding 1
               }
              }
@@ -1741,11 +1827,6 @@ FrameWidgetClass EditorFrame {
    vexactpos 0
    hexactsize 0
    vexactsize 0
-  }
- }
- {
-  ScriptParamsClass {
-   Debug_Logging 0
   }
  }
 }

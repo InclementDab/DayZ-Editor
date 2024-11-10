@@ -68,7 +68,6 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		advanced_group.Insert(new EditBoxPrefab("#STR_EDITOR_LOOT_SPAWN_FILE", settings, "EditorProtoFile"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_MODAL_DIALOGS", settings, "LockCameraDuringDialogs"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_PRELOAD_OBJECTS", settings, "PreloadObjects"));
-		advanced_group.Insert(new CheckBoxPrefab("Scope 0 Objects", settings, "ShowScopeZeroObjects"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_HIGH_PRECISION_COLLISION", settings, "HighPrecisionCollision"));
 		advanced_group.Insert(new CheckBoxPrefab("Minify Clipboard Data", settings, "MinifyCopyData"));
 		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_DEBUG_MODE", settings, "DebugMode"));

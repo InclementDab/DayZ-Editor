@@ -3,22 +3,27 @@ class EditorGizmo: Managed
 
 }
 
+enum eGizmoAxis
+{
+	X_AXIS,
+	Y_AXIS,
+	Z_AXIS
+};
+
 class EditorTranslationGizmo: EditorGizmo
 {
-	protected ref EditorObjectMap m_ObjectList;
-	protected ref array<Object> m_Gizmos = {};
+	protected Editor m_Editor;
+	protected EditorObject m_EditorObject;
+	protected ref map<eGizmoAxis, GizmoBase> m_Gizmos = new map<eGizmoAxis, GizmoBase>();
 
-	void EditorTranslationGizmo(EditorObjectMap object_map)
-	{
-		m_ObjectList = object_map;
-		if (m_ObjectList.Count() == 0) {
-			return;
-		}
+	void EditorTranslationGizmo(notnull Editor editor, notnull EditorObject editor_object)
+	{		
+		m_Editor = editor;
+		m_EditorObject = editor_object;
 
-		EditorObject first_object = m_ObjectList.GetElement(0);
-		vector gizmo_center = first_object.GetTopCenter();
+		vector gizmo_center = m_EditorObject.GetTopCenter();
 
-		Object gizmo_x = GetGame().CreateObjectEx("GizmoArrowX", gizmo_center, ECE_NONE);
+		GizmoBase gizmo_x = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowX", gizmo_center, ECE_NONE));
 		vector gizmo_x_mat[4] = {
 			-vector.Forward,
 			vector.Aside,
@@ -27,9 +32,8 @@ class EditorTranslationGizmo: EditorGizmo
 		};
 		gizmo_x.SetTransform(gizmo_x_mat);
 		gizmo_x.Update();
-		m_Gizmos.Insert(gizmo_x);
 
-		Object gizmo_y = GetGame().CreateObjectEx("GizmoArrowY", gizmo_center, ECE_NONE);
+		GizmoBase gizmo_y = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowY", gizmo_center, ECE_NONE));
 		vector gizmo_y_mat[4] = {
 			"1 0 0",
 			"0 1 0",
@@ -38,9 +42,8 @@ class EditorTranslationGizmo: EditorGizmo
 		};
 		gizmo_y.SetTransform(gizmo_y_mat);
 		gizmo_y.Update();
-		m_Gizmos.Insert(gizmo_y);
 
-		Object gizmo_z = GetGame().CreateObjectEx("GizmoArrowZ", gizmo_center, ECE_NONE);
+		GizmoBase gizmo_z = GizmoBase.Cast(GetGame().CreateObjectEx("GizmoArrowZ", gizmo_center, ECE_NONE));
 		vector gizmo_z_mat[4] = {
 			vector.Aside,
 			vector.Forward,
@@ -49,7 +52,12 @@ class EditorTranslationGizmo: EditorGizmo
 		};
 		gizmo_y.SetTransform(gizmo_z_mat);
 		gizmo_z.Update();
-		m_Gizmos.Insert(gizmo_z);
+
+		m_Gizmos[eGizmoAxis.X_AXIS] = gizmo_x;
+		m_Gizmos[eGizmoAxis.Y_AXIS] = gizmo_y;
+		m_Gizmos[eGizmoAxis.Z_AXIS] = gizmo_z;
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 	}
 
 	void ~EditorTranslationGizmo()
@@ -59,6 +67,24 @@ class EditorTranslationGizmo: EditorGizmo
 				gizmo.Delete();
 			}
 		}
+	}
+	
+	void Update(float dt)
+	{
+		if (!m_EditorObject) {
+			m_EditorObject = m_Editor.GetSelectedObjects().GetElement(0);
+			if (!m_EditorObject) {
+				delete this;
+				return;
+			}
+		}
+
+		vector top_center = m_EditorObject.GetTopCenter();
+
+		// This widget will never rotate unless we get a local space operator
+		m_Gizmos[eGizmoAxis.X_AXIS].SetPosition(top_center);
+		m_Gizmos[eGizmoAxis.Y_AXIS].SetPosition(top_center);
+		m_Gizmos[eGizmoAxis.Z_AXIS].SetPosition(top_center);
 	}
 }
 

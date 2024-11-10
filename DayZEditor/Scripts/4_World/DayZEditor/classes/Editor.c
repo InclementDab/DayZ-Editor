@@ -31,6 +31,13 @@
 // and message me your feedback on discord :)
 
 
+enum eEditorMode
+{
+	Translation,
+	Rotation,
+	Scale
+};
+
 ref Editor g_Editor;
 Editor GetEditor() 
 {
@@ -118,6 +125,8 @@ class Editor: Managed
 	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
+	protected eEditorMode m_EditorMode;
+	
 	bool										KEgg; // oh?
 	
 	private void Editor(PlayerBase player) 
@@ -180,7 +189,7 @@ class Editor: Managed
 		
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
-		m_EditorHud 		= new EditorHud();
+		m_EditorHud 		= new EditorHud(this);
 		EditorLog.Info("Initializing Hud");
 		m_EditorHudController = m_EditorHud.GetTemplateController();		
 		// Add camera marker to newly created hud
@@ -252,6 +261,26 @@ class Editor: Managed
 		delete g_Editor;
 	}
 
+	void SetMode(eEditorMode editor_mode)
+	{
+		m_EditorMode = editor_mode;
+		m_EditorHud.SetEditorMode(m_EditorMode);
+		
+		delete m_CurrentGizmo;
+		switch (m_EditorMode) {
+			case eEditorMode.Translation: {
+				m_CurrentGizmo = new EditorTranslationGizmo(this, GetSelectedObjects().GetElement(0));
+				break;
+			}
+		}
+	}
+		
+	eEditorMode GetMode()
+	{
+		return m_EditorMode;
+	}
+	
+	// When you tab in the game
 	void OnActivateMessage()
 	{
 		if (m_EditorHud && EditorHud.CurrentDialog) {
@@ -261,6 +290,7 @@ class Editor: Managed
 		}
 	}
 
+	// When you tab out of the game (thanks jacob mongo)
 	void OnDeactivateMessage()
 	{
 		m_MouseVisibleOnClose = GetGame().GetUIManager().IsCursorVisible();
@@ -1187,7 +1217,7 @@ class Editor: Managed
 		EditorLog.Trace("Editor::ReloadHud");
 		delete m_EditorHud;
 		
-		m_EditorHud = new EditorHud();
+		m_EditorHud = new EditorHud(this);
 		m_EditorHudController = m_EditorHud.GetTemplateController();
 		return m_EditorHud;
 	}
@@ -1735,6 +1765,11 @@ class Editor: Managed
 		
 		EditorLog.Debug("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
 		foreach (EditorObjectData data: save_data.EditorObjects) {
+			// So here I am thinking... I used to do int.MAX coverage when placing stuff. i BET they are serialized this way. until we go through every editor file ever, this will have to do.
+			if (data.Flags == int.MAX) {
+				data.Flags = EFE_DEFAULT;
+			}
+
 			if (CreateObject(data, false)) {
 				created_objects++;
 			}			

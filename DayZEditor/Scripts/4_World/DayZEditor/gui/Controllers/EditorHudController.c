@@ -15,6 +15,7 @@ class EditorHudController: EditorControllerBase
 	bool CategoryConfig = true;
 	bool CategoryStatic;
 	bool FavoritesToggle;
+	bool ShowPrivate;
 	
 	StringEvaluater PrecisionLevel = "0.5";
 	
@@ -122,39 +123,33 @@ class EditorHudController: EditorControllerBase
 		
 		array<ref EditorPlaceableItem> placeable_items = GetEditor().GetPlaceableObjects();
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
+			ObservableCollection<ref EditorPlaceableListItem> TargetList;
 			// Makes stuff look good when first loading
 			switch (placeable_item.Category) {
 				case EditorPlaceableItemCategory.CONFIG: {
-					if (placeable_item.IsFavorite()) {
-						LeftbarSpacerConfig.InsertAt(new EditorPlaceableListItem(placeable_item), 0);
-					} else {
-						LeftbarSpacerConfig.Insert(new EditorPlaceableListItem(placeable_item));
-					}
+					TargetList = LeftbarSpacerConfig;
 					break;
 				}
 				case EditorPlaceableItemCategory.STATIC: {
-					if (placeable_item.IsFavorite()) {
-						LeftbarSpacerConfig.InsertAt(new EditorPlaceableListItem(placeable_item), 0);
-					} else {
-						LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
-					}
+					TargetList = LeftbarSpacerStatic;
 					break;
 				}
 				//? fall-through removed 
 				case EditorPlaceableItemCategory.SCRIPTED: {
-					if (placeable_item.IsFavorite()) {
-						LeftbarSpacerStatic.InsertAt(new EditorPlaceableListItem(placeable_item), 0);
-					} else {
-						LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
-					}
+					TargetList = LeftbarSpacerStatic;
 					break;
 				}
 			}
-						
-			// update favorites from properties		, bbroooklkkeeenn	
-			if (favorite_items.Find(placeable_item.Type) != -1) {
-				//list_item.SetFavorite(true);
+			
+			EditorPlaceableListItem list_item = new EditorPlaceableListItem(placeable_item);
+			if (placeable_item.IsFavorite()) {
+				TargetList.InsertAt(list_item, 0);
+			} else {
+				TargetList.Insert(list_item);
 			}
+			
+			bool gay = placeable_item.Scope > 1 || ShowPrivate;
+			list_item.Show(gay);
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
@@ -169,6 +164,9 @@ class EditorHudController: EditorControllerBase
 		
 		EditorHudToolbarView = new EditorHudToolbar();
 		NotifyPropertyChanged("EditorHudToolbarView");
+		
+		ShowPrivate = GetEditor().GetSettings().ShowScopeZeroObjects;
+		NotifyPropertyChanged("ShowPrivate");
 	}
 		
 	void Update()
@@ -355,6 +353,24 @@ class EditorHudController: EditorControllerBase
 			// I literally hate this
 			case "PrecisionLevel": {
 				g_EditorPrecision = GetPrecisionLevel();
+				break;
+			}
+
+			case "ShowPrivate": {
+				for (int ii = 0; ii < LeftbarSpacerConfig.Count(); ii++) {
+					if (LeftbarSpacerConfig[ii] && LeftbarSpacerConfig[ii].GetLayoutRoot() && LeftbarSpacerConfig[ii].GetPlaceableItem()) {
+						bool gay1 = LeftbarSpacerConfig[ii].GetPlaceableItem().Scope > 1 || ShowPrivate;
+						LeftbarSpacerConfig[ii].GetLayoutRoot().Show(gay1);
+					}
+				}
+
+				for (int jj = 0; jj < LeftbarSpacerStatic.Count(); jj++) {
+					if (LeftbarSpacerStatic[jj] && LeftbarSpacerStatic[jj].GetLayoutRoot() && LeftbarSpacerStatic[jj].GetPlaceableItem()) {
+						bool gay2 = LeftbarSpacerStatic[ii].GetPlaceableItem().Scope > 1 || ShowPrivate;
+						LeftbarSpacerStatic[jj].GetLayoutRoot().Show(gay2);
+					}
+				}
+
 				break;
 			}
 		}

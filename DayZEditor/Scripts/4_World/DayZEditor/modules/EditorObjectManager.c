@@ -58,12 +58,9 @@ class EditorObjectManagerModule : Managed
 			{
 				string type;
 				GetGame().ConfigGetChildName(path, i, type);
-				if (GetGame().ConfigGetInt(path + " " + type + " scope") < 1 && editor.GetSettings() && !editor.GetSettings().ShowScopeZeroObjects)
-				{
-					continue;
-				}
+				int scope = GetGame().ConfigGetInt(path + " " + type + " scope");
 
-				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type);
+				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type, scope);
 				if (!placeable_item)
 				{
 					continue;
