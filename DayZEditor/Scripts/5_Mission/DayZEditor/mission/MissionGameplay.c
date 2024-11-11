@@ -96,4 +96,13 @@ modded class MissionGameplay
 		// On Load unhide em all
 		CF.ObjectManager.UnhideAllMapObjects();
 	}
+	
+	override void Continue()
+	{
+		super.Continue();
+		
+		if (GetEditor().IsActive())	{
+			GetEditor().GetEditorHud().Show(true);
+		}
+	}
 }

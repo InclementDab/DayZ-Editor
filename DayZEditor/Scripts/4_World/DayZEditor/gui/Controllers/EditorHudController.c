@@ -366,7 +366,7 @@ class EditorHudController: EditorControllerBase
 
 				for (int jj = 0; jj < LeftbarSpacerStatic.Count(); jj++) {
 					if (LeftbarSpacerStatic[jj] && LeftbarSpacerStatic[jj].GetLayoutRoot() && LeftbarSpacerStatic[jj].GetPlaceableItem()) {
-						bool gay2 = LeftbarSpacerStatic[ii].GetPlaceableItem().Scope > 1 || ShowPrivate;
+						bool gay2 = LeftbarSpacerStatic[jj].GetPlaceableItem().Scope > 1 || ShowPrivate;
 						LeftbarSpacerStatic[jj].GetLayoutRoot().Show(gay2);
 					}
 				}

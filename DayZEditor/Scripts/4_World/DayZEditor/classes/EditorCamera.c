@@ -79,7 +79,7 @@ class EditorCamera: Camera
 	}
 }
 
-[RegisterProfileSetting(EditorCameraSettings, "EDITOR")]
+[RegisterProfileSetting(EditorCameraSettings, "CAMERA")]
 class EditorCameraSettings: ProfileSettings
 {
 	[RegisterProfileSettingSlider("CAMERA", "ViewDistance", "View Distance", EditorCamera.VIEW_DISTANCE_MIN, EditorCamera.VIEW_DISTANCE_MAX)]
