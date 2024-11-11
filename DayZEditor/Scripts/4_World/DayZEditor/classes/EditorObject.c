@@ -38,7 +38,7 @@ class EditorObject: EditorWorldObject
 	int CurrentAnimation;
 	bool Animate;
 	
-	// Custom stuff
+	// Custom stuff 
 	string ExpansionTraderType;
 	string TestingScript;
 		
@@ -647,7 +647,7 @@ class EditorObject: EditorWorldObject
 	
 	float GetYDistance()
 	{
-		return -m_VectorBasePoint[1];
+		return m_WorldObject.GetBoundingCenter()[1];
 	}
 	
 	float GetAngle()

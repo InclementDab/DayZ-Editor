@@ -146,8 +146,8 @@ class EditorBrush
 		foreach (int id, EditorObject editor_object_brushed: object_map) {
 			if (editor_object_brushed) {
 				vector new_pos = brushes_data[id].param1;
-				vector size = ObjectGetSize(editor_object_brushed.GetWorldObject());
-				new_pos[1] = GetGame().SurfaceY(new_pos[0], new_pos[2]) + size[1] - 0.5 + brushes_data[id].param2.ZOffset;
+				vector size = editor_object_brushed.GetWorldObject().GetBoundingCenter();
+				new_pos[1] = GetGame().SurfaceY(new_pos[0], new_pos[2]) + size[1] + brushes_data[id].param2.ZOffset;
 				editor_object_brushed.SetScale(Math.RandomFloat(brushes_data[id].param2.MinScale, brushes_data[id].param2.MaxScale));
 				editor_object_brushed.SetPosition(new_pos);
 			}

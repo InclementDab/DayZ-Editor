@@ -217,6 +217,7 @@ class EditorHud: ScriptView
 		int x, y;
 		x += 6;
 		GetMousePos(x, y);
+		SetFocus(null);
 		thread _DelayedDragBoxCheck(x, y);		
 	}
 	

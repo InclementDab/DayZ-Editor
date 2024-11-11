@@ -127,6 +127,8 @@ class Editor: Managed
 	
 	protected eEditorMode m_EditorMode;
 	
+	protected ref EditorObject m_PlayerObject;
+	
 	bool										KEgg; // oh?
 	
 	private void Editor(PlayerBase player) 
@@ -203,7 +205,7 @@ class Editor: Managed
 				
 		// Register Player Object as a hidden EditorObject
 		if (GetSettings().CreateCharacterObject) {
-			CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER | EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE, false);
+			m_PlayerObject = CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER | EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE, false);
 			m_Player.SetPosition(m_Player.GetPosition());
 		}
 				
@@ -449,6 +451,10 @@ class Editor: Managed
 
 		if (GetDayZGame().IsLeftCtrlDown()) {
 			processed_flags |= ECameraLockFlag.LOCK_MOVE;
+		}
+		
+		if (IsMapActive()) {
+			processed_flags |= ECameraLockFlag.LOCK_LOOK;
 		}
 
 		if (!use_override) {
