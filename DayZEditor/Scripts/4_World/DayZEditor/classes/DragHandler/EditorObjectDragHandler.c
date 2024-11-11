@@ -99,16 +99,25 @@ class EditorObjectDragHandler: EditorDragHandler
 		float angle;
 		int i;
 		
+		vector bounding_center = target.GetWorldObject().GetBoundingCenter();
+		vector up_vector = vector.Up;
+		if (GetEditor().MagnetMode) {
+			up_vector = GetGame().SurfaceGetNormal(transform[3][0], transform[3][2]);
+		}
+		
+		vector fwd_vector_local = GetGame().GetCurrentCameraDirection() * up_vector;
+		Plane zx_plane = Plane.Create(GetGame().GetCurrentCameraDirection(), "1 1 1", transform[3], fwd_vector_local);
+		zx_plane.Debug(transform);
+
+		
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
 		if (KeyState(KeyCode.KC_LMENU)) {
-			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetBottomCenter());
-			cursor_pos[1] = cursor_pos[1] + size[1] / 2;
-			if (GetEditor().MagnetMode) {
-				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos + GetGame().GetCurrentCameraDirection() * 1);
-			} else {
-				transform[3][1] = cursor_pos[1];
-			}
+			vector zx_intersect_position = zx_plane.Intersect(cursor_ray, transform);
+			zx_intersect_position[0] = transform[3][0];
+			zx_intersect_position[1] = zx_intersect_position[1] + bounding_center[1];
+			zx_intersect_position[2] = transform[3][2];
+			transform[3] = zx_intersect_position;
 		}
 		
 		// Handle XY Rotation
