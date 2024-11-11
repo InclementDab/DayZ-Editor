@@ -411,7 +411,9 @@ class EditorObject: EditorWorldObject
 			}
 			
 			case "Physics": {
-				EnablePhysics(Physics);
+				if (!PlayerBase.Cast(m_WorldObject)) {
+					EnablePhysics(Physics);
+				}
 				break;
 			}
 			
