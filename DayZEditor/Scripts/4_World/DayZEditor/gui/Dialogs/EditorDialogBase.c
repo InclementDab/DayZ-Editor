@@ -3,6 +3,9 @@ class EditorDialogBase: DialogBase
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
 	
+	Widget DialogContent;
+	ScrollWidget DialogWrapper;
+	
 	void EditorDialogBase(string title)
 	{
 		m_Editor = GetEditor();
@@ -29,16 +32,24 @@ class EditorDialogBase: DialogBase
 		}
 		
 		Show(false);
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetupDialog, 3, false);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetupDialog, 12, false);
 	}
 	
 	void SetupDialog()
 	{
-		float du, dv, dx, dy;
 		int sx, sy;
 		GetScreenSize(sx, sy);
+		float dcu, dcv;	
+		DialogContent.GetScreenSize(dcu, dcv);
+		if (dcv > sy * 0.8) {
+			DialogWrapper.SetScreenSize(dcu, sy * 0.8);
+		} else {
+			DialogWrapper.SetScreenSize(dcu, Math.Max(150, dcv + 1));
+		}
+		
+		float du, dv, dx, dy;
 		m_LayoutRoot.GetScreenSize(du, dv);
-		m_LayoutRoot.SetScreenPos(sx / 2 - du / 2, sy / 2 - dv);
+		m_LayoutRoot.SetScreenPos(sx / 2 - du / 2, sy / 2 - dcv / 2 - 66);
 		Show(true);
 	}
 	
