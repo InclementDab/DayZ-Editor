@@ -23,15 +23,23 @@ class EditorDialogBase: DialogBase
 		
 		//! Set Dialog to last saved position
 		if (m_EditorHud && m_EditorHud.GetLastDialogPosition(this)) {
-			vector pos = m_EditorHud.GetLastDialogPosition(this);
-			m_LayoutRoot.SetPos(pos[0], pos[1]);
-			return;
+			//vector pos = m_EditorHud.GetLastDialogPosition(this);
+			//m_LayoutRoot.SetPos(pos[0], pos[1]);
+			//return;
 		}
 		
+		Show(false);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetupDialog, 3, false);
+	}
+	
+	void SetupDialog()
+	{
 		float du, dv, dx, dy;
-		m_LayoutRoot.GetScreenSize(du, dv);		
-		m_LayoutRoot.GetPos(dx, dy);
-		m_LayoutRoot.SetPos(dx, dy - dv / 2);
+		int sx, sy;
+		GetScreenSize(sx, sy);
+		m_LayoutRoot.GetScreenSize(du, dv);
+		m_LayoutRoot.SetScreenPos(sx / 2 - du / 2, sy / 2 - dv);
+		Show(true);
 	}
 	
 	void ~EditorDialogBase()

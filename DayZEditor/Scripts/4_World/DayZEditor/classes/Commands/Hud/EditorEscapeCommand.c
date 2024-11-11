@@ -38,6 +38,11 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
+		if (m_Editor.IsPlayerActive()) {
+			m_Editor.SetActive(true);
+			return true;
+		}
+		
 		if (m_Editor.IsLootEditActive()) {
 			m_Editor.FinishEditLootSpawns();
 			return true;

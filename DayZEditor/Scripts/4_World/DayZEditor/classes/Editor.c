@@ -202,10 +202,11 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
 				
 		// Register Player Object as a hidden EditorObject
-		CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER | EditorObjectFlags.NOSAVE, false);
-		m_Player.SetPosition(m_Player.GetPosition());
-		//m_Player.SetFlags(EntityFlags.VISIBLE, true);
-		
+		if (GetSettings().CreateCharacterObject) {
+			CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER | EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE, false);
+			m_Player.SetPosition(m_Player.GetPosition());
+		}
+				
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
 		
@@ -217,7 +218,7 @@ class Editor: Managed
 		}
 
 		m_AutoSaveTimer.Run(GetSettings().AutoSaveTimer, this, "OnAutoSaveTimer");
-		
+				
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
 		GetSettings().TimesOpened++;
 	}
@@ -264,20 +265,29 @@ class Editor: Managed
 	void SetMode(eEditorMode editor_mode)
 	{
 		m_EditorMode = editor_mode;
-		m_EditorHud.SetEditorMode(m_EditorMode);
+		//m_EditorHud.SetEditorMode(m_EditorMode);
 		
-		delete m_CurrentGizmo;
-		switch (m_EditorMode) {
-			case eEditorMode.Translation: {
-				m_CurrentGizmo = new EditorTranslationGizmo(this, GetSelectedObjects().GetElement(0));
-				break;
-			}
+		//m_CurrentGizmo = EditorGizmo.Cast(GetCurrentGizmo().Spawn());
+		if (m_CurrentGizmo) {
+			//m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0));
 		}
 	}
 		
 	eEditorMode GetMode()
 	{
 		return m_EditorMode;
+	}
+	
+	typename GetCurrentGizmo()
+	{
+		// please be of type EditorTranslationGizmo
+		switch (m_EditorMode) {
+			case eEditorMode.Translation: {
+				return EditorTranslationGizmo;
+			}
+		}
+		
+		return EditorTranslationGizmo;
 	}
 	
 	// When you tab in the game
@@ -632,7 +642,7 @@ class Editor: Managed
 			}
 		}
 		
-		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !GetWidgetUnderCursor()) {
+		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !GetWidgetUnderCursor() && !IsPlacing()) {
 			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
 				GetCamera().GetSettings().Speed += Math.Ln(GetCamera().GetSettings().Speed + 1);
 			}
@@ -716,6 +726,10 @@ class Editor: Managed
 				}
 				
 				if (!target || target == m_EditorHud.EditorMapWidget) {
+					if (m_CurrentGizmo && GetCursorRaycast().Hit.GetShapeName().Contains("widget")) {
+						return true;
+					}
+					
 					ClearSelection();
 					GetCameraTrackManager().ClearSelection();
 				}
@@ -1937,7 +1951,7 @@ class Editor: Managed
 		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		GetGame().SaveProfile();
 	}
-	
+		
 	protected void ShowDonationDialog()
 	{		
 		EditorOneTimeDonationDialog dialog = new EditorOneTimeDonationDialog("Support DayZ Editor");
@@ -1973,28 +1987,20 @@ class Editor: Managed
 	{
 		m_ObjectManager.SelectObject(target);
 
-		// should this be here?
-		//m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
+		SetMode(GetMode());
 	}
 	
 	void DeselectObject(EditorObject target) 
 	{
 		m_ObjectManager.DeselectObject(target);
-
-		delete m_CurrentGizmo;
-		if (m_ObjectManager.GetSelectedObjects().Count()) {
-			//m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
-		}
 	}
 	
 	void ToggleSelection(EditorObject target) 
 	{
 		m_ObjectManager.ToggleSelection(target);
 
-		delete m_CurrentGizmo;
-		if (m_ObjectManager.GetSelectedObjects().Count()) {
-			//m_CurrentGizmo = new EditorTranslationGizmo(m_ObjectManager.GetSelectedObjects());
-		}
+		// we are equivilent to changing mode. dont make SetMode too unoptimized
+		SetMode(GetMode());
 	}
 		
 	void ClearSelection() 

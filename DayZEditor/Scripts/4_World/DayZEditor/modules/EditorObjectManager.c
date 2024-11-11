@@ -125,6 +125,10 @@ class EditorObjectManagerModule : Managed
 	void DeleteObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeleteObject");
+		
+		if (target.GetFlags() & EditorObjectFlags.NODELETE) {
+			return;
+		}
 
 		m_SelectedObjects.RemoveEditorObject(target);
 		m_PlacedObjects.RemoveEditorObject(target);

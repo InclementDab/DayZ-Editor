@@ -88,8 +88,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		AddContent(general_group);
 		AddContent(object_group);
-		
-		AutoSize();
 	}
 	
 	// This function is a mess
@@ -210,8 +208,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			AddContent(debug_group);
 		}
 		
-		// Auto resize
-		AutoSize();
+		SetupDialog();
 	}
 				
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)

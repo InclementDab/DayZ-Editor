@@ -36,6 +36,9 @@
 			<input name="EditorRotateObjectCounterClockwise" loc="Rotate Objects Counter Clockwise" />
 			<input name="EditorScaleUp" loc="Scale Objects Up" />
 			<input name="EditorScaleDown" loc="Scale Objects Down" />
+			<input name="EditorPickTranslation" loc="Translation Widget" />
+			<input name="EditorPickRotation" loc="Rotation Widget" />
+			<input name="EditorPickScale" loc="Scale Widget" />
         </actions>
     </inputs>
 
@@ -45,6 +48,15 @@
         </input>
         <input name="EditorCameraToolSpeedDecrease">
             <btn name="mWheelDown"/>
+        </input>
+        <input name="EditorPickTranslation">
+            <btn name="kE"/>
+        </input>
+        <input name="EditorPickRotation">
+            <btn name="kR"/>
+        </input>
+        <input name="EditorPickScale">
+            <btn name="kT"/>
         </input>
         <input name="EditorCameraForward">
             <btn name="kW"/>

@@ -87,6 +87,63 @@
 		<BrushObject type="DZ/plants/tree/t_quercusRobur_3sb.p3d" frequency="1.0" zoffset="0"/>
 	</Brush>
 
+	<Brush name="Betula Pendula Winter">
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_1f_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_1fb_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_1s_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_2f_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_2fb_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_2fc_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_2s_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_2w_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_3f_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_3fb_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_3fc_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendula_3s_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_BetulaPendulaE_2w_winter.p3d" frequency="1.0" zoffset="-2"/>
+	</Brush>
+	
+	<Brush name="Picea Abies Winter">
+		<BrushObject type="DZ/plants_sakhal/winter/t_PiceaAbies_1f_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_PiceaAbies_1s_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_PiceaAbies_1sb_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_piceaabies_2d_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_PiceaAbies_2f_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_PiceaAbies_2fb_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_PiceaAbies_2s_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_PiceaAbies_2sb_winter.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/winter/t_piceaabies_3d_winter.p3d" frequency="1.0" zoffset="-2"/>
+	</Brush>
+	
+	
+	<Brush name="Picea Abies Dark">
+		<BrushObject type="DZ/plants_sakhal/dark/t_PiceaAbies_1f_dark.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/dark/t_PiceaAbies_1s_dark.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/dark/t_PiceaAbies_1sb_dark.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/dark/t_piceaabies_2d_dark.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/dark/t_PiceaAbies_2f_dark.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/dark/t_PiceaAbies_2fb_dark.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/dark/t_PiceaAbies_2s_dark.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/dark/t_PiceaAbies_2sb_dark.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/dark/t_piceaabies_3d_dark.p3d" frequency="1.0" zoffset="-2"/>
+	</Brush>
+	
+	<Brush name="Betula Pendula Latefall">
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_1f_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_1fb_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_1s_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_2f_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_2fb_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_2fc_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_2s_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_2w_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_3f_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_3fb_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_3fc_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendula_3s_latefall.p3d" frequency="1.0" zoffset="-2"/>
+		<BrushObject type="DZ/plants_sakhal/latefall/t_BetulaPendulaE_2w_latefall.p3d" frequency="1.0" zoffset="-2"/>
+	</Brush>
+
 	<!-- Delete Brush is handled in Code -->
 	<Brush name="Delete" class="DeleteBrush"/>
 </BrushTypes>

@@ -1,4 +1,4 @@
-[RegisterProfileSetting(EditorSettings)]
+[RegisterProfileSetting(EditorSettings, "EDITOR")]
 class EditorSettings: ProfileSettings
 {	
 	bool AutoSaveEnabled			= true;
@@ -15,6 +15,10 @@ class EditorSettings: ProfileSettings
 	bool AllowBelowGround 			= false;
 	
 	// Advanced Settings
+	[RegisterProfileSettingMultistate("ADVANCED", "CreateCharacterObject", "Create Character Object", {"NO", "YES"})]
+	bool CreateCharacterObject		= false;
+	
+	[RegisterProfileSettingMultistate("ADVANCED", "LockCameraDuringDialogs", "Modal Dialogs", {"NO", "YES"})]
 	bool LockCameraDuringDialogs 	= true;
 	bool ShowBoundingBoxes 			= true;
 	bool PreloadObjects				= false;	

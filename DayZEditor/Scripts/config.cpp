@@ -34,11 +34,23 @@ class CfgMods
 		{
 			class imageSets
 			{
-				files[] = {"DayZEditor/gui/imagesets/dayz_editor_gui.imageset","DabsFramework/gui/imagesets/prefabs.imageset"};
+				files[] = {
+					"DayZEditor/gui/imagesets/dayz_editor_gui.imageset",
+					"DabsFramework/gui/imagesets/prefabs.imageset",
+					"DabsFramework/gui/icons/brands.imageset",
+					"DabsFramework/gui/icons/light.imageset",
+					"DabsFramework/gui/icons/regular.imageset",
+					"DabsFramework/gui/icons/solid.imageset",
+					"DabsFramework/gui/icons/thin.imageset"
+				};
 			};
 			class widgetStyles
 			{
-				files[] = {"DayZEditor/gui/looknfeel/editorwidgets.styles","DayZEditor/gui/looknfeel/prefabs.styles","DabsFramework/gui/looknfeel/prefabs.imageset"};
+				files[] = {
+					"DayZEditor/gui/looknfeel/editorwidgets.styles",
+					"DayZEditor/gui/looknfeel/prefabs.styles",
+					"DabsFramework/gui/looknfeel/prefabs.styles"
+				};
 			};
 			class engineScriptModule
 			{

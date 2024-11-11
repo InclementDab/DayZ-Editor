@@ -1,4 +1,4 @@
-class EditorHud: ScriptViewTemplate<EditorHudController>
+class EditorHud: ScriptView
 {
 	const float DEFAULT_BAR_WIDTH_PX = 380.0;
 
@@ -6,6 +6,7 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	const float BAR_WIDTH_MAXIMUM_PX = 900.0;
 
 	protected bool m_IsBoxSelectActive;
+	protected EditorHudController m_TemplateController;
 	
 	// Layout Elements
 	Widget NotificationFrame;
@@ -36,6 +37,8 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	{	
 		EditorLog.Trace("EditorHud");
 		EditorMapWidget.Show(false);
+		
+		m_TemplateController = EditorHudController.Cast(m_Controller);
 				
 		ShowScreenLogs(GetEditor().GetSettings().ShowScreenLogs);
 	}
@@ -303,6 +306,11 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 		return "DayZEditor/gui/layouts/hud/EditorHud.layout";
 	}
 	
+	override typename GetControllerType()
+	{
+		return EditorHudController;
+	}
+	
 	// Modal Menu Control
 	static ref EditorMenu CurrentMenu;
 	
@@ -345,5 +353,10 @@ class EditorHud: ScriptViewTemplate<EditorHudController>
 	vector GetLastDialogPosition(ScriptView dialog)
 	{
 		return m_LastDialogPosition[dialog.Type()];
+	}
+	
+	EditorHudController GetTemplateController()
+	{
+		return m_TemplateController;
 	}
 }
