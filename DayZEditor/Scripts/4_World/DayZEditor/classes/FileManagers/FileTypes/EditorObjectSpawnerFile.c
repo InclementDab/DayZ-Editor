@@ -7,6 +7,7 @@ class EditorObjectSpawnerFile : EditorFileType
 		export_data.Objects = { };
 		foreach (EditorObjectData object_data: data.EditorObjects) {
 			ITEM_SpawnerObject spawn_object = new ITEM_SpawnerObject();
+			object_data.Position = object_data.Position - GetOffset(object_data.Type);
 			spawn_object.name = object_data.Type;
 			spawn_object.pos[0] = object_data.Position[0];
 			spawn_object.pos[1] = object_data.Position[1];
@@ -31,7 +32,7 @@ class EditorObjectSpawnerFile : EditorFileType
 
 		JsonFileLoader<ObjectSpawnerJson>.JsonLoadFile(file, import_data);
 		foreach (ITEM_SpawnerObject scene_object: import_data.Objects) {
-			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.name, Vector(scene_object.pos[0], scene_object.pos[1], scene_object.pos[2]), Vector(scene_object.ypr[0], scene_object.ypr[1], scene_object.ypr[2]), scene_object.scale, EFE_DEFAULT));
+			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.name, Vector(scene_object.pos[0], scene_object.pos[1], scene_object.pos[2]), Vector(scene_object.ypr[0], scene_object.ypr[1], scene_object.ypr[2]) + GetOffset(scene_object.name), scene_object.scale, EFE_DEFAULT));
 		}
 
 		return save_data;
