@@ -20,6 +20,7 @@ class EditorSettings: ProfileSettings
 	
 	[RegisterProfileSettingMultistate("ADVANCED", "LockCameraDuringDialogs", "Modal Dialogs", {"NO", "YES"})]
 	bool LockCameraDuringDialogs 	= true;
+	
 	bool ShowBoundingBoxes 			= true;
 	bool PreloadObjects				= false;	
 	bool ShowScreenLogs				= true;
@@ -59,7 +60,7 @@ class EditorSettings: ProfileSettings
 						
 			case "SelectedLogLevel": {
 				EditorLog.Warning("Changed log level to %1", typename.EnumToString(LogLevel, SelectedLogLevel));
-				break;
+				break; 
 			}
 						
 			case "ShowScreenLogs": {

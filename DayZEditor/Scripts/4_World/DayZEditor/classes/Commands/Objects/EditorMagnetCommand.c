@@ -1,3 +1,4 @@
+
 class EditorMagnetCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)
