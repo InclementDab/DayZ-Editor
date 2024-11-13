@@ -109,7 +109,8 @@ class Editor: Managed
 	
 	bool 										CameraLight;
 
-	static const string 						Version = "1.32";
+	static const int VersionNumber = 32;
+	static const string 						Version = "1." + VersionNumber.ToString();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -216,7 +217,7 @@ class Editor: Managed
 		GetDayZGame().Event_OnActivateMessage.Insert(OnActivateMessage);
 		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
 		
-		if (!GetSettings().HasRequestedNotToSeeDonationDialog) {
+		if (!GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
 			thread ShowDonationDialog();
 		}
 
@@ -977,8 +978,7 @@ class Editor: Managed
 				
 		GetGame().GetUIManager().ShowCursor(m_Active);
 		
-		if (m_Player) {
-			
+		if (m_Player && !EditorHudToolbarController.Cast(GetEditorHud().GetTemplateController().EditorHudToolbarView.GetController()).ControlPlayerState) {
 			m_Player.GetInputController().SetDisabled(m_Active);
 			
 			if (!_bugfixFirstGrab) {

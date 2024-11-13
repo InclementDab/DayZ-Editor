@@ -21,7 +21,7 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 	void OnCloseButton()
 	{
 		if (m_NeverShowAnymore) {
-			GetEditor().GetSettings().HasRequestedNotToSeeDonationDialog = true;
+			GetEditor().GetSettings().VersionRequestedNotToSeeDonationDialog = Editor.VersionNumber;
 		}
 		
 		CloseDialog(DialogResult.OK);

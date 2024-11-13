@@ -46,7 +46,8 @@ class EditorDialogBase: DialogBase
 		float dcu, dcv;	
 		DialogContent.GetScreenSize(dcu, dcv);
 		if (dcv > sy * 0.8) {
-			DialogWrapper.SetScreenSize(dcu, sy * 0.8);
+			dcv = sy * 0.8;
+			DialogWrapper.SetScreenSize(dcu, Math.Max(150, dcv + 1));
 		} else {
 			DialogWrapper.SetScreenSize(dcu, Math.Max(150, dcv + 1));
 		}
