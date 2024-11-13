@@ -1,9 +1,12 @@
 @echo off
 set repository="%cd%"
 
-cd /d "%~dp0DayZEditor\Workbench"
+restart:
 
 taskkill /f /im "workbenchApp.exe"
+rmdir /s /q "P:/temp"
+
+cd /d "%~dp0DayZEditor\Workbench"
 
 for /f "tokens=2,*" %%a in ('reg query "HKCU\SOFTWARE\Bohemia Interactive\Dayz Tools" /v "path" 2^>nul') do (
     set "dayz_tools=%%b"
@@ -17,5 +20,7 @@ if "%dayz_tools:~-10%"=="DayZ Tools" (
 )
 
 start "" /b "%dayz_tools%\Bin\Workbench\workbenchApp.exe" "-profiles=%profile_path% -repository=\"%repository%\""
+sleep(60000)
+goto restart:
 
 exit

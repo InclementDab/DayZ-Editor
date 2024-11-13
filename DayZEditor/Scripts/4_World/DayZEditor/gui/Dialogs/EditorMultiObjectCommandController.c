@@ -18,7 +18,13 @@ class EditorMultiObjectCommandController
 			if (Name != editor_object.Name) {
 				Name = string.Empty;
 			}
+
+			OriginalPositions[editor_object.GetWorldObject()] = editor_object.GetWorldObject().GetPosition();
+			OriginalOrientations[editor_object.GetWorldObject()] = editor_object.GetWorldObject().GetDirection();
+			m_AveragePosition += editor_object.GetPosition();
 		}
+
+		m_AveragePosition = Vector(m_AveragePosition[0] / m_EditorObjects.Count(), m_AveragePosition[1] / m_EditorObjects.Count(), m_AveragePosition[2] / m_EditorObjects.Count());
 		
 		// determine center point on startup
 		m_CenterPoint = GetCenterPoint(m_EditorObjects);
@@ -33,6 +39,8 @@ class EditorMultiObjectCommandController
 	string Name;
 	vector Position, DeltaPosition;
 	vector Orientation, DeltaOrientation;
+	protected ref map<Object, vector> OriginalPositions = new map<Object, vector>();
+	protected ref map<Object, vector> OriginalOrientations = new map<Object, vector>();
 	float Scale = 1.0;
 	
 	float Health = 100;
@@ -41,9 +49,19 @@ class EditorMultiObjectCommandController
 	bool AllowDamage = false;
 	bool Collision = true;
 	bool EditorOnly = false;
+
+	protected vector m_AveragePosition;
 	
 	void PropertyChanged(string property_name)
 	{		
+		switch (property_name) {
+			case "Position": {
+				m_AveragePosition += Position - DeltaPosition;
+				break;
+			}
+			
+		}
+		
 		foreach (EditorObject editor_object: m_EditorObjects) {
 			switch (property_name) {
 				case "Show": {
@@ -58,27 +76,23 @@ class EditorMultiObjectCommandController
 							
 				case "Position": {
 					editor_object.Position += Position - DeltaPosition;
+
 					break;
 				}
 				
 				case "Orientation": {
-					vector movement_on_tick = Orientation - DeltaOrientation;					
-					int index_moved = -1;
-					for (int i = 0; i < 3; i++) {
-						if (movement_on_tick[i] != 0) {
-							index_moved = i;
-						}
-					}
+					vector rot_matrix[4];
+					Math3D.YawPitchRollMatrix(Orientation, rot_matrix);
+					rot_matrix[3] = m_AveragePosition;
+
+					vector new_orientation = OriginalOrientations[editor_object.GetWorldObject()] + Orientation;
+					vector new_position = (OriginalPositions[editor_object.GetWorldObject()] - m_AveragePosition).Multiply4(rot_matrix);
+					editor_object.Orientation = new_orientation;
+					editor_object.Position = new_position;
+					editor_object.PropertyChanged("Position");
 					
-					if (index_moved == -1) {
-						break;
-					}
-				
-					// some cool logic here	
-					vector direction_of_rotation;
-					direction_of_rotation[index_moved] = 1;
-					
-					editor_object.SetPosition(EditorMath.RotateAroundPoint(m_CenterPoint, editor_object.Position, direction_of_rotation, Math.Cos(Orientation[index_moved] - DeltaOrientation[index_moved]), Math.Sin(Orientation[index_moved] - DeltaOrientation[index_moved])));
+
+					//vector old_orientation = editor_object.GetOrientation();
 					
 					/*
 					//holy FUCK this is hard

@@ -184,7 +184,11 @@ class EditorPlacedListItem: EditorListItem
 		
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorPlacedListItem::OnDrag");	
+		EditorLog.Trace("EditorPlacedListItem::OnDrag");		
+		if (!KeyState(KeyCode.KC_LSHIFT)) {
+			GetEditor().ClearSelection();
+		}
+		
 		GetEditor().SelectObject(m_EditorObject);
 		array<EditorObject> additional_drag_targets = m_Editor.GetSelectedObjects().GetValueArray();
 		additional_drag_targets.RemoveItem(m_EditorObject);
@@ -210,20 +214,28 @@ class EditorPlacedListItem: EditorListItem
 
 		switch (w) {
 			case LockedImage.GetParent(): {
-				string command_name = GetEditor().CommandManager[EditorLockCommand].GetName();
-				string command_shortcut = GetEditor().CommandManager[EditorLockCommand].GetShortcutString();
-				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(command_name, LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT, command_shortcut));
+				if (LockedImage.IsVisible()) {
+					string command_name = GetEditor().CommandManager[EditorLockCommand].GetName();
+					string command_shortcut = GetEditor().CommandManager[EditorLockCommand].GetShortcutString();
+					GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(command_name, LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT, command_shortcut));
+				}
 				break;
 			}
 			
 			case ToggleBoundingBoxImage.GetParent(): {
 				// todo make toggle command
-				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle Bounding Box", LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT));
+				if (ToggleBoundingBoxImage.IsVisible()) {
+					GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle Bounding Box", ToggleBoundingBoxImage.GetParent(), TooltipPosition.BOTTOM_LEFT));
+				}
+				
 				break;
 			}
 			
 			case ToggleWorldMarkerImage.GetParent(): {
-				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle World Marker", LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT));
+				if (ToggleWorldMarkerImage) {
+					GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle World Marker", ToggleWorldMarkerImage.GetParent(), TooltipPosition.BOTTOM_LEFT));
+				}
+				
 				break;
 			}
 		}
@@ -236,6 +248,8 @@ class EditorPlacedListItem: EditorListItem
 		if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
 			m_EditorObject.GetMarker().Deselect();
 		}
+		
+		GetEditor().GetEditorHud().ClearCurrentTooltip();
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
