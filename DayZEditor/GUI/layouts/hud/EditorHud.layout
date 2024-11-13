@@ -1015,7 +1015,7 @@ FrameWidgetClass EditorFrame {
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
      position 0 0
-     size 1 18
+     size 1 16
      halign right_ref
      valign bottom_ref
      hexactpos 0
@@ -1405,7 +1405,7 @@ FrameWidgetClass EditorFrame {
           }
           ImageWidgetClass CinematicCameraIcon {
            ignorepointer 1
-           position -4 0
+           position -4.19127 0.38252
            size 25 23
            valign center_ref
            hexactpos 1

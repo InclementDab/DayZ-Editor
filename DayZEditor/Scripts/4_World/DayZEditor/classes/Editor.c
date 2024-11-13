@@ -109,7 +109,7 @@ class Editor: Managed
 	
 	bool 										CameraLight;
 
-	static const string 						Version = "1.32." + GetBuildNumber();
+	static const string 						Version = "1.32";
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	

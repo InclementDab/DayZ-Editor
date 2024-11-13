@@ -200,7 +200,7 @@ class EditorObject: EditorWorldObject
 				}
 			}	
 		}			
-
+		
 		Update();
 	}
 		

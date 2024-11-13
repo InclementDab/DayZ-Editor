@@ -40,9 +40,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 		
-		// there has to be some better math for this, some type of viewport angle magic that im not quite getting
-		// its trig, something to do with view angle
-		float size = Math.Min(Math.Max(1500 / distance, MARKER_MIN_SIZE), MARKER_MAX_SIZE);
+		// old tyler, the answer was dimensional analysis.. not trig... distance squared <3
+		
+		float size = Math.Min(Math.Max(1400 / (distance * distance), MARKER_MIN_SIZE), MARKER_MAX_SIZE);
 		SetSize(size, size);
 		SetPos(screen_pos[0], screen_pos[1]);
 		Show(m_Show);
