@@ -113,6 +113,8 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
+		Print(m_PlaceableItem.Type);
+		Print(m_PlaceableItem.Path);
 		EditorPlaceableTooltip tooltip = new EditorPlaceableTooltip();
 		
 		float size_x, size_y, pos_x, pos_y;

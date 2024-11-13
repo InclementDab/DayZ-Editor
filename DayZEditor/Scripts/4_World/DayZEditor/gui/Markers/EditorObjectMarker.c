@@ -9,6 +9,12 @@ class EditorObjectMarker: EditorMarker
 		EditorLog.Trace("EditorObjectMarker");
 		m_EditorObject = editor_object;
 		
+		if (m_EditorObject.GetFlags() & (EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE)) {
+			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_INVUNERABLE);
+		} else {
+			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
+		}
+		
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
@@ -125,9 +131,13 @@ class EditorObjectMarker: EditorMarker
 	
 	void Deselect() 
 	{
-		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
 		SetColor(m_Editor.GetSettings().MarkerPrimaryColor);
 		SetOutlineColor(m_Editor.GetSettings().MarkerPrimaryColor);
+		if (m_EditorObject.GetFlags() & (EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE)) {
+			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_INVUNERABLE);
+		} else {
+			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
+		}
 	}
 	
 	bool IsSelected() 

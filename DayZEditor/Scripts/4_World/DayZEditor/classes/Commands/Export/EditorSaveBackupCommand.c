@@ -13,12 +13,11 @@ class EditorSaveBackupCommand: EditorExportCommandBase
 			string directory = Directory.GetDirectory(file_full_path);
 			string file_name = file.GetFileName();
 			string file_extension = file.GetExtension();
-			file_name.Replace(file_extension, string.Empty);
-			Print(file_name);
-			array<string> existing_save_files = Directory.EnumerateFiles(directory, string.Format("{0}*", file_name));
-			existing_save_files.Debug();
-			
-			//ExportFile(file_name, m_ExportSettings, false)
+			file_name.Replace(file_extension, string.Empty);	
+			DateTime date = DateTime.Now(false);
+			string formatted_date = date.ToString("yyyy-MM-dd-HH-mm-ss");
+			file_name = string.Format("%1 (%2)%3", file_name, formatted_date, m_ExportSettings.GetFileType().GetExtension());			
+			ExportFile(file_name, m_ExportSettings, false);
 		}
 	}
 	

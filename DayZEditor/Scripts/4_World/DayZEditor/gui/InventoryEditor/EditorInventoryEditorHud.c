@@ -29,6 +29,8 @@ class EditorInventoryEditorHud: ScriptViewMenu
 		
 		m_TemplateController = EditorInventoryEditorController.Cast(m_Controller);
 		m_TemplateController.SetEntity(m_Entity);
+		
+		GetGame().GetUIManager().ShowCursor(true);
 	}
 	
 	void ~EditorInventoryEditorHud()

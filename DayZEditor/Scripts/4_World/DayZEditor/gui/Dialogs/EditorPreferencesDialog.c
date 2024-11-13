@@ -9,11 +9,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		"#STR_EDITOR_THEMES",
 		"#STR_EDITOR_ADVANCED",
 	};
-	
-			// autoptr since assigned prior to the handover to the array
-	protected autoptr CheckBoxPrefab m_AutoSaveToggle;
-	protected autoptr ScriptView m_AutoSaveTimer;
-	
+		
 	void EditorPreferencesDialog(string title, string default_group = "General")
 	{
 		EditorSettings settings = GetEditor().GetSettings();
@@ -27,16 +23,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		log_level["Error"] = LogLevel.ERROR;
 		
 		general_group.Insert(log_level);
-		
-		m_AutoSaveToggle = new CheckBoxPrefab("#STR_EDITOR_AUTO_SAVE", settings, "AutoSaveEnabled");
-		general_group.Insert(m_AutoSaveToggle);
-		m_AutoSaveTimer = new SliderPrefab("#STR_EDITOR_AUTO_SAVE_TIMER", settings, "AutoSaveTimer", 10, 600);
-		general_group.Insert(m_AutoSaveTimer);
-		
-		// update view state of auto save timer
-		PrefabBaseController<bool> controller = m_AutoSaveToggle.GetPrefabController();
-		m_AutoSaveTimer.GetLayoutRoot().Show(controller.Value);
-		
+						
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_QUICK_MOVE_STEP", settings, "QuickMoveStepSize", 0.01));	
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_QUICK_MOVE_FOLLOWS", settings, "QuickMoveFollowsCamera"));	
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SPAWN_ITEMS_WITH_ATTACHMENTS", settings, "SpawnItemsWithAttachments"));	
@@ -114,16 +101,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		AddButton("#STR_EDITOR_CLOSE", DialogResult.Cancel);
 		AddButton("#STR_EDITOR_DEFAULTS", "SetDefaults");
 	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		// update view state of autosave timer
-		PrefabBaseController<bool> controller = m_AutoSaveToggle.GetPrefabController();
-		m_AutoSaveTimer.GetLayoutRoot().Show(controller.Value);
 		
-		return super.OnClick(w, x, y, button);
-	}
-	
 	protected override void DialogExitButtonCallback(DialogExitButton button)
 	{
 		if (button.ButtonResult == DialogResult.OK) {

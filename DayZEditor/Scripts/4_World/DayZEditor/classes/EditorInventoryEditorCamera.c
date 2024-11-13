@@ -54,7 +54,7 @@ class EditorInventoryEditorCamera: Camera
 		vector current_pos = GetGame().GetCurrentCameraPosition();
 		m_LerpTimer.Run(0.01, this, "RunPositionLerp", new Param4<vector, vector, float, int>(current_pos, target_position, animation_time, GetGame().GetTime()), true);
 	}	
-	
+		
 	private void RunPositionLerp(vector start, vector finish, float duration, int start_time)
 	{
 		float tfactor = (1 / duration) * (GetGame().GetTime() - start_time) / 1000;

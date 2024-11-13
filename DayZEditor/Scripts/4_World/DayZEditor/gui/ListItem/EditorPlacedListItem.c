@@ -8,7 +8,9 @@ class EditorPlacedListItem: EditorListItem
 	
 	protected ref EditorObjectDragHandler m_DragHandler;
 	
-	ImageWidget LockedImage;
+	TextWidget ListItemLabel;
+	
+	ImageWidget LockedImage, ToggleBoundingBoxImage, ToggleWorldMarkerImage;
 	
 	void EditorPlacedListItem(EditorObject editor_object)
 	{
@@ -24,6 +26,9 @@ class EditorPlacedListItem: EditorListItem
 		m_TemplateController.NotifyPropertyChanged("Icon");
 		
 		LockedImage.Show(m_EditorObject.Locked);
+		ToggleBoundingBoxImage.Show(m_EditorObject.GetFlags() & EditorObjectFlags.BBOX);
+		ToggleWorldMarkerImage.Show(m_EditorObject.GetFlags() & EditorObjectFlags.OBJECTMARKER);
+		ListItemLabel.SetText(editor_object.GetDisplayName());
 		
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
@@ -155,6 +160,26 @@ class EditorPlacedListItem: EditorListItem
 		m_EditorObject.Lock(!m_EditorObject.Locked);
 		return true;
 	}
+	
+	void OnToggleBoundingBoxExecute(ButtonCommandArgs args)
+	{
+		bool new_state = !(m_EditorObject.GetFlags() & EditorObjectFlags.BBOX);
+		m_EditorObject.SetBoundingBox(!m_EditorObject.IsBoundingBoxEnabled(), true);
+		ToggleBoundingBoxImage.Show(new_state);
+	}	
+	
+	void OnWorldMarkerExecute(ButtonCommandArgs args)
+	{
+		bool new_state = !(m_EditorObject.GetFlags() & EditorObjectFlags.OBJECTMARKER);
+		m_EditorObject.EnableObjectMarker(new_state);
+		if (new_state) {
+			m_EditorObject.GetData().Flags |= EditorObjectFlags.OBJECTMARKER;
+		} else {
+			m_EditorObject.GetData().Flags &= ~EditorObjectFlags.OBJECTMARKER;
+		}
+		
+		ToggleWorldMarkerImage.Show(new_state);
+	}
 		
 	override bool OnDrag(Widget w, int x, int y)
 	{
@@ -196,7 +221,9 @@ class EditorPlacedListItem: EditorListItem
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
-		GetEditor().CommandManager[EditorObjectPropertiesCommand].Execute(this, null);
+		if (w.GetName() == "ListItemButton") {
+			GetEditor().CommandManager[EditorObjectPropertiesCommand].Execute(this, null);
+		}
 		
 		return true;
 	}

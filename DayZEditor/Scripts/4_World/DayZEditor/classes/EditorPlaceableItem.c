@@ -116,6 +116,7 @@ class EditorPlaceableItem : Managed
 		if (model == "access") return true;
 		if (model == "transport") return true;
 		if (model == "all") return true;
+		if (model == "land_wreck_car_twodoors") return true;
 
 		//! Cursed items
 		if (model == "akm_testbed") return true;

@@ -4,11 +4,11 @@ WrapSpacerWidgetClass ListItem {
  ignorepointer 1
  color 0.0196 0.0196 0.0196 0
  position 0 0
- size 1 0.023
+ size 1 23
  hexactpos 1
  vexactpos 1
  hexactsize 0
- vexactsize 0
+ vexactsize 1
  draggable 0
  scriptclass "EditorListItemController"
  style Colorable
@@ -52,11 +52,12 @@ WrapSpacerWidgetClass ListItem {
      scriptclass "ViewBinding"
      style Normal
      text "CATEGORY"
-     font "gui/fonts/etelkatextpro"
+     font "gui/fonts/sdf_MetronBook24"
      "bold text" 0
-     "exact text" 0
+     "exact text" 1
+     "exact text size" 12
      "size to text h" 1
-     "size to text v" 0
+     "size to text v" 1
      "text halign" center
      "text valign" center
      {
@@ -69,8 +70,8 @@ WrapSpacerWidgetClass ListItem {
      visible 0
      inheritalpha 0
      color 1 0.8431 0 1
-     position 1 0
-     size 22 22
+     position 3 0
+     size 18 18
      valign center_ref
      hexactpos 1
      vexactpos 1

@@ -1,6 +1,6 @@
 class EditorObject: EditorWorldObject
 {
-	protected EditorObjectData 				m_Data;
+	protected ref EditorObjectData 			m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
@@ -28,6 +28,7 @@ class EditorObject: EditorWorldObject
 	float Health = 100;
 	bool Show = true;
 	bool Locked;
+	bool Simulate;
 	bool Physics;
 	bool AllowDamage = false;
 	bool Collision = true;
@@ -367,6 +368,7 @@ class EditorObject: EditorWorldObject
 	void PropertyChanged(string property_name)
 	{
 		//EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
+		EntityAI entity_world_object = EntityAI.Cast(m_WorldObject);
 		switch (property_name) {
 			case "Name": {
 				SetDisplayName(Name);
@@ -413,6 +415,13 @@ class EditorObject: EditorWorldObject
 			case "Physics": {
 				if (!PlayerBase.Cast(m_WorldObject)) {
 					EnablePhysics(Physics);
+				}
+				break;
+			}
+			
+			case "Simulate": {
+				if (entity_world_object) {
+					entity_world_object.DisableSimulation(!Simulate);
 				}
 				break;
 			}
@@ -691,12 +700,31 @@ class EditorObject: EditorWorldObject
 		return result;
 	}	
 
+	void SetBoundingBox(bool state, bool set_flags = false)
+	{
+		if (set_flags) {
+			if (state) {
+				m_Data.Flags |= EditorObjectFlags.BBOX;
+			} else {
+				m_Data.Flags &= ~EditorObjectFlags.BBOX;
+			}
+		}
+		
+		if (state) {
+			ShowBoundingBox();
+		} else {
+			HideBoundingBox();
+		}
+	}
+		
 	void ShowBoundingBox()
 	{
 		EditorLog.Trace("EditorObject::ShowBoundingBox");
 		
 		// Global Settings Check
 		if (!GetEditor().GetSettings().ShowBoundingBoxes) return;
+		
+		if (!(GetData().Flags & EditorObjectFlags.BBOX)) return;
 		
 		// quick and dirty bugfix
 		if (!_boundingBoxesCreated) {

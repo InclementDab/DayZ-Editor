@@ -14,6 +14,9 @@ class EditorSettings: ProfileSettings
 	bool RuleOfThirds				= false;
 	bool AllowBelowGround 			= false;
 	
+	[RegisterProfileSettingMultistate("EXPORT/IMPORT", "CreateSaveBackups", "Create Backup Saves", {"NO", "EVERY 5MIN", "EVERY 15MIN", "EVERY HOUR"})]
+	int CreateSaveBackups = 0;
+
 	// Advanced Settings
 	[RegisterProfileSettingMultistate("ADVANCED", "CreateCharacterObject", "Create Character Object", {"NO", "YES"})]
 	bool CreateCharacterObject		= false;
@@ -35,8 +38,11 @@ class EditorSettings: ProfileSettings
 	int MarkerPrimaryColor			= COLOR_WHITE;
 	
 	// Theme Settings
-	int HighlightColor				= COLOR_SALMON;
-	int SelectionColor				= COLOR_BLUE;
+	[RegisterProfileSettingColor("APPEARANCE", "HighlightColor", "Highlight Color", false)]
+	int HighlightColor				= 0xff3d4045;
+	
+	[RegisterProfileSettingColor("APPEARANCE", "SelectionColor", "Selection Color", false)]
+	int SelectionColor				= 0xff6ba5ff;
 	
 	// Brush Settings
 	bool BrushedObjectMarkers 		= false;

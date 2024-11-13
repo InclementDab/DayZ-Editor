@@ -3,7 +3,7 @@ class EditorDialogBase: DialogBase
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
 	
-	Widget DialogContent;
+	Widget DialogContent, TitleBar;
 	ScrollWidget DialogWrapper;
 	
 	void EditorDialogBase(string title)
@@ -19,6 +19,10 @@ class EditorDialogBase: DialogBase
 		
 		if (EditorHud.CurrentDialog) {
 			EditorHud.CurrentDialog.CloseDialog();
+		}
+		
+		if (TitleBar) {
+			TitleBar.SetColor(m_Editor.GetSettings().SelectionColor);
 		}
 		
 		EditorHud.CurrentDialog = this;
@@ -63,6 +67,14 @@ class EditorDialogBase: DialogBase
 		if (m_EditorHud) {
 			m_EditorHud.ShowCursor(true);
 		}
+	}
+	
+	override DialogButton AddButton(DialogButton button)
+	{
+		DialogButton btn = super.AddButton(button);
+		
+		btn.Button.SetColor(m_Editor.GetSettings().HighlightColor);
+		return btn;
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)

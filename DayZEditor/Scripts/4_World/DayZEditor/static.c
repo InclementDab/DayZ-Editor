@@ -1,5 +1,6 @@
 static const float MARKER_ALPHA_ON_SHOW = 1.0;
-static const float MARKER_ALPHA_ON_HIDE = 1.0;
+static const float MARKER_ALPHA_ON_HIDE = 0.8;
+static const float MARKER_ALPHA_ON_INVUNERABLE = 0.3;
 
 static const int DRAG_BOX_THRESHOLD = 15;
 static const int DRAG_BOX_THICKNESS = 1;

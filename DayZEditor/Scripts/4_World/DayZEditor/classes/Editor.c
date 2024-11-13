@@ -98,6 +98,7 @@ class Editor: Managed
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
 	protected string								EditorSaveFile;
+	protected float m_TimeSinceLastBackup;
 	static const string								ROOT_DIRECTORY = "$saves:\\Editor\\";
 	
 	// modes
@@ -219,8 +220,6 @@ class Editor: Managed
 			thread ShowDonationDialog();
 		}
 
-		m_AutoSaveTimer.Run(GetSettings().AutoSaveTimer, this, "OnAutoSaveTimer");
-				
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
 		GetSettings().TimesOpened++;
 	}
@@ -305,7 +304,7 @@ class Editor: Managed
 	// When you tab out of the game (thanks jacob mongo)
 	void OnDeactivateMessage()
 	{
-		m_MouseVisibleOnClose = GetGame().GetUIManager().IsCursorVisible();
+		m_MouseVisibleOnClose = GetGame().GetUIManager().IsCursorVisible() && IsActive();
 		m_PlacingObjects.Clear();
 	}
 	
@@ -468,10 +467,43 @@ class Editor: Managed
 	{
 		GetStatistics().Save();
 	}
-	
+
 	void Update(float timeslice)
 	{		
 		ProcessInput(GetGame().GetInput());
+		if (EditorSaveFile != string.Empty) {
+			m_TimeSinceLastBackup += timeslice;
+
+			switch (GetSettings().CreateSaveBackups) {
+				case 0: break;
+				case 1: {
+					if (m_TimeSinceLastBackup >= (5.0 * 60.0)) {
+						CommandManager[EditorSaveBackupCommand].Execute(this, CommandArgs());
+						m_TimeSinceLastBackup = 0;
+					}
+
+					break;
+				}
+
+				case 2: {
+					if (m_TimeSinceLastBackup >= (15.0 * 60.0)) {
+						CommandManager[EditorSaveBackupCommand].Execute(this, CommandArgs());
+						m_TimeSinceLastBackup = 0;
+					}
+
+					break;
+				}
+
+				case 3: {
+					if (m_TimeSinceLastBackup >= (60.0 * 60.0)) {
+						CommandManager[EditorSaveBackupCommand].Execute(this, CommandArgs());
+						m_TimeSinceLastBackup = 0;
+					}
+
+					break;
+				}
+			}
+		}
 		
 		set<Object> obj();
 		int x, y;
@@ -729,7 +761,16 @@ class Editor: Managed
 					return true;
 				}
 				
-				if (!target || target == m_EditorHud.EditorMapWidget) {
+				if (!target) { //target == m_EditorHud.EditorMapWidget
+					Raycast cursor_raycast = GetCursorRaycast();
+					if (cursor_raycast.Hit) {
+						EditorObject select_object = GetEditorObject(cursor_raycast.Hit);
+						if (select_object) {
+							SelectObject(select_object);
+							return true;
+						}
+					}
+					
 					if (m_CurrentGizmo && GetCursorRaycast().Hit.GetShapeName().Contains("widget")) {
 						return true;
 					}
@@ -896,6 +937,8 @@ class Editor: Managed
 	
 	// Call to enable / disable editor
 	// this code is TERRIBLE 11/9
+	// update: im makin it worse 11/12
+	private bool _bugfixFirstGrab;
 	void SetActive(bool active)
 	{	
 		EditorLog.Info("Set Active %1", active.ToString());		
@@ -909,7 +952,7 @@ class Editor: Managed
 		if (m_Active) {
 			m_EditorCamera.SetActive(true);
 		} else {
-			GetGame().SelectPlayer(null, GetGame().GetPlayer());
+			GetGame().SelectPlayer(null, m_Player);
 		}
 		
 		if (m_EditorHud) {
@@ -930,16 +973,21 @@ class Editor: Managed
 				
 				editor_object.HideBoundingBox();
 			}
-		}	
-				
-		if (!m_Active) {
-			GetGame().SelectPlayer(null, m_Player);
 		}
+				
+		GetGame().GetUIManager().ShowCursor(m_Active);
 		
-		// handles player death
-		if (m_Player) {			
-			m_Player.DisableSimulation(m_Active);
+		if (m_Player) {
+			
 			m_Player.GetInputController().SetDisabled(m_Active);
+			
+			if (!_bugfixFirstGrab) {
+				m_Player.DisableSimulation(false);
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(m_Player.DisableSimulation, 1000, 0, m_Active);
+				_bugfixFirstGrab = true;
+			} else {
+				m_Player.DisableSimulation(m_Active);
+			}
 		}
 		
 		SetMissionHud(!m_Active);

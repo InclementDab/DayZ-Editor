@@ -69,7 +69,7 @@ class EditorHudController: EditorControllerBase
 	protected ButtonWidget DeletionsTabButton;
 	protected ButtonWidget LeftbarPanelSearchBarIconButton;
 	protected ButtonWidget PlacedSearchIconButton;
-	
+		
 	// Camera Track
 	protected Widget CameraTrackWrapper;
 	protected ButtonWidget CameraTrackRunButton;
@@ -80,6 +80,15 @@ class EditorHudController: EditorControllerBase
 	
 	// Favorites
 	protected ref array<string> m_FavoriteItems = {};
+	protected ref array<Widget> ThemedWidget = {
+		CameraTrackRunButton,
+		CinematicCameraButton,
+		BrushToggleButton,
+		PlacementsTabButton,
+		DeletionsTabButton,
+		LeftbarPanelSearchBarIconButton,
+		PlacedSearchIconButton,
+	};
 	
 	// Temp until sub ViewControllers can be properties of parent ViewController
 	EditorHudToolbarController GetToolbarController() 
@@ -160,6 +169,12 @@ class EditorHudController: EditorControllerBase
 		
 		LeftbarCategoryConfig.SetColor(m_Editor.GetSettings().SelectionColor);
 		LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
+		
+		foreach (Widget themed_widget: ThemedWidget) {
+			if (themed_widget) {
+				themed_widget.SetColor(GetEditor().GetSettings().SelectionColor);
+			}
+		}
 #endif
 		
 		EditorHudToolbarView = new EditorHudToolbar();

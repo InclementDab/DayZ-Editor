@@ -62,7 +62,8 @@ class EditorWorldObject
 		EntityAI entity_ai;
 		if (Class.CastTo(entity_ai, object))
 		{
-			entity_ai.DisableSimulation(true);
+			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 15, 0, true);
+			//entity_ai.DisableSimulation(true);
 
 			// weeeeeeee
 			if (GetEditor().GetSettings().SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0))
