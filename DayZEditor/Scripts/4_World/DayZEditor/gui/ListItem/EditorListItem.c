@@ -1,4 +1,4 @@
-class EditorListItem: ScriptViewTemplate<EditorListItemController>
+class EditorListItem: ScriptView
 {
 	protected Editor m_Editor = GetEditor();
 	protected WrapSpacerWidget ListItem;
@@ -6,6 +6,23 @@ class EditorListItem: ScriptViewTemplate<EditorListItemController>
 	
 	// Can be null!
 	protected CheckBoxWidget ListItemFavorites;
+	
+	protected EditorListItemController m_TemplateController;
+	
+	override typename GetControllerType()
+	{
+		return EditorListItemController;
+	}
+	
+	EditorListItemController GetTemplateController()
+	{
+		return m_TemplateController;
+	}
+	
+	void EditorListItem()
+	{
+		m_TemplateController = EditorListItemController.Cast(m_Controller);
+	}
 	
 	void Select() 
 	{

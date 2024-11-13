@@ -29,6 +29,7 @@ class EditorPlacedListItem: EditorListItem
 		ToggleBoundingBoxImage.Show(m_EditorObject.GetFlags() & EditorObjectFlags.BBOX);
 		ToggleWorldMarkerImage.Show(m_EditorObject.GetFlags() & EditorObjectFlags.OBJECTMARKER);
 		ListItemLabel.SetText(editor_object.GetDisplayName());
+		ListItemLabel.Show(true);
 		
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
@@ -205,6 +206,26 @@ class EditorPlacedListItem: EditorListItem
 	{
 		if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
 			m_EditorObject.GetMarker().Highlight();
+		}
+
+		switch (w) {
+			case LockedImage.GetParent(): {
+				string command_name = GetEditor().CommandManager[EditorLockCommand].GetName();
+				string command_shortcut = GetEditor().CommandManager[EditorLockCommand].GetShortcutString();
+				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(command_name, LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT, command_shortcut));
+				break;
+			}
+			
+			case ToggleBoundingBoxImage.GetParent(): {
+				// todo make toggle command
+				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle Bounding Box", LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT));
+				break;
+			}
+			
+			case ToggleWorldMarkerImage.GetParent(): {
+				GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle World Marker", LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT));
+				break;
+			}
 		}
 		
 		return super.OnMouseEnter(w, x, y);
