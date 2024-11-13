@@ -7,7 +7,7 @@ class EditorCopyCommand: EditorCommand
 		auto selected_objects = GetEditor().GetSelectedObjects();
 		if (selected_objects.Count() > 0) {
 			int selected_object_count = EditorClipboard.Copy(selected_objects.GetValueArray());
-			GetEditor().GetEditorHud().CreateNotification(string.Format("%1 entities copied to clipboard", selected_object_count), LinearColor.DARK_GOLDENROD);
+			GetEditor().GetEditorHud().CreateNotification(string.Format("%1 entities copied to clipboard", selected_object_count));
 		}
 		
 		return true;

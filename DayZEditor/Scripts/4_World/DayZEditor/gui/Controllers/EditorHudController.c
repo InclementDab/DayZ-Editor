@@ -182,6 +182,9 @@ class EditorHudController: EditorControllerBase
 		
 		ShowPrivate = GetEditor().GetSettings().ShowScopeZeroObjects;
 		NotifyPropertyChanged("ShowPrivate");
+
+		FavoritesToggle = GetEditor().GetSettings().ShowFavoriteObjects;
+		NotifyPropertyChanged("FavoritesToggle");
 	}
 		
 	void Update()
@@ -224,17 +227,34 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController::PropertyChanged: %1", property_name);
 		
 		switch (property_name) {
-					
-			case "SearchBarData": {
+			case "SearchBarData": 
+			case "FavoritesToggle":
+			case "ShowPrivate": {
+				GetEditor().GetSettings().ShowFavoriteObjects = FavoritesToggle;
+				GetEditor().GetSettings().ShowScopeZeroObjects = ShowPrivate;
+				GetEditor().GetSettings().Save();
+
 				auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
 				for (int j = 0; j < spacer_config.Count(); j++) {
+					int hide = !spacer_config[j].FilterType(SearchBarData);
 					if (FavoritesToggle) {
-						spacer_config[j].GetLayoutRoot().Show(spacer_config[j].GetTemplateController().Favorite && spacer_config[j].FilterType(SearchBarData)); 	
-					} else {
-						spacer_config[j].GetLayoutRoot().Show(spacer_config[j].FilterType(SearchBarData)); 	
+						hide |= hide | (!spacer_config[j].GetTemplateController().Favorite << 1);
 					}
+
+					if (!ShowPrivate) {
+						hide |= hide | (spacer_config[j].GetPlaceableItem().Scope < 2) << 2;
+					}
+
+					spacer_config[j].GetLayoutRoot().Show(!hide);
 				}
-				
+
+				break;
+			}
+		}
+
+		switch (property_name) {
+					
+			case "SearchBarData": {
 				LeftbarScroll.VScrollToPos(0);
 				
 				if (SearchBarData.Length() > 0) {
@@ -273,22 +293,7 @@ class EditorHudController: EditorControllerBase
 				
 				break;
 			}
-			
-			case "FavoritesToggle": {
-				auto spacer_config_favorites = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
-				for (int i = 0; i < spacer_config_favorites.Count(); i++) {
-					if (FavoritesToggle) {
-						spacer_config_favorites[i].GetLayoutRoot().Show(spacer_config_favorites[i].GetTemplateController().Favorite && spacer_config_favorites[i].FilterType(SearchBarData));
-					} else {
-						spacer_config_favorites[i].GetLayoutRoot().Show(spacer_config_favorites[i].FilterType(SearchBarData)); 	 // SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData)
-					}
-				}
-				
-				LeftbarScroll.VScrollToPos(0);
-				
-				break;
-			}		
-			
+						
 			case "cam_x":
 			case "cam_y":
 			case "cam_z": {				
@@ -368,24 +373,6 @@ class EditorHudController: EditorControllerBase
 			// I literally hate this
 			case "PrecisionLevel": {
 				g_EditorPrecision = GetPrecisionLevel();
-				break;
-			}
-
-			case "ShowPrivate": {
-				for (int ii = 0; ii < LeftbarSpacerConfig.Count(); ii++) {
-					if (LeftbarSpacerConfig[ii] && LeftbarSpacerConfig[ii].GetLayoutRoot() && LeftbarSpacerConfig[ii].GetPlaceableItem()) {
-						bool gay1 = LeftbarSpacerConfig[ii].GetPlaceableItem().Scope > 1 || ShowPrivate;
-						LeftbarSpacerConfig[ii].GetLayoutRoot().Show(gay1);
-					}
-				}
-
-				for (int jj = 0; jj < LeftbarSpacerStatic.Count(); jj++) {
-					if (LeftbarSpacerStatic[jj] && LeftbarSpacerStatic[jj].GetLayoutRoot() && LeftbarSpacerStatic[jj].GetPlaceableItem()) {
-						bool gay2 = LeftbarSpacerStatic[jj].GetPlaceableItem().Scope > 1 || ShowPrivate;
-						LeftbarSpacerStatic[jj].GetLayoutRoot().Show(gay2);
-					}
-				}
-
 				break;
 			}
 		}

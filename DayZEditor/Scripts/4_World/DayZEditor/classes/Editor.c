@@ -109,7 +109,7 @@ class Editor: Managed
 	
 	bool 										CameraLight;
 
-	static const string 						Version = "1.31." + GetBuildNumber();
+	static const string 						Version = "1.32." + GetBuildNumber();
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -1860,12 +1860,12 @@ class Editor: Managed
 		
 		if (error_message != string.Empty) {
 			EditorLog.Warning(error_message);
-			m_EditorHud.CreateNotification(error_message, COLOR_YELLOW);
+			m_EditorHud.CreateNotification(error_message);
 			
 			// Disable auto save since we loaded a shit file
 			GetSettings().AutoSaveTimer = -1;
 		} else {
-			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
+			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()));
 		}
 	}
 	

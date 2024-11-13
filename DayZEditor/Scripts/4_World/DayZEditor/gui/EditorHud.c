@@ -182,11 +182,11 @@ class EditorHud: ScriptView
 		LoggerFrame.Show(state);
 	}
 		
-	void CreateNotification(string text, LinearColor color = 0xFF7CFC00, float duration = 4.0)
-	{
+	void CreateNotification(string text, float duration = 4.0)
+	{		
 		WidgetAnimator.CancelAnimate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y);
 		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, -24, 100);
-		NotificationPanel.SetColor(color.With(3, 200));
+		NotificationPanel.SetColor(GetEditor().GetSettings().SelectionColor);
 		NotificationText.SetText(text);
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(CleanupNotification);

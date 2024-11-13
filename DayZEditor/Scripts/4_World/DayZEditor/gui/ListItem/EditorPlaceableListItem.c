@@ -119,18 +119,31 @@ class EditorPlaceableListItem: EditorListItem
 		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
 		m_LayoutRoot.GetScreenSize(size_x, size_y);
 		
-		tooltip.SetTitle(m_PlaceableItem.Type);	
-		tooltip.SetPosition(pos_x + size_x, pos_y);
+		tooltip.SetPosition(pos_x + size_x + 7, pos_y);
 		
 		//! bugfix
 		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;
 		
-		if (m_PlaceableItem && !IsBlacklistedItem(m_PlaceableItem.Type)) {
+		if (m_PlaceableItem) {
 			Object preview = GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE);
+			if (!preview) {
+				// DOESNT WORK @JACOB
+				//preview = GetGame().CreateStaticObjectUsingP3D(m_PlaceableItem.Path, Vector(0, -1000, 0), vector.Zero, 1.0, true);
+			}
+
+			string display_name = string.Empty;
+			if (preview) {
+				display_name = preview.GetDisplayName();
+			}
+				
+			if (!display_name) {
+				display_name = m_PlaceableItem.Type;
+			}
+
+			tooltip.SetTitle(display_name);	
+
 			if (preview) {
 				tooltip.SetContent(preview);
-			} else {
-				tooltip.SetContent(m_PlaceableItem.Type);
 			}
 		}		
 		

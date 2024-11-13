@@ -7,7 +7,7 @@ class EditorCutCommand: EditorCommand
 		auto selected_objects = GetEditor().GetSelectedObjects();
 		if (selected_objects.Count() > 0) {
 			int selected_object_count = EditorClipboard.Cut(selected_objects.GetValueArray());
-			GetEditor().GetEditorHud().CreateNotification(string.Format("%1 entities cut to clipboard", selected_object_count), LinearColor.AQUA);
+			GetEditor().GetEditorHud().CreateNotification(string.Format("%1 entities cut to clipboard", selected_object_count));
 		}
 
 		return true;

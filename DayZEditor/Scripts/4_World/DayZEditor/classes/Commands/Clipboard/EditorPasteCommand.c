@@ -12,11 +12,11 @@ class EditorPasteCommand: EditorCommand
 		if (cursor_raycast && cursor_raycast.Bounce) {
 			int paste_count = EditorClipboard.Paste(cursor_raycast.Bounce.Position);
 			if (paste_count < 0) {
-				GetEditor().GetEditorHud().CreateNotification(string.Format("Paste: exited with error code (%1)", paste_count), LinearColor.INDIAN_RED);
+				GetEditor().GetEditorHud().CreateNotification(string.Format("Paste: exited with error code (%1)", paste_count));
 			} else if (paste_count == 1) {
-				GetEditor().GetEditorHud().CreateNotification(string.Format("%1 New Entity Pasted", paste_count), LinearColor.DEEP_SKY_BLUE);
+				GetEditor().GetEditorHud().CreateNotification(string.Format("%1 New Entity Pasted", paste_count));
 			} else if (paste_count > 1) {
-				GetEditor().GetEditorHud().CreateNotification(string.Format("%1 New Entities Pasted", paste_count), LinearColor.DEEP_SKY_BLUE);
+				GetEditor().GetEditorHud().CreateNotification(string.Format("%1 New Entities Pasted", paste_count));
 			}
 		}
 

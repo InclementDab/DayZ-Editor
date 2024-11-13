@@ -217,7 +217,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			string text = TextBoxPrefabGetString(w);
 			
 			if (text != string.Empty) {
-				GetEditor().GetEditorHud().CreateNotification("Copied to clipboard!", COLOR_SALMON);
+				GetEditor().GetEditorHud().CreateNotification("Copied to clipboard!");
 				GetGame().CopyToClipboard(text);
 			}
 		}

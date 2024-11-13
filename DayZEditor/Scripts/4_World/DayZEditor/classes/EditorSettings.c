@@ -7,6 +7,7 @@ class EditorSettings: ProfileSettings
 	bool QuickMoveFollowsCamera		= false;
 	bool SpawnItemsWithAttachments	= true;
 	bool ShowScopeZeroObjects		= false;
+	bool ShowFavoriteObjects		= false;
 
 	// Camera Settings
 	float CameraSpeed				= 25;

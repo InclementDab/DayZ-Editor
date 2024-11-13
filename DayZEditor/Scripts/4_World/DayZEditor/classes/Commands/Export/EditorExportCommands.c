@@ -57,7 +57,7 @@ class EditorExportCommandBase: EditorAsyncCommand
 
 		File f = file_name;
 		string message = string.Format("Saved %1 objects, %2 deletions (%3)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count(), f.GetFileName());
-		m_Editor.GetEditorHud().CreateNotification(message, COLOR_GREEN);
+		m_Editor.GetEditorHud().CreateNotification(message);
 		EditorLog.Debug(message);
 		return true;
 	}
