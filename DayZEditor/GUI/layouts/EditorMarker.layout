@@ -1,33 +1,67 @@
-ButtonWidgetClass EditorMarkerColor {
+PanelWidgetClass EditorMarkerInteract {
  visible 1
  clipchildren 1
  ignorepointer 0
- color 1 1 1 0.9961
  position 0 0
- size 20 20
+ size 24 24
+ halign center_ref
+ valign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ scaled 0
  draggable 0
- scriptclass "ViewBinding"
- style Colorable
+ scriptclass ""
+ style blank
  {
-  PanelWidgetClass EditorMarkerOutlineColor {
+  ImageWidgetClass EditorMarkerColor {
+   visible 1
+   clipchildren 1
    ignorepointer 1
-   color 0.0588 0.0588 0.0588 1
    position 0 0
    size 1 1
+   halign center_ref
+   valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   style Outline_1px
+   scaled 0
+   draggable 0
+   scriptclass "SymbolHandler"
+   mode blend
+   "src alpha" 1
+   {
+    ScriptParamsClass {
+     Symbol_Name "rectangle"
+     Symbol_Size 3
+    }
+   }
   }
- }
- {
-  ScriptParamsClass {
-   Relay_Command "EditorMarkerExecute"
+  ImageWidgetClass EditorMarkerOutline {
+   visible 1
+   clipchildren 1
+   ignorepointer 1
+   position 0 0
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
+   draggable 0
+   scriptclass "SymbolHandler"
+   mode blend
+   "src alpha" 1
+   {
+    ScriptParamsClass {
+     Symbol_Name "rectangle"
+     Symbol_Size 2
+    }
+   }
   }
  }
 }

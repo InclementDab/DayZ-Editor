@@ -39,6 +39,9 @@ class EditorSettings: ProfileSettings
 	int MarkerPrimaryColor			= COLOR_WHITE;
 	
 	// Theme Settings
+	[RegisterProfileSettingMultistate("APPEARANCE", "MarkerSize", "Marker Size", {"SMALL", "MEDIUM", "LARGE", "GIGANTIC"})]
+	int MarkerSize = 1;
+	
 	[RegisterProfileSettingColor("APPEARANCE", "HighlightColor", "Highlight Color", false)]
 	int HighlightColor				= 0xff3d4045;
 	
@@ -59,6 +62,8 @@ class EditorSettings: ProfileSettings
 	
 	int VersionRequestedNotToSeeDonationDialog = 0;
 	int TimesOpened;
+	
+	float LeftBarPlacement = 380, RightBarPlacement = 380;
 
 	// Its a pseduo-controller, preferences dialogs!!
 	void PropertyChanged(string property_name)

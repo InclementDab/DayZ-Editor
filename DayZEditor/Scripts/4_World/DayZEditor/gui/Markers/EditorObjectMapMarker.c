@@ -18,6 +18,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 		
 		vector position = m_EditorMap.MapToScreen(m_EditorObject.GetPosition());
 		SetPos(position[0], position[1]);
+		SetSize(0.5);
 		super.Update(dt);
 	}
 }

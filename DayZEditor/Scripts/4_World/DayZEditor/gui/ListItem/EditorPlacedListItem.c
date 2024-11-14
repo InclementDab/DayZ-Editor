@@ -184,11 +184,6 @@ class EditorPlacedListItem: EditorListItem
 		
 	override bool OnDrag(Widget w, int x, int y)
 	{
-		EditorLog.Trace("EditorPlacedListItem::OnDrag");		
-		if (!KeyState(KeyCode.KC_LSHIFT)) {
-			GetEditor().ClearSelection();
-		}
-		
 		GetEditor().SelectObject(m_EditorObject);
 		array<EditorObject> additional_drag_targets = m_Editor.GetSelectedObjects().GetValueArray();
 		additional_drag_targets.RemoveItem(m_EditorObject);
@@ -200,7 +195,6 @@ class EditorPlacedListItem: EditorListItem
 	
 	override bool OnDrop(Widget w, int x, int y, Widget receiver)
 	{
-		EditorLog.Trace("EditorPlacedListItem::OnDrop");
 		//m_DragHandler.OnDragFinish();
 		
 		return true;
@@ -209,7 +203,7 @@ class EditorPlacedListItem: EditorListItem
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
-			m_EditorObject.GetMarker().Highlight();
+			m_EditorObject.GetMarker().SetHighlighted(1);
 		}
 
 		switch (w) {
@@ -246,7 +240,7 @@ class EditorPlacedListItem: EditorListItem
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (m_EditorObject.GetMarker() && !m_EditorObject.GetMarker().IsSelected()) {
-			m_EditorObject.GetMarker().Deselect();
+			m_EditorObject.GetMarker().SetHighlighted(0);
 		}
 		
 		GetEditor().GetEditorHud().ClearCurrentTooltip();

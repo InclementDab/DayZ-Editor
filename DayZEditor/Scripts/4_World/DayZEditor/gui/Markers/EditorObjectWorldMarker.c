@@ -1,8 +1,5 @@
 class EditorObjectWorldMarker: EditorObjectMarker
-{
-	static const float MARKER_MIN_SIZE = 8;
-	static const float MARKER_MAX_SIZE = 15;
-	
+{	
 	protected int m_ScreenX, m_ScreenY;
 	protected MapWidget m_MapWidget;
 	void EditorObjectWorldMarker(EditorObject editor_object)
@@ -22,8 +19,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	override void Update(float dt)
 	{
 		vector position = GetPosition();	
-		float distance = vector.Distance(GetGame().GetCurrentCameraPosition(), position);
-		if (m_Editor.GetSettings().MarkerViewDistance < distance) {
+		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
+		float marker_view_distance_sq = m_Editor.GetSettings().MarkerViewDistance * m_Editor.GetSettings().MarkerViewDistance;
+		if (marker_view_distance_sq < distancesq) {
 			m_LayoutRoot.Show(false);
 			return;
 		}
@@ -39,11 +37,11 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			m_LayoutRoot.Show(false);
 			return;
 		}
+						
+		//float size = Math.Min(Math.Max(1300 / distancesq, 18), 24);
+		float size_01 = Math.InverseLerp(0, marker_view_distance_sq, distancesq);
 		
-		// old tyler, the answer was dimensional analysis.. not trig... distance squared <3
-		
-		float size = Math.Min(Math.Max(1400 / (distance * distance), MARKER_MIN_SIZE), MARKER_MAX_SIZE);
-		SetSize(size, size);
+		SetSize(size_01);
 		SetPos(screen_pos[0], screen_pos[1]);
 		Show(m_Show);
 	}

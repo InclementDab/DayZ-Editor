@@ -109,8 +109,9 @@ class Editor: Managed
 	
 	bool 										CameraLight;
 
+	static const int MinorVersionNumber = 1;
 	static const int VersionNumber = 32;
-	static const string 						Version = "1." + VersionNumber.ToString();
+	static const string Version = string.Format("1.%1%2", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty));
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -217,7 +218,7 @@ class Editor: Managed
 		GetDayZGame().Event_OnActivateMessage.Insert(OnActivateMessage);
 		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
 		
-		if (!GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
+		if (GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
 			thread ShowDonationDialog();
 		}
 
@@ -1587,8 +1588,9 @@ class Editor: Managed
 	
 	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
 	{
+		EditorAction action;
 		if (create_undo) {
-			EditorAction action = new EditorAction("Hide", "Unhide");
+			action = new EditorAction("Hide", "Unhide");
 		}
 		
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						

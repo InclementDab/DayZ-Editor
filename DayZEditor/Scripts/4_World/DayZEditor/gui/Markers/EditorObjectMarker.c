@@ -8,13 +8,7 @@ class EditorObjectMarker: EditorMarker
 	{
 		EditorLog.Trace("EditorObjectMarker");
 		m_EditorObject = editor_object;
-		
-		if (m_EditorObject.GetFlags() & (EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE)) {
-			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_INVUNERABLE);
-		} else {
-			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		}
-		
+				
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
@@ -26,12 +20,12 @@ class EditorObjectMarker: EditorMarker
 	
 	void EditorObjectSelected(EditorObject data) 
 	{		
-		Select();
+		SetHighlighted(2);
 	}
 	
 	void EditorObjectDeselected(EditorObject data) 
 	{
-		Deselect();
+		SetHighlighted(0);
 	}
 		
 	override void Show(bool show)
@@ -114,30 +108,10 @@ class EditorObjectMarker: EditorMarker
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
-
-	void Select() 
+				
+	override bool IsDisabled()
 	{
-		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
-		SetColor(m_Editor.GetSettings().SelectionColor);
-		SetOutlineColor(m_Editor.GetSettings().MarkerPrimaryColor);
-	}
-	
-	void Highlight()
-	{
-		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
-		SetColor(m_Editor.GetSettings().MarkerPrimaryColor);
-		SetOutlineColor(m_Editor.GetSettings().HighlightColor);
-	}
-	
-	void Deselect() 
-	{
-		SetColor(m_Editor.GetSettings().MarkerPrimaryColor);
-		SetOutlineColor(m_Editor.GetSettings().MarkerPrimaryColor);
-		if (m_EditorObject.GetFlags() & (EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE)) {
-			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_INVUNERABLE);
-		} else {
-			m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		}
+		return m_EditorObject && (m_EditorObject.GetFlags() & (EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE));		
 	}
 	
 	bool IsSelected() 
@@ -148,7 +122,7 @@ class EditorObjectMarker: EditorMarker
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		if (!IsSelected()) {
-			Highlight();
+			SetHighlighted(1);
 			if (m_EditorObject.GetListItem()) {
 				m_EditorObject.GetListItem().Highlight();
 			}
@@ -157,13 +131,14 @@ class EditorObjectMarker: EditorMarker
 		if (m_Editor.GetSettings().MarkerTooltips && !m_Editor.IsPlacing()) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DoTooltipCheck, 500);
 		}
+		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (!IsSelected()) {
-			Deselect();
+			SetHighlighted(0);
 			if (m_EditorObject.GetListItem()) {
 				m_EditorObject.GetListItem().Deselect();
 			}

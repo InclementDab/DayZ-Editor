@@ -9,7 +9,7 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 	void EditorOneTimeDonationDialog(string title)
 	{
 		m_TextBox = new MessageBoxPrefab("DayZ Editor is 100% free to use—and it always will be! But if you want to see even more awesome updates, consider joining our supporter community on Discord. Your support drives future content and improvements!");
-		m_NeverShowAgain = new CheckBoxPrefab("Never Show Again", this, "m_NeverShowAnymore");
+		m_NeverShowAgain = new CheckBoxPrefab("Don't Show Again", this, "m_NeverShowAnymore");
 		AddContent(m_TextBox);
 		AddContent(m_NeverShowAgain);
 		
@@ -22,6 +22,7 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 	{
 		if (m_NeverShowAnymore) {
 			GetEditor().GetSettings().VersionRequestedNotToSeeDonationDialog = Editor.VersionNumber;
+			GetEditor().GetSettings().Save();
 		}
 		
 		CloseDialog(DialogResult.OK);

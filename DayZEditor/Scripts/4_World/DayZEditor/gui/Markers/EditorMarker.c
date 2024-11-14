@@ -3,31 +3,64 @@ class EditorMarker: ScriptView
 	protected Editor m_Editor = GetEditor();
 	protected bool m_Show = true;
 	
-	Widget EditorMarkerColor;
-	Widget EditorMarkerOutlineColor;
+	Widget EditorMarkerColor, EditorMarkerOutline;
 	
 	void EditorMarker()
 	{
-		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		SetColor(m_Editor.GetSettings().MarkerPrimaryColor);
-		SetOutlineColor(m_Editor.GetSettings().MarkerPrimaryColor);
+		SetHighlighted(false);
 	}
 	
 	void SetPos(float x, float y) 
 	{
-		float h, w;
-		GetSize(h, w);
-		// Offset to center of marker		
-		m_LayoutRoot.SetPos(x - h / 2, y - w / 2);
+		// Offset to center of marker
+		float w, h;		
+		m_LayoutRoot.GetScreenSize(w, h);
+		
+		m_LayoutRoot.SetScreenPos(x - w / 2, y - h / 2);
 	}
 	
 	void GetPos(out float x, out float y)
 	{
-		m_LayoutRoot.GetPos(x, y);
+		m_LayoutRoot.GetScreenPos(x, y);
+	}
+	
+	void SetSize(float normalize_01)
+	{
+		float size_min = 0, size_max = 0;
+		switch (GetEditor().GetSettings().MarkerSize) {
+			case 0: {
+				size_min = 12;
+				size_max = 16;
+				break;
+			}
+			
+			case 1: {
+				size_min = 16;
+				size_max = 22;
+				break;
+			}
+			
+			case 2: {
+				size_min = 22;
+				size_max = 28;
+				break;
+			}
+			
+			case 3: {
+				// woah
+				size_min = 30;
+				size_max = 38;
+				break;
+			}
+		}
+		
+		float size = Math.Lerp(size_min, size_max, normalize_01);
+		m_LayoutRoot.SetScreenSize(size, size);
 	}
 	
 	void SetSize(float x, float y)
 	{
+		Error("Deprecated function");
 		m_LayoutRoot.SetSize(x, y);
 	}
 	
@@ -44,26 +77,45 @@ class EditorMarker: ScriptView
 		}
 	}
 	
-	void SetColor(int color)
+	bool IsDisabled()
 	{
-		if (EditorMarkerColor) {
-			EditorMarkerColor.SetColor(color);
-		}
+		return false;		
 	}
 	
-	void SetOutlineColor(int color)
+	void SetHighlighted(int highlighted)
 	{
-		if (EditorMarkerOutlineColor) {
-			EditorMarkerOutlineColor.SetColor(color);
+		int alpha = 255;
+		if (!highlighted) {
+			alpha = 100;
+		}
+		
+		if (IsDisabled()) {
+			alpha = 40;
+		}
+
+		LinearColor innercolor = GetEditor().GetSettings().HighlightColor;
+		LinearColor outercolor = GetEditor().GetSettings().SelectionColor;
+
+
+		if (highlighted) {
+			if (highlighted > 1) {
+				EditorMarkerColor.SetColor(outercolor.With(3, 255) + LinearColor.Create(20, 20, 20));
+				EditorMarkerOutline.SetColor(LinearColor.BLACK.With(3, 255));
+			} else {
+				EditorMarkerOutline.SetColor(outercolor.With(3, alpha));
+			}
+		} else {
+			WidgetAnimator.AnimateColor(EditorMarkerColor, innercolor.With(3, alpha), 100);
+			WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 100);
 		}
 	}
 	
 	protected bool IsMouseInside(int c_x, int c_y)
 	{
 		float x, y, w, h;
-		m_LayoutRoot.GetPos(x, y);
-		m_LayoutRoot.GetSize(w, h);
-		return (c_x < x + h && c_x > x - h) && (c_y < y + h && c_y > y - h);
+		m_LayoutRoot.GetScreenPos(x, y);
+		m_LayoutRoot.GetScreenSize(w, h);
+		return (c_x < x + h / 2 && c_x > x - h / 2) && (c_y < y + h / 2 && c_y > y - h / 2);
 	}
 	
 	override string GetLayoutFile() 

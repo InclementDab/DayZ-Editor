@@ -157,7 +157,7 @@ class EditorHudController: EditorControllerBase
 				TargetList.Insert(list_item);
 			}
 			
-			bool gay = placeable_item.Scope > 1 || ShowPrivate;
+			bool gay = placeable_item.Scope > 0 || ShowPrivate;
 			list_item.Show(gay);
 		}
 		

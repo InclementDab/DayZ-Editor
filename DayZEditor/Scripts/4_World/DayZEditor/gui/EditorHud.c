@@ -39,6 +39,12 @@ class EditorHud: ScriptView
 		EditorMapWidget.Show(false);
 		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
+		
+		float s_r_w, s_r_h, s_l_w, s_l_h;
+		RightbarWrapper.GetScreenSize(s_r_w, s_r_h);
+		RightbarWrapper.SetScreenSize(editor.GetSettings().RightBarPlacement, s_r_h);
+		LeftbarWrapper.GetScreenSize(s_l_w, s_l_h);
+		LeftbarWrapper.SetScreenSize(editor.GetSettings().LeftBarPlacement, s_l_h);
 				
 		ShowScreenLogs(GetEditor().GetSettings().ShowScreenLogs);
 	}
@@ -124,7 +130,9 @@ class EditorHud: ScriptView
 					LeftbarDrag0.SetColor(LinearColor.SLATE_BLUE);
 					LeftbarCollapsePanel.GetScreenSize(wr_col_s_w, wr_col_s_h);
 					LeftbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
-					LeftbarWrapper.SetScreenSize(Math.Clamp(mouse_x + wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
+					float LeftWidth = Math.Clamp(mouse_x + wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
+					LeftbarWrapper.SetScreenSize(LeftWidth, wr_s_h);
+					GetEditor().GetSettings().LeftBarPlacement = LeftWidth;
 					break;
 				}
 
@@ -132,7 +140,9 @@ class EditorHud: ScriptView
 					RightbarDrag0.SetColor(LinearColor.SLATE_BLUE);
 					RightbarCollapsePanel.GetScreenSize(wr_col_s_w, wr_col_s_h);
 					RightbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
+					float RightWidth = Math.Clamp(screen_x - mouse_x - wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
 					RightbarWrapper.SetScreenSize(Math.Clamp(screen_x - mouse_x - wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
+					GetEditor().GetSettings().RightBarPlacement = RightWidth;
 					break;
 				}
 			}			
@@ -162,7 +172,10 @@ class EditorHud: ScriptView
 	}
 		
 	void ToggleCursor() 
-	{		
+	{	
+		// An excellent place to do this!	
+		GetEditor().GetSettings().Save();
+		
 		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 	}
 	
