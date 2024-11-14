@@ -85,7 +85,7 @@ class EditorHudController: EditorControllerBase
 		"LeftbarCategoryConfig",
 		"DeletionsTabButton",
 		"PlacementsTabButton",
-		"PlacedSearchIconButton",,
+		"PlacedSearchIconButton",
 		"MenuBarFile",
 		"MenuBarEdit",
 		"MenuBarView",

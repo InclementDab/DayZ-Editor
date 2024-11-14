@@ -108,7 +108,7 @@ class EditorMarker: ScriptView
 	{
 		int alpha = 255;
 		if (!highlighted) {
-			alpha = 100;
+			alpha = 140;
 		}
 		
 		if (IsDisabled()) {
@@ -139,7 +139,7 @@ class EditorMarker: ScriptView
 			}
 			
 			if (EditorMarkerOutline) {
-				EditorMarkerOutline.SetColor(0xffa8a8a8); 
+				EditorMarkerOutline.SetColor(LinearColor.MINT_CREAM.With(3, alpha)); 
 			}
 			//WidgetAnimator.AnimateColor(EditorMarkerColor, LinearColor.WHITE.With(3, alpha), 20);
 			//WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 20);

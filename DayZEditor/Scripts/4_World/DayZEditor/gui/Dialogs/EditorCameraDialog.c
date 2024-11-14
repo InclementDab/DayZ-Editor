@@ -15,8 +15,49 @@ class EditorCameraDialog: EditorDialogBase
 		EditorLog.Trace("EditorCameraDialog");
 			
 		m_EditorCamera = GetEditor().GetCamera();
+		/*
+		map<int, ref PPEClassBase> class_map;
+		EnScript.GetClassVar(PPEManagerStatic.GetPPEManager(), "m_PPEClassMap", 0, class_map);
+		foreach (int id, PPEClassBase clascs: class_map) {
+		    Print(id);
+		    typename ty = clascs.Type();
+			
+		    map<int,ref PPEMatClassParameterCommandData> parameter_data;
+		    EnScript.GetClassVar(clascs, "m_MaterialParamMapStructure", 0, parameter_data);
+		
+			GroupPrefab group_prefab = new GroupPrefab(ty.ToString(), null, string.Empty);
+			
+			map<int, string> param_map = new map<int, string>();
+		    for (int i = 0; i < ty.GetVariableCount(); i++) {
+		        string variable_name = ty.GetVariableName(i);
+				if (variable_name.Contains("PARAM_")) {
+					int var;
+					ty.GetVariableValue(clascs, i, var);
+					param_map[var] = variable_name;
+					
+					switch (parameter_data[var].Type()) {
+						case PPEMatClassParameterColor: {
+							group_prefab.Insert(new ColorPickerPrefab(variable_name, this, string.Empty));
+							break;	
+						}
 						
-		m_CameraGroup = new GroupPrefab("Camera", m_EditorCamera, string.Empty);
+						case PPEMatClassParameterFloat: {
+							group_prefab.Insert(new SliderPrefab(variable_name, this, string.Empty));
+							break;
+						}
+					}
+				}
+		    }
+			
+		    
+		    foreach (int id2, PPEMatClassParameterCommandData data: parameter_data) {
+		        Print(id2);
+				Print(data);
+		    }
+			
+			AddContent(group_prefab);
+		}*/
+		
 		m_CameraGroup.Insert(new SliderPrefab("FOV", m_EditorCamera, "FOV", 0, 2));
 		m_CameraGroup.Insert(new SliderPrefab("Gaussian Blur", m_EditorCamera, "Blur", 0, 1));
 		m_CameraGroup.Insert(new SliderPrefab("Near Plane", m_EditorCamera, "NearPlane",  0, 1));
@@ -27,7 +68,7 @@ class EditorCameraDialog: EditorDialogBase
 		m_CameraGroup.Insert(new SliderPrefab("Exposure", m_EditorCamera, "Exposure", 0, 3));
 		m_CameraGroup.Insert(new SliderPrefab("Smoothing", m_EditorCamera, "Smoothing", 0, 1));
 		m_CameraGroup.Open(OpenCameraGroup);
-		
+				
 		m_ColorCorrectionGroup = new GroupPrefab("Filters", m_EditorCamera, string.Empty);
 		m_ColorCorrectionGroup.Insert(new ColorPickerPrefab("Color Correction", m_EditorCamera, "ColorCorrection", false));
 		m_ColorCorrectionGroup.Open(OpenColorCorrectionGroup);

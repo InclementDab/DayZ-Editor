@@ -325,12 +325,12 @@ class Editor: Managed
 
 	Ray GetCameraRay()
 	{
-		return new Ray(m_EditorCamera.GetPosition(), m_EditorCamera.GetDirection());
+		return new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraDirection());
 	}
 	
 	Ray GetCursorRay()
 	{
-		return new Ray(m_EditorCamera.GetPosition(), GetDayZGame().GetPointerDirection());
+		return new Ray(GetGame().GetCurrentCameraPosition(), GetDayZGame().GetPointerDirection());
 	}
 
 	Ray GetCursorRayModeSafe()
@@ -472,7 +472,9 @@ class Editor: Managed
 	}
 
 	void Update(float timeslice)
-	{		
+	{	
+		PPEManagerStatic.GetPPEManager().GetPostProcessCurrentValues(1, 0);
+		
 		ProcessInput(GetGame().GetInput());
 		if (EditorSaveFile != string.Empty) {
 			m_TimeSinceLastBackup += timeslice;

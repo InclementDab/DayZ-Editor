@@ -102,8 +102,12 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
 		if (KeyState(KeyCode.KC_LMENU)) {
-			cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetBottomCenter());
-			cursor_pos[1] = cursor_pos[1] + size[1] / 2;
+			vector aside = GetGame().GetCurrentCameraDirection() * transform[1];
+			Plane test = Plane.Create(aside * vector.Up, "10 10 10", vector.Zero, aside);
+			cursor_pos = test.Intersect(cursor_ray, transform);
+			
+			//cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetBottomCenter());
+			//cursor_pos[1] = cursor_pos[1] + size[1] / 2;
 			if (GetEditor().MagnetMode) {
 				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos + GetGame().GetCurrentCameraDirection() * 1);
 			} else {

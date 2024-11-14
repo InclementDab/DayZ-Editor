@@ -3,9 +3,19 @@ class EditorSettings: ProfileSettings
 {	
 	bool AutoSaveEnabled			= true;
 	float AutoSaveTimer 			= 240;
+	
+	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveStepSize", "Quick Move Speed (m/s)", 0.1, 4)]
 	float QuickMoveStepSize			= 0.1;
-	bool QuickMoveFollowsCamera		= false;
-	bool SpawnItemsWithAttachments	= true;
+	
+	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveFollowsCamera", "Quick Move Mode", {"WORLD", "LOCAL"})]
+	int QuickMoveFollowsCamera		= 0;
+	
+	[RegisterProfileSettingMultistate("PLACEMENT", "SpawnItemsWithAttachments", "Item Spawns", {"EMPTY", "WITH ATTACHMENT"})]
+	int SpawnItemsWithAttachments	= 0;
+	
+	[RegisterProfileSettingMultistate("PLACEMENT", "AllowPlacementOfPersistentItems", "Place Persistent Items", {"NO", "YES"})]
+	bool AllowPlacementOfPersistentItems = false; 
+	
 	bool ShowScopeZeroObjects		= false;
 	bool ShowFavoriteObjects		= false;
 
@@ -35,7 +45,10 @@ class EditorSettings: ProfileSettings
 	// Marker Settings
 	bool MarkerTooltips				= true;
 	bool MarkerGroundOcclusion		= false;
-	float MarkerViewDistance 		= 1000;
+	
+	[RegisterProfileSettingSlider("APPEARANCE", "MarkerViewDistance", "Marker Range", 10, 3000)]
+	float MarkerViewDistance 		= 1000.0;
+	
 	int MarkerPrimaryColor			= COLOR_WHITE;
 	
 	// Theme Settings
@@ -49,14 +62,20 @@ class EditorSettings: ProfileSettings
 	int SelectionColor				= 0xff6ba5ff;
 	
 	// Brush Settings
+	[RegisterProfileSettingMultistate("PLACEMENT", "BrushedObjectMarkers", "Brush Object Markers", {"NO", "YES"})]
 	bool BrushedObjectMarkers 		= false;
+	
+	[RegisterProfileSettingMultistate("PLACEMENT", "BrushedListItems", "Brush List Items", {"NO", "YES"})]
 	bool BrushedListItems			= false;
-	string EditorBrushFile 			= Editor.ROOT_DIRECTORY + "Brushes.xml";
 	
-	// Loot Settings
-	string EditorProtoFile 			= Editor.ROOT_DIRECTORY + "MapGroupProto.xml";
+	[RegisterProfileSettingText("PLACEMENT", "EditorBrushFile", "Brush File")]
+	string EditorBrushFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "Brushes.xml");
 	
-	LogLevel SelectedLogLevel 		= LogLevel.WARNING;
+	[RegisterProfileSettingText("PLACEMENT", "EditorBrushFile", "CE Proto File")]
+	string EditorProtoFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "MapGroupProto.xml");
+	
+	[RegisterProfileSettingMultistate("ADVANCED", "SelectedLogLevel", "Log Level", {"TRACE", "DEBUG", "INFO", "WARNING", "ERROR"})]
+	int SelectedLogLevel 		= LogLevel.WARNING;
 	
 	ref array<string> FavoriteItems = {};
 	

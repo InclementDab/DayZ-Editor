@@ -71,7 +71,7 @@ PanelWidgetClass EditorMarkerInteract {
    ignorepointer 1
    color 0.2627 0.3216 0.502 1
    position 0 0
-   size 24 24
+   size 22 22
    halign center_ref
    valign center_ref
    hexactpos 1
