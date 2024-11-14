@@ -7,7 +7,7 @@ class EditorToggleLightCommand: EditorCommand
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
 		if (!button_args || button_args.Source.GetName() != "CameraLightButton") {
 			m_Editor.CameraLight = !m_Editor.CameraLight;
-			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.CameraLight");
+			m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("m_Editor.CameraLight");
 		}
 				
 		return true;

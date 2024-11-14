@@ -954,7 +954,7 @@ class Editor: Managed
 				
 		GetGame().GetUIManager().ShowCursor(m_Active);
 		
-		if (m_Player && !EditorHudToolbarController.Cast(GetEditorHud().GetTemplateController().EditorHudToolbarView.GetController()).ControlPlayerState) {
+		if (m_Player && !GetEditorHud().GetTemplateController().ControlPlayerState) {
 			m_Player.GetInputController().SetDisabled(m_Active);
 			
 			if (!_bugfixFirstGrab) {
@@ -1125,7 +1125,7 @@ class Editor: Managed
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
-		GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("CollisionMode");
+		GetEditorHud().GetTemplateController().NotifyPropertyChanged("CollisionMode");
 		
 		thread EditLootSpawnsDialog();
 	}

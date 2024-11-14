@@ -1,14 +1,15 @@
 PanelWidgetClass EditorMenuDivider {
  visible 1
  clipchildren 1
- color 0.0588 0.0588 0.0588 1
- size 298 8
+ color 0.1412 0.1569 0.1804 1
+ size 300 8
  halign center_ref
  valign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ scaled 0
  priority 252
  scriptclass ""
  style rover_sim_colorable

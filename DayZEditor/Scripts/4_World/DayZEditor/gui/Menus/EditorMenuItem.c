@@ -1,11 +1,31 @@
-class EditorMenuItem: ScriptViewTemplate<EditorMenuItemController>
+class EditorMenuItem: ScriptView
 {
 	protected ImageWidget EditorMenuItemIcon;
 	protected ButtonWidget EditorMenuItemButton;
+	protected EditorMenuItemController m_TemplateController;
+	
+	void EditorMenuItem()
+	{
+		if (EditorMenuItemButton) {
+			EditorMenuItemButton.SetColor(GetEditor().GetSettings().HighlightColor);
+		}
+
+		m_TemplateController = EditorMenuItemController.Cast(m_Controller);
+	}
 	
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
+	}
+
+	EditorMenuItemController GetTemplateController()
+	{
+		return m_TemplateController;
+	}
+	
+	override typename GetControllerType()
+	{
+		return EditorMenuItemController;
 	}
 }
 
@@ -93,9 +113,7 @@ class EditorMenuItemCategory: EditorMenuItem
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (enterW != m_TemplateController.ChildMenu.GetLayoutRoot().FindAnyWidget(enterW.GetName())) {
-			m_TemplateController.ChildMenu.GetLayoutRoot().Show(false);
-		}
+		m_TemplateController.ChildMenu.GetLayoutRoot().Show(enterW == m_TemplateController.ChildMenu.GetLayoutRoot().FindAnyWidget(enterW.GetName()));	//enter_widget && !enter_widget.IsInherited(ButtonWidget)
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}

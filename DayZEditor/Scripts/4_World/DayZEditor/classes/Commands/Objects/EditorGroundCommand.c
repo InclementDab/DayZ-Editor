@@ -6,7 +6,7 @@ class EditorGroundCommand: EditorCommand
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
 		if (!button_args || button_args.Source.GetName() != "GroundButton") {
 			m_Editor.GroundMode = !m_Editor.GroundMode;
-			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.GroundMode");
+			m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("m_Editor.GroundMode");
 		}
 		
 		return true;

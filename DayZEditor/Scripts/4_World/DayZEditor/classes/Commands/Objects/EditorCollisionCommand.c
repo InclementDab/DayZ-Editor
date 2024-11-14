@@ -6,7 +6,7 @@ class EditorCollisionCommand: EditorCommand
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
 		if (!button_args || button_args.Source.GetName() != "CollisionButton") {
 			m_Editor.CollisionMode = !m_Editor.CollisionMode;
-			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("m_Editor.CollisionMode");
+			m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("m_Editor.CollisionMode");
 		}
 		
 		return true;

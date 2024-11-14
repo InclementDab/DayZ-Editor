@@ -1,9 +1,10 @@
 class EditorChangelogCommand: EditorCommand
 {
-	override void Execute(Class sender, CommandArgs args)
+	override bool Execute(Class sender, CommandArgs args)
 	{	
 		super.Execute(sender, args);
 		GetEditor().ShowChangelog();
+		return true;
 	}
 	
 	override string GetName() 
@@ -13,6 +14,6 @@ class EditorChangelogCommand: EditorCommand
 	
 	override Symbols GetSymbol()
 	{
-		return Symbols.WRENCH_SIMPLE;
+		return Symbols.WRENCH;
 	}
 }

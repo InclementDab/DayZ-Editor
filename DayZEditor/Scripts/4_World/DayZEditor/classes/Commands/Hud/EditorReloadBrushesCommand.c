@@ -3,8 +3,8 @@ class EditorReloadBrushesCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().BrushTypeBoxData.Clear();
-		m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().ReloadBrushes(m_Editor.GetSettings().EditorBrushFile);
+		m_Editor.GetEditorHud().GetTemplateController().BrushTypeBoxData.Clear();
+		m_Editor.GetEditorHud().GetTemplateController().ReloadBrushes(m_Editor.GetSettings().EditorBrushFile);
 		return true;
 	}
 	

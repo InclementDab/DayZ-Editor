@@ -12,7 +12,7 @@ class EditorBrushToggleCommand: EditorCommand
 					break;
 				}
 
-				EditorHudToolbarController toolbar_controller = m_Editor.GetEditorHud().GetTemplateController().GetToolbarController();
+				auto toolbar_controller = m_Editor.GetEditorHud().GetTemplateController();
 				bool button_state = button_args.GetButtonState();
 				button_args.Source.FindAnyWidget("BrushToggleButtonText").SetPos(button_state * 1, button_state * 1);
 

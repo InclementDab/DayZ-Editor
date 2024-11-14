@@ -109,7 +109,7 @@ class EditorHud: ScriptView
 		}
 		
 		EditorCanvas.Clear();
-		if (input.LocalValue("UAFire") && m_DragBoxDelayStart < 0 && m_DragBoxDelayStart > -1 && GetGame().GetInput().HasGameFocus() && cursor_visible && !GetEditor().IsPlacing() && !GetEditor().IsDragging()) {
+		if (input.LocalValue("UAFire") && m_DragBoxDelayStart < 0 && m_DragBoxDelayStart > -1 && GetGame().GetInput().HasGameFocus() && cursor_visible && !GetEditor().IsPlacing() && !GetEditor().IsDragging() && !GetEditor().GetBrush()) {
 			LinearColor drag_box_color = 0xff0078D4;
 			LinearColor drag_box_color_fill = drag_box_color.With(3, 60);
 			int current_x, current_y;
