@@ -1,9 +1,10 @@
-class EditorChangelogCommand: EditorAsyncCommand
+class EditorChangelogCommand: EditorCommand
 {
-	override void Call(Class sender, CommandArgs args)
+	override bool Execute(Class sender, CommandArgs args)
 	{	
-		EditorOneTimeDonationDialog dialog("Editor Changelog");
-		dialog.ShowDialog();
+		super.Execute(sender, args);
+		GetEditor().ShowChangelog();
+		return true;
 	}
 	
 	override string GetName() 
