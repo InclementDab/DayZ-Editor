@@ -1,5 +1,7 @@
 class EditorMarker: ScriptView
 {
+	static ref array<EditorMarker> s_AllMarkers = {};
+
 	protected Editor m_Editor = GetEditor();
 	protected bool m_Show = true;
 	
@@ -7,7 +9,20 @@ class EditorMarker: ScriptView
 	
 	void EditorMarker()
 	{
-		SetHighlighted(false);
+		SetHighlighted(0);
+
+		if (!s_AllMarkers) {
+			s_AllMarkers = {};
+		}
+
+		s_AllMarkers.Insert(this);
+	}
+
+	void ~EditorMarker()
+	{
+		if (s_AllMarkers) {
+			s_AllMarkers.RemoveItem(this);
+		}
 	}
 	
 	void SetPos(float x, float y) 
@@ -58,6 +73,13 @@ class EditorMarker: ScriptView
 		m_LayoutRoot.SetScreenSize(size, size);
 	}
 	
+	float GetSize()
+	{
+		float size;
+		m_LayoutRoot.GetScreenSize(size, size);
+		return size;
+	}
+	
 	void SetSize(float x, float y)
 	{
 		Error("Deprecated function");
@@ -95,7 +117,8 @@ class EditorMarker: ScriptView
 
 		LinearColor innercolor = GetEditor().GetSettings().HighlightColor;
 		LinearColor outercolor = GetEditor().GetSettings().SelectionColor;
-
+		WidgetAnimator.CancelAnimate(EditorMarkerColor);
+		WidgetAnimator.CancelAnimate(EditorMarkerOutline);
 
 		if (highlighted) {
 			if (highlighted > 1) {
@@ -105,8 +128,8 @@ class EditorMarker: ScriptView
 				EditorMarkerOutline.SetColor(outercolor.With(3, alpha));
 			}
 		} else {
-			WidgetAnimator.AnimateColor(EditorMarkerColor, innercolor.With(3, alpha), 100);
-			WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 100);
+			WidgetAnimator.AnimateColor(EditorMarkerColor, innercolor.With(3, alpha), 20);
+			WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 20);
 		}
 	}
 	

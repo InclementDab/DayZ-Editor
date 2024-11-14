@@ -1,8 +1,6 @@
 class EditorObjectMarker: EditorMarker
 {	
 	protected EditorObject m_EditorObject;
-
-	protected ref EditorDragHandler m_DragHandler;
 	
 	void EditorObjectMarker(EditorObject editor_object)
 	{
@@ -11,11 +9,6 @@ class EditorObjectMarker: EditorMarker
 				
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
-	}
-	
-	void ~EditorObjectMarker()
-	{
-		delete m_DragHandler;
 	}
 	
 	void EditorObjectSelected(EditorObject data) 
@@ -179,7 +172,8 @@ class EditorObjectMarker: EditorMarker
 				
 				array<EditorObject> additional_drag_targets = m_Editor.GetSelectedObjects().GetValueArray();
 				additional_drag_targets.RemoveItem(m_EditorObject);
-				m_DragHandler.OnDragStart(m_EditorObject, additional_drag_targets);
+				GetEditor().DragHandler = EditorDragHandler.Cast(GetDragHandlerType().Spawn());
+				GetEditor().DragHandler.OnDragStart(m_EditorObject, additional_drag_targets);
 				return;
 			}
 			
@@ -197,9 +191,9 @@ class EditorObjectMarker: EditorMarker
 	{ 
 		return m_EditorObject; 
 	}
-	
-	EditorDragHandler GetDragHandler() 
+
+	typename GetDragHandlerType()
 	{
-		return m_DragHandler; 
+		return EditorDragHandler;
 	}
 }

@@ -3,7 +3,8 @@ class EditorDragHandler: Managed
 	protected EditorObject m_Target;
 	protected ref array<EditorObject> m_AdditionalDragTargets = {};
 	protected ref EditorAction m_RewindAction;
-
+	protected bool m_IsDragging;
+	
 	void OnDragStart(notnull EditorObject target, array<EditorObject> additional_targets = null)
 	{
 		m_Target = target;
@@ -35,6 +36,11 @@ class EditorDragHandler: Managed
 		m_Target = null;
 		m_AdditionalDragTargets = {};
 	}
+
+	bool IsDragging()
+	{
+		return m_IsDragging;
+	}
 	
 	protected void _OnDragging()
 	{
@@ -43,10 +49,12 @@ class EditorDragHandler: Managed
 		
 		UAInputAPI input = GetUApi();
 		if (input.GetInputByID(UAFire).LocalValue()) {
+			m_IsDragging = true;
 			OnDragging(m_Target, m_AdditionalDragTargets);
 		}
 
 		if (input.GetInputByID(UAFire).LocalRelease()) {
+			m_IsDragging = false;
 			OnDragFinish();
 		}
 	}

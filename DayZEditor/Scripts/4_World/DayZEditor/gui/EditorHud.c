@@ -23,6 +23,8 @@ class EditorHud: ScriptView
 	TextWidget NotificationText;
 
 	protected Widget m_DragWidget;
+	protected int m_DragBoxStartX = -1, m_DragBoxStartY = -1;
+	protected float m_DragBoxDelayStart;
 	
 	CanvasWidget EditorCanvas;
 	
@@ -39,14 +41,19 @@ class EditorHud: ScriptView
 		EditorMapWidget.Show(false);
 		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
+						
+		ShowScreenLogs(GetEditor().GetSettings().ShowScreenLogs);
+	}
+	
+	override void OnWidgetScriptInit(Widget w)
+	{
+		super.OnWidgetScriptInit(w);
 		
 		float s_r_w, s_r_h, s_l_w, s_l_h;
 		RightbarWrapper.GetScreenSize(s_r_w, s_r_h);
-		RightbarWrapper.SetScreenSize(editor.GetSettings().RightBarPlacement, s_r_h);
+		RightbarWrapper.SetScreenSize(GetEditor().GetSettings().RightBarPlacement, s_r_h);
 		LeftbarWrapper.GetScreenSize(s_l_w, s_l_h);
-		LeftbarWrapper.SetScreenSize(editor.GetSettings().LeftBarPlacement, s_l_h);
-				
-		ShowScreenLogs(GetEditor().GetSettings().ShowScreenLogs);
+		LeftbarWrapper.SetScreenSize(GetEditor().GetSettings().LeftBarPlacement, s_l_h);
 	}
 	
 	void ~EditorHud()
@@ -68,6 +75,7 @@ class EditorHud: ScriptView
 		UAInputAPI input_api = GetUApi();
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
+		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
 		
 		if (GetEditor().IsInventoryEditorActive()) {
 			Show(false);
@@ -83,6 +91,68 @@ class EditorHud: ScriptView
 			if (!EditorMapWidget.IsVisible() && !(EditorHud.CurrentDialog && GetEditor().GetSettings().LockCameraDuringDialogs)) {	
 				ToggleCursor();
 			}
+		}
+
+		if (input.LocalPress("UAFire")) {
+			if ((!widget_under_cursor || widget_under_cursor == EditorMapWidget) && GetGame().GetInput().HasGameFocus() && cursor_visible && !GetEditor().IsPlacing() && !GetEditor().IsDragging()) {
+				m_DragBoxDelayStart = 0.12;
+				GetMousePos(m_DragBoxStartX, m_DragBoxStartY);
+				g_Editor.ClearSelection();
+			}
+
+			EditorMapWidget.SetFlags(WidgetFlags.IGNOREPOINTER);
+		}
+		
+		if (input.LocalRelease("UAFire")) {
+			m_DragBoxDelayStart = -5;
+			EditorMapWidget.ClearFlags(WidgetFlags.IGNOREPOINTER);
+		}
+		
+		EditorCanvas.Clear();
+		if (input.LocalValue("UAFire") && m_DragBoxDelayStart < 0 && m_DragBoxDelayStart > -1 && GetGame().GetInput().HasGameFocus() && cursor_visible && !GetEditor().IsPlacing() && !GetEditor().IsDragging()) {
+			LinearColor drag_box_color = 0xff0078D4;
+			LinearColor drag_box_color_fill = drag_box_color.With(3, 60);
+			int current_x, current_y;
+			GetMousePos(current_x, current_y);
+			// @Sumrak :ANGERY:
+			//current_x += 6;
+			
+			// Draw Drag Box
+			EditorCanvas.DrawLine(m_DragBoxStartX, m_DragBoxStartY, current_x, m_DragBoxStartY, DRAG_BOX_THICKNESS, drag_box_color);
+			EditorCanvas.DrawLine(m_DragBoxStartX, m_DragBoxStartY, m_DragBoxStartX, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+			EditorCanvas.DrawLine(m_DragBoxStartX, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+			EditorCanvas.DrawLine(current_x, m_DragBoxStartY, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
+
+
+			vector top_left = Vector(Math.Min(m_DragBoxStartX, current_x), Math.Min(m_DragBoxStartY, current_y), 0);
+			vector bottom_right = Vector(Math.Max(m_DragBoxStartX, current_x), Math.Max(m_DragBoxStartY, current_y), 0);
+			
+			// Handles the fill operation
+			int x_avg = (m_DragBoxStartX + current_x) / 2;
+			EditorCanvas.DrawLine(x_avg, m_DragBoxStartY, x_avg, current_y, current_x - m_DragBoxStartX, drag_box_color_fill); 
+			
+			foreach (EditorMarker marker: EditorMarker.s_AllMarkers) {
+				if (!marker || !marker.GetLayoutRoot().IsVisible()) {
+					continue;
+				}
+				
+				EditorObjectMarker object_marker = EditorObjectMarker.Cast(marker);
+				
+				float m_screen_x, m_screen_y;
+				marker.GetLayoutRoot().GetScreenPos(m_screen_x, m_screen_y);
+				if (top_left[0] <= m_screen_x && m_screen_x <= bottom_right[0] && top_left[1] <= m_screen_y && m_screen_y <= bottom_right[1]) {
+					if (object_marker && !object_marker.GetEditorObject().IsSelected()) {
+						GetEditor().SelectObject(object_marker.GetEditorObject());
+					}
+				} else {
+					if (object_marker && object_marker.GetEditorObject().IsSelected()) {
+						GetEditor().DeselectObject(object_marker.GetEditorObject());
+					}
+				}
+			}
+			
+		} else {
+			m_DragBoxDelayStart -= dt;
 		}
 
 		bool is_curtain_open = m_TemplateController.LeftbarFrame.IsVisible() || m_TemplateController.RightbarFrame.IsVisible();
@@ -221,83 +291,12 @@ class EditorHud: ScriptView
 		return m_IsBoxSelectActive;
 	}
 	
-	void DelayedDragBoxCheck()
-	{
-		if (!IsVisible() || !GetGame().GetInput().HasGameFocus()) { 
-			return;
-		}
-
-		int x, y;
-		x += 6;
-		GetMousePos(x, y);
-		SetFocus(null);
-		thread _DelayedDragBoxCheck(x, y);		
-	}
-	
 	void ScrollToListItem(EditorListItem list_item)
 	{
 		
 		//VScrollToWidget(list_item.GetLayoutRoot());
 	}
 	
-	private void _DelayedDragBoxCheck(int start_x, int start_y)
-	{
-		int drag_box_color = GetEditor().GetSettings().SelectionColor;
-		
-		int a, r, g, b;
-		InverseARGB(drag_box_color, a, r, g, b);
-		int drag_box_color_fill = ARGB(50, r, g, b);			
-		
-		int current_x, current_y;
-		while ((GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) && GetGame().GetInput().HasGameFocus()) {			
-			m_IsBoxSelectActive = true;
-			GetMousePos(current_x, current_y);
-			// @Sumrak :ANGERY:
-			current_x += 6;
-			
-			EditorCanvas.Clear();
-			g_Editor.ClearSelection();
-			
-			// Draw Drag Box
-			if (Math.AbsInt(start_x - current_x) > DRAG_BOX_THRESHOLD || Math.AbsInt(start_y - current_y) > DRAG_BOX_THRESHOLD) {
-				EditorCanvas.DrawLine(start_x, start_y, current_x, start_y, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(start_x, start_y, start_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(start_x, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				EditorCanvas.DrawLine(current_x, start_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-				
-				// Handles the fill operation
-				int x_avg = (start_x + current_x) / 2;
-				EditorCanvas.DrawLine(x_avg, start_y, x_avg, current_y, current_x - start_x, drag_box_color_fill); 
-				
-				EditorObjectMap placed_objects = g_Editor.GetPlacedObjects();
-				foreach (EditorObject editor_object: placed_objects) {					
-					if (!editor_object) {
-						continue;
-					}
-
-					float marker_x, marker_y;
-					EditorObjectMarker object_marker = editor_object.GetMarker();
-					if (object_marker) {
-						object_marker.GetPos(marker_x, marker_y);
-						
-						//i think only checking if within cone of box select not distance
-						if ((marker_x < Math.Max(start_x, current_x) && marker_x > Math.Min(start_x, current_x)) && (marker_y < Math.Max(start_y, current_y) && marker_y > Math.Min(start_y, current_y))) {
-							//check if within markerviewdistance to allow selection.
-							if (vector.Distance(editor_object.GetPosition(), g_Editor.GetCamera().GetPosition()) <= g_Editor.GetSettings().MarkerViewDistance) {
-								g_Editor.SelectObject(editor_object);
-							}
-						}
-					}
-				}		
-			}
-			
-			Sleep(10);
-		}
-		
-		m_IsBoxSelectActive = false;
-		EditorCanvas.Clear();
-	}
-
 	void ShowRuleOfThirds(bool state)
 	{
 		if (!state) {

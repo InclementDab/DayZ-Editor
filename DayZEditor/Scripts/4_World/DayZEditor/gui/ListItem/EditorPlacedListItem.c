@@ -5,9 +5,7 @@ class EditorPlacedListItem: EditorListItem
 	{ 
 		return m_EditorObject; 
 	}
-	
-	protected ref EditorObjectDragHandler m_DragHandler;
-	
+		
 	TextWidget ListItemLabel;
 	
 	ImageWidget LockedImage, ToggleBoundingBoxImage, ToggleWorldMarkerImage;
@@ -16,9 +14,7 @@ class EditorPlacedListItem: EditorListItem
 	{
 		EditorLog.Trace("EditorPlacedListItem::SetEditorObject"); 
 		m_EditorObject = editor_object;
-		
-		m_DragHandler = new EditorObjectDragHandler();
-		
+				
 		m_TemplateController.Label = m_EditorObject.GetDisplayName();
 		m_TemplateController.NotifyPropertyChanged("Label");
 		
@@ -34,12 +30,7 @@ class EditorPlacedListItem: EditorListItem
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
-	
-	void ~EditorPlacedListItem()
-	{
-		delete m_DragHandler;
-	}	
-	
+		
 	void EditorObjectSelected(EditorObject data) 
 	{
 		Select();
@@ -188,14 +179,8 @@ class EditorPlacedListItem: EditorListItem
 		array<EditorObject> additional_drag_targets = m_Editor.GetSelectedObjects().GetValueArray();
 		additional_drag_targets.RemoveItem(m_EditorObject);
 		
-		m_DragHandler.OnDragStart(m_EditorObject, additional_drag_targets);
-		
-		return true;
-	}
-	
-	override bool OnDrop(Widget w, int x, int y, Widget receiver)
-	{
-		//m_DragHandler.OnDragFinish();
+		GetEditor().DragHandler = new EditorObjectDragHandler();
+		GetEditor().DragHandler.OnDragStart(m_EditorObject, additional_drag_targets);
 		
 		return true;
 	}

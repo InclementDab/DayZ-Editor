@@ -2,7 +2,6 @@ PanelWidgetClass EditorMarkerInteract {
  visible 1
  clipchildren 1
  ignorepointer 0
- position 0 0
  size 24 24
  halign center_ref
  valign center_ref
@@ -20,7 +19,7 @@ PanelWidgetClass EditorMarkerInteract {
    clipchildren 1
    ignorepointer 1
    position 0 0
-   size 1 1
+   size 0.98 0.98
    halign center_ref
    valign center_ref
    hexactpos 1
@@ -32,6 +31,7 @@ PanelWidgetClass EditorMarkerInteract {
    scriptclass "SymbolHandler"
    mode blend
    "src alpha" 1
+   filter 0
    {
     ScriptParamsClass {
      Symbol_Name "rectangle"
@@ -56,10 +56,11 @@ PanelWidgetClass EditorMarkerInteract {
    scriptclass "SymbolHandler"
    mode blend
    "src alpha" 1
+   filter 0
    {
     ScriptParamsClass {
      Symbol_Name "rectangle"
-     Symbol_Size 2
+     Symbol_Size 1
     }
    }
   }

@@ -108,6 +108,7 @@ class Editor: Managed
 	bool 										CollisionMode;
 	
 	bool 										CameraLight;
+	ref EditorDragHandler DragHandler;
 
 	static const int MinorVersionNumber = 1;
 	static const int VersionNumber = 32;
@@ -765,7 +766,7 @@ class Editor: Managed
 				
 				if (!target) { //target == m_EditorHud.EditorMapWidget
 					Raycast cursor_raycast = GetCursorRaycast();
-					if (cursor_raycast.Hit) {
+					if (cursor_raycast && cursor_raycast.Hit) {
 						EditorObject select_object = GetEditorObject(cursor_raycast.Hit);
 						if (select_object) {
 							SelectObject(select_object);
@@ -794,32 +795,6 @@ class Editor: Managed
 					return true;
 				}
 				
-				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
-					
-					/*if (ObjectUnderCursor) {
-						EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
-						if (editor_object) {
-							
-							// Removed due to bug with inside selection being weird
-							// Allows multiple objects to be dragged with selection
-							/*if (editor_object.IsSelected()) {
-								return true;
-							}
-							
-							if (!KeyState(KeyCode.KC_LSHIFT)) {
-								ClearSelection();
-							}
-							
-							SelectObject(editor_object);
-							return true;
-						} 
-					} */
-					
-					if (!target) {
-						m_EditorHud.DelayedDragBoxCheck();
-					}
-				}
-
 				break;
 			}
 			
@@ -2213,6 +2188,11 @@ class Editor: Managed
 	bool IsPlayerActive()
 	{
 		return (m_Player && m_Player.IsControlledPlayer() && !m_Active);
+	}
+	
+	bool IsDragging()
+	{
+		return DragHandler != null && DragHandler.IsDragging();
 	}
 		
 	// Get Selected player in Editor

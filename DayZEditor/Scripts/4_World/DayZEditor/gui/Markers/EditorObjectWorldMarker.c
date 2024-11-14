@@ -5,7 +5,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
 		m_MapWidget = m_Editor.GetEditorHud().EditorMapWidget;
-		m_DragHandler = new EditorObjectDragHandler();
 		EditorEvents.OnMapToggled.Insert(OnEditorMapToggled);
 		
 		GetScreenSize(m_ScreenX, m_ScreenY);
@@ -43,7 +42,8 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		
 		SetSize(size_01);
 		SetPos(screen_pos[0], screen_pos[1]);
-		Show(m_Show);
+		bool show = m_Show && !GetEditor().IsMapActive();
+		Show(show);
 	}
 	
 	protected vector GetPosition()
@@ -59,5 +59,11 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		} 
 		
 		return m_EditorObject.GetBottomCenter();
+	}
+	
+	
+	override typename GetDragHandlerType()
+	{
+		return EditorObjectDragHandler;
 	}
 }
