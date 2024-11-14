@@ -492,6 +492,7 @@ FrameWidgetClass EditorFrame {
            vexactsize 0
            scriptclass ""
            style blank
+           "no focus" 1
            "next left" ""
            "next right" ""
            "Scrollbar V" 1

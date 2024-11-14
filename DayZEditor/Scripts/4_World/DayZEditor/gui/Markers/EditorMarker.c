@@ -128,8 +128,10 @@ class EditorMarker: ScriptView
 				EditorMarkerOutline.SetColor(outercolor.With(3, alpha));
 			}
 		} else {
-			WidgetAnimator.AnimateColor(EditorMarkerColor, innercolor.With(3, alpha), 20);
-			WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 20);
+			EditorMarkerColor.SetColor(LinearColor.WHITE.With(3, alpha));
+			EditorMarkerOutline.SetColor(LinearColor.BLACK.With(3, 220));
+			//WidgetAnimator.AnimateColor(EditorMarkerColor, LinearColor.WHITE.With(3, alpha), 20);
+			//WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 20);
 		}
 	}
 	

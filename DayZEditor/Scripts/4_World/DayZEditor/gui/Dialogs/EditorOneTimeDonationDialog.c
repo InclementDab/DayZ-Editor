@@ -1,5 +1,22 @@
+class RichTextPrefab: ScriptView
+{
+	TextListboxWidget ListBox;
+	
+	override string GetLayoutFile()
+	{
+		return "DayZEditor\\GUI\\layouts\\prefabs\\RichTextPrefab.layout";
+	}
+}
+
+class Payload_Changelog: Managed
+{
+	string changelog;
+}
+
 class EditorOneTimeDonationDialog: EditorDialogBase
 {
+	protected ref TextBoxPrefab m_RichTitle;
+	protected ref RichTextPrefab m_RichText;
 	protected ref MessageBoxPrefab m_TextBox;
 	protected ref CheckBoxPrefab m_NeverShowAgain;
 	protected bool m_NeverShowAnymore;
@@ -8,8 +25,33 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 	
 	void EditorOneTimeDonationDialog(string title)
 	{
+		RestContext ctx = CreateRestApi().GetRestContext("http:\/\/astro.pylex.xyz:10078\/");
+		string changelog = ctx.GET_now("api\/changelog");
+		JsonSerializer serializer = new JsonSerializer();
+		Payload_Changelog cl = new Payload_Changelog();
+		string error;
+		serializer.ReadFromString(cl, changelog, error);
+
 		m_TextBox = new MessageBoxPrefab("DayZ Editor is 100% free to use—and it always will be! But if you want to see even more awesome updates, consider joining our supporter community on Discord. Your support drives future content and improvements!");
 		m_NeverShowAgain = new CheckBoxPrefab("Don't Show Again", this, "m_NeverShowAnymore");
+		m_RichText = new RichTextPrefab();
+		//m_RichText.Text.SetText(message);
+		array<string> messages = {};
+		cl.changelog.Split("\n", messages);
+		
+		foreach (string message_line: messages) {
+			Print(message_line);
+			m_RichText.ListBox.AddItem(message_line, null, 0);
+		}
+		
+		float s_x, s_y;
+		m_RichText.ListBox.GetScreenSize(s_x, s_y);
+		m_RichText.ListBox.SetScreenSize(s_x, messages.Count() * 22);
+
+		m_RichTitle = new TextBoxPrefab(string.Format("Change Log", GetEditor().Version), this, string.Empty);
+
+		AddContent(m_RichTitle);
+		AddContent(m_RichText);
 		AddContent(m_TextBox);
 		AddContent(m_NeverShowAgain);
 		
