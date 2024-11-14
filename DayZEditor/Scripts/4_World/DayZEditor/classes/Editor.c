@@ -1983,7 +1983,7 @@ class Editor: Managed
 		
 	protected void ShowDonationDialog()
 	{		
-		EditorOneTimeDonationDialog dialog = new EditorOneTimeDonationDialog("Support DayZ Editor");
+		EditorOneTimeDonationDialog dialog = new EditorOneTimeDonationDialog("DayZ Editor Changelog");
 		dialog.ShowDialog();
 	}
 		

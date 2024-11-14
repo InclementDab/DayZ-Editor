@@ -1,6 +1,6 @@
 PanelWidgetClass EditorMarkerInteract {
  visible 1
- clipchildren 1
+ clipchildren 0
  ignorepointer 0
  size 24 24
  halign center_ref
@@ -18,14 +18,15 @@ PanelWidgetClass EditorMarkerInteract {
    visible 1
    clipchildren 1
    ignorepointer 1
+   color 0.6588 0.6588 0.6588 1
    position 0 0
-   size 0.98 0.98
+   size 12 12
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 0
-   vexactsize 0
+   hexactsize 1
+   vexactsize 1
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"
@@ -34,7 +35,32 @@ PanelWidgetClass EditorMarkerInteract {
    filter 0
    {
     ScriptParamsClass {
-     Symbol_Name "rectangle"
+     Symbol_Name "circle"
+     Symbol_Size 3
+    }
+   }
+  }
+  ImageWidgetClass EditorMarkerColor2 {
+   visible 0
+   clipchildren 1
+   ignorepointer 1
+   position 0 0
+   size 24 24
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   draggable 0
+   scriptclass "SymbolHandler"
+   mode blend
+   "src alpha" 1
+   filter 0
+   {
+    ScriptParamsClass {
+     Symbol_Name "vector_square"
      Symbol_Size 3
     }
    }
@@ -43,24 +69,26 @@ PanelWidgetClass EditorMarkerInteract {
    visible 1
    clipchildren 1
    ignorepointer 1
+   color 0.2627 0.3216 0.502 1
    position 0 0
-   size 1 1
+   size 24 24
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 0
-   vexactsize 0
+   hexactsize 1
+   vexactsize 1
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"
    mode blend
    "src alpha" 1
+   "stretch mode" stretch_w_h
    filter 0
    {
     ScriptParamsClass {
-     Symbol_Name "rectangle"
-     Symbol_Size 1
+     Symbol_Name "circle_dashed"
+     Symbol_Size 3
     }
    }
   }

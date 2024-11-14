@@ -27,7 +27,7 @@ WrapSpacerWidgetClass ListBoxWra {
    "title visible" 0
    colums ""
    lines 9999
-   font "gui/fonts/Metron22"
+   font "gui/fonts/MetronBook22"
   }
  }
 }

@@ -10,14 +10,16 @@ class RichTextPrefab: ScriptView
 
 class Payload_Changelog: Managed
 {
-	string changelog;
+	ref array<string> changelog = {};
+	string uploadDate;
+	string updateVersion;
 }
 
 class EditorOneTimeDonationDialog: EditorDialogBase
 {
-	protected ref TextBoxPrefab m_RichTitle;
+	protected ref TextBoxPrefab m_RichTitle, m_RichTitle2;
 	protected ref RichTextPrefab m_RichText;
-	protected ref MessageBoxPrefab m_TextBox;
+	protected ref MessageBoxPrefab m_TextBox, m_TextBox2;
 	protected ref CheckBoxPrefab m_NeverShowAgain;
 	protected bool m_NeverShowAnymore;
 	
@@ -36,21 +38,18 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 		m_NeverShowAgain = new CheckBoxPrefab("Don't Show Again", this, "m_NeverShowAnymore");
 		m_RichText = new RichTextPrefab();
 		//m_RichText.Text.SetText(message);
-		array<string> messages = {};
-		cl.changelog.Split("\n", messages);
-		
-		foreach (string message_line: messages) {
-			Print(message_line);
+
+		m_RichText.ListBox.AddItem(string.Format("Change Log (%1)", cl.uploadDate), null, 0);
+		m_RichText.ListBox.AddItem(string.Format("Version %1", cl.updateVersion), null, 0);
+		m_RichText.ListBox.AddItem("", null, 0);
+		foreach (string message_line: cl.changelog) {
 			m_RichText.ListBox.AddItem(message_line, null, 0);
 		}
 		
 		float s_x, s_y;
 		m_RichText.ListBox.GetScreenSize(s_x, s_y);
-		m_RichText.ListBox.SetScreenSize(s_x, messages.Count() * 22);
+		m_RichText.ListBox.SetScreenSize(s_x, cl.changelog.Count() * 22);
 
-		m_RichTitle = new TextBoxPrefab(string.Format("Change Log", GetEditor().Version), this, string.Empty);
-
-		AddContent(m_RichTitle);
 		AddContent(m_RichText);
 		AddContent(m_TextBox);
 		AddContent(m_NeverShowAgain);

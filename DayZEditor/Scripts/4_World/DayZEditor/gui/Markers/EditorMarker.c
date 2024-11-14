@@ -5,7 +5,7 @@ class EditorMarker: ScriptView
 	protected Editor m_Editor = GetEditor();
 	protected bool m_Show = true;
 	
-	Widget EditorMarkerColor, EditorMarkerOutline;
+	ImageWidget EditorMarkerColor, EditorMarkerOutline;
 	
 	void EditorMarker()
 	{
@@ -70,7 +70,7 @@ class EditorMarker: ScriptView
 		}
 		
 		float size = Math.Lerp(size_min, size_max, normalize_01);
-		m_LayoutRoot.SetScreenSize(size, size);
+		//m_LayoutRoot.SetScreenSize(size, size);
 	}
 	
 	float GetSize()
@@ -122,14 +122,14 @@ class EditorMarker: ScriptView
 
 		if (highlighted) {
 			if (highlighted > 1) {
-				EditorMarkerColor.SetColor(outercolor.With(3, 255) + LinearColor.Create(20, 20, 20));
-				EditorMarkerOutline.SetColor(LinearColor.BLACK.With(3, 255));
+				EditorMarkerColor.SetColor(innercolor.With(3, 255));
+				EditorMarkerOutline.SetColor(outercolor.With(3, 255));
 			} else {
 				EditorMarkerOutline.SetColor(outercolor.With(3, alpha));
 			}
 		} else {
-			EditorMarkerColor.SetColor(LinearColor.WHITE.With(3, alpha));
-			EditorMarkerOutline.SetColor(LinearColor.BLACK.With(3, 220));
+			EditorMarkerColor.SetColor(outercolor.With(3, alpha));
+			EditorMarkerOutline.SetColor(0xffa8a8a8); 
 			//WidgetAnimator.AnimateColor(EditorMarkerColor, LinearColor.WHITE.With(3, alpha), 20);
 			//WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 20);
 		}
