@@ -219,9 +219,10 @@ class Editor: Managed
 		GetDayZGame().Event_OnActivateMessage.Insert(OnActivateMessage);
 		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
 		
-		if (GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
-			thread ShowDonationDialog();
-		}
+		CreateRestApi();
+		//if (GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
+			ShowDonationDialog();
+		//}
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
 		GetSettings().TimesOpened++;
@@ -1982,16 +1983,10 @@ class Editor: Managed
 		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		GetGame().SaveProfile();
 	}
-
-	void ShowChangelog()
-	{
-		thread ShowDonationDialog();
-	}
 		
-	protected void ShowDonationDialog()
+	void ShowDonationDialog()
 	{		
-		EditorOneTimeDonationDialog dialog = new EditorOneTimeDonationDialog("DayZ Editor Changelog");
-		dialog.ShowDialog();
+		GetEditorHud().CurrentDialog = new EditorOneTimeDonationDialog("Editor Changelog");
 	}
 		
 	string GetSaveFile()

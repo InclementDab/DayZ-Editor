@@ -2,6 +2,8 @@ class EditorDialogBase: DialogBase
 {
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
+	protected ref ScriptCaller m_SynchronousCallback;
+	protected bool m_IsSynchronous;
 	
 	Widget DialogContent, TitleBar;
 	ScrollWidget DialogWrapper;
@@ -68,6 +70,25 @@ class EditorDialogBase: DialogBase
 		if (m_EditorHud) {
 			m_EditorHud.ShowCursor(true);
 		}
+	}
+	
+	void ShowDialogSynchronous(ScriptCaller dialog_cb = null)
+	{
+		m_SynchronousCallback = dialog_cb;
+		m_IsSynchronous = true;
+		m_LayoutRoot.Show(true);
+	}
+
+	override void CloseDialog(DialogResult dialog_result = DialogResult.Cancel)
+	{
+		if (m_SynchronousCallback) {
+			m_SynchronousCallback.Invoke(dialog_result);
+		}
+		
+		Trace("CloseDialog");
+		m_DialogResult = dialog_result;
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_SYSTEM).CallLater(Delete, 15);
 	}
 	
 	override DialogButton AddButton(DialogButton button)
