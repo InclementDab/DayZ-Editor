@@ -117,18 +117,22 @@ class EditorMarker: ScriptView
 
 		LinearColor innercolor = GetEditor().GetSettings().HighlightColor;
 		LinearColor outercolor = GetEditor().GetSettings().SelectionColor;
-		WidgetAnimator.CancelAnimate(EditorMarkerColor);
-		WidgetAnimator.CancelAnimate(EditorMarkerOutline);
+		//WidgetAnimator.CancelAnimate(EditorMarkerColor);
+		//WidgetAnimator.CancelAnimate(EditorMarkerOutline);
 
 		if (highlighted) {
 			if (highlighted > 1) {
-				EditorMarkerColor.SetColor(innercolor.With(3, 255));
-				EditorMarkerOutline.SetColor(outercolor.With(3, 255));
+				if (EditorMarkerColor) {
+					EditorMarkerColor.SetColor(innercolor.With(3, 255));
+				}
+				EditorMarkerOutline.SetColor(LinearColor.REDDIT.With(3, 255));
 			} else {
 				EditorMarkerOutline.SetColor(outercolor.With(3, alpha));
 			}
 		} else {
-			EditorMarkerColor.SetColor(outercolor.With(3, alpha));
+			if (EditorMarkerColor) {
+				EditorMarkerColor.SetColor(outercolor.With(3, alpha));
+			}
 			EditorMarkerOutline.SetColor(0xffa8a8a8); 
 			//WidgetAnimator.AnimateColor(EditorMarkerColor, LinearColor.WHITE.With(3, alpha), 20);
 			//WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 20);

@@ -70,6 +70,7 @@ class EditorCommandManager
 		RegisterCommand(EditorDumpSceneCommand);
 		RegisterCommand(EditorEnvironmentControlCommand);
 		RegisterCommand(EditorCameraControlsCommand);
+		RegisterCommand(EditorChangelogCommand);
 		
 		// All preferences
 		RegisterCommand(EditorPreferencesCommand);

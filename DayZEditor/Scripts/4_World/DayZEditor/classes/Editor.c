@@ -1980,6 +1980,11 @@ class Editor: Managed
 		GetGame().SetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		GetGame().SaveProfile();
 	}
+
+	void ShowChangelog()
+	{
+		thread ShowDonationDialog();
+	}
 		
 	protected void ShowDonationDialog()
 	{		

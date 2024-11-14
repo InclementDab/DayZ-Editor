@@ -50,6 +50,11 @@ class EditorCommand: RelayCommand
 	{
 		return string.Empty;
 	}
+	
+	Symbols GetSymbol()
+	{
+		return string.Empty;
+	}
 		
 	string GetShortcutString() 
 	{

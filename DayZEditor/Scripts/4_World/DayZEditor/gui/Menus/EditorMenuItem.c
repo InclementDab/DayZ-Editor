@@ -13,12 +13,17 @@ class EditorMenuItemCommand: EditorMenuItem
 {	
 	void EditorMenuItemCommand(EditorCommand editor_command)
 	{
-		EditorMenuItemIcon.Show(editor_command.GetIcon() != string.Empty);
+		string symbol_icon = editor_command.GetSymbol().Regular();
+		if (!symbol_icon) {
+			symbol_icon = editor_command.GetIcon();
+		}
+		
+		EditorMenuItemIcon.Show(symbol_icon != string.Empty);
 		
 		m_TemplateController.LabelText = editor_command.GetName();
 		m_TemplateController.NotifyPropertyChanged("LabelText");
 		
-		m_TemplateController.IconPath = editor_command.GetIcon();
+		m_TemplateController.IconPath = symbol_icon;
 		m_TemplateController.NotifyPropertyChanged("IconPath");
 		
 		m_TemplateController.ShortcutText = editor_command.GetShortcutString();
