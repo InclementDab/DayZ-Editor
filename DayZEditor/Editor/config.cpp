@@ -66,7 +66,7 @@ class CfgVehicles
 
 	class GizmoBase : HouseNoDestruct
 	{
-		scope = 0;
+		scope = 1;
 		hiddenSelections[] = {"main"};
 		shadow = 0;
 	};

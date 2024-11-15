@@ -68,6 +68,7 @@ class EditorHudController: EditorControllerBase
 	protected ButtonWidget MenuBarFile, MenuBarEdit, MenuBarView, MenuBarEditor, NewButton, OpenButton, SaveButton, SaveAsButton;
 	protected ButtonWidget UndoButton, RedoButton, CutButton, CopyButton, PasteButton, MagnetButton, GroundButton;
 	protected ButtonWidget SnapButton, CollisionButton, CameraLightButton, BrushToggleButton, CinematicCameraButton, CameraTrackMinimizeButton, AddNodeButton, CameraTrackRunButton;
+	protected ButtonWidget ObjectSelectionButton, BoxSelectionButton, EllipseSelectionButton, LassoSelectionButton;
 	
 	protected Widget CameraTrackButtonOutline;
 	
@@ -108,7 +109,11 @@ class EditorHudController: EditorControllerBase
 		"CinematicCameraButton",
 		"CameraTrackMinimizeButton",
 		"AddNodeButton",
-		"CameraTrackRunButton"
+		"CameraTrackRunButton",
+		"ObjectSelectionButton", 
+		"BoxSelectionButton", 
+		"EllipseSelectionButton", 
+		"LassoSelectionButton"
 	};
 
 	// Toolvar stuff

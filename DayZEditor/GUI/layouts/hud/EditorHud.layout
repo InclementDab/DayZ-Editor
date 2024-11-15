@@ -29,7 +29,7 @@ FrameWidgetClass EditorFrame {
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
-     position 0.00023 -0.0009
+     position 0.00088 -0.0009
      size 1 1
      halign center_ref
      valign center_ref
@@ -2328,6 +2328,224 @@ FrameWidgetClass EditorFrame {
               }
              }
             }
+            GridSpacerWidgetClass Section6 {
+             clipchildren 1
+             ignorepointer 1
+             position 0 0
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             content_halign center
+             content_valign center
+             Columns 4
+             Rows 1
+             {
+              ButtonWidgetClass ObjectSelectionButton {
+               clipchildren 0
+               color 0.7529 0.3686 0.3255 1
+               position 0 0
+               size 33 33
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scriptclass ""
+               style Default
+               "no focus" 1
+               font "gui/fonts/metron-bold"
+               switch toggle
+               {
+                ImageWidgetClass ObjectSelectionButton_Icon {
+                 inheritalpha 1
+                 ignorepointer 1
+                 position 0 0
+                 size 20 20
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 priority 1
+                 scriptclass "SymbolHandler"
+                 image0 ""
+                 mode blend
+                 "src alpha" 1
+                 "clamp mode" clamp
+                 filter 1
+                 {
+                  ScriptParamsClass {
+                   Symbol_Name "house_blank"
+                   Symbol_Size 1
+                  }
+                 }
+                }
+               }
+              }
+              ButtonWidgetClass BoxSelectionButton {
+               clipchildren 0
+               color 0.7529 0.3686 0.3255 1
+               position 0 0
+               size 33 33
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scriptclass ""
+               style Default
+               "no focus" 1
+               font "gui/fonts/metron-bold"
+               switch toggle
+               {
+                ImageWidgetClass BoxSelectionButton_Icon {
+                 inheritalpha 1
+                 ignorepointer 1
+                 position 0 0
+                 size 20 20
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 priority 1
+                 scriptclass "SymbolHandler"
+                 image0 ""
+                 mode blend
+                 "src alpha" 1
+                 "clamp mode" clamp
+                 filter 1
+                 {
+                  ScriptParamsClass {
+                   Symbol_Name "square_dashed"
+                   Symbol_Size 1
+                  }
+                 }
+                }
+               }
+              }
+              ButtonWidgetClass EllipseSelectionButton {
+               clipchildren 0
+               color 0.7529 0.3686 0.3255 1
+               position 0 0
+               size 33 33
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scriptclass ""
+               style Default
+               "no focus" 1
+               font "gui/fonts/metron-bold"
+               switch toggle
+               {
+                ImageWidgetClass EllipseSelectionButton_Icon {
+                 clipchildren 0
+                 inheritalpha 1
+                 ignorepointer 1
+                 position 0 0
+                 size 20 20
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 priority 1
+                 scriptclass "SymbolHandler"
+                 image0 ""
+                 mode blend
+                 "src alpha" 1
+                 "clamp mode" clamp
+                 filter 1
+                 rotation 22 0 0
+                 {
+                  ScriptParamsClass {
+                   Symbol_Name "circle_dashed"
+                   Symbol_Size 1
+                  }
+                 }
+                }
+               }
+              }
+              ButtonWidgetClass LassoSelectionButton {
+               clipchildren 0
+               color 0.7529 0.3686 0.3255 1
+               position 0 0
+               size 33 33
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scriptclass ""
+               style Default
+               "no focus" 1
+               font "gui/fonts/metron-bold"
+               switch toggle
+               {
+                ImageWidgetClass LassoSelectionButton_Icon {
+                 clipchildren 0
+                 inheritalpha 1
+                 ignorepointer 1
+                 position 0 0
+                 size 20 20
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 0
+                 priority 1
+                 scriptclass "SymbolHandler"
+                 image0 ""
+                 mode blend
+                 "src alpha" 1
+                 "clamp mode" clamp
+                 filter 1
+                 {
+                  ScriptParamsClass {
+                   Symbol_Name "lasso"
+                   Symbol_Size 1
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+            PanelWidgetClass Divider12 {
+             ignorepointer 1
+             position 0 0
+             size 19 33
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 1
+             vexactsize 1
+             {
+              PanelWidgetClass Divider13 {
+               ignorepointer 1
+               color 0 0 0 0.5882
+               position 0 0
+               size 0.1 0.6
+               halign center_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               style rover_sim_colorable
+              }
+             }
+            }
             XComboBoxWidgetClass BrushTypeBox {
              visible 1
              clipchildren 1
@@ -2698,6 +2916,7 @@ FrameWidgetClass EditorFrame {
              vexactsize 0
             }
             TextWidgetClass ControlPlayerText {
+             visible 0
              ignorepointer 1
              size 0.07 1
              valign center_ref

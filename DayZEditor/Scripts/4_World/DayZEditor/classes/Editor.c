@@ -246,6 +246,8 @@ class Editor: Managed
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
 		GetSettings().TimesOpened++;
+		
+		SetMode(eEditorMode.Translation);
 	}
 	
 	void ~Editor() 
@@ -291,7 +293,7 @@ class Editor: Managed
 	{
 		m_EditorMode = editor_mode;
 #ifdef DIAG_DEVELOPER
-		m_EditorHud.SetEditorMode(m_EditorMode);
+		//m_EditorHud.SetEditorMode(m_EditorMode);
 		
 		// please be of type EditorTranslationGizmo
 		typename gizmo_type = EditorTranslationGizmo;
@@ -302,9 +304,9 @@ class Editor: Managed
 			}
 		}
 		
-		m_CurrentGizmo = EditorGizmo.Cast(gizmo_type.Spawn());
+		//m_CurrentGizmo = EditorGizmo.Cast(gizmo_type.Spawn());
 		if (m_CurrentGizmo) {
-			m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0), GetSelectedObjects());
+			//m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0), GetSelectedObjects());
 		}
 #endif
 	}
@@ -788,7 +790,7 @@ class Editor: Managed
 				
 				if (!target) { //target == m_EditorHud.EditorMapWidget
 					Raycast cursor_raycast = GetCursorRaycast();
-					if (cursor_raycast && cursor_raycast.Hit) {
+					if (cursor_raycast && cursor_raycast.Hit && GetEditorHud().IsObjectSelectionEnabled()) {
 						EditorObject select_object = GetEditorObject(cursor_raycast.Hit);
 						if (select_object) {
 							SelectObject(select_object);
@@ -796,8 +798,10 @@ class Editor: Managed
 						}
 					}
 					
-					if (m_CurrentGizmo && GetCursorRaycast().Hit.GetShapeName().Contains("widget")) {
-						return true;
+					if (m_CurrentGizmo && cursor_raycast && m_CurrentGizmo.Contains(cursor_raycast.Hit)) {
+						//if (m_CurrentGizmo.Begin(cursor_raycast.Hit)) {
+							return true;
+						//}
 					}
 					
 					ClearSelection();
@@ -2068,8 +2072,6 @@ class Editor: Managed
 	void SelectObject(EditorObject target) 
 	{
 		m_ObjectManager.SelectObject(target);
-
-		SetMode(GetMode());
 	}
 	
 	void DeselectObject(EditorObject target) 
@@ -2080,16 +2082,11 @@ class Editor: Managed
 	void ToggleSelection(EditorObject target) 
 	{
 		m_ObjectManager.ToggleSelection(target);
-
-		// we are equivilent to changing mode. dont make SetMode too unoptimized
-		SetMode(GetMode());
 	}
 		
 	void ClearSelection() 
 	{
 		m_ObjectManager.ClearSelection();
-
-		delete m_CurrentGizmo;
 	}
 	
 	void SelectHiddenObject(EditorDeletedObject target)
@@ -2245,6 +2242,10 @@ class Editor: Managed
 	
 	bool IsDragging()
 	{
+		if (m_CurrentGizmo && m_CurrentGizmo.IsInteracting()) {
+			return true;
+		}
+		
 		return DragHandler != null && DragHandler.IsDragging();
 	}
 		

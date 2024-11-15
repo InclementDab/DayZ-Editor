@@ -4,15 +4,16 @@ class EditorGizmo: Managed
 	protected EditorObject m_EditorObject;
 	protected EditorObjectMap m_AllObjects;
 	protected int m_CurrentGizmoAxis;
-	protected ref map<eGizmoAxis, GizmoBase> m_Gizmos = new map<eGizmoAxis, GizmoBase>();
+	protected Object m_CurrentInteractingGizmo;
+	protected ref map<eGizmoAxis, Object> m_Gizmos = new map<eGizmoAxis, Object>();
 	
-	void Initialize(notnull Editor editor, notnull EditorObject editor_object, EditorObjectMap all_objects)
+	void Initialize(notnull Editor editor, EditorObject editor_object, EditorObjectMap all_objects)
 	{		
 		m_Editor = editor;
 		m_EditorObject = editor_object;
 		m_AllObjects = all_objects;
 
-		vector gizmo_center = m_EditorObject.GetTopCenter();
+		vector gizmo_center = vector.Zero;
 
 		vector gizmo_x_mat[4] = {
 			-vector.Forward,
@@ -42,6 +43,7 @@ class EditorGizmo: Managed
 			-vector.Up,
 			gizmo_center
 		};
+		
 		gizmo_y.SetTransform(gizmo_z_mat);
 		gizmo_z.Update();
 
@@ -60,6 +62,31 @@ class EditorGizmo: Managed
 			}
 		}
 	}
+	
+	// Starts listening on specific gizmo_object, stops when mouse cursor is released
+	bool Begin(Object gizmo_object)
+	{
+		if (!Contains(gizmo_object)) {
+			return false;
+		}
+		
+		m_CurrentInteractingGizmo = gizmo_object;
+		return m_CurrentInteractingGizmo != null;
+	}
+
+	bool Contains(Object gizmo_object)
+	{
+		if (!gizmo_object) {
+			return false;
+		}
+		
+		return (m_Gizmos.GetValueArray().Find(gizmo_object) != -1);
+	}
+	
+	bool IsInteracting()
+	{
+		return m_CurrentInteractingGizmo != null;
+	}
 
 	Object GetGizmoArm(eGizmoAxis gizmo_axis)
 	{
@@ -75,9 +102,29 @@ class EditorGizmo: Managed
 		return Plane.Create(normal, "10 10 10", position, aside);
 	}
 	
+	Plane GetGizmoPlane(Object gizmo)
+	{
+		vector normal = gizmo.GetDirectionUp();
+		vector aside = gizmo.GetDirectionAside();
+		vector position = gizmo.GetPosition();
+		return Plane.Create(normal, "10 10 10", position, aside);
+	}
+	
 	void Update(float dt)
 	{
+		if (m_CurrentInteractingGizmo) {
+			if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
+				m_CurrentInteractingGizmo = null;
+				return;
+			}
+			
+			int mouse_x, mouse_y;
+			GetMousePos(mouse_x, mouse_y);
+			UpdateGizmo(mouse_x, mouse_y, m_CurrentInteractingGizmo);
+		}
 	}
+	
+	void UpdateGizmo(int mouse_x, int mouse_y, GizmoBase current_gizmo);
 
 	void OnIntersectMouse(Ray ray)
 	{
@@ -102,18 +149,33 @@ enum eGizmoAxis
 
 class EditorTranslationGizmo: EditorGizmo
 {
+	protected vector m_DragOffset;
+	protected Object m_DragObject;
+
 	override void Update(float dt)
 	{
-		if (!m_EditorObject) {
-			m_EditorObject = m_Editor.GetSelectedObjects().GetElement(0);
-			if (!m_EditorObject) {
-				delete this;
-				return;
-			}
+		super.Update(dt);
+		
+		if (GetGame().GetInput().LocalRelease("UAFire")) {
+			m_DragObject = null;
 		}
 		
-		vector top_center = m_EditorObject.GetTopCenter();
+		EditorObjectMap all_editor_objects = GetEditor().GetSelectedObjects();
+		EditorObject editor_object = all_editor_objects.GetElement(0);
+		if (!editor_object || all_editor_objects.Count() == 0) {
+			m_Gizmos[eGizmoAxis.X_AXIS].SetPosition(vector.Zero);
+			m_Gizmos[eGizmoAxis.Y_AXIS].SetPosition(vector.Zero);
+			m_Gizmos[eGizmoAxis.Z_AXIS].SetPosition(vector.Zero);
+			return;
+		}
+
+		vector top_center = editor_object.GetTopCenter();
 		Ray cursor_ray = GetEditor().GetCursorRay();
+		Raycast cursor_raycast = cursor_ray.PerformRaycast();
+	
+		m_Gizmos[eGizmoAxis.X_AXIS].SetPosition(top_center);
+		m_Gizmos[eGizmoAxis.Y_AXIS].SetPosition(top_center);
+		m_Gizmos[eGizmoAxis.Z_AXIS].SetPosition(top_center);
 		vector mat[4] = {
 			"1 0 0",
 			"0 1 0",
@@ -121,14 +183,32 @@ class EditorTranslationGizmo: EditorGizmo
 			top_center
 		};
 
-		vector intersect_point = GetGizmoPlane(m_CurrentGizmoAxis).Intersect(cursor_ray, mat);
-		Debug.DestroyAllShapes();
-		Debug.DrawSphere(intersect_point, 0.5);
+		if (GetGame().GetInput().LocalPress("UAFire") && !m_DragObject && cursor_raycast && Contains(cursor_raycast.Hit)) {	
+			m_DragObject = cursor_raycast.Hit;
+			vector intersect_point = GetGizmoPlane(m_DragObject).Intersect(cursor_ray, mat);
+			m_DragOffset = intersect_point - editor_object.GetPosition();
+		}
+		
+		if (m_DragObject) {
+			Debug.DestroyAllShapes();
 
-		// This widget will never rotate unless we get a local space operator
-		m_Gizmos[eGizmoAxis.X_AXIS].SetPosition(top_center);
-		m_Gizmos[eGizmoAxis.Y_AXIS].SetPosition(top_center);
-		m_Gizmos[eGizmoAxis.Z_AXIS].SetPosition(top_center);
+			vector normal = vector.Direction(top_center, GetGame().GetCurrentCameraPosition());						
+			normal[1] = 0;
+			normal.Normalize();
+
+			Plane normal_plane = Plane.Create(normal, "10 10 10", vector.Zero, vector.Up);
+			vector intersect_point2 = normal_plane.Intersect(cursor_ray, mat);
+			
+			//vector intersect_point2 = GetGizmoPlane(m_DragObject).Intersect(cursor_ray, mat);
+			Debug.DrawSphere(intersect_point2);
+			Print(intersect_point2);
+			editor_object.SetPosition(intersect_point2 - m_DragOffset);
+			top_center = editor_object.GetTopCenter();
+			// This widget will never rotate unless we get a local space operator
+			m_Gizmos[eGizmoAxis.X_AXIS].SetPosition(top_center);
+			m_Gizmos[eGizmoAxis.Y_AXIS].SetPosition(top_center);
+			m_Gizmos[eGizmoAxis.Z_AXIS].SetPosition(top_center);
+		}
 	}
 
 	override void OnIntersectMouse(Ray ray)
@@ -139,6 +219,11 @@ class EditorTranslationGizmo: EditorGizmo
 	override void OnUnintersectMouse(Ray ray)
 	{
 		super.OnUnintersectMouse(ray);
+	}
+
+	override bool IsInteracting()
+	{
+		return m_DragObject != null;
 	}
 }
 
