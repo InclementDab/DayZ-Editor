@@ -4,7 +4,7 @@ WrapSpacerWidgetClass ListItem {
  ignorepointer 1
  color 0.0196 0.0196 0.0196 0
  position 0 0
- size 1 24
+ size 1 48
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -36,12 +36,20 @@ WrapSpacerWidgetClass ListItem {
    scriptclass "ViewBinding"
    style Empty
    {
+    ItemPreviewWidgetClass ItemPreview {
+     ignorepointer 1
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
     TextWidgetClass ListItemLabel {
      visible 1
      disabled 0
      clipchildren 1
      ignorepointer 1
-     position 24 0
+     position 52 0
      size 1 1
      valign center_ref
      hexactpos 1
@@ -67,7 +75,7 @@ WrapSpacerWidgetClass ListItem {
      }
     }
     CheckBoxWidgetClass ListItemFavorites {
-     visible 0
+     visible 1
      inheritalpha 0
      color 1 0.8431 0 1
      position 3 0

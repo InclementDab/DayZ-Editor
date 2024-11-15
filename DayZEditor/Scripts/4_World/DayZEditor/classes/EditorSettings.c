@@ -35,8 +35,11 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("ADVANCED", "LockCameraDuringDialogs", "Modal Dialogs", {"NO", "YES"})]
 	bool LockCameraDuringDialogs 	= true;
 		
-	[RegisterProfileSettingMultistate("APPEARANCE", "BoundingBoxSize", "Bounding Box Size", {"OFF", "THIN", "MEDIUM", "THICK", "EXTRA THICC"})]
+	[RegisterProfileSettingMultistate("APPEARANCE", "BoundingBoxSize", "Bounding Box Size", {"OFF", "THIN", "MEDIUM", "THICK", "EXTRA THICCC"})]
 	int BoundingBoxSize = 2;
+	
+	[RegisterProfileSettingMultistate("APPEARANCE", "ListItemSize", "List Item Size", {"SMALL", "MEDIUM", "LARGE"})]
+	int ListItemSize = 1;
 	
 	bool PreloadObjects				= false;	
 	bool ShowScreenLogs				= true;

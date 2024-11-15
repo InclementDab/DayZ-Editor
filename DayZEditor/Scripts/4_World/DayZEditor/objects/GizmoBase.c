@@ -112,20 +112,8 @@ class EditorGizmo: Managed
 	
 	void Update(float dt)
 	{
-		if (m_CurrentInteractingGizmo) {
-			if (!(GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK)) {
-				m_CurrentInteractingGizmo = null;
-				return;
-			}
-			
-			int mouse_x, mouse_y;
-			GetMousePos(mouse_x, mouse_y);
-			UpdateGizmo(mouse_x, mouse_y, m_CurrentInteractingGizmo);
-		}
 	}
 	
-	void UpdateGizmo(int mouse_x, int mouse_y, GizmoBase current_gizmo);
-
 	void OnIntersectMouse(Ray ray)
 	{
 		Raycast ray_cast = ray.PerformRaycast();

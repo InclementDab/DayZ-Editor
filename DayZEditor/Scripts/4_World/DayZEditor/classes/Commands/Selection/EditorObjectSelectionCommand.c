@@ -10,7 +10,7 @@ class EditorObjectSelectionCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Objects Are Clickable";
+		return "Toggle Objects Are Clickable";
 	}
 	
 	override Symbols GetSymbol()

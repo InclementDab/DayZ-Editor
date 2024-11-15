@@ -17,8 +17,6 @@ class EditorHudController: EditorControllerBase
 	bool FavoritesToggle;
 	bool ShowPrivate;
 	
-	StringEvaluater PrecisionLevel = "0.5";
-	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
@@ -77,40 +75,7 @@ class EditorHudController: EditorControllerBase
 	
 	// Favorites
 	protected ref array<string> m_FavoriteItems = {};
-	protected ref array<string> ThemedWidgetStrings = {
-		"GizmoTranslateButton",
-		"LeftbarPanelSearchBarIconButton",
-		"FavoritesTabButton",
-		"ShowPrivateButton",
-		"LeftbarCategoryStatic",
-		"LeftbarCategoryConfig",
-		"DeletionsTabButton",
-		"PlacementsTabButton",
-		"PlacedSearchIconButton",
-		"MenuBarFile",
-		"MenuBarEdit",
-		"MenuBarView",
-		"MenuBarEditor",
-		"NewButton",
-		"OpenButton",
-		"SaveButton",
-		"SaveAsButton",
-		"UndoButton",
-		"RedoButton",
-		"CutButton",
-		"CopyButton",
-		"PasteButton",
-		"MagnetButton",
-		"GroundButton",
-		"SnapButton",
-		"CollisionButton",
-		"CameraLightButton",
-		"BrushToggleButton",
-		"CinematicCameraButton",
-		"CameraTrackMinimizeButton",
-		"AddNodeButton",
-		"CameraTrackRunButton"
-	};
+
 
 	// Toolvar stuff
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
@@ -135,9 +100,6 @@ class EditorHudController: EditorControllerBase
 		EditorLog.OnLog.Insert(OnEditorLog);		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 #endif
-		
-		// more hacking
-		g_EditorPrecision = GetPrecisionLevel();
 	}
 	
 	void ~EditorHudController() 
@@ -146,18 +108,6 @@ class EditorHudController: EditorControllerBase
 		EditorLog.OnLog.Remove(OnEditorLog);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 #endif
-	}
-
-	// Brush Management
-	void ReloadBrushes(string filename)
-	{
-		EditorLog.Trace("EditorHudToolbarController::ReloadBrushes");
-		BrushToggleButtonState = false;
-		NotifyPropertyChanged("BrushToggleButtonState");
-		
-		BrushTypeBoxData.Clear();
-		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(BrushTypeBoxData);
-		GetXMLApi().Read(filename, xml_brushes);
 	}
 		
 	void Update()
@@ -190,11 +140,6 @@ class EditorHudController: EditorControllerBase
 		m_Editor.GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
 	}
 	
-	float GetPrecisionLevel()
-	{
-		return PrecisionLevel.Parse();
-	}
-
 	override void PropertyChanged(string property_name)
 	{
 		EditorLog.Trace("EditorHudController::PropertyChanged: %1", property_name);
@@ -413,12 +358,6 @@ class EditorHudController: EditorControllerBase
 			
 			case "PlacedSearchBarIcon": {
 				PlacedSearchIconButton.Enable(PlacedSearchBarData.Length() > 0);
-				break;
-			}
-			
-			// I literally hate this
-			case "PrecisionLevel": {
-				g_EditorPrecision = GetPrecisionLevel();
 				break;
 			}
 		}

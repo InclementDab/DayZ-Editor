@@ -30,11 +30,15 @@ class EditorHud: ScriptViewMenu
 	Widget NotificationPanel;
 	TextWidget NotificationText;
 
+	protected LinearColor m_MenuColor, m_ToolbarColor;
 	protected Widget m_DragWidget;
 	protected int m_DragBoxStartX = -1, m_DragBoxStartY = -1;
 	protected float m_DragBoxDelayStart;
 	protected SelectionMode m_SelectionMode;
 	protected bool m_ObjectSelectToggle;
+	
+	Widget Menubar, ToolsWrapper;
+	Widget PlacementsTabButton, DeletionsTabButton, LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
 	
 	CanvasWidget EditorCanvas;
 	
@@ -46,6 +50,41 @@ class EditorHud: ScriptViewMenu
 	EditBoxWidget LeftbarSearchBar;
 
 	protected ref array<vector> m_LassoHistory = {};
+	
+	static const ref array<string> ThemedWidgetStrings = {
+		"GizmoTranslateButton",
+		"LeftbarPanelSearchBarIconButton",
+		"FavoritesTabButton",
+		"ShowPrivateButton",
+		"LeftbarCategoryStatic",
+		"LeftbarCategoryConfig",
+		"DeletionsTabButton",
+		"PlacementsTabButton",
+		"PlacedSearchIconButton",
+		"MenuBarFile",
+		"MenuBarEdit",
+		"MenuBarView",
+		"MenuBarEditor",
+		"NewButton",
+		"OpenButton",
+		"SaveButton",
+		"SaveAsButton",
+		"UndoButton",
+		"RedoButton",
+		"CutButton",
+		"CopyButton",
+		"PasteButton",
+		"MagnetButton",
+		"GroundButton",
+		"SnapButton",
+		"CollisionButton",
+		"CameraLightButton",
+		"BrushToggleButton",
+		"CinematicCameraButton",
+		"CameraTrackMinimizeButton",
+		"AddNodeButton",
+		"CameraTrackRunButton"
+	};
 
 	void EditorHud(notnull Editor editor)
 	{	
@@ -55,8 +94,12 @@ class EditorHud: ScriptViewMenu
 		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 		
+		m_MenuColor = Menubar.GetColor();
+		m_ToolbarColor = ToolsWrapper.GetColor();
+		
 		// Load Placeable Items
 #ifndef COMPONENT_SYSTEM		
+		int item_size = m_Editor.GetSettings().ListItemSize;
 		array<ref EditorPlaceableItem> placeable_items = m_Editor.GetPlaceableObjects();
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
 			ObservableCollection<ref EditorPlaceableListItem> TargetList;
@@ -77,61 +120,60 @@ class EditorHud: ScriptViewMenu
 				}
 			}
 			
-			EditorPlaceableListItem list_item = new EditorPlaceableListItem(placeable_item);
+			EditorPlaceableListItem list_item;
+			switch (item_size) {
+				case 2: {
+					list_item = new EditorPlaceableListItemLarge(placeable_item);
+					break;
+				}
+				
+				case 1:
+				default: {
+					list_item = new EditorPlaceableListItem(placeable_item);
+					break;
+				}	
+			}
 			if (placeable_item.IsFavorite()) {
 				TargetList.InsertAt(list_item, 0);
 			} else {
 				TargetList.Insert(list_item);
 			}
 			
-			bool gay = placeable_item.Scope > 0 || m_TemplateController.ShowPrivate;
+			bool gay = (placeable_item.Scope > 0 || m_TemplateController.ShowPrivate);
 			list_item.Show(gay);
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
 		
-		// Just a quickset on the color
-		m_TemplateController.PlacementsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
-		m_TemplateController.DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));		
-		
-		m_TemplateController.LeftbarCategoryConfig.SetColor(m_Editor.GetSettings().SelectionColor);
-		m_TemplateController.LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
+		SearchFavoriteTabPanel.SetColor(m_ToolbarColor);
 		
 		foreach (string themed_widget_name: ThemedWidgetStrings) {
 			Widget themed_widget = m_LayoutRoot.FindAnyWidget(themed_widget_name);
 			if (themed_widget) {
-				themed_widget.SetColor(GetEditor().GetSettings().SelectionColor);
+				themed_widget.SetColor(m_Editor.GetSettings().SelectionColor);
 			}
 		}
 
 		// Load Brushes		
 		
-		string brush_file = m_Editor.GetSettings().EditorBrushFile;
-		if (brush_file.Contains("'")) {
-			// bi wtf
-			brush_file.Replace("'", "");
-			brush_file.Replace("\"", "");
-			m_Editor.GetSettings().EditorBrushFile = brush_file;
-			m_Editor.GetSettings().Save();
-		}
+		string brush_file = SystemPath.Format(m_Editor.GetSettings().EditorBrushFile);		
 		
-		if (!FileExist(m_Editor.GetSettings().EditorBrushFile)) {
-			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", m_Editor.GetSettings().EditorBrushFile)) {
-				EditorLog.Error("Could not copy brush data to %1", m_Editor.GetSettings().EditorBrushFile);
-				return;
+		if (!FileExist(brush_file)) {
+			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", brush_file)) {
+				Error(string.Format("Could not copy brush data to %1", brush_file));
 			}
 		}
 		
-		ReloadBrushes(m_Editor.GetSettings().EditorBrushFile);
+		ReloadBrushes(brush_file);
 #endif		
 
-		ShowPrivate = GetEditor().GetSettings().ShowScopeZeroObjects;
-		NotifyPropertyChanged("ShowPrivate");
+		m_TemplateController.ShowPrivate = m_Editor.GetSettings().ShowScopeZeroObjects;
+		m_TemplateController.NotifyPropertyChanged("ShowPrivate");
 
-		FavoritesToggle = GetEditor().GetSettings().ShowFavoriteObjects;
-		NotifyPropertyChanged("FavoritesToggle");
+		m_TemplateController.FavoritesToggle = m_Editor.GetSettings().ShowFavoriteObjects;
+		m_TemplateController.NotifyPropertyChanged("FavoritesToggle");
 						
-		ShowScreenLogs(GetEditor().GetSettings().ShowScreenLogs);
+		ShowScreenLogs(m_Editor.GetSettings().ShowScreenLogs);
 	}
 	
 	override void OnWidgetScriptInit(Widget w)
@@ -140,14 +182,25 @@ class EditorHud: ScriptViewMenu
 		
 		float s_r_w, s_r_h, s_l_w, s_l_h;
 		RightbarWrapper.GetScreenSize(s_r_w, s_r_h);
-		RightbarWrapper.SetScreenSize(GetEditor().GetSettings().RightBarPlacement, s_r_h);
+		RightbarWrapper.SetScreenSize(m_Editor.GetSettings().RightBarPlacement, s_r_h);
 		LeftbarWrapper.GetScreenSize(s_l_w, s_l_h);
-		LeftbarWrapper.SetScreenSize(GetEditor().GetSettings().LeftBarPlacement, s_l_h);
+		LeftbarWrapper.SetScreenSize(m_Editor.GetSettings().LeftBarPlacement, s_l_h);
 	}
 	
-	void ~EditorHud()
+	int ReloadBrushes(string filename)
 	{
-		delete CameraMapMarker;
+		filename = SystemPath.Format(filename);
+		if (!File.Exists(filename)) {
+			return 0;
+		}
+		
+		m_TemplateController.BrushToggleButtonState = false;
+		m_TemplateController.NotifyPropertyChanged("BrushToggleButtonState");
+		
+		m_TemplateController.BrushTypeBoxData.Clear();
+		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(m_TemplateController.BrushTypeBoxData);
+		GetXMLApi().Read(filename, xml_brushes);
+		return m_TemplateController.BrushTypeBoxData.Count();
 	}
 	
 	override void Update(float dt)
@@ -166,7 +219,7 @@ class EditorHud: ScriptViewMenu
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
 		
-		if (GetEditor().IsInventoryEditorActive()) {
+		if (m_Editor.IsInventoryEditorActive()) {
 			Show(false);
 			return;
 		}
@@ -177,13 +230,13 @@ class EditorHud: ScriptViewMenu
 		
 		// Dont want to toggle cursor on map
 		if (input.LocalPress("EditorToggleCursor")) {
-			if (!EditorMapWidget.IsVisible() && !(EditorHud.CurrentDialog && GetEditor().GetSettings().LockCameraDuringDialogs)) {	
+			if (!EditorMapWidget.IsVisible() && !(EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
 				ToggleCursor();
 			}
 		}
 
 		if (input.LocalPress("UAFire") && m_DragBoxStartX == -1 && m_DragBoxStartY == -1) {
-			if ((!widget_under_cursor || widget_under_cursor == EditorMapWidget) && GetGame().GetInput().HasGameFocus() && cursor_visible && !GetEditor().IsPlacing() && !GetEditor().IsDragging()) {
+			if ((!widget_under_cursor || widget_under_cursor == EditorMapWidget) && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging()) {
 				m_DragBoxDelayStart = 0.12;
 				GetMousePos(m_DragBoxStartX, m_DragBoxStartY);
 				m_LassoHistory.Clear();
@@ -201,7 +254,7 @@ class EditorHud: ScriptViewMenu
 		
 		EditorCanvas.Clear();
 		m_DragBoxDelayStart -= dt;
-		if (input.LocalValue("UAFire") && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !GetEditor().IsPlacing() && !GetEditor().IsDragging() && !GetEditor().GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1) {	
+		if (input.LocalValue("UAFire") && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1) {	
 			switch (m_SelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
@@ -233,11 +286,11 @@ class EditorHud: ScriptViewMenu
 						marker0.GetLayoutRoot().GetScreenPos(x_n0, y_n0);
 						if (IsPointInPolygon(x_n0, y_n0, m_LassoHistory)) {
 							if (object_marker0 && !object_marker0.GetEditorObject().IsSelected()) {
-								GetEditor().SelectObject(object_marker0.GetEditorObject());
+								m_Editor.SelectObject(object_marker0.GetEditorObject());
 							}
 						} else {
 							if (object_marker0 && object_marker0.GetEditorObject().IsSelected()) {
-								GetEditor().DeselectObject(object_marker0.GetEditorObject());
+								m_Editor.DeselectObject(object_marker0.GetEditorObject());
 							}
 						}
 					}
@@ -264,11 +317,11 @@ class EditorHud: ScriptViewMenu
 						//if (top_left[0] <= m_screen_x && m_screen_x <= bottom_right[0] && top_left[1] <= m_screen_y && m_screen_y <= bottom_right[1]) {
 						if ((x_n < Math.Max(m_DragBoxStartX, mouse_x) && x_n > Math.Min(m_DragBoxStartX, mouse_x)) && (y_n < Math.Max(m_DragBoxStartY, mouse_y) && y_n > Math.Min(m_DragBoxStartY, mouse_y))) {
 							if (object_marker && !object_marker.GetEditorObject().IsSelected()) {
-								GetEditor().SelectObject(object_marker.GetEditorObject());
+								m_Editor.SelectObject(object_marker.GetEditorObject());
 							}
 						} else {
 							if (object_marker && object_marker.GetEditorObject().IsSelected()) {
-								GetEditor().DeselectObject(object_marker.GetEditorObject());
+								m_Editor.DeselectObject(object_marker.GetEditorObject());
 							}
 						}
 					}
@@ -325,11 +378,11 @@ class EditorHud: ScriptViewMenu
 						float test = (relative_x * relative_x)/((abs_width/2) * (abs_width/2)) + (relative_y * relative_y)/((abs_height/2) * (abs_height/2));
 						if (test <= 1.0) {
 							if (object_marker2 && !object_marker2.GetEditorObject().IsSelected()) {
-								GetEditor().SelectObject(object_marker2.GetEditorObject());
+								m_Editor.SelectObject(object_marker2.GetEditorObject());
 							}
 						} else {
 							if (object_marker2 && object_marker2.GetEditorObject().IsSelected()) {
-								GetEditor().DeselectObject(object_marker2.GetEditorObject());
+								m_Editor.DeselectObject(object_marker2.GetEditorObject());
 							}
 						}
 					}
@@ -387,7 +440,7 @@ class EditorHud: ScriptViewMenu
 					LeftbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
 					float LeftWidth = Math.Clamp(mouse_x + wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
 					LeftbarWrapper.SetScreenSize(LeftWidth, wr_s_h);
-					GetEditor().GetSettings().LeftBarPlacement = LeftWidth;
+					m_Editor.GetSettings().LeftBarPlacement = LeftWidth;
 					break;
 				}
 
@@ -397,7 +450,7 @@ class EditorHud: ScriptViewMenu
 					RightbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
 					float RightWidth = Math.Clamp(screen_x - mouse_x - wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
 					RightbarWrapper.SetScreenSize(Math.Clamp(screen_x - mouse_x - wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
-					GetEditor().GetSettings().RightBarPlacement = RightWidth;
+					m_Editor.GetSettings().RightBarPlacement = RightWidth;
 					break;
 				}
 			}			
@@ -454,7 +507,7 @@ class EditorHud: ScriptViewMenu
 	void ToggleCursor() 
 	{	
 		// An excellent place to do this!	
-		GetEditor().GetSettings().Save();
+		m_Editor.GetSettings().Save();
 		
 		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 	}
@@ -479,7 +532,7 @@ class EditorHud: ScriptViewMenu
 	{		
 		WidgetAnimator.CancelAnimate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y);
 		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, -24, 100);
-		NotificationPanel.SetColor(GetEditor().GetSettings().SelectionColor);
+		NotificationPanel.SetColor(m_Editor.GetSettings().SelectionColor);
 		NotificationText.SetText(text);
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(CleanupNotification);

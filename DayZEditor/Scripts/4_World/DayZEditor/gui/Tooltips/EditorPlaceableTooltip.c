@@ -1,7 +1,7 @@
 class EditorPlaceableTooltip: ScriptView
 {
 	TextWidget HeaderLabel;
-	ItemPreviewWidget ContentItem;
+	ItemPreviewWidget ContentItem0, ContentItem1, ContentItem2, ContentItem3;
 	ImageWidget BackupImage;
 	protected Object m_MyObject;
 
@@ -22,7 +22,10 @@ class EditorPlaceableTooltip: ScriptView
 		m_MyObject = item;
 		EntityAI entity = EntityAI.Cast(item);
 		if (entity) {
-			ContentItem.SetItem(entity);
+			ContentItem0.SetItem(entity);
+			ContentItem1.SetItem(entity);
+			ContentItem2.SetItem(entity);
+			ContentItem3.SetItem(entity);
 			BackupImage.Show(false);
 		}
 	}

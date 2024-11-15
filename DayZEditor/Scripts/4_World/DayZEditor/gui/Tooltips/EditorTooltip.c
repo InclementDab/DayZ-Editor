@@ -1,10 +1,13 @@
-class EditorTooltip: ScriptViewTemplate<EditorCommandTooltipController>
+class EditorTooltip: ScriptView
 {	
 	TextWidget EditorCommandText;
 	TextWidget EditorCommandShortcut;
 	
+	protected EditorCommandTooltipController m_TemplateController;
+	
 	void EditorTooltip(string text, float x, float y, string shortcut_text = "")
 	{
+		m_TemplateController = EditorCommandTooltipController.Cast(m_Controller);
 		m_TemplateController.Name = text;				
 		if (shortcut_text) {
 			m_TemplateController.Shortcut = string.Format("%1", shortcut_text);
@@ -89,6 +92,16 @@ class EditorTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 		}
 		
 		m_LayoutRoot.SetPos(x, y);
+	}
+	
+	EditorCommandTooltipController GetTemplateController()
+	{
+		return m_TemplateController;
+	}
+	
+	override typename GetControllerType()
+	{
+		return EditorCommandTooltipController;
 	}
 	
 	override string GetLayoutFile() 

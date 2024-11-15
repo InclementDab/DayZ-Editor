@@ -1,3 +1,38 @@
+class EditorPlaceableListItemLarge: EditorPlaceableListItem
+{
+	protected EntityAI m_PreviewItem;
+
+	ItemPreviewWidget ItemPreview;
+	
+	void EditorPlaceableListItemLarge(EditorPlaceableItem placeable_item)
+	{
+		Print(placeable_item.Type);
+		Object preview_object = GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_NONE);
+		if (preview_object) {
+			m_PreviewItem = EntityAI.Cast(preview_object);
+			if (!m_PreviewItem) {
+				preview_object.Delete();
+			} else {
+				ItemPreview.SetItem(m_PreviewItem);
+				ItemPreview.SetView(0);
+				ItemPreview.Update();
+			}
+		}
+	}
+
+	void ~EditorPlaceableListItemLarge()
+	{
+		if (m_PreviewItem) {
+			m_PreviewItem.Delete();
+		}
+	}
+	
+	override string GetLayoutFile() 
+	{
+		return "DayZEditor/gui/Layouts/items/EditorListItemLarge.layout";
+	}
+}
+
 class EditorPlaceableListItem: EditorListItem
 {
 	//! Animals and Zombies / Players "survivors"

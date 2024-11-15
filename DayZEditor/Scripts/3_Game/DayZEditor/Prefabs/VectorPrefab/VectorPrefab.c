@@ -1,11 +1,9 @@
-float g_EditorPrecision;
-
 modded class VectorPrefab
 {
 	// Override is for step size
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{
-		float motion = wheel * g_EditorPrecision;
+		float motion = wheel * 0.5; // precision value
 		
 		if (KeyState(KeyCode.KC_LCONTROL)) {
 			motion *= 10;

@@ -20,7 +20,7 @@ class EditorToggleLightCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut()
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_5 };
+		return { KeyCode.KC_LSHIFT, KeyCode.KC_L };
 	}
 	
 	override LinearColor GetColor()

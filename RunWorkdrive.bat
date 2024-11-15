@@ -6,6 +6,8 @@ set repository="%cd%"
 taskkill /f /im "workbenchApp.exe"
 rmdir /s /q "P:/temp"
 
+timeout 1>nul
+
 cd /d "%~dp0DayZEditor\Workbench"
 
 for /f "tokens=2,*" %%a in ('reg query "HKCU\SOFTWARE\Bohemia Interactive\Dayz Tools" /v "path" 2^>nul') do (

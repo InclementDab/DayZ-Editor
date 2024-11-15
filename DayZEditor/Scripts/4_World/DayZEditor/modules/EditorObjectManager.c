@@ -53,16 +53,17 @@ class EditorObjectManagerModule : Managed
 
 		// handle config objects
 		foreach (string path: config_paths) {
-
-			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++)
-			{
+			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 				GetGame().ConfigGetChildName(path, i, type);
 				int scope = GetGame().ConfigGetInt(path + " " + type + " scope");
+				
+				if (IsForbiddenItem(type)) {
+					continue;
+				}
 
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type, scope);
-				if (!placeable_item)
-				{
+				if (!placeable_item) {
 					continue;
 				}
 
@@ -331,5 +332,42 @@ class EditorObjectManagerModule : Managed
 		EditorLog.Debug("EditorObjectManager Debug Info");
 		EditorLog.Debug(m_EditorObjectRefs.Count().ToString());
 		EditorLog.Debug(m_EditorDeletedObjectRefs.Count().ToString());
+	}
+	
+	static bool IsForbiddenItem(string model)
+	{
+		model.ToLower();
+		model.TrimInPlace();
+		//! In theory should be safe but just in case
+		if (model == "itemoptics") return true;
+		if (model == "access") return true;
+		if (model == "transport") return true;
+		if (model == "all") return true;
+		if (model == "land_wreck_car_twodoors") return true;
+		if (model == "land_wreck_car_threedoors") return true;
+
+		//! Cursed items
+		if (model == "akm_testbed") return true;
+		if (model == "red9") return true;
+		if (model == "quickiebow") return true;
+		if (model == "largetentbackpack") return true;
+		if (model == "survivormale_base" || model == "survivorfemale_base") return true;
+		if (model == "land_vasicore" || model == "flagcarriercore") return true;
+		if (GetGame().IsKindOf(model, "gp25base")) return true;
+		if (GetGame().IsKindOf(model, "m203base")) return true;
+		if (model == "itemoptics_base") return true;
+
+		//? Added a few more to the list
+		/* 
+		Give console Error: SCRIPT    (E): [WeaponStableState::ValidateMuzzleArray] :: 
+		[ERROR] :: Muzzle array validation has failed. Please set up the correct muzzle states by overriding InitMuzzleArray.
+		*/
+		if (model == "groza") return true;
+		if (model == "pm73rak") return true;
+		if (model == "trumpet") return true;
+		//TODO add the abstract models 
+
+		//! Everything is fine... I hope... :pain:
+		return false;
 	}
 }

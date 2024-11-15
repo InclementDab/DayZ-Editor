@@ -17,9 +17,13 @@ class EditorCameraLight: SpotLightBase
 {
 	void EditorCameraLight()
 	{
-		SetBrightnessTo(10);
-		SetRadiusTo(150);
-		SetSpotLightAngle(100);
+		SetBrightnessTo(3);
+		SetRadiusTo(400);
+		SetSpotLightAngle(120);
+		SetVisibleDuringDaylight(true);
+		EnableSpecular(true);
+		EnableLinear(true);
+		SetCastShadow(false);
 	}
 }
 
@@ -65,9 +69,7 @@ class EditorCamera: Camera
 	void SetLightState(bool state)
 	{
 		if (state) {
-			m_EditorCameraLight = EditorCameraLight.Cast(ScriptedLightBase.CreateLight(EditorCameraLight, GetPosition(), 0.2));
-			m_EditorCameraLight.SetDirection(GetDirection());
-			m_EditorCameraLight.AttachOnObject(this);
+			m_EditorCameraLight = EditorCameraLight.Cast(ScriptedLightBase.CreateLight(EditorCameraLight, vector.Zero, 0.2));
 		} else {
 			GetGame().ObjectDelete(m_EditorCameraLight);
 		}
@@ -187,7 +189,7 @@ class EditorCamera_V2: EditorCamera
 		}
 		
 		if (input.GetInputByID(UALookAround).LocalValue()) {
-			speed /= TURBO_MULTIPLIER;
+			speed /= (TURBO_MULTIPLIER * TURBO_MULTIPLIER);
 		}
 
 		if (camera_lock & ECameraLockFlag.PAN_LOOK) {
@@ -247,6 +249,10 @@ class EditorCamera_V2: EditorCamera
 		// Apply
 		SetFOV(m_CameraFovActual);
 		SetTransform(transform);
+		if (m_EditorCameraLight) {
+			m_EditorCameraLight.SetTransform(transform);
+		}
+		
 		GetGame().GetWorld().SetEyeAccom(m_EditorCameraSettings.ExposureLevel);
 		GetGame().GetWorld().SetViewDistance(m_EditorCameraSettings.ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(m_EditorCameraSettings.ViewDistance);
