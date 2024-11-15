@@ -1,5 +1,7 @@
 class EditorObject: EditorWorldObject
 {
+	static ref map<Object, EditorObject> s_AllByObject = new map<Object, EditorObject>();
+
 	protected ref EditorObjectData 			m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
@@ -105,6 +107,12 @@ class EditorObject: EditorWorldObject
 			EditorLog.Warning("Object failed to create: %1", m_Data.Type);
 			return;
 		}
+
+		if (!s_AllByObject) {
+			s_AllByObject = new map<Object, EditorObject>();
+		}
+
+		s_AllByObject[m_WorldObject] = this;
 		
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
@@ -209,6 +217,10 @@ class EditorObject: EditorWorldObject
 		EditorLog.Trace("~EditorObject");
 		if (m_Data && m_WorldObject) {
 			Update();
+		}
+
+		if (s_AllByObject && m_WorldObject) {
+			s_AllByObject.Remove(m_WorldObject);
 		}
 		
 		DestroyBoundingBox();

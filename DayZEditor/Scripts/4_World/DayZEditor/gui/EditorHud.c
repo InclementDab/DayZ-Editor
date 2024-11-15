@@ -126,49 +126,6 @@ class EditorHud: ScriptView
 		}
 		
 		EditorCanvas.Clear();
-		/*if ( && ) {
-			LinearColor drag_box_color = 0xff0078D4;
-			LinearColor drag_box_color_fill = drag_box_color.With(3, 60);
-			int current_x, current_y;
-			GetMousePos(current_x, current_y);
-			// @Sumrak :ANGERY:
-			//current_x += 6;
-			
-			// Draw Drag Box
-			EditorCanvas.DrawLine(m_DragBoxStartX, m_DragBoxStartY, current_x, m_DragBoxStartY, DRAG_BOX_THICKNESS, drag_box_color);
-			EditorCanvas.DrawLine(m_DragBoxStartX, m_DragBoxStartY, m_DragBoxStartX, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-			EditorCanvas.DrawLine(m_DragBoxStartX, current_y, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-			EditorCanvas.DrawLine(current_x, m_DragBoxStartY, current_x, current_y, DRAG_BOX_THICKNESS, drag_box_color);
-
-
-			vector top_left = Vector(Math.Min(m_DragBoxStartX, current_x), Math.Min(m_DragBoxStartY, current_y), 0);
-			vector bottom_right = Vector(Math.Max(m_DragBoxStartX, current_x), Math.Max(m_DragBoxStartY, current_y), 0);
-			
-			// Handles the fill operation
-			int x_avg = (m_DragBoxStartX + current_x) / 2;
-			EditorCanvas.DrawLine(x_avg, m_DragBoxStartY, x_avg, current_y, current_x - m_DragBoxStartX, drag_box_color_fill); 
-			
-			foreach (EditorMarker marker: EditorMarker.s_AllMarkers) {
-				if (!marker || !marker.GetLayoutRoot().IsVisible()) {
-					continue;
-				}
-				
-				EditorObjectMarker object_marker = EditorObjectMarker.Cast(marker);
-				
-				float m_screen_x, m_screen_y;
-				marker.GetLayoutRoot().GetScreenPos(m_screen_x, m_screen_y);
-				if (top_left[0] <= m_screen_x && m_screen_x <= bottom_right[0] && top_left[1] <= m_screen_y && m_screen_y <= bottom_right[1]) {
-					if (object_marker && !object_marker.GetEditorObject().IsSelected()) {
-						GetEditor().SelectObject(object_marker.GetEditorObject());
-					}
-				} else {
-					if (object_marker && object_marker.GetEditorObject().IsSelected()) {
-						GetEditor().DeselectObject(object_marker.GetEditorObject());
-					}
-				}
-			}
-		}*/
-
 		m_DragBoxDelayStart -= dt;
 		if (input.LocalValue("UAFire") && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !GetEditor().IsPlacing() && !GetEditor().IsDragging() && !GetEditor().GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1) {	
 			switch (m_SelectionMode) {
@@ -383,29 +340,17 @@ class EditorHud: ScriptView
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		switch (w) {
-			case ObjectSelectionButton: {
-				m_ObjectSelectToggle = !m_ObjectSelectToggle;
-				return true;
-			}
-
-			case BoxSelectionButton: {
-				m_SelectionMode = SelectionMode.BOX;
-				return true;
-			}
-
-			case EllipseSelectionButton: {
-				m_SelectionMode = SelectionMode.ELLIPSE;
-				return true;
-			}
-
-			case LassoSelectionButton: {
-				m_SelectionMode = SelectionMode.LASSO;
-				return true;
-			}
-		}
-
 		return super.OnClick(w, x, y, button);
+	}
+	
+	void ToggleObjectSelect()
+	{
+		m_ObjectSelectToggle = !m_ObjectSelectToggle;
+	}
+	
+	void SetSelectionMode(SelectionMode selection_mode)
+	{
+		m_SelectionMode = selection_mode;
 	}
 
 	override void Show(bool show) 

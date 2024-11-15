@@ -791,8 +791,19 @@ class Editor: Managed
 				if (!target) { //target == m_EditorHud.EditorMapWidget
 					Raycast cursor_raycast = GetCursorRaycast();
 					if (cursor_raycast && cursor_raycast.Hit && GetEditorHud().IsObjectSelectionEnabled()) {
-						EditorObject select_object = GetEditorObject(cursor_raycast.Hit);
+						
+						EditorObject select_object = EditorObject.s_AllByObject[cursor_raycast.Hit];
 						if (select_object) {
+							// We want to Toggle selection if you are holding control
+							if (KeyState(KeyCode.KC_LCONTROL)) {
+								ToggleSelection(select_object);
+								return true;
+							} 
+														
+							if (!KeyState(KeyCode.KC_LSHIFT)) {
+								ClearSelection();
+							}
+							
 							SelectObject(select_object);
 							return true;
 						}

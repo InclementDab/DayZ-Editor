@@ -29,7 +29,7 @@ FrameWidgetClass EditorFrame {
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
      color 0.0588 0.0588 0.0588 1
-     position 0.00088 -0.0009
+     position 0.00056 -0.0009
      size 1 1
      halign center_ref
      valign center_ref
@@ -2354,7 +2354,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               scriptclass ""
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/metron-bold"
@@ -2386,6 +2386,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorObjectSelectionCommand"
+                }
+               }
               }
               ButtonWidgetClass BoxSelectionButton {
                clipchildren 0
@@ -2396,7 +2401,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               scriptclass ""
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/metron-bold"
@@ -2428,6 +2433,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorBoxSelectionCommand"
+                }
+               }
               }
               ButtonWidgetClass EllipseSelectionButton {
                clipchildren 0
@@ -2438,7 +2448,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               scriptclass ""
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/metron-bold"
@@ -2473,6 +2483,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorEllipseSelectionCommand"
+                }
+               }
               }
               ButtonWidgetClass LassoSelectionButton {
                clipchildren 0
@@ -2483,7 +2498,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 1
-               scriptclass ""
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/metron-bold"
@@ -2515,6 +2530,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorLassoSelectionCommand"
                 }
                }
               }

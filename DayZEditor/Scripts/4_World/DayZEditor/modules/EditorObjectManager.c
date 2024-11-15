@@ -141,6 +141,10 @@ class EditorObjectManagerModule : Managed
 	// Call to select an object
 	void SelectObject(notnull EditorObject target)
 	{
+		if (target.IsSelected()) {
+			return;
+		}
+		
 		EditorLog.Trace("EditorObjectManager::SelectObject");
 		m_SelectedObjects.InsertEditorObject(target);
 		EditorEvents.ObjectSelected(this, target);

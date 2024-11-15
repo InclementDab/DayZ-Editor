@@ -56,7 +56,9 @@ class EditorMenuItemCommand: EditorMenuItem
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		m_Command.Execute(this, CommandArgs());
+		if (m_Command) {
+			m_Command.Execute(this, CommandArgs());
+		}
 
 		return true;
 	}
