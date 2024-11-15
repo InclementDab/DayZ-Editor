@@ -17,9 +17,7 @@ class EditorHud: ScriptViewMenu
 	protected EditorHudController m_TemplateController;
 	
 	// Layout Elements
-	Widget NotificationFrame;
-	Widget MapContainer;
-	Widget LoggerFrame;
+	Widget NotificationFrame, MapContainer, LoggerFrame;
 
 	Widget LeftbarWrapper, RightbarWrapper;
 	Widget LeftbarDrag, RightbarDrag;
@@ -41,6 +39,8 @@ class EditorHud: ScriptViewMenu
 	Widget PlacementsTabButton, DeletionsTabButton, LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
 	
 	CanvasWidget EditorCanvas;
+	
+	RTTextureWidget SelectionTextures;
 	
 	ref EditorCameraMapMarker CameraMapMarker;
 	
@@ -78,7 +78,6 @@ class EditorHud: ScriptViewMenu
 		"GroundButton",
 		"SnapButton",
 		"CollisionButton",
-		"CameraLightButton",
 		"BrushToggleButton",
 		"CinematicCameraButton",
 		"CameraTrackMinimizeButton",
@@ -156,15 +155,12 @@ class EditorHud: ScriptViewMenu
 
 		// Load Brushes		
 		
-		string brush_file = SystemPath.Format(m_Editor.GetSettings().EditorBrushFile);		
+		string brush_file = SystemPath.Format(m_Editor.GetSettings().BrushFile);		
+		Print(brush_file);
+		if (!FileExist(brush_file) && !CopyFile("DayZEditor\\scripts\\data\\Defaults\\Brushes.xml", brush_file)) {
+			Error(string.Format("Could not copy brush data to %1", brush_file));
+		} else ReloadBrushes(brush_file);
 		
-		if (!FileExist(brush_file)) {
-			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", brush_file)) {
-				Error(string.Format("Could not copy brush data to %1", brush_file));
-			}
-		}
-		
-		ReloadBrushes(brush_file);
 #endif		
 
 		m_TemplateController.ShowPrivate = m_Editor.GetSettings().ShowScopeZeroObjects;
@@ -190,7 +186,9 @@ class EditorHud: ScriptViewMenu
 	int ReloadBrushes(string filename)
 	{
 		filename = SystemPath.Format(filename);
+		Print(filename);
 		if (!File.Exists(filename)) {
+			PrintFormat("file not found %1", filename);
 			return 0;
 		}
 		
@@ -216,6 +214,12 @@ class EditorHud: ScriptViewMenu
 		Input input = GetGame().GetInput();
 		UAInputAPI input_api = GetUApi();
 		
+		UAInput click_input = input_api.GetInputByID(UAFire);
+		UAInput toggle_hud_input = input_api.GetInputByName("EditorToggleUI");
+		UAInput toggle_cursor = input_api.GetInputByName("EditorToggleCursor");
+		UAInput toggle_editor = input_api.GetInputByName("EditorToggleActive");
+		UAInput teleport_to_cursor = input_api.GetInputByName("EditorTeleportPlayerToCursor");
+		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
 		
@@ -224,18 +228,43 @@ class EditorHud: ScriptViewMenu
 			return;
 		}
 		
-		if (input.LocalPress("EditorToggleUI") && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget))) {		
+		// lctrl for commands
+		if (toggle_editor.LocalPress() && !GetDayZGame().IsLeftCtrlDown()) {
+			// Control current player
+			if (m_Editor.IsActive()) {
+				m_Editor.ControlPlayer(m_Editor.GetPlayer());
+			} else {
+				m_Editor.Activate();
+			}
+		}
+		
+		if (toggle_hud_input.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget))) {		
 			Show(!IsVisible());
 		}
 		
 		// Dont want to toggle cursor on map
-		if (input.LocalPress("EditorToggleCursor")) {
-			if (!EditorMapWidget.IsVisible() && !(EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
+		if (toggle_cursor.LocalPress()) {
+			if (!EditorMapWidget.IsVisible() && !GetEditor().IsPlayerControlled() && GetEditor().IsActive() && !(EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
 				ToggleCursor();
 			}
 		}
+		
+		// Teleport the player
+		if (teleport_to_cursor.LocalValue() && GetGame().GetUIManager().IsCursorVisible()) {
+			PlayerBase teleport_player = m_Editor.GetControllingPlayer();
+			if (!teleport_player) {
+				teleport_player = m_Editor.GetPlayer();
+			}
+			
+			if (teleport_player) {
+				Raycast teleport_player_raycast = m_Editor.GetCursorRaycastModeSafe(teleport_player);
+				if (teleport_player_raycast) {
+					teleport_player.SetPosition(teleport_player_raycast.Bounce.Position);
+				}
+			}
+		}
 
-		if (input.LocalPress("UAFire") && m_DragBoxStartX == -1 && m_DragBoxStartY == -1) {
+		if (click_input.LocalPress() && m_DragBoxStartX == -1 && m_DragBoxStartY == -1) {
 			if ((!widget_under_cursor || widget_under_cursor == EditorMapWidget) && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging()) {
 				m_DragBoxDelayStart = 0.12;
 				GetMousePos(m_DragBoxStartX, m_DragBoxStartY);
@@ -245,7 +274,8 @@ class EditorHud: ScriptViewMenu
 			EditorMapWidget.SetFlags(WidgetFlags.IGNOREPOINTER);
 		}
 		
-		if (input.LocalRelease("UAFire")) {
+		if (click_input.LocalRelease()) {
+			m_DragWidget = null;
 			m_DragBoxDelayStart = 10;
 			m_DragBoxStartX = -1;
 			m_DragBoxStartY = -1;
@@ -254,7 +284,7 @@ class EditorHud: ScriptViewMenu
 		
 		EditorCanvas.Clear();
 		m_DragBoxDelayStart -= dt;
-		if (input.LocalValue("UAFire") && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1) {	
+		if (click_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1) {	
 			switch (m_SelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
@@ -402,11 +432,11 @@ class EditorHud: ScriptViewMenu
 		float wr_s_w, wr_s_h, wr_col_s_w, wr_col_s_h;
 		switch (widget_under_cursor) {
 			case LeftbarDrag: {
-				if (input_api.GetInputByID(UAFire).LocalPress()) {
+				if (click_input.LocalPress()) {
 					m_DragWidget = LeftbarWrapper;
 				}
 				
-				if (input_api.GetInputByID(UAFire).LocalDoubleClick()) {
+				if (click_input.LocalDoubleClick()) {
 					LeftbarWrapper.GetSize(wr_s_w, wr_s_h);
 					LeftbarWrapper.SetSize(DEFAULT_BAR_WIDTH_PX, wr_s_h);
 				}
@@ -415,11 +445,11 @@ class EditorHud: ScriptViewMenu
 			}
 
 			case RightbarDrag: {
-				if (input_api.GetInputByID(UAFire).LocalPress()) {
+				if (click_input.LocalPress()) {
 					m_DragWidget = RightbarWrapper;
 				}
 
-				if (input_api.GetInputByID(UAFire).LocalDoubleClick()) {
+				if (click_input.LocalDoubleClick()) {
 					LeftbarWrapper.GetSize(wr_s_w, wr_s_h);
 					RightbarWrapper.SetSize(DEFAULT_BAR_WIDTH_PX, wr_s_h);
 				}
@@ -428,10 +458,6 @@ class EditorHud: ScriptViewMenu
 			}
 		}
 		
-		if (input_api.GetInputByID(UAFire).LocalRelease()) {
-			m_DragWidget = null;
-		}
-
 		if (m_DragWidget) {
 			switch (m_DragWidget) {
 				case LeftbarWrapper: {
@@ -497,6 +523,8 @@ class EditorHud: ScriptViewMenu
 		if (CurrentDialog) {
 			CurrentDialog.GetLayoutRoot().Show(show);
 		}
+		
+		GetGame().GetUIManager().ShowCursor(show);
 	}
 	
 	void SetEditorMode(eEditorMode editor_mode)

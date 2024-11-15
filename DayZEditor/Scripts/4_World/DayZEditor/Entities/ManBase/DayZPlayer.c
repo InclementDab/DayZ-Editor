@@ -23,6 +23,13 @@ modded class PlayerBase
 		}
 	}
 	
+	override void OnSelectPlayer()
+	{
+		super.OnSelectPlayer();
+		
+		GetInputController().SetDisabled(false);
+	}
+	
 	// Yeet
 	override void CheckDeath()
 	{

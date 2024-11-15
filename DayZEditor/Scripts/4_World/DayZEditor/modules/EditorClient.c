@@ -43,9 +43,6 @@ class EditorClientModule: JMModuleBase
 		EditorLog.Trace("Editor::OnInit");
 						
 		// Keybinds
-		RegisterBinding(new JMModuleBinding("OnEditorToggleActive", "EditorToggleActive"));
-		RegisterBinding(new JMModuleBinding("OnEditorToggleUI", "EditorToggleUI"));
-		RegisterBinding(new JMModuleBinding("OnEditorTeleportPlayerToCursor", "EditorTeleportPlayerToCursor"));
 		
 		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
 		RegisterBinding(new JMModuleBinding("OnEditorDeleteObject", "EditorDeleteObject"));
@@ -167,18 +164,6 @@ class EditorClientModule: JMModuleBase
 
 	}	
 	
-	private void OnEditorToggleCursor(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleCursor");
-		
-		if (!m_Editor.IsActive() && !m_Editor.IsInventoryEditorActive()) {
-			return;
-		}
-		
-		m_Editor.GetEditorHud().ToggleCursor();
-	}	
-	
 	private void OnEditorToggleUI(UAInput input)
 	{		
 		if (!ShouldProcessInput(input)) return;
@@ -236,15 +221,7 @@ class EditorClientModule: JMModuleBase
 		args.Context = m_Editor.GetEditorHud();
 		command.Execute(this, args);
 	}
-	
-	private void OnEditorTeleportPlayerToCursor(UAInput input)
-	{		
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorTeleportPlayerToCursor");
-				
-		m_Editor.TeleportPlayerToCursor();
-	}
-		
+			
 	private void QuickTransformObjects(vector relative_position)
 	{
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();

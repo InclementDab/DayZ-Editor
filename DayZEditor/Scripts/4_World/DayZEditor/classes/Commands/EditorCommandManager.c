@@ -88,7 +88,6 @@ class EditorCommandManager
 		BrushRadiusCommand = RegisterCommand(EditorBrushRadiusCommand);
 		BrushWidthCommand = RegisterCommand(EditorBrushWidthCommand);
 	
-		CameraToggleLight = RegisterCommand(EditorToggleLightCommand);
 		RegisterCommand(EditorResetAlignmentCommand);
 		RegisterCommand(EditorAlignToSurfaceCommand);
 		RegisterCommand(EditorSnapToSurfaceCommand);

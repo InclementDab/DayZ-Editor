@@ -23,7 +23,7 @@ class EditorCameraLight: SpotLightBase
 		SetVisibleDuringDaylight(true);
 		EnableSpecular(true);
 		EnableLinear(true);
-		SetCastShadow(false);
+		SetCastShadow(GetEditor().GetSettings().DrawCameraLightShadows);
 	}
 }
 
@@ -60,6 +60,8 @@ class EditorCamera: Camera
 	const float SPEED_DEFAULT = 60;
 	const float SPEED_MAX = 300;
 	const float SPEED_MIN = 1;
+	
+	protected bool m_LightState;
 
 	void EditorCamera()
 	{
@@ -68,11 +70,17 @@ class EditorCamera: Camera
 
 	void SetLightState(bool state)
 	{
-		if (state) {
+		m_LightState = state;
+		if (m_LightState) {
 			m_EditorCameraLight = EditorCameraLight.Cast(ScriptedLightBase.CreateLight(EditorCameraLight, vector.Zero, 0.2));
 		} else {
 			GetGame().ObjectDelete(m_EditorCameraLight);
 		}
+	}
+	
+	bool GetLightState()
+	{
+		return m_LightState;
 	}
 
 	EditorCameraSettings GetSettings()

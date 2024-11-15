@@ -3,7 +3,7 @@ class EditorReloadBrushesCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		m_Editor.GetEditorHud().ReloadBrushes(m_Editor.GetSettings().EditorBrushFile);
+		m_Editor.GetEditorHud().ReloadBrushes(m_Editor.GetSettings().BrushFile);
 		return true;
 	}
 	

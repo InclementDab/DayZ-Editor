@@ -43,6 +43,11 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
+		if (m_Editor.IsPlayerControlled()) {
+			m_Editor.SetPlayerControlled(false);
+			return true;
+		}
+		
 		if (m_Editor.IsLootEditActive()) {
 			m_Editor.FinishEditLootSpawns();
 			return true;

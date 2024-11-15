@@ -8,12 +8,13 @@ class EditorControlPlayerCommand: EditorCommand
 			return false;
 		}
 		
-		// Set the player as the current active
-		data.param1.Control = true;
-		data.param1.PropertyChanged("Control");
+		PlayerBase control_player = PlayerBase.Cast(data.param1.GetWorldObject());
+		if (!control_player) {
+			return false;
+		}
 		
 		// Enable Player
-		m_Editor.SetActive(false);
+		m_Editor.ControlPlayer(control_player);
 		return true;
 	}
 	

@@ -75,7 +75,7 @@ class Editor: Managed
 {
 	/* Private Members */
 	protected Mission m_Mission;
-	protected PlayerBase m_Player;
+	protected PlayerBase m_Player, m_ControllingPlayer;
 		
 	// statics (updated in Update())
 	static Object								ObjectUnderCursor;
@@ -119,7 +119,8 @@ class Editor: Managed
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
 	protected string								EditorSaveFile;
 	protected float m_TimeSinceLastBackup;
-	static const string								ROOT_DIRECTORY = "$saves:\\Editor\\";
+	
+	static const string								ROOT_DIRECTORY = SystemPath.Combine(SystemPath.Saves(), "Editor");
 	
 	// modes
 	bool 										MagnetMode;
@@ -127,7 +128,6 @@ class Editor: Managed
 	bool 										SnappingMode;
 	bool 										CollisionMode;
 	
-	bool 										CameraLight;
 	ref EditorDragHandler DragHandler;
 
 	static const int MinorVersionNumber = 2;
@@ -155,13 +155,18 @@ class Editor: Managed
 	
 	bool										KEgg; // oh?
 	
-	private void Editor(PlayerBase player) 
+	private void Editor(notnull PlayerBase player) 
 	{		
+#ifdef DIAG_DEVELOPER
+		EnProfiler.Enable(true, true, true);
+#endif
+
 		EditorLog.Trace("Editor");
 		g_Game.ReportProgress("Loading Editor");
 
 		g_Editor = this;
 		m_Player = player;
+		m_ControllingPlayer = m_Player;
 
 #ifdef SERVER
 		for (int i = 0; i < 100; i++) {
@@ -247,6 +252,7 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
 		GetSettings().TimesOpened++;
 		
+		// Enable default mode
 		SetMode(eEditorMode.Translation);
 	}
 	
@@ -444,26 +450,100 @@ class Editor: Managed
 		m_CameraLockFlags &= ~flag;
 	}
 
-	// todo: stub
+	// Player controlled from viewport, probably poorly named
 	protected bool m_ControlledPlayer;
 	void SetPlayerControlled(bool state)
 	{
-		if (!m_Player) {
+		if (!m_ControllingPlayer) {
+			m_ControllingPlayer = m_Player;
+		}
+		
+		if (!m_ControllingPlayer) {
 			m_ControlledPlayer = false;
 			return;
 		}
 		
 		m_ControlledPlayer = state;
 		
-		m_Player.GetInputController().SetDisabled(!m_ControlledPlayer);
-		m_Player.DisableSimulation(!m_ControlledPlayer);
-
-		Camera.GetCurrentCamera().DisableSimulation(m_ControlledPlayer);
+		m_ControllingPlayer.DisableSimulation(!m_ControlledPlayer);
+		m_ControllingPlayer.GetInputController().SetDisabled(!m_ControlledPlayer);
+		
+		GetGame().GetUIManager().ShowCursor(true);
 	}
 
 	bool IsPlayerControlled()
 	{
 		return m_ControlledPlayer;
+	}
+
+	// Brings you into player view, controlling them
+	void ControlPlayer(notnull PlayerBase new_player)
+	{
+		m_ControllingPlayer = new_player;
+		m_Active = false;
+		
+		m_ControllingPlayer.DisableSimulation(false);
+		GetGame().SelectPlayer(null, m_ControllingPlayer);
+		m_ControllingPlayer.GetInputController().SetDisabled(false);
+		
+		m_EditorHud.Show(false);
+		GetGame().GetUIManager().ShowCursor(!GetSettings().HideCursorOnPlayerControl);
+		SetMissionHud(true);
+		PPEffects.ResetAll();
+	}
+	
+	PlayerBase GetControllingPlayer()
+	{
+		return m_ControllingPlayer;
+	}
+	
+	void Activate()
+	{
+		m_Active = true;
+				
+		// Shut down Inventory Editor, done prior to the camera due to the destructor
+		if (m_EditorInventoryEditorHud) {
+			delete m_EditorInventoryEditorHud;
+		}
+				
+		m_EditorCamera.SetActive(true);
+		
+		if (m_EditorHud) {
+			m_EditorHud.Show(true);
+			m_EditorHud.SetCurrentTooltip(null);
+		}
+				
+		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
+		if (placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {
+				if (!editor_object) {
+					continue;
+				}
+				
+				if (editor_object.GetMarker()) {
+					editor_object.GetMarker().Show(true);			
+				}
+				
+				editor_object.HideBoundingBox();
+			}
+		}
+				
+		GetGame().GetUIManager().ShowCursor(true);
+		
+		if (m_ControllingPlayer && !IsPlayerControlled()) {
+			m_ControllingPlayer.GetInputController().SetDisabled(true);
+			
+			if (!_bugfixFirstGrab) {
+				m_ControllingPlayer.DisableSimulation(false);
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(m_Player.DisableSimulation, 1000, 0, true);
+				_bugfixFirstGrab = true;
+			} else {
+				m_ControllingPlayer.DisableSimulation(true);
+			}
+		}
+		
+		SetMissionHud(false);
+		PPEffects.ResetAll();
 	}
 
 	ECameraLockFlag GetCameraLockFlags(bool use_override = false)
@@ -501,6 +581,10 @@ class Editor: Managed
 		
 		if (IsMapActive()) {
 			processed_flags |= ECameraLockFlag.LOCK_LOOK;
+		}
+		
+		if (m_ControlledPlayer) {
+			processed_flags |= (ECameraLockFlag.LOCK_LOOK | ECameraLockFlag.LOCK_MOVE);
 		}
 
 		if (!use_override) {
@@ -686,21 +770,7 @@ class Editor: Managed
 			world_object.GetWorldObject().SetTransform(transform);
 		}
 	}
-			
-	void SetPlayer(PlayerBase player)
-	{
-		// You can only control one player, this is how
-		EditorObjectMap placed_objects = GetPlacedObjects();
-		foreach (int id, EditorObject placed_object: placed_objects) {
-			PlayerBase loop_player = PlayerBase.Cast(placed_object.GetWorldObject());
-			if (loop_player && loop_player != player) {
-				placed_object.Control = false;
-			}
-		}
-		
-		m_Player = player;
-	}
-	
+				
 	void ProcessInput(Input input)
 	{
 		if (IsPlacing()) {
@@ -970,7 +1040,7 @@ class Editor: Managed
 		m_CurrentKeys.Remove(m_CurrentKeys.Find(key));
 		return false;
 	}
-	
+		
 	// Call to enable / disable editor
 	// this code is TERRIBLE 11/9
 	// update: im makin it worse 11/12
@@ -988,7 +1058,7 @@ class Editor: Managed
 		if (m_Active) {
 			m_EditorCamera.SetActive(true);
 		} else {
-			GetGame().SelectPlayer(null, m_Player);
+			GetGame().SelectPlayer(null, m_ControllingPlayer);
 		}
 		
 		if (m_EditorHud) {
@@ -1013,7 +1083,7 @@ class Editor: Managed
 				
 		GetGame().GetUIManager().ShowCursor(m_Active);
 		
-		if (m_Player && !GetEditorHud().GetTemplateController().ControlPlayerState) {
+		if (m_Player && !IsPlayerControlled()) {
 			m_Player.GetInputController().SetDisabled(m_Active);
 			
 			if (!_bugfixFirstGrab) {
@@ -1174,13 +1244,13 @@ class Editor: Managed
 		m_EditorCamera.SetPosition(Vector(10, LootYOffset, 10));
 		m_EditorCamera.LookAt(Vector(0, LootYOffset, 0));	
 		
-		if (!FileExist(GetSettings().EditorProtoFile)) {
+		if (!FileExist(GetSettings().ProtoFile)) {
 			EditorLog.Info("EditorProtoFile not found! Copying...");
-			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", GetSettings().EditorProtoFile);
+			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", GetSettings().ProtoFile);
 		}
 		
 		m_EditorMapGroupProto = new EditorMapGroupProto(m_LootEditTarget); 
-		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, GetSettings().EditorProtoFile);
+		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, GetSettings().ProtoFile);
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
@@ -1250,7 +1320,6 @@ class Editor: Managed
 		hud.Show(state);
 		hud.ShowHud(state);
 		hud.ShowHudUI(state);
-		hud.SetPermanentCrossHair(state);
 		// we are in 4_world and this game is bad :)
 		Widget hud_root;
 		EnScript.GetClassVar(mission, "m_HudRootWidget", 0, hud_root);
@@ -1367,17 +1436,7 @@ class Editor: Managed
 		
 		return false;
 	}
-	
-	void TeleportPlayerToCursor()
-	{
-		if (!m_Player) { 
-			return;
-		}
 		
-		set<Object> _();
-		m_Player.SetPosition(MousePosToRay(_, m_Player, 3000, 0, false, true));
-	}
-	
 	protected void OnAutoSaveTimer()
 	{		
 		if (EditorSaveFile != string.Empty && GetSettings().AutoSaveEnabled) {
@@ -1685,6 +1744,7 @@ class Editor: Managed
 				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
 				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
 				editor_object.Lock(true);
+				DeselectObject(editor_object);
 			}
 		}
 

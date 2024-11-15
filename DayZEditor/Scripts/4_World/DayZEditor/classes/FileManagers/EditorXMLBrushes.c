@@ -5,20 +5,15 @@ class XMLEditorBrushes: XMLCallback
 
 	void XMLEditorBrushes(ObservableCollection<ref EditorBrushData> data) 
 	{
-		EditorLog.Trace("XMLEditorBrushes");
 		m_Data = data;
 	}
 		
 	override void OnStart(XMLDocument document)
 	{
-		EditorLog.Trace("XMLEditorBrushes::OnStart");
-		EditorLog.Info("Loading Brushes...");
 	}
 	
 	override void OnSuccess(XMLDocument document)
-	{		
-		EditorLog.Trace("XMLEditorBrushes::OnSuccess");
-		
+	{				
 		set<string> object_type_list = new set<string>();
 		
 		// <BrushTypes>

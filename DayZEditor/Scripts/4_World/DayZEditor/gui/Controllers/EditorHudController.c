@@ -87,9 +87,7 @@ class EditorHudController: EditorControllerBase
 	bool BrushToggleButtonState;
 	int BrushTypeSelection;
 	string BrushToggleButtonText;
-	
-	bool ControlPlayerState;
-	
+		
 	protected ImageWidget MagnetButton_Icon, GroundButton_Icon, SnapButton_Icon, CollisionButton_Icon, CameraLightButton_Icon;
 		
 	void EditorHudController() 
@@ -225,20 +223,6 @@ class EditorHudController: EditorControllerBase
 					CollisionButton_Icon.SetColor(COLOR_WHITE);
 				}
 					
-				break;
-			}
-			case "ControlPlayerState": {
-				
-				break;
-			}
-			
-			case "m_Editor.CameraLight": {
-				GetEditor().GetCamera().SetLightState(m_Editor.CameraLight);
-				if (m_Editor.CameraLight) {
-					CameraLightButton_Icon.SetColor(COLOR_YELLOW);
-				} else {
-					CameraLightButton_Icon.SetColor(COLOR_WHITE);
-				}
 				break;
 			}
 		}

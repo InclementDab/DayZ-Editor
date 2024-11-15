@@ -47,7 +47,6 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		marker_group.Insert(new ColorPickerPrefab("#STR_EDITOR_MARKER_COLOR", settings, "MarkerPrimaryColor"));
 		
 		GroupPrefab brush_settings = new GroupPrefab("#STR_EDITOR_BRUSHES", settings, string.Empty);
-		brush_settings.Insert(new EditBoxPrefab("#STR_EDITOR_BRUSH_FILE", settings, "EditorBrushFile"));
 		brush_settings.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_OBJECT_MARKERS", settings, "BrushedObjectMarkers"));
 		brush_settings.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_LIST_ITEMS", settings, "BrushedListItems"));
 		

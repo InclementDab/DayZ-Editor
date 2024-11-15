@@ -12,7 +12,6 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
 		GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
 		GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
-		GetUApi().GetInputByName("UAGear").ForceDisable(true);
 		GetUApi().UpdateControls();
 		
 		/* Kill the weather! */
@@ -22,6 +21,8 @@ modded class MissionGameplay
 		GetGame().GetWeather().GetOvercast().SetLimits(0, 0);
 		GetGame().GetWeather().GetRain().Set(0, 0, 0);
 		GetGame().GetWeather().GetRain().SetLimits(0, 0);
+		GetGame().GetWeather().GetSnowfall().Set(0);
+		GetGame().GetWeather().GetSnowfall().SetLimits(0, 0);
 		
 		GetGame().GetWeather().SetWind(vector.Zero);
 		GetGame().GetWeather().SetWindSpeed(0);

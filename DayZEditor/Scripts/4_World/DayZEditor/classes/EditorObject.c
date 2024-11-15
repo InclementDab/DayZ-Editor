@@ -37,7 +37,6 @@ class EditorObject: EditorWorldObject
 	bool EditorOnly = false;
 	
 	// Human Properties
-	bool Control;
 	int CurrentAnimation;
 	bool Animate;
 	
@@ -368,12 +367,6 @@ class EditorObject: EditorWorldObject
 		Position = GetPosition();
 		Orientation = GetOrientation();
 		Scale = GetScale();
-				
-		// what is this stuff?
-		PlayerBase player = PlayerBase.Cast(m_WorldObject);
-		if (player && player == GetEditor().GetPlayer()) {
-			Control = true;
-		}	
 	}
 	
 	// EditorObjects can also be psuedo-controllers
@@ -437,17 +430,7 @@ class EditorObject: EditorWorldObject
 				}
 				break;
 			}
-			
-			case "Control": {
-				PlayerBase player = PlayerBase.Cast(m_WorldObject);
-				if (player) {
-					GetEditor().SetPlayer(player);
-				}				
-				
-				GetEditor().GetEditorHud().GetController().PropertyChanged("ControlPlayerState");
-				break;
-			}
-						
+									
 			case "Animate": {
 				PlayerBase emote_player = PlayerBase.Cast(m_WorldObject);
 				if (emote_player) {
@@ -745,7 +728,7 @@ class EditorObject: EditorWorldObject
 			}
 		}
 		
-		if (state) {
+		if (state && IsSelected()) {
 			ShowBoundingBox();
 		} else {
 			HideBoundingBox();
@@ -877,19 +860,7 @@ class EditorObject: EditorWorldObject
 			}
 		}
 	}
-	
-	void ControlPlayer(bool enable)
-	{
-		Control = enable;
-		
-		if (m_WorldObject && m_WorldObject.IsMan()) {
-			PlayerBase pb = PlayerBase.Cast(m_WorldObject);
-			GetGame().SelectPlayer(null, pb);
-			pb.DisableSimulation(!Control);
-			GetEditor().GetEditorHud().Show(!Control);
-		}
-	}
-	
+
 	bool IsBoundingBoxEnabled()
 	{
 		return ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);

@@ -6,7 +6,7 @@ set repository="%cd%"
 taskkill /f /im "workbenchApp.exe"
 rmdir /s /q "P:/temp"
 
-timeout 1>nul
+timeout 1 /nobreak
 
 cd /d "%~dp0DayZEditor\Workbench"
 

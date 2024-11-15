@@ -85,7 +85,6 @@ class EditorInventoryEditorHud: ScriptViewMenu
 	{		
 		PlayerBase player_entity = PlayerBase.Cast(m_Entity);
 		if (player_entity) {
-			GetEditor().SetPlayer(player_entity);
 			GetEditor().SetActive(false);
 		}
 	}

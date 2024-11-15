@@ -20,7 +20,7 @@ class EditorTogglePlayerCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		GetEditor().SetPlayerControlled(!GetEditor().IsPlayerControlled());
+		m_Editor.SetPlayerControlled(!m_Editor.IsPlayerControlled());
 		return true;
 	}
 
@@ -36,7 +36,12 @@ class EditorTogglePlayerCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut()
 	{
-		return { KeyCode.KC_LSHIFT, KeyCode.KC_P };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_HOME };
+	}
+
+	override LinearColor GetColor()
+	{
+		return LinearColor.REDDIT;
 	}
 	
 	override bool IsToggled()

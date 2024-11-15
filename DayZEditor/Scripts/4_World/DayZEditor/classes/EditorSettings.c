@@ -4,6 +4,12 @@ class EditorSettings: ProfileSettings
 	bool AutoSaveEnabled			= true;
 	float AutoSaveTimer 			= 240;
 	
+	[RegisterProfileSettingMultistate("BEHAVIOR", "HideCursorOnPlayerControl", "Hide Cursor When Controlling Player", {"NO", "YES"})]
+	int HideCursorOnPlayerControl;
+
+	[RegisterProfileSettingMultistate("BEHAVIOR", "DrawCameraLightShadows", "Draw Camera Light Shadows", {"NO", "YES"})]
+	int DrawCameraLightShadows = 0;
+	
 	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveStepSize", "Quick Move Speed (m/s)", 0.1, 4)]
 	float QuickMoveStepSize			= 0.1;
 	
@@ -38,8 +44,8 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("APPEARANCE", "BoundingBoxSize", "Bounding Box Size", {"OFF", "THIN", "MEDIUM", "THICK", "EXTRA THICCC"})]
 	int BoundingBoxSize = 2;
 	
-	[RegisterProfileSettingMultistate("APPEARANCE", "ListItemSize", "List Item Size", {"SMALL", "MEDIUM", "LARGE"})]
-	int ListItemSize = 1;
+	//[RegisterProfileSettingMultistate("APPEARANCE", "ListItemSize", "List Item Size", {"SMALL", "MEDIUM", "LARGE"})]
+	int ListItemSize = 1; // todo: stub
 	
 	bool PreloadObjects				= false;	
 	bool ShowScreenLogs				= true;
@@ -73,11 +79,11 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("PLACEMENT", "BrushedListItems", "Brush List Items", {"NO", "YES"})]
 	bool BrushedListItems			= false;
 	
-	[RegisterProfileSettingText("PLACEMENT", "EditorBrushFile", "Brush File")]
-	string EditorBrushFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "Brushes.xml");
+	[RegisterProfileSettingText("PLACEMENT", "BrushFile", "Brush File")]
+	string BrushFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "Brushes.xml");
 	
-	[RegisterProfileSettingText("PLACEMENT", "EditorBrushFile", "CE Proto File")]
-	string EditorProtoFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "MapGroupProto.xml");
+	[RegisterProfileSettingText("PLACEMENT", "ProtoFile", "CE Proto File")]
+	string ProtoFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "MapGroupProto.xml");
 	
 	[RegisterProfileSettingMultistate("ADVANCED", "SelectedLogLevel", "Log Level", {"TRACE", "DEBUG", "INFO", "WARNING", "ERROR"})]
 	int SelectedLogLevel 		= LogLevel.WARNING;
