@@ -1,9 +1,9 @@
 WrapSpacerWidgetClass EditorDialog {
- visible 0
+ visible 1
  clipchildren 1
  ignorepointer 0
  color 0.1412 0.1569 0.1804 1
- position 0 0
+ position 0 -1.08936
  size 0.35 0
  hexactpos 1
  vexactpos 1
@@ -45,16 +45,17 @@ WrapSpacerWidgetClass EditorDialog {
      style rover_sim_colorable
      {
       ImageWidgetClass TitleIcon {
-       visible 0
+       visible 1
        ignorepointer 1
+       color 0.6824 0.7176 0.702 1
        position 5 0
-       size 22 22
+       size 18 18
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       scriptclass "ViewBinding"
+       scriptclass "SymbolHandler"
        image0 ""
        mode blend
        "src alpha" 1
@@ -63,7 +64,8 @@ WrapSpacerWidgetClass EditorDialog {
        filter 1
        {
         ScriptParamsClass {
-         Binding_Name "Icon"
+         Symbol_Name "buildings"
+         Symbol_Size 3
         }
        }
       }

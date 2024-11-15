@@ -21,6 +21,11 @@ class EditorSaveAsCommand: EditorExportCommandBase
 	{
 		return "#STR_EDITOR_SAVEAS";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.FLOPPY_DISK_PEN;
+	}
 	
 	override ShortcutKeys GetShortcut() 
 	{

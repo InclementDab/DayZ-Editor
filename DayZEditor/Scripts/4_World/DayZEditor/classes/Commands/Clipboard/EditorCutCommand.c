@@ -27,4 +27,9 @@ class EditorCutCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_X };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.SCISSORS;
+	}
 }

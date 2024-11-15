@@ -24,4 +24,9 @@ class EditorHideCommand: EditorCommand
 	{
 		return "#STR_EDITOR_HIDE";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.EYE_SLASH;
+	}
 }

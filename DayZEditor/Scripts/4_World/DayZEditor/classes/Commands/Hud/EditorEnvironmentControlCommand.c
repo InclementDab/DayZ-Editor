@@ -20,4 +20,9 @@ class EditorEnvironmentControlCommand: EditorAsyncCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_I };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.SUN_CLOUD;
+	}
 }

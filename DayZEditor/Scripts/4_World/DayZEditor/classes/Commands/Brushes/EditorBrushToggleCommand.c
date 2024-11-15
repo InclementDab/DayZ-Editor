@@ -42,4 +42,9 @@ class EditorBrushToggleCommand: EditorCommand
 	{
 		return "#STR_EDITOR_CMD_TOGGLE_BRUSH";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.BRUSH;
+	}
 }

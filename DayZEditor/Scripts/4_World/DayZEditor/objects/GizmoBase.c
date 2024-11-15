@@ -2,13 +2,15 @@ class EditorGizmo: Managed
 {
 	protected Editor m_Editor;
 	protected EditorObject m_EditorObject;
+	protected EditorObjectMap m_AllObjects;
 	protected int m_CurrentGizmoAxis;
 	protected ref map<eGizmoAxis, GizmoBase> m_Gizmos = new map<eGizmoAxis, GizmoBase>();
 	
-	void Initialize(notnull Editor editor, notnull EditorObject editor_object)
+	void Initialize(notnull Editor editor, notnull EditorObject editor_object, EditorObjectMap all_objects)
 	{		
 		m_Editor = editor;
 		m_EditorObject = editor_object;
+		m_AllObjects = all_objects;
 
 		vector gizmo_center = m_EditorObject.GetTopCenter();
 
@@ -68,8 +70,9 @@ class EditorGizmo: Managed
 	{
 		Object gizmo_object = GetGizmoArm(gizmo_axis);
 		vector normal = gizmo_object.GetDirectionUp();
+		vector aside = gizmo_object.GetDirectionAside();
 		vector position = gizmo_object.GetPosition();
-		return Plane.Create(normal, "10 10 10", position, vector.Aside);
+		return Plane.Create(normal, "10 10 10", position, aside);
 	}
 	
 	void Update(float dt)
@@ -119,6 +122,7 @@ class EditorTranslationGizmo: EditorGizmo
 		};
 
 		vector intersect_point = GetGizmoPlane(m_CurrentGizmoAxis).Intersect(cursor_ray, mat);
+		Debug.DestroyAllShapes();
 		Debug.DrawSphere(intersect_point, 0.5);
 
 		// This widget will never rotate unless we get a local space operator

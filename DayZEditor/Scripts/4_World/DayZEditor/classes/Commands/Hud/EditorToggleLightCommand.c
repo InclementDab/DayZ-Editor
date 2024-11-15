@@ -22,4 +22,9 @@ class EditorToggleLightCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_5 };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.FLASHLIGHT;
+	}
 }

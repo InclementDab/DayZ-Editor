@@ -53,4 +53,9 @@ class EditorCheckDuplicatesCommand: EditorAsyncCommand
 	{
 		return "#STR_EDITOR_CMD_CHECK_DUPLICATES";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.RECTANGLE_XMARK;
+	}
 }

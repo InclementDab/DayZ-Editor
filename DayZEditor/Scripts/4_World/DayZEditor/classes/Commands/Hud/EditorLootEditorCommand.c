@@ -14,4 +14,9 @@ class EditorLootEditorCommand: EditorCommand
 	{
 		return "#STR_EDITOR_LOOT_EDITOR";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.BUILDINGS;
+	}
 }

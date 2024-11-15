@@ -22,4 +22,9 @@ class EditorMagnetCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_1 };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.MAGNET;
+	}
 }

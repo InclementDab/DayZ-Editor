@@ -21,4 +21,9 @@ class EditorSnapCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_3 };
 	}
+	
+	override Symbols GetSymbol()
+	{
+		return Symbols.CIRCLE_NODES;
+	}
 }

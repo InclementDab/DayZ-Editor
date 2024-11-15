@@ -135,6 +135,11 @@ class EditorCommandManager
 		// Camera Track
 		CameraTrackAddNode = RegisterCommand(EditorCameraTrackAddNode);
 		CameraTrackRun = RegisterCommand(EditorCameraTrackRun);
+		
+		// the future is now
+		foreach (typename cmd: RegisterEditorCommand.Instances) {
+			RegisterCommand(cmd);
+		}
 	}
 	
 	EditorCommand RegisterCommand(typename command_type)

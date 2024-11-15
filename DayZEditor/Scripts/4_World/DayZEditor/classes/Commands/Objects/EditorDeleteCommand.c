@@ -36,4 +36,9 @@ class EditorDeleteCommand: EditorCommand
 	{
 		return { KeyCode.KC_DELETE };
 	}
+	
+	override Symbols GetSymbol()
+	{
+		return Symbols.TRASH_CAN;
+	}
 }

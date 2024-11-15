@@ -21,4 +21,9 @@ class EditorRedoCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_Y };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.ROTATE_RIGHT;
+	}
 }

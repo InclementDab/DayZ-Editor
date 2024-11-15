@@ -33,6 +33,11 @@ class EditorNewCommand: EditorAsyncCommand
 	{
 		return "set:dayz_editor_gui image:new_alt";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.FILE;
+	}
 	
 	override ShortcutKeys GetShortcut() 
 	{

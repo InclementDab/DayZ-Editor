@@ -55,4 +55,9 @@ class EditorImportCommandBase: EditorAsyncCommand
 	{
 		return m_ImportSettings;
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.FILE_IMPORT;
+	}
 }

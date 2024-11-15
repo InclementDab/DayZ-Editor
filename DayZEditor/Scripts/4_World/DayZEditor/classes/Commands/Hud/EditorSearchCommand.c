@@ -18,4 +18,9 @@ class EditorSearchCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_F };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.MAGNIFYING_GLASS;
+	}
 }

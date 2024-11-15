@@ -20,4 +20,9 @@ class EditorLockCommand: EditorCommand
 	{
 		return "#STR_EDITOR_LOCK";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.LOCK;
+	}
 }

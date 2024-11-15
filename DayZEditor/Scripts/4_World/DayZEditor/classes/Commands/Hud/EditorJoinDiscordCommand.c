@@ -11,4 +11,9 @@ class EditorJoinDiscordCommand: EditorCommand
 	{
 		return "#STR_EDITOR_JOIN_DISCORD";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Brands.DISCORD;
+	}
 }

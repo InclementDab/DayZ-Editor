@@ -10,4 +10,9 @@ class EditorDonateCommand: EditorAsyncCommand
 	{
 		return "#STR_EDITOR_DONATE";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.COIN;
+	}
 }

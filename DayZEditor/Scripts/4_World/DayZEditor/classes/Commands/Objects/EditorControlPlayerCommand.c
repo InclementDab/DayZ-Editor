@@ -21,4 +21,9 @@ class EditorControlPlayerCommand: EditorCommand
 	{
 		return "#STR_EDITOR_CMD_CONTROL_PLAYER";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.CHILD_REACHING;
+	}
 }

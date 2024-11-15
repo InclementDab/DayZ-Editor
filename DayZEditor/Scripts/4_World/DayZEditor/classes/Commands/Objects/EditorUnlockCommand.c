@@ -20,4 +20,9 @@ class EditorUnlockCommand: EditorCommand
 	{
 		return "#STR_EDITOR_UNLOCK";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.LOCK_OPEN;
+	}
 }

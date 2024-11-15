@@ -27,4 +27,10 @@ class EditorCopyCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_C };
 	}
+
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.COPY;
+	}
 }

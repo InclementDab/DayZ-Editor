@@ -45,4 +45,9 @@ class EditorSnapToSurfaceCommand: EditorCommand
 	{
 		return "set:dayz_editor_gui image:ground";
 	}
+	
+	override Symbols GetSymbol()
+	{
+		return Symbols.BLOCK;
+	}
 }

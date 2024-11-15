@@ -45,4 +45,9 @@ class EditorDumpSceneCommand: EditorCommand
 	{
 		return "#STR_EDITOR_CMD_DUMP_CAMERA";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.IMAGE;
+	}
 }

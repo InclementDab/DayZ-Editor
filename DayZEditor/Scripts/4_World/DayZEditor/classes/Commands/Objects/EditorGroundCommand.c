@@ -21,4 +21,9 @@ class EditorGroundCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_2 };
 	}
+	
+	override Symbols GetSymbol()
+	{
+		return Symbols.IMAGE_LANDSCAPE;
+	}
 }

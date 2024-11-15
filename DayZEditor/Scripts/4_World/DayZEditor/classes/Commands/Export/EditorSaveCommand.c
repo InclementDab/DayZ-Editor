@@ -31,6 +31,11 @@ class EditorSaveCommand: EditorExportCommandBase
 	{
 		return "set:dayz_editor_gui image:save";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.FLOPPY_DISK;
+	}
 	
 	override ShortcutKeys GetShortcut() 
 	{

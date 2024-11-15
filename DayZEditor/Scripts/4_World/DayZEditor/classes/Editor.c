@@ -52,6 +52,17 @@ class EditorHandData
 
 typedef map<ref EditorWorldObject, ref EditorHandData> EditorHandMap;
 
+class EditorColors
+{
+	static const LinearColor BLUE = 0xFF007ACC;
+	static const LinearColor BLACK = 0xFF24282E;
+	static const LinearColor YELLOW = 0xFFEFCB68;
+	static const LinearColor HONEYDEW = 0xFFE1EFE6;
+	static const LinearColor GRAY = 0xFFAEB7B3;
+	static const LinearColor RED = 0xFFD64045;
+	static const LinearColor PINK = 0xFF9E768F;
+}
+
 class EditorWebApi: WebApiBase
 {
 	override string GetBaseUrl()
@@ -279,31 +290,30 @@ class Editor: Managed
 	void SetMode(eEditorMode editor_mode)
 	{
 		m_EditorMode = editor_mode;
-		//m_EditorHud.SetEditorMode(m_EditorMode);
+#ifdef DIAG_DEVELOPER
+		m_EditorHud.SetEditorMode(m_EditorMode);
 		
-		//m_CurrentGizmo = EditorGizmo.Cast(GetCurrentGizmo().Spawn());
-		if (m_CurrentGizmo) {
-			//m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0));
+		// please be of type EditorTranslationGizmo
+		typename gizmo_type = EditorTranslationGizmo;
+		switch (m_EditorMode) {
+			case eEditorMode.Translation: {
+				gizmo_type = EditorTranslationGizmo;
+				break;
+			}
 		}
+		
+		m_CurrentGizmo = EditorGizmo.Cast(gizmo_type.Spawn());
+		if (m_CurrentGizmo) {
+			m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0), GetSelectedObjects());
+		}
+#endif
 	}
 		
 	eEditorMode GetMode()
 	{
 		return m_EditorMode;
 	}
-	
-	typename GetCurrentGizmo()
-	{
-		// please be of type EditorTranslationGizmo
-		switch (m_EditorMode) {
-			case eEditorMode.Translation: {
-				return EditorTranslationGizmo;
-			}
-		}
 		
-		return EditorTranslationGizmo;
-	}
-	
 	// When you tab in the game
 	void OnActivateMessage()
 	{
@@ -1630,6 +1640,22 @@ class Editor: Managed
 		editor_object.Lock(true);
 		DeselectObject(editor_object);
 	}
+
+	void LockObjects(EditorObjectMap editor_object_map, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Unlock", "Lock");
+		foreach (int id, EditorObject editor_object: editor_object_map) {
+			if (editor_object && !editor_object.Locked) {
+				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
+				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
+				editor_object.Lock(true);
+			}
+		}
+
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
 	
 	void UnlockObject(EditorObject editor_object)
 	{
@@ -1639,6 +1665,22 @@ class Editor: Managed
 		InsertAction(action);
 		
 		editor_object.Lock(false);
+	}
+
+	void UnlockObjects(EditorObjectMap editor_object_map, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Lock", "Unlock");
+		foreach (int id, EditorObject editor_object: editor_object_map) {
+			if (editor_object && editor_object.Locked) {
+				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
+				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
+				editor_object.Lock(false);
+			}
+		}
+
+		if (create_undo) {
+			InsertAction(action);
+		}
 	}
 	
 	vector GetCameraProjectPosition(bool ground_only = true, float raycast_distance = 3000)

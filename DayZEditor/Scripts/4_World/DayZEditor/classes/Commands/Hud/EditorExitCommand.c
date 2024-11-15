@@ -18,4 +18,9 @@ class EditorExitCommand: EditorAsyncCommand
 	{
 		return "#STR_EDITOR_EXIT";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.PERSON_TO_DOOR;
+	}
 }

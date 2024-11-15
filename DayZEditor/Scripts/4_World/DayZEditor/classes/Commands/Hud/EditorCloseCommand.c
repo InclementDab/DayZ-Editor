@@ -20,4 +20,9 @@ class EditorCloseCommand: EditorAsyncCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_W };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.XMARK;
+	}
 }

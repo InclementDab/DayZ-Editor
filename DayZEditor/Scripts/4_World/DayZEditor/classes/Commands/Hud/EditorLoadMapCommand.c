@@ -18,4 +18,9 @@ class EditorLoadMapCommand: EditorAsyncCommand
 	{
 		return "#STR_EDITOR_SELECT_MAP";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.BUILDINGS;
+	}
 }

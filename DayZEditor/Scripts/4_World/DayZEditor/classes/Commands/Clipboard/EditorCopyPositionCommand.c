@@ -27,4 +27,9 @@ class EditorCopyPositionCommand: EditorCommand
 	{
 		return { KeyCode.KC_P };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.WALKIE_TALKIE;
+	}
 }

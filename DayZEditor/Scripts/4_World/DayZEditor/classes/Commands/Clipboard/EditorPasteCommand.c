@@ -37,4 +37,9 @@ class EditorPasteCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_V };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.PASTE;
+	}
 }

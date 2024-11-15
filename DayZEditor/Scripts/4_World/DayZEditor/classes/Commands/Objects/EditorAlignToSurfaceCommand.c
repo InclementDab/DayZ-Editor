@@ -44,4 +44,9 @@ class EditorAlignToSurfaceCommand: EditorCommand
 	{
 		return "set:dayz_editor_gui image:magnet";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.IMAGE_LANDSCAPE;
+	}
 }

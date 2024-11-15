@@ -18,16 +18,16 @@ class EditorMenu: ScriptViewTemplate<EditorMenuController>
 		EditorLog.Trace("~EditorMenu");
 	}
 	
-	void AddMenuCategory(string label, typename child_menu, EditorCommand editor_command = null)
+	void AddMenuCategory(string label, typename child_menu, Symbols icon, EditorCommand editor_command = null)
 	{
 		if (child_menu.IsInherited(EditorMenu)) {
-			AddMenuCategory(label, EditorMenu.Cast(child_menu.Spawn()), editor_command);
+			AddMenuCategory(label, EditorMenu.Cast(child_menu.Spawn()), icon, editor_command);
 		}
 	}
 	
-	void AddMenuCategory(string label, EditorMenu child_menu, EditorCommand editor_command = null)
+	void AddMenuCategory(string label, EditorMenu child_menu, Symbols icon, EditorCommand editor_command = null)
 	{
-		AddMenuItem(new EditorMenuItemCategory(label, child_menu, editor_command));
+		AddMenuItem(new EditorMenuItemCategory(label, child_menu, icon, editor_command));
 	}
 			
 	void AddMenuDivider()

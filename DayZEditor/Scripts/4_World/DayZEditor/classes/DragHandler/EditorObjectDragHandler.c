@@ -93,6 +93,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		vector size, ground_position, surface_normal, local_dir, local_ori;
 		vector deltapos = target.GetPosition();
 		size = target.GetSize();
+		vector bounding_center = target.GetWorldObject().GetBoundingCenter();
 		float scale = target.GetScale();
 		ground_position = ProjectToGround(transform);
 		surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
@@ -102,12 +103,11 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Handle Z-Only motion
 		// Todo will people want this as a keybind?
 		if (KeyState(KeyCode.KC_LMENU)) {
-			vector aside = GetGame().GetCurrentCameraDirection() * transform[1];
-			Plane test = Plane.Create(aside * vector.Up, "10 10 10", vector.Zero, aside);
-			cursor_pos = test.Intersect(cursor_ray, transform);
-			
-			//cursor_pos = GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * vector.Distance(GetGame().GetCurrentCameraPosition(), target.GetBottomCenter());
-			//cursor_pos[1] = cursor_pos[1] + size[1] / 2;
+			vector normal = vector.Direction(transform[3], GetGame().GetCurrentCameraPosition());						
+			normal[1] = 0;
+			normal.Normalize();
+			Plane z_normal_plane = Plane.Create(normal, "10 10 10", vector.Zero, vector.Up);
+			cursor_pos = z_normal_plane.Intersect(cursor_ray, transform) + bounding_center;
 			if (GetEditor().MagnetMode) {
 				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos + GetGame().GetCurrentCameraDirection() * 1);
 			} else {

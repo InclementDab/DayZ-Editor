@@ -68,4 +68,9 @@ class EditorExportCommandBase: EditorAsyncCommand
 	{
 		return "#STR_EDITOR_EXPORT";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.FILE_EXPORT;
+	}
 }

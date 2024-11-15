@@ -12,4 +12,9 @@ class EditorReloadBrushesCommand: EditorCommand
 	{
 		return "#STR_EDITOR_CMD_RELOAD_BRUSHES";
 	}
+	
+	override Symbols GetSymbol()
+	{
+		return Symbols.ARROWS_ROTATE;
+	}
 }
