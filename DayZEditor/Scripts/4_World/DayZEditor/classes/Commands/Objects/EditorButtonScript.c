@@ -1,6 +1,13 @@
 class EditorButtonScript: ScriptedWidgetEventHandler
 {
 	reference string CommandType;
+	
+	static EditorButtonScript PressedButton;
+	static int PressedButtonButton = -1;
+
+	static const int ICON_SIZE_NORMAL = 1;
+	static const int ICON_SIZE_HOVER = 2;
+	static const int ICON_SIZE_ENABLE = 3;
 
 	protected Widget m_LayoutRoot;
 	protected LinearColor m_DefaultColor, m_DefaultIconColor;
@@ -22,7 +29,6 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 
 		Icon = ImageWidget.Cast(m_LayoutRoot.GetChildren());
 		if (Icon) {
-			Icon.SetImage(1);
 			m_DefaultIconColor = Icon.GetColor();
 		}
 				
@@ -36,8 +42,15 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	
 			if (m_Command.IsToggled()) {
 				Icon.SetColor(m_Command.GetColor());
+				Icon.SetImage(ICON_SIZE_ENABLE);
 			} else {
-				Icon.SetColor(LinearColor.WHITE);
+				if (GetWidgetUnderCursor() == m_LayoutRoot) {
+					Icon.SetImage(ICON_SIZE_HOVER);
+				} else {
+					Icon.SetImage(ICON_SIZE_NORMAL);
+				}
+
+				Icon.SetColor(m_DefaultIconColor);
 			}
 
 			if (!m_Command.CanExecute()) {
@@ -48,19 +61,27 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 		}
 	}
 
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		PressedButton = this;
+		PressedButtonButton = button;
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (m_Command) {
-			m_Command.Execute(this, CommandArgs());
-			
-			if (m_Command.IsToggled()) {
-				Icon.SetImage(3);
-			} else {
-				Icon.SetImage(2);
-			}
+		if (PressedButton != this || PressedButtonButton != button) {
+			PressedButton = null;
+			PressedButtonButton = -1;
+			return false;
 		}
 
-		return true;
+		if (m_Command) {
+			m_Command.Execute(this, CommandArgs());
+			return true;
+		}
+
+		return super.OnMouseButtonUp(w, x, y, button);
 	}
 
 	override bool OnMouseEnter(Widget w, int x, int y)
@@ -75,10 +96,6 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 				tooltip.GetLayoutRoot().SetAlpha(100);
 			}
 			
-			if (!m_Command.IsToggled()) {
-				Icon.SetImage(2);
-			}
-			
 			WidgetAnimator.AnimateColor(m_LayoutRoot, GetEditor().GetSettings().HighlightColor, 70);
 				
 			GetEditor().GetEditorHud().DelaySetCurrentTooltip(tooltip, w);
@@ -91,22 +108,10 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	{
 		if (m_Command) {
 			GetEditor().GetEditorHud().SetCurrentTooltip(null);
-			
-			if (!m_Command.IsToggled()) {
-				Icon.SetImage(1);
-			}
-			
+						
 			WidgetAnimator.AnimateColor(m_LayoutRoot, m_DefaultColor, 35);
 		}
 		
 		return true;
-	}
-
-	protected void DelayedTooltipCheck(Widget w)
-	{
-		if (w != GetWidgetUnderCursor()) {
-			return;
-		}
-
 	}
 }

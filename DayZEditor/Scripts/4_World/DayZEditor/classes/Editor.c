@@ -612,7 +612,7 @@ class Editor: Managed
 		int log_lvl = EditorLog.GetLevel();
 		EditorLog.SetLevel(LogLevel.WARNING);
 		
-		if (m_EditorCamera) {
+		if (m_EditorCamera && m_EditorHudController) {
 			vector cam_pos = m_EditorCamera.GetPosition();
 			
 			m_EditorHudController.cam_x = cam_pos[0];
@@ -1315,7 +1315,6 @@ class Editor: Managed
 
 	EditorHud ReloadHud() 
 	{
-		EditorLog.Trace("Editor::ReloadHud");
 		delete m_EditorHud;
 		
 		m_EditorHud = new EditorHud(this);

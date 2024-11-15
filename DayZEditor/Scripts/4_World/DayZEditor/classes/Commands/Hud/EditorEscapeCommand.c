@@ -49,13 +49,11 @@ class EditorEscapeCommand: EditorCommand
 		} 
 
 		if (g_Game.GetMission().IsPaused()) {
-			g_Game.GetMission().Continue();
 			m_Editor.GetEditorHud().Show(true);
 			return true;
 		} 
 		
-		g_Game.GetMission().Pause();
-		m_Editor.GetEditorHud().Show(false);
+		GetEditor().GetEditorHud().EnterChildMenu(MENU_INGAME);
 		return true;
 	}
 	

@@ -28,7 +28,7 @@ modded class DayZGame
 		
 	override void ConnectFromCLI()
 	{
-		GetGame().GetUIManager().ShowDialog("Editor Error!", "You cannot run the DayZ Editor in a multiplayer environment. Launch the tool via the \"Open Editor\" button on the main menu!", 1, DBT_OK, DBB_OK, DMT_EXCLAMATION, null);
+		Error("You cannot run the DayZ Editor in a multiplayer environment. Launch the tool via the \"Open Editor\" button on the main menu!");
 	}
 
 	override void OnActivateMessage()

@@ -5,13 +5,14 @@ enum SelectionMode
 	LASSO // ???? are you CRAZY?
 };
 
-class EditorHud: ScriptView
+class EditorHud: ScriptViewMenu
 {
 	const float DEFAULT_BAR_WIDTH_PX = 380.0;
 
 	const float BAR_WIDTH_MINIMUM_PX = 100.0;
 	const float BAR_WIDTH_MAXIMUM_PX = 900.0;
 
+	protected Editor m_Editor;
 	protected bool m_IsBoxSelectActive;
 	protected EditorHudController m_TemplateController;
 	
@@ -48,10 +49,87 @@ class EditorHud: ScriptView
 
 	void EditorHud(notnull Editor editor)
 	{	
-		EditorLog.Trace("EditorHud");
+		m_Editor = editor;
+		
 		EditorMapWidget.Show(false);
 		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
+		
+		// Load Placeable Items
+#ifndef COMPONENT_SYSTEM		
+		array<ref EditorPlaceableItem> placeable_items = m_Editor.GetPlaceableObjects();
+		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
+			ObservableCollection<ref EditorPlaceableListItem> TargetList;
+			// Makes stuff look good when first loading
+			switch (placeable_item.Category) {
+				case EditorPlaceableItemCategory.CONFIG: {
+					TargetList = m_TemplateController.LeftbarSpacerConfig;
+					break;
+				}
+				case EditorPlaceableItemCategory.STATIC: {
+					TargetList = m_TemplateController.LeftbarSpacerStatic;
+					break;
+				}
+				//? fall-through removed 
+				case EditorPlaceableItemCategory.SCRIPTED: {
+					TargetList = m_TemplateController.LeftbarSpacerStatic;
+					break;
+				}
+			}
+			
+			EditorPlaceableListItem list_item = new EditorPlaceableListItem(placeable_item);
+			if (placeable_item.IsFavorite()) {
+				TargetList.InsertAt(list_item, 0);
+			} else {
+				TargetList.Insert(list_item);
+			}
+			
+			bool gay = placeable_item.Scope > 0 || m_TemplateController.ShowPrivate;
+			list_item.Show(gay);
+		}
+		
+		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
+		
+		// Just a quickset on the color
+		m_TemplateController.PlacementsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
+		m_TemplateController.DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));		
+		
+		m_TemplateController.LeftbarCategoryConfig.SetColor(m_Editor.GetSettings().SelectionColor);
+		m_TemplateController.LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
+		
+		foreach (string themed_widget_name: ThemedWidgetStrings) {
+			Widget themed_widget = m_LayoutRoot.FindAnyWidget(themed_widget_name);
+			if (themed_widget) {
+				themed_widget.SetColor(GetEditor().GetSettings().SelectionColor);
+			}
+		}
+
+		// Load Brushes		
+		
+		string brush_file = m_Editor.GetSettings().EditorBrushFile;
+		if (brush_file.Contains("'")) {
+			// bi wtf
+			brush_file.Replace("'", "");
+			brush_file.Replace("\"", "");
+			m_Editor.GetSettings().EditorBrushFile = brush_file;
+			m_Editor.GetSettings().Save();
+		}
+		
+		if (!FileExist(m_Editor.GetSettings().EditorBrushFile)) {
+			if (!CopyFile("DayZEditor/scripts/data/Defaults/Brushes.xml", m_Editor.GetSettings().EditorBrushFile)) {
+				EditorLog.Error("Could not copy brush data to %1", m_Editor.GetSettings().EditorBrushFile);
+				return;
+			}
+		}
+		
+		ReloadBrushes(m_Editor.GetSettings().EditorBrushFile);
+#endif		
+
+		ShowPrivate = GetEditor().GetSettings().ShowScopeZeroObjects;
+		NotifyPropertyChanged("ShowPrivate");
+
+		FavoritesToggle = GetEditor().GetSettings().ShowFavoriteObjects;
+		NotifyPropertyChanged("FavoritesToggle");
 						
 		ShowScreenLogs(GetEditor().GetSettings().ShowScreenLogs);
 	}
@@ -478,7 +556,7 @@ class EditorHud: ScriptView
 		CurrentTooltip = current_tooltip;
 	}
 
-	void DelaySetCurrentTooltip(ScriptView current_tooltip, Widget w, int delay = 100)
+	void DelaySetCurrentTooltip(ScriptView current_tooltip, Widget w, int delay = 300)
 	{
 		CurrentTooltip = current_tooltip;
 		CurrentTooltip.GetLayoutRoot().Show(false);
@@ -532,7 +610,7 @@ class EditorHud: ScriptView
 	{
 		return m_TemplateController;
 	}
-	
+		
 	static bool IsPointInPolygon(float x, float y, array<vector> points)
 	{
 		bool inside = false;

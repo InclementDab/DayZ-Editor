@@ -1336,12 +1336,12 @@ FrameWidgetClass EditorFrame {
          clipchildren 0
          ignorepointer 1
          color 0.1176 0.1176 0.1176 1
-         size 1 0.55
+         size 1 42
          halign center_ref
          hexactpos 1
          vexactpos 0
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          scaled 0
          style rover_sim_colorable
          "next up" ""
@@ -1383,17 +1383,18 @@ FrameWidgetClass EditorFrame {
            clipchildren 0
            ignorepointer 1
            color 0.149 0.1529 0.1608 1
-           size 1 1
+           size 1 42
            halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
-           vexactsize 0
+           vexactsize 1
+           scaled 0
            style Colorable
-           Padding 1
-           Margin 5
-           content_valign center
+           Padding 0
+           Margin 0
+           content_valign bottom
            {
             PanelWidgetClass Divider8 {
              visible 1
@@ -2238,35 +2239,35 @@ FrameWidgetClass EditorFrame {
             GridSpacerWidgetClass Section5 {
              ignorepointer 1
              position 0 0
-             size 0 0
+             size 0 1
              hexactpos 1
              vexactpos 1
              hexactsize 1
-             vexactsize 1
+             vexactsize 0
              Margin 0
              "Size To Content H" 1
-             "Size To Content V" 1
              content_halign center
              content_valign center
              Columns 2
              Rows 1
              {
               PanelWidgetClass CameraLightButton {
-               clipchildren 0
+               visible 1
+               clipchildren 1
                color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 1
+               size 32 32
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 0
-               fixaspect fixwidth
+               vexactsize 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style rover_sim_colorable
                "no focus" 1
                {
                 ImageWidgetClass CameraLightButton_Icon {
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  position 0 0
                  size 24 24
@@ -2276,6 +2277,7 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  priority 1
                  scriptclass "SymbolHandler"
                  image0 ""
@@ -2299,21 +2301,21 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass TogglePlayerButton {
                visible 1
-               clipchildren 0
+               clipchildren 1
                color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 1
+               size 32 32
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 0
-               fixaspect fixwidth
+               vexactsize 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style rover_sim_colorable
                "no focus" 1
                {
                 ImageWidgetClass TogglePlayerButton_Icon {
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  position 0 0
                  size 24 24
@@ -2323,6 +2325,7 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  priority 1
                  scriptclass "SymbolHandler"
                  image0 ""
@@ -2390,30 +2393,32 @@ FrameWidgetClass EditorFrame {
              Rows 1
              {
               PanelWidgetClass ObjectSelectionButton {
-               clipchildren 0
+               clipchildren 1
                color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 1
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               fixaspect fixwidth
+               scaled 0
                scriptclass "EditorButtonScript"
                style rover_sim_colorable
                "no focus" 1
                {
                 ImageWidgetClass ObjectSelectionButton_Icon {
-                 inheritalpha 1
+                 clipchildren 1
+                 inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 20 20
+                 size 24 24
                  halign center_ref
                  valign center_ref
                  hexactpos 1
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  priority 1
                  scriptclass "SymbolHandler"
                  image0 ""
@@ -2436,30 +2441,32 @@ FrameWidgetClass EditorFrame {
                }
               }
               PanelWidgetClass BoxSelectionButton {
-               clipchildren 0
+               clipchildren 1
                color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 1
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               fixaspect fixwidth
+               scaled 0
                scriptclass "EditorButtonScript"
                style rover_sim_colorable
                "no focus" 1
                {
                 ImageWidgetClass BoxSelectionButton_Icon {
-                 inheritalpha 1
+                 clipchildren 1
+                 inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 20 20
+                 size 24 24
                  halign center_ref
                  valign center_ref
                  hexactpos 1
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  priority 1
                  scriptclass "SymbolHandler"
                  image0 ""
@@ -2482,25 +2489,25 @@ FrameWidgetClass EditorFrame {
                }
               }
               PanelWidgetClass EllipseSelectionButton {
-               clipchildren 0
+               clipchildren 1
                color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 1
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               fixaspect fixwidth
+               scaled 0
                scriptclass "EditorButtonScript"
                style rover_sim_colorable
                "no focus" 1
                {
                 ImageWidgetClass EllipseSelectionButton_Icon {
-                 clipchildren 0
-                 inheritalpha 1
+                 clipchildren 1
+                 inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 20 20
+                 size 24 24
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2530,25 +2537,25 @@ FrameWidgetClass EditorFrame {
                }
               }
               PanelWidgetClass LassoSelectionButton {
-               clipchildren 0
+               clipchildren 1
                color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 1
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               fixaspect fixwidth
+               scaled 0
                scriptclass "EditorButtonScript"
                style rover_sim_colorable
                "no focus" 1
                {
                 ImageWidgetClass LassoSelectionButton_Icon {
-                 clipchildren 0
-                 inheritalpha 1
+                 clipchildren 1
+                 inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 20 20
+                 size 24 24
                  halign center_ref
                  valign center_ref
                  hexactpos 1

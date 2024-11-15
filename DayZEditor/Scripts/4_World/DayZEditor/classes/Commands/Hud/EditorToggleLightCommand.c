@@ -22,9 +22,19 @@ class EditorToggleLightCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_5 };
 	}
+	
+	override LinearColor GetColor()
+	{
+		return LinearColor.GOLDENROD;
+	}
 
 	override Symbols GetSymbol()
 	{
 		return Symbols.FLASHLIGHT;
+	}
+	
+	override bool IsToggled()
+	{
+		return GetEditor().CameraLight;
 	}
 }
