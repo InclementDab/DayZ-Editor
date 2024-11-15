@@ -444,6 +444,28 @@ class Editor: Managed
 		m_CameraLockFlags &= ~flag;
 	}
 
+	// todo: stub
+	protected bool m_ControlledPlayer;
+	void SetPlayerControlled(bool state)
+	{
+		if (!m_Player) {
+			m_ControlledPlayer = false;
+			return;
+		}
+		
+		m_ControlledPlayer = state;
+		
+		m_Player.GetInputController().SetDisabled(!m_ControlledPlayer);
+		m_Player.DisableSimulation(!m_ControlledPlayer);
+
+		Camera.GetCurrentCamera().DisableSimulation(m_ControlledPlayer);
+	}
+
+	bool IsPlayerControlled()
+	{
+		return m_ControlledPlayer;
+	}
+
 	ECameraLockFlag GetCameraLockFlags(bool use_override = false)
 	{
 		ECameraLockFlag processed_flags;

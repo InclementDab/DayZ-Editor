@@ -55,6 +55,16 @@ class EditorCommand: RelayCommand
 	{
 		return string.Empty;
 	}
+	
+	LinearColor GetColor()
+	{
+		return GetEditor().GetSettings().SelectionColor;
+	}
+	
+	bool IsToggled()
+	{
+		return false;
+	}
 		
 	string GetShortcutString() 
 	{

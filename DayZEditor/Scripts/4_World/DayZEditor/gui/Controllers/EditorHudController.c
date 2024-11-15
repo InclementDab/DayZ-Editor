@@ -109,11 +109,7 @@ class EditorHudController: EditorControllerBase
 		"CinematicCameraButton",
 		"CameraTrackMinimizeButton",
 		"AddNodeButton",
-		"CameraTrackRunButton",
-		"ObjectSelectionButton", 
-		"BoxSelectionButton", 
-		"EllipseSelectionButton", 
-		"LassoSelectionButton"
+		"CameraTrackRunButton"
 	};
 
 	// Toolvar stuff
@@ -372,9 +368,7 @@ class EditorHudController: EditorControllerBase
 				break;
 			}
 			case "ControlPlayerState": {
-				GetEditor().GetPlayer().GetInputController().SetDisabled(!ControlPlayerState);
-				GetEditor().GetPlayer().DisableSimulation(!ControlPlayerState);
-				Camera.GetCurrentCamera().DisableSimulation(ControlPlayerState);
+				
 				break;
 			}
 			

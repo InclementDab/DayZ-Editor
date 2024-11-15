@@ -18,6 +18,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	reference string CommandType;
 
 	protected EditorCommand m_Command;
+	protected ImageWidget Icon;
 
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -30,23 +31,45 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 			return;
 		}
 
-		ImageWidget child_image = ImageWidget.Cast(w.GetChildren());
-		if (child_image) {
-			string symbol_icon = m_Command.GetIcon();
-			if (m_Command.GetSymbol()) {
-				symbol_icon = m_Command.GetSymbol().Regular();
-			}
-			
-			child_image.LoadImageFile(0, symbol_icon);
-			child_image.SetImage(0);
+		Icon = ImageWidget.Cast(w.GetChildren());
+		if (Icon) {
+			Icon.SetImage(1);
 		}
+		
+		w.SetColor(GetEditor().GetSettings().HighlightColor);
+		
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 #endif
+	}
+
+	protected void Update(float dt)
+	{
+		if (m_Command && Icon) {
+	
+			if (m_Command.IsToggled()) {
+				Icon.SetColor(m_Command.GetColor());
+			} else {
+				Icon.SetColor(LinearColor.WHITE);
+			}
+
+			if (!m_Command.CanExecute()) {
+				Icon.SetAlpha(0.3);
+			} else {
+				Icon.SetAlpha(1.0);
+			}
+		}
 	}
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
 		if (m_Command) {
 			m_Command.Execute(this, CommandArgs());
+			
+			if (m_Command.IsToggled()) {
+				Icon.SetImage(3);
+			} else {
+				Icon.SetImage(2);
+			}
 		}
 
 		return true;
@@ -64,6 +87,10 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 				tooltip.GetLayoutRoot().SetAlpha(100);
 			}
 			
+			if (!m_Command.IsToggled()) {
+				Icon.SetImage(2);
+			}
+						
 			GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
 		}
 
@@ -74,6 +101,10 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	{
 		if (m_Command) {
 			GetEditor().GetEditorHud().SetCurrentTooltip(null);
+			
+			if (!m_Command.IsToggled()) {
+				Icon.SetImage(1);
+			}
 		}
 
 		return true;
@@ -104,6 +135,11 @@ class EditorObjectSelectionCommand: EditorCommand
 	{
 		return { KeyCode.KC_U };
 	}
+
+	override bool IsToggled()
+	{
+		return GetEditor().GetEditorHud().GetObjectSelect();
+	}
 }
 [RegisterEditorCommand(EditorBoxSelectionCommand)]
 class EditorBoxSelectionCommand: EditorCommand
@@ -128,6 +164,11 @@ class EditorBoxSelectionCommand: EditorCommand
 	override ShortcutKeys GetShortcut()
 	{
 		return { KeyCode.KC_I };
+	}
+	
+	override bool IsToggled()
+	{
+		return GetEditor().GetEditorHud().GetSelectionMode() == SelectionMode.BOX;
 	}
 }
 
@@ -155,6 +196,11 @@ class EditorEllipseSelectionCommand: EditorCommand
 	{
 		return { KeyCode.KC_O };
 	}
+
+	override bool IsToggled()
+	{
+		return GetEditor().GetEditorHud().GetSelectionMode() == SelectionMode.ELLIPSE;
+	}
 }
 
 [RegisterEditorCommand(EditorLassoSelectionCommand)]
@@ -180,5 +226,41 @@ class EditorLassoSelectionCommand: EditorCommand
 	override ShortcutKeys GetShortcut()
 	{
 		return { KeyCode.KC_P };
+	}
+
+	override bool IsToggled()
+	{
+		return GetEditor().GetEditorHud().GetSelectionMode() == SelectionMode.LASSO;
+	}
+}
+
+[RegisterEditorCommand(EditorTogglePlayerCommand)]
+class EditorTogglePlayerCommand: EditorCommand
+{
+	protected override bool Execute(Class sender, CommandArgs args)
+	{
+		GetEditor().SetPlayerControlled(!GetEditor().IsPlayerControlled());
+
+		return true;
+	}
+
+	override string GetName()
+	{
+		return "#STR_EDITOR_CMD_CONTROL_PLAYER";
+	}
+	
+	override Symbols GetSymbol()
+	{
+		return Symbols.PERSON_WALKING;
+	}
+	
+	override ShortcutKeys GetShortcut()
+	{
+		return { KeyCode.KC_LSHIFT, KeyCode.KC_P };
+	}
+	
+	override bool IsToggled()
+	{
+		return GetEditor().IsPlayerControlled();
 	}
 }

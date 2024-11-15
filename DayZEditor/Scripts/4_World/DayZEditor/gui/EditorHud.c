@@ -347,10 +347,20 @@ class EditorHud: ScriptView
 	{
 		m_ObjectSelectToggle = !m_ObjectSelectToggle;
 	}
+
+	bool GetObjectSelect()
+	{
+		return m_ObjectSelectToggle;
+	}
 	
 	void SetSelectionMode(SelectionMode selection_mode)
 	{
 		m_SelectionMode = selection_mode;
+	}
+	
+	SelectionMode GetSelectionMode()
+	{
+		return m_SelectionMode;
 	}
 
 	override void Show(bool show) 
