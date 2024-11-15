@@ -52,6 +52,14 @@ class EditorHandData
 
 typedef map<ref EditorWorldObject, ref EditorHandData> EditorHandMap;
 
+class EditorWebApi: WebApiBase
+{
+	override string GetBaseUrl()
+	{
+		return "http:\/\/astro.pylex.xyz:10078\/";
+	}
+}
+
 class Editor: Managed
 {
 	/* Private Members */
@@ -81,6 +89,7 @@ class Editor: Managed
 	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
 	protected ref EditorGizmo m_CurrentGizmo;
+	protected ref EditorWebApi m_RestApi;
 	
 	// Stack of Undo / Redo Actions
 	protected ref EditorActionStack 				m_ActionStack;
@@ -219,10 +228,10 @@ class Editor: Managed
 		GetDayZGame().Event_OnActivateMessage.Insert(OnActivateMessage);
 		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
 		
-		CreateRestApi();
-		//if (GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
+		m_RestApi = new EditorWebApi();
+		if (GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
 			ShowDonationDialog();
-		//}
+		}
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
 		GetSettings().TimesOpened++;
@@ -2216,5 +2225,10 @@ class Editor: Managed
 	EditorCameraSettings GetCameraSettings()
 	{
 		return EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+	}
+	
+	EditorWebApi GetWebApi()
+	{
+		return m_RestApi;
 	}
 }

@@ -49,10 +49,13 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 	protected string m_Text;
 	
 	void EditorOneTimeDonationDialog(string title)
-	{
-		m_RichText = new RichTextPrefab();
-		CreateRestApi().GetRestContext("http:\/\/astro.pylex.xyz:10078\/").GET(new ChangelogRestCallback(ScriptCaller.Create(SetListBoxInfo)), "api\/changelog");
-		AddContent(m_RichText);
+	{			
+		EditorWebApi web_api = GetEditor().GetWebApi();
+		if (web_api && web_api.GetRestContext()) {
+			m_RichText = new RichTextPrefab();
+			web_api.GetRestContext().GET(new ChangelogRestCallback(ScriptCaller.Create(SetListBoxInfo)), "api\/changelog");
+			AddContent(m_RichText);
+		}
 		
 		m_TextBox = new MessageBoxPrefab("DayZ Editor is 100% free to use—and it always will be! But if you want to see even more awesome updates, consider joining our supporter community on Discord. Your support drives future content and improvements!");
 		m_NeverShowAgain = new CheckBoxPrefab("Don't Show Again", this, "m_NeverShowAnymore");
