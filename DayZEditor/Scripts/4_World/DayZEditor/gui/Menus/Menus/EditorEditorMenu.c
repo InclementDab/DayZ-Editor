@@ -2,8 +2,6 @@ class EditorEditorMenu: EditorMenu
 {
 	void EditorEditorMenu()
 	{
-		EditorLog.Trace("EditorEditorMenu");
-		
 		AddMenuButton(m_Editor.CommandManager[EditorReloadBrushesCommand]);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorEnvironmentControlCommand]);

@@ -2,12 +2,28 @@ class EditorMenuItem: ScriptView
 {
 	static const LinearColor DEFAULT_COLOR = 0xff24282e;
 
+	protected EditorMenu m_ParentMenu;
+	protected EditorCommand m_Command;
 	protected ImageWidget Icon;
 	protected TextWidget Label, Shortcut;
 	
-	void EditorMenuItem()
+	void EditorMenuItem(notnull EditorMenu editor_menu, EditorCommand editor_command = null)
 	{
-	
+		m_ParentMenu = editor_menu;
+		m_Command = editor_command;
+		if (m_Command) {
+			string symbol_icon = m_Command.GetIcon();
+			if (m_Command.GetSymbol()) {
+				symbol_icon = m_Command.GetSymbol().Regular();
+			}
+			
+			Icon.Show(symbol_icon != string.Empty);
+			Label.SetText(m_Command.GetName());
+			Shortcut.SetText(string.Format("(%1)", editor_command.GetShortcutString()));
+			Shortcut.Show(editor_command.GetShortcutString() != string.Empty);
+			Icon.LoadImageFile(0, symbol_icon);
+			Icon.SetImage(0);
+		}
 	}
 
 	override bool OnMouseEnter(Widget w, int x, int y)
@@ -23,35 +39,21 @@ class EditorMenuItem: ScriptView
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	protected void CloseMenu()
 	{
-		return true;
-	}
-	
-	override string GetLayoutFile() 
-	{
-		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
-	}
-}
-
-class EditorMenuItemCommand: EditorMenuItem
-{	
-	protected EditorCommand m_Command;
-
-	void EditorMenuItemCommand(notnull EditorCommand editor_command)
-	{
-		m_Command = editor_command;
-		string symbol_icon = m_Command.GetIcon();
-		if (m_Command.GetSymbol()) {
-			symbol_icon = m_Command.GetSymbol().Regular();
+		if (m_ParentMenu) {
+			m_ParentMenu.Delete();
 		}
-		
-		Icon.Show(symbol_icon != string.Empty);
-		Label.SetText(m_Command.GetName());
-		Shortcut.SetText(string.Format("(%1)", editor_command.GetShortcutString()));
-		Shortcut.Show(editor_command.GetShortcutString() != string.Empty);
-		Icon.LoadImageFile(0, symbol_icon);
-		Icon.SetImage(0);
+	}
+
+	EditorMenu GetParentMenu()
+	{
+		return m_ParentMenu;
+	}
+
+	EditorCommand GetCommand()
+	{
+		return m_Command;
 	}
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -60,7 +62,21 @@ class EditorMenuItemCommand: EditorMenuItem
 			m_Command.Execute(this, CommandArgs());
 		}
 
+		if (ClosesAfterInteraction()) {
+			CloseMenu();
+		}
+
 		return true;
+	}
+
+	bool ClosesAfterInteraction()
+	{
+		return true;
+	}
+	
+	override string GetLayoutFile() 
+	{
+		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
 	}
 }
 
@@ -75,34 +91,18 @@ class EditorMenuItemDivider: EditorMenuItem
 class EditorMenuItemCategory: EditorMenuItem
 {
 	protected ref EditorMenu m_ChildMenu;
-	protected EditorCommand m_Command;
+	protected typename m_ChildMenuType;
 	protected Widget Expand;
 	
-	void EditorMenuItemCategory(string label, EditorMenu child_menu, Symbols icon, EditorCommand editor_command = null)
+	void EditorMenuItemCategory(notnull EditorMenu parent_menu, EditorCommand editor_command = null, string label = string.Empty, typename child_menu_type = EMPTY_TYPENAME, Symbols icon = string.Empty)
 	{
-		m_ChildMenu = child_menu;
-		m_ChildMenu.GetLayoutRoot().Show(false);
-		Expand.Show(m_ChildMenu != null);
-		m_Command = editor_command;
-		string symbol_icon;
-		if (m_Command) {
-			symbol_icon = m_Command.GetIcon();
-			if (m_Command.GetSymbol()) {
-				symbol_icon = m_Command.GetSymbol().Regular();
-			}
-			
-			Shortcut.SetText(string.Format("(%1)", editor_command.GetShortcutString()));
-			Shortcut.Show(editor_command.GetShortcutString() != string.Empty);
+		m_ChildMenuType = child_menu_type;
+		if (!m_ChildMenuType.IsInherited(EditorMenu)) {
+			ErrorEx("ChildMenuType must inherit from EditorMenu");
 		}
 		
-		if (icon) {
-			symbol_icon = icon.Regular();
-		}
-		
-		Icon.Show(symbol_icon != string.Empty);
+		Expand.Show(m_ChildMenuType != EMPTY_TYPENAME);
 		Label.SetText(label);
-		Icon.LoadImageFile(0, symbol_icon);
-		Icon.SetImage(0);
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
@@ -116,6 +116,8 @@ class EditorMenuItemCategory: EditorMenuItem
 		float sx1, sy1;
 		m_LayoutRoot.GetScreenPos(x1, y1);
 		m_LayoutRoot.GetScreenSize(sx1, sy1);
+		
+		m_ChildMenu = EditorMenu.Cast(m_ChildMenuType.Spawn());
 		m_ChildMenu.GetLayoutRoot().SetPos(x1 + sx1, y1);
 		m_ChildMenu.GetLayoutRoot().Show(true);
 		return super.OnMouseEnter(w, x, y);
@@ -123,18 +125,11 @@ class EditorMenuItemCategory: EditorMenuItem
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_ChildMenu.GetLayoutRoot().Show(enterW == m_ChildMenu.GetLayoutRoot().FindAnyWidget(enterW.GetName()));	//enter_widget && !enter_widget.IsInherited(ButtonWidget)
-		
-		return super.OnMouseLeave(w, enterW, x, y);
-	}
-
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		if (m_Command) {
-			m_Command.Execute(this, CommandArgs());
+		if (enterW != m_ChildMenu.GetLayoutRoot().FindAnyWidget(enterW.GetName())) {
+			delete m_ChildMenu;
 		}
-
-		return true;
+				
+		return super.OnMouseLeave(w, enterW, x, y);
 	}
 }
 
@@ -142,7 +137,7 @@ class EditorOpenRecentListItem: EditorMenuItem
 {	
 	// todo: EditorFile struct like in EditorSaveFile
 	protected string m_File;
-	void EditorOpenRecentListItem(string file_path)
+	void EditorOpenRecentListItem(notnull EditorMenu parent_menu, EditorCommand editor_command = null, string file_path = string.Empty)
 	{	
 		m_File = file_path;
 		Label.SetText(file_path);
@@ -155,14 +150,14 @@ class EditorOpenRecentListItem: EditorMenuItem
 		GetEditor().LoadSaveData(open_command.ImportFile(m_File), true);
 		GetEditor().SetSaveFile(m_File);
 		
-		return true;
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 }
 
 class EditorPreferencesListItem: EditorMenuItem
 {	
 	protected string m_Setting;
-	void EditorPreferencesListItem(string setting)
+	void EditorPreferencesListItem(notnull EditorMenu parent_menu, EditorCommand editor_command = null, string setting = string.Empty)
 	{		
 		m_Setting = setting;
 		Label.SetText(setting);
@@ -174,7 +169,7 @@ class EditorPreferencesListItem: EditorMenuItem
 		EditorPreferencesCommand preferences_command = EditorPreferencesCommand.Cast(GetEditor().CommandManager[EditorPreferencesCommand]);
 		preferences_command.OpenPreferences(m_Setting);
 		
-		return true;
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 }
 

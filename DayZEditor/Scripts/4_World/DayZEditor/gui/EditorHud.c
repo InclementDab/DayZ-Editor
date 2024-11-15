@@ -110,7 +110,7 @@ class EditorHud: ScriptView
 			}
 		}
 
-		if (input.LocalPress("UAFire")) {
+		if (input.LocalPress("UAFire") && m_DragBoxStartX == -1 && m_DragBoxStartY == -1) {
 			if ((!widget_under_cursor || widget_under_cursor == EditorMapWidget) && GetGame().GetInput().HasGameFocus() && cursor_visible && !GetEditor().IsPlacing() && !GetEditor().IsDragging()) {
 				m_DragBoxDelayStart = 0.12;
 				GetMousePos(m_DragBoxStartX, m_DragBoxStartY);
@@ -122,6 +122,8 @@ class EditorHud: ScriptView
 		
 		if (input.LocalRelease("UAFire")) {
 			m_DragBoxDelayStart = 10;
+			m_DragBoxStartX = -1;
+			m_DragBoxStartY = -1;
 			EditorMapWidget.ClearFlags(WidgetFlags.IGNOREPOINTER);
 		}
 		

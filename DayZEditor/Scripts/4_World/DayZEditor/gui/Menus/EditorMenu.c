@@ -1,21 +1,17 @@
-class EditorMenu: ScriptViewTemplate<EditorMenuController>
+class EditorMenu: ScriptView
 {			
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
+	protected EditorMenuController m_TemplateController;
 	
 	void EditorMenu()
-	{
-		EditorLog.Trace("EditorMenu");
-		
+	{		
 		m_Editor = GetEditor();
 		if (m_Editor) {
 			m_EditorHud = m_Editor.GetEditorHud();	
 		}
-	}
-	
-	void ~EditorMenu()
-	{
-		EditorLog.Trace("~EditorMenu");
+		
+		m_TemplateController = EditorMenuController.Cast(GetController());
 	}
 	
 	void AddMenuCategory(string label, typename child_menu, Symbols icon, EditorCommand editor_command = null)
@@ -27,12 +23,12 @@ class EditorMenu: ScriptViewTemplate<EditorMenuController>
 	
 	void AddMenuCategory(string label, EditorMenu child_menu, Symbols icon, EditorCommand editor_command = null)
 	{
-		AddMenuItem(new EditorMenuItemCategory(label, child_menu, icon, editor_command));
+		AddMenuItem(new EditorMenuItemCategory(this, editor_command, label, child_menu, icon));
 	}
 			
 	void AddMenuDivider()
 	{	
-		AddMenuItem(new EditorMenuItemDivider());
+		AddMenuItem(new EditorMenuItemDivider(this));
 	}
 
 	void AddMenuButton(typename editor_command_type)
@@ -47,7 +43,7 @@ class EditorMenu: ScriptViewTemplate<EditorMenuController>
 	
 	void AddMenuButton(EditorCommand editor_command)
 	{
-		AddMenuItem(new EditorMenuItemCommand(editor_command));
+		AddMenuItem(new EditorMenuItem(this, editor_command));
 	}
 
 	void AddMenuItem(EditorMenuItem menu_item)
@@ -63,6 +59,16 @@ class EditorMenu: ScriptViewTemplate<EditorMenuController>
 	ObservableCollection<ref EditorMenuItem> GetMenuItems()
 	{
 		return m_TemplateController.MenuItems;
+	}
+	
+	EditorMenuController GetTemplateController()
+	{
+		return m_TemplateController;
+	}
+	
+	override typename GetControllerType()
+	{
+		return EditorMenuController;
 	}
 			
 	override string GetLayoutFile() 

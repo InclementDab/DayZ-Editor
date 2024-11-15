@@ -14,6 +14,7 @@ class EditorEditMenu: EditorMenu
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorCheckDuplicatesCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorScriptEditorCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorOptionsCommand]);
 	}
 }
 
@@ -24,6 +25,9 @@ class EditorSelectMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorObjectSelectionCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorBoxSelectionCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorEllipseSelectionCommand]);	
-		AddMenuButton(m_Editor.CommandManager[EditorLassoSelectionCommand]);	
+		AddMenuButton(m_Editor.CommandManager[EditorLassoSelectionCommand]);
+		AddMenuDivider();
+		AddMenuButton(m_Editor.CommandManager[EditorInvertSelectionCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorClearSelectionCommand]);
 	}
 }

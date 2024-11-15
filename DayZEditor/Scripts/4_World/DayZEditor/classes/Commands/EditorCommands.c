@@ -6,19 +6,13 @@ class EditorCommand: RelayCommand
 
 	override bool Execute(Class sender, CommandArgs args) 
 	{
-		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(sender, args);
-		if (EditorHud.CurrentMenu) {
-			delete EditorHud.CurrentMenu;		
-		}
 		
 		if (!m_Editor) {
 			m_Editor = GetEditor();
 		}
 		
-		// Needs to be since we do ShowDialog alot
 		if (!m_Editor) {
-			EditorLog.Error("EditorCommand::Editor was null!");
 			return true;
 		} 
 	

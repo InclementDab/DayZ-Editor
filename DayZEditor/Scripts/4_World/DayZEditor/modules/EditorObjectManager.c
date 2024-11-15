@@ -141,7 +141,7 @@ class EditorObjectManagerModule : Managed
 	// Call to select an object
 	void SelectObject(notnull EditorObject target)
 	{
-		if (target.IsSelected()) {
+		if (target.IsSelected() || target.Locked) {
 			return;
 		}
 		

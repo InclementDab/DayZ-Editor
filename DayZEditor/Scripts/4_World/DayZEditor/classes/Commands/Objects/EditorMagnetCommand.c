@@ -24,7 +24,7 @@ class EditorMagnetCommand: EditorCommand
 	}
 
 	override Symbols GetSymbol()
-	{
+	{	
 		return Symbols.MAGNET;
 	}
 }

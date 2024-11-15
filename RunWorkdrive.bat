@@ -1,7 +1,7 @@
 @echo off
 set repository="%cd%"
 
-restart:
+:restart
 
 taskkill /f /im "workbenchApp.exe"
 rmdir /s /q "P:/temp"
@@ -20,7 +20,7 @@ if "%dayz_tools:~-10%"=="DayZ Tools" (
 )
 
 start "" /b "%dayz_tools%\Bin\Workbench\workbenchApp.exe" "-profiles=%profile_path% -repository=\"%repository%\""
-sleep(60000)
+timeout 1800 >nul
 goto restart:
 
 exit

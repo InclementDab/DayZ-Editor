@@ -578,11 +578,34 @@ class EditorObject: EditorWorldObject
 		DestroyBoundingBox();
 		
 		// Global Settings Check		
-		if (!enable || !GetEditor().GetSettings().ShowBoundingBoxes) {
+		if (!enable || !GetEditor().GetSettings().BoundingBoxSize) {
 			return;
 		}
 		
 		_boundingBoxesCreated = enable;
+		float bounding_box_thickness = 0;
+		switch (GetEditor().GetSettings().BoundingBoxSize) {
+			case 1: { // small
+				bounding_box_thickness = 0.016;
+				break;
+			}
+			
+			case 2: { // medium
+				bounding_box_thickness = 0.023;
+				break;
+			}
+			
+			case 3: { // large
+				bounding_box_thickness = 0.031;
+				break;
+			}
+			
+			case 4: { // gigantic
+				bounding_box_thickness = 0.040;
+				break;
+			}
+			
+		}
 		
 		vector size = GetSize();
 		vector clip_info[2];
@@ -594,11 +617,11 @@ class EditorObject: EditorWorldObject
 			transform[3] = m_LineCenters[i];
 			
 			for (int j = 0; j < 3; j++) {
-				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + BOUNDING_BOX_THICKNESS;						
+				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + bounding_box_thickness;						
 			}
 			 
 			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_NONE));
-			m_BBoxLines[i].SetTransform(transform);			
+			m_BBoxLines[i].SetTransform(transform);
 			
 			AddChild(m_BBoxLines[i], -1);
 		}
@@ -606,9 +629,9 @@ class EditorObject: EditorWorldObject
 		
 		vector y_axis_mat[4];
 		vector bottom_center = GetBottomCenter() - GetPosition();
-		y_axis_mat[0][0] = BOUNDING_BOX_THICKNESS;
+		y_axis_mat[0][0] = bounding_box_thickness;
 		y_axis_mat[1][1] = 1000;
-		y_axis_mat[2][2] = BOUNDING_BOX_THICKNESS;
+		y_axis_mat[2][2] = bounding_box_thickness;
 		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
 		
 		//m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE));
@@ -734,7 +757,7 @@ class EditorObject: EditorWorldObject
 		EditorLog.Trace("EditorObject::ShowBoundingBox");
 		
 		// Global Settings Check
-		if (!GetEditor().GetSettings().ShowBoundingBoxes) return;
+		if (!GetEditor().GetSettings().BoundingBoxSize) return;
 		
 		if (!(GetData().Flags & EditorObjectFlags.BBOX)) return;
 		

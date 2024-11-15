@@ -1,4 +1,4 @@
-[RegisterProfileSetting(EditorSettings, "EDITOR")]
+[RegisterProfileSetting(EditorSettings, "#STR_EDITOR_EDITOR")]
 class EditorSettings: ProfileSettings
 {	
 	bool AutoSaveEnabled			= true;
@@ -34,8 +34,10 @@ class EditorSettings: ProfileSettings
 	
 	[RegisterProfileSettingMultistate("ADVANCED", "LockCameraDuringDialogs", "Modal Dialogs", {"NO", "YES"})]
 	bool LockCameraDuringDialogs 	= true;
+		
+	[RegisterProfileSettingMultistate("APPEARANCE", "BoundingBoxSize", "Bounding Box Size", {"OFF", "THIN", "MEDIUM", "THICK", "EXTRA THICC"})]
+	int BoundingBoxSize = 2;
 	
-	bool ShowBoundingBoxes 			= true;
 	bool PreloadObjects				= false;	
 	bool ShowScreenLogs				= true;
 	bool HighPrecisionCollision		= false;
@@ -129,7 +131,6 @@ class EditorSettings: ProfileSettings
 		AutoSaveTimer 				= 240;
 
 		LockCameraDuringDialogs 	= true;
-		ShowBoundingBoxes 			= true;
 		PreloadObjects				= false;
 		ShowScreenLogs				= true;
 		DebugMode 					= false;

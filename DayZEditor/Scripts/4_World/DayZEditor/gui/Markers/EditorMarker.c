@@ -120,10 +120,12 @@ class EditorMarker: ScriptView
 		//WidgetAnimator.CancelAnimate(EditorMarkerColor);
 		//WidgetAnimator.CancelAnimate(EditorMarkerOutline);
 
+		EditorMarkerOutline.SetImage(highlighted + 1);
+		//EditorMarkerColor.SetImage(highlighted + 1);
 		if (highlighted) {
 			if (highlighted > 1) {
 				if (EditorMarkerColor) {
-					EditorMarkerColor.SetColor(innercolor.With(3, 255));
+					//EditorMarkerColor.SetColor(innercolor.With(3, 255));
 				}
 				if (EditorMarkerOutline) {
 					EditorMarkerOutline.SetColor(LinearColor.REDDIT.With(3, 255));
@@ -135,7 +137,7 @@ class EditorMarker: ScriptView
 			}
 		} else {
 			if (EditorMarkerColor) {
-				EditorMarkerColor.SetColor(outercolor.With(3, alpha));
+				EditorMarkerColor.SetColor(LinearColor.MINT_CREAM.With(3, alpha));
 			}
 			
 			if (EditorMarkerOutline) {

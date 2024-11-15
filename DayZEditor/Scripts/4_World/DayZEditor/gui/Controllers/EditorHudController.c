@@ -657,15 +657,6 @@ class EditorHudController: EditorControllerBase
 			return super.OnMouseEnter(w, x, y);
 		}
 		
-		// All a dumb workaround to beat some MVC bug. ViewBindings are bad
-		SymbolHandler handler;
-		if (w.GetChildren() && w.GetChildren().Type() == ImageWidget && w.GetChildren().GetName().Contains("_Icon")) {
-			w.GetChildren().GetScript(handler);
-			if (handler) {
-				handler.SetSize(3);
-			}
-		}
-
 		switch (w) {
 			case PlacementsTabButton: {
 				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));

@@ -10,7 +10,7 @@ class EditorPreferencesMenu: EditorMenu
 				continue;
 			}
 			
-			AddMenuItem(new EditorPreferencesListItem(category));
+			AddMenuItem(new EditorPreferencesListItem(this, null, category));
 		}
 	}
 }

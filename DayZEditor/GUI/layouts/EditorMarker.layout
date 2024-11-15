@@ -87,7 +87,7 @@ PanelWidgetClass EditorMarkerInteract {
    filter 0
    {
     ScriptParamsClass {
-     Symbol_Name "circle_dashed"
+     Symbol_Name "crosshairs_simple"
      Symbol_Size 3
     }
    }

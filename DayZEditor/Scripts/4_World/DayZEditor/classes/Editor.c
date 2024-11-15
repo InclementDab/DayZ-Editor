@@ -2102,17 +2102,17 @@ class Editor: Managed
 		GetStatistics().EditorPlayTime += passed_time;
 	}
 	
-	void SelectObject(EditorObject target) 
+	void SelectObject(notnull EditorObject target) 
 	{
 		m_ObjectManager.SelectObject(target);
 	}
 	
-	void DeselectObject(EditorObject target) 
+	void DeselectObject(notnull EditorObject target) 
 	{
 		m_ObjectManager.DeselectObject(target);
 	}
 	
-	void ToggleSelection(EditorObject target) 
+	void ToggleSelection(notnull EditorObject target) 
 	{
 		m_ObjectManager.ToggleSelection(target);
 	}
