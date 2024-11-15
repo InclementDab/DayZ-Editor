@@ -45,7 +45,6 @@ class EditorHud: ScriptView
 	EditBoxWidget LeftbarSearchBar;
 
 	protected ref array<vector> m_LassoHistory = {};
-	ButtonWidget ObjectSelectionButton, BoxSelectionButton, EllipseSelectionButton, LassoSelectionButton;
 
 	void EditorHud(notnull Editor editor)
 	{	
@@ -89,11 +88,6 @@ class EditorHud: ScriptView
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
 		
-		ObjectSelectionButton.SetState(m_ObjectSelectToggle);
-		BoxSelectionButton.SetState(m_SelectionMode == SelectionMode.BOX);
-		EllipseSelectionButton.SetState(m_SelectionMode == SelectionMode.ELLIPSE);
-		LassoSelectionButton.SetState(m_SelectionMode == SelectionMode.LASSO);
-
 		if (GetEditor().IsInventoryEditorActive()) {
 			Show(false);
 			return;
@@ -477,11 +471,34 @@ class EditorHud: ScriptView
 		delete CurrentTooltip;
 		
 		// Dont create a tooltip if conditions are met
-		if (IsSelectionBoxActive()) {
+		if (!CanCreateTooltip()) {
 			return;
 		}
 		
 		CurrentTooltip = current_tooltip;
+	}
+
+	void DelaySetCurrentTooltip(ScriptView current_tooltip, Widget w, int delay = 100)
+	{
+		CurrentTooltip = current_tooltip;
+		CurrentTooltip.GetLayoutRoot().Show(false);
+
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(VerifyCurrentTooltip);
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(VerifyCurrentTooltip, delay, false, w);
+	}
+
+	protected void VerifyCurrentTooltip(Widget w)
+	{
+		if (!CanCreateTooltip() || GetWidgetUnderCursor() != w) {
+			return;
+		}
+
+		CurrentTooltip.GetLayoutRoot().Show(true);
+	}
+
+	protected bool CanCreateTooltip()
+	{
+		return !IsSelectionBoxActive();
 	}
 	
 	void ClearCurrentTooltip()

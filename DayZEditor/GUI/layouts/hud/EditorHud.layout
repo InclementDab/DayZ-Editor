@@ -2248,23 +2248,22 @@ FrameWidgetClass EditorFrame {
              "Size To Content V" 1
              content_halign center
              content_valign center
-             Columns 4
+             Columns 2
              Rows 1
              {
-              ButtonWidgetClass CameraLightButton {
+              PanelWidgetClass CameraLightButton {
                clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 33 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
-               style Default
+               vexactsize 0
+               fixaspect fixwidth
+               scriptclass "EditorButtonScript"
+               style rover_sim_colorable
                "no focus" 1
-               font "gui/fonts/metron-bold"
-               switch toggle
                {
                 ImageWidgetClass CameraLightButton_Icon {
                  inheritalpha 1
@@ -2294,26 +2293,24 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Binding_Name "m_Editor.CameraLight"
-                 Two_Way_Binding 1
-                 Relay_Command "m_Editor.CommandManager.CameraToggleLight"
+                 CommandType "EditorToggleLightCommand"
                 }
                }
               }
-              ButtonWidgetClass TogglePlayerButton {
+              PanelWidgetClass TogglePlayerButton {
+               visible 1
                clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 33 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
+               vexactsize 0
+               fixaspect fixwidth
                scriptclass "EditorButtonScript"
-               style Default
+               style rover_sim_colorable
                "no focus" 1
-               font "gui/fonts/metron-bold"
-               switch toggle
                {
                 ImageWidgetClass TogglePlayerButton_Icon {
                  inheritalpha 1
@@ -2392,20 +2389,19 @@ FrameWidgetClass EditorFrame {
              Columns 4
              Rows 1
              {
-              ButtonWidgetClass ObjectSelectionButton {
+              PanelWidgetClass ObjectSelectionButton {
                clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 33 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
+               vexactsize 0
+               fixaspect fixwidth
                scriptclass "EditorButtonScript"
-               style Default
+               style rover_sim_colorable
                "no focus" 1
-               font "gui/fonts/metron-bold"
-               switch toggle
                {
                 ImageWidgetClass ObjectSelectionButton_Icon {
                  inheritalpha 1
@@ -2439,20 +2435,19 @@ FrameWidgetClass EditorFrame {
                 }
                }
               }
-              ButtonWidgetClass BoxSelectionButton {
+              PanelWidgetClass BoxSelectionButton {
                clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 33 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
+               vexactsize 0
+               fixaspect fixwidth
                scriptclass "EditorButtonScript"
-               style Default
+               style rover_sim_colorable
                "no focus" 1
-               font "gui/fonts/metron-bold"
-               switch toggle
                {
                 ImageWidgetClass BoxSelectionButton_Icon {
                  inheritalpha 1
@@ -2486,20 +2481,19 @@ FrameWidgetClass EditorFrame {
                 }
                }
               }
-              ButtonWidgetClass EllipseSelectionButton {
+              PanelWidgetClass EllipseSelectionButton {
                clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 33 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
+               vexactsize 0
+               fixaspect fixwidth
                scriptclass "EditorButtonScript"
-               style Default
+               style rover_sim_colorable
                "no focus" 1
-               font "gui/fonts/metron-bold"
-               switch toggle
                {
                 ImageWidgetClass EllipseSelectionButton_Icon {
                  clipchildren 0
@@ -2521,7 +2515,6 @@ FrameWidgetClass EditorFrame {
                  "src alpha" 1
                  "clamp mode" clamp
                  filter 1
-                 rotation 22 0 0
                  {
                   ScriptParamsClass {
                    Symbol_Name "circle_dashed"
@@ -2536,20 +2529,19 @@ FrameWidgetClass EditorFrame {
                 }
                }
               }
-              ButtonWidgetClass LassoSelectionButton {
+              PanelWidgetClass LassoSelectionButton {
                clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 33 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
+               vexactsize 0
+               fixaspect fixwidth
                scriptclass "EditorButtonScript"
-               style Default
+               style rover_sim_colorable
                "no focus" 1
-               font "gui/fonts/metron-bold"
-               switch toggle
                {
                 ImageWidgetClass LassoSelectionButton_Icon {
                  clipchildren 0

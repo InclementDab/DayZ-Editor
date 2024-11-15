@@ -586,22 +586,22 @@ class EditorObject: EditorWorldObject
 		float bounding_box_thickness = 0;
 		switch (GetEditor().GetSettings().BoundingBoxSize) {
 			case 1: { // small
-				bounding_box_thickness = 0.016;
+				bounding_box_thickness = 0.008;
 				break;
 			}
 			
 			case 2: { // medium
-				bounding_box_thickness = 0.023;
+				bounding_box_thickness = 0.016;
 				break;
 			}
 			
 			case 3: { // large
-				bounding_box_thickness = 0.031;
+				bounding_box_thickness = 0.032;
 				break;
 			}
 			
 			case 4: { // gigantic
-				bounding_box_thickness = 0.040;
+				bounding_box_thickness = 0.064;
 				break;
 			}
 			

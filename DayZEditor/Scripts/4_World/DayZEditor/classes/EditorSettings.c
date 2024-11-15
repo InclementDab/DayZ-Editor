@@ -1,4 +1,4 @@
-[RegisterProfileSetting(EditorSettings, "#STR_EDITOR_EDITOR")]
+[RegisterProfileSetting(EditorSettings, "EDITOR")]
 class EditorSettings: ProfileSettings
 {	
 	bool AutoSaveEnabled			= true;

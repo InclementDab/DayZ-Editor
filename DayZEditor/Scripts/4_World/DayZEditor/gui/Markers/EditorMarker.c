@@ -125,7 +125,7 @@ class EditorMarker: ScriptView
 		if (highlighted) {
 			if (highlighted > 1) {
 				if (EditorMarkerColor) {
-					//EditorMarkerColor.SetColor(innercolor.With(3, 255));
+					EditorMarkerColor.SetColor(outercolor.With(3, 255));
 				}
 				if (EditorMarkerOutline) {
 					EditorMarkerOutline.SetColor(LinearColor.REDDIT.With(3, 255));

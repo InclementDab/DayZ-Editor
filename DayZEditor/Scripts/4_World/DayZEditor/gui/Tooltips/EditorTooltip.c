@@ -7,7 +7,7 @@ class EditorTooltip: ScriptViewTemplate<EditorCommandTooltipController>
 	{
 		m_TemplateController.Name = text;				
 		if (shortcut_text) {
-			m_TemplateController.Shortcut = string.Format("(%1)", shortcut_text);
+			m_TemplateController.Shortcut = string.Format("%1", shortcut_text);
 		}
 		m_TemplateController.NotifyPropertyChanged();
 		

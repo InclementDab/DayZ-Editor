@@ -13,17 +13,12 @@ class EditorMenu: ScriptView
 		
 		m_TemplateController = EditorMenuController.Cast(GetController());
 	}
-	
+		
 	void AddMenuCategory(string label, typename child_menu, Symbols icon, EditorCommand editor_command = null)
 	{
 		if (child_menu.IsInherited(EditorMenu)) {
-			AddMenuCategory(label, EditorMenu.Cast(child_menu.Spawn()), icon, editor_command);
+			AddMenuItem(new EditorMenuItemCategory(this, editor_command, label, child_menu, icon));
 		}
-	}
-	
-	void AddMenuCategory(string label, EditorMenu child_menu, Symbols icon, EditorCommand editor_command = null)
-	{
-		AddMenuItem(new EditorMenuItemCategory(this, editor_command, label, child_menu, icon));
 	}
 			
 	void AddMenuDivider()

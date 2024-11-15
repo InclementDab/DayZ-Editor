@@ -8,7 +8,7 @@ class EditorOptionsCommand: EditorCommand
         UIScriptedMenu menu = GetGame().GetUIManager().EnterScriptedMenu(MENU_OPTIONS, null);
 		
 		int tab_index = -1;
-		g_Script.CallFunction(menu, "FindTabIndex", tab_index, "#STR_EDITOR_EDITOR");        
+		g_Script.CallFunction(menu, "FindTabIndex", tab_index, "EDITOR"); // this wouldve originally been localized but its lowercase and ugly
         if (tab_index != -1) {
             g_Script.CallFunction(menu, "SetOpenTab", null, tab_index);
         }
