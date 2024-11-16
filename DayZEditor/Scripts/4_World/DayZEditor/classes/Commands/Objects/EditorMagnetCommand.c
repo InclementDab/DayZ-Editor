@@ -26,4 +26,9 @@ class EditorMagnetCommand: EditorCommand
 	{
 		return COLOR_CANDY;
 	}
+	
+	override bool IsToggled()
+	{
+		return GetEditor().MagnetMode;
+	}
 }

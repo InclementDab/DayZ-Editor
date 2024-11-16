@@ -31,4 +31,9 @@ class EditorSnapCommand: EditorCommand
 	{
 		return false;
 	}
+	
+	override bool IsToggled()
+	{
+		return GetEditor().SnappingMode;
+	}
 }

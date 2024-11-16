@@ -86,9 +86,7 @@ class EditorHudController: EditorControllerBase
 	bool BrushToggleButtonState;
 	int BrushTypeSelection;
 	string BrushToggleButtonText;
-		
-	protected ImageWidget MagnetButton_Icon, GroundButton_Icon, SnapButton_Icon, CollisionButton_Icon, CameraLightButton_Icon;
-		
+				
 	void EditorHudController() 
 	{		
 		m_Editor = GetEditor();

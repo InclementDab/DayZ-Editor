@@ -1444,7 +1444,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -1499,7 +1499,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -1553,7 +1553,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -1607,7 +1607,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -1704,7 +1704,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -1757,7 +1757,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -1851,7 +1851,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -1904,7 +1904,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -1959,7 +1959,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -2056,7 +2056,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -2101,7 +2101,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -2144,7 +2144,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
@@ -2188,7 +2188,7 @@ FrameWidgetClass EditorFrame {
                vexactpos 1
                hexactsize 1
                vexactsize 0
-               scaled 1
+               scaled 0
                scriptclass "EditorButtonScript"
                style Default
                "no focus" 1

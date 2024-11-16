@@ -27,4 +27,9 @@ class EditorCollisionCommand: EditorCommand
 	{
 		return COLOR_PALE_B;
 	}
+	
+	override bool IsToggled()
+	{
+		return GetEditor().CollisionMode;
+	}
 }

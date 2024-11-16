@@ -27,4 +27,9 @@ class EditorGroundCommand: EditorCommand
 	{
 		return COLOR_APPLE;
 	}
+	
+	override bool IsToggled()
+	{
+		return GetEditor().GroundMode;
+	}
 }
