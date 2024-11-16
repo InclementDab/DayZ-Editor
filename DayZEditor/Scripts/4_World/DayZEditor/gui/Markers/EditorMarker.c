@@ -72,7 +72,7 @@ class EditorMarker: ScriptView
 		}
 		
 		float size = Math.Lerp(size_min, size_max, normalize_01);
-		//m_LayoutRoot.SetScreenSize(size, size);
+		m_LayoutRoot.SetScreenSize(size, size);
 	}
 	
 	float GetSize()

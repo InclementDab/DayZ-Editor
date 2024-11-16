@@ -124,7 +124,7 @@ class EditorHudController: EditorControllerBase
 	void InsertMapMarker(EditorMarker map_marker)
 	{
 		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
-		m_Editor.GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
+		m_Editor.GetEditorHud().Map.AddChild(map_marker.GetLayoutRoot());
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -477,7 +477,7 @@ class EditorHudController: EditorControllerBase
 		
 
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
-	{
+	{		
 		if (RecursiveGetParent(w, ScrollWidget)) {
 			if (KeyState(KeyCode.KC_LCONTROL)) {
 				ScrollWidget.Cast(w).VScrollStep(wheel * 10);

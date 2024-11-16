@@ -7,7 +7,7 @@ class EditorDeletedObjectWorldMarker: EditorMarker
 	void EditorDeletedObjectWorldMarker(EditorDeletedObject deleted_object)
 	{
 		EditorLog.Trace("EditorDeletedObjectWorldMarker");
-		m_MapWidget = GetEditor().GetEditorHud().EditorMapWidget;
+		m_MapWidget = GetEditor().GetEditorHud().Map;
 		m_EditorDeletedObject = deleted_object;
 		GetScreenSize(m_ScreenX, m_ScreenY);
 	}

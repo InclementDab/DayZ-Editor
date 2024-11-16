@@ -3,9 +3,7 @@ class EditorInitFile: EditorFileType
 	static const int FILE_READ_SIZE = 2048;
 	
 	override EditorSaveData Import(string file, ImportSettings settings)
-	{
-		EditorLog.Trace("EditorInitFile::Import");
-		
+	{		
 		FileHandle handle = OpenFile(file, FileMode.READ);
 		if (!handle) {
 			EditorLog.Error("File in use %1", file);
@@ -76,9 +74,7 @@ class EditorInitFile: EditorFileType
 	}
 	
 	override void Export(EditorSaveData data, string file, ExportSettings settings)
-	{
-		EditorLog.Trace("EditorInitFile::Export");
-		
+	{		
 		if (!CopyFile("DayZEditor/scripts/data/Defaults/init.c", file)) {
 			EditorLog.Error("Failed to copy file %1", file);
 			return;

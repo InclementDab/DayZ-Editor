@@ -34,7 +34,7 @@ class EditorEscapeCommand: EditorCommand
 		}
 		
 		if (m_Editor.GetEditorHud().IsMapVisible()) {
-			m_Editor.GetEditorHud().EditorMapWidget.Show(false);
+			m_Editor.GetEditorHud().Map.Show(false);
 			return true;
 		}
 		

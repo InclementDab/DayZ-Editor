@@ -4,7 +4,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 	
 	void EditorObjectMapMarker(EditorObject editor_object)
 	{
-		m_EditorMap = m_Editor.GetEditorHud().EditorMapWidget;
+		m_EditorMap = m_Editor.GetEditorHud().Map;
 		
 		GetLayoutRoot().SetSort(101);
 	}

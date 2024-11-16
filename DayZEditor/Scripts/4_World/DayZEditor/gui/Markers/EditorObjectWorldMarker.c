@@ -2,11 +2,12 @@ class EditorObjectWorldMarker: EditorObjectMarker
 {	
 	protected int m_ScreenX, m_ScreenY;
 	protected MapWidget m_MapWidget;
+	protected float m_MarkerDistSq;
 	void EditorObjectWorldMarker(EditorObject editor_object)
 	{
-		m_MapWidget = m_Editor.GetEditorHud().EditorMapWidget;
+		m_MapWidget = m_Editor.GetEditorHud().Map;
 		EditorEvents.OnMapToggled.Insert(OnEditorMapToggled);
-		
+		m_MarkerDistSq = m_Editor.GetSettings().MarkerViewDistance * m_Editor.GetSettings().MarkerViewDistance;
 		GetScreenSize(m_ScreenX, m_ScreenY);
 	}
 	
@@ -19,8 +20,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	{
 		vector position = GetPosition();	
 		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
-		float marker_view_distance_sq = m_Editor.GetSettings().MarkerViewDistance * m_Editor.GetSettings().MarkerViewDistance;
-		if (marker_view_distance_sq < distancesq) {
+		if (m_MarkerDistSq < distancesq) {
 			m_LayoutRoot.Show(false);
 			return;
 		}
@@ -38,8 +38,8 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		}
 						
 		//float size = Math.Min(Math.Max(1300 / distancesq, 18), 24);
-		float size_01 = Math.InverseLerp(0, marker_view_distance_sq, distancesq);
-		
+		float size_01 = Math.InverseLerp(0, distancesq, m_MarkerDistSq);
+		size_01 = Math.Clamp(size_01, 0, 1);
 		SetSize(size_01);
 		SetPos(screen_pos[0], screen_pos[1]);
 		bool show = m_Show && !GetEditor().IsMapActive();

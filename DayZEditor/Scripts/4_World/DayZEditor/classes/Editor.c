@@ -222,10 +222,7 @@ class Editor: Managed
 		g_Game.ReportProgress("Initializing Hud");
 		m_EditorHud 		= new EditorHud(this);
 		EditorLog.Info("Initializing Hud");
-		m_EditorHudController = m_EditorHud.GetTemplateController();		
-		// Add camera marker to newly created hud
-		m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
-		m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
+		m_EditorHudController = m_EditorHud.GetTemplateController();
 		
 		m_Mission = GetGame().GetMission();
 				
@@ -345,7 +342,7 @@ class Editor: Managed
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 
-		vector map_position_screen = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		vector map_position_screen = m_EditorHud.Map.ScreenToMap(Vector(mouse_x, mouse_y, 0));
 		map_position_screen[1] = GetGame().SurfaceY(map_position_screen[0], map_position_screen[2]) + y_offset;
 		vector map_direction_screen = GetGame().SurfaceGetNormal(map_position_screen[0], map_position_screen[2]);
 		return new Ray(map_position_screen, map_direction_screen);
@@ -436,7 +433,7 @@ class Editor: Managed
 	
 	bool IsMapActive()
 	{
-		return m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible();
+		return m_EditorHud && m_EditorHud.Map.IsVisible();
 	}
 
 	protected ECameraLockFlag m_CameraLockFlags;
@@ -642,8 +639,8 @@ class Editor: Managed
 		int x, y;
 		GetMousePos(x, y);
 		
-		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
-			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
+		if (m_EditorHud && m_EditorHud.Map.IsVisible()) {
+			CurrentMousePosition = m_EditorHud.Map.ScreenToMap(Vector(x, y, 0));
 			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
 		} else {
 			Object collision_ignore;
@@ -727,7 +724,15 @@ class Editor: Managed
 				return;
 			}
 			
-			vector position = CurrentMousePosition;
+			Raycast cursor_raycast = GetCursorRaycastModeSafe(world_object.GetWorldObject());
+			
+			vector position;
+			if (cursor_raycast) {
+				position = cursor_raycast.Bounce.Position;
+			} else {
+				position = GetCursorRay().GetPoint(GetCameraSettings().ViewDistance);
+			}
+			
 			if (hand_data) {
 				position += hand_data.PositionOffset;
 			}
@@ -865,7 +870,7 @@ class Editor: Managed
 					return true;
 				}
 				
-				if (!target) { //target == m_EditorHud.EditorMapWidget
+				if (!target || target == m_EditorHud.Map) { //
 					Raycast cursor_raycast = GetCursorRaycast();
 					if (cursor_raycast && cursor_raycast.Hit && GetEditorHud().IsObjectSelectionEnabled()) {
 						
@@ -1165,7 +1170,7 @@ class Editor: Managed
 	array<EditorObject> PlaceObject()
 	{
 		EditorLog.Trace("Editor::PlaceObject");
-		if (GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel") {
+		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().IsInherited(MapWidget)) {
 			return null;
 		}
 		

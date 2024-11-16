@@ -1,5 +1,5 @@
 PanelWidgetClass EditorMarkerInteract {
- visible 1
+ visible 0
  clipchildren 0
  ignorepointer 0
  size 24 24
@@ -20,13 +20,13 @@ PanelWidgetClass EditorMarkerInteract {
    ignorepointer 1
    color 0.6588 0.6588 0.6588 1
    position 0 0
-   size 12 12
+   size 0.5 0.5
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
-   vexactsize 1
+   hexactsize 0
+   vexactsize 0
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"
@@ -71,13 +71,13 @@ PanelWidgetClass EditorMarkerInteract {
    ignorepointer 1
    color 0.2627 0.3216 0.502 1
    position 0 0
-   size 24 24
+   size 1 1
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
-   vexactsize 1
+   hexactsize 0
+   vexactsize 0
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"

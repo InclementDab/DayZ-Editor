@@ -44,7 +44,6 @@ class EditorClientModule: JMModuleBase
 						
 		// Keybinds
 		
-		RegisterBinding(new JMModuleBinding("OnEditorToggleMap", "EditorToggleMap"));
 		RegisterBinding(new JMModuleBinding("OnEditorDeleteObject", "EditorDeleteObject"));
 		
 		RegisterBinding(new JMModuleBinding("OnEditorMoveObjectForward", "EditorMoveObjectForward"));
@@ -196,20 +195,6 @@ class EditorClientModule: JMModuleBase
 			}
 		}
 	}
-	
-	private void OnEditorToggleMap(UAInput input)
-	{
-		if (!ShouldProcessInput(input)) return;
-		EditorLog.Trace("Editor::OnEditorToggleMap");
-		
-		if (!m_Editor.GetEditorHud().IsVisible()) return;
-		
-		EditorHud editor_hud = m_Editor.GetEditorHud();
-		editor_hud.EditorMapWidget.Show(!editor_hud.EditorMapWidget.IsVisible());
-		editor_hud.ShowCursor(true);
-		
-		EditorEvents.MapToggled(this, m_Editor.GetEditorHud().EditorMapWidget, m_Editor.GetEditorHud().EditorMapWidget.IsVisible());
-	}	
 	
 	private void OnEditorDeleteObject(UAInput input)
 	{

@@ -40,13 +40,8 @@ class EditorHud: ScriptViewMenu
 	Widget PlacementsTabButton, DeletionsTabButton, LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
 		
 	CanvasWidget EditorCanvas;
-	
-	RTTextureWidget SelectionTextures;
-	
-	ref EditorCameraMapMarker CameraMapMarker;
-	
-	// todo protect this and move all Map logic in here?
-	MapWidget EditorMapWidget;
+	MapWidget Map;
+	ImageWidget CameraMarker;
 	
 	EditBoxWidget LeftSearchBar, RightSearchBar;
 	Widget LeftSearchBarIcon, RightSearchBarIcon;
@@ -79,7 +74,7 @@ class EditorHud: ScriptViewMenu
 	{	
 		m_Editor = editor;
 		
-		EditorMapWidget.Show(false);
+		Map.Show(false);
 		
 		m_TemplateController = EditorHudController.Cast(m_Controller);
 		
@@ -207,6 +202,7 @@ class EditorHud: ScriptViewMenu
 		UAInput toggle_cursor = input_api.GetInputByName("EditorToggleCursor");
 		UAInput toggle_editor = input_api.GetInputByName("EditorToggleActive");
 		UAInput teleport_to_cursor = input_api.GetInputByName("EditorTeleportPlayerToCursor");
+		UAInput toggle_map = input_api.GetInputByName("EditorToggleMap");
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
@@ -214,6 +210,19 @@ class EditorHud: ScriptViewMenu
 		if (m_Editor.IsInventoryEditorActive()) {
 			Show(false);
 			return;
+		}
+		
+		if (toggle_map.LocalPress()) {
+			Map.Show(!Map.IsVisible());
+			Map.SetMapPos(GetGame().GetCurrentCameraPosition());
+			ShowCursor(true);
+		
+			EditorEvents.MapToggled(this, Map, Map.IsVisible());
+			return;
+		}
+		
+		if (Map.IsVisible()) {
+			UpdateMap(Map, dt);
 		}
 		
 		// lctrl for commands
@@ -232,7 +241,7 @@ class EditorHud: ScriptViewMenu
 		
 		// Dont want to toggle cursor on map
 		if (toggle_cursor.LocalPress()) {
-			if (!EditorMapWidget.IsVisible() && !GetEditor().IsPlayerControlled() && GetEditor().IsActive() && !(EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
+			if (!Map.IsVisible() && !GetEditor().IsPlayerControlled() && GetEditor().IsActive() && !(EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
 				ToggleCursor();
 			}
 		}
@@ -253,13 +262,13 @@ class EditorHud: ScriptViewMenu
 		}
 
 		if (click_input.LocalPress() && m_DragBoxStartX == -1 && m_DragBoxStartY == -1) {
-			if ((!widget_under_cursor || widget_under_cursor == EditorMapWidget) && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging()) {
+			if ((!widget_under_cursor || widget_under_cursor == Map) && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging()) {
 				m_DragBoxDelayStart = 0.12;
 				GetMousePos(m_DragBoxStartX, m_DragBoxStartY);
 				m_LassoHistory.Clear();
 			}
 
-			EditorMapWidget.SetFlags(WidgetFlags.IGNOREPOINTER);
+			Map.SetFlags(WidgetFlags.IGNOREPOINTER);
 		}
 		
 		if (click_input.LocalRelease()) {
@@ -267,7 +276,7 @@ class EditorHud: ScriptViewMenu
 			m_DragBoxDelayStart = 10;
 			m_DragBoxStartX = -1;
 			m_DragBoxStartY = -1;
-			EditorMapWidget.ClearFlags(WidgetFlags.IGNOREPOINTER);
+			Map.ClearFlags(WidgetFlags.IGNOREPOINTER);
 		}
 		
 		EditorCanvas.Clear();
@@ -478,6 +487,79 @@ class EditorHud: ScriptViewMenu
 			}
 		}
 	}
+	
+	protected vector m_DragOffset, m_MapPosition;
+	protected float m_MapScale = 1.0, m_ScaleActual = 1.0;
+	protected float m_ScaleVelocity[1];
+	
+	protected void UpdateMap(notnull MapWidget map_widget, float dt)
+	{
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+		UAInputAPI input = GetUApi();
+		UAInput left_mouse_input = input.GetInputByID(UAMenuSelect);
+		UAInput right_mouse_input =  input.GetInputByID(UAMenuBack);
+		UAInput speed_modifier_input =  input.GetInputByID(UATurbo);
+		int world_size = GetGame().GetWorld().GetWorldSize();
+		
+		vector mouse_world = map_widget.ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		
+		float scale_min = GetGame().ConfigGetFloat("RscMapControl scaleMin");
+		float scale_max = GetGame().ConfigGetFloat("RscMapControl scaleMax");
+		float scale_01 = Math.InverseLerp(scale_min, scale_max, m_MapScale);
+		
+		float scale_change_value = Math.Exp(scale_01) / (50 - 30 * speed_modifier_input.LocalValue());
+		if (input.GetInputByID(UANextAction).LocalValue()) {
+			m_MapScale += scale_change_value;
+		}
+		
+		if (input.GetInputByID(UAPrevAction).LocalValue()) {
+			m_MapScale -= scale_change_value;
+		}
+		
+		m_MapScale = Math.Clamp(m_MapScale, scale_min, scale_max);
+		
+		float vertical_view_size = m_MapScale * world_size;		
+		if (input.GetInputByID(UAUIRotateInventory).LocalPress()) {
+			m_MapPosition = GetGame().GetCurrentCameraPosition();
+			m_MapScale = 0.333;
+		}
+		
+		if (right_mouse_input.LocalPress()) {
+			m_DragOffset = map_widget.ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		}			
+		
+		float p[1];
+		copyarray(p, m_ScaleVelocity);		
+				
+		if (!right_mouse_input.LocalValue()) {
+			//Scale = Math.Clamp(Scale, 0.05, 0.95);
+			
+			//m_ScaleActual += (Scale - m_SclaeActual) * dt;
+			
+			m_ScaleActual = Math.SmoothCD(m_ScaleActual, m_MapScale, p, 0.007, 100, dt);
+			//Scale = Math.Clamp(m_ScaleActual, 0.05, 0.95);
+		} else {
+			m_ScaleActual = m_MapScale;
+		}
+
+		map_widget.SetScale(m_ScaleActual);
+		
+		if (right_mouse_input.LocalValue()) {
+			m_MapPosition = m_DragOffset - map_widget.ScreenToMap(Vector(mouse_x, mouse_y, 0)) + map_widget.GetMapPos();
+		}
+		
+		map_widget.SetMapPos(m_MapPosition);
+		
+		// Camera yaw matrix
+		vector map_to_screen_cam = map_widget.MapToScreen(GetGame().GetCurrentCameraPosition());
+		float c_s_x, c_s_y;
+		CameraMarker.GetScreenSize(c_s_x, c_s_y);
+		CameraMarker.SetScreenPos(map_to_screen_cam[0] - c_s_x / 2, map_to_screen_cam[1] - c_s_y / 2);
+		
+		float camera_yaw = GetGame().GetCurrentCameraDirection().VectorToAngles()[0];
+		CameraMarker.SetRotation(0, 0, camera_yaw - 90);		
+	}
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{		
@@ -683,7 +765,7 @@ class EditorHud: ScriptViewMenu
 	
 	bool IsMapVisible()
 	{
-		return EditorMapWidget.IsVisible();
+		return Map.IsVisible();
 	}
 	
 	bool IsSelectionBoxActive()

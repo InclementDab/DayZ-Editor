@@ -12,7 +12,7 @@ class EditorMapDragHandler: EditorDragHandler
 
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
-		vector map_world_pos = GetEditor().GetEditorHud().EditorMapWidget.ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		vector map_world_pos = GetEditor().GetEditorHud().Map.ScreenToMap(Vector(mouse_x, mouse_y, 0));
 		transform[3] = map_world_pos;
 		
 		if (GetEditor().GroundMode) {
