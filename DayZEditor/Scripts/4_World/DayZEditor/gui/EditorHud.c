@@ -236,7 +236,7 @@ class EditorHud: ScriptViewMenu
 		}
 		
 		// Teleport the player
-		if (teleport_to_cursor.LocalValue() && GetGame().GetUIManager().IsCursorVisible()) {
+		if (teleport_to_cursor.LocalPress() && GetGame().GetUIManager().IsCursorVisible()) {
 			PlayerBase teleport_player = m_Editor.GetControllingPlayer();
 			if (!teleport_player) {
 				teleport_player = m_Editor.GetPlayer();
