@@ -188,7 +188,7 @@ class Editor: Managed
 								
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
-		g_Game.ReportProgress("Initializing Camera");
+		g_Game.ReportProgress("Loading Camera");
 		EditorCameraSettings camera_settings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
 		string camera_type = "EditorCamera_V2";
 		if (camera_settings.LegacyCamera) {
@@ -198,8 +198,8 @@ class Editor: Managed
 		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
 		
 		// Object Manager
-		g_Game.ReportProgress("Initializing Object Manager");
-		EditorLog.Info("Initializing Object Manager");
+		// Loads placeable objects	
+		g_Game.ReportProgress("Loading Placeable Objects");
 		m_ObjectManager 	= new EditorObjectManagerModule(this);
 		
 		// Camera Track Manager
@@ -208,7 +208,7 @@ class Editor: Managed
 		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
 		
 		// Command Manager
-		g_Game.ReportProgress("Initializing Command Manager");
+		g_Game.ReportProgress("Loading Commands");
 		EditorLog.Info("Initializing Command Manager");
 		CommandManager 		= new EditorCommandManager();
 		CommandManager.Init();

@@ -284,7 +284,7 @@ class EditorHudController: EditorControllerBase
 				CategoryConfig = false;				
 				NotifyPropertyChanged("CategoryPlacements", false);				
 				// forcing to be true, otherwise it will just show nothing
-				CategoryDeletions = true;
+				CategoryStatic = true;
 				LeftbarPlacementsConfig.Show(CategoryConfig);
 				LeftbarPlacementsStatic.Show(CategoryStatic);
 				

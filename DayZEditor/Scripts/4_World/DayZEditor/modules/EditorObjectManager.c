@@ -1,75 +1,83 @@
 class EditorObjectManagerModule : Managed
 {
+	static const ref array<string> VALID_CONFIG_PATHS = {
+		CFG_VEHICLESPATH,
+		CFG_WEAPONSPATH,
+		CFG_MAGAZINESPATH
+	};
+
 	// strong reference to objects, insert and remove expectedly
-	protected ref map<int, ref EditorObject> m_EditorObjectRefs;
-	protected ref map<int, ref EditorDeletedObject> m_EditorDeletedObjectRefs;
+	protected ref map<int, ref EditorObject> m_EditorObjectRefs = new map<int, ref EditorObject>();
+	protected ref map<int, ref EditorDeletedObject> m_EditorDeletedObjectRefs = new map<int, ref EditorDeletedObject>();
 
 	// Stored list of all Placed Objects
-	protected ref EditorObjectMap m_PlacedObjects;
+	protected ref EditorObjectMap m_PlacedObjects = new EditorObjectMap();
 
 	// Stored list of all selected Objects
-	protected ref EditorObjectMap m_SelectedObjects;
+	protected ref EditorObjectMap m_SelectedObjects = new EditorObjectMap();
 
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
-	protected ref EditorObjectMap m_WorldObjectIndex;
+	protected ref EditorObjectMap m_WorldObjectIndex = new EditorObjectMap();
 
 	// Stored list of all Hidden Objects, indexed by their WorldObject ID
-	protected ref EditorDeletedObjectMap m_DeletedObjects;
+	protected ref EditorDeletedObjectMap m_DeletedObjects = new EditorDeletedObjectMap();
 
-	protected ref EditorDeletedObjectMap m_SelectedDeletedObjects;
+	protected ref EditorDeletedObjectMap m_SelectedDeletedObjects = new EditorDeletedObjectMap();
 
-	protected ref array<ref EditorPlaceableItem> m_PlaceableObjects;
+	protected ref array<ref EditorPlaceableItem> m_PlaceableObjects = {};
 
-	protected ref map<string, EditorPlaceableItem> m_PlaceableObjectsByType;
+	protected ref map<string, EditorPlaceableItem> m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>;
 
 	// lookup table by p3d
-	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3d;
+	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dFile = new map<string, ref array<EditorPlaceableItem>>();
+	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dPath = new map<string, ref array<EditorPlaceableItem>>();
 
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
 
 	void EditorObjectManagerModule(Editor editor)
 	{
-		EditorLog.Trace("EditorObjectManager::Init");
-		m_WorldObjectIndex = new EditorObjectMap();
-		m_PlacedObjects = new EditorObjectMap();
-		m_SelectedObjects = new EditorObjectMap();
-		m_DeletedObjects = new EditorDeletedObjectMap();
-		m_SelectedDeletedObjects = new EditorDeletedObjectMap();
-
-		m_EditorObjectRefs = new map<int, ref EditorObject>();
-		m_EditorDeletedObjectRefs = new map<int, ref EditorDeletedObject>();
-
-		// Loads placeable objects	
-		g_Game.ReportProgress("Loading Placeable Objects");
-
-		m_PlaceableObjects = { };
-		m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>;
-		m_PlaceableObjectsByP3d = new map<string, ref array<EditorPlaceableItem>>();
-		TStringArray config_paths = { };
-		config_paths.Insert(CFG_VEHICLESPATH);
-		config_paths.Insert(CFG_WEAPONSPATH);
-		config_paths.Insert(CFG_MAGAZINESPATH);
-
 		// handle config objects
-		foreach (string path: config_paths) {
+		foreach (string path: VALID_CONFIG_PATHS) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
 				string type;
 				GetGame().ConfigGetChildName(path, i, type);
 				int scope = GetGame().ConfigGetInt(path + " " + type + " scope");
-				
+				string model = SystemPath.Format(GetGame().ConfigGetTextOut(string.Format("%1 %2 model", path, type)));
 				if (IsForbiddenItem(type)) {
 					continue;
 				}
 
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type, scope);
-				if (!placeable_item) {
-					continue;
-				}
 
+				// Register as placeable
 				m_PlaceableObjects.Insert(placeable_item);
-				m_PlaceableObjectsByType[placeable_item.Type] = placeable_item;
 
+				// Register placeable type
+				m_PlaceableObjectsByType[placeable_item.Type] = placeable_item;
+				
+				// If our model exists we need to dig a little deeper
+				if (model && model != "bmp") {
+					string model_file = File.GetName(model);
+
+					// register into placeable p3d models
+					if (!m_PlaceableObjectsByP3dPath[model]) {
+						m_PlaceableObjectsByP3dPath[model] = {};
+					}
+					
+					if (!m_PlaceableObjectsByP3dFile[model_file]) {
+						m_PlaceableObjectsByP3dFile[model_file] = {};
+					} else continue; // quite humorously this fixes duplication bugs. 
+					
+					m_PlaceableObjectsByP3dPath[model].Insert(placeable_item);
+					m_PlaceableObjectsByP3dFile[model_file].Insert(placeable_item);
+					
+					// Add static variant of all config items
+					EditorPlaceableItem placeable_item_static_variant = EditorPlaceableItem.Create(SystemPath.Format(model));
+					m_PlaceableObjectsByP3dPath[model].Insert(placeable_item_static_variant);
+					m_PlaceableObjectsByP3dFile[model_file].Insert(placeable_item_static_variant);
+					m_PlaceableObjects.Insert(placeable_item_static_variant);
+				}
 			}
 		}
 
@@ -78,20 +86,22 @@ class EditorObjectManagerModule : Managed
 		// handle static objects
 		foreach (string model_path: paths) {
 			array<string> p3d_files = Directory.EnumerateFiles(model_path, "*.p3d");
-			foreach (string p3d_file: p3d_files) {
-
-				// reformat and proper the p3d file
-				p3d_file = SystemPath.Format(p3d_file);
-
+			foreach (string p3d_file: p3d_files) {		
+				string p3d_file_name = File.GetName(p3d_file);
+				
 				EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(p3d_file);
 				m_PlaceableObjects.Insert(placeable_item_p3d);
 
-				if (!m_PlaceableObjectsByP3d[p3d_file])
-				{
-					m_PlaceableObjectsByP3d[p3d_file] = { };
+				if (!m_PlaceableObjectsByP3dPath[p3d_file]) {
+					m_PlaceableObjectsByP3dPath[p3d_file] = {};
+				}
+				
+				if (!m_PlaceableObjectsByP3dFile[p3d_file_name]) {
+					m_PlaceableObjectsByP3dFile[p3d_file_name] = {};
 				}
 
-				m_PlaceableObjectsByP3d[p3d_file].Insert(placeable_item_p3d);
+				m_PlaceableObjectsByP3dPath[p3d_file].Insert(placeable_item_p3d);
+				m_PlaceableObjectsByP3dFile[p3d_file_name].Insert(placeable_item_p3d);
 			}
 		}
 
@@ -322,9 +332,20 @@ class EditorObjectManagerModule : Managed
 
 	// return a list of objects that use this p3d, useful for finding adequite replacements for 
 	// otherwise unplaceable objects
-	array<EditorPlaceableItem> GetReplaceableObjects(string p3d)
+	array<EditorPlaceableItem> GetReplaceableObjects(string p3d_file_name)
 	{
-		return m_PlaceableObjectsByP3d[p3d];
+		return m_PlaceableObjectsByP3dFile[p3d_file_name];
+	}
+	
+	// reverses full p3d file, mostly to overcome ItemPreviewWidgets requiring EntityAI
+	string ConvertP3dFileToPotentialObjectType(string p3d_file)	
+	{
+		array<EditorPlaceableItem> placeables = m_PlaceableObjectsByP3dPath[p3d_file];
+		if (placeables && placeables.Count() > 0) {
+			return placeables[0].Type;
+		}
+
+		return string.Empty;
 	}
 
 	void Debug()

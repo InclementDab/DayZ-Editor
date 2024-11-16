@@ -49,7 +49,7 @@ class EditorPlaceableItem : Managed
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
 		placeable_item.Scope = 2;
-		placeable_item.Type = string.Format("p3d:%1", p3d_file);
+		placeable_item.Type = SystemPath.Format(p3d_file);
 		placeable_item.Path = p3d_file;
 		placeable_item.Category = EditorPlaceableItemCategory.STATIC;
 		return placeable_item;

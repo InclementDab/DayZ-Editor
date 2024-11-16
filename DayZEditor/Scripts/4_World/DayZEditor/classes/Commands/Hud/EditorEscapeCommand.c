@@ -58,7 +58,7 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		} 
 		
-		GetGame().GetMission().Pause();
+		GetEditor().GetEditorHud().EnterChildMenu(MENU_INGAME);
 		return true;
 	}
 	

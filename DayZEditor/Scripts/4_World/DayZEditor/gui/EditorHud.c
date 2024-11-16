@@ -37,7 +37,7 @@ class EditorHud: ScriptViewMenu
 	
 	Widget Menubar, ToolsWrapper;
 	Widget PlacementsTabButton, DeletionsTabButton, LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
-	
+		
 	CanvasWidget EditorCanvas;
 	
 	RTTextureWidget SelectionTextures;
@@ -143,7 +143,6 @@ class EditorHud: ScriptViewMenu
 		// Load Brushes		
 		
 		string brush_file = SystemPath.Format(m_Editor.GetSettings().BrushFile);		
-		Print(brush_file);
 		if (!FileExist(brush_file) && !CopyFile("DayZEditor\\scripts\\data\\Defaults\\Brushes.xml", brush_file)) {
 			Error(string.Format("Could not copy brush data to %1", brush_file));
 		} else ReloadBrushes(brush_file);
@@ -478,8 +477,25 @@ class EditorHud: ScriptViewMenu
 	}
 
 	override bool OnClick(Widget w, int x, int y, int button)
-	{
+	{		
 		return super.OnClick(w, x, y, button);
+	}
+
+	override bool OnMouseEnter(Widget w, int x, int y, int button)
+	{
+		switch (w) {
+			case LeftbarCategoryStatic: {
+				CreateDelayedTooltip(w, "Static Objects", TooltipPosition.BOTTOM_RIGHT, "Static Non-Interactive Objects");
+				break;
+			}
+
+			case LeftbarCategoryConfig: {
+				CreateDelayedTooltip(w, "Config Objects", TooltipPosition.BOTTOM_RIGHT, "Interactive Objects & Items");
+				break;
+			}
+		}
+
+		return super.OnMouseEnter(w, x, y, button);
 	}
 	
 	void ToggleObjectSelect()
@@ -512,7 +528,7 @@ class EditorHud: ScriptViewMenu
 		
 		GetGame().GetUIManager().ShowCursor(show);
 	}
-	
+		
 	void SetEditorMode(eEditorMode editor_mode)
 	{
 		//@ stub
@@ -621,6 +637,13 @@ class EditorHud: ScriptViewMenu
 		}
 		
 		CurrentTooltip = current_tooltip;
+	}
+
+	TooltipView CreateDelayedTooltip(Widget w, string text, TooltipPosition position, string desc = string.Empty, Symbols icon = string.Empty, int delay = 300)
+	{
+		TooltipView view = TooltipView.CreateOnWidget(w, text, position, desc, icon);
+		DelaySetCurrentTooltip(view, w, delay);
+		return view;
 	}
 
 	void DelaySetCurrentTooltip(ScriptView current_tooltip, Widget w, int delay = 300)

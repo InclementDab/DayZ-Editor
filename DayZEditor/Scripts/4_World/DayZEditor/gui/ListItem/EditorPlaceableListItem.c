@@ -163,7 +163,10 @@ class EditorPlaceableListItem: EditorListItem
 			Object preview = GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE);
 			if (!preview) {
 				// DOESNT WORK @JACOB
-				//preview = GetGame().CreateStaticObjectUsingP3D(m_PlaceableItem.Path, Vector(0, -1000, 0), vector.Zero, 1.0, true);
+				string new_type = GetEditor().GetObjectManager().ConvertP3dFileToPotentialObjectType(m_PlaceableItem.Type);
+				if (new_type) {
+					preview = GetGame().CreateObjectEx(new_type, Vector(0, -1000, 0), ECE_NONE);
+				}
 			}
 
 			string display_name = string.Empty;

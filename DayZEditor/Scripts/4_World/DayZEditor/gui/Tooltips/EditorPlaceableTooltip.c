@@ -27,7 +27,6 @@ class EditorPlaceableTooltip: ScriptView
 			vector max_dir = min_max[1];
 			max_dir.Normalize();
 			vector angle_max = max_dir.VectorToAngles();
-			Print(angle_max);
 			
 			ContentItem0.SetItem(entity);
 			ContentItem0.SetView(0);

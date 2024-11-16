@@ -27,19 +27,19 @@ class EditorWorldObject
 
 	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)
 	{
-		type = type.Trim();
-		type.Replace("\/", "\\");
-		if (type == string.Empty)
-		{
+		if (type == string.Empty) {
 			return null;
 		}
 
 		Object object;
-		if (File.WildcardMatch(type, "*.p3d"))
-		{
-			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
-			object.SetPosition(position);
-			object.SetOrientation(orientation);
+		if (type.Contains(".p3d")) {
+			string formatted_path = SystemPath.Format(type);
+			formatted_path.Replace("\\", "/"); // static object creation likes this
+			if (formatted_path[0] == "/") {
+				formatted_path = formatted_path.Substring(1, formatted_path.Length() - 1);
+			}
+			
+			object = GetGame().CreateStaticObjectUsingP3D(formatted_path, position, orientation, scale);
 		}
 		else
 		{
