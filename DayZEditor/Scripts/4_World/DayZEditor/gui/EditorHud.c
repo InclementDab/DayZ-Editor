@@ -481,7 +481,7 @@ class EditorHud: ScriptViewMenu
 		return super.OnClick(w, x, y, button);
 	}
 
-	override bool OnMouseEnter(Widget w, int x, int y, int button)
+	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		switch (w) {
 			case LeftbarCategoryStatic: {
@@ -495,9 +495,14 @@ class EditorHud: ScriptViewMenu
 			}
 		}
 
-		return super.OnMouseEnter(w, x, y, button);
+		return super.OnMouseEnter(w, x, y);
 	}
 	
+	void SetObjectSelectState(bool state)
+	{
+		m_ObjectSelectToggle = state;
+	}
+
 	void ToggleObjectSelect()
 	{
 		m_ObjectSelectToggle = !m_ObjectSelectToggle;
