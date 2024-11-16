@@ -2,7 +2,7 @@ class EditorEscapeCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		super.Execute(sender, args);
+		super.Execute(sender, args);		
 		if (EditorHud.CurrentDialog) {	
 			EditorHud.CurrentDialog.CloseDialog();
 			return true;
@@ -53,12 +53,12 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		} 
 
-		if (g_Game.GetMission().IsPaused()) {
-			m_Editor.GetEditorHud().Show(true);
+		if (GetGame().GetUIManager().GetMenu() && GetGame().GetUIManager().GetMenu().GetID() == MENU_INGAME) {
+			GetGame().GetUIManager().Back();
 			return true;
 		} 
 		
-		GetEditor().GetEditorHud().EnterChildMenu(MENU_INGAME);
+		GetGame().GetMission().Pause();
 		return true;
 	}
 	

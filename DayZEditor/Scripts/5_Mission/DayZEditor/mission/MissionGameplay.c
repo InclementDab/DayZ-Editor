@@ -30,17 +30,6 @@ modded class MissionGameplay
 	
 	override void OnKeyPress(int key)
 	{			
-		if (IsPaused() && key == KeyCode.KC_ESCAPE && GetEditor()) {
-			UIScriptedMenu menu = GetGame().GetUIManager().GetMenu();
-			if (menu && menu.GetID() == MENU_INGAME) {
-				GetEditor().SetActive(true);
-			}
-
-			Continue();
-
-			return;
-		}
-
 		if (!GetEditor() || !GetEditor().OnKeyPress(key)) {
 			super.OnKeyPress(key);
 		}	
@@ -96,6 +85,41 @@ modded class MissionGameplay
 		super.OnMissionStart();
 		// On Load unhide em all
 		CF.ObjectManager.UnhideAllMapObjects();
+	}
+	
+	override void Pause()
+	{
+		if (IsPaused() || (GetGame().GetUIManager().GetMenu() && GetGame().GetUIManager().GetMenu().GetID() == MENU_INGAME))
+		{
+			return;
+		}
+
+		m_PauseQueued = true;
+
+		if ( g_Game.IsClient() && g_Game.GetGameState() != DayZGameState.IN_GAME )
+		{
+			return;
+		}
+		
+		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+		if ( player && !player.IsPlayerLoaded() || IsPlayerRespawning() )
+		{
+			return;
+		}
+		
+		//CloseAllMenus();
+		
+		// open ingame menu
+		UIScriptedMenu menu = GetEditor().GetEditorHud().EnterChildMenu(MENU_INGAME);
+		if (!menu || !menu.IsVisible())
+		{
+			return;
+		}
+
+		AddActiveInputExcludes({"menu"});
+		AddActiveInputRestriction(EInputRestrictors.INVENTORY);
+
+		m_PauseQueued = false;
 	}
 	
 	override void Continue()
