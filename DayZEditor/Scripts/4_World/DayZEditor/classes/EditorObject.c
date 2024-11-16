@@ -333,8 +333,16 @@ class EditorObject: EditorWorldObject
 				
 		ObjectID = m_WorldObject.GetID();
 		if (m_Data) {
-			m_Data.Position = GetPosition();
-			m_Data.Orientation = GetOrientation();
+			// 11/15/24 - to combat the horrid world object bugs, we are going to forcibly offset this value
+			 /* Chat, you're not gonna believe this */
+			if (m_Data.Type.Contains(".p3d")) {
+				m_Data.Position = GetPosition() - GetWorldObject().GetBoundingCenter();
+				m_Data.Orientation = GetOrientation() * Math.DEG2RAD;
+			} else {
+				m_Data.Position = GetPosition();
+				m_Data.Orientation = GetOrientation();
+			}
+			
 			m_Data.Scale = GetScale();
 			m_Data.BottomCenter = GetBottomCenter();
 			
