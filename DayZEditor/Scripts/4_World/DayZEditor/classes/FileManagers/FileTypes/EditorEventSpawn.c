@@ -237,7 +237,7 @@ class EditorEventManager
 	{
 		m_Events = new array<ref EditorEventSpawn>();
 		
-		string file = Editor.ROOT_DIRECTORY + "cfgeventspawns.xml";
+		string file = SystemPath.Combine(Editor.ROOT_DIRECTORY, "cfgeventspawns.xml");
 		if (!FileExist(file)) {
 			Print("File not found!"); // todo replace with the new fileopen dialog result type
 			return;
@@ -251,7 +251,7 @@ class EditorEventManager
 	
 	static void ImportEvents()
 	{
-		string file = Editor.ROOT_DIRECTORY + "db\\events.xml";
+		string file = SystemPath.Combine(Editor.ROOT_DIRECTORY, "db\\events.xml");
 		if (!FileExist(file)) {
 			Print("File not found!");
 			return;

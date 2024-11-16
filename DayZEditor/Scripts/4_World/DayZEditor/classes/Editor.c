@@ -1214,6 +1214,12 @@ class Editor: Managed
 		return placed_objects;
 	}
 	
+	void CancelPlacing()
+	{
+		// todo: stub
+		//delete m_PlacingObjects;
+	}
+	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.Type);

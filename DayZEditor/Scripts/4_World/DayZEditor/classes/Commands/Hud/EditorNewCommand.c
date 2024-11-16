@@ -10,9 +10,13 @@ class EditorNewCommand: EditorAsyncCommand
 		}
 		
 		EditorFileManager.GetSafeFileName(file_name, ".dze");
+		// a terrible hack. the file dialogs need to return a fille path to the file
+		if (!SystemPath.IsPathRooted(file_name)) {
+			file_name = SystemPath.Combine(Editor.ROOT_DIRECTORY, file_name);
+		}
 		
 		// Only supporting new in root dir atm
-		if (FileExist(Editor.ROOT_DIRECTORY + file_name)) {
+		if (FileExist(file_name)) {
 			if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
 				return;
 			}

@@ -49,7 +49,8 @@ class EditorHud: ScriptViewMenu
 	MapWidget EditorMapWidget;
 	
 	EditBoxWidget LeftSearchBar, RightSearchBar;
-	ImageWidget LeftSearchBarIcon, RightSearchBarIcon;
+	Widget LeftSearchBarIcon, RightSearchBarIcon;
+	ImageWidget LeftSearchBarIconIcon, RightSearchBarIconIcon;
 
 	protected ref array<vector> m_LassoHistory = {};
 	
@@ -511,7 +512,7 @@ class EditorHud: ScriptViewMenu
 				break;
 			}
 			
-			case RightSearchBar: {
+			case RightSearchBarIcon: {
 				RightSearchBar.SetText(string.Empty);
 				OnChange(RightSearchBar, x, y, true);
 				break;
@@ -543,6 +544,19 @@ class EditorHud: ScriptViewMenu
 		return super.OnMouseEnter(w, x, y);
 	}
 	
+	override bool OnFocus(Widget w, int x, int y)
+	{
+		switch (w) {
+			case LeftSearchBar:
+			case RightSearchBar: {
+				GetEditor().CancelPlacing();
+				break;
+			}
+		}
+
+		return super.OnFocus(w, x, y);
+	}	
+	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		switch (w) {
@@ -565,12 +579,12 @@ class EditorHud: ScriptViewMenu
 				LeftbarScroll.VScrollToPos(0);
 				
 				Symbols left_search_bar_icon = Ternary<Symbols>.If(!left_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.XMARK);
-				left_search_bar_icon.Load(LeftSearchBarIcon);
+				left_search_bar_icon.Load(LeftSearchBarIconIcon);
 				break;
 			}
 			
 			case RightSearchBar: {
-				string right_search_bar_text = LeftSearchBar.GetText();
+				string right_search_bar_text = RightSearchBar.GetText();
 				auto right_spacer_config = Ternary<ObservableCollection<EditorListItem>>.If(m_TemplateController.CategoryPlacements, m_TemplateController.RightbarPlacedData, m_TemplateController.RightbarDeletionData);
 				for (int i = 0; i < right_spacer_config.Count(); i++) {					
 					right_spacer_config[i].GetLayoutRoot().Show(right_spacer_config[i].FilterType(right_search_bar_text));
@@ -578,7 +592,7 @@ class EditorHud: ScriptViewMenu
 				
 				RightbarScroll.VScrollToPos(0);
 				Symbols right_search_bar_icon = Ternary<Symbols>.If(!right_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.XMARK);
-				right_search_bar_icon.Load(RightSearchBarIcon);
+				right_search_bar_icon.Load(RightSearchBarIconIcon);
 				break;
 			}
 		}

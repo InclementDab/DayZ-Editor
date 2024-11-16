@@ -49,8 +49,24 @@ class EditorInitFile: EditorFileType
 				if (tokens.Count() > 6) {
 					scale = tokens[7].ToFloat();
 				}
-								
-				save_data.EditorObjects.Insert(EditorObjectData.Create(tokens[1], tokens[3].ToVector(), tokens[5].ToVector(), 1, EFE_DEFAULT));
+				
+				// [11/16/24] dab: bugfix for inconsistent DayZ crap. the other end of this bugfix is in EditorObject.Update
+				string type = tokens[1];
+				vector position = tokens[3].ToVector();
+				vector orientation = tokens[5].ToVector();
+			
+				if (type.Contains(".p3d")) {
+					// Because DayZ is inconsistent, we need to have these checks
+					Object p3d_test_object = GetGame().CreateStaticObjectUsingP3D(type, vector.Zero, vector.Zero, 1.0, true);
+					if (p3d_test_object) {
+						orientation = orientation * Math.RAD2DEG;
+						position = position + p3d_test_object.GetBoundingCenter();
+						GetGame().ObjectDelete(p3d_test_object);
+					}
+				}
+				
+				
+				save_data.EditorObjects.Insert(EditorObjectData.Create(type, position, orientation, scale, EFE_DEFAULT));
 			}
 		}        
 

@@ -1,5 +1,7 @@
 class EditorFileDialog: EditorDialogBase
 {
+	static const string BACK_DIRECTORY_IDENTIFIER = "...";
+
 	protected autoptr EditBoxPrefab m_EditBoxPrefab;
 	// strong reference, since ListBox cant strong ref it
 	protected autoptr ListBoxPrefab<string> m_ListBoxPrefab;
@@ -46,117 +48,82 @@ class EditorFileDialog: EditorDialogBase
 		AddButton(button_name, DialogResult.OK);
 		AddButton(DialogResult.Cancel);
 	}
-	
-	private void LoadFiles(string directory, string filter, inout array<string> folder_array, FileSearchMode search_mode)
-	{
-		TStringArray name_array = new TStringArray();
-		string filename;
-		FileAttr fileattr;
-		
-		if (search_mode == FileSearchMode.FOLDERS) {
-			filter = "*";
-		}
-		
-		FindFileHandle filehandle = FindFile(directory + filter, filename, fileattr, FindFileFlags.ALL);
-		if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
-			if (search_mode == FileSearchMode.FOLDERS) {
-				name_array.Insert(filename + "\\");
-			}
-		} else {
-			if (search_mode == FileSearchMode.FILES) {
-				name_array.Insert(filename);
-			}
-		}
-
-		while (FindNextFile(filehandle, filename, fileattr)) {
-			if ((fileattr & FileAttr.DIRECTORY) == FileAttr.DIRECTORY) {
-				if (search_mode == FileSearchMode.FOLDERS) {
-					name_array.Insert(filename + "\\");
-				}
-			} else {
-				if (search_mode == FileSearchMode.FILES) {
-					name_array.Insert(filename);
-				}
-			}
-		}
-		
-		CloseFindFile(filehandle);
-		
-		name_array.Sort();
-		foreach (string sorted_name: name_array) {
-			folder_array.Insert(sorted_name);
-		}
-	}
-		
+			
 	DialogResult ShowDialog(out string edit_data)
 	{
 		// Need to store this variable since EVERYTHING is deleted after ShowDialog finishes
 		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
-		DialogResult result = ShowDialog();
+		DialogResult result = ShowDialog();				
 		edit_data = edit_box.GetText();
 		return result;
 	}
 	
 	void LoadFileDirectory(string directory, string filter)
 	{
-		EditorLog.Trace("EditorFileDialog::LoadFileDirectory");
 		m_CurrentDirectory = directory;
-		string filterdir = string.Format("%1%2", directory, filter);
-		EditorLog.Info("EditorFileDialog::Loading Directory %1", m_CurrentDirectory);
+		
 		m_ListBoxPrefab.ClearItems();
-		array<string> loaded_files = {};
-		loaded_files.Insert("...");
+				
+		array<string> files = Directory.EnumerateFiles(m_CurrentDirectory, filter, 0);
+		array<string> folders = Directory.EnumerateDirectories(m_CurrentDirectory);
 
-		LoadFiles(directory, filter, loaded_files, FileSearchMode.FOLDERS);
-		LoadFiles(directory, filter, loaded_files, FileSearchMode.FILES);
+		folders.Sort();
+		files.Sort();
+		array<string> all_loaded_files = {};
+		all_loaded_files.Insert(BACK_DIRECTORY_IDENTIFIER);
+		all_loaded_files.InsertAll(folders);
+		all_loaded_files.InsertAll(files);
 
-		foreach (string sorted_file: loaded_files) {
-			m_ListBoxPrefab.InsertItem(sorted_file, sorted_file);
+		foreach (string sorted_file: all_loaded_files) {
+			string sorted_file_name = File.GetName(sorted_file);
+			Symbols icon = Symbols.FILE;
+			if (!sorted_file_name.Contains(".")) {
+				icon = Symbols.FOLDER;
+			} else if (sorted_file_name == BACK_DIRECTORY_IDENTIFIER) {
+				icon = Symbols.ARROW_TURN_LEFT_UP;
+			}
+			
+			m_ListBoxPrefab.InsertItem(sorted_file_name, sorted_file, icon.Solid(), GetEditor().GetSettings().HighlightColor);
 		}
+		
+		PrintFormat("Loaded Directory %1, %2 folders, %3 files, filter %4", directory, folders.Count(), files.Count(), filter);
 	}
 	
 	void BackDirectory()
-	{				
-		TStringArray file_array = {};
-		string file_directory = m_CurrentDirectory;
-		file_directory.Split("\\", file_array);
+	{						
+		m_CurrentDirectory = Directory.GetDirectory(m_CurrentDirectory);
 		
-		if (file_array.Count() == 1) return;
-		
-		file_directory.Replace(file_array[file_array.Count() - 1] + "\\", "");		
-		LoadFileDirectory(file_directory, m_Filter);
+		LoadFileDirectory(m_CurrentDirectory, m_Filter);
 	}
 	
 	void OnListItemClick(string file, Widget w, int x, int y, int button)
 	{
-		EditorLog.Trace("EditorFileDialog::OnListItemClick");
 		if (file != string.Empty) {
-			string folder_sanitized = m_CurrentDirectory;
-			folder_sanitized.Replace(Editor.ROOT_DIRECTORY, "");
-			m_EditBoxPrefab.GetPrefabController().Value = folder_sanitized + file;
+			m_EditBoxPrefab.GetPrefabController().Value = file;
 			m_EditBoxPrefab.GetPrefabController().NotifyPropertyChanged("Value");
 		}
 	}
 	
 	void OnListItemDoubleClick(string file, Widget w, int x, int y, int button)
 	{
-		EditorLog.Trace("EditorFileDialog::OnListItemDoubleClick");
-		
 		// Is that shit a folder?
-		if (file.Contains("\\")) {
-			LoadFileDirectory(m_CurrentDirectory + file, m_Filter);
-		} else if (file.Contains("...")) {
+		if (file == BACK_DIRECTORY_IDENTIFIER) {
 			BackDirectory();
-		} else {
-			CloseDialog(DialogResult.OK);
-			//LoadFile(file);
+			return;
 		}
+		
+		if (!file.Contains(".") || file.LastIndexOf(".") != file.Length() - 3) {
+			LoadFileDirectory(SystemPath.Combine(m_CurrentDirectory, File.GetName(file)), m_Filter);
+			return;
+		}
+		
+		m_EditBoxPrefab.ContentText.SetText(SystemPath.Join(m_CurrentDirectory, file));
+		CloseDialog(DialogResult.OK);
 	}
 		
 	// Abstracterino
 	void LoadFile(string file)
 	{
-		EditorLog.Trace("EditorFileDialog::LoadFile");
 		EditBoxWidget edit_box = m_EditBoxPrefab.ContentText;
 		edit_box.SetText(file);
 		CloseDialog(DialogResult.OK);

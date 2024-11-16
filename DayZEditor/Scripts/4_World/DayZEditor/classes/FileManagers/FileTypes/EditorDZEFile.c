@@ -67,6 +67,19 @@ class EditorDZEFile: EditorFileType
 		} else {
 			save_data = LoadJsonFile(file);
 		}
+		
+		// [11/16/24] dab: bugfix for inconsistent DayZ crap. the other end of this bugfix is in EditorObject.Update
+		foreach (EditorObjectData placed_object_data: save_data.EditorObjects) {
+			if (placed_object_data.Type.Contains(".p3d")) {
+				// Because DayZ is inconsistent, we need to have these checks
+				Object p3d_test_object = GetGame().CreateStaticObjectUsingP3D(placed_object_data.Type, vector.Zero, vector.Zero, 1.0, true);
+				if (p3d_test_object) {
+					placed_object_data.Orientation = placed_object_data.Orientation * Math.RAD2DEG;
+					placed_object_data.Position = placed_object_data.Position + p3d_test_object.GetBoundingCenter();
+					GetGame().ObjectDelete(p3d_test_object);
+				}
+			}
+		}
 				
 		return save_data;
 	}

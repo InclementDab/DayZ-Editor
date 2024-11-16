@@ -112,7 +112,7 @@ class EditorInventoryEditorHud: ScriptViewMenu
 			return;
 		}
 		
-		file_name = Editor.ROOT_DIRECTORY + file_name;
+		file_name = SystemPath.Combine(Editor.ROOT_DIRECTORY, file_name);
 		EditorFileManager.GetSafeFileName(file_name, FILE_EXTENSION);
 		FileSerializer serializer();
 		if (!serializer.Open(file_name, FileMode.READ)) {
@@ -138,7 +138,7 @@ class EditorInventoryEditorHud: ScriptViewMenu
 			return;
 		}
 		
-		file_name = Editor.ROOT_DIRECTORY + file_name;
+		file_name = SystemPath.Combine(Editor.ROOT_DIRECTORY, file_name);
 		EditorFileManager.GetSafeFileName(file_name, FILE_EXTENSION);
 		FileSerializer serializer();
 		if (!serializer.Open(file_name, FileMode.WRITE)) {

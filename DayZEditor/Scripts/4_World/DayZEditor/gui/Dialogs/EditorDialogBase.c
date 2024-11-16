@@ -94,7 +94,6 @@ class EditorDialogBase: DialogBase
 	override DialogButton AddButton(DialogButton button)
 	{
 		DialogButton btn = super.AddButton(button);
-		
 		btn.Button.SetColor(m_Editor.GetSettings().HighlightColor);
 		return btn;
 	}

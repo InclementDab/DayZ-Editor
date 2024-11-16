@@ -13,10 +13,14 @@ class EditorSaveCommand: EditorExportCommandBase
 			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 				return;
 			}
-			
+						
 			warn_on_overwrite = true;
 		}
 		
+		if (!SystemPath.IsPathRooted(file_name)) {
+			file_name = SystemPath.Combine(Editor.ROOT_DIRECTORY, file_name);
+		}
+
 		if (ExportFile(file_name, m_ExportSettings, warn_on_overwrite)) {
 			m_Editor.SetSaveFile(file_name);
 		}

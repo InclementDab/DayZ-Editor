@@ -181,7 +181,7 @@ FrameWidgetClass EditorFrame {
              fixaspect fixwidth
              scriptclass "SymbolHandler"
              {
-              ImageWidgetClass LeftbarPanelSearchBarIcon0 {
+              ImageWidgetClass LeftSearchBarIconIcon {
                ignorepointer 1
                position 0 0
                size 24 24
@@ -674,7 +674,7 @@ FrameWidgetClass EditorFrame {
            fixaspect fixwidth
            scriptclass "SymbolHandler"
            {
-            ImageWidgetClass RightSearchBarIcon0 {
+            ImageWidgetClass RightSearchBarIconIcon {
              ignorepointer 1
              position 0 0
              size 24 24
