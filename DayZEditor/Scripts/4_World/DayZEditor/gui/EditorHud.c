@@ -172,7 +172,7 @@ class EditorHud: ScriptViewMenu
 	
 	int ReloadBrushes(string filename)
 	{
-		filename = SystemPath.Format(filename);z
+		filename = SystemPath.Format(filename);
 		if (!File.Exists(filename)) {
 			PrintFormat("file not found %1", filename);
 			return 0;
