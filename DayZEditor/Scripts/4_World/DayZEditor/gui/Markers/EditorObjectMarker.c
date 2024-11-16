@@ -44,6 +44,10 @@ class EditorObjectMarker: EditorMarker
 		switch (button) {
 			case MouseState.LEFT: {
 				
+				if (!m_Editor.CanSelectObject()) {
+					return true;
+				}
+				
 				// We want to Toggle selection if you are holding control
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					m_Editor.ToggleSelection(m_EditorObject);

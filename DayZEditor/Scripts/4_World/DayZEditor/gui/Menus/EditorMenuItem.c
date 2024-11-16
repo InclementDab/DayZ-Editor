@@ -147,7 +147,7 @@ class EditorOpenRecentListItem: EditorMenuItem
 	{
 		EditorOpenCommand open_command = EditorOpenCommand.Cast(GetEditor().CommandManager[EditorOpenCommand]);	
 
-		GetEditor().LoadSaveData(open_command.ImportFile(m_File), true);
+		GetEditor().LoadSaveData(open_command.OnDialogCallback(m_File), true);
 		GetEditor().SetSaveFile(m_File);
 		
 		return super.OnMouseButtonDown(w, x, y, button);

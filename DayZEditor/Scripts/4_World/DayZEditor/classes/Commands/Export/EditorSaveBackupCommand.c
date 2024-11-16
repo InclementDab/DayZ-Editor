@@ -1,8 +1,8 @@
 class EditorSaveBackupCommand: EditorExportCommandBase
 {
-	override void Call(Class sender, CommandArgs args)
+	override bool Execute(Class sender, CommandArgs args)
 	{
-		EditorLog.Trace("EditorSaveCommand");
+		super.Execute(sender, args);
 		
 		string file_full_path = m_Editor.GetSaveFile();
 		
@@ -18,7 +18,10 @@ class EditorSaveBackupCommand: EditorExportCommandBase
 			string formatted_date = date.ToString("yyyy-MM-dd-HH-mm-ss");
 			file_name = string.Format("%1 (%2)%3", file_name, formatted_date, m_ExportSettings.GetFileType().GetExtension());			
 			ExportFile(file_name, m_ExportSettings, false);
+			return true;
 		}
+
+		return false;
 	}
 	
 	override string GetName() 

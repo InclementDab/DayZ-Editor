@@ -96,14 +96,15 @@ class EditorInventoryEditorHud: ScriptViewMenu
 	
 	void ImportExecute(ButtonCommandArgs args)
 	{
-		thread ImportExecuteThread();
+		//thread ImportExecuteThread();
 	}
 	
 	void ExportExecute(ButtonCommandArgs args)
 	{
-		thread ExportExecuteThread();
+		//thread ExportExecuteThread();
 	}
 	
+	/*
 	private void ImportExecuteThread()
 	{
 		EditorFileDialog file_dialog("Import Inventory Data", "*.dzeinv", "", "Import");
@@ -147,7 +148,7 @@ class EditorInventoryEditorHud: ScriptViewMenu
 		
 		data.Write(serializer, 0); // version means nothing here
 		serializer.Close();
-	}
+	}*/
 	
 	override bool UseMouse()
 	{

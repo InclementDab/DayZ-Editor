@@ -1,4 +1,4 @@
-class EditorImportCommandBase: EditorAsyncCommand
+class EditorImportCommandBase: EditorCommand
 {
 	protected ref ImportSettings m_ImportSettings = new ImportSettings();
 	
@@ -7,44 +7,44 @@ class EditorImportCommandBase: EditorAsyncCommand
 		m_ImportSettings.SetFileType(GetFileType());
 	}
 	
-	protected override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		string extension = "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension();
-		EditorLog.Debug("Using filter %1", extension);
-		EditorFileDialog file_dialog(GetName(), extension, "", GetDialogButtonName(), m_ImportSettings);
+		super.Execute(sender, args);
+		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		
-		string file_name;
-		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
-			return;
-		}
-		
-		if (file_name == string.Empty) {
-			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
-			return;
-		}
-		
-		GetEditor().LoadSaveData(ImportFile(file_name));
+		EditorHud.CurrentDialog = new EditorFileDialog(GetName(), ScriptCaller.Create(OnDialogCallback), string.Format("*%1", file_type.GetExtension()), "", GetDialogButtonName(), m_ImportSettings);
+		EditorHud.CurrentDialog.GetLayoutRoot().Show(true);
+		return true;
 	}
 		
-	EditorSaveData ImportFile(string file_name)
+	EditorSaveData OnDialogCallback(string file_name)
 	{
+		// if (file_name == string.Empty) {
+		// 	MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
+		// 	return;
+		// }
+
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
 			EditorLog.Error("Invalid FileType in Import");
 			return null;
 		}
 		
-		file_name = Editor.ROOT_DIRECTORY + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		if (!FileExist(file_name)) {
 			EditorLog.Error("Could not find file %1", file_name);
 			return null;
 		}
 		
-		return file_type.Import(file_name, m_ImportSettings);
+		EditorSaveData save_data = file_type.Import(file_name, m_ImportSettings);
+		GetEditor().LoadSaveData(save_data);
+		return save_data;
 	}
 		
-	typename GetFileType();
+	typename GetFileType()
+	{
+		return EditorDZEFile;
+	}
 	
 	string GetDialogButtonName() 
 	{

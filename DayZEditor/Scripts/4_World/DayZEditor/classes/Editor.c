@@ -434,6 +434,11 @@ class Editor: Managed
 		return camera_raycast;
 	}
 	
+	bool CanSelectObject()
+	{
+		return m_EditorBrush == null;
+	}
+	
 	bool IsMapActive()
 	{
 		return m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible();

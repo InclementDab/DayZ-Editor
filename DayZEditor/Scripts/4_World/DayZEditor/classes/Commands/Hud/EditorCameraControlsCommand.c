@@ -20,4 +20,10 @@ class EditorCameraControlsCommand: EditorAsyncCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_T };
 	}
+	
+	override bool CanExecute()
+	{
+		// legacy functionality
+		return GetEditor().GetCameraSettings().LegacyCamera;
+	}
 }

@@ -8,7 +8,7 @@ modded class EditorObjectData
 	{
 		return m_Id;
 	}
-	
+		
 	// Safely create a copy to clear reference counts
 	/* todo "safely" isnt applied here yet...
 	EditorObjectData CreateCopy()

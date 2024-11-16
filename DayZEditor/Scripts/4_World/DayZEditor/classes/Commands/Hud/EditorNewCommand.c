@@ -1,25 +1,27 @@
-class EditorNewCommand: EditorAsyncCommand
+class EditorNewCommand: EditorCommand
 {
-	protected override void Call(Class sender, CommandArgs args) 
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		EditorFileDialog edit_dialog = new EditorFileDialog(GetName(), "*.dze", GetEditor().GetSaveFile(), "#STR_EDITOR_NEW");
-		string file_name;
-		DialogResult result = edit_dialog.ShowDialog(file_name);
-		if (result != DialogResult.OK) { 
-			return;
-		}
-		
-		EditorFileManager.GetSafeFileName(file_name, ".dze");
+		super.Execute(sender, args);
+		EditorHud.CurrentDialog = new EditorFileDialog(GetName(), ScriptCaller.Create(OnNewDialog), "*.dze", GetEditor().GetSaveFile(), "#STR_EDITOR_NEW");		
+		EditorHud.CurrentDialog.GetLayoutRoot().Show(true);
+		return true;
+	}
+	
+	protected void OnNewDialog(string file)
+	{
+		EditorFileManager.GetSafeFileName(file, ".dze");
 		
 		// Only supporting new in root dir atm
-		if (FileExist(Editor.ROOT_DIRECTORY + file_name)) {
-			if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
-				return;
-			}
+		if (FileExist(file)) {
+			//GetEditorHud().ShowMessageBox()
+			// if (MessageBox.Show("Are you sure?", "File " + file + " already exists. Overwrite?", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
+			// 	return;
+			// }
 		}
 		
 		m_Editor.Clear();
-		m_Editor.SetSaveFile(file_name);
+		m_Editor.SetSaveFile(file);
 		
 		GetEditor().GetEditorHud().CreateNotification("New File Created");
 	}

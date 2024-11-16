@@ -1,27 +1,31 @@
-class EditorExportCommandBase: EditorAsyncCommand
+class EditorExportCommandBase: EditorCommand
 {
 	protected ref ExportSettings m_ExportSettings = new ExportSettings();
 	
-	protected override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
+		super.Execute(sender, args);
 		m_ExportSettings.SetFileType(GetFileType());
-		EditorFileDialog file_dialog(GetName(), "*", "", GetDialogButtonName(), m_ExportSettings);
-
-		string file_name;
-		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
-			return;
-		}
-
-		if (file_name == string.Empty) {
+		
+		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
+		
+		EditorHud.CurrentDialog = new EditorFileDialog(GetName(), ScriptCaller.Create(OnDialogCallback), string.Format("*%1", file_type.GetExtension()), "", GetDialogButtonName(), m_ExportSettings);
+		EditorHud.CurrentDialog.GetLayoutRoot().Show(true);
+		return true;
+	}
+	
+	protected void OnDialogCallback(string file)
+	{
+		if (file == string.Empty) {
 			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
-			return;
 		}
-
-		ExportFile(file_name, m_ExportSettings, true);
+		
+		thread ExportFile(file, m_ExportSettings, GetWarnOnOverwrite());
 	}
 
 	protected bool ExportFile(string file_name, ExportSettings export_settings, bool warn_on_overwrite)
 	{
+		file_name = FileSystem.Format(file_name);
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
 		if (!file_type) {
 			EditorLog.Error("Invalid FileType in Export");
@@ -37,7 +41,7 @@ class EditorExportCommandBase: EditorAsyncCommand
 
 		export_settings.ExportSetName = file_name;
 
-		file_name = Editor.ROOT_DIRECTORY + file_name;
+		file_name = file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 
 		if (FileExist(file_name) && warn_on_overwrite) {
@@ -59,6 +63,7 @@ class EditorExportCommandBase: EditorAsyncCommand
 		string message = string.Format("Saved %1 objects, %2 deletions (%3)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count(), f.GetFileName());
 		m_Editor.GetEditorHud().CreateNotification(message);
 		EditorLog.Debug(message);
+		m_Editor.SetSaveFile(file_name);
 		return true;
 	}
 
@@ -67,6 +72,11 @@ class EditorExportCommandBase: EditorAsyncCommand
 	string GetDialogButtonName()
 	{
 		return "#STR_EDITOR_EXPORT";
+	}
+	
+	bool GetWarnOnOverwrite()
+	{
+		return false;
 	}
 
 	override Symbols GetSymbol()
