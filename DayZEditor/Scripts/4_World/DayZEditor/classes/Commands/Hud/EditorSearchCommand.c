@@ -5,7 +5,7 @@ class EditorSearchCommand: EditorCommand
 		super.Execute(sender, args);
 		
 		m_Editor.GetEditorHud().ShowCursor(true);
-		SetFocus(m_Editor.GetEditorHud().LeftbarSearchBar);
+		SetFocus(m_Editor.GetEditorHud().LeftSearchBar);
 		return true;
 	}
 	

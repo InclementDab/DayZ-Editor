@@ -22,6 +22,7 @@ class EditorHud: ScriptViewMenu
 	Widget LeftbarWrapper, RightbarWrapper;
 	Widget LeftbarDrag, RightbarDrag;
 	Widget LeftbarDrag0, RightbarDrag0;
+	ScrollWidget RightbarScroll, LeftbarScroll;
 	
 	Widget RightbarCollapsePanel, LeftbarCollapsePanel;
 
@@ -47,7 +48,8 @@ class EditorHud: ScriptViewMenu
 	// todo protect this and move all Map logic in here?
 	MapWidget EditorMapWidget;
 	
-	EditBoxWidget LeftbarSearchBar;
+	EditBoxWidget LeftSearchBar, RightSearchBar;
+	ImageWidget LeftSearchBarIcon, RightSearchBarIcon;
 
 	protected ref array<vector> m_LassoHistory = {};
 	
@@ -480,6 +482,44 @@ class EditorHud: ScriptViewMenu
 	{		
 		return super.OnClick(w, x, y, button);
 	}
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		switch (w) {
+			case LeftSearchBar: {
+				if (button == 1) {
+					LeftSearchBar.SetText(string.Empty);
+					OnChange(LeftSearchBar, x, y, true);
+					return true;
+				}
+				
+				break;
+			}
+			
+			case RightSearchBar: {
+				if (button == 1) {
+					RightSearchBar.SetText(string.Empty);
+					OnChange(RightSearchBar, x, y, true);
+					return true;
+				}
+				break;
+			}
+			
+			case LeftSearchBarIcon: {
+				LeftSearchBar.SetText(string.Empty);
+				OnChange(LeftSearchBar, x, y, true);
+				break;
+			}
+			
+			case RightSearchBar: {
+				RightSearchBar.SetText(string.Empty);
+				OnChange(RightSearchBar, x, y, true);
+				break;
+			}
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
 
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
@@ -493,11 +533,59 @@ class EditorHud: ScriptViewMenu
 				CreateDelayedTooltip(w, "Config Objects", TooltipPosition.TOP_LEFT, "Interactive Objects & Items");
 				break;
 			}
+			
+			case RightSearchBar:
+			case LeftSearchBar: {
+				return true;
+			}
 		}
 
 		return super.OnMouseEnter(w, x, y);
 	}
 	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		switch (w) {
+			case LeftSearchBar: {
+				string left_search_bar_text = LeftSearchBar.GetText();
+				auto left_spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(m_TemplateController.CategoryConfig, m_TemplateController.LeftbarSpacerConfig, m_TemplateController.LeftbarSpacerStatic);
+				for (int j = 0; j < left_spacer_config.Count(); j++) {
+					int hide = !left_spacer_config[j].FilterType(left_search_bar_text);
+					if (m_TemplateController.FavoritesToggle) {
+						hide |= hide | (!left_spacer_config[j].GetTemplateController().Favorite << 1);
+					}
+
+					if (!m_TemplateController.ShowPrivate) {
+						hide |= hide | (left_spacer_config[j].GetPlaceableItem().Scope < 2) << 2;
+					}
+
+					left_spacer_config[j].GetLayoutRoot().Show(!hide);
+				}
+				
+				LeftbarScroll.VScrollToPos(0);
+				
+				Symbols left_search_bar_icon = Ternary<Symbols>.If(!left_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.XMARK);
+				left_search_bar_icon.Load(LeftSearchBarIcon);
+				break;
+			}
+			
+			case RightSearchBar: {
+				string right_search_bar_text = LeftSearchBar.GetText();
+				auto right_spacer_config = Ternary<ObservableCollection<EditorListItem>>.If(m_TemplateController.CategoryPlacements, m_TemplateController.RightbarPlacedData, m_TemplateController.RightbarDeletionData);
+				for (int i = 0; i < right_spacer_config.Count(); i++) {					
+					right_spacer_config[i].GetLayoutRoot().Show(right_spacer_config[i].FilterType(right_search_bar_text));
+				}
+				
+				RightbarScroll.VScrollToPos(0);
+				Symbols right_search_bar_icon = Ternary<Symbols>.If(!right_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.XMARK);
+				right_search_bar_icon.Load(RightSearchBarIcon);
+				break;
+			}
+		}
+		
+		return super.OnChange(w, x, y, finished);
+	}
+		
 	void SetObjectSelectState(bool state)
 	{
 		m_ObjectSelectToggle = state;

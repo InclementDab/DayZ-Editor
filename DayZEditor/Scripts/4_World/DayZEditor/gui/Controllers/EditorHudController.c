@@ -1,13 +1,8 @@
 class EditorHudController: EditorControllerBase
 {
-	string SearchBarData;
-	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	string Version = Editor.Version;
 	
-	//
-	string PlacedSearchBarData;
-	string PlacedSearchBarIcon = "set:dayz_editor_gui image:search";
-	
+	//	
 	string ObjectReadoutName;
 	
 	bool CategoryPlacements = true;
@@ -41,6 +36,7 @@ class EditorHudController: EditorControllerBase
 	
 	ScrollWidget LeftbarScroll;
 	ScrollWidget RightbarScroll;
+	EditBoxWidget LeftSearchBar, RightSearchBar;
 	
 	Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
@@ -53,16 +49,12 @@ class EditorHudController: EditorControllerBase
 	protected GridSpacerWidget InfobarObjPosFrame;
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
-	protected EditBoxWidget LeftbarSearchBar;
-	
-	//
-	protected EditBoxWidget PlacedSearchEditbox;
 			
 	// Camera Track
 	protected Widget CameraTrackWrapper;
 
-	protected ButtonWidget GizmoTranslateButton, LeftbarPanelSearchBarIconButton, FavoritesTabButton, ShowPrivateButton, LeftbarCategoryStatic, LeftbarCategoryConfig;
-	protected ButtonWidget LeftbarHide, DeletionsTabButton, PlacementsTabButton, PlacedSearchIconButton, RightbarHide;
+	protected ButtonWidget GizmoTranslateButton, FavoritesTabButton, ShowPrivateButton, LeftbarCategoryStatic, LeftbarCategoryConfig;
+	protected ButtonWidget LeftbarHide, DeletionsTabButton, PlacementsTabButton, RightbarHide;
 	protected ButtonWidget MenuBarFile, MenuBarEdit, MenuBarView, MenuBarEditor;
 	protected ButtonWidget BrushToggleButton, CinematicCameraButton, CameraTrackMinimizeButton, AddNodeButton, CameraTrackRunButton;
 	protected ButtonWidget ObjectSelectionButton, BoxSelectionButton, EllipseSelectionButton, LassoSelectionButton;
@@ -140,7 +132,6 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController::PropertyChanged: %1", property_name);
 		
 		switch (property_name) {
-			case "SearchBarData": 
 			case "FavoritesToggle":
 			case "ShowPrivate": {
 				GetEditor().GetSettings().ShowFavoriteObjects = FavoritesToggle;
@@ -149,7 +140,7 @@ class EditorHudController: EditorControllerBase
 
 				auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
 				for (int j = 0; j < spacer_config.Count(); j++) {
-					int hide = !spacer_config[j].FilterType(SearchBarData);
+					int hide = !spacer_config[j].FilterType(LeftSearchBar.GetText());
 					if (FavoritesToggle) {
 						hide |= hide | (!spacer_config[j].GetTemplateController().Favorite << 1);
 					}
@@ -190,6 +181,7 @@ class EditorHudController: EditorControllerBase
 		switch (property_name) {
 					
 			case "SearchBarData": {
+				/*
 				LeftbarScroll.VScrollToPos(0);
 				
 				if (SearchBarData.Length() > 0) {
@@ -199,12 +191,12 @@ class EditorHudController: EditorControllerBase
 				}
 				
 				NotifyPropertyChanged("SearchBarIcon");
-				
+				*/
 				break;
 			}	
 			
 			case "PlacedSearchBarData": {
-				
+				/*
 				ObservableCollection<EditorListItem> selected_list;
 				if (CategoryPlacements) {
 					selected_list = RightbarPlacedData;
@@ -225,7 +217,7 @@ class EditorHudController: EditorControllerBase
 				}
 				
 				NotifyPropertyChanged("PlacedSearchBarIcon");
-				
+				*/
 				break;
 			}
 						
@@ -293,17 +285,6 @@ class EditorHudController: EditorControllerBase
 				LeftbarScroll.VScrollToPos(0);
 				break;
 			}
-			
-			case "SearchBarIcon": {
-				// this could probably be a command with SetCanExecute but im not feeling it 
-				LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
-				break;	
-			}
-			
-			case "PlacedSearchBarIcon": {
-				PlacedSearchIconButton.Enable(PlacedSearchBarData.Length() > 0);
-				break;
-			}
 		}
 	}
 	
@@ -348,25 +329,6 @@ class EditorHudController: EditorControllerBase
 		string name = "CameraTrack" + CameraTrackData.Count();
 		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
 	}
-
-	void OnSearchButtonPress(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::OnSearchButtonPress");
-		if (SearchBarData.Length() > 0) {
-			SearchBarData = string.Empty;
-			NotifyPropertyChanged("SearchBarData");
-		}
-	}
-	
-	void OnSearchPlacedButtonPress(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::OnSearchPlacedButtonPress");
-		if (PlacedSearchBarData.Length() > 0) {
-			PlacedSearchBarData = string.Empty;
-			NotifyPropertyChanged("PlacedSearchBarData");
-		}	
-	}
-	
 	
 	void OnCameraTrackStart()
 	{
@@ -396,7 +358,7 @@ class EditorHudController: EditorControllerBase
 		
 		for (int i = bottom; i < top; i++) {
 			// if this element is filtered out
-			if (!list[i].FilterType(PlacedSearchBarData)) {
+			if (!list[i].FilterType(RightSearchBar.GetText())) {
 				continue;
 			}
 			
@@ -425,30 +387,7 @@ class EditorHudController: EditorControllerBase
 			EditorLogEntries.RemoveOrdered(0); // 0 = remove oldest, then since ordered next olded becomes 0. i think????
 		}
 	}
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
-		
-		if (button == MouseState.RIGHT) {
-		
-			switch (w) {
-				case LeftbarSearchBar: {
-					SearchBarData = string.Empty;
-					NotifyPropertyChanged("SearchBarData");
-					break;
-				}
-				case PlacedSearchEditbox: {
-					PlacedSearchBarData = string.Empty;
-					NotifyPropertyChanged("PlacedSearchBarData");
-					break;
-				}
-			}	
-		}
-	
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-		
+			
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		if (EditorHud.CurrentDialog && !EditorHud.IsDialogCommand(w)) {
