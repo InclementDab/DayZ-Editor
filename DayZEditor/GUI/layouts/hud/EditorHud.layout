@@ -1435,16 +1435,17 @@ FrameWidgetClass EditorFrame {
              {
               ButtonWidgetClass NewButton {
                visible 1
-               clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                text_offset 0 0
@@ -1453,7 +1454,7 @@ FrameWidgetClass EditorFrame {
                 ImageWidgetClass NewButton_Icon {
                  visible 1
                  clipchildren 1
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1464,14 +1465,15 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:file"
-                 mode blend
+                 mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 "stretch mode" stretch_w_h
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "file"
@@ -1482,22 +1484,23 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Relay_Command "m_Editor.CommandManager.NewCommand"
+                 CommandType "EditorNewCommand"
                 }
                }
               }
               ButtonWidgetClass OpenButton {
                visible 1
-               clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                text_offset 0 0
@@ -1505,7 +1508,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass OpenButton_Icon {
                  visible 1
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1516,14 +1519,15 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 ""
                  mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 "stretch mode" stretch_w_h
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "folder_open"
@@ -1534,22 +1538,23 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Relay_Command "m_Editor.CommandManager.OpenCommand"
+                 CommandType "EditorOpenCommand"
                 }
                }
               }
               ButtonWidgetClass SaveButton {
                visible 1
-               clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                text_offset 0 0
@@ -1557,7 +1562,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass SaveButton_Icon {
                  visible 1
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1568,14 +1573,15 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:floppy_disk"
                  mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 "stretch mode" stretch_w_h
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "floppy_disk"
@@ -1586,22 +1592,23 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Relay_Command "m_Editor.CommandManager.SaveCommand"
+                 CommandType "EditorSaveCommand"
                 }
                }
               }
               ButtonWidgetClass SaveAsButton {
                visible 1
-               clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                text_offset 0 0
@@ -1609,7 +1616,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass SaveAsButton_Icon {
                  visible 1
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1620,14 +1627,15 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:floppy_disk_pen"
                  mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 "stretch mode" stretch_w_h
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "floppy_disk_pen"
@@ -1638,7 +1646,7 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Relay_Command "m_Editor.CommandManager.SaveCommand"
+                 CommandType "EditorSaveAsCommand"
                 }
                }
               }
@@ -1688,16 +1696,16 @@ FrameWidgetClass EditorFrame {
              {
               ButtonWidgetClass UndoButton {
                visible 1
-               clipchildren 0
-               color 0.7529 0.3686 0.3255 1
-               size 33 33
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
+               size 32 1
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
+               vexactsize 0
                scaled 1
-               scriptclass "ViewBinding"
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                text_offset 0 0
@@ -1705,7 +1713,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass UndoButton_Icon {
                  disabled 0
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1716,13 +1724,15 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:arrow_rotate_left"
                  mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "arrow_rotate_left"
@@ -1733,27 +1743,28 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Relay_Command "m_Editor.CommandManager.UndoCommand"
+                 CommandType "EditorUndoCommand"
                 }
                }
               }
               ButtonWidgetClass RedoButton {
-               clipchildren 0
+               clipchildren 1
                ignorepointer 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                switch normal
                {
                 ImageWidgetClass RedoButton_Icon {
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1764,12 +1775,14 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  scriptclass "SymbolHandler"
                  mode additive
                  "src alpha" 1
                  "clamp mode" clamp
+                 "stretch mode" invalid
                  "flip u" 0
-                 filter 0
+                 filter 1
                  "Transition width" 0
                  {
                   ScriptParamsClass {
@@ -1781,7 +1794,7 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Relay_Command "m_Editor.CommandManager.RedoCommand"
+                 CommandType "EditorRedoCommand"
                 }
                }
               }
@@ -1829,16 +1842,17 @@ FrameWidgetClass EditorFrame {
              Rows 1
              {
               ButtonWidgetClass CutButton {
-               clipchildren 0
+               clipchildren 1
                ignorepointer 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/Metron"
@@ -1846,7 +1860,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass CutButton_Icon {
                  visible 1
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1857,12 +1871,14 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  scriptclass "SymbolHandler"
                  mode additive
                  "src alpha" 1
                  "clamp mode" clamp
+                 "stretch mode" invalid
                  "flip u" 0
-                 filter 0
+                 filter 1
                  "Transition width" 0
                  {
                   ScriptParamsClass {
@@ -1874,22 +1890,22 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Debug_Logging 0
-                 Relay_Command "m_Editor.CommandManager.CutCommand"
+                 CommandType "EditorCutCommand"
                 }
                }
               }
               ButtonWidgetClass CopyButton {
-               clipchildren 0
+               clipchildren 1
                ignorepointer 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/Metron"
@@ -1897,7 +1913,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass CopyButton_Icon {
                  visible 1
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1908,14 +1924,15 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
-                 scaled 1
+                 scaled 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:copy"
                  mode additive
                  "src alpha" 1
                  "clamp mode" clamp
+                 "stretch mode" invalid
                  "flip u" 1
-                 filter 0
+                 filter 1
                  pivot 0.5 0.5
                  "Transition width" 0
                  {
@@ -1928,22 +1945,22 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Debug_Logging 0
-                 Relay_Command "m_Editor.CommandManager.CopyCommand"
+                 CommandType "EditorCopyCommand"
                 }
                }
               }
               ButtonWidgetClass PasteButton {
-               clipchildren 0
+               clipchildren 1
                ignorepointer 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/Metron"
@@ -1951,7 +1968,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass PasteButton_Icon {
                  visible 1
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  color 1 1 1 0.7843
                  position 0 0
@@ -1962,13 +1979,15 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  scriptclass "SymbolHandler"
                  image0 ""
                  mode additive
                  "src alpha" 1
                  "clamp mode" clamp
+                 "stretch mode" invalid
                  "flip u" 1
-                 filter 0
+                 filter 1
                  "Transition width" 0
                  {
                   ScriptParamsClass {
@@ -1980,8 +1999,7 @@ FrameWidgetClass EditorFrame {
                }
                {
                 ScriptParamsClass {
-                 Debug_Logging 0
-                 Relay_Command "m_Editor.CommandManager.PasteCommand"
+                 CommandType "EditorPasteCommand"
                 }
                }
               }
@@ -2030,22 +2048,23 @@ FrameWidgetClass EditorFrame {
              Rows 1
              {
               ButtonWidgetClass MagnetButton {
-               clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/metron-bold"
                switch toggle
                {
                 ImageWidgetClass MagnetButton_Icon {
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  position 0 0
                  size 24 24
@@ -2055,41 +2074,42 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  priority 1
                  image0 "set:dayz_editor_gui image:magnet"
-                 mode blend
+                 mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                 }
                }
                {
                 ScriptParamsClass {
-                 Binding_Name "m_Editor.MagnetMode"
-                 Two_Way_Binding 1
-                 Relay_Command "m_Editor.CommandManager.MagnetCommand"
+                 CommandType "EditorMagnetCommand"
                 }
                }
               }
               ButtonWidgetClass GroundButton {
-               clipchildren 0
-               color 0.6549 0.8745 0.7098 1
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/metron-bold"
                switch toggle
                {
                 ImageWidgetClass GroundButton_Icon {
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  size 24 24
                  halign center_ref
@@ -2098,40 +2118,41 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  image0 "set:dayz_editor_gui image:ground"
-                 mode blend
+                 mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                 }
                }
                {
                 ScriptParamsClass {
-                 Binding_Name "m_Editor.GroundMode"
-                 Two_Way_Binding 1
-                 Relay_Command "m_Editor.CommandManager.GroundCommand"
+                 CommandType "EditorGroundCommand"
                 }
                }
               }
               ButtonWidgetClass SnapButton {
-               clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/metron-bold"
                switch toggle
                {
                 ImageWidgetClass SnapButton_Icon {
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  size 24 24
                  halign center_ref
@@ -2140,41 +2161,42 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  draggable 0
                  image0 "set:dayz_editor_gui image:snapping"
-                 mode blend
+                 mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                 }
                }
                {
                 ScriptParamsClass {
-                 Binding_Name "m_Editor.SnappingMode"
-                 Two_Way_Binding 1
-                 Relay_Command "m_Editor.CommandManager.SnapCommand"
+                 CommandType "EditorSnapCommand"
                 }
                }
               }
               ButtonWidgetClass CollisionButton {
-               clipchildren 0
-               color 0.7529 0.3686 0.3255 1
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
                position 0 0
-               size 33 33
+               size 32 1
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 1
-               vexactsize 1
-               scriptclass "ViewBinding"
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
                style Default
                "no focus" 1
                font "gui/fonts/metron-bold"
                switch toggle
                {
                 ImageWidgetClass CollisionButton_Icon {
-                 inheritalpha 1
+                 inheritalpha 0
                  ignorepointer 1
                  size 24 24
                  halign center_ref
@@ -2183,20 +2205,20 @@ FrameWidgetClass EditorFrame {
                  vexactpos 1
                  hexactsize 1
                  vexactsize 1
+                 scaled 0
                  draggable 0
                  scriptclass ""
                  image0 "set:dayz_editor_gui image:collision"
-                 mode blend
+                 mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 filter 0
+                 "stretch mode" invalid
+                 filter 1
                 }
                }
                {
                 ScriptParamsClass {
-                 Binding_Name "m_Editor.CollisionMode"
-                 Two_Way_Binding 1
-                 Relay_Command "m_Editor.CommandManager.CollisionCommand"
+                 CommandType "EditorCollisionCommand"
                 }
                }
               }
@@ -2248,7 +2270,7 @@ FrameWidgetClass EditorFrame {
                clipchildren 1
                color 0.149 0.1529 0.1608 1
                position 0 0
-               size 38 1
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
@@ -2273,7 +2295,7 @@ FrameWidgetClass EditorFrame {
                  priority 1
                  scriptclass "SymbolHandler"
                  image0 ""
-                 mode blend
+                 mode additive
                  "src alpha" 1
                  "clamp mode" clamp
                  filter 0
@@ -2296,7 +2318,7 @@ FrameWidgetClass EditorFrame {
                clipchildren 1
                color 0.149 0.1529 0.1608 1
                position 0 0
-               size 38 1
+               size 32 1
                hexactpos 1
                vexactpos 1
                hexactsize 1
@@ -2321,10 +2343,10 @@ FrameWidgetClass EditorFrame {
                  priority 1
                  scriptclass "SymbolHandler"
                  image0 ""
-                 mode blend
+                 mode additive
                  "src alpha" 1
                  "clamp mode" clamp
-                 filter 1
+                 filter 0
                  {
                   ScriptParamsClass {
                    Symbol_Name "person_walking"
@@ -2608,20 +2630,17 @@ FrameWidgetClass EditorFrame {
              visible 1
              clipchildren 1
              ignorepointer 0
-             position 0 0
-             size 0.14 1
-             halign center_ref
-             valign bottom_ref
+             size 192 1
              hexactpos 0
              vexactpos 0
-             hexactsize 0
+             hexactsize 1
              vexactsize 0
              scaled 1
              draggable 0
              scriptclass "ViewBinding"
              style debugUI
              "no focus" 0
-             font "gui/fonts/etelkatextpro"
+             font "gui/fonts/Metron22"
              {
               ButtonWidgetClass BrushToggleButton {
                visible 1
@@ -2629,13 +2648,13 @@ FrameWidgetClass EditorFrame {
                ignorepointer 0
                color 0.7529 0.3686 0.3255 1
                position 0 0
-               size 0.74 0.93
+               size 0.74 24
                halign center_ref
                valign center_ref
                hexactpos 0
                vexactpos 0
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                priority 5
                scriptclass "ViewBinding"
                style Default
@@ -2644,21 +2663,22 @@ FrameWidgetClass EditorFrame {
                switch toggle
                {
                 TextWidgetClass BrushToggleButtonText {
-                 visible 0
+                 visible 1
                  ignorepointer 1
-                 color 0 1 1 0
                  position 0 0
-                 size 1 1
+                 size 1 24
                  halign center_ref
                  valign center_ref
                  hexactpos 0
                  vexactpos 0
                  hexactsize 0
-                 vexactsize 0
+                 vexactsize 1
                  scriptclass "ViewBinding"
-                 font "gui/fonts/etelkatextpro"
+                 text "Test"
+                 font "gui/fonts/Metron22"
+                 "exact text" 0
                  "size to text h" 0
-                 "size to text v" 0
+                 "size to text v" 1
                  "text halign" center
                  "text valign" center
                  {
@@ -2684,18 +2704,6 @@ FrameWidgetClass EditorFrame {
               }
              }
             }
-            FrameWidgetClass BrushControlPlayerSpacer {
-             clipchildren 0
-             ignorepointer 1
-             position 0 0
-             size 0.01 1
-             halign center_ref
-             valign center_ref
-             hexactpos 0
-             vexactpos 0
-             hexactsize 0
-             vexactsize 0
-            }
             FrameWidgetClass BrushRadiusFrame {
              visible 0
              disabled 0
@@ -2713,25 +2721,25 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.1373 0.1373 0.1373 1
                position 0 0
-               size 0.857 1
+               size 0.857 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                style rover_sim_colorable
               }
               SliderWidgetClass BrushRadiusSlider {
                visible 1
                color 1 1 1 0.1961
-               size 0.857 1
+               size 0.857 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                scriptclass "ViewBinding"
                current 20
                "fill in" 1
@@ -2747,13 +2755,13 @@ FrameWidgetClass EditorFrame {
               TextWidgetClass BrushRadiusText {
                visible 1
                ignorepointer 1
-               size 0.4 1
+               size 0.4 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                scriptclass "ViewBinding"
                text "0"
                font "gui/fonts/metron"
@@ -2788,26 +2796,26 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.1373 0.1373 0.1373 1
                position 0 0
-               size 0.857 1
+               size 0.857 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                style rover_sim_colorable
               }
               SliderWidgetClass BrushDensitySlider {
                visible 1
                color 1 1 1 0.1961
                position 0 0
-               size 0.857 1
+               size 0.857 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                scriptclass "ViewBinding"
                maximum 1
                step 0.01
@@ -2826,13 +2834,13 @@ FrameWidgetClass EditorFrame {
                visible 1
                ignorepointer 1
                position 0 0
-               size 0.4 1
+               size 0.4 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                scriptclass "ViewBinding"
                text "0"
                font "gui/fonts/metron"
@@ -2867,26 +2875,26 @@ FrameWidgetClass EditorFrame {
                ignorepointer 1
                color 0.1373 0.1373 0.1373 1
                position 0 0
-               size 0.857 1
+               size 0.857 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                style rover_sim_colorable
               }
               SliderWidgetClass BrushWidthSlider {
                visible 1
                color 1 1 1 0.1961
                position 0 0
-               size 0.857 1
+               size 0.857 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                scriptclass "ViewBinding"
                maximum 6
                step 0.01
@@ -2905,13 +2913,13 @@ FrameWidgetClass EditorFrame {
                visible 1
                ignorepointer 1
                position 0 0
-               size 0.4 1
+               size 0.4 28
                halign center_ref
                valign center_ref
                hexactpos 1
                vexactpos 1
                hexactsize 0
-               vexactsize 0
+               vexactsize 1
                scriptclass "ViewBinding"
                text "0"
                font "gui/fonts/metron"

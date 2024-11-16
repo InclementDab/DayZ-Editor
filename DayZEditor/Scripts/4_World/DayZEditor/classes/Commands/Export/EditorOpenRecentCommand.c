@@ -5,4 +5,9 @@ class EditorOpenRecentCommand: EditorCommand
 	{
 		return "#STR_EDITOR_OPEN_RECENT";
 	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().GetRecentFiles().Count() > 0;
+	}
 }

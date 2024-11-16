@@ -3,11 +3,7 @@ class EditorGroundCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
-		if (!button_args || button_args.Source.GetName() != "GroundButton") {
-			m_Editor.GroundMode = !m_Editor.GroundMode;
-			m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("m_Editor.GroundMode");
-		}
+		m_Editor.GroundMode = !m_Editor.GroundMode;
 		
 		return true;
 	}
@@ -24,6 +20,11 @@ class EditorGroundCommand: EditorCommand
 	
 	override Symbols GetSymbol()
 	{
-		return Symbols.IMAGE_LANDSCAPE;
+		return Symbols.ARROW_DOWN_TO_LINE;
+	}
+	
+	override LinearColor GetColor()
+	{
+		return COLOR_APPLE;
 	}
 }

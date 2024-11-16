@@ -713,22 +713,7 @@ class Editor: Managed
 			// Spams errors
 			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
-		
-		CommandManager[EditorCutCommand].SetCanExecute(selected_objects.Count() > 0);
-		CommandManager[EditorCopyCommand].SetCanExecute(selected_objects.Count() > 0);
-		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
-
-		CommandManager[EditorSnapCommand].SetCanExecute(false); // not implemented
-		
-		// Shit code. Theres better ways to do this CanUndo and CanRedo are slow
-		CommandManager[EditorUndoCommand].SetCanExecute(CanUndo());
-		CommandManager[EditorRedoCommand].SetCanExecute(CanRedo());
-		
-		CommandManager[EditorOpenRecentCommand].SetCanExecute(m_RecentlyOpenedFiles.Count() > 0);
-		
-		CommandManager[EditorCameraTrackRun].SetCanExecute(m_CameraTrackManager.GetCameraTracks().Count() > 0);
-		CommandManager[EditorCloseCommand].SetCanExecute(EditorSaveFile != string.Empty);
-		
+				
 		EditorLog.SetLevel(log_lvl);
 		
 		HandleHands();

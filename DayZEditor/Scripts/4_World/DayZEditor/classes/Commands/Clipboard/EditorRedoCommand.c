@@ -26,4 +26,9 @@ class EditorRedoCommand: EditorCommand
 	{
 		return Symbols.ROTATE_RIGHT;
 	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().CanRedo();
+	}
 }

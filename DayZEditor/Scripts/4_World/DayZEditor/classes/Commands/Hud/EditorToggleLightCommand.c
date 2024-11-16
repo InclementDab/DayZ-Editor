@@ -1,4 +1,4 @@
-[RegisterCommand(EditorToggleLightCommand)]
+[RegisterEditorCommand(EditorToggleLightCommand)]
 class EditorToggleLightCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)

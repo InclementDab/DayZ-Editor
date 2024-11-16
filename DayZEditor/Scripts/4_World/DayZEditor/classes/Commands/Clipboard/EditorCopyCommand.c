@@ -13,6 +13,11 @@ class EditorCopyCommand: EditorCommand
 		return true;
 	}
 
+	override bool CanExecute()
+	{
+		return GetEditor().GetSelectedObjects().Count() > 0;
+	}
+	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_COPY";

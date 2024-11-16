@@ -4,9 +4,9 @@ class EditorPasteCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 
-		Raycast cursor_raycast = GetEditor().GetCursorRaycast();
-		if (GetEditor().IsMapActive()) {
-			cursor_raycast = GetEditor().GetMapCursorRaycast();
+		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafe();		
+		if (sender.IsInherited(EditorButtonScript)) {
+			cursor_raycast = GetEditor().GetCameraRaycast();
 		}
 		
 		if (cursor_raycast && cursor_raycast.Bounce) {
@@ -41,5 +41,14 @@ class EditorPasteCommand: EditorCommand
 	override Symbols GetSymbol()
 	{
 		return Symbols.PASTE;
+	}
+	
+	override bool CanExecute()
+	{
+		// Checking for valid json could be a terrible idea!
+		string from_clipboard, error;
+		GetGame().CopyFromClipboard(from_clipboard);
+		
+		return (from_clipboard != string.Empty);
 	}
 }

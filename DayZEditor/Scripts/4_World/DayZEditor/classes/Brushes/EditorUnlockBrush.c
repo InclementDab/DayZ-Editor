@@ -17,7 +17,6 @@ class EditorUnlockBrush: EditorBrush
 			EditorObject eo = GetEditor().GetEditorObject(r);
 			if (eo) {
 				editor_objects.InsertEditorObject(eo);
-				GetEditor().SelectObject(eo);
 			}
 		}	
 		

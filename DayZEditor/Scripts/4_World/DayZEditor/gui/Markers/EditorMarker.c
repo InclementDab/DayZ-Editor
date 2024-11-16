@@ -1,5 +1,7 @@
 class EditorMarker: ScriptView
 {
+	static EditorMarker PressedButton;
+	static int PressedButtonButton = -1;
 	static ref array<EditorMarker> s_AllMarkers = {};
 
 	protected Editor m_Editor = GetEditor();
@@ -97,6 +99,30 @@ class EditorMarker: ScriptView
 		if (m_LayoutRoot && m_LayoutRoot.IsVisible() != show) {
 			m_LayoutRoot.Show(m_Show);
 		}
+	}
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{	
+		PressedButton = this;
+		PressedButtonButton = button;
+		
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{		
+		if (PressedButton != this || PressedButtonButton != button) {
+			PressedButton = null;
+			PressedButtonButton = -1;
+			return super.OnMouseButtonUp(w, x, y, button);
+		}
+
+		return OnPress(w, x, y, button);		
+	}
+	
+	bool OnPress(Widget w, int x, int y, int button)
+	{		
+		return false;
 	}
 	
 	bool IsDisabled()

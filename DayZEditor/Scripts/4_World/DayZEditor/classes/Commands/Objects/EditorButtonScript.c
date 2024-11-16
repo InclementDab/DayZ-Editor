@@ -30,6 +30,10 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 		Icon = ImageWidget.Cast(m_LayoutRoot.GetChildren());
 		if (Icon) {
 			m_DefaultIconColor = Icon.GetColor();
+			Symbols symbol = m_Command.GetSymbol();
+			if (symbol) {
+				symbol.Load(Icon, ICON_SIZE_NORMAL);
+			}
 		}
 				
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
@@ -44,7 +48,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 				Icon.SetColor(m_Command.GetColor());
 				Icon.SetImage(ICON_SIZE_ENABLE);
 			} else {
-				if (GetWidgetUnderCursor() == m_LayoutRoot) {
+				if (GetWidgetUnderCursor() == m_LayoutRoot && m_Command.CanExecute()) {
 					Icon.SetImage(ICON_SIZE_HOVER);
 				} else {
 					Icon.SetImage(ICON_SIZE_NORMAL);
@@ -94,9 +98,9 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 			EditorTooltip tooltip = EditorTooltip.CreateOnButton(m_Command, w, TooltipPositions.BOTTOM_LEFT);
 			if (!m_Command.CanExecute()) {
 				tooltip.GetLayoutRoot().SetAlpha(100);
+			} else {
+				WidgetAnimator.AnimateColor(m_LayoutRoot, GetEditor().GetSettings().HighlightColor, 70);
 			}
-			
-			WidgetAnimator.AnimateColor(m_LayoutRoot, GetEditor().GetSettings().HighlightColor, 70);
 				
 			GetEditor().GetEditorHud().DelaySetCurrentTooltip(tooltip, w);
 		}

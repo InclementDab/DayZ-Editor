@@ -25,4 +25,9 @@ class EditorCloseCommand: EditorAsyncCommand
 	{
 		return Symbols.XMARK;
 	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().GetSaveFile() != string.Empty;
+	}
 }

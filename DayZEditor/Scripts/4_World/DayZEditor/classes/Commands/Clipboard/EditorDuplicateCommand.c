@@ -36,4 +36,9 @@ class EditorDuplicateCommand: EditorCommand
 	{
 		return Symbols.CLONE;
 	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().GetSelectedObjects().Count() > 0;
+	}
 }

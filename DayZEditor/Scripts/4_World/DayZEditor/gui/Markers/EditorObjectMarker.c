@@ -1,5 +1,5 @@
 class EditorObjectMarker: EditorMarker
-{	
+{		
 	protected EditorObject m_EditorObject;
 	
 	void EditorObjectMarker(EditorObject editor_object)
@@ -30,19 +30,18 @@ class EditorObjectMarker: EditorMarker
 		
 		super.Show(show);
 	}
-	
+
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{		
+	{	
 		// ignores the object if you are placing
 		if (m_Editor.IsPlacing()) { 
 			return false;
 		}
-		
+
 		// Delete the current tooltip to clean the UI a bit
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
-		
+
 		switch (button) {
-			
 			case MouseState.LEFT: {
 				
 				// We want to Toggle selection if you are holding control
@@ -80,7 +79,22 @@ class EditorObjectMarker: EditorMarker
 				camera.LookAt(m_EditorObject.GetPosition());
 				return true;
 			}
-			
+		}
+
+		return true;
+	}
+		
+	override bool OnPress(Widget w, int x, int y, int button)
+	{		
+		// ignores the object if you are placing
+		if (m_Editor.IsPlacing()) { 
+			return false;
+		}
+		
+		// Delete the current tooltip to clean the UI a bit
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
+		
+		switch (button) {			
 			case MouseState.RIGHT: {
 				
 				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
@@ -94,12 +108,11 @@ class EditorObjectMarker: EditorMarker
 				}
 				
 				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y, m_EditorObject);
-				
 				return true;
 			}
 		}
 		
-		return super.OnMouseButtonDown(w, x, y, button);
+		return super.OnPress(w, x, y, button);
 	}
 				
 	override bool IsDisabled()

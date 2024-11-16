@@ -63,9 +63,8 @@ class EditorHudController: EditorControllerBase
 
 	protected ButtonWidget GizmoTranslateButton, LeftbarPanelSearchBarIconButton, FavoritesTabButton, ShowPrivateButton, LeftbarCategoryStatic, LeftbarCategoryConfig;
 	protected ButtonWidget LeftbarHide, DeletionsTabButton, PlacementsTabButton, PlacedSearchIconButton, RightbarHide;
-	protected ButtonWidget MenuBarFile, MenuBarEdit, MenuBarView, MenuBarEditor, NewButton, OpenButton, SaveButton, SaveAsButton;
-	protected ButtonWidget UndoButton, RedoButton, CutButton, CopyButton, PasteButton, MagnetButton, GroundButton;
-	protected ButtonWidget SnapButton, CollisionButton, CameraLightButton, BrushToggleButton, CinematicCameraButton, CameraTrackMinimizeButton, AddNodeButton, CameraTrackRunButton;
+	protected ButtonWidget MenuBarFile, MenuBarEdit, MenuBarView, MenuBarEditor;
+	protected ButtonWidget BrushToggleButton, CinematicCameraButton, CameraTrackMinimizeButton, AddNodeButton, CameraTrackRunButton;
 	protected ButtonWidget ObjectSelectionButton, BoxSelectionButton, EllipseSelectionButton, LassoSelectionButton;
 	
 	protected Widget CameraTrackButtonOutline;
@@ -186,43 +185,6 @@ class EditorHudController: EditorControllerBase
 				EditorBrush.BrushRadius = BrushRadius / 2;
 				EditorBrush.BrushDensity = BrushDensity;
 				EditorBrush.BrushWidth = BrushWidth;
-				break;
-			}
-			
-			case "m_Editor.MagnetMode": {
-				
-				if (m_Editor.MagnetMode) {
-					MagnetButton_Icon.SetColor(COLOR_CANDY);
-				} else {
-					MagnetButton_Icon.SetColor(COLOR_WHITE);
-				}
-				break;
-			}
-			case "m_Editor.GroundMode": {
-				if (m_Editor.GroundMode) {
-					GroundButton_Icon.SetColor(COLOR_APPLE);
-				} else {
-					GroundButton_Icon.SetColor(COLOR_WHITE);
-				}
-				
-				break;
-			}
-			case "m_Editor.SnappingMode": {
-				if (m_Editor.SnappingMode) {
-					SnapButton_Icon.SetColor(COLOR_JELLY);
-				} else {
-					SnapButton_Icon.SetColor(COLOR_WHITE);
-				}
-				
-				break;
-			}
-			case "m_Editor.CollisionMode": {
-				if (m_Editor.CollisionMode) {
-					CollisionButton_Icon.SetColor(COLOR_PALE_B);
-				} else {
-					CollisionButton_Icon.SetColor(COLOR_WHITE);
-				}
-					
 				break;
 			}
 		}
@@ -564,14 +526,6 @@ class EditorHudController: EditorControllerBase
 		m_Editor.GetEditorHud().SetCurrentTooltip(null);
 
 		SymbolHandler handler;
-		ButtonWidget button_w = ButtonWidget.Cast(w);
-		if (w.GetChildren() && w.GetChildren().Type() == ImageWidget && w.GetChildren().GetName().Contains("_Icon")) {
-			w.GetChildren().GetScript(handler);
-
-			if (handler && (!button_w || !button_w.GetState())) {
-				handler.SetSize(2);
-			}
-		}
 
 		switch (w.GetTypeName()) {
 		
