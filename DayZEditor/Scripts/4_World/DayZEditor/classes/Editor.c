@@ -550,7 +550,7 @@ class Editor: Managed
 	{
 		ECameraLockFlag processed_flags;
 		if (GetGame().GetUIManager().IsCursorVisible()) {
-			if (GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue()) {
+			if (GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue() && !GetWidgetUnderCursor()) {
 				if (m_EditorCamera.GetSettings().InvertCamera) {
 					processed_flags |= ECameraLockFlag.INVERT_LOOK;
 				}

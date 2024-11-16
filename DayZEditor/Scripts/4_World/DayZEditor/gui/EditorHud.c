@@ -485,12 +485,12 @@ class EditorHud: ScriptViewMenu
 	{
 		switch (w) {
 			case LeftbarCategoryStatic: {
-				CreateDelayedTooltip(w, "Static Objects", TooltipPosition.BOTTOM_RIGHT, "Static Non-Interactive Objects");
+				CreateDelayedTooltip(w, "Static Objects", TooltipPosition.TOP_LEFT, "Static Non-Interactive Objects");
 				break;
 			}
 
 			case LeftbarCategoryConfig: {
-				CreateDelayedTooltip(w, "Config Objects", TooltipPosition.BOTTOM_RIGHT, "Interactive Objects & Items");
+				CreateDelayedTooltip(w, "Config Objects", TooltipPosition.TOP_LEFT, "Interactive Objects & Items");
 				break;
 			}
 		}
