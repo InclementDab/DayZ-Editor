@@ -4,7 +4,7 @@ class EditorSaveBackupCommand: EditorExportCommandBase
 	{
 		EditorLog.Trace("EditorSaveCommand");
 		
-		string file_full_path = m_Editor.GetSaveFile();
+		string file_full_path = GetEditor().GetSaveFile();
 		
 		if (file_full_path != string.Empty) {
 			EditorLog.Info("Using filter %1", "*.dze");
