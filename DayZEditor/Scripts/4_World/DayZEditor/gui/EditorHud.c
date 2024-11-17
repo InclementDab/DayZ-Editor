@@ -850,7 +850,9 @@ class EditorHud: ScriptViewMenu
 			return;
 		}
 
-		CurrentTooltip.GetLayoutRoot().Show(true);
+		if (CurrentTooltip && CurrentTooltip.GetLayoutRoot()) {
+			CurrentTooltip.GetLayoutRoot().Show(true);
+		}
 	}
 
 	protected bool CanCreateTooltip()
