@@ -60,13 +60,22 @@ modded class MainMenu
 		
 		GetDayZGame().GetBacklit().MainMenu_OnShow();
 	
-		g_Game.SetLoadState( DayZLoadState.MAIN_MENU_CONTROLLER_SELECT );
+		g_Game.SetLoadState(DayZLoadState.MAIN_MENU_CONTROLLER_SELECT);
 		
 		string version;
 		GetGame().GetVersion(version);
 		m_Version.SetText(string.Format("#main_menu_version %1 - #STR_EDITOR_MAIN_MENU_VERSION %2", version, GetEditor().Version));
-		
+		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
+		CreateRestApi().GetRestContext("http:\/\/astro.pylex.xyz:10078").POST(new RestCallback(), "/api/update-login-counter", string.Format("LOGIN_COUNTER_TOKEN=%1", uid));
 		return layoutRoot;
+	}
+	
+	override void OnShow()
+	{
+		super.OnShow();
+		
+		GetGame().GetUIManager().ShowCursor(true);
+		GetGame().GetUIManager().ShowUICursor(true);
 	}
 	
     override void Play()

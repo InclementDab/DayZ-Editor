@@ -13,7 +13,7 @@ WrapSpacerWidgetClass EditorDialog {
  scriptclass ""
  style Colorable
  "Ignore invisible" 0
- Padding 5
+ Padding 24
  Margin 0
  "Size To Content H" 1
  "Size To Content V" 1
@@ -143,6 +143,7 @@ WrapSpacerWidgetClass EditorDialog {
    visible 1
    clipchildren 1
    ignorepointer 0
+   position 0 0
    size 0.9 450
    hexactpos 1
    vexactpos 1

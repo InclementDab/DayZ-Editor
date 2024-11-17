@@ -17,12 +17,12 @@ WrapSpacerWidgetClass ListBoxWra {
    visible 1
    clipchildren 1
    ignorepointer 0
-   size 0.97 900
+   size 0.97 1920
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
-   scaled 0
+   scaled 1
    style Default
    "title visible" 0
    colums ""

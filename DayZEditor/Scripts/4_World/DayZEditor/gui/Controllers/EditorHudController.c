@@ -481,6 +481,7 @@ class EditorHudController: EditorControllerBase
 		if (RecursiveGetParent(w, ScrollWidget)) {
 			if (KeyState(KeyCode.KC_LCONTROL)) {
 				ScrollWidget.Cast(w).VScrollStep(wheel * 10);
+				return true;
 			}
 		}
 		

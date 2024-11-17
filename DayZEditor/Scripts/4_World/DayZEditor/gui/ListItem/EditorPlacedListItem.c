@@ -205,13 +205,21 @@ class EditorPlacedListItem: EditorListItem
 			m_EditorObject.GetMarker().SetHighlighted(1);
 		}
 
+		bool mouse_down = GetUApi().GetInputByID(UAMenuSelect).LocalValue();
 		switch (w) {
 			case LockedImage.GetParent(): {
-				if (LockedImage.IsVisible()) {
+				if (mouse_down) {
+					m_EditorObject.Lock(!m_EditorObject.Locked);
+					return true;
+				}
+				
+				if (LockedImage.IsVisible() && m_EditorObject.Locked) {					
 					string command_name = GetEditor().CommandManager[EditorUnlockCommand].GetName();
 					string command_shortcut = GetEditor().CommandManager[EditorUnlockCommand].GetShortcutString();
 					GetEditor().GetEditorHud().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(command_name, LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", command_shortcut)), w);
 				} else {
+					
+					
 					string command_name2 = GetEditor().CommandManager[EditorLockCommand].GetName();
 					string command_shortcut2 = GetEditor().CommandManager[EditorLockCommand].GetShortcutString();
 					GetEditor().GetEditorHud().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(command_name2, LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", command_shortcut2)), w);
@@ -225,6 +233,13 @@ class EditorPlacedListItem: EditorListItem
 					GetEditor().GetEditorHud().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle Bounding Box", ToggleBoundingBoxImage.GetParent(), TooltipPosition.BOTTOM_LEFT), w);
 				//}
 				
+				if (mouse_down) {
+					bool new_state = !(m_EditorObject.GetFlags() & EditorObjectFlags.BBOX);
+					m_EditorObject.SetBoundingBox(!m_EditorObject.IsBoundingBoxEnabled(), true);
+					ToggleBoundingBoxImage.Show(new_state);
+					return true;
+				}
+				
 				break;
 			}
 			
@@ -232,6 +247,19 @@ class EditorPlacedListItem: EditorListItem
 				//if (ToggleWorldMarkerImage.IsVisible()) {
 					GetEditor().GetEditorHud().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle World Marker", ToggleWorldMarkerImage.GetParent(), TooltipPosition.BOTTOM_LEFT), w);
 				//}
+				
+				if (mouse_down) {
+					bool new_state2 = !(m_EditorObject.GetFlags() & EditorObjectFlags.OBJECTMARKER);
+					m_EditorObject.EnableObjectMarker(new_state2);
+					if (new_state2) {
+						m_EditorObject.GetData().Flags |= EditorObjectFlags.OBJECTMARKER;
+					} else {
+						m_EditorObject.GetData().Flags &= ~EditorObjectFlags.OBJECTMARKER;
+					}
+					
+					ToggleWorldMarkerImage.Show(new_state2);
+					return true;
+				}
 				
 				break;
 			}
