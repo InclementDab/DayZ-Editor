@@ -45,3 +45,10 @@ modded class DayZGame
 		Event_OnDeactivateMessage.Invoke();
 	}
 }
+
+modded class NotificationUI
+{
+	override void Update( float timeslice )
+	{
+	}
+}

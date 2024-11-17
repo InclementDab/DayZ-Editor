@@ -1,14 +1,5 @@
 class EditorCameraClassic: EditorCamera
 {
-	float FOV = 1;
-	float DOFDistance;
-	float DOFBlur;
-	float Blur;
-	float Vignette;
-	float Sharpness;
-	float NearPlane;
-	float Exposure;
-	
 	float Smoothing = 0;
 	
 	float Speed = GetEditor().GetSettings().CameraSpeed;
@@ -26,9 +17,7 @@ class EditorCameraClassic: EditorCamera
 	vector linearVelocity;
 	vector angularVelocity;
 	vector orientation;
-	
-	int ColorCorrection = COLOR_WHITE;
-	
+		
 	bool HideCursorOnDrag;
 	
 	void EditorCameraClassic()
@@ -267,55 +256,5 @@ class EditorCameraClassic: EditorCamera
 		}
 		
 		MoveEnabled = true;
-	}
-		
-	void PropertyChanged(string property_name)
-	{
-		switch (property_name) {
-						
-			case "FOV": {
-				SetFOV(FOV);
-				break;
-			}			
-			
-			case "NearPlane": {
-				SetNearPlane(NearPlane);
-				break;
-			}			
-			
-			case "DOFBlur":
-			case "DOFDistance": {
-				SetFocus(DOFDistance, DOFBlur);
-				break;
-			}
-			
-			case "Vignette": {
-				PPEffects.SetVignette(Vignette, 0, 0, 0, 255);
-				break;
-			}
-			
-			case "Blur": {
-				PPEffects.SetBlur(Blur);
-				break;
-			}
-			
-			case "Sharpness": {	
-				GetGame().GetWorld().GetMaterial("Graphics/Materials/postprocess/filmgrainNV").SetParam("Sharpness", Sharpness);
-				break;
-			}
-			
-			case "Exposure": {
-				GetGame().GetWorld().SetEyeAccom(Exposure);
-				break;
-			}
-			
-			case "ColorCorrection": {
-				float a, r, g, b;
-				InverseARGBF(ColorCorrection, a, r, g, b);
-				PPEffects.SetColorizationNV(r, g, b);
-				break;
-			}
-		}	
 	}	
-	
 }

@@ -61,6 +61,9 @@ class EditorCamera: Camera
 	const float SPEED_MAX = 300;
 	const float SPEED_MIN = 1;
 	
+	float FOV = 1, DOFDistance, DOFBlur, Blur, Vignette, Sharpness, NearPlane, Exposure;
+	int ColorCorrection = -1;
+	
 	protected bool m_LightState;
 
 	void EditorCamera()
@@ -87,6 +90,55 @@ class EditorCamera: Camera
 	{
 		return m_EditorCameraSettings;
 	}
+	
+	void PropertyChanged(string property_name)
+	{
+		switch (property_name) {
+						
+			case "FOV": {
+				SetFOV(FOV);
+				break;
+			}			
+			
+			case "NearPlane": {
+				SetNearPlane(NearPlane);
+				break;
+			}			
+			
+			case "DOFBlur":
+			case "DOFDistance": {
+				SetFocus(DOFDistance, DOFBlur);
+				break;
+			}
+			
+			case "Vignette": {
+				PPEffects.SetVignette(Vignette, 0, 0, 0, 255);
+				break;
+			}
+			
+			case "Blur": {
+				PPEffects.SetBlur(Blur);
+				break;
+			}
+			
+			case "Sharpness": {	
+				GetGame().GetWorld().GetMaterial("Graphics/Materials/postprocess/filmgrainNV").SetParam("Sharpness", Sharpness);
+				break;
+			}
+			
+			case "Exposure": {
+				GetGame().GetWorld().SetEyeAccom(Exposure);
+				break;
+			}
+			
+			case "ColorCorrection": {
+				float a, r, g, b;
+				InverseARGBF(ColorCorrection, a, r, g, b);
+				PPEffects.SetColorizationNV(r, g, b);
+				break;
+			}
+		}	
+	}	
 }
 
 [RegisterProfileSetting(EditorCameraSettings, "CAMERA")]
@@ -122,12 +174,6 @@ class EditorCamera_V2: EditorCamera
 {	
 	protected float m_CameraFovVelocity[1];
 	protected float m_CameraFovActual;
-
-	float DOFDistance;
-	float DOFBlur;
-	float Blur;
-	float Vignette;
-	float Sharpness;
 		
 	float Speed = GetEditor().GetSettings().CameraSpeed;
 	float Boost_Multiplier = 6.5;
@@ -137,8 +183,7 @@ class EditorCamera_V2: EditorCamera
 	float SendUpdateAccumalator = 0.0;
 	
 	protected vector m_LinearVelocity, m_AngularVelocity;
-	
-	int ColorCorrection = COLOR_WHITE;
+	protected vector m_Impulse;
 	
 	void EditorCamera_V2()
 	{
@@ -216,11 +261,24 @@ class EditorCamera_V2: EditorCamera
 		if (teleport) {
 			Ray cursor_ray = GetEditor().GetCursorRayModeSafe();
 			Raycast cursor_ray_cast = GetEditor().GetCursorRaycastModeSafe();
+
+			float y_height = transform[3][1] - GetGame().SurfaceY(transform[3][0], transform[3][2]);
+			vector target = cursor_ray.GetPoint(250);
 			if (cursor_ray_cast) {
-				transform[3] = cursor_ray_cast.Bounce.GetPoint(100.0);
-			} else if (cursor_ray) {
-				transform[3] = cursor_ray.GetPoint(m_EditorCameraSettings.ViewDistance);
+				target = cursor_ray_cast.Bounce.Position;
 			}
+
+			target[1] = GetGame().SurfaceY(target[0], target[2]) + y_height;
+
+			m_Impulse = target - transform[3];
+			//transform[3] = target;
+		}
+
+		if (m_Impulse.Length() > 0.01) {
+						
+			vector impulse_amount = 5 * m_Impulse * timeSlice;
+			transform[3] = transform[3] + impulse_amount;
+			m_Impulse = m_Impulse - impulse_amount;
 		}
 				
 		// Process Angular Velocity, use angle addition. hope YawPitchRollMatrix normalizes it

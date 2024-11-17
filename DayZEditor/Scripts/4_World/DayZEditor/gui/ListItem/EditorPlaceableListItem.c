@@ -205,10 +205,10 @@ class EditorPlaceableListItem: EditorListItem
 			w.Show(false);
 		}
 		
-		return true;
+		return super.OnDrag(w, x, y);
 	}
 	
-	override bool OnDrop(Widget w, int x, int y, Widget receiver)
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
 		if (GetEditor().IsPlacing()) {
@@ -216,7 +216,7 @@ class EditorPlaceableListItem: EditorListItem
 			w.Show(true);
 		}
 		
-		return true;
+		return super.OnDrop(w, x, y, reciever);
 	}
 		
 	override bool FilterType(string filter)
