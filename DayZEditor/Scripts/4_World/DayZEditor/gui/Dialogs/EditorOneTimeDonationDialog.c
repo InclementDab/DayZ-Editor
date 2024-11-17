@@ -85,7 +85,7 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 		m_RichText.ListBox.GetScreenSize(s_x, s_y);
 		m_RichText.ListBox.SetScreenSize(s_x, pl.changelog.Count() * 22);
 		
-		SetupDialog();
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetupDialog, 10);
 	}
 	
 	void OnCloseButton()

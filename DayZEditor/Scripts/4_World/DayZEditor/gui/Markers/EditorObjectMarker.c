@@ -63,25 +63,11 @@ class EditorObjectMarker: EditorMarker
 				m_Editor.SelectObject(m_EditorObject);
 				
 				thread CheckDragBounds(x, y);
-				return false;
-			}
-			
-			case MouseState.MIDDLE: {
-				EditorCamera camera = GetEditor().GetCamera();
-
-				vector camera_transform[4];
-				camera.GetTransform(camera_transform);
-				Math3D.MatrixInverse3(camera_transform);
-				camera_transform[3] = m_EditorObject.GetPosition();
-
-				vector new_position = Vector(4.0, 4.0, 4.0).Multiply4(camera_transform);
-				camera.SetPosition(new_position);
-				camera.LookAt(m_EditorObject.GetPosition());
-				return true;
+				return super.OnMouseButtonDown(w, x, y, button);
 			}
 		}
 
-		return true;
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 		
 	override bool OnPress(Widget w, int x, int y, int button)
@@ -108,6 +94,21 @@ class EditorObjectMarker: EditorMarker
 				}
 				
 				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y, m_EditorObject);
+				return true;
+			}
+			
+						
+			case MouseState.MIDDLE: {
+				EditorCamera camera = GetEditor().GetCamera();
+
+				vector camera_transform[4];
+				camera.GetTransform(camera_transform);
+				Math3D.MatrixInverse3(camera_transform);
+				camera_transform[3] = m_EditorObject.GetPosition();
+
+				vector new_position = Vector(4.0, 4.0, 4.0).Multiply4(camera_transform);
+				camera.SetPosition(new_position);
+				camera.LookAt(m_EditorObject.GetPosition());
 				return true;
 			}
 		}
