@@ -36,7 +36,7 @@ class EditorHud: ScriptViewMenu
 	protected SelectionMode m_SelectionMode;
 	protected bool m_ObjectSelectToggle;
 	
-	Widget Menubar, ToolsWrapper;
+	Widget Menubar, ToolsWrapper, InfobarFrame, ToolbarFrame;
 	Widget PlacementsTabButton, DeletionsTabButton, LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
 		
 	CanvasWidget EditorCanvas;
@@ -146,7 +146,7 @@ class EditorHud: ScriptViewMenu
 		} else ReloadBrushes(brush_file);
 		
 #endif		
-
+	
 		m_TemplateController.ShowPrivate = m_Editor.GetSettings().ShowScopeZeroObjects;
 		m_TemplateController.NotifyPropertyChanged("ShowPrivate");
 
@@ -160,11 +160,22 @@ class EditorHud: ScriptViewMenu
 	{
 		super.OnWidgetScriptInit(w);
 		
-		float s_r_w, s_r_h, s_l_w, s_l_h;
-		RightbarWrapper.GetScreenSize(s_r_w, s_r_h);
-		RightbarWrapper.SetScreenSize(m_Editor.GetSettings().RightBarPlacement, s_r_h);
-		LeftbarWrapper.GetScreenSize(s_l_w, s_l_h);
-		LeftbarWrapper.SetScreenSize(m_Editor.GetSettings().LeftBarPlacement, s_l_h);
+		int screen_w, screen_h;
+		GetScreenSize(screen_w, screen_h);
+		
+		float tb_s_w, tb_s_h;
+		ToolbarFrame.GetScreenSize(tb_s_w, tb_s_h);
+		
+		float ib_s_w, ib_s_h;
+		InfobarFrame.GetScreenSize(ib_s_w, ib_s_h);
+		
+		float lbw_s_w, lbw_s_h;
+		float rbw_s_w, rbw_s_h;
+		LeftbarWrapper.GetScreenSize(lbw_s_w, lbw_s_h);
+			RightbarWrapper.GetScreenSize(rbw_s_w, rbw_s_h);
+		
+		LeftbarWrapper.SetScreenSize(m_Editor.GetSettings().LeftBarPlacement, screen_h - ib_s_h - tb_s_h);
+		RightbarWrapper.SetScreenSize(m_Editor.GetSettings().RightBarPlacement, screen_h - ib_s_h - tb_s_h);
 	}
 	
 	int ReloadBrushes(string filename)

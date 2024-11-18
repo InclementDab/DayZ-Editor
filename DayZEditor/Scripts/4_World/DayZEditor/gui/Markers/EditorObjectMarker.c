@@ -52,7 +52,7 @@ class EditorObjectMarker: EditorMarker
 				
 				// allows multiple objects to be dragged
 				if (m_EditorObject.IsSelected()) {
-					thread CheckDragBounds(x, y);
+					CheckDragBounds(x, y);
 					return true;
 				}
 				
@@ -62,7 +62,7 @@ class EditorObjectMarker: EditorMarker
 				
 				m_Editor.SelectObject(m_EditorObject);
 				
-				thread CheckDragBounds(x, y);
+				CheckDragBounds(x, y);
 				return super.OnMouseButtonDown(w, x, y, button);
 			}
 		}
@@ -171,17 +171,17 @@ class EditorObjectMarker: EditorMarker
 		}
 	}
 	
-	private const int DRAG_THRESHOLD = 5;
+	private const int DRAG_THRESHOLD_SQ = 25;
 	private void CheckDragBounds(int x, int y)
 	{
-		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
+		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
 			int c_x, c_y;
 			GetMousePos(c_x, c_y);
 			
 			int dist_x = Math.AbsInt(x - c_x);
 			int dist_y = Math.AbsInt(y - c_y);
 			
-			if (Math.Sqrt(dist_x * dist_x + dist_y * dist_y) > DRAG_THRESHOLD) {
+			if (dist_x * dist_x + dist_y * dist_y > DRAG_THRESHOLD_SQ) {
 				m_Editor.SelectObject(m_EditorObject);
 				
 				array<EditorObject> additional_drag_targets = m_Editor.GetSelectedObjects().GetValueArray();
@@ -191,7 +191,7 @@ class EditorObjectMarker: EditorMarker
 				return;
 			}
 			
-			Sleep(10);
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CheckDragBounds, 10, false, x, y);
 		}
 	}
 	
