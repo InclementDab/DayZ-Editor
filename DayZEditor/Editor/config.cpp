@@ -14,6 +14,11 @@ class CfgVehicles
 {
 	class Static;
 	class HouseNoDestruct;
+	class EditorCamera : HouseNoDestruct
+	{
+		scope = 2;
+		model = "\DayZEditor\Editor\EditorCamera.p3d";
+	};
 
 	class DSLRCamera : HouseNoDestruct
 	{
@@ -70,8 +75,8 @@ class CfgVehicles
 		hiddenSelections[] = {"main"};
 		shadow = 0;
 	};
-	
-	class GizmoArrowX: GizmoBase
+
+	class GizmoArrowX : GizmoBase
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\TranslationWidgetX.p3d";
@@ -79,7 +84,7 @@ class CfgVehicles
 		shadow = 0;
 	};
 
-	class GizmoArrowY: GizmoBase
+	class GizmoArrowY : GizmoBase
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\TranslationWidgetY.p3d";
@@ -87,14 +92,14 @@ class CfgVehicles
 		shadow = 0;
 	};
 
-	class GizmoArrowZ: GizmoBase
+	class GizmoArrowZ : GizmoBase
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\TranslationWidgetZ.p3d";
 		hiddenSelections[] = {"main"};
 		shadow = 0;
 	};
-	
+
 	class GizmoCenter : GizmoBase
 	{
 		scope = 1;
