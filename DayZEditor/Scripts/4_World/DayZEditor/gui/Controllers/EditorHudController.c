@@ -70,7 +70,8 @@ class EditorHudController: EditorControllerBase
 
 	// Toolvar stuff
 	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
-
+	Widget BrushRadiusText, BrushRadiusSlider, BrushDensityText, BrushDensitySlider, BrushWidthText, BrushWidthSlider;
+	
 	float BrushRadius = 65;
 	float BrushDensity = 0.25;
 	float BrushWidth = 2.0;
@@ -475,7 +476,6 @@ class EditorHudController: EditorControllerBase
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 		
-
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{		
 		if (RecursiveGetParent(w, ScrollWidget)) {
@@ -485,28 +485,26 @@ class EditorHudController: EditorControllerBase
 			}
 		}
 		
-		string w_name = w.GetName();
-		float direction = wheel;
-		switch (w_name) {
-			case "BrushRadiusText":
-			case "BrushRadiusSlider": {
-				BrushRadius += direction * 2;
+		switch (w) {
+			case BrushRadiusText:
+			case BrushRadiusSlider: {
+				BrushRadius += wheel * 2;
 				BrushRadius = Math.Clamp(BrushRadius, 1, 100);
 				NotifyPropertyChanged("BrushRadius");
 				break;
 			}
 			
-			case "BrushDensityText":
-			case "BrushDensitySlider": {
-				BrushDensity += direction * 0.05;
+			case BrushDensityText:
+			case BrushDensitySlider: {
+				BrushDensity += wheel * 0.05;
 				BrushDensity = Math.Clamp(BrushDensity, 0, 1);
 				NotifyPropertyChanged("BrushDensity");
 				break;
 			}			
 
-			case "BrushWidthText": 
-			case "BrushDensitrySlider": {
-				BrushWidth += direction;
+			case BrushWidthText: 
+			case BrushWidthSlider: {
+				BrushWidth += wheel;
 				BrushWidth = Math.Clamp(BrushWidth, 0, BrushRadius);
 				NotifyPropertyChanged("BrushWidth");
 				break;
