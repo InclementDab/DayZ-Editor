@@ -9,9 +9,12 @@ class EditorSettings: ProfileSettings
 
 	[RegisterProfileSettingMultistate("BEHAVIOR", "DrawCameraLightShadows", "Draw Camera Light Shadows", {"NO", "YES"})]
 	int DrawCameraLightShadows = 0;
-	
-	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveStepSize", "Quick Move Speed (m/s)", 0.1, 4)]
-	float QuickMoveStepSize			= 0.1;
+
+	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveMode", "Quick Move Mode", {"WORLD", "CAMERA FLAT", "CAMERA 3D"})]
+	int QuickMoveMode = 1;
+		
+	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveSpeed", "Quick Move Speed (m/s)", 1.0, 40)]
+	float QuickMoveSpeed = 10;
 	
 	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveFollowsCamera", "Quick Move Mode", {"WORLD", "LOCAL"})]
 	int QuickMoveFollowsCamera		= 0;
@@ -131,7 +134,6 @@ class EditorSettings: ProfileSettings
 	
 	void SetDefaults()
 	{
-		QuickMoveStepSize			= 0.1; // dont know what this does (not changed)
 		CameraSpeed					= 0.05; // 25
 		CameraTilt					= 0.5; // 0
 		MarkerViewDistance 			= 0.2; // 1000

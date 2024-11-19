@@ -138,13 +138,8 @@ class EditorHud: ScriptViewMenu
 			}
 		}
 
-		// Load Brushes		
-		
-		string brush_file = SystemPath.Format(m_Editor.GetSettings().BrushFile);		
-		if (!FileExist(brush_file) && !CopyFile("DayZEditor\\scripts\\data\\Defaults\\Brushes.xml", brush_file)) {
-			Error(string.Format("Could not copy brush data to %1", brush_file));
-		} else ReloadBrushes(brush_file);
-		
+		// Load Brushes
+		ReloadBrushes(m_Editor.GetSettings().BrushFile);		
 #endif		
 	
 		m_TemplateController.ShowPrivate = m_Editor.GetSettings().ShowScopeZeroObjects;

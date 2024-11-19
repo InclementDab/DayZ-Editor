@@ -120,7 +120,8 @@ class Editor: Managed
 	protected string								EditorSaveFile;
 	protected float m_TimeSinceLastBackup;
 	
-	static const string								ROOT_DIRECTORY = SystemPath.Combine(SystemPath.Saves(), "Editor");
+	static const string	ROOT_DIRECTORY = SystemPath.Combine(SystemPath.Saves(), "Editor");
+	static const string BRUSH_XML_FILE = "DayZEditor/Scripts/Data/Defaults/Brushes.xml";
 	
 	// modes
 	bool 										MagnetMode;
@@ -182,6 +183,12 @@ class Editor: Managed
 
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(ROOT_DIRECTORY);
+		
+		// Load brush files
+		string brush_file = SystemPath.Format(GetSettings().BrushFile);
+		if (!FileExist(brush_file) && !CopyFile(BRUSH_XML_FILE, brush_file)) {
+			Error(string.Format("Could not copy brush data to %1", brush_file));
+		}
 		
 		// Init Statistics
 		m_StatisticsSaveTimer.Run(10.0, this, "OnStatisticsSave", null, true);
@@ -598,10 +605,9 @@ class Editor: Managed
 
 	void Update(float timeslice)
 	{	
-		PPEManagerStatic.GetPPEManager().GetPostProcessCurrentValues(1, 0);
-		
-		ProcessInput(GetGame().GetInput());
+		ProcessInput(timeslice, GetGame().GetInput());
 		if (EditorSaveFile != string.Empty) {
+			
 			m_TimeSinceLastBackup += timeslice;
 
 			switch (GetSettings().CreateSaveBackups) {
@@ -761,11 +767,21 @@ class Editor: Managed
 		}
 	}
 				
-	void ProcessInput(Input input)
+	void ProcessInput(float dt, Input input)
 	{
+		UAInputAPI input_api = GetUApi();
+		UAInput fwd_input = input_api.GetInputByID(UAUIUp);
+		UAInput bck_input = input_api.GetInputByID(UAUIDown);
+		UAInput left_input = input_api.GetInputByID(UAUILeft);
+		UAInput right_input = input_api.GetInputByID(UAUIRight);
+		UAInput up_input = input_api.GetInputByID(UAZeroingUp);
+		UAInput down_input = input_api.GetInputByID(UAZeroingDown);
+		UAInput turbo_input = input_api.GetInputByID(UATurbo);
+		UAInput slow_input = input_api.GetInputByID(UALookAround);
 		if (IsPlacing()) {
 			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
+				
 				float factor = 9;
 				if (KeyState(KeyCode.KC_LSHIFT)) {
 					factor /= 5;
@@ -786,6 +802,99 @@ class Editor: Managed
 				}
 			}
 		}
+									
+		EditorObjectMap selected_objects = GetSelectedObjects();
+		if (selected_objects.Count() == 0 && IsPlacing()) {
+			int input_direction = fwd_input.LocalPress() + fwd_input.LocalHold() - bck_input.LocalPress() - bck_input.LocalHold();
+			input_direction = Math.Clamp(input_direction, -1, 1);
+			if (input_direction) {
+				auto placeables = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(GetEditorHud().GetTemplateController().CategoryConfig, GetEditorHud().GetTemplateController().LeftbarSpacerConfig, GetEditorHud().GetTemplateController().LeftbarSpacerStatic);
+				for (int i = 0; i < placeables.Count(); i++) {
+					if (placeables[i].IsSelected()) {
+						if (!placeables[i + input_direction]) {
+							continue;
+						}
+						
+						placeables[i].Deselect();
+						AddInHand(placeables[i + input_direction].GetPlaceableItem());
+						placeables[i + input_direction].Select();
+						
+						// Handle tooltip showing
+						placeables[i].OnMouseLeave(null, null, 0, 0);
+						placeables[i + input_direction].OnMouseEnter(null, 0, 0);
+						
+						GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
+						break;
+					}
+				}
+			}
+		} else if (selected_objects.Count()) {
+			float step_size = GetSettings().QuickMoveSpeed;
+			if (turbo_input.LocalValue()) {
+				step_size *= (1.608 * 1.608);
+			}
+			
+			if (slow_input.LocalValue()) {
+				step_size /= (1.608 * 1.608);
+			}
+			
+			step_size *= dt;
+			
+			vector camera_transform_mat[4];
+			GetCamera().GetTransform(camera_transform_mat);
+
+			switch (GetSettings().QuickMoveMode) {
+				case 0: { // World flat
+					camera_transform_mat[0] = vector.Aside;
+					camera_transform_mat[1] = vector.Up;
+					camera_transform_mat[2] = vector.Forward;
+					break;
+				}
+
+				case 1: { // Camera flat
+					camera_transform_mat[1] = vector.Up;
+					camera_transform_mat[2] = (camera_transform_mat[0] * vector.Up).Normalized();
+					Math3D.MatrixOrthogonalize4(camera_transform_mat);
+					break;
+				}
+
+				case 2: { // Camera 3d
+					break;
+				}
+			}
+			
+			vector pos_offset = vector.Zero;
+			if (fwd_input.LocalValue()) {
+				pos_offset = Vector(0, 0, step_size).Multiply3(camera_transform_mat);
+			}
+			
+			if (bck_input.LocalValue()) {
+				pos_offset = Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
+			}
+			
+			if (left_input.LocalValue()) {
+				pos_offset = Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
+			}
+			
+			if (right_input.LocalValue()) {
+				pos_offset = Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
+			}
+			
+			if (up_input.LocalValue()) {
+				pos_offset = Vector(0, step_size, 0).Multiply3(camera_transform_mat);
+			}
+			
+			if (down_input.LocalValue()) {
+				pos_offset = Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
+			}
+					
+			if (pos_offset != vector.Zero) {
+				foreach (int id, EditorObject selected_object: selected_objects) {
+					selected_object.GetWorldObject().SetPosition(selected_object.GetWorldObject().GetPosition() + pos_offset);
+				}
+			}
+		}
+		
 		
 		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !GetWidgetUnderCursor() && !IsPlacing()) {
 			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
