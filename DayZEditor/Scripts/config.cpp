@@ -47,9 +47,9 @@ class CfgMods
 			class widgetStyles
 			{
 				files[] = {
+					"DabsFramework/gui/looknfeel/prefabs.styles",
 					"DayZEditor/gui/looknfeel/editorwidgets.styles",
-					"DayZEditor/gui/looknfeel/prefabs.styles",
-					"DabsFramework/gui/looknfeel/prefabs.styles"
+					"DayZEditor/gui/looknfeel/prefabs.styles"
 				};
 			};
 			class engineScriptModule

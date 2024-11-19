@@ -3,8 +3,9 @@ WrapSpacerWidgetClass FileDialog {
  clipchildren 1
  ignorepointer 0
  color 0.1412 0.1569 0.1804 1
- position 0 0
  size 700 492
+ halign center_ref
+ valign center_ref
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -165,7 +166,7 @@ WrapSpacerWidgetClass FileDialog {
        hexactsize 1
        vexactsize 1
        {
-        ImageWidgetClass ImageWidget0 {
+        ImageWidgetClass ExplorerBackImage {
          ignorepointer 1
          position 0 0
          size 18 18
@@ -190,6 +191,7 @@ WrapSpacerWidgetClass FileDialog {
        }
       }
       ButtonWidgetClass ExplorerFwd {
+       disabled 1
        position 10 10
        size 36 36
        hexactpos 1
@@ -197,8 +199,9 @@ WrapSpacerWidgetClass FileDialog {
        hexactsize 1
        vexactsize 1
        {
-        ImageWidgetClass ImageWidget1 {
+        ImageWidgetClass ExplorerFwdImage {
          ignorepointer 1
+         color 1 1 1 0.3922
          size 18 18
          halign center_ref
          valign center_ref
@@ -334,7 +337,7 @@ WrapSpacerWidgetClass FileDialog {
      vexactsize 0
      style Outline_1px
      {
-      EditBoxWidgetClass EditBoxWidget0 {
+      EditBoxWidgetClass SearchBox {
        size 1 1
        halign center_ref
        valign center_ref
@@ -442,8 +445,6 @@ WrapSpacerWidgetClass FileDialog {
        "Size To Content V" 1
        Columns 1
        Rows 24
-       {
-       }
        {
         ScriptParamsClass {
          Binding_Name "Directories"
@@ -628,7 +629,7 @@ WrapSpacerWidgetClass FileDialog {
          vexactsize 0
          style Outline_1px
          {
-          EditBoxWidgetClass EditBoxWidget1 {
+          EditBoxWidgetClass FileNameBox {
            size 1 1
            halign center_ref
            valign center_ref
@@ -660,7 +661,7 @@ WrapSpacerWidgetClass FileDialog {
        Columns 2
        Rows 1
        {
-        PanelWidgetClass ButtonWidget0 {
+        PanelWidgetClass SaveButtonWrapper {
          position 10 10
          size 72 48
          hexactpos 1
@@ -669,7 +670,7 @@ WrapSpacerWidgetClass FileDialog {
          vexactsize 1
          style Outline_1px
          {
-          ButtonWidgetClass ButtonWidget1 {
+          ButtonWidgetClass SaveButton {
            size 1 1
            halign center_ref
            valign center_ref
@@ -682,7 +683,7 @@ WrapSpacerWidgetClass FileDialog {
           }
          }
         }
-        PanelWidgetClass ButtonWidget2 {
+        PanelWidgetClass CancelButtonWrapper {
          position 10 10
          size 72 48
          hexactpos 1
@@ -691,7 +692,7 @@ WrapSpacerWidgetClass FileDialog {
          vexactsize 1
          style Outline_1px
          {
-          ButtonWidgetClass ButtonWidget3 {
+          ButtonWidgetClass CancelButton {
            size 1 1
            halign center_ref
            valign center_ref

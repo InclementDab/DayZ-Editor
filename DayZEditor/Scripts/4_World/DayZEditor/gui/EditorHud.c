@@ -905,22 +905,24 @@ class EditorHud: ScriptViewMenu
 		delete CurrentTooltip;
 	}
 		
-	ScriptViewMenu ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen)
+	ScriptView ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen)
 	{
-		
+		EditorFileDialog dialog = new EditorFileDialog(title, file_type, on_file_chosen);
+		m_Dialog = dialog;
+		return m_Dialog;
 	}
 	
-	ScriptViewMenu ShowMessageBox(string title, string caption, MessageBoxButtons buttons, ScriptCaller on_close)
+	ScriptView ShowMessageBox(string title, string caption, MessageBoxButtons buttons, ScriptCaller on_close)
 	{
 		return null;
 	}
 	
-	ScriptViewMenu GetDialog()
+	ScriptView GetDialog()
 	{
 		return m_Dialog;
 	}
 	
-	protected ref ScriptViewMenu m_Dialog;
+	protected ref ScriptView m_Dialog;
 		
 	// Dialog Control
 	static ref DialogBase CurrentDialog;

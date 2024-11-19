@@ -10,7 +10,7 @@ class ExportSettings: FileSettingsBase
 	override void GetFileSettings(out array<ref ScriptView> settings)
 	{
 		switch (m_FileType.Type()) {
-			case EditorDZEFile: {
+			/*case EditorDZEFile: {
 				settings.Insert(new CheckBoxPrefab("Binarized", this, "Binarized"));
 				break;
 			}
@@ -18,7 +18,7 @@ class ExportSettings: FileSettingsBase
 			case EditorMapGroupPosFile: {
 				settings.Insert(new CheckBoxPrefab("Export Entire Map", this, "ExportEntireMap"));
 				break;
-			}
+			}*/
 		}
 		
 		settings.Insert(new CheckBoxPrefab("Export Selected Only", this, "ExportSelectedOnly"));
