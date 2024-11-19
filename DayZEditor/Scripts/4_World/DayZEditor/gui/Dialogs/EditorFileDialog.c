@@ -1,4 +1,4 @@
-class EditorFileDialog: EditorDialogBase
+class EditorFileDialog_DEPRECATED: EditorDialogBase
 {
 	static const string BACK_DIRECTORY_IDENTIFIER = "...";
 
@@ -10,7 +10,7 @@ class EditorFileDialog: EditorDialogBase
 	protected FileSettingsBase m_FileSettings;
 	protected string m_Filter, m_FileTypeString;
 	
-	void EditorFileDialog(string title, string filter = "*", string default_value = "", string button_name = "", FileSettingsBase file_settings = null)
+	void EditorFileDialog_DEPRECATED(string title, string filter = "*", string default_value = "", string button_name = "", FileSettingsBase file_settings = null)
 	{
 		m_Filter = filter;		
 		m_FileSettings = file_settings;
@@ -41,7 +41,8 @@ class EditorFileDialog: EditorDialogBase
 			}
 		}
 
-		LoadFileDirectory(Editor.ROOT_DIRECTORY, m_Filter);
+		m_CurrentDirectory = Editor.ROOT_DIRECTORY;
+		LoadFileDirectory();
 
 		//AddContent(m_FileTypes);
 		AddContent(m_EditBoxPrefab);
@@ -58,13 +59,11 @@ class EditorFileDialog: EditorDialogBase
 		return result;
 	}
 	
-	void LoadFileDirectory(string directory, string filter)
-	{
-		m_CurrentDirectory = directory;
-		
+	void LoadFileDirectory()
+	{		
 		m_ListBoxPrefab.ClearItems();
 				
-		array<string> files = Directory.EnumerateFiles(m_CurrentDirectory, filter, 0);
+		array<string> files = Directory.EnumerateFiles(m_CurrentDirectory, m_Filter, 0);
 		array<string> folders = Directory.EnumerateDirectories(m_CurrentDirectory);
 
 		folders.Sort();
@@ -86,14 +85,12 @@ class EditorFileDialog: EditorDialogBase
 			m_ListBoxPrefab.InsertItem(sorted_file_name, sorted_file, icon.Solid(), GetEditor().GetSettings().HighlightColor);
 		}
 		
-		PrintFormat("Loaded Directory %1, %2 folders, %3 files, filter %4", directory, folders.Count(), files.Count(), filter);
+		PrintFormat("Loaded Directory %1, %2 folders, %3 files, filter %4", m_CurrentDirectory, folders.Count(), files.Count(), m_Filter);
 	}
 	
 	void BackDirectory()
 	{						
-		m_CurrentDirectory = Directory.GetDirectory(m_CurrentDirectory);
 		
-		LoadFileDirectory(m_CurrentDirectory, m_Filter);
 	}
 	
 	void OnListItemClick(string file, Widget w, int x, int y, int button)
@@ -108,12 +105,14 @@ class EditorFileDialog: EditorDialogBase
 	{
 		// Is that shit a folder?
 		if (file == BACK_DIRECTORY_IDENTIFIER) {
-			BackDirectory();
+			m_CurrentDirectory = Directory.GetDirectory(m_CurrentDirectory);
+			LoadFileDirectory();
 			return;
 		}
 		
 		if (!file.Contains(".") || file.LastIndexOf(".") != file.Length() - 3) {
-			LoadFileDirectory(SystemPath.Combine(m_CurrentDirectory, File.GetName(file)), m_Filter);
+			m_CurrentDirectory = SystemPath.Combine(m_CurrentDirectory, File.GetName(file));
+			LoadFileDirectory();
 			return;
 		}
 		

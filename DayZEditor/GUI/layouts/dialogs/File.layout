@@ -1,0 +1,76 @@
+PanelWidgetClass PanelWidget3 {
+         visible 1
+         ignorepointer 0
+         color 0.1412 0.1569 0.1804 1
+         position 0 0
+         size 1 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scaled 1
+         style rover_sim_colorable
+         {
+          FrameWidgetClass ImageWidget9 {
+           ignorepointer 1
+           size 0.06 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass ""
+           {
+            ImageWidgetClass ImageWidget10 {
+             ignorepointer 1
+             size 18 18
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             filter 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "file"
+               Symbol_Size 3
+              }
+             }
+            }
+           }
+          }
+          TextWidgetClass FileName {
+           ignorepointer 1
+           position 0.06 0
+           size 0.61 1
+           valign center_ref
+           hexactpos 0
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "MyFile.dze"
+           font "gui/fonts/Metron22"
+           "size to text h" 0
+           "text valign" center
+          }
+          TextWidgetClass Extension {
+           ignorepointer 1
+           position 0.67 0
+           size 0.33 1
+           valign center_ref
+           hexactpos 0
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "DayZ Editor File"
+           font "gui/fonts/Metron16"
+           "exact text" 0
+           "size to text h" 0
+           "text valign" center
+          }
+         }
+        }

@@ -5,7 +5,7 @@ class EditorExportCommandBase: EditorAsyncCommand
 	protected override void Call(Class sender, CommandArgs args)
 	{
 		m_ExportSettings.SetFileType(GetFileType());
-		EditorFileDialog file_dialog(GetName(), "*", "", GetDialogButtonName(), m_ExportSettings);
+		EditorFileDialog_DEPRECATED file_dialog = new EditorFileDialog_DEPRECATED(GetName(), "*", "", GetDialogButtonName(), m_ExportSettings);
 
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {

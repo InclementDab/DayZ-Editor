@@ -2,7 +2,7 @@ class EditorNewCommand: EditorAsyncCommand
 {
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorFileDialog edit_dialog = new EditorFileDialog(GetName(), "*.dze", GetEditor().GetSaveFile(), "#STR_EDITOR_NEW");
+		EditorFileDialog_DEPRECATED edit_dialog = new EditorFileDialog_DEPRECATED(GetName(), "*.dze", GetEditor().GetSaveFile(), "#STR_EDITOR_NEW");
 		string file_name;
 		DialogResult result = edit_dialog.ShowDialog(file_name);
 		if (result != DialogResult.OK) { 

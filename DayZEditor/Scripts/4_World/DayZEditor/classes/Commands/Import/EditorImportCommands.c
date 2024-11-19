@@ -11,7 +11,7 @@ class EditorImportCommandBase: EditorAsyncCommand
 	{
 		string extension = "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension();
 		EditorLog.Debug("Using filter %1", extension);
-		EditorFileDialog file_dialog(GetName(), extension, "", GetDialogButtonName(), m_ImportSettings);
+		EditorFileDialog_DEPRECATED file_dialog(GetName(), extension, "", GetDialogButtonName(), m_ImportSettings);
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {

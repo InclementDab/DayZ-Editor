@@ -106,7 +106,7 @@ class EditorInventoryEditorHud: ScriptViewMenu
 	
 	private void ImportExecuteThread()
 	{
-		EditorFileDialog file_dialog("Import Inventory Data", "*.dzeinv", "", "Import");
+		EditorFileDialog_DEPRECATED file_dialog("Import Inventory Data", "*.dzeinv", "", "Import");
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;
@@ -132,7 +132,7 @@ class EditorInventoryEditorHud: ScriptViewMenu
 	private void ExportExecuteThread()
 	{
 		EditorInventoryData data = m_TemplateController.GetInventoryData();
-		EditorFileDialog file_dialog("Export Inventory Data", "*.dzeinv", "", "Export");
+		EditorFileDialog_DEPRECATED file_dialog("Export Inventory Data", "*.dzeinv", "", "Export");
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 			return;

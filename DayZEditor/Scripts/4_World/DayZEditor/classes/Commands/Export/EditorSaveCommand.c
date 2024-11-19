@@ -9,7 +9,7 @@ class EditorSaveCommand: EditorExportCommandBase
 		if (file_name == string.Empty) {
 			EditorLog.Info("Using filter %1", "*.dze");
 			m_ExportSettings.SetFileType(GetFileType());
-			EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ExportSettings);
+			EditorFileDialog_DEPRECATED file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ExportSettings);
 			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
 				return;
 			}

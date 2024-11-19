@@ -905,6 +905,23 @@ class EditorHud: ScriptViewMenu
 		delete CurrentTooltip;
 	}
 		
+	ScriptViewMenu ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen)
+	{
+		
+	}
+	
+	ScriptViewMenu ShowMessageBox(string title, string caption, MessageBoxButtons buttons, ScriptCaller on_close)
+	{
+		return null;
+	}
+	
+	ScriptViewMenu GetDialog()
+	{
+		return m_Dialog;
+	}
+	
+	protected ref ScriptViewMenu m_Dialog;
+		
 	// Dialog Control
 	static ref DialogBase CurrentDialog;
 	

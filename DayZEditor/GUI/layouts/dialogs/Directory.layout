@@ -1,0 +1,60 @@
+PanelWidgetClass PanelWidget1 {
+         visible 1
+         ignorepointer 0
+         color 0 0.4784 0.8 1
+         position 10 10
+         size 209 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         style rover_sim_colorable
+         {
+          FrameWidgetClass ImageWidget5 {
+           ignorepointer 1
+           size 26 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           scriptclass ""
+           {
+            ImageWidgetClass ImageWidget6 {
+             ignorepointer 1
+             size 18 18
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             filter 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "folder"
+               Symbol_Size 3
+              }
+             }
+            }
+           }
+          }
+          TextWidgetClass TextWidget0 {
+           ignorepointer 1
+           position 26 0
+           size 292 1
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 0
+           text "$profiles:"
+           font "gui/fonts/Metron22"
+           "size to text h" 1
+           "text valign" center
+          }
+         }
+        }

@@ -2,7 +2,7 @@ class EditorOpenCommand: EditorImportCommandBase
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ImportSettings);
+		EditorFileDialog_DEPRECATED file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ImportSettings);
 		
 		string file_name;
 		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {

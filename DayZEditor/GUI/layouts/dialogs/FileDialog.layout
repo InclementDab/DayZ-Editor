@@ -1,0 +1,714 @@
+WrapSpacerWidgetClass FileDialog {
+ visible 1
+ clipchildren 1
+ ignorepointer 0
+ color 0.1412 0.1569 0.1804 1
+ position 0 0
+ size 700 492
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 998
+ scriptclass ""
+ style Colorable
+ "Ignore invisible" 0
+ Padding 0
+ Margin 0
+ content_halign center
+ {
+  FrameWidgetClass WindowDragWrapper {
+   visible 1
+   ignorepointer 0
+   color 1 1 1 0.3922
+   size 1 26
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   draggable 1
+   scriptclass ""
+   {
+    PanelWidgetClass TitleBar {
+     ignorepointer 1
+     color 0 0.4784 0.8 1
+     size 1 25
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     priority 255
+     draggable 0
+     style rover_sim_colorable
+     {
+      ImageWidgetClass TitleIcon {
+       visible 1
+       ignorepointer 1
+       color 0.6824 0.7176 0.702 1
+       position 5 0
+       size 18 18
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "SymbolHandler"
+       image0 ""
+       mode blend
+       "src alpha" 1
+       "clamp mode" clamp
+       "stretch mode" stretch_w_h
+       filter 1
+       {
+        ScriptParamsClass {
+         Symbol_Name "buildings"
+         Symbol_Size 3
+        }
+       }
+      }
+      TextWidgetClass TitleText {
+       clipchildren 1
+       ignorepointer 1
+       position 0 0
+       size 673 22
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass ""
+       text "DialogBox"
+       font "gui/fonts/Metron"
+       "italic text" 0
+       "bold text" 0
+       "text sharpness" 0.9
+       "exact text" 0
+       "size to text h" 1
+       "size to text v" 1
+       "text halign" center
+       "text valign" center
+      }
+      PanelWidgetClass TitleClosePanel {
+       ignorepointer 1
+       color 0.7843 0.2941 0.2745 1
+       position 2 2
+       size 21 21
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass TitleClose {
+         visible 1
+         ignorepointer 0
+         color 0.6667 0.6667 0.6667 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         priority 5
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text "X"
+         font "gui/fonts/Metron-Bold"
+         {
+          ScriptParamsClass {
+           Relay_Command "ExitDialogExecute"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass PanelWidget0 {
+   ignorepointer 1
+   color 0.1725 0.1922 0.2118 1
+   size 1 48
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    GridSpacerWidgetClass NavigationWrapper {
+     ignorepointer 1
+     size 48 1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     content_valign center
+     Columns 2
+     Rows 1
+     {
+      ButtonWidgetClass ExplorerBack {
+       position 10 10
+       size 36 36
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ImageWidgetClass ImageWidget0 {
+         ignorepointer 1
+         position 0 0
+         size 18 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "arrow_left"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+      ButtonWidgetClass ExplorerFwd {
+       position 10 10
+       size 36 36
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ImageWidgetClass ImageWidget1 {
+         ignorepointer 1
+         size 18 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "arrow_right"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass FolderViewOutline {
+     visible 1
+     ignorepointer 1
+     position 92 0
+     size 401 0.618
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     style Outline_1px
+     {
+      ButtonWidgetClass RefreshButton {
+       position 6 0
+       size 24 24
+       halign right_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ImageWidgetClass ImageWidget2 {
+         ignorepointer 1
+         size 18 18
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 0
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "arrow_rotate_right"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass FolderContent {
+       ignorepointer 1
+       size 360 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 0
+       scriptclass "ViewBinding"
+       Padding 0
+       "Size To Content H" 1
+       content_valign center
+       Columns 12
+       Rows 1
+       {
+        FrameWidgetClass ImageWidget3 {
+         ignorepointer 1
+         size 26 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         scriptclass ""
+         {
+          ImageWidgetClass ImageWidget4 {
+           ignorepointer 1
+           size 18 18
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scaled 0
+           scriptclass "SymbolHandler"
+           mode blend
+           "src alpha" 1
+           filter 1
+           {
+            ScriptParamsClass {
+             Symbol_Name "folder"
+             Symbol_Size 3
+            }
+           }
+          }
+         }
+        }
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "FolderViews"
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass WrapSpacerWidget0 {
+     visible 1
+     ignorepointer 1
+     position 523 0
+     size 162 0.618
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     style Outline_1px
+     {
+      EditBoxWidgetClass EditBoxWidget0 {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       text "Search..."
+       "exact text" 1
+       font "gui/fonts/Metron22"
+      }
+     }
+    }
+   }
+  }
+  ScrollWidgetClass ExplorerWrapper {
+   visible 0
+   clipchildren 1
+   ignorepointer 0
+   position 0 0
+   size 0.9 450
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   scriptclass ""
+   "Scrollbar V" 1
+   {
+    WrapSpacerWidgetClass ExplorerContent {
+     visible 1
+     clipchildren 1
+     ignorepointer 1
+     size 1 0
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     priority 2
+     scriptclass "ViewBinding"
+     Padding 3
+     Margin 0
+     "Size To Content V" 1
+     {
+      ScriptParamsClass {
+       Binding_Name "DialogContentData"
+      }
+     }
+    }
+   }
+  }
+  WrapSpacerWidgetClass DialogButtons {
+   visible 0
+   ignorepointer 0
+   color 0.7059 0.7059 0.7059 1
+   size 0.9 36
+   halign center_ref
+   valign bottom_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   scaled 1
+   priority 3
+   scriptclass "ViewBinding"
+   style Empty
+   Padding 5
+   Margin 0
+   content_halign center
+   content_valign center
+   {
+    ScriptParamsClass {
+     Binding_Name "DialogButtonData"
+    }
+   }
+  }
+  PanelWidgetClass WrapSpacerWidget1 {
+   visible 1
+   ignorepointer 1
+   position 0 0
+   size 1 346
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   {
+    ScrollWidgetClass ScrollWidget0 {
+     ignorepointer 0
+     size 0.333 0.9
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     "Scrollbar V" 1
+     {
+      GridSpacerWidgetClass GridSpacerWidget0 {
+       ignorepointer 1
+       size 1 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       "Size To Content V" 1
+       Columns 1
+       Rows 24
+       {
+       }
+       {
+        ScriptParamsClass {
+         Binding_Name "Directories"
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass Divider {
+     ignorepointer 1
+     color 0.5647 0.5647 0.5647 1
+     position 0.333 0
+     size 0.001 1
+     hexactpos 0
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 1
+     style rover_sim_colorable
+    }
+    ScrollWidgetClass ScrollWidget1 {
+     ignorepointer 0
+     position 0.334 0
+     size 0.666 0.9
+     valign bottom_ref
+     hexactpos 0
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     "Scrollbar V" 1
+     {
+      WrapSpacerWidgetClass WrapSpacerWidget2 {
+       ignorepointer 1
+       size 1 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 0
+       "Size To Content V" 1
+       {
+        ScriptParamsClass {
+         Binding_Name "Files"
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass FolderHeader {
+     ignorepointer 1
+     color 0.2275 0.2471 0.2627 1
+     size 0.333 0.1
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass TextWidget3 {
+       ignorepointer 1
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Directory"
+       font "gui/fonts/Metron22"
+       "text offset" 12 0
+       "text valign" center
+      }
+     }
+    }
+    PanelWidgetClass FileHeader {
+     ignorepointer 1
+     color 0.2275 0.2471 0.2627 1
+     position 0.334 0
+     size 0.666 0.1
+     hexactpos 0
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     style rover_sim_colorable
+     {
+      TextWidgetClass TextWidget4 {
+       ignorepointer 1
+       size 0.66 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Name"
+       font "gui/fonts/Metron16"
+       "text offset" 12 0
+       "text valign" center
+      }
+      TextWidgetClass TextWidget5 {
+       ignorepointer 1
+       position 0.66 0
+       size 0.34 1
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Type"
+       font "gui/fonts/Metron16"
+       "text offset" 12 0
+       "text valign" center
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass PanelWidget4 {
+   ignorepointer 1
+   color 0.2275 0.2471 0.2627 1
+   position 10 10
+   size 1 72
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    GridSpacerWidgetClass WrapSpacerWidget5 {
+     ignorepointer 1
+     size 48 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 0
+     Padding 7
+     Margin 7
+     "Size To Content H" 1
+     content_halign right
+     Columns 1
+     Rows 2
+     {
+      GridSpacerWidgetClass WrapSpacerWidget3 {
+       visible 1
+       ignorepointer 1
+       position 0 7
+       size 1 24
+       halign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       Padding 6
+       Margin 0
+       "Size To Content H" 1
+       content_valign center
+       Columns 2
+       Rows 1
+       {
+        TextWidgetClass TextWidget2 {
+         ignorepointer 1
+         position 10 10
+         size 48 1
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         text "File Name:"
+         font "gui/fonts/Metron16"
+         "size to text h" 1
+         "size to text v" 0
+         "text valign" center
+        }
+        PanelWidgetClass WrapSpacerWidget4 {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 330 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         style Outline_1px
+         {
+          EditBoxWidgetClass EditBoxWidget1 {
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scaled 1
+           "exact text" 1
+           font "gui/fonts/Metron16"
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass GridSpacerWidget1 {
+       ignorepointer 1
+       position 0 7
+       size 51 28
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 7
+       Margin 0
+       "Size To Content H" 1
+       Columns 2
+       Rows 1
+       {
+        PanelWidgetClass ButtonWidget0 {
+         position 10 10
+         size 72 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Outline_1px
+         {
+          ButtonWidgetClass ButtonWidget1 {
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "Save"
+           font "gui/fonts/MetronBook16"
+          }
+         }
+        }
+        PanelWidgetClass ButtonWidget2 {
+         position 10 10
+         size 72 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Outline_1px
+         {
+          ButtonWidgetClass ButtonWidget3 {
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "Cancel"
+           font "gui/fonts/MetronBook16"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+}
