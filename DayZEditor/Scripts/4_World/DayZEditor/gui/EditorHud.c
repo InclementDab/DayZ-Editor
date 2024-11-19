@@ -38,10 +38,12 @@ class EditorHud: ScriptViewMenu
 	
 	Widget Menubar, ToolsWrapper, InfobarFrame, ToolbarFrame;
 	Widget PlacementsTabButton, DeletionsTabButton, LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
+	Widget CameraPanel;
 		
 	CanvasWidget EditorCanvas;
 	MapWidget Map;
 	ImageWidget CameraMarker;
+	ButtonWidget CameraPanelButton;
 	
 	EditBoxWidget LeftSearchBar, RightSearchBar;
 	Widget LeftSearchBarIcon, RightSearchBarIcon;
@@ -147,6 +149,17 @@ class EditorHud: ScriptViewMenu
 
 		m_TemplateController.FavoritesToggle = m_Editor.GetSettings().ShowFavoriteObjects;
 		m_TemplateController.NotifyPropertyChanged("FavoritesToggle");
+		
+		EditorCamera camera = m_Editor.GetCamera();
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", 0, 2));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Gaussian Blur", camera, "Blur", 0, 1));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Near Plane", camera, "NearPlane",  0, 1));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Distance", camera, "DOFDistance", 0, 500));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Blur", camera, "DOFBlur", 0, 1));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Vignette", camera, "Vignette", 0, 1));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Sharpness", camera, "Sharpness", 0, 1));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Exposure", camera, "Exposure", 0, 3));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Smoothing", camera, "Smoothing", 0, 1));
 						
 		ShowScreenLogs(m_Editor.GetSettings().ShowScreenLogs);
 	}
@@ -167,7 +180,7 @@ class EditorHud: ScriptViewMenu
 		float lbw_s_w, lbw_s_h;
 		float rbw_s_w, rbw_s_h;
 		LeftbarWrapper.GetScreenSize(lbw_s_w, lbw_s_h);
-			RightbarWrapper.GetScreenSize(rbw_s_w, rbw_s_h);
+		RightbarWrapper.GetScreenSize(rbw_s_w, rbw_s_h);
 		
 		LeftbarWrapper.SetScreenSize(m_Editor.GetSettings().LeftBarPlacement, screen_h - ib_s_h - tb_s_h);
 		RightbarWrapper.SetScreenSize(m_Editor.GetSettings().RightBarPlacement, screen_h - ib_s_h - tb_s_h);
@@ -209,6 +222,8 @@ class EditorHud: ScriptViewMenu
 		UAInput toggle_editor = input_api.GetInputByName("EditorToggleActive");
 		UAInput teleport_to_cursor = input_api.GetInputByName("EditorTeleportPlayerToCursor");
 		UAInput toggle_map = input_api.GetInputByName("EditorToggleMap");
+		UAInput zoom_up = input_api.GetInputByID(UAZoomInOptics);
+		UAInput zoom_down = input_api.GetInputByID(UAZoomOutOptics);
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
@@ -431,6 +446,18 @@ class EditorHud: ScriptViewMenu
 			m_TemplateController.LeftbarFrame.Show(!is_curtain_open);
 			m_TemplateController.RightbarFrame.Show(!is_curtain_open);
 		}
+		
+		if (zoom_up.LocalValue() && GetEditor().GetBrush()) {
+			m_TemplateController.BrushRadius += 5;
+			m_TemplateController.BrushRadius = Math.Clamp(m_TemplateController.BrushRadius, 1, 100);
+			m_TemplateController.NotifyPropertyChanged("BrushRadius");
+		}
+		
+		if (zoom_down.LocalValue() && GetEditor().GetBrush()) {
+			m_TemplateController.BrushRadius -= 5;
+			m_TemplateController.BrushRadius = Math.Clamp(m_TemplateController.BrushRadius, 1, 100);
+			m_TemplateController.NotifyPropertyChanged("BrushRadius");
+		}
 
 		float wr_s_w, wr_s_h, wr_col_s_w, wr_col_s_h;
 		switch (widget_under_cursor) {
@@ -569,6 +596,13 @@ class EditorHud: ScriptViewMenu
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{		
+		switch (w) {
+			case CameraPanelButton: {
+				CameraPanel.Show(!CameraPanel.IsVisible());
+				break;
+			}
+		}
+
 		return super.OnClick(w, x, y, button);
 	}
 	

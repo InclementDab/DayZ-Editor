@@ -69,6 +69,9 @@ class EditorCamera: Camera
 	void EditorCamera()
 	{
 		m_EditorCameraSettings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+		
+		NearPlane = GetNearPlane();
+		Exposure = GetGame().GetWorld().GetEyeAccom();
 	}
 
 	void SetLightState(bool state)
@@ -96,7 +99,7 @@ class EditorCamera: Camera
 		switch (property_name) {
 						
 			case "FOV": {
-				SetFOV(FOV);
+				SetFOV(FOV * Math.RAD2DEG);
 				break;
 			}			
 			
@@ -314,13 +317,13 @@ class EditorCamera_V2: EditorCamera
 		m_CameraFovActual = Math.SmoothCD(m_CameraFovActual, m_EditorCameraSettings.FieldOfView + zoom * FOV_ZOOM_AMT, p, 0.05, 800 * (m_EditorCameraSettings.SmoothingLevel + 0.5), timeSlice);
 
 		// Apply
-		SetFOV(m_CameraFovActual);
+		//SetFOV(m_CameraFovActual);
 		SetTransform(transform);
 		if (m_EditorCameraLight) {
 			m_EditorCameraLight.SetTransform(transform);
 		}
 		
-		GetGame().GetWorld().SetEyeAccom(m_EditorCameraSettings.ExposureLevel);
+		//GetGame().GetWorld().SetEyeAccom(m_EditorCameraSettings.ExposureLevel);
 		GetGame().GetWorld().SetViewDistance(m_EditorCameraSettings.ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(m_EditorCameraSettings.ViewDistance);
 		

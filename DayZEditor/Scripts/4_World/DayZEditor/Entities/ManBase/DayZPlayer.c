@@ -18,7 +18,7 @@ modded class PlayerBase
 		//super.EEKilled(killer);
 		
 		// Quick! Before he stops breathing
-		if (this == PlayerBase.Cast(GetGame().GetPlayer())) {
+		if (this == PlayerBase.Cast(GetEditor().GetPlayer())) {
 			GetEditor().SetActive(true);
 		}
 	}

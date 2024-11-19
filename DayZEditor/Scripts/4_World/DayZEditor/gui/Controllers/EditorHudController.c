@@ -29,6 +29,8 @@ class EditorHudController: EditorControllerBase
 	// Camera bindings
 	float CameraSmoothing = 50.0;
 	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
+	
+	ref ObservableCollection<ref ScriptView> CameraControls = new ObservableCollection<ref ScriptView>(this);
 
 	// View Properties
 	Widget LeftbarFrame;
