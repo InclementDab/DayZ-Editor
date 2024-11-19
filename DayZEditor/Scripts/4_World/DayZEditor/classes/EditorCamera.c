@@ -61,7 +61,7 @@ class EditorCamera: Camera
 	const float SPEED_MAX = 300;
 	const float SPEED_MIN = 1;
 	
-	float FOV = 1, DOFDistance, DOFBlur, Blur, Vignette, Sharpness, NearPlane, Exposure;
+	float FOV = 90, DOFDistance, DOFBlur, Blur, Vignette, Sharpness, NearPlane, Exposure;
 	int ColorCorrection = -1;
 	
 	protected bool m_LightState;
@@ -72,6 +72,7 @@ class EditorCamera: Camera
 		
 		NearPlane = GetNearPlane();
 		Exposure = GetGame().GetWorld().GetEyeAccom();
+		//FOV = GetCurrentFOV() * Math.RAD2DEG;
 	}
 
 	void SetLightState(bool state)
@@ -99,7 +100,7 @@ class EditorCamera: Camera
 		switch (property_name) {
 						
 			case "FOV": {
-				SetFOV(FOV * Math.RAD2DEG);
+				//SetFOV(FOV * Math.DEG2RAD);
 				break;
 			}			
 			
