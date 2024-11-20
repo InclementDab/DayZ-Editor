@@ -1,144 +1,146 @@
+// Draggable modal dialog
+class EditorModal: ScriptView
+{
+	TextWidget TitleText;
+	
+	void EditorModal()
+	{
+		if (TitleText) {
+			TitleText.SetText(GetTitle());
+		}
+	}
+	
+	string GetTitle()
+	{
+		return "Dialog";
+	}
+}
+
+class EditorMessageBoxButton: ScriptView
+{
+	protected ref ScriptCaller m_OnClick;
+	protected DialogResult m_DialogResult;
+	ButtonWidget Button;
+	void EditorMessageBoxButton(DialogResult result, ScriptCaller on_click)
+	{
+		m_DialogResult = result;
+		m_OnClick = on_click;
+		Button.SetText(DialogBase.GetDialogResultText(result));
+	}
+
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (m_OnClick) {
+			m_OnClick.Invoke(this);
+		}
+
+		return super.OnClick(w, x, y, button);
+	}
+
+	DialogResult GetResult()
+	{
+		return m_DialogResult;
+	}
+
+	override string GetLayoutFile()
+	{
+		return "DayZEditor/GUI/layouts/dialogs/MessageBoxButton.layout";
+	}
+}
+
+class EditorMessageBoxController: ViewController
+{
+	ref ObservableCollection<ref EditorMessageBoxButton> Buttons = new ObservableCollection<ref EditorMessageBoxButton>(this);
+}
+
+class EditorMessageBox: EditorModal
+{
+	protected ref ScriptCaller m_Callback;
+	RichTextWidget Text;
+
+	protected ref map<ButtonWidget, DialogResult> m_ButtonMap = new map<ButtonWidget, DialogResult>();
+	protected EditorMessageBoxController m_TemplateController;
+
+	void EditorMessageBox(string content, MessageBoxButtons buttons, ScriptCaller callback)
+	{
+		Text.SetText(content);
+		m_Callback = callback;
+		m_TemplateController = EditorMessageBoxController.Cast(m_Controller);
+		switch (buttons) {
+			case MessageBoxButtons.OK: {
+				AddButton(DialogResult.OK);
+				break;
+			}
+			
+			case MessageBoxButtons.OKCancel: {
+				AddButton(DialogResult.OK);
+				AddButton(DialogResult.Cancel);
+				break;
+			}
+			
+			case MessageBoxButtons.AbortRetryIgnore: {
+				AddButton(DialogResult.Abort);
+				AddButton(DialogResult.Retry);
+				AddButton(DialogResult.Ignore);
+				break;
+			}
+			
+			case MessageBoxButtons.YesNoCancel: {
+				AddButton(DialogResult.Yes);
+				AddButton(DialogResult.No);
+				AddButton(DialogResult.Cancel);
+				break;
+			}
+			
+			case MessageBoxButtons.YesNo: {
+				AddButton(DialogResult.Yes);
+				AddButton(DialogResult.No);
+				break;
+			}			
+			
+			case MessageBoxButtons.RetryCancel: {
+				AddButton(DialogResult.Retry);
+				AddButton(DialogResult.Cancel);
+				break;
+			}
+		}
+	}
+	
+	protected void AddButton(DialogResult result)
+	{
+		m_TemplateController.Buttons.Insert(new EditorMessageBoxButton(result, ScriptCaller.Create(OnClickedButton)));
+	}
+
+	protected void OnClickedButton(EditorMessageBoxButton button)
+	{
+		if (m_Callback) {
+			m_Callback.Invoke(button.GetResult());
+		}
+
+		Delete();
+	}
+
+	override string GetTitle()
+	{
+		return "Editor Message";
+	}
+
+	override typename GetControllerType()
+	{
+		return EditorMessageBoxController;
+	}
+
+	override string GetLayoutFile()
+	{
+		return "DayZEditor/GUI/layouts/dialogs/MessageBox.layout";
+	}
+}
+
 class EditorFileDialogController: ViewController
 {
 	ref ObservableCollection<ref EditorFileView> Files = new ObservableCollection<ref EditorFileView>(this);
 	ref ObservableCollection<ref EditorDirectoryView> Directories = new ObservableCollection<ref EditorDirectoryView>(this);
 	ref ObservableCollection<ref EditorFileQuickView> FolderViews = new ObservableCollection<ref EditorFileQuickView>(this);
-}
-
-class EditorFileView: ScriptView
-{
-	protected string m_File;
-	protected ref ScriptCaller m_OnClicked, m_OnDoubleClicked;
-
-	protected float m_ClickTick;
-	
-	ImageWidget Icon;
-	TextWidget FileName, Extension;
-
-	void EditorFileView(string file, ScriptCaller on_click, ScriptCaller on_double_click)
-	{
-		m_File = file;
-		m_OnClicked = on_click;
-		m_OnDoubleClicked = on_double_click;
-
-		string file_name = File.GetName(m_File);
-		string file_extension = File.GetExtension(m_File);
-		FileName.SetText(file_name);
-		Extension.SetText(file_extension);
-		// Set icon to folder
-		if (file_extension == string.Empty) {
-			Symbols.FOLDER.Load(Icon, 3);
-		}
-	}
-	
-	override bool OnMouseEnter(Widget w, int x, int y)
-	{
-		
-		
-		return super.OnMouseEnter(w, x, y);
-	}
-	
-	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
-	{
-		return super.OnMouseLeave(w, enterW, x, y);
-	}
-
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		if (m_OnClicked) {
-			m_OnClicked.Invoke(this, m_File);
-		}
-		
-		if (GetGame().GetTickTime() < m_ClickTick + 0.3) {
-			if (m_OnDoubleClicked) {
-				m_OnDoubleClicked.Invoke(this, m_File);
-			}
-			m_ClickTick = 0;
-		} else {
-			m_ClickTick = GetGame().GetTickTime();
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-
-	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
-	{
-		return super.OnMouseButtonUp(w, x, y, button);
-	}
-
-	override string GetLayoutFile()
-	{
-		return "DayZEditor/GUI/layouts/dialogs/File.layout";
-	}
-}
-
-class EditorDirectoryView: ScriptView
-{
-	protected string m_Directory;
-	protected ref ScriptCaller m_OnClicked;
-	TextWidget Text;
-
-	void EditorDirectoryView(string directory, ScriptCaller on_click)
-	{
-		m_Directory = directory;
-		m_OnClicked = on_click;
-		
-		Text.SetText(m_Directory);
-	}
-
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		if (m_OnClicked) {
-			m_OnClicked.Invoke(this, m_Directory);
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-
-	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
-	{
-		return super.OnMouseButtonUp(w, x, y, button);
-	}
-
-	override string GetLayoutFile()
-	{
-		return "DayZEditor/GUI/layouts/dialogs/Directory.layout";
-	}
-}
-
-class EditorFileQuickView: ScriptView
-{
-	protected string m_FullPath;
-	TextWidget Text;
-
-	protected ref ScriptCaller m_OnClicked;
-
-	void EditorFileQuickView(string full_path, ScriptCaller on_clicked)
-	{
-		m_FullPath = full_path;
-		m_OnClicked = on_clicked;
-		
-		string text = File.GetName(full_path);
-		if (!text) {
-			text = full_path;
-		}
-		
-		Text.SetText(text);
-	}
-
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		if (m_OnClicked) {
-			m_OnClicked.Invoke(this, m_FullPath);
-		}
-		
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-	
-	override string GetLayoutFile()
-	{
-		return "DayZEditor/GUI/layouts/dialogs/FileDialogFolderQuickView.layout";
-	}
 }
 
 enum eDialogMode
@@ -153,10 +155,11 @@ enum eDialogMode
 enum eDialogFlags
 {
 	WARN_ON_OVERWRITE = 1,
-	ALLOW_EMPTY_FILES = 2
+	ALLOW_EMPTY_FILES = 2,
+	ALLOW_DOUBLE_CLICK = 4
 }
 
-class EditorFileDialog: ScriptView
+class EditorFileDialog: EditorModal
 {
 	static const ref array<string> AVAILABLE_DIRECTORIES = {
 		SystemPath.Saves(),
@@ -174,16 +177,15 @@ class EditorFileDialog: ScriptView
 	protected string m_CurrentDirectory, m_CurrentFile;
 	protected ref ScriptCaller m_ScriptCallback;
 	protected ref EditorFileType m_FileType;
+	protected ref EditorMessageBox m_EditorMessageBox;
 	
 	Widget WindowDragWrapper;
 	EditBoxWidget SearchBox, FileNameBox;
-	TextWidget TitleText;
 	ButtonWidget SaveButton, CancelButton, ExplorerBack, ExplorerFwd, TitleClose, RefreshButton;
 	ImageWidget ExplorerBackImage, ExplorerFwdImage;
 
-	void EditorFileDialog(string title, typename file_type, ScriptCaller on_file_selected, eDialogMode dialog_mode, eDialogFlags dialog_flags)
+	void EditorFileDialog(typename file_type, ScriptCaller on_file_selected, eDialogMode dialog_mode, eDialogFlags dialog_flags)
 	{
-		TitleText.SetText(title);
 		m_TemplateController = EditorFileDialogController.Cast(m_Controller);
 		m_FileType = EditorFileType.Cast(file_type.Spawn());
 		m_ScriptCallback = on_file_selected;
@@ -339,16 +341,12 @@ class EditorFileDialog: ScriptView
 		if (is_directory) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetDirectory, 0, 0, file, true);
 		} else {
-			Print(File.GetName(file));
-
-			//if (m_DialogFlags & eDialogFlags.ALLOW_EMPTY_FILES) {
-
-			//}
-
-			if (m_ScriptCallback) {
-				m_ScriptCallback.Invoke(file);
-				Delete();
-			}
+			if (m_DialogFlags & eDialogFlags.ALLOW_DOUBLE_CLICK) {
+				if (m_ScriptCallback) {
+					m_ScriptCallback.Invoke(file);
+					Delete();
+				}
+			}			
 		}
 	}
 
@@ -410,13 +408,19 @@ class EditorFileDialog: ScriptView
 				
 				case SaveButton: {
 					if (!FileNameBox.GetText() && !(m_DialogFlags & eDialogFlags.ALLOW_EMPTY_FILES)) {
-						//GetEditor().GetEditorHud().ShowMessageBox("Error", "Please select a valid file name", MessageBoxButtons.OK, null);
+						m_EditorMessageBox = new EditorMessageBox("Please select a valid file name", MessageBoxButtons.OK, null);
 						return true;
 					}
-					
-					
+
+					string final_file = SystemPath.Combine(m_CurrentDirectory, FileNameBox.GetText());
+					if (FileExist(final_file) && (m_DialogFlags & eDialogFlags.WARN_ON_OVERWRITE)) {
+						string msg = string.Format("Overwrite File %1?", final_file);
+						m_EditorMessageBox = new EditorMessageBox(msg, MessageBoxButtons.OKCancel, ScriptCaller.Create(ForceOverwriteFileFromTextBox));
+						return true;
+					}
+
 					if (m_ScriptCallback) {
-						m_ScriptCallback.Invoke(SystemPath.Combine(m_CurrentDirectory, FileNameBox.GetText()));
+						m_ScriptCallback.Invoke(final_file);
 						Delete();
 						return true; 
 					}
@@ -433,6 +437,16 @@ class EditorFileDialog: ScriptView
 		}
 		
 		return super.OnClick(w, x, y, button);
+	}
+
+	protected void ForceOverwriteFileFromTextBox(DialogResult result)
+	{
+		if (result == DialogResult.OK) {
+			string final_file = SystemPath.Combine(m_CurrentDirectory, FileNameBox.GetText());
+			Print(final_file);
+			m_ScriptCallback.Invoke(final_file);
+			Delete();
+		}
 	}
 	
 	override bool OnDrag(Widget w, int x, int y)
@@ -496,5 +510,10 @@ class EditorFileDialog: ScriptView
 	override string GetLayoutFile()
 	{
 		return "DayZEditor/GUI/layouts/dialogs/FileDialog.layout";
+	}
+
+	override string GetTitle()
+	{
+		return "File Explorer";
 	}
 }

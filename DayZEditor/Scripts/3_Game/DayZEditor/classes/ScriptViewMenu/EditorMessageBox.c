@@ -1,3 +1,0 @@
-class EditorMessageBox: ScriptView
-{
-}

@@ -69,7 +69,7 @@ class EditorMessageBox_DEPRECATED: MessageBox
 	override DialogButton AddButton(DialogButton button)
 	{
 		DialogButton btn = super.AddButton(button);
-		btn.Button.SetColor(m_Editor.GetSettings().HighlightColor);
+		btn.Button.SetColor(GetEditor().GetSettings().HighlightColor);
 		return btn;
 	}
 	

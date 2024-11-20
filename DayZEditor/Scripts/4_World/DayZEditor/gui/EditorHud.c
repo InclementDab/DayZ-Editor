@@ -912,7 +912,7 @@ class EditorHud: ScriptViewMenu
 		
 	ScriptView ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen, eDialogMode dialog_mode, eDialogFlags dialog_flags = 0)
 	{
-		EditorFileDialog dialog = new EditorFileDialog(title, file_type, on_file_chosen, dialog_mode, dialog_flags);
+		EditorFileDialog dialog = new EditorFileDialog(file_type, on_file_chosen, dialog_mode, dialog_flags);
 		m_Dialog = dialog;
 		
 		GetGame().GetUIManager().ShowCursor(true);

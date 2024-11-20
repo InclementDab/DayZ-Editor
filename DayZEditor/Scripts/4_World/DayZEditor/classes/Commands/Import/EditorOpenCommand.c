@@ -3,7 +3,7 @@ class EditorOpenCommand: EditorImportCommandBase
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		//super.Execute(sender, args);
-		GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnOpenFileSelected), eDialogMode.OPEN);
+		GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnOpenFileSelected), eDialogMode.OPEN, eDialogFlags.ALLOW_DOUBLE_CLICK);
 		
 		return true;
 	}
