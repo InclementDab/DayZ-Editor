@@ -74,7 +74,7 @@ class EditorClipboard
 		for (int j = 0; j < read_data.Count(); j++) {
 			if (read_data[j] && read_data[j].Type) {				
 				if (read_data[j].Type.Contains(".p3d")) {
-					// Because DayZ is inconsistent, we need to have these checks
+					// Because DayZ is inconsistent, we need to have these checks					
 					Object p3d_test_object = GetGame().CreateStaticObjectUsingP3D(SystemPath.Format(read_data[j].Type), vector.Zero, vector.Zero, 1.0, true);
 					if (p3d_test_object) {
 						read_data[j].Orientation = read_data[j].Orientation * Math.RAD2DEG;

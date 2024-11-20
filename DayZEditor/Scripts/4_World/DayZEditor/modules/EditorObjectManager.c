@@ -44,6 +44,11 @@ class EditorObjectManagerModule : Managed
 				GetGame().ConfigGetChildName(path, i, type);
 				int scope = GetGame().ConfigGetInt(path + " " + type + " scope");
 				string model = SystemPath.Format(GetGame().ConfigGetTextOut(string.Format("%1 %2 model", path, type)));
+				// DayZ has a difficult time supporting leading slashes
+				if (model[0] == SystemPath.SEPERATOR) {
+					model = model.Substring(1, model.Length() - 1);
+				}
+				
 				if (IsForbiddenItem(type)) {
 					continue;
 				}
