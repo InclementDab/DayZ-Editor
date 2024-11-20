@@ -5,7 +5,7 @@ class EditorEditorMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorReloadBrushesCommand]);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorEnvironmentControlCommand]);
-		AddMenuCategory("#STR_EDITOR_PREFERENCES", EditorPreferencesMenu, Symbols.GEARS, m_Editor.CommandManager[EditorPreferencesCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorOptionsCommand]);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorJoinDiscordCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorOpenWikiCommand]);

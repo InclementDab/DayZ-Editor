@@ -34,7 +34,7 @@ class EditorObjectMarker: EditorMarker
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{	
 		// ignores the object if you are placing
-		if (m_Editor.IsPlacing()) { 
+		if (m_Editor.IsPlacing() || m_Editor.GetBrush()) { 
 			return false;
 		}
 
@@ -42,8 +42,7 @@ class EditorObjectMarker: EditorMarker
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 
 		switch (button) {
-			case MouseState.LEFT: {
-				
+			case MouseState.LEFT: {				
 				// We want to Toggle selection if you are holding control
 				if (KeyState(KeyCode.KC_LCONTROL)) {
 					m_Editor.ToggleSelection(m_EditorObject);
@@ -73,7 +72,7 @@ class EditorObjectMarker: EditorMarker
 	override bool OnPress(Widget w, int x, int y, int button)
 	{		
 		// ignores the object if you are placing
-		if (m_Editor.IsPlacing()) { 
+		if (m_Editor.IsPlacing() || m_Editor.GetBrush()) { 
 			return false;
 		}
 		
@@ -128,6 +127,11 @@ class EditorObjectMarker: EditorMarker
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
+		// ignores the object if you are placing
+		if (m_Editor.IsPlacing() || m_Editor.GetBrush()) { 
+			return false;
+		}
+		
 		if (!IsSelected()) {
 			SetHighlighted(1);
 			if (m_EditorObject.GetListItem()) {

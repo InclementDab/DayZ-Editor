@@ -69,16 +69,15 @@ modded class MainMenu
 	}
 	
 	override void OnShow()
-	{
-		super.OnShow();
-		
-		GetGame().GetUIManager().ShowCursor(true);
-		GetGame().GetUIManager().ShowUICursor(true);
+	{		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(GetGame().GetUIManager().ShowCursor, 0, 0, true);
 		
 		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
 		RestContext ctx = CreateRestApi().GetRestContext("http:\/\/us-nyc.pylex.xyz:8226\/");
 		ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 		ctx.POST(new RestCallbackBase(),"api\/update-login-counter", string.Format("{\"id\":%1}", uid));
+		
+		super.OnShow();
 	}
 	
     override void Play()

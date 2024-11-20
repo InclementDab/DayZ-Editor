@@ -82,10 +82,12 @@ class XMLEditorBrushes: XMLCallback
 		}
 		
 		for (int k = 0; k < RegisterBrush.Instances.Count(); k++) {
-			EditorBrushData brush_type_data = new EditorBrushData();
-			brush_type_data.BrushClassName = RegisterBrush.Instances[k].param1;
-			brush_type_data.Name = RegisterBrush.Instances[k].param2;
-			m_Data.Insert(brush_type_data);
+			if (RegisterBrush.Instances[k].param3) {
+				EditorBrushData brush_type_data = new EditorBrushData();
+				brush_type_data.BrushClassName = RegisterBrush.Instances[k].param1;
+				brush_type_data.Name = RegisterBrush.Instances[k].param2;
+				m_Data.Insert(brush_type_data);
+			}
 		}
 		
 		EditorLog.Info("Loaded %1 Brushes!", m_Data.Count().ToString());

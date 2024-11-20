@@ -1,14 +1,14 @@
 class RegisterBrush: Class
 {
-	static ref array<ref Param2<typename, string>> Instances = {};
+	static ref array<ref Param3<typename, string, bool>> Instances = {};
 	
-	void RegisterBrush(typename brush, string name = "Default Brush")
+	void RegisterBrush(typename brush, string name = "Default Brush", bool show_in_list = true)
 	{
 		if (!Instances) {
 			Instances = {};
 		}
 				
-		Instances.Insert(new Param2<typename, string>(brush, name));
+		Instances.Insert(new Param3<typename, string, bool>(brush, name, show_in_list));
 	}	
 }
 

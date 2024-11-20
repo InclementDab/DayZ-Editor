@@ -11,7 +11,7 @@ class EditorBrush
 	// Private members
 	private vector m_LastMousePosition;
 
-	private void EditorBrush(EditorBrushData settings = null)
+	void EditorBrush(EditorBrushData settings = null)
 	{
 		m_BrushData = settings;
 		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_NONE));
@@ -46,7 +46,7 @@ class EditorBrush
 
 	void UpdateBrush()
 	{
-		if (GetEditor().IsPlacing()) {
+		if (GetEditor().IsPlacing() || GetWidgetUnderCursor()) {
 			return;
 		}
 		
