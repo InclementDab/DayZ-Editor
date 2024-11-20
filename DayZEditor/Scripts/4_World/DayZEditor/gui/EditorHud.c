@@ -256,7 +256,7 @@ class EditorHud: ScriptViewMenu
 			}
 		}
 		
-		if (toggle_hud_input.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget) || !m_Dialog)) {		
+		if (toggle_hud_input.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog) {		
 			Show(!IsVisible());
 		}
 		
