@@ -566,6 +566,10 @@ class Editor: Managed
 				processed_flags |= ECameraLockFlag.PAN_LOOK;
 			}
 		}
+		
+		if (GetEditorHud().GetDialog()) {
+			processed_flags |= (ECameraLockFlag.LOCK_LOOK | ECameraLockFlag.LOCK_MOVE);
+		}
 
 		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
 			processed_flags |= ECameraLockFlag.LOCK;
@@ -1100,7 +1104,7 @@ class Editor: Managed
 	{
 		// Dont process hotkeys if dialog is open
 												// HACK
-		if (m_EditorHud.CurrentDialog && key != KeyCode.KC_ESCAPE) {
+		if ((m_EditorHud.GetDialog() || m_EditorHud.CurrentDialog) && key != KeyCode.KC_ESCAPE) {
 			return false;
 		}
 		

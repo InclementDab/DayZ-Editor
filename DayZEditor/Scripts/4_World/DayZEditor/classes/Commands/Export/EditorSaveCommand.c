@@ -1,41 +1,31 @@
 class EditorSaveCommand: EditorExportCommandBase
 {		
-	override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		EditorLog.Trace("EditorSaveCommand");
-		
-		bool warn_on_overwrite = false;
-		string file_name = m_Editor.GetSaveFile();
+		//super.Execute(sender, args);
+		string file_name = GetEditor().GetSaveFile();
 		if (file_name == string.Empty) {
 			EditorLog.Info("Using filter %1", "*.dze");
-			m_ExportSettings.SetFileType(GetFileType());
-			EditorFileDialog_DEPRECATED file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ExportSettings);
-			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
-				return;
-			}
-						
-			warn_on_overwrite = true;
+			GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnSaveFileSelected), eDialogMode.SAVE, eDialogFlags.WARN_ON_OVERWRITE);
+		} else {
+			OnSaveFileSelected(file_name);
 		}
-		
-		if (!SystemPath.IsPathRooted(file_name)) {
-			file_name = SystemPath.Combine(Editor.ROOT_DIRECTORY, file_name);
+				
+		return true;
+	}
+	
+	protected void OnSaveFileSelected(string file_name)
+	{
+		if (!file_name) {
+			GetEditor().GetEditorHud().CreateNotification("No file name specified");
+			return;
 		}
 
-		if (ExportFile(file_name, m_ExportSettings, warn_on_overwrite)) {
-			m_Editor.SetSaveFile(file_name);
+		if (ExportFile(file_name, m_ExportSettings, true)) {
+			GetEditor().SetSaveFile(file_name);
 		}
 	}
 	
-	override string GetName() 
-	{
-		return "#STR_EDITOR_SAVE";
-	}
-	
-	override string GetIcon() 
-	{
-		return "set:dayz_editor_gui image:save";
-	}
-
 	override Symbols GetSymbol()
 	{
 		return Symbols.FLOPPY_DISK;

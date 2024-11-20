@@ -1,25 +1,25 @@
-class EditorExportCommandBase: EditorAsyncCommand
+class EditorExportCommandBase: EditorCommand
 {
 	protected ref ExportSettings m_ExportSettings = new ExportSettings();
 	
-	protected override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		m_ExportSettings.SetFileType(GetFileType());
-		EditorFileDialog_DEPRECATED file_dialog = new EditorFileDialog_DEPRECATED(GetName(), "*", "", GetDialogButtonName(), m_ExportSettings);
-
-		string file_name;
-		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+		super.Execute(sender, args);
+		GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnFileSelected), eDialogMode.EXPORT);
+		
+		return true;
+	}
+	
+	protected void OnFileSelected(string file_name)
+	{
+		if (!file_name) {
+			GetEditor().GetEditorHud().CreateNotification("No file name specified");
 			return;
 		}
-
-		if (file_name == string.Empty) {
-			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
-			return;
-		}
-
+		
 		ExportFile(file_name, m_ExportSettings, true);
 	}
-
+	
 	protected bool ExportFile(string file_name, ExportSettings export_settings, bool warn_on_overwrite)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
@@ -30,17 +30,12 @@ class EditorExportCommandBase: EditorAsyncCommand
 
 		// Warn the user if they are exporting with deleted objects
 		if (GetEditor().GetObjectManager().GetDeletedObjects().Count() > 0 && !file_type.CanDoDeletion() ) {
-			if (EditorMessageBox.Show("Export Warning!", "NOTE: Exporting with this format does NOT support Object Deletion! You need to use .dze or .map file format for this (File > Save)", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
-				return false;
-			}
+			//if (GetEditor().GetEditorHud().ShowMessageBox("Export Warning!", "NOTE: Exporting with this format does NOT support Object Deletion! You need to use .dze or .map file format for this (File > Save)", MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
+			//	return false;
+			//}
 		}
 
-		export_settings.ExportSetName = file_name;
-		// a terrible hack. the file dialogs need to return a fille path to the file
-		if (!SystemPath.IsPathRooted(file_name)) {
-			file_name = SystemPath.Combine(Editor.ROOT_DIRECTORY, file_name);
-		}
-		
+		export_settings.ExportSetName = file_name;		
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 
 		if (FileExist(file_name) && warn_on_overwrite) {
@@ -49,18 +44,18 @@ class EditorExportCommandBase: EditorAsyncCommand
 			if (Math.RandomIntInclusive(0, 100) == 69 || file_name == "PauseChamp.dze") {
 				egg = " PauseChamp";
 			}
-
-			if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?" + egg, MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
-				return false;
-			}
+			
+			// todo: overwrite dialog!!!
+			//if (MessageBox.Show("Are you sure?", "File " + file_name + " already exists. Overwrite?" + egg, MessageBoxButtons.OKCancel) == DialogResult.Cancel) {
+			//	return false;
+			//}
 		}
 
-		EditorSaveData save_data = m_Editor.CreateSaveData(export_settings.ExportSelectedOnly);
+		EditorSaveData save_data = GetEditor().CreateSaveData(export_settings.ExportSelectedOnly);
 		file_type.Export(save_data, file_name, export_settings);
 
-		File f = file_name;
-		string message = string.Format("Saved %1 objects, %2 deletions (%3)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count(), f.GetFileName());
-		m_Editor.GetEditorHud().CreateNotification(message);
+		string message = string.Format("Saved %1 objects, %2 deletions (%3)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count(), File.GetName(file_name));
+		GetEditor().GetEditorHud().CreateNotification(message);
 		EditorLog.Debug(message);
 		return true;
 	}

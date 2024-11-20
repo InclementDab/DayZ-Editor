@@ -256,13 +256,13 @@ class EditorHud: ScriptViewMenu
 			}
 		}
 		
-		if (toggle_hud_input.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget))) {		
+		if (toggle_hud_input.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget) || !m_Dialog)) {		
 			Show(!IsVisible());
 		}
 		
 		// Dont want to toggle cursor on map
 		if (toggle_cursor.LocalPress()) {
-			if (!Map.IsVisible() && !GetEditor().IsPlayerControlled() && GetEditor().IsActive() && !(EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
+			if (!Map.IsVisible() && !GetEditor().IsPlayerControlled() && GetEditor().IsActive() && !(m_Dialog && EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
 				ToggleCursor();
 			}
 		}
@@ -755,6 +755,10 @@ class EditorHud: ScriptViewMenu
 			CurrentDialog.GetLayoutRoot().Show(show);
 		}
 		
+		if (m_Dialog) {
+			m_Dialog.GetLayoutRoot().Show(show);
+		}
+		
 		GetGame().GetUIManager().ShowCursor(show);
 	}
 		
@@ -905,10 +909,12 @@ class EditorHud: ScriptViewMenu
 		delete CurrentTooltip;
 	}
 		
-	ScriptView ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen)
+	ScriptView ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen, eDialogMode dialog_mode, eDialogFlags dialog_flags = 0)
 	{
-		EditorFileDialog dialog = new EditorFileDialog(title, file_type, on_file_chosen);
+		EditorFileDialog dialog = new EditorFileDialog(title, file_type, on_file_chosen, dialog_mode, dialog_flags);
 		m_Dialog = dialog;
+		
+		GetGame().GetUIManager().ShowCursor(true);
 		return m_Dialog;
 	}
 	

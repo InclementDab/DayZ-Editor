@@ -8,6 +8,11 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
+		if (m_Editor.GetEditorHud().GetDialog()) {
+			m_Editor.GetEditorHud().GetDialog().Delete();
+			return true;
+		}
+		
 		if (m_Editor.IsInventoryEditorActive()) {
 			m_Editor.StopInventoryEditor();
 			return true;

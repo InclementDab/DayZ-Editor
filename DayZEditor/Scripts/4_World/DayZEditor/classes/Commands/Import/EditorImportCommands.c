@@ -1,4 +1,4 @@
-class EditorImportCommandBase: EditorAsyncCommand
+class EditorImportCommandBase: EditorCommand
 {
 	protected ref ImportSettings m_ImportSettings = new ImportSettings();
 	
@@ -7,30 +7,24 @@ class EditorImportCommandBase: EditorAsyncCommand
 		m_ImportSettings.SetFileType(GetFileType());
 	}
 	
-	protected override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		string extension = "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension();
-		EditorLog.Debug("Using filter %1", extension);
-		EditorFileDialog_DEPRECATED file_dialog(GetName(), extension, "", GetDialogButtonName(), m_ImportSettings);
+		super.Execute(sender, args);
+		GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnFileSelected), eDialogMode.IMPORT);
 		
-		string file_name;
-		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
+		return true;
+	}
+	
+	protected void OnFileSelected(string file_name)
+	{
+		if (!file_name) {
+			GetEditor().GetEditorHud().CreateNotification("No file name specified");
 			return;
-		}
-		
-		if (file_name == string.Empty) {
-			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
-			return;
-		}
-		
-		// a terrible hack. the file dialogs need to return a fille path to the file
-		if (!SystemPath.IsPathRooted(file_name)) {
-			file_name = SystemPath.Combine(Editor.ROOT_DIRECTORY, file_name);
 		}
 		
 		GetEditor().LoadSaveData(ImportFile(file_name));
 	}
-		
+			
 	EditorSaveData ImportFile(string file_name)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());

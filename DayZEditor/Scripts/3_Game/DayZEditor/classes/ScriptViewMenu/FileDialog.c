@@ -141,6 +141,20 @@ class EditorFileQuickView: ScriptView
 	}
 }
 
+enum eDialogMode
+{
+	OPEN = 1,
+	SAVE = 2,
+	EXPORT = 3,
+	IMPORT = 4,
+	NEW
+}
+
+enum eDialogFlags
+{
+	WARN_ON_OVERWRITE = 1
+}
+
 class EditorFileDialog: ScriptView
 {
 	static const ref array<string> AVAILABLE_DIRECTORIES = {
@@ -150,7 +164,9 @@ class EditorFileDialog: ScriptView
 	};
 
 	protected EditorFileDialogController m_TemplateController;
-
+	
+	protected eDialogMode m_DialogMode;
+	protected eDialogFlags m_DialogFlags;
 	protected float m_DragOffsetX, m_DragOffsetY;
 	protected int m_CurrentHistoryIndex = 0;
 	protected ref array<string> m_DirectoryHistory = {};
@@ -164,11 +180,14 @@ class EditorFileDialog: ScriptView
 	ButtonWidget SaveButton, CancelButton, ExplorerBack, ExplorerFwd, TitleClose, RefreshButton;
 	ImageWidget ExplorerBackImage, ExplorerFwdImage;
 
-	void EditorFileDialog(string title, typename file_type, ScriptCaller on_file_selected)
+	void EditorFileDialog(string title, typename file_type, ScriptCaller on_file_selected, eDialogMode dialog_mode, eDialogFlags dialog_flags)
 	{
+		TitleText.SetText(title);
 		m_TemplateController = EditorFileDialogController.Cast(m_Controller);
 		m_FileType = EditorFileType.Cast(file_type.Spawn());
 		m_ScriptCallback = on_file_selected;
+		m_DialogMode = dialog_mode;
+		m_DialogFlags = dialog_flags;
 
 		if (!file_type.IsInherited(EditorFileType) || !m_FileType) {
 			Error("invalid file_type parameter");
@@ -178,6 +197,28 @@ class EditorFileDialog: ScriptView
 
 		foreach (string directory: AVAILABLE_DIRECTORIES) {
 			m_TemplateController.Directories.Insert(new EditorDirectoryView(directory, ScriptCaller.Create(OnDirectoryPressed)));
+		}
+		
+		switch (m_DialogMode) {
+			case eDialogMode.OPEN: {
+				SaveButton.SetText("#STR_EDITOR_OPEN");
+				break;
+			}
+			
+			case eDialogMode.SAVE: {
+				SaveButton.SetText("#STR_EDITOR_SAVE");
+				break;
+			}
+			
+			case eDialogMode.IMPORT: {
+				SaveButton.SetText("#STR_EDITOR_IMPORT");
+				break;
+			}
+			
+			case eDialogMode.EXPORT: {
+				SaveButton.SetText("#STR_EDITOR_EXPORT");
+				break;
+			}
 		}
 		
 		m_TemplateController.Directories[0].GetLayoutRoot().SetColor(0xff007acc);
@@ -217,9 +258,21 @@ class EditorFileDialog: ScriptView
 		array<ref Param2<string, string>> extensions = {};
 		m_FileType.GetValidExtensions(extensions);
 
+		string search_box_text = SearchBox.GetText();
+		if (search_box_text == "Search..." || search_box_text == "") {
+			search_box_text = "*";
+		}
+		
+		search_box_text.Replace(" ", "*");
+		
 		array<string> files = {};
 		foreach (auto extension: extensions) {
-			files.InsertAll(Directory.EnumerateFiles(m_CurrentDirectory, extension.param2, 0));
+			array<string> files_temp = Directory.EnumerateFiles(m_CurrentDirectory, extension.param2, 0);
+			foreach (string file_temp: files_temp) {
+				if (files.Find(file_temp) == -1 && File.WildcardMatch(file_temp, search_box_text)) {
+					files.Insert(file_temp);
+				}
+			}
 		}
 
 		array<string> folders = Directory.EnumerateDirectories(m_CurrentDirectory);
@@ -237,7 +290,6 @@ class EditorFileDialog: ScriptView
 
 		array<string> directory_split = {};
 		m_CurrentDirectory.Split(SystemPath.SEPERATOR, directory_split);
-		directory_split.Debug();
 		m_TemplateController.FolderViews.Clear();
 		for (int j = 0; j < directory_split.Count(); j++) {
 			string full_dir = directory_split[0];
@@ -256,10 +308,7 @@ class EditorFileDialog: ScriptView
 			m_DirectoryHistory.Insert(directory);
 			m_CurrentHistoryIndex = 0;
 		}
-		
-		//Print(m_CurrentHistoryIndex);
-		//m_DirectoryHistory.Debug();
-		
+				
 		PrintFormat("Loaded Directory %1, %2 folders, %3 files", m_CurrentDirectory, folders.Count(), files.Count());
 	}
 
@@ -344,8 +393,8 @@ class EditorFileDialog: ScriptView
 				}
 				
 				case SaveButton: {
-					if (m_ScriptCallback && m_CurrentFile) {
-						m_ScriptCallback.Invoke(m_CurrentFile);
+					if (m_ScriptCallback) {
+						m_ScriptCallback.Invoke(SystemPath.Combine(m_CurrentDirectory, FileNameBox.GetText()));
 						Delete();
 						return true; 
 					}
@@ -398,6 +447,19 @@ class EditorFileDialog: ScriptView
 		
 		return false;
 	}
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		switch (w) {
+			case SearchBox: {
+				// for now
+				SetDirectory(m_CurrentDirectory);
+				return true;
+			}
+		}
+
+		return super.OnChange(w, x, y, finished);
+	}	
 	
 	EditorFileDialogController GetTemplateController()
 	{
