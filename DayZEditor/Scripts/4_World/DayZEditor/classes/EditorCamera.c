@@ -72,7 +72,8 @@ class EditorCamera: Camera
 		
 		NearPlane = GetNearPlane();
 		Exposure = GetGame().GetWorld().GetEyeAccom();
-		//FOV = GetCurrentFOV() * Math.RAD2DEG;
+		FOV = m_EditorCameraSettings.FieldOfView * Math.RAD2DEG;
+		SetFOV(FOV * Math.DEG2RAD);
 	}
 
 	void SetLightState(bool state)
@@ -100,7 +101,8 @@ class EditorCamera: Camera
 		switch (property_name) {
 						
 			case "FOV": {
-				//SetFOV(FOV * Math.DEG2RAD);
+				SetFOV(FOV * Math.DEG2RAD);
+				m_EditorCameraSettings.FieldOfView = FOV;
 				break;
 			}			
 			

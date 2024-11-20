@@ -2,7 +2,7 @@ class EditorExitCommand: EditorAsyncCommand
 {	
 	protected override void Call(Class sender, CommandArgs args) 
 	{
-		DialogResult result = EditorMessageBox.Show(GetName(), "#STR_EDITOR_EXIT_MSG", MessageBoxButtons.OKCancel);
+		DialogResult result = EditorMessageBox_DEPRECATED.Show(GetName(), "#STR_EDITOR_EXIT_MSG", MessageBoxButtons.OKCancel);
 		if (result != DialogResult.OK) { 
 			return;
 		}

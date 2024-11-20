@@ -152,7 +152,8 @@ enum eDialogMode
 
 enum eDialogFlags
 {
-	WARN_ON_OVERWRITE = 1
+	WARN_ON_OVERWRITE = 1,
+	ALLOW_EMPTY_FILES = 2
 }
 
 class EditorFileDialog: ScriptView
@@ -219,6 +220,11 @@ class EditorFileDialog: ScriptView
 				SaveButton.SetText("#STR_EDITOR_EXPORT");
 				break;
 			}
+			
+			case eDialogMode.NEW: {
+				SaveButton.SetText("#STR_EDITOR_NEW");
+				break;
+			}
 		}
 		
 		m_TemplateController.Directories[0].GetLayoutRoot().SetColor(0xff007acc);
@@ -251,6 +257,10 @@ class EditorFileDialog: ScriptView
 		if (!FileExist(directory)) {
 			Error(string.Format("Attempted to browse to invalid directory: %1", directory));
 			return;
+		}
+		
+		if (directory == m_CurrentDirectory) {
+			update_history = false;
 		}
 		
 		m_CurrentDirectory = SystemPath.Format(directory);
@@ -329,6 +339,12 @@ class EditorFileDialog: ScriptView
 		if (is_directory) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetDirectory, 0, 0, file, true);
 		} else {
+			Print(File.GetName(file));
+
+			//if (m_DialogFlags & eDialogFlags.ALLOW_EMPTY_FILES) {
+
+			//}
+
 			if (m_ScriptCallback) {
 				m_ScriptCallback.Invoke(file);
 				Delete();
@@ -393,6 +409,12 @@ class EditorFileDialog: ScriptView
 				}
 				
 				case SaveButton: {
+					if (!FileNameBox.GetText() && !(m_DialogFlags & eDialogFlags.ALLOW_EMPTY_FILES)) {
+						//GetEditor().GetEditorHud().ShowMessageBox("Error", "Please select a valid file name", MessageBoxButtons.OK, null);
+						return true;
+					}
+					
+					
 					if (m_ScriptCallback) {
 						m_ScriptCallback.Invoke(SystemPath.Combine(m_CurrentDirectory, FileNameBox.GetText()));
 						Delete();

@@ -131,7 +131,7 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int MinorVersionNumber = 2;
+	static const int MinorVersionNumber = 0;
 	static const int VersionNumber = 32;
 	static const string Version = string.Format("1.%1%2", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty));
 	

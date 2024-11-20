@@ -1,4 +1,4 @@
-class EditorMessageBox: MessageBox
+class EditorMessageBox_DEPRECATED: MessageBox
 {
 	protected Editor m_Editor;
 	protected EditorHud m_EditorHud;
@@ -6,9 +6,9 @@ class EditorMessageBox: MessageBox
 	Widget DialogContent, TitleBar;
 	ScrollWidget DialogWrapper;
 	
-	void EditorMessageBox(string title, string caption, MessageBoxButtons buttons)
+	void EditorMessageBox_DEPRECATED(string title, string caption, MessageBoxButtons buttons)
 	{
-		//EditorLog.Trace("EditorMessageBox");
+		//EditorLog.Trace("EditorMessageBox_DEPRECATED");
 
 		m_Editor = GetEditor();
 		if (!m_Editor) {
@@ -55,9 +55,9 @@ class EditorMessageBox: MessageBox
 		Show(true);
 	}
 	
-	private void ~EditorMessageBox()
+	private void ~EditorMessageBox_DEPRECATED()
 	{
-		//EditorLog.Trace("~EditorMessageBox");
+		//EditorLog.Trace("~EditorMessageBox_DEPRECATED");
 		
 		if (!m_Editor) {
 			return;
@@ -75,7 +75,7 @@ class EditorMessageBox: MessageBox
 	
 	override static DialogResult Show(string title, string caption, MessageBoxButtons buttons)
 	{
-		EditorMessageBox message_box = new EditorMessageBox(title, caption, buttons);
+		EditorMessageBox_DEPRECATED message_box = new EditorMessageBox_DEPRECATED(title, caption, buttons);
 		return message_box.ShowDialog();
 	}
 	

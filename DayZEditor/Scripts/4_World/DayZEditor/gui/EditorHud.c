@@ -151,7 +151,7 @@ class EditorHud: ScriptViewMenu
 		m_TemplateController.NotifyPropertyChanged("FavoritesToggle");
 		
 		EditorCamera camera = m_Editor.GetCamera();
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", 0, 2));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", 40, 140));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Gaussian Blur", camera, "Blur", 0, 1));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Near Plane", camera, "NearPlane",  0, 1));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Distance", camera, "DOFDistance", 0, 500));
@@ -771,6 +771,7 @@ class EditorHud: ScriptViewMenu
 	{	
 		// An excellent place to do this!	
 		m_Editor.GetSettings().Save();
+		m_Editor.GetCameraSettings().Save();
 		
 		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
 	}
@@ -929,6 +930,7 @@ class EditorHud: ScriptViewMenu
 	}
 	
 	protected ref ScriptView m_Dialog;
+	protected ref ScriptView m_MessageBox;
 		
 	// Dialog Control
 	static ref DialogBase CurrentDialog;

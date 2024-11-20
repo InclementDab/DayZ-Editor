@@ -4,16 +4,16 @@ class EditorSettings: ProfileSettings
 	bool AutoSaveEnabled			= true;
 	float AutoSaveTimer 			= 240;
 	
-	[RegisterProfileSettingMultistate("BEHAVIOR", "HideCursorOnPlayerControl", "Hide Cursor When Controlling Player", {"NO", "YES"})]
+	[RegisterProfileSettingMultistate("ADVANCED", "HideCursorOnPlayerControl", "Hide Cursor When Controlling Player", {"NO", "YES"})]
 	int HideCursorOnPlayerControl;
 
-	[RegisterProfileSettingMultistate("BEHAVIOR", "DrawCameraLightShadows", "Draw Camera Light Shadows", {"NO", "YES"})]
+	[RegisterProfileSettingMultistate("ADVANCED", "DrawCameraLightShadows", "Draw Camera Light Shadows", {"NO", "YES"})]
 	int DrawCameraLightShadows = 0;
 
 	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveMode", "Quick Move Mode", {"WORLD", "CAMERA FLAT", "CAMERA 3D"})]
 	int QuickMoveMode = 1;
 		
-	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveSpeed", "Quick Move Speed (m/s)", 1.0, 40)]
+	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveSpeed", "Quick Move Speed (m/s)", 0.1, 40)]
 	float QuickMoveSpeed = 10;
 	
 	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveFollowsCamera", "Quick Move Mode", {"WORLD", "LOCAL"})]
@@ -22,7 +22,8 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("PLACEMENT", "SpawnItemsWithAttachments", "Item Spawns", {"EMPTY", "WITH ATTACHMENT"})]
 	int SpawnItemsWithAttachments	= 0;
 	
-	[RegisterProfileSettingMultistate("PLACEMENT", "AllowPlacementOfPersistentItems", "Place Persistent Items", {"NO", "YES"})]
+	// todo: stub
+	//[RegisterProfileSettingMultistate("PLACEMENT", "AllowPlacementOfPersistentItems", "Place Persistent Items", {"NO", "YES"})]
 	bool AllowPlacementOfPersistentItems = false; 
 	
 	bool ShowScopeZeroObjects		= false;
@@ -34,7 +35,7 @@ class EditorSettings: ProfileSettings
 	bool RuleOfThirds				= false;
 	bool AllowBelowGround 			= false;
 	
-	[RegisterProfileSettingMultistate("EXPORT/IMPORT", "CreateSaveBackups", "Create Backup Saves", {"NO", "EVERY 5MIN", "EVERY 15MIN", "EVERY HOUR"})]
+	[RegisterProfileSettingMultistate("IMPORT/EXPORT", "CreateSaveBackups", "Create Backup Saves", {"NO", "EVERY 5MIN", "EVERY 15MIN", "EVERY HOUR"})]
 	int CreateSaveBackups = 0;
 
 	// Advanced Settings
@@ -76,10 +77,10 @@ class EditorSettings: ProfileSettings
 	int SelectionColor				= 0xff6ba5ff;
 	
 	// Brush Settings
-	[RegisterProfileSettingMultistate("PLACEMENT", "BrushedObjectMarkers", "Brush Object Markers", {"NO", "YES"})]
+	[RegisterProfileSettingMultistate("BRUSHES", "BrushedObjectMarkers", "Brush Object Markers", {"NO", "YES"})]
 	bool BrushedObjectMarkers 		= false;
 	
-	[RegisterProfileSettingMultistate("PLACEMENT", "BrushedListItems", "Brush List Items", {"NO", "YES"})]
+	[RegisterProfileSettingMultistate("BRUSHES", "BrushedListItems", "Brush List Items", {"NO", "YES"})]
 	bool BrushedListItems			= false;
 	
 	[RegisterProfileSettingText("PLACEMENT", "BrushFile", "Brush File")]
