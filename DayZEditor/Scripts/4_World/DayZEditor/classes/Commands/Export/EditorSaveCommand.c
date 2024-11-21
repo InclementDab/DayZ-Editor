@@ -40,6 +40,11 @@ class EditorSaveCommand: EditorExportCommandBase
 		return EditorDZEFile;
 	}
 	
+	override string GetName() 
+	{
+		return "#STR_EDITOR_SAVE";
+	}
+	
 	override string GetDialogButtonName() 
 	{
 		return "#STR_EDITOR_SAVE";
