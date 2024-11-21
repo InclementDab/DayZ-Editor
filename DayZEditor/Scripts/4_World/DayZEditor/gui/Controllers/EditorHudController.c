@@ -141,18 +141,21 @@ class EditorHudController: EditorControllerBase
 				GetEditor().GetSettings().ShowScopeZeroObjects = ShowPrivate;
 				GetEditor().GetSettings().Save();
 
-				auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
-				for (int j = 0; j < spacer_config.Count(); j++) {
-					int hide = !spacer_config[j].FilterType(LeftSearchBar.GetText());
-					if (FavoritesToggle) {
-						hide |= hide | (!spacer_config[j].GetTemplateController().Favorite << 1);
-					}
+				//auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
+				array<ObservableCollection<ref EditorPlaceableListItem>> collections = { LeftbarSpacerConfig, LeftbarSpacerStatic };
+				foreach (auto collection: collections) {
+					for (int j = 0; j < collection.Count(); j++) {
+						int hide = !collection[j].FilterType(LeftSearchBar.GetText());
+						if (FavoritesToggle) {
+							hide |= hide | (!collection[j].GetTemplateController().Favorite << 1);
+						}
 
-					if (!ShowPrivate) {
-						hide |= hide | (spacer_config[j].GetPlaceableItem().Scope < 2) << 2;
-					}
+						if (!ShowPrivate) {
+							hide |= hide | (collection[j].GetPlaceableItem().Scope < 2) << 2;
+						}
 
-					spacer_config[j].GetLayoutRoot().Show(!hide);
+						collection[j].GetLayoutRoot().Show(!hide);
+					}
 				}
 
 				break;

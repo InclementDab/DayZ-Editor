@@ -6,7 +6,7 @@ class EditorLoadingScreen: LoadingScreen
 		new EditorLoadingScreenEntry("impipapo-1727267576.edds", "VVils0on"), 
 		new EditorLoadingScreenEntry("itzmikedocherty-1727104663.edds", "ItzMikeDocherty"),
 		new EditorLoadingScreenEntry("itzmikedocherty-1727104768.edds", "ItzMikeDocherty"), 
-		new EditorLoadingScreenEntry("kowalskiz-1727301225.edds", "Kowalskiz"),
+		new EditorLoadingScreenEntry("kowalskiz-1727301225.edds", "KowalskiZ (with a capital Z)"),
 		new EditorLoadingScreenEntry("lunna2233-1727117795.edds", "Lunna2233"),
 		new EditorLoadingScreenEntry("lunna2233-1727808367.edds", "Lunna2233"),
 		new EditorLoadingScreenEntry("rochie-1727883649.edds", "Rochie"),

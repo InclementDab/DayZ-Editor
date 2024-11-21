@@ -1,6 +1,6 @@
 class EditorObjectSpawnerFile : EditorFileType
 {
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		EditorLog.Trace("EditorObjectSpawnerFile::Export");
 		ObjectSpawnerJson export_data = new ObjectSpawnerJson();

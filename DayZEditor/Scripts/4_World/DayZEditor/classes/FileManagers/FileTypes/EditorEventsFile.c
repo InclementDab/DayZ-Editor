@@ -3,7 +3,7 @@ typedef array<ref EventDataPair> EventDataArray;
 
 class EditorEventsFile: EditorFileType
 {	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;

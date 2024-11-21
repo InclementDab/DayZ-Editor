@@ -32,13 +32,13 @@ class EditorVPPFile: EditorFileType
 		return save_data;
 	}
 	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		EditorLog.Trace("EditorVPPFile::Export");
 		
 		FileSerializer file_serializer = new FileSerializer();
 	
-		VPPToEditorBuildingSet building_set = new VPPToEditorBuildingSet(settings.ExportSetName);
+		VPPToEditorBuildingSet building_set = new VPPToEditorBuildingSet(File.GetName(file));
 		
 		foreach (EditorObjectData object_data: data.EditorObjects) {
 			building_set.AddBuilding(object_data.Type, object_data.Position, object_data.Orientation, true);

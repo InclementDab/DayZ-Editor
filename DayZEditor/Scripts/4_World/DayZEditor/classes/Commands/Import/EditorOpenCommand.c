@@ -8,7 +8,7 @@ class EditorOpenCommand: EditorImportCommandBase
 		return true;
 	}
 	
-	protected void OnOpenFileSelected(string file_name)
+	protected void OnOpenFileSelected(string file_name, eDialogExtraSetting extra_settings)
 	{
 		GetEditor().LoadSaveData(ImportFile(file_name), true);
 		GetEditor().SetSaveFile(file_name);

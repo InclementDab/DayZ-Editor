@@ -73,7 +73,7 @@ class EditorInitFile: EditorFileType
 		return save_data;
 	}
 	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{		
 		if (!CopyFile("DayZEditor/scripts/data/Defaults/init.c", file)) {
 			EditorLog.Error("Failed to copy file %1", file);

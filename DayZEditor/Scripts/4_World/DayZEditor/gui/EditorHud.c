@@ -256,7 +256,7 @@ class EditorHud: ScriptView
 			}
 		}
 		
-		if (toggle_hud_input.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog) {		
+		if (toggle_hud_input.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog && !GetDayZGame().IsLeftCtrlDown()) {		
 			Show(!IsVisible());
 		}
 		
@@ -684,18 +684,20 @@ class EditorHud: ScriptView
 		switch (w) {
 			case LeftSearchBar: {
 				string left_search_bar_text = LeftSearchBar.GetText();
-				auto left_spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(m_TemplateController.CategoryConfig, m_TemplateController.LeftbarSpacerConfig, m_TemplateController.LeftbarSpacerStatic);
-				for (int j = 0; j < left_spacer_config.Count(); j++) {
-					int hide = !left_spacer_config[j].FilterType(left_search_bar_text);
-					if (m_TemplateController.FavoritesToggle) {
-						hide |= hide | (!left_spacer_config[j].GetTemplateController().Favorite << 1);
-					}
+				array<ObservableCollection<ref EditorPlaceableListItem>> collections = { m_TemplateController.LeftbarSpacerConfig, m_TemplateController.LeftbarSpacerStatic };
+				foreach (auto collection: collections) {
+					for (int j = 0; j < collection.Count(); j++) {
+						int hide = !collection[j].FilterType(left_search_bar_text);
+						if (m_TemplateController.FavoritesToggle) {
+							hide |= hide | (!collection[j].GetTemplateController().Favorite << 1);
+						}
 
-					if (!m_TemplateController.ShowPrivate) {
-						hide |= hide | (left_spacer_config[j].GetPlaceableItem().Scope < 2) << 2;
-					}
+						if (!m_TemplateController.ShowPrivate) {
+							hide |= hide | (collection[j].GetPlaceableItem().Scope < 2) << 2;
+						}
 
-					left_spacer_config[j].GetLayoutRoot().Show(!hide);
+						collection[j].GetLayoutRoot().Show(!hide);
+					}
 				}
 				
 				LeftbarScroll.VScrollToPos(0);

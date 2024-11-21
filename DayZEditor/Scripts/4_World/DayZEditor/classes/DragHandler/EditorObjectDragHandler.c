@@ -11,6 +11,30 @@ enum EDragFlags
 	ROTATION_LOCK_Z = 32
 };
 
+class Plane3D: Managed
+{
+	vector Normal, Center;
+
+	void Plane3D(vector normal, vector center)
+	{
+		Normal = normal.Normalized();
+		Center = center;
+	}
+
+	vector Intersect(notnull Ray source)
+	{
+		float denom = vector.Dot(Normal, source.Direction);
+		if (Math.AbsFloat(denom) > Math.EPSILON) {
+			float t = vector.Dot((Center - source.Position), Normal) / denom;
+			if (t >= 0) {
+				return source.Position + source.Direction * t;
+			}
+		}
+
+		return vector.Zero;
+	}
+}
+
 class EditorObjectDragHandler: EditorDragHandler
 {
 	protected float m_LastAngle;
@@ -57,6 +81,9 @@ class EditorObjectDragHandler: EditorDragHandler
 
 		vector cursor_transform[4];
 		GetEditor().GetCursorTransform(cursor_transform);
+		
+		vector camera_transform[4];
+		GetEditor().GetCamera().GetTransform(camera_transform);
 
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 
@@ -101,13 +128,12 @@ class EditorObjectDragHandler: EditorDragHandler
 		int i;
 		
 		// Handle Z-Only motion
-		// Todo will people want this as a keybind?
-		if (KeyState(KeyCode.KC_LMENU)) {
-			vector normal = vector.Direction(transform[3], GetGame().GetCurrentCameraPosition());						
-			normal[1] = 0;
-			normal.Normalize();
-			Plane z_normal_plane = Plane.Create(normal, "10 10 10", vector.Zero, vector.Up);
-			cursor_pos = z_normal_plane.Intersect(cursor_ray, transform) + bounding_center;
+		if (KeyState(KeyCode.KC_LMENU)) {			
+			// This should always be ortho
+			vector forward_plane = vector.Up * camera_transform[0];
+			Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
+			vector intersect = z_plane.Intersect(cursor_ray);
+			cursor_pos = intersect;
 			if (GetEditor().MagnetMode) {
 				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos + GetGame().GetCurrentCameraDirection() * 1);
 			} else {

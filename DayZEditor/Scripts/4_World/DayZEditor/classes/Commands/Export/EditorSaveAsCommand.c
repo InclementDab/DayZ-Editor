@@ -7,14 +7,9 @@ class EditorSaveAsCommand: EditorExportCommandBase
 		return true;
 	}
 	
-	protected void OnSaveAsFileSelected(string file_name)
+	protected void OnSaveAsFileSelected(string file_name, eDialogExtraSetting extra_settings)
 	{
-		if (!file_name) {
-			GetEditor().GetEditorHud().CreateNotification("No file name specified");
-			return;
-		}
-
-		if (ExportFile(file_name, m_ExportSettings, true)) {
+		if (ExportFile(file_name, m_ExportSettings, extra_settings & eDialogExtraSetting.EXPORT_SELECTED_ONLY)) {
 			GetEditor().SetSaveFile(file_name);
 		}
 	}
