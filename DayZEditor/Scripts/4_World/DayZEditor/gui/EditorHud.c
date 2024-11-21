@@ -268,7 +268,7 @@ class EditorHud: ScriptView
 		}
 		
 		// Teleport the player
-		if (teleport_to_cursor.LocalPress() && GetGame().GetUIManager().IsCursorVisible()) {
+		if (teleport_to_cursor.LocalPress() && GetGame().GetUIManager().IsCursorVisible() && !GetDayZGame().IsLeftCtrlDown()) {
 			PlayerBase teleport_player = m_Editor.GetControllingPlayer();
 			if (!teleport_player) {
 				teleport_player = m_Editor.GetPlayer();
