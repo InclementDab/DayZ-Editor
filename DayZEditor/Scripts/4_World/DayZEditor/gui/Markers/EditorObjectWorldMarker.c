@@ -20,6 +20,11 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	{
 		vector position = GetPosition();	
 		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
+		if (!m_Editor.GetEditorHud().IsVisible()) {
+			m_LayoutRoot.Show(false);
+			return;
+		}
+		
 		if (m_MarkerDistSq < distancesq) {
 			m_LayoutRoot.Show(false);
 			return;

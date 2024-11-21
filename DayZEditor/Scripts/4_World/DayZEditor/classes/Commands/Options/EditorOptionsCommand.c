@@ -6,8 +6,9 @@ class EditorOptionsCommand: EditorCommand
         super.Execute(sender, args);
 
 		// lmao DF bad
-		GetEditor().GetEditorHud().EnterChildMenu(MENU_OPTIONS);
-        UIScriptedMenu menu = GetEditor().GetEditorHud().GetChildMenu();
+		UIScriptedMenu menu = GetGame().GetUIManager().EnterScriptedMenu(MENU_OPTIONS, null);
+		//GetEditor().GetEditorHud().EnterChildMenu(MENU_OPTIONS);
+        //UIScriptedMenu menu = GetEditor().GetEditorHud().GetChildMenu();
 		
 		int tab_index = -1;
 		g_Script.CallFunction(menu, "FindTabIndex", tab_index, "EDITOR"); // this wouldve originally been localized but its lowercase and ugly

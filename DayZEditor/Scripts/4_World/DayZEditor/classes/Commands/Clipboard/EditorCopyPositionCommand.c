@@ -25,7 +25,7 @@ class EditorCopyPositionCommand: EditorCommand
 		
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_P };
+		return { KeyCode.KC_P };
 	}
 
 	override Symbols GetSymbol()

@@ -63,7 +63,8 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		} 
 		
-		GetEditor().GetEditorHud().EnterChildMenu(MENU_INGAME);
+		//GetEditor().GetEditorHud().EnterChildMenu(MENU_INGAME);
+		GetGame().GetUIManager().EnterScriptedMenu(MENU_INGAME, null);
 		return true;
 	}
 	

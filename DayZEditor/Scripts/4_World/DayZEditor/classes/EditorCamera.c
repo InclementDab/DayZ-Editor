@@ -239,8 +239,7 @@ class EditorCamera_V2: EditorCamera
 				rotation = -rotation;
 			}
 		} else {
-			teleport = input.GetInputByID(UAZoomIn).LocalPress() && !GetDayZGame().IsLeftCtrlDown() && !GetWidgetUnderCursor();
-
+			teleport = input.GetInputByID(UAZoomIn).LocalPress() && !GetDayZGame().IsLeftCtrlDown();
 		}
 							
 		float speed = m_EditorCameraSettings.Speed;

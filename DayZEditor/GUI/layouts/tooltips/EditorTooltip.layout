@@ -98,61 +98,18 @@ WrapSpacerWidgetClass EditorTooltipRoot {
    vexactsize 1
    scaled 1
    {
-    GridSpacerWidgetClass ContentViews {
+    ItemPreviewWidgetClass ContentItem {
+     visible 1
      ignorepointer 1
      size 1 1
+     halign center_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     Columns 2
-     Rows 2
-     {
-      ItemPreviewWidgetClass ContentItem0 {
-       visible 1
-       ignorepointer 1
-       size 123 123
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       "force flip" 0
-      }
-      ItemPreviewWidgetClass ContentItem1 {
-       visible 1
-       ignorepointer 1
-       size 123 123
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       "force flip" 0
-      }
-      ItemPreviewWidgetClass ContentItem2 {
-       visible 1
-       ignorepointer 1
-       size 123 123
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       "force flip" 0
-      }
-      ItemPreviewWidgetClass ContentItem3 {
-       visible 1
-       ignorepointer 1
-       size 123 123
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       "force flip" 0
-      }
-     }
+     scriptclass ""
+     "force flip" 0
     }
     ImageWidgetClass BackupImage {
      ignorepointer 1

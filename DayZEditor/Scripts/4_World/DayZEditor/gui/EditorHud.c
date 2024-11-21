@@ -5,7 +5,7 @@ enum SelectionMode
 	LASSO // ???? are you CRAZY?
 };
 
-class EditorHud: ScriptViewMenu
+class EditorHud: ScriptView
 {
 	const float DEFAULT_BAR_WIDTH_PX = 380.0;
 
@@ -233,7 +233,7 @@ class EditorHud: ScriptViewMenu
 			return;
 		}
 		
-		if (toggle_map.LocalPress()) {
+		if (toggle_map.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog) {
 			Map.Show(!Map.IsVisible());
 			Map.SetMapPos(GetGame().GetCurrentCameraPosition());
 			ShowCursor(true);

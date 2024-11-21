@@ -86,7 +86,9 @@ class Editor: Managed
 		"BrushBase",
 		"BoundingBoxBase",
 		"Man",
-		"EditorCamera"
+		"EditorCamera",
+		"EditorCamera_V2",
+		"EditorCameraClassic"
 	};
 	
 	// public properties
@@ -131,8 +133,8 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int MinorVersionNumber = 0;
-	static const int VersionNumber = 32;
+	static const int MinorVersionNumber = 2;
+	static const int VersionNumber = 33;
 	static const string Version = string.Format("1.%1%2", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty));
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
@@ -250,7 +252,7 @@ class Editor: Managed
 		
 		m_RestApi = new EditorWebApi();
 		if (GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
-			ShowDonationDialog();
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ShowDonationDialog);
 		}
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
@@ -833,6 +835,20 @@ class Editor: Managed
 				}
 			}
 		} else if (selected_objects.Count()) {
+			vector average_position;
+			foreach (int _, EditorObject sle: selected_objects) {
+				average_position = average_position + sle.GetPosition();
+			}
+			
+			average_position = Vector(average_position[0] / selected_objects.Count(), average_position[1] / selected_objects.Count(), average_position[2] / selected_objects.Count());
+			
+			vector average_mat[4] = {
+				"1 0 0",
+				"0 1 0",
+				"0 0 1",
+				average_position
+			};
+			
 			float step_size = GetSettings().QuickMoveSpeed;
 			if (turbo_input.LocalValue()) {
 				step_size *= (1.608 * 1.608);
@@ -868,33 +884,64 @@ class Editor: Managed
 			}
 			
 			vector pos_offset = vector.Zero;
-			if (fwd_input.LocalValue()) {
+			vector ori_offset = vector.Zero;
+			if (GetDayZGame().IsLeftCtrlDown() && fwd_input.LocalValue()) {
+				ori_offset = Vector(0, 0, step_size);
+			}
+			
+			else if (fwd_input.LocalValue()) {
 				pos_offset = Vector(0, 0, step_size).Multiply3(camera_transform_mat);
 			}
 			
-			if (bck_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && bck_input.LocalValue()) {
+				ori_offset = Vector(0, 0, -step_size);
+			}
+			
+			else if (bck_input.LocalValue()) {
 				pos_offset = Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
 			}
 			
-			if (left_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && left_input.LocalValue()) {
+				ori_offset = Vector(-step_size, 0, 0);
+			}
+			
+			else if (left_input.LocalValue()) {
 				pos_offset = Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (right_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && right_input.LocalValue()) {
+				ori_offset = Vector(step_size, 0, 0);
+			}
+			
+			else if (right_input.LocalValue()) {
 				pos_offset = Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (up_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && up_input.LocalValue()) {
+				ori_offset = Vector(0, step_size, 0);
+			}	
+					
+			else if (up_input.LocalValue()) {
 				pos_offset = Vector(0, step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (down_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && down_input.LocalValue()) {
+				ori_offset = Vector(0, -step_size, 0);
+			}
+			else if (down_input.LocalValue()) {
 				pos_offset = Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
 			}
 					
-			if (pos_offset != vector.Zero) {
+			if (pos_offset != vector.Zero || ori_offset != vector.Zero) {
 				foreach (int id, EditorObject selected_object: selected_objects) {
-					selected_object.GetWorldObject().SetPosition(selected_object.GetWorldObject().GetPosition() + pos_offset);
+					vector rel_pos = selected_object.GetPosition().InvMultiply4(average_mat) + pos_offset;
+					vector rel_mat[4];
+					Math3D.YawPitchRollMatrix(ori_offset, rel_mat);
+					rel_mat[3] = average_position;
+					
+					vector new_pos = rel_pos.Multiply4(rel_mat);
+					selected_object.SetPosition(new_pos);
+					selected_object.SetOrientation(selected_object.GetOrientation() + ori_offset);
 				}
 			}
 		}
