@@ -44,13 +44,15 @@ class EditorInitFile : EditorFileType
 				tokens[1]; // Building
 	        	tokens[3]; // Position
 	        	tokens[5]; // Orientation
-				tokens[7]; // Scale
+				tokens[6]; // Scale
 				*/
-
 				float scale = 1.0;
-				if (tokens.Count() > 6)
+				if (tokens[6])
 				{
-					scale = tokens[7].ToFloat();
+					string temp = tokens[6];
+					temp.Replace(", ", "");
+					temp.Replace(");", "");
+					scale = temp.ToFloat();
 				}
 
 				// [11/16/24] dab: bugfix for inconsistent DayZ crap. the other end of this bugfix is in EditorObject.Update
