@@ -30,11 +30,17 @@ class EditorObjectSpawnerFile : EditorFileType
 
 		JsonFileLoader<ObjectSpawnerJson>.JsonLoadFile(file, import_data);
 		foreach (ITEM_SpawnerObject scene_object: import_data.Objects) {
+			if (!scene_object.scale)
+			{
+				scene_object.scale = 1;
+			}
 			EditorObjectData dta = EditorObjectData.Create(scene_object.name, Vector(scene_object.pos[0], scene_object.pos[1], scene_object.pos[2]), Vector(scene_object.ypr[0], scene_object.ypr[1], scene_object.ypr[2]), scene_object.scale, EFE_DEFAULT);
-			if (dta.Type.Contains(".p3d")) {
+			if (dta.Type.Contains(".p3d"))
+			{
 				// Because DayZ is inconsistent, we need to have these checks
 				Object p3d_test_object = GetGame().CreateStaticObjectUsingP3D(dta.Type, vector.Zero, vector.Zero, 1.0, true);
-				if (p3d_test_object) {
+				if (p3d_test_object)
+				{
 					dta.Orientation = dta.Orientation * Math.RAD2DEG;
 					dta.Position = dta.Position + p3d_test_object.GetBoundingCenter();
 					GetGame().ObjectDelete(p3d_test_object);
