@@ -110,7 +110,6 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToMapGroupPos);
 		RegisterCommand(EditorExportToObjectSpawner);
 		
-		RegisterCommand(EditorSaveBackupCommand);
 		RegisterCommand(EditorSearchCommand);
 		RegisterCommand(EditorSearchObjectCommand);
 		RegisterCommand(EditorCheckDuplicatesCommand);

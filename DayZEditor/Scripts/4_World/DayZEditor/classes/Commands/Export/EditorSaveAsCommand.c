@@ -10,6 +10,7 @@ class EditorSaveAsCommand: EditorExportCommandBase
 	protected void OnSaveAsFileSelected(string file_name, eDialogExtraSetting extra_settings)
 	{
 		if (ExportFile(file_name, m_ExportSettings, extra_settings & eDialogExtraSetting.EXPORT_SELECTED_ONLY)) {
+			EditorFileManager.GetSafeFileName(file_name, ".dze");
 			GetEditor().SetSaveFile(file_name);
 		}
 	}

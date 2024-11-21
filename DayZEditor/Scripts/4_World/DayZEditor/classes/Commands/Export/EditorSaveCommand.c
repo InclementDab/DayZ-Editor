@@ -21,6 +21,7 @@ class EditorSaveCommand: EditorExportCommandBase
 		}
 
 		if (ExportFile(file_name, m_ExportSettings, extra_setting)) {
+			EditorFileManager.GetSafeFileName(file_name, ".dze");
 			GetEditor().SetSaveFile(file_name);
 		}
 	}

@@ -387,9 +387,6 @@ class EditorFileDialog: EditorModal
 			if (m_ScriptCallback) {
 				int extra_setting_checked_mask = ExtraSettingCheckBox.IsChecked() * int.MAX;
 				int result_mask = (m_DialogSettings & extra_setting_checked_mask);		
-				Print(m_DialogSettings);
-				Print(extra_setting_checked_mask);
-				Print(result_mask);
 				m_ScriptCallback.Invoke(final_file, result_mask);
 			}
 			
