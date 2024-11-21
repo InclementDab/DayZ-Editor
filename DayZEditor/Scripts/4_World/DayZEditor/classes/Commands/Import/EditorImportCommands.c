@@ -15,7 +15,7 @@ class EditorImportCommandBase: EditorCommand
 		return true;
 	}
 	
-	protected void OnFileSelected(string file_name)
+	protected void OnFileSelected(string file_name, eDialogExtraSetting extra_settings)
 	{
 		if (!file_name) {
 			GetEditor().GetEditorHud().CreateNotification("No file name specified");

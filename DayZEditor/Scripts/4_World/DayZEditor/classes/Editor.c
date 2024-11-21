@@ -133,7 +133,7 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int MinorVersionNumber = 2;
+	static const int MinorVersionNumber = 3;
 	static const int VersionNumber = 33;
 	static const string Version = string.Format("1.%1%2", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty));
 	
@@ -849,13 +849,13 @@ class Editor: Managed
 				average_position
 			};
 			
-			float step_size = GetSettings().QuickMoveSpeed;
+			float step_size = GetSettings().QuickMoveRate;
 			if (turbo_input.LocalValue()) {
-				step_size *= (1.608 * 1.608);
+				step_size *= 6.685;
 			}
 			
 			if (slow_input.LocalValue()) {
-				step_size /= (1.608 * 1.608);
+				step_size /= 6.685;
 			}
 			
 			step_size *= dt;
@@ -931,17 +931,23 @@ class Editor: Managed
 			else if (down_input.LocalValue()) {
 				pos_offset = Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
 			}
+			
+			ori_offset = ori_offset * Math.RAD2DEG;
 					
 			if (pos_offset != vector.Zero || ori_offset != vector.Zero) {
 				foreach (int id, EditorObject selected_object: selected_objects) {
-					vector rel_pos = selected_object.GetPosition().InvMultiply4(average_mat) + pos_offset;
 					vector rel_mat[4];
-					Math3D.YawPitchRollMatrix(ori_offset, rel_mat);
-					rel_mat[3] = average_position;
+					selected_object.GetTransform(rel_mat);
+					vector inv_mat[4];
+					Math3D.MatrixInvMultiply4(average_mat, rel_mat, inv_mat);
+					inv_mat[3] = inv_mat[3] + pos_offset;
 					
-					vector new_pos = rel_pos.Multiply4(rel_mat);
-					selected_object.SetPosition(new_pos);
-					selected_object.SetOrientation(selected_object.GetOrientation() + ori_offset);
+					vector avg_mat[4];
+					Math3D.YawPitchRollMatrix(ori_offset, avg_mat);
+					avg_mat[3] = average_position;
+					vector res_mat[4];
+					Math3D.MatrixMultiply4(avg_mat, inv_mat, res_mat);
+					selected_object.SetTransform(res_mat);
 				}
 			}
 		}

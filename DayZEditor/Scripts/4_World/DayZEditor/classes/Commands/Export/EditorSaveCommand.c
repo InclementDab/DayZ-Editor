@@ -4,24 +4,24 @@ class EditorSaveCommand: EditorExportCommandBase
 	{
 		//super.Execute(sender, args);
 		string file_name = GetEditor().GetSaveFile();
-		if (file_name == string.Empty) {
-			EditorLog.Info("Using filter %1", "*.dze");
+		if (file_name == string.Empty) {			
 			GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnSaveFileSelected), eDialogMode.SAVE, eDialogFlags.WARN_ON_OVERWRITE);
 		} else {
-			OnSaveFileSelected(file_name);
+			OnSaveFileSelected(file_name, 0);
 		}
 				
 		return true;
 	}
 	
-	protected void OnSaveFileSelected(string file_name)
+	protected void OnSaveFileSelected(string file_name, eDialogExtraSetting extra_setting)
 	{
 		if (!file_name) {
 			GetEditor().GetEditorHud().CreateNotification("No file name specified");
 			return;
 		}
 
-		if (ExportFile(file_name, m_ExportSettings, true)) {
+		if (ExportFile(file_name, m_ExportSettings, extra_setting)) {
+			EditorFileManager.GetSafeFileName(file_name, ".dze");
 			GetEditor().SetSaveFile(file_name);
 		}
 	}
@@ -39,6 +39,11 @@ class EditorSaveCommand: EditorExportCommandBase
 	override typename GetFileType() 
 	{
 		return EditorDZEFile;
+	}
+	
+	override string GetName() 
+	{
+		return "#STR_EDITOR_SAVE";
 	}
 	
 	override string GetDialogButtonName() 

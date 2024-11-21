@@ -58,7 +58,7 @@ class EditorExportDialog: EditorDialogBase
 				edit_data = edit_box.GetText();
 			}
 			
-			export_settings.ExportSelectedOnly = EditorExportDialogController.Cast(m_Controller).export_selected;
+			//export_settings.ExportSelectedOnly = EditorExportDialogController.Cast(m_Controller).export_selected;
 			Sleep(10);
 		}
 		

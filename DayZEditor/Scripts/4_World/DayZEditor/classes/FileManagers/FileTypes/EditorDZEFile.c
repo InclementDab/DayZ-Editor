@@ -84,13 +84,13 @@ class EditorDZEFile: EditorFileType
 		return save_data;
 	}
 	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{		
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
 		}
 		
-		if (settings.Binarized) {
+		//if (settings.Binarized) {
 			FileSerializer file_serializer = new FileSerializer();
 			if (!file_serializer.Open(file, FileMode.WRITE)) {
 				EditorLog.Error("Failed to open file %1", file);
@@ -100,9 +100,9 @@ class EditorDZEFile: EditorFileType
 			data.Write(file_serializer, EditorSaveData.Version);
 			file_serializer.Close();
 			
-		} else {
-			EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
-		}
+		//} else {
+		//	EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
+		//}
 	}
 	
 	override string GetExtension() 

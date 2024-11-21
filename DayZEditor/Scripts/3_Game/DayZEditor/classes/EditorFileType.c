@@ -1,7 +1,12 @@
 class EditorFileType: Managed
 {
-	EditorSaveData Import(string file, ImportSettings settings);
-	void Export(EditorSaveData data, string file, ExportSettings settings);
+	EditorSaveData Import(string file, ImportSettings settings) { return null; }
+	void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting) {}
+	
+	eDialogExtraSetting GetExportSettings()
+	{
+		return eDialogExtraSetting.EXPORT_SELECTED_ONLY;
+	}
 	
 	string GetExtension()
 	{

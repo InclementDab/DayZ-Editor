@@ -1,9 +1,7 @@
 class ExportSettings: FileSettingsBase
 {
 	bool Binarized = true;
-	bool ExportEntireMap;
 	ExportHeightType HeightType;
-	bool ExportSelectedOnly;
 	vector ExportOffset;
 	string ExportSetName;
 	

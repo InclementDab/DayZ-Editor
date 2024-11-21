@@ -1,7 +1,8 @@
 class EditorMapGroupPosFile: EditorFileType
 {
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
+		Print(dialog_setting);
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
 		}
@@ -16,7 +17,7 @@ class EditorMapGroupPosFile: EditorFileType
 		FPrintln(handle, "<map>");
 		
 		array<Object> objects = {};
-		if (settings.ExportEntireMap) {	
+		if (dialog_setting & eDialogExtraSetting.EXPORT_ENTIRE_MAP) {	
 			GetGame().GetObjectsAtPosition3D(vector.Zero, 100000, objects, null);
 		} else {
 			foreach (EditorObjectData editor_object: data.EditorObjects) {
@@ -48,6 +49,11 @@ class EditorMapGroupPosFile: EditorFileType
 		FPrintln(handle, "</map>");
 		
 		CloseFile(handle);
+	}
+	
+	override eDialogExtraSetting GetExportSettings()
+	{
+		return eDialogExtraSetting.EXPORT_ENTIRE_MAP;
 	}
 	
 	override string GetExtension() 

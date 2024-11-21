@@ -58,7 +58,7 @@ class EditorExpansionFile: EditorFileType
 		return save_data;
 	}
 	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		EditorLog.Trace("EditorExpansionFile::Export");
 		

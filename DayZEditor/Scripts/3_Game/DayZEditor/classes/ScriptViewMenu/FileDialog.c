@@ -76,6 +76,12 @@ enum eDialogFlags
 	ALLOW_DOUBLE_CLICK = 4
 }
 
+enum eDialogExtraSetting
+{
+	EXPORT_SELECTED_ONLY = 1,
+	EXPORT_ENTIRE_MAP = 2
+}
+
 class EditorFileDialog: EditorModal
 {
 	static const ref array<string> AVAILABLE_DIRECTORIES = {
@@ -88,6 +94,7 @@ class EditorFileDialog: EditorModal
 	
 	protected eDialogMode m_DialogMode;
 	protected eDialogFlags m_DialogFlags;
+	protected eDialogExtraSetting m_DialogSettings;
 	protected int m_CurrentHistoryIndex = 0;
 	protected ref array<string> m_DirectoryHistory = {};
 	protected string m_CurrentDirectory, m_CurrentFile;
@@ -95,6 +102,9 @@ class EditorFileDialog: EditorModal
 	protected ref EditorFileType m_FileType;
 	protected ref EditorMessageBox m_EditorMessageBox;
 	
+	Widget ExtraSetting;
+	CheckBoxWidget ExtraSettingCheckBox;
+	TextWidget ExtraSettingText;
 	EditBoxWidget SearchBox, FileNameBox;
 	ButtonWidget SaveButton, CancelButton, ExplorerBack, ExplorerFwd, TitleClose, RefreshButton;
 	ImageWidget ExplorerBackImage, ExplorerFwdImage;
@@ -106,6 +116,7 @@ class EditorFileDialog: EditorModal
 		m_ScriptCallback = on_file_selected;
 		m_DialogMode = dialog_mode;
 		m_DialogFlags = dialog_flags;
+		m_DialogSettings = m_FileType.GetExportSettings();
 
 		if (!file_type.IsInherited(EditorFileType) || !m_FileType) {
 			Error("invalid file_type parameter");
@@ -143,6 +154,17 @@ class EditorFileDialog: EditorModal
 				break;
 			}
 		}
+
+		// Extra settings interface leaves much to be desired but I have to get this out for server owners
+		if (m_DialogSettings & eDialogExtraSetting.EXPORT_ENTIRE_MAP) {
+			ExtraSettingText.SetText("Export Entire Map");
+		}
+
+		if (m_DialogSettings & eDialogExtraSetting.EXPORT_SELECTED_ONLY) {
+			ExtraSettingText.SetText("Export Selected Only");
+		}
+
+		ExtraSetting.Show(m_DialogSettings);
 		
 		m_TemplateController.Directories[0].GetLayoutRoot().SetColor(0xff007acc);
 
@@ -258,7 +280,9 @@ class EditorFileDialog: EditorModal
 		} else {
 			if (m_DialogFlags & eDialogFlags.ALLOW_DOUBLE_CLICK) {
 				if (m_ScriptCallback) {
-					m_ScriptCallback.Invoke(file);
+					int extra_setting_checked_mask = ExtraSettingCheckBox.IsChecked() * int.MAX;
+					int result_mask = (m_DialogSettings & extra_setting_checked_mask);					
+					m_ScriptCallback.Invoke(file, result_mask);
 					Delete();
 				}
 			}			
@@ -335,7 +359,9 @@ class EditorFileDialog: EditorModal
 					}
 
 					if (m_ScriptCallback) {
-						m_ScriptCallback.Invoke(final_file);
+						int extra_setting_checked_mask = ExtraSettingCheckBox.IsChecked() * int.MAX;
+						int result_mask = (m_DialogSettings & extra_setting_checked_mask);		
+						m_ScriptCallback.Invoke(final_file, result_mask);
 						Delete();
 						return true; 
 					}
@@ -359,7 +385,9 @@ class EditorFileDialog: EditorModal
 		if (result == DialogResult.OK) {
 			string final_file = SystemPath.Combine(m_CurrentDirectory, FileNameBox.GetText());
 			if (m_ScriptCallback) {
-				m_ScriptCallback.Invoke(final_file);
+				int extra_setting_checked_mask = ExtraSettingCheckBox.IsChecked() * int.MAX;
+				int result_mask = (m_DialogSettings & extra_setting_checked_mask);		
+				m_ScriptCallback.Invoke(final_file, result_mask);
 			}
 			
 			Delete();

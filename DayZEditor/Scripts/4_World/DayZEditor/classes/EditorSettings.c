@@ -13,8 +13,8 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveMode", "Quick Move Mode", {"WORLD", "CAMERA FLAT", "CAMERA 3D"})]
 	int QuickMoveMode = 1;
 		
-	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveSpeed", "Quick Move Speed (m/s)", 0.1, 40)]
-	float QuickMoveSpeed = 10;
+	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveRate", "Quick Move Speed (m/s)", 0.1, 15)]
+	float QuickMoveRate = 2.5;
 	
 	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveFollowsCamera", "Quick Move Mode", {"WORLD", "LOCAL"})]
 	int QuickMoveFollowsCamera		= 0;

@@ -658,9 +658,53 @@ WrapSpacerWidgetClass FileDialog {
        Padding 7
        Margin 0
        "Size To Content H" 1
-       Columns 2
        Rows 1
        {
+        GridSpacerWidgetClass ExtraSetting {
+         ignorepointer 1
+         position 10 10
+         size 300 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         Padding 7
+         Margin 0
+         "Size To Content H" 1
+         "Size To Content V" 1
+         Columns 2
+         Rows 1
+         {
+          CheckBoxWidgetClass ExtraSettingCheckBox {
+           size 24 24
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           style CheckBox_16px
+           font "gui/fonts/Metron22"
+           checked 0
+          }
+          TextWidgetClass ExtraSettingText {
+           ignorepointer 1
+           position 0 0
+           size 48 22
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           text "Export Entire Map"
+           font "gui/fonts/Metron16"
+           "exact text" 0
+           "size to text h" 1
+           "size to text v" 1
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
         PanelWidgetClass SaveButtonWrapper {
          position 10 10
          size 72 48

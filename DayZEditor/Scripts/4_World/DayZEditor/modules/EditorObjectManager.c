@@ -40,8 +40,10 @@ class EditorObjectManagerModule : Managed
 		// handle config objects
 		foreach (string path: VALID_CONFIG_PATHS) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
-				string type;
+				string type, type_lower;
 				GetGame().ConfigGetChildName(path, i, type);
+				type_lower = type;
+				type_lower.ToLower();
 				int scope = GetGame().ConfigGetInt(path + " " + type + " scope");
 				string model = SystemPath.Format(GetGame().ConfigGetTextOut(string.Format("%1 %2 model", path, type)));
 				// DayZ has a difficult time supporting leading slashes
@@ -49,11 +51,24 @@ class EditorObjectManagerModule : Managed
 					model = model.Substring(1, model.Length() - 1);
 				}
 				
+				// bug with some military tents missing models
+				if (model && !File.GetExtension(model)) {
+					model += ".p3d";
+				}
+				
 				if (IsForbiddenItem(type)) {
 					continue;
 				}
 
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type, scope);
+				if (type_lower.Contains("land_") || type_lower.Contains("staticobj_")) {
+					placeable_item.Scope = 2;
+				}
+
+				// Yikes
+				if (GetGame().IsKindOf(type, "Inventory_Base") || GetGame().IsKindOf(type, "Weapon_Base") || GetGame().IsKindOf(type, "DZ_LightAI") || GetGame().IsKindOf(type, "Magazine_Base")) {
+					placeable_item.Scope = 0;
+				}
 
 				// Register as placeable
 				m_PlaceableObjects.Insert(placeable_item);
@@ -73,12 +88,15 @@ class EditorObjectManagerModule : Managed
 					if (!m_PlaceableObjectsByP3dFile[model_file]) {
 						m_PlaceableObjectsByP3dFile[model_file] = {};
 					} else continue; // quite humorously this fixes duplication bugs. 
-					
+										
 					m_PlaceableObjectsByP3dPath[model].Insert(placeable_item);
 					m_PlaceableObjectsByP3dFile[model_file].Insert(placeable_item);
 					
 					// Add static variant of all config items
 					EditorPlaceableItem placeable_item_static_variant = EditorPlaceableItem.Create(SystemPath.Format(model));
+					if (!ObjectSpawnerHandler.ValidatePath(model)) {
+						placeable_item_static_variant.Scope = 0;
+					}
 					m_PlaceableObjectsByP3dPath[model].Insert(placeable_item_static_variant);
 					m_PlaceableObjectsByP3dFile[model_file].Insert(placeable_item_static_variant);
 					m_PlaceableObjects.Insert(placeable_item_static_variant);
@@ -87,7 +105,6 @@ class EditorObjectManagerModule : Managed
 		}
 
 		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/plants_sakhal", "DZ/rocks", "DZ/rocks_bliss", "DZ/rocks_sakhal" };
-
 		// handle static objects
 		foreach (string model_path: paths) {
 			array<string> p3d_files = Directory.EnumerateFiles(model_path, "*.p3d");
@@ -103,6 +120,10 @@ class EditorObjectManagerModule : Managed
 				
 				if (!m_PlaceableObjectsByP3dFile[p3d_file_name]) {
 					m_PlaceableObjectsByP3dFile[p3d_file_name] = {};
+				}
+				
+				if (!ObjectSpawnerHandler.ValidatePath(p3d_file)) {
+					placeable_item_p3d.Scope = 0;
 				}
 
 				m_PlaceableObjectsByP3dPath[p3d_file].Insert(placeable_item_p3d);
