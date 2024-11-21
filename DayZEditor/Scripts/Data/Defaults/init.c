@@ -4,7 +4,7 @@ static Object SpawnObject(string type, vector position, vector orientation, floa
     if (type.Contains(".p3d")) {
         obj = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale, false);
     } else {        
-        obj = GetGame().CreateObjectEx(type, type, ECE_SETUP | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_WORLD | ECE_NOPERSISTENCY_CHAR);
+        obj = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_WORLD | ECE_NOPERSISTENCY_CHAR);
     }
 
     if (!obj) {
