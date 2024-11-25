@@ -775,7 +775,7 @@ class Editor: Managed
 				
 	void ProcessInput(float dt, Input input)
 	{
-		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog;
+		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !GetEditorHud().GetDialog();
 		if (!input_unlocked) {
 			return;
 		}

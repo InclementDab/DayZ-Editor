@@ -164,7 +164,7 @@ class EditorFileDialog: EditorModal
 			ExtraSettingText.SetText("Export Selected Only");
 		}
 
-		ExtraSetting.Show(m_DialogSettings);
+		ExtraSetting.Show(m_DialogSettings != 0);
 		
 		m_TemplateController.Directories[0].GetLayoutRoot().SetColor(0xff007acc);
 
