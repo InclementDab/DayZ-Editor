@@ -227,13 +227,14 @@ class EditorHud: ScriptView
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
+		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog;
 		
 		if (m_Editor.IsInventoryEditorActive()) {
 			Show(false);
 			return;
 		}
 		
-		if (toggle_map.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog) {
+		if (toggle_map.LocalPress() && input_unlocked) {
 			Map.Show(!Map.IsVisible());
 			Map.SetMapPos(GetGame().GetCurrentCameraPosition());
 			ShowCursor(true);
@@ -247,7 +248,7 @@ class EditorHud: ScriptView
 		}
 		
 		// lctrl for commands
-		if (toggle_editor.LocalPress() && !GetDayZGame().IsLeftCtrlDown()) {
+		if (toggle_editor.LocalPress() && !GetDayZGame().IsLeftCtrlDown() && input_unlocked) {
 			// Control current player
 			if (m_Editor.IsActive()) {
 				m_Editor.ControlPlayer(m_Editor.GetPlayer());
@@ -256,7 +257,7 @@ class EditorHud: ScriptView
 			}
 		}
 		
-		if (toggle_hud_input.LocalPress() && (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog && !GetDayZGame().IsLeftCtrlDown()) {		
+		if (toggle_hud_input.LocalPress() && input_unlocked && !GetDayZGame().IsLeftCtrlDown()) {		
 			Show(!IsVisible());
 		}
 		
@@ -751,6 +752,10 @@ class EditorHud: ScriptView
 
 	override void Show(bool show) 
 	{
+		if (m_LayoutRoot.IsVisible() == show) {
+			return;
+		}
+		
 		super.Show(show);
 		
 		if (CurrentDialog) {

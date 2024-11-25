@@ -79,7 +79,6 @@ modded class MissionGameplay
 		m_Hud.InventoryShown = false;
 	}
 	
-	
 	override void OnMissionStart()
 	{
 		super.OnMissionStart();

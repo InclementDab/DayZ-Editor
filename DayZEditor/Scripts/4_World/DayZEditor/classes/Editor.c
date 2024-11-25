@@ -775,6 +775,11 @@ class Editor: Managed
 				
 	void ProcessInput(float dt, Input input)
 	{
+		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog;
+		if (!input_unlocked) {
+			return;
+		}
+		
 		UAInputAPI input_api = GetUApi();
 		UAInput fwd_input = input_api.GetInputByID(UAUIUp);
 		UAInput bck_input = input_api.GetInputByID(UAUIDown);
@@ -1448,16 +1453,13 @@ class Editor: Managed
 		}
 		
 		SetMissionHud(false);	
-		m_EditorHud.ShowCursor(true);
+		//m_EditorHud.ShowCursor(true);
 	}
 	
 	void StopInventoryEditor()
 	{
-		if (m_EditorInventoryEditorHud) {
-			m_EditorInventoryEditorHud.Close();
-		}
-		
-		SetActive(true);
+		delete m_EditorInventoryEditorHud;
+		Activate();
 	}
 	
 	bool IsInventoryEditorActive()

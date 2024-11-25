@@ -104,7 +104,7 @@ class EditorInitFile : EditorFileType
 		}
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
 			string itype = editor_object.Type;
-			itype.Replace("\\", "/");
+			itype.Replace("\\", "\/");
 			spawn_method.Insert(string.Format("SpawnObject(\"%1\", \"%2\", \"%3\", %4);", itype, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false), editor_object.Scale));
 		}
 

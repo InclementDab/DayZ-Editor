@@ -36,49 +36,6 @@ WrapSpacerWidgetClass ListItem {
    scriptclass "ViewBinding"
    style Empty
    {
-    ButtonWidgetClass ToggleLockedButton {
-     visible 1
-     color 1 1 1 0.0784
-     position 0 0
-     size 22 22
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scriptclass "ViewBinding"
-     style Empty
-     {
-      ImageWidgetClass LockedImage {
-       visible 1
-       ignorepointer 1
-       position 0 0
-       size 12 12
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "SymbolHandler"
-       image0 ""
-       mode additive
-       "src alpha" 1
-       filter 0
-       {
-        ScriptParamsClass {
-         Symbol_Name "lock"
-         Symbol_Size 3
-        }
-       }
-      }
-     }
-     {
-      ScriptParamsClass {
-       Relay_Command "OnToggleLockExecute"
-      }
-     }
-    }
     TextWidgetClass ListItemLabel {
      visible 1
      disabled 0
@@ -205,6 +162,49 @@ WrapSpacerWidgetClass ListItem {
        {
         ScriptParamsClass {
          Relay_Command "OnWorldMarkerExecute"
+        }
+       }
+      }
+      ButtonWidgetClass ToggleLockedButton {
+       visible 1
+       color 1 1 1 0.0784
+       position 0 0
+       size 18 18
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       style Empty
+       {
+        ImageWidgetClass LockedImage {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 12 12
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "SymbolHandler"
+         image0 ""
+         mode additive
+         "src alpha" 1
+         filter 0
+         {
+          ScriptParamsClass {
+           Symbol_Name "lock"
+           Symbol_Size 3
+          }
+         }
+        }
+       }
+       {
+        ScriptParamsClass {
+         Relay_Command "OnToggleLockExecute"
         }
        }
       }

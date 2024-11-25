@@ -151,7 +151,7 @@ class EditorInventoryEditorHud: ScriptViewMenu
 	
 	override bool UseMouse()
 	{
-		return false;
+		return true;
 	}
 	
 	EntityAI GetEntity()
