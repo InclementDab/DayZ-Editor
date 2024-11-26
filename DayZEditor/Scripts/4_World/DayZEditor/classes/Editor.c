@@ -794,6 +794,8 @@ class Editor: Managed
 		UAInput down_input = input_api.GetInputByID(UAZeroingDown);
 		UAInput turbo_input = input_api.GetInputByID(UATurbo);
 		UAInput slow_input = input_api.GetInputByID(UALookAround);
+		UAInput big_input = input_api.GetInputByID(UAZeroingUp);
+		UAInput small_input = input_api.GetInputByID(UAZeroingDown);
 		if (IsPlacing()) {
 			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
@@ -936,6 +938,7 @@ class Editor: Managed
 			
 			vector pos_offset = vector.Zero;
 			vector ori_offset = vector.Zero;
+			float scale_offset = 0;
 			if (GetDayZGame().IsLeftCtrlDown() && fwd_input.LocalValue()) {
 				ori_offset = Vector(0, 0, step_size);
 			}
@@ -983,6 +986,14 @@ class Editor: Managed
 				pos_offset = Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
+			if (big_input.LocalValue()) {
+				scale_offset = step_size;
+			}
+			
+			if (small_input.LocalValue()) {
+				scale_offset = -step_size;
+			}
+			
 			ori_offset = ori_offset * Math.RAD2DEG;
 					
 			if (pos_offset != vector.Zero || ori_offset != vector.Zero) {
@@ -998,6 +1009,11 @@ class Editor: Managed
 					avg_mat[3] = average_position;
 					vector res_mat[4];
 					Math3D.MatrixMultiply4(avg_mat, inv_mat, res_mat);
+					
+					res_mat[0] = res_mat[0] + res_mat[0].Normalized() * scale_offset;
+					res_mat[1] = res_mat[1] + res_mat[1].Normalized() * scale_offset;
+					res_mat[2] = res_mat[2] + res_mat[2].Normalized() * scale_offset;
+										
 					selected_object.SetTransform(res_mat);
 				}
 			}
