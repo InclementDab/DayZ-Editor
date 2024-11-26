@@ -493,7 +493,7 @@ class Editor: Managed
 		m_ControllingPlayer.GetInputController().SetDisabled(false);
 		
 		m_EditorHud.Show(false);
-		GetGame().GetUIManager().ShowCursor(!GetSettings().HideCursorOnPlayerControl);
+		GetGame().GetUIManager().ShowCursor(false);
 		SetMissionHud(true);
 		PPEffects.ResetAll();
 		
@@ -1037,12 +1037,6 @@ class Editor: Managed
 			if (input.LocalPress("EditorToggleInventory", false)) {
 				if (m_EditorInventoryEditorHud) {
 					StopInventoryEditor();
-				}
-				
-				if (GetGame().GetMission().GetHud().InventoryShown) {
-					GetGame().GetMission().HideInventory();
-				} else {
-					GetGame().GetMission().ShowInventory();
 				}
 			}
 		}
