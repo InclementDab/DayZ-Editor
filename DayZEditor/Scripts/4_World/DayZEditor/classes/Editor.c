@@ -1390,6 +1390,10 @@ class Editor: Managed
 		m_PlacingObjects[world_object] = hand_data;
 		EditorEvents.AddInHand(this, world_object, hand_data);
 		
+		if (!KeyState(KeyCode.KC_LSHIFT)) {
+			ClearSelection();
+		}
+		
 		return m_PlacingObjects;
 	}
 	
