@@ -76,6 +76,9 @@ class EditorObjectDragHandler: EditorDragHandler
 	
 	protected override void OnDragging(notnull EditorObject target, notnull array<EditorObject> additional_drag_targets)
 	{
+		array<EditorObject> all_objects = {};
+		all_objects.Insert(target);
+		all_objects.InsertAll(additional_drag_targets);
 		vector target_transform[4];
 		target.GetTransform(target_transform);
 
@@ -127,22 +130,65 @@ class EditorObjectDragHandler: EditorDragHandler
 		float angle;
 		int i;
 		
+		vector average_position;
+		foreach (int _, EditorObject sle: all_objects) {
+			average_position = average_position + sle.GetPosition();
+		}
+		
+		average_position = Vector(average_position[0] / all_objects.Count(), average_position[1] / all_objects.Count(), average_position[2] / all_objects.Count());
+	
+		vector average_mat[4] = {
+			"1 0 0",
+			"0 1 0",
+			"0 0 1",
+			average_position
+		};
+		
+		/*
+		foreach (EditorObject move_object: all_objects) {
+			
+			vector move_transform[4];
+			move_object.GetTransform(move_transform);
+			
+			vector local_transform[4];
+			Math3D.MatrixInvMultiply4(average_mat, move_transform, local_transform);
+		
+						
+			vector final_transform[4];
+			Math3D.MatrixMultiply4(local_transform, average_mat, final_transform);
+			move_object.SetTransform(final_transform);
+		}*/
+		
 		// Handle Z-Only motion
 		if (KeyState(KeyCode.KC_LMENU)) {			
 			// This should always be ortho
-			vector forward_plane = vector.Up * camera_transform[0];
+			vector up_dir = vector.Up;
+			if (GetEditor().MagnetMode) {
+				up_dir = surface_normal;
+				up_dir.Normalize();
+			}
+			
+			vector forward_plane = up_dir * camera_transform[0];
 			Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
 			vector intersect = z_plane.Intersect(cursor_ray);
-			cursor_pos = intersect;
-			if (GetEditor().MagnetMode) {
-				transform[3] = ground_position + transform[1] * vector.Distance(ground_position, cursor_pos + GetGame().GetCurrentCameraDirection() * 1);
-			} else {
-				transform[3][1] = cursor_pos[1];
-			}
+			
+			vector up_dir_matrix[4];
+			Math3D.DirectionAndUpMatrix(forward_plane, up_dir, up_dir_matrix);
+			Math3D.MatrixOrthogonalize4(up_dir_matrix);
+			up_dir_matrix[3] = transform[3];
+			vector local_intersect = intersect.InvMultiply4(up_dir_matrix);
+			local_intersect[0] = 0;
+			local_intersect[2] = 0;
+			local_intersect[1] = local_intersect[1] + target.GetYDistance();
+			intersect = local_intersect.Multiply4(up_dir_matrix);
+			transform[3] = intersect;
 		}
 		
 		// Handle XY Rotation
 		else if (KeyState(KeyCode.KC_LSHIFT)) {
+			
+			//Math3D.MatrixInvMultiply4(average_mat, 
+			
 			vector cursor_delta = ground_position - Editor.CurrentMousePosition;
 			local_ori = target.GetOrientation();
 			angle = Math.Atan2(cursor_delta[0], cursor_delta[2]);
