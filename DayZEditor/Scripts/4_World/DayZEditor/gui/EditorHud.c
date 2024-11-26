@@ -151,7 +151,7 @@ class EditorHud: ScriptView
 		m_TemplateController.NotifyPropertyChanged("FavoritesToggle");
 		
 		EditorCamera camera = m_Editor.GetCamera();
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", 40, 140));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", EditorCamera.FOV_MIN * Math.RAD2DEG, EditorCamera.FOV_MAX * Math.RAD2DEG));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Gaussian Blur", camera, "Blur", 0, 1));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Near Plane", camera, "NearPlane",  0, 1));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Distance", camera, "DOFDistance", 0, 500));

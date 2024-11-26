@@ -16,7 +16,9 @@ class EditorDragHandler: Managed
 		m_RewindAction.InsertUndoParameter(m_Target.GetTransformArray());
 
 		foreach (EditorObject selected_object: m_AdditionalDragTargets) {
-			m_RewindAction.InsertUndoParameter(selected_object.GetTransformArray());
+			if (selected_object != m_Target) {
+				m_RewindAction.InsertUndoParameter(selected_object.GetTransformArray());
+			}
 		}
 
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_OnDragging);
@@ -28,7 +30,9 @@ class EditorDragHandler: Managed
 
 		m_RewindAction.InsertRedoParameter(m_Target.GetTransformArray());
 		foreach (EditorObject selected_object: m_AdditionalDragTargets) {
-			m_RewindAction.InsertRedoParameter(selected_object.GetTransformArray());
+			if (selected_object != m_Target) {
+				m_RewindAction.InsertRedoParameter(selected_object.GetTransformArray());
+			}
 		}
 		
 		GetEditor().InsertAction(m_RewindAction);

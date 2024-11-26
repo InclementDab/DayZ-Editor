@@ -133,7 +133,7 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int MinorVersionNumber = 3;
+	static const int MinorVersionNumber = 4;
 	static const int VersionNumber = 33;
 	static const string Version = string.Format("1.%1%2", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty));
 	
@@ -496,6 +496,9 @@ class Editor: Managed
 		GetGame().GetUIManager().ShowCursor(!GetSettings().HideCursorOnPlayerControl);
 		SetMissionHud(true);
 		PPEffects.ResetAll();
+		
+		GetStatistics().CharactersControlled++;
+		GetStatistics().Save();
 	}
 	
 	PlayerBase GetControllingPlayer()
@@ -772,7 +775,9 @@ class Editor: Managed
 			world_object.GetWorldObject().SetTransform(transform);
 		}
 	}
-				
+			
+	protected ref EditorAction m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");	
+	
 	void ProcessInput(float dt, Input input)
 	{
 		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !GetEditorHud().GetDialog();
@@ -886,6 +891,47 @@ class Editor: Managed
 				case 2: { // Camera 3d
 					break;
 				}
+			}
+			
+			array<UAInput> input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input };
+			
+			bool input_is_value = false;
+			bool input_is_press = false;
+			bool input_is_release = false;
+			foreach (UAInput input_in_list2: input_list) {
+				input_is_press = input_is_press || input_in_list2.LocalPress();
+			}
+			
+			if (input_is_press) {
+				m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");	
+			}
+			
+			foreach (UAInput input_in_list: input_list) {
+				if (!input_in_list) {
+					continue;
+				}
+
+				if (input_in_list.LocalPress()) {
+					foreach (int __, EditorObject eo_undo: selected_objects) {
+						m_QuickMoveUndoAction.InsertUndoParameter(eo_undo.GetTransformArray());
+					}
+				}
+
+				if (input_in_list.LocalRelease()) {
+					foreach (int ___, EditorObject eo_redo: selected_objects) {
+						m_QuickMoveUndoAction.InsertRedoParameter(eo_redo.GetTransformArray());
+					}
+					
+					input_is_release = true;
+				}
+				
+				if (input_in_list.LocalValue()) {
+					input_is_value = true;
+				}
+			}
+			
+			if (input_is_release) {
+				InsertAction(m_QuickMoveUndoAction);
 			}
 			
 			vector pos_offset = vector.Zero;
@@ -1165,8 +1211,12 @@ class Editor: Managed
 		if ((m_EditorHud.GetDialog() || m_EditorHud.CurrentDialog) && key != KeyCode.KC_ESCAPE) {
 			return false;
 		}
-		
+				
 		if (!GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD)) {
+			return false;
+		}
+		
+		if (IsPlayerControlled()) {
 			return false;
 		}
 		
@@ -1186,7 +1236,7 @@ class Editor: Managed
 		}
 		
 		if (!command.CanExecute()) {
-			return true;
+			return false;
 		}
 			
 		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
@@ -1453,6 +1503,9 @@ class Editor: Managed
 		}
 		
 		SetMissionHud(false);	
+				
+		GetStatistics().CharactersEdited++;
+		GetStatistics().Save();
 		//m_EditorHud.ShowCursor(true);
 	}
 	

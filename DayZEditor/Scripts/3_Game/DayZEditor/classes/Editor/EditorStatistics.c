@@ -5,4 +5,6 @@ class EditorStatistics: ProfileSettings
 	int EditorPlacedObjects;
 	int EditorRemovedObjects;
 	float EditorDistanceFlown; // storing in km
+	int CharactersControlled;
+	int CharactersEdited;
 }
