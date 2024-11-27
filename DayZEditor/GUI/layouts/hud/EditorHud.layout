@@ -1007,48 +1007,31 @@ FrameWidgetClass EditorFrame {
          scaled 1
          style rover_sim_colorable
          {
-          WrapSpacerWidgetClass MenuBarWrapper {
-           clipchildren 0
+          ImageWidgetClass ToolbarIcon {
            ignorepointer 1
-           position 0 0
+           size 26 26
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           imageTexture "{1A57E6DE48397D04}DayZEditor/GUI/images/dayz_editor_icon_black.edds"
+           mode blend
+           "src alpha" 1
+           "clamp mode" clamp
+           "stretch mode" stretch_w_h
+          }
+          GridSpacerWidgetClass MenuBarGridSpacer {
+           ignorepointer 1
+           position 28 0
            size 1 1
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           style Empty
            Padding 0
            Margin 0
-           content_valign center
-           {
-            ImageWidgetClass ToolbarIcon {
-             ignorepointer 1
-             position 0 0
-             size 26 26
-             hexactpos 1
-             vexactpos 1
-             hexactsize 1
-             vexactsize 1
-             imageTexture "{1A57E6DE48397D04}DayZEditor/GUI/images/dayz_editor_icon_black.edds"
-             mode blend
-             "src alpha" 1
-             "clamp mode" clamp
-             "stretch mode" stretch_w_h
-            }
-           }
-          }
-          GridSpacerWidgetClass MenuBarGridSpacer {
-           ignorepointer 1
-           position 28 1
-           size 1 66
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 1
-           Padding 0
-           Margin 1
            "Size To Content H" 1
-           "Size To Content V" 1
+           Rows 1
            {
             WrapSpacerWidgetClass MenuBarWrapSpacer {
              ignorepointer 1
@@ -1058,10 +1041,11 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 0
              vexactsize 0
-             Padding 1
-             Margin 0
+             Padding 0
+             Margin 7
              "Size To Content H" 1
              "Size To Content V" 1
+             content_valign center
              {
               TextWidgetClass MenuBarFileLabel0 {
                ignorepointer 1
@@ -1075,7 +1059,7 @@ FrameWidgetClass EditorFrame {
                vexactsize 1
                scaled 0
                text "  #STR_EDITOR_FILE  "
-               font "gui/fonts/Metron22"
+               font "gui/fonts/Metron28"
                "exact text" 1
                "size to text h" 1
                "size to text v" 1
@@ -1084,26 +1068,27 @@ FrameWidgetClass EditorFrame {
                {
                 ButtonWidgetClass MenuBarFile {
                  color 0.749 0.3725 0.3725 1
-                 size 1 22
+                 size 1 1
                  halign center_ref
                  valign center_ref
                  hexactpos 1
                  vexactpos 1
                  hexactsize 0
-                 vexactsize 1
+                 vexactsize 0
                  scriptclass "ViewBinding"
                  style Default
                  "no focus" 1
                  {
                   TextWidgetClass MenuBarFileLabel {
                    ignorepointer 1
-                   size 0 22
+                   position 0 0
+                   size 0 1
                    halign center_ref
                    valign center_ref
                    hexactpos 1
                    vexactpos 1
                    hexactsize 1
-                   vexactsize 1
+                   vexactsize 0
                    scaled 0
                    text "  #STR_EDITOR_FILE  "
                    font "gui/fonts/Metron22"
@@ -1134,7 +1119,7 @@ FrameWidgetClass EditorFrame {
                vexactsize 1
                scaled 0
                text "  #STR_EDITOR_EDIT  "
-               font "gui/fonts/Metron22"
+               font "gui/fonts/Metron28"
                "exact text" 1
                "size to text h" 1
                "size to text v" 1
@@ -1143,13 +1128,13 @@ FrameWidgetClass EditorFrame {
                {
                 ButtonWidgetClass MenuBarEdit {
                  color 0.749 0.3725 0.3725 1
-                 size 1 22
+                 size 1 1
                  halign center_ref
                  valign center_ref
                  hexactpos 1
                  vexactpos 1
                  hexactsize 0
-                 vexactsize 1
+                 vexactsize 0
                  scriptclass "ViewBinding"
                  "no focus" 1
                  {
@@ -1192,7 +1177,7 @@ FrameWidgetClass EditorFrame {
                vexactsize 1
                scaled 0
                text "  #STR_EDITOR_VIEW  "
-               font "gui/fonts/Metron22"
+               font "gui/fonts/Metron28"
                "exact text" 1
                "size to text h" 1
                "size to text v" 1
@@ -1201,13 +1186,13 @@ FrameWidgetClass EditorFrame {
                {
                 ButtonWidgetClass MenuBarView {
                  color 0.749 0.3725 0.3725 1
-                 size 1 22
+                 size 1 1
                  halign center_ref
                  valign center_ref
                  hexactpos 1
                  vexactpos 1
                  hexactsize 0
-                 vexactsize 1
+                 vexactsize 0
                  scriptclass "ViewBinding"
                  "no focus" 1
                  {
@@ -1250,7 +1235,7 @@ FrameWidgetClass EditorFrame {
                vexactsize 1
                scaled 0
                text "  #STR_EDITOR_EDITOR  "
-               font "gui/fonts/Metron22"
+               font "gui/fonts/Metron28"
                "text color" 1 1 1 0
                "exact text" 1
                "size to text h" 1
@@ -1260,13 +1245,13 @@ FrameWidgetClass EditorFrame {
                {
                 ButtonWidgetClass MenuBarEditor {
                  color 0.749 0.3725 0.3725 1
-                 size 1 22
+                 size 1 1
                  halign center_ref
                  valign center_ref
                  hexactpos 1
                  vexactpos 1
                  hexactsize 0
-                 vexactsize 1
+                 vexactsize 0
                  scriptclass "ViewBinding"
                  "no focus" 1
                  {

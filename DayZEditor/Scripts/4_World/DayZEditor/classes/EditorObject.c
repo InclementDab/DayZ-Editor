@@ -233,7 +233,23 @@ class EditorObject: EditorWorldObject
 		delete OnObjectSelected;
 		delete OnObjectDeselected;
 	}
-			
+	
+	// Gets full model path, starting with DZ// etc..
+	string GetModelPath()
+	{
+		if (m_Data.Type.Contains("p3d")) {
+			return m_Data.Type;
+		}
+		
+		string model_name = Editor.GetModelName(GetWorldObject());
+		auto placeable_replacement = GetEditor().GetObjectManager().GetReplaceableObjects(model_name);
+		if (placeable_replacement) {
+			return placeable_replacement.Type;
+		}
+		
+		return string.Empty;
+	}
+	
 	bool IsSelected() 
 	{
 		return m_IsSelected;

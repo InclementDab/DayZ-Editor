@@ -2259,6 +2259,25 @@ class Editor: Managed
 		return save_data;
 	}
 	
+	static string GetModelName(notnull Object object)
+	{
+		string debug_name = object.GetDebugNameNative();
+		if (debug_name == string.Empty) {
+			// lost cause, unlikely
+			return null;
+		}
+		
+		array<string> split_string = {};
+		debug_name.Split(":", split_string);
+		
+		// also unlikely
+		if (split_string.Count() == 1) {
+			return null;
+		}
+		
+		return split_string[1].Trim();
+	}
+	
 	EditorPlaceableItem GetReplaceableItem(Object object)
 	{
 		if (!object) {
@@ -2274,21 +2293,9 @@ class Editor: Managed
 		}
 		
 		// 1346854: tank_small_white.p3d
-		string debug_name = object.GetDebugNameNative();
-		if (debug_name == string.Empty) {
-			// lost cause, unlikely
-			return null;
-		}
+		string model_name = GetModelName(object);
 		
-		array<string> split_string = {};
-		debug_name.Split(":", split_string);
-		
-		// also unlikely
-		if (split_string.Count() == 1) {
-			return null;
-		}
-		
-		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
+		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(model_name);
 		// not ideal since we dont want to feed them the p3d, but doable
 		if (!placeable_items || placeable_items.Count() == 0) {			
 			return null;

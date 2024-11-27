@@ -926,9 +926,12 @@ class EditorHud: ScriptView
 		return m_Dialog;
 	}
 	
-	ScriptView ShowMessageBox(string title, string caption, MessageBoxButtons buttons, ScriptCaller on_close)
+	ScriptView ShowMessageBox(string caption, MessageBoxButtons buttons, ScriptCaller on_close)
 	{
-		return null;
+		EditorMessageBox message_box = new EditorMessageBox(caption, buttons, on_close);
+		m_Dialog = message_box;
+		GetGame().GetUIManager().ShowCursor(true);
+		return m_Dialog;
 	}
 	
 	ScriptView GetDialog()
