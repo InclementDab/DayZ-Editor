@@ -22,7 +22,5 @@ if "%dayz_tools:~-10%"=="DayZ Tools" (
 )
 
 start "" /b "%dayz_tools%\Bin\Workbench\workbenchApp.exe" "-profiles=%profile_path% -repository=\"%repository%\""
-timeout 1800
-goto restart:
 
 exit

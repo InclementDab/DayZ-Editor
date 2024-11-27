@@ -229,7 +229,7 @@ class EditorHud: ScriptView
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
 		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog;
-		
+
 		if (m_Editor.IsInventoryEditorActive()) {
 			Show(false);
 			return;
@@ -561,6 +561,7 @@ class EditorHud: ScriptView
 		}
 		
 		if (right_mouse_input.LocalPress()) {
+			SetFocus(null);
 			m_DragOffset = map_widget.ScreenToMap(Vector(mouse_x, mouse_y, 0));
 		}			
 		

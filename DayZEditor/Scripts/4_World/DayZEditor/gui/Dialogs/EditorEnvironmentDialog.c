@@ -5,35 +5,66 @@ class EditorEnvironmentDialogController: DialogBaseController
 
 class EditorEnvironmentDialog: EditorDialogBase
 {	
+	protected World m_World;
+	protected Weather m_Weather;
+	protected WorldLighting m_WorldLighting;
+	
+	float rain, fog, overcast, wind, snow, snowscale, winddir;
+	
+	protected float m_DynFogDistanceDensity, m_DynFogHeightDensity, m_DynFogHeightBias;
+	protected float m_Year, m_Month, m_Day, m_Hour, m_Minute;
+	
+	protected int m_LightingConfig;
+	
 	void EditorEnvironmentDialog(string title)
 	{	
 		m_World = GetGame().GetWorld();
 		m_Weather = GetGame().GetWeather();
 		m_WorldLighting = GetGame().GetMission().GetWorldLighting();
 		
-		LightingConfig = m_WorldLighting.GetCurrentLighting();
+		m_LightingConfig = m_WorldLighting.GetCurrentLighting();
 		
 		int year, month, day, hour, minute;
-		GetGame().GetWorld().GetDate(year, month, day, hour, minute);
-		time = minute * 60 + hour * 3600;
-		date = month * 30 + day;
+		m_World.GetDate(year, month, day, hour, minute);
+		m_Year = year;
+		m_Month = month;
+		m_Day = day;
+		m_Hour = hour;
+		m_Minute = minute;
 		
-		rain = GetGame().GetWeather().GetRain().GetActual();
-		fog = GetGame().GetWeather().GetFog().GetActual();
-		overcast = GetGame().GetWeather().GetOvercast().GetActual();
+		rain = m_Weather.GetRain().GetActual();
+		fog = m_Weather.GetFog().GetActual();
+		overcast = m_Weather.GetOvercast().GetActual();
 		
-		wind = GetGame().GetWeather().GetWindSpeed();
+		wind = m_Weather.GetWindMagnitude().GetActual();
+		winddir = m_Weather.GetWindDirection().GetActual() * Math.RAD2DEG;
 		
-		GroupPrefab group_prefab = new GroupPrefab("#STR_EDITOR_WEATHER", this, string.Empty);		
-		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_DATE", this, "date", 1, 365));
-		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_TIME", this, "time", 0, 86400));
+		m_DynFogHeightBias = m_Weather.GetDynVolFogHeightBias();
+		m_DynFogHeightDensity = m_Weather.GetDynVolFogHeightDensity();
+		m_DynFogDistanceDensity = m_Weather.GetDynVolFogDistanceDensity();
+		
+		GroupPrefab date_prefab = new GroupPrefab("Date / Time", this, string.Empty);
+		date_prefab.Insert(new SliderPrefab("Year", this, "m_Year", 1970, 2038, 1));
+		date_prefab.Insert(new SliderPrefab("Month", this, "m_Month", 1, 12, 1));
+		date_prefab.Insert(new SliderPrefab("Day", this, "m_Day", 1, 31, 1));
+		date_prefab.Insert(new SliderPrefab("Hour", this, "m_Hour", 1, 23, 1));
+		date_prefab.Insert(new SliderPrefab("Minute", this, "m_Minute", 1, 59, 1));
+		AddContent(date_prefab);
+		
+		GroupPrefab group_prefab = new GroupPrefab("#STR_EDITOR_WEATHER", this, string.Empty);
 		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_RAIN", this, "rain", 0, 1));
+		group_prefab.Insert(new SliderPrefab("Snow", this, "snow", 0, 1));
+		group_prefab.Insert(new SliderPrefab("Snow Scale", this, "snowscale", 0, 1));
 		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_FOG", this, "fog", 0, 1));
 		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_OVERCAST", this, "overcast", 0, 1));
-		group_prefab.Insert(new SliderPrefab("#STR_EDITOR_WIND", this, "wind", 0, 1));
+		group_prefab.Insert(new SliderPrefab("Wind Direction", this, "winddir", 0, 360));
+		group_prefab.Insert(new SliderPrefab("Wind Speed", this, "wind", 0, 100));
+		group_prefab.Insert(new SliderPrefab("Dynamic Fog Distance Density", this, "m_DynFogDistanceDensity"));
+		group_prefab.Insert(new SliderPrefab("Dynamic Fog Height Bias", this, "m_DynFogHeightBias"));
+		group_prefab.Insert(new SliderPrefab("Dynamic Fog Height Density", this, "m_DynFogHeightDensity"));
 		
 		map<int, string> lighting_config_data = GetGame().GetMission().GetWorldLighting().GetAllLightingConfigs();
-		DropdownListPrefab<int> lighting_config = new DropdownListPrefab<int>("#STR_EDITOR_LIGHTING_CONFIG", this, "LightingConfig");
+		DropdownListPrefab<int> lighting_config = new DropdownListPrefab<int>("#STR_EDITOR_LIGHTING_CONFIG", this, "m_LightingConfig");
 		foreach (int value, string name: lighting_config_data) {
 			lighting_config[name] = value;
 		}
@@ -53,28 +84,29 @@ class EditorEnvironmentDialog: EditorDialogBase
 	{
 		return "set:dayz_gui image:icon_moon";
 	}
-	
-	protected World m_World;
-	protected Weather m_Weather;
-	protected WorldLighting m_WorldLighting;
-	
-	float date, time, rain, fog, overcast, wind;
-		
-	int LightingConfig;
-		
+			
 	void PropertyChanged(string property_name)
 	{
 		switch (property_name) {
-						
-			case "date":
-			case "time": {
-				int year, month, day, hour, minute;
-				m_World.GetDate(year, month, day, hour, minute);
-				hour = Math.Floor(time / 3600); 
-				minute = time / 60 - hour * 60;
-				month = Math.Floor(date / 30);
-				day = date - month * 30;
-				m_World.SetDate(year, month, day, hour, minute);
+			case "m_Year":
+			case "m_Month":
+			case "m_Day":
+			case "m_Hour":
+			case "m_Minute": {
+				m_Year = Math.Round(m_Year);
+				m_Month = Math.Round(m_Month);
+				m_Day = Math.Round(m_Day);
+				m_Hour = Math.Round(m_Hour);
+				m_Minute = Math.Round(m_Minute);
+				m_World.SetDate(m_Year, m_Month, m_Day, m_Hour, m_Minute);
+				break;
+			}
+			
+			case "snow":
+			case "snowscale": {
+				m_Weather.GetSnowfall().Set(snow);
+				m_Weather.GetSnowfall().SetLimits(snow, snow);
+				m_Weather.SetSnowflakeScale(snowscale);
 				break;
 			}
 			
@@ -96,15 +128,35 @@ class EditorEnvironmentDialog: EditorDialogBase
 				break;
 			}
 			
-			case "wind": {
-				//m_Weather.SetWindFunctionParams(wind, wind, wind);
-				m_Weather.SetWindSpeed(wind);
-				m_Weather.SetWindMaximumSpeed(wind);
+			case "wind":
+			case "winddir": {
+				float winddir_rad = winddir * Math.DEG2RAD;
+				m_Weather.GetWindDirection().Set(winddir_rad);
+				m_Weather.GetWindDirection().SetLimits(winddir_rad, winddir_rad);
+				m_Weather.GetWindDirection().SetForecastChangeLimits(winddir_rad, winddir_rad);
+				m_Weather.GetWindMagnitude().Set(wind);
+				m_Weather.GetWindMagnitude().SetLimits(wind, wind);
+				m_Weather.GetWindMagnitude().SetForecastChangeLimits(wind, wind);
 				break;
 			}
 			
-			case "LightingConfig": {
-				m_WorldLighting.SetGlobalLighting(LightingConfig);
+			case "m_DynFogDistanceDensity": {
+				m_Weather.SetDynVolFogDistanceDensity(m_DynFogDistanceDensity);
+				break;
+			}
+			
+			case "m_DynFogHeightBias": {
+				m_Weather.SetDynVolFogHeightBias(m_DynFogHeightBias);
+				break;
+			}			
+			
+			case "m_DynFogHeightDensity": {
+				m_Weather.SetDynVolFogHeightDensity(m_DynFogHeightDensity);
+				break;
+			}
+			
+			case "m_LightingConfig": {
+				m_WorldLighting.SetGlobalLighting(m_LightingConfig);
 				break;
 			}
 		}

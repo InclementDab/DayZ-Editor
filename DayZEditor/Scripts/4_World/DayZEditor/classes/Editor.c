@@ -613,7 +613,7 @@ class Editor: Managed
 	}
 
 	void Update(float timeslice)
-	{	
+	{			
 		ProcessInput(timeslice, GetGame().GetInput());
 		if (EditorSaveFile != string.Empty) {
 			
@@ -786,16 +786,16 @@ class Editor: Managed
 		}
 		
 		UAInputAPI input_api = GetUApi();
-		UAInput fwd_input = input_api.GetInputByID(UAUIUp);
-		UAInput bck_input = input_api.GetInputByID(UAUIDown);
-		UAInput left_input = input_api.GetInputByID(UAUILeft);
-		UAInput right_input = input_api.GetInputByID(UAUIRight);
-		UAInput up_input = input_api.GetInputByID(UAZeroingUp);
-		UAInput down_input = input_api.GetInputByID(UAZeroingDown);
+		UAInput fwd_input = input_api.GetInputByName("EditorMoveObjectForward");
+		UAInput bck_input = input_api.GetInputByName("EditorMoveObjectBackward");
+		UAInput left_input = input_api.GetInputByName("EditorMoveObjectLeft");
+		UAInput right_input = input_api.GetInputByName("EditorMoveObjectRight");
+		UAInput up_input = input_api.GetInputByName("EditorMoveObjectUp");
+		UAInput down_input = input_api.GetInputByName("EditorMoveObjectDown");
 		UAInput turbo_input = input_api.GetInputByID(UATurbo);
 		UAInput slow_input = input_api.GetInputByID(UALookAround);
-		UAInput big_input = input_api.GetInputByID(UAZeroingUp);
-		UAInput small_input = input_api.GetInputByID(UAZeroingDown);
+		UAInput big_input = input_api.GetInputByName("EditorScaleIncrease");
+		UAInput small_input = input_api.GetInputByName("EditorScaleDecrease");
 		if (IsPlacing()) {
 			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
@@ -847,13 +847,7 @@ class Editor: Managed
 				}
 			}
 		} else if (selected_objects.Count()) {
-			vector average_position;
-			foreach (int _, EditorObject sle: selected_objects) {
-				average_position = average_position + sle.GetPosition();
-			}
-			
-			average_position = Vector(average_position[0] / selected_objects.Count(), average_position[1] / selected_objects.Count(), average_position[2] / selected_objects.Count());
-			
+			vector average_position = GetAveragePositionOfSelection();
 			vector average_mat[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -2433,12 +2427,17 @@ class Editor: Managed
 	{
 		m_ObjectManager.ToggleHiddenObjectSelection(target);
 	}
+	
+	vector GetAveragePositionOfSelection()
+	{
+		return m_ObjectManager.GetAveragePositionOfSelection();
+	}
 		
 	void InsertAction(EditorAction action) 
 	{
 		m_ActionStack.InsertAction(action);
 	}
-	
+		
 	array<string> GetRecentFiles()
 	{
 		return m_RecentlyOpenedFiles;

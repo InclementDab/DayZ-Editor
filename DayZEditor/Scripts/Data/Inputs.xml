@@ -21,24 +21,20 @@
             <input name="EditorToggleCursor" loc="Toggle Cursor" />
             <input name="EditorTeleportPlayerToCursor" loc="Teleport Player to Cursor" />
             <input name="EditorToggleInventoryEditor" loc="Toggle Inventory Editor" />
-            <input name="EditorToggleInventory" loc="Toggle Inventory" />
 			
 			<input name="EditorToggleMap" loc="Map" />
 			<input name="EditorDeleteObject" loc="Delete Object" />
 
-			<input name="EditorMoveObjectForward" loc="Move Object Forward" />
-			<input name="EditorMoveObjectBackward" loc="Move Object Backward" />
-			<input name="EditorMoveObjectLeft" loc="Move Object Left" />
-			<input name="EditorMoveObjectRight" loc="Move Object Right" />
-			<input name="EditorMoveObjectUp" loc="Move Object Up" />
-			<input name="EditorMoveObjectDown" loc="Move Object Down" />
-			<input name="EditorRotateObjectClockwise" loc="Rotate Objects Clockwise" />
-			<input name="EditorRotateObjectCounterClockwise" loc="Rotate Objects Counter Clockwise" />
-			<input name="EditorScaleUp" loc="Scale Objects Up" />
-			<input name="EditorScaleDown" loc="Scale Objects Down" />
-			<input name="EditorPickTranslation" loc="Translation Widget" />
-			<input name="EditorPickRotation" loc="Rotation Widget" />
-			<input name="EditorPickScale" loc="Scale Widget" />
+			<input name="EditorMoveObjectForward" loc="Move Selection Forward" />
+			<input name="EditorMoveObjectBackward" loc="Move Selection Backward" />
+			<input name="EditorMoveObjectLeft" loc="Move Selection Left" />
+			<input name="EditorMoveObjectRight" loc="Move Selection Right" />
+			<input name="EditorMoveObjectUp" loc="Move Selection Up" />
+			<input name="EditorMoveObjectDown" loc="Move Selection Down" />
+			<input name="EditorRotateObjectClockwise" loc="Rotate Selection Clockwise" />
+			<input name="EditorRotateObjectCounterClockwise" loc="Rotate Selection Counter Clockwise" />
+			<input name="EditorScaleIncrease" loc="Scale Selection Up" />
+			<input name="EditorScaleDecrease" loc="Scale Selection Down" />
         </actions>
     </inputs>
 
@@ -48,15 +44,6 @@
         </input>
         <input name="EditorCameraToolSpeedDecrease">
             <btn name="mWheelDown"/>
-        </input>
-        <input name="EditorPickTranslation">
-            <btn name="kE"/>
-        </input>
-        <input name="EditorPickRotation">
-            <btn name="kR"/>
-        </input>
-        <input name="EditorPickScale">
-            <btn name="kT"/>
         </input>
         <input name="EditorCameraForward">
             <btn name="kW"/>
@@ -126,10 +113,6 @@
             </btn>
         </input>
 
-        <input name="EditorToggleInventory">
-            <btn name="kTab"/>
-        </input>
-
         <input name="EditorToggleMap">
             <btn name="kM" />
         </input>        
@@ -178,16 +161,12 @@
             </btn>
         </input>
 
-        <input name="EditorScaleUp">
-            <btn name="kLControl">
-                <btn name="kPrior" />
-            </btn>
+        <input name="EditorScaleIncrease">
+            <btn name="kEquals"/>
         </input>
 
-        <input name="EditorScaleDown">
-            <btn name="kLControl">
-                <btn name="kNext" />
-            </btn>
+        <input name="EditorScaleDecrease">
+            <btn name="kMinus"/>
         </input>
 
     </preset>

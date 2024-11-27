@@ -31,6 +31,7 @@ class EditorObjectManagerModule : Managed
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dFile = new map<string, ref array<EditorPlaceableItem>>();
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dPath = new map<string, ref array<EditorPlaceableItem>>();
+	protected vector m_AveragePositionOfSelection;
 
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
@@ -186,7 +187,13 @@ class EditorObjectManagerModule : Managed
 		m_SelectedObjects.InsertEditorObject(target);
 		EditorEvents.ObjectSelected(this, target);
 		target.OnSelected();
-
+		
+		float count_flt = m_SelectedObjects.Count();
+		vector diff = target.GetPosition() - m_AveragePositionOfSelection;
+		diff[0] = diff[0] / count_flt;
+		diff[1] = diff[1] / count_flt;
+		diff[2] = diff[2] / count_flt;
+		m_AveragePositionOfSelection = m_AveragePositionOfSelection + diff;
 		// todo perhaps propagate selections to the children of the object?
 	}
 
@@ -197,6 +204,17 @@ class EditorObjectManagerModule : Managed
 		m_SelectedObjects.RemoveEditorObject(target);
 		EditorEvents.ObjectDeselected(this, target);
 		target.OnDeselected();
+
+		if (m_SelectedObjects.Count() == 0) {
+			m_AveragePositionOfSelection = vector.Zero;
+		} else {
+			float count_flt = m_SelectedObjects.Count();
+			vector n = (m_AveragePositionOfSelection * (count_flt + 1) - target.GetPosition());
+			n[0] = n[0] / count_flt;
+			n[1] = n[1] / count_flt;
+			n[2] = n[2] / count_flt;
+			m_AveragePositionOfSelection = n;
+		}
 	}
 
 	// Call to toggle selection
@@ -416,5 +434,10 @@ class EditorObjectManagerModule : Managed
 
 		//! Everything is fine... I hope... :pain:
 		return false;
+	}
+	
+	vector GetAveragePositionOfSelection()
+	{
+		return m_AveragePositionOfSelection;
 	}
 }
