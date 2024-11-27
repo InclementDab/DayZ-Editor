@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorScaleCommand)]
+#endif
 class EditorScaleCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)
@@ -16,7 +18,7 @@ class EditorScaleCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_7 };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_R };
 	}
 
 	override Symbols GetSymbol()

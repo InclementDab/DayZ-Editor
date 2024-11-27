@@ -13,8 +13,9 @@ modded class RelayCommand
 	}
 }
 
-
+#ifndef COMPONENT_SYSTEM
 [RegisterLogger(EditorLog)]
+#endif
 class EditorLog: LoggerBase
 {
 	static ref ScriptInvoker OnLog;

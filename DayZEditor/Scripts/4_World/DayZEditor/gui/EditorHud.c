@@ -224,6 +224,7 @@ class EditorHud: ScriptView
 		UAInput toggle_map = input_api.GetInputByName("EditorToggleMap");
 		UAInput zoom_up = input_api.GetInputByID(UAZoomInOptics);
 		UAInput zoom_down = input_api.GetInputByID(UAZoomOutOptics);
+		UAInput shift_input = input_api.GetInputByID(UATurbo);
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
@@ -338,7 +339,7 @@ class EditorHud: ScriptView
 								m_Editor.SelectObject(object_marker0.GetEditorObject());
 							}
 						} else {
-							if (object_marker0 && object_marker0.GetEditorObject().IsSelected()) {
+							if (object_marker0 && object_marker0.GetEditorObject().IsSelected() && !shift_input.LocalValue()) {
 								m_Editor.DeselectObject(object_marker0.GetEditorObject());
 							}
 						}
@@ -369,7 +370,7 @@ class EditorHud: ScriptView
 								m_Editor.SelectObject(object_marker.GetEditorObject());
 							}
 						} else {
-							if (object_marker && object_marker.GetEditorObject().IsSelected()) {
+							if (object_marker && object_marker.GetEditorObject().IsSelected() && !shift_input.LocalValue()) {
 								m_Editor.DeselectObject(object_marker.GetEditorObject());
 							}
 						}
@@ -430,7 +431,7 @@ class EditorHud: ScriptView
 								m_Editor.SelectObject(object_marker2.GetEditorObject());
 							}
 						} else {
-							if (object_marker2 && object_marker2.GetEditorObject().IsSelected()) {
+							if (object_marker2 && object_marker2.GetEditorObject().IsSelected() && !shift_input.LocalValue()) {
 								m_Editor.DeselectObject(object_marker2.GetEditorObject());
 							}
 						}

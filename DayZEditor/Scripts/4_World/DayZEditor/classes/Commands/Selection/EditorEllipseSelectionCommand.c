@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorEllipseSelectionCommand)]
+#endif
 class EditorEllipseSelectionCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)

@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorToggleLightCommand)]
+#endif
 class EditorToggleLightCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)

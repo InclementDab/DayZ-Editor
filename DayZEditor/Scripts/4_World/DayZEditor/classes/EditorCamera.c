@@ -147,31 +147,49 @@ class EditorCamera: Camera
 	}	
 }
 
+#ifndef COMPONENT_SYSTEM
 [RegisterProfileSetting(EditorCameraSettings, "CAMERA")]
+#endif
 class EditorCameraSettings: ProfileSettings
 {
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingSlider("CAMERA", "ViewDistance", "View Distance", EditorCamera.VIEW_DISTANCE_MIN, EditorCamera.VIEW_DISTANCE_MAX)]
+#endif
 	float ViewDistance = EditorCamera.VIEW_DISTANCE_DEFAULT;
 	
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingSlider("CAMERA", "Speed", "Camera Speed (m/s)", EditorCamera.SPEED_MIN, EditorCamera.SPEED_MAX)]
+#endif
 	float Speed = EditorCamera.SPEED_DEFAULT;
 
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingSlider("CAMERA", "FieldOfView", "Field Of View", EditorCamera.FOV_MIN, EditorCamera.FOV_MAX)]
+#endif
 	float FieldOfView = EditorCamera.FOV_DEFAULT;
 
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingSlider("CAMERA", "ExposureLevel", "Exposure Level", EditorCamera.EXPOSURE_MIN, EditorCamera.EXPOSURE_MAX)]
+#endif
 	float ExposureLevel = EditorCamera.EXPOSURE_DEFAULT;
 
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingSlider("CAMERA", "SmoothingLevel", "Smoothing Level", EditorCamera.SMOOTHING_MIN, EditorCamera.SMOOTHING_MAX)]
+#endif
 	float SmoothingLevel = EditorCamera.SMOOTHING_DEFAULT;
 
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingMultistate("CAMERA", "AllowUnderEarth", "Camera Below Surface", {"NO", "YES"})]
+#endif
 	bool AllowUnderEarth = false;
 
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingMultistate("CAMERA", "InvertCamera", "Inverted Camera", {"NO", "YES"})]
+#endif
 	bool InvertCamera = false;
 
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingMultistate("CAMERA", "LegacyCamera", "Classic Camera", {"DISABLED", "ENABLED"}, true)]
+#endif
 	bool LegacyCamera = false;
 }
 

@@ -13,8 +13,9 @@ class EditorPlaceObjectCommand: EditorCommand
 	}
 }
 
-
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorTogglePlayerCommand)]
+#endif
 class EditorTogglePlayerCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)

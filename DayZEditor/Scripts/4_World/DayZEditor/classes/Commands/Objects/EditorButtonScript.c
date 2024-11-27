@@ -43,7 +43,6 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	protected void Update(float dt)
 	{
 		if (m_Command && Icon) {
-	
 			if (m_Command.IsToggled()) {
 				Icon.SetColor(m_Command.GetColor());
 				Icon.SetImage(ICON_SIZE_ENABLE);

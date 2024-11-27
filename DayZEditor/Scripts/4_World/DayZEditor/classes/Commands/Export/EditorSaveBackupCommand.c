@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorSaveBackupCommand)]
+#endif
 class EditorSaveBackupCommand: EditorExportCommandBase
 {		
 	protected override bool Execute(Class sender, CommandArgs args)

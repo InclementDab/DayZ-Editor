@@ -243,8 +243,8 @@ class EditorObject: EditorWorldObject
 		
 		string model_name = Editor.GetModelName(GetWorldObject());
 		auto placeable_replacement = GetEditor().GetObjectManager().GetReplaceableObjects(model_name);
-		if (placeable_replacement) {
-			return placeable_replacement.Type;
+		if (placeable_replacement[0]) {
+			return placeable_replacement[0].Type;
 		}
 		
 		return string.Empty;

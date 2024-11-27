@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorLassoSelectionCommand)]
+#endif
 class EditorLassoSelectionCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)

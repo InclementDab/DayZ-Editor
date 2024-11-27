@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorConsoleAuditCommand)]
+#endif
 class EditorConsoleAuditCommand: EditorCommand
 {
 	override bool Execute(Class sender, CommandArgs args)
@@ -15,7 +17,7 @@ class EditorConsoleAuditCommand: EditorCommand
 			
 		}
 		
-		m_Editor.GetEditorHud().ShowMessageBox();
+		//m_Editor.GetEditorHud().ShowMessageBox();
 		
 		return true;
 	}

@@ -1,4 +1,4 @@
-[RegisterBrush(EditorUnlockBrush, "#STR_EDITOR_UNLOCK")]
+//[RegisterBrush(EditorUnlockBrush, "#STR_EDITOR_UNLOCK")]
 class EditorUnlockBrush: EditorBrush
 {
 	override void DuringMouseDown(vector position)
@@ -26,7 +26,7 @@ class EditorUnlockBrush: EditorBrush
 	}
 }
 
-[RegisterBrush(EditorLockBrush, "#STR_EDITOR_LOCK")]
+//[RegisterBrush(EditorLockBrush, "#STR_EDITOR_LOCK")]
 class EditorLockBrush: EditorBrush
 {
 	override void DuringMouseDown(vector position)

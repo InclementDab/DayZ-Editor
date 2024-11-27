@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorClearSelectionCommand)]
+#endif
 class EditorClearSelectionCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)

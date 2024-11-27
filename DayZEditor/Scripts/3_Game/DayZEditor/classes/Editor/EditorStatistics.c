@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterProfileSetting(EditorStatistics)]
+#endif
 class EditorStatistics: ProfileSettings
 {		
 	int EditorPlayTime;

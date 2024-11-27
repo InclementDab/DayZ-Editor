@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorRotationCommand)]
+#endif
 class EditorRotationCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)
@@ -16,7 +18,7 @@ class EditorRotationCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_6 };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_E };
 	}
 
 	override Symbols GetSymbol()

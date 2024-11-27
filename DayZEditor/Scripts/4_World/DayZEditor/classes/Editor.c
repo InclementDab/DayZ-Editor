@@ -2264,7 +2264,7 @@ class Editor: Managed
 		string debug_name = object.GetDebugNameNative();
 		if (debug_name == string.Empty) {
 			// lost cause, unlikely
-			return null;
+			return string.Empty;
 		}
 		
 		array<string> split_string = {};
@@ -2272,7 +2272,7 @@ class Editor: Managed
 		
 		// also unlikely
 		if (split_string.Count() == 1) {
-			return null;
+			return string.Empty;
 		}
 		
 		return split_string[1].Trim();

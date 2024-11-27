@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorUnlockAllCommand)]
+#endif
 class EditorUnlockAllCommand: EditorCommand
 {
 	override bool Execute(Class sender, CommandArgs args)

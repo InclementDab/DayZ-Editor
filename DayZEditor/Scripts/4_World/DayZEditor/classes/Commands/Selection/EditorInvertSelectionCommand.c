@@ -1,4 +1,6 @@
+#ifndef COMPONENT_SYSTEM
 [RegisterEditorCommand(EditorInvertSelectionCommand)]
+#endif
 class EditorInvertSelectionCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)
