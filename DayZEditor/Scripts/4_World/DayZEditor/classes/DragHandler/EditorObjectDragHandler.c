@@ -84,22 +84,27 @@ class EditorObjectDragHandler: EditorDragHandler
 		GetEditor().GetCamera().GetTransform(camera_transform);
 
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
-		vector transform[4];
-		target.GetTransform(transform);
 
+		vector transform[4];
+		target.GetBottomTransform(transform);
+
+		vector transform_without_scale[4];
+		copyarray(transform_without_scale, transform);
+		Math3D.MatrixOrthogonalize4(transform_without_scale);
+		
 		vector scale_matrix[3];
 		Math3D.ScaleMatrix(transform[0].Length(), scale_matrix);
 
 		Ray cursor_ray = GetEditor().GetCursorRay();
 		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafe(target.GetWorldObject(), GetEditor().GroundMode);
-		vector cursor_pos = cursor_ray.GetPoint(10.0) + transform[1] * target.GetYDistance();
+		vector cursor_pos = cursor_ray.GetPoint(10.0);
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;
 		}
 
-		vector icon_position = transform[3];
+		vector icon_position = target.GetBottomCenter();
 		vector transform_ground_projection = ProjectToGround(transform);
-		vector rotation_source_pos = transform[3];
+		vector rotation_source_pos = target.GetBottomCenter();
 		if (GetEditor().GroundMode) {
 			rotation_source_pos = transform_ground_projection;
 		}
@@ -117,21 +122,18 @@ class EditorObjectDragHandler: EditorDragHandler
 		//up_dir.Normalize();
 
 		if (GetEditor().GroundMode) {
-			icon_position = transform[3] - transform[1] * vector.Distance(transform_ground_projection, transform[3]);
+			icon_position = transform[3] - transform[1].Normalized() * vector.Distance(transform_ground_projection, transform[3]);
 
 			// always use transform[1] because GetBottomCenter is doing the opposite of this
-			cursor_pos = cursor_pos + transform[1] * vector.Distance(transform_ground_projection, transform[3]);
-		} else {
-			icon_position = transform[3] - up_dir * target.GetYDistance();
-			cursor_pos = cursor_pos + up_dir * target.GetYDistance();
+			cursor_pos = cursor_pos + transform[1].Normalized() * vector.Distance(transform_ground_projection, transform[3]);
 		}
 
 		map<EditorObject, ref array<vector>> local_transforms_to_target = new map<EditorObject, ref array<vector>>();
 		foreach (EditorObject additional_drag_target: additional_drag_targets) {
 			vector additional_drag_target_mat[4];
-			additional_drag_target.GetTransform(additional_drag_target_mat);
+			additional_drag_target.GetBottomTransform(additional_drag_target_mat);
 			vector inv_additional_drag_target_mat[4];
-			Math3D.MatrixInvMultiply4(transform, additional_drag_target_mat, inv_additional_drag_target_mat);
+			Math3D.MatrixInvMultiply4(transform_without_scale, additional_drag_target_mat, inv_additional_drag_target_mat);
 			local_transforms_to_target[additional_drag_target] = {
 				inv_additional_drag_target_mat[0],
 				inv_additional_drag_target_mat[1],
@@ -154,7 +156,7 @@ class EditorObjectDragHandler: EditorDragHandler
 			vector local_intersect = intersect.InvMultiply4(up_dir_matrix);
 			local_intersect[0] = 0;
 			local_intersect[2] = 0;
-			local_intersect[1] = local_intersect[1] + target.GetYDistance();
+			local_intersect[1] = local_intersect[1];
 			intersect = local_intersect.Multiply4(up_dir_matrix);
 			transform[3] = intersect;
 		}
@@ -173,10 +175,10 @@ class EditorObjectDragHandler: EditorDragHandler
 					Math3D.DirectionAndUpMatrix(cursor_intersect_dir, up_dir, cursor_dir_mat);
 					Math3D.MatrixOrthogonalize4(cursor_dir_mat);
 
-
-					Math3D.MatrixMultiply3(scale_matrix, cursor_dir_mat, transform);
+					//cursor_dir_mat[3] = icon_position.InvMultiply4(transform) + transform[3];
+					Math3D.MatrixMultiply3(scale_matrix, cursor_dir_mat, cursor_dir_mat);
 					cursor_dir_mat[3] = transform[3];
-					//transform = cursor_dir_mat;
+					transform = cursor_dir_mat;
 				}
 			}
 		}
@@ -188,6 +190,7 @@ class EditorObjectDragHandler: EditorDragHandler
 				vector aside_new = transform[0] * up_dir;			
 				Math3D.DirectionAndUpMatrix(aside_new, up_dir, transform_new);
 				Math3D.MatrixOrthogonalize4(transform_new);
+				Math3D.MatrixMultiply3(scale_matrix, transform_new, transform_new);
 			} else {
 				target.GetTransform(transform_new);
 			}
@@ -195,6 +198,9 @@ class EditorObjectDragHandler: EditorDragHandler
 			transform_new[3] = cursor_pos;
 			copyarray(transform, transform_new);
 		}
+
+		copyarray(transform_without_scale, transform);
+		Math3D.MatrixOrthogonalize4(transform_without_scale);
 				
 		// Handle all child objects
 		foreach (EditorObject selected_object: additional_drag_targets) {
@@ -213,11 +219,11 @@ class EditorObjectDragHandler: EditorDragHandler
 			Math3D.MatrixOrthogonalize4(local_additional_mat);
 
 			vector output_additional_mat[4];
-			Math3D.MatrixMultiply4(transform, local_additional_mat, output_additional_mat);
-			selected_object.SetTransform(output_additional_mat);
+			Math3D.MatrixMultiply4(transform_without_scale, local_additional_mat, output_additional_mat);
+			selected_object.SetBottomTransform(output_additional_mat);
 		}
 		
-		target.SetTransform(transform);
+		target.SetBottomTransform(transform);
 	}
 	
 	static vector GetAveragePosition(EditorObjectMap objects)
