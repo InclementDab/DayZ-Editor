@@ -703,7 +703,7 @@ class EditorObject: EditorWorldObject
 	{		
 		vector transform[4];
 		GetTransform(transform);
-		return transform[3] - transform[1] * GetYDistance();
+		return (-m_WorldObject.GetBoundingCenter()).Multiply4(transform);
 	}
 	
 	float GetYDistance()
