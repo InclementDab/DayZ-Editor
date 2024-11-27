@@ -130,13 +130,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		float angle;
 		int i;
 		
-		vector average_position;
-		foreach (int _, EditorObject sle: all_objects) {
-			average_position = average_position + sle.GetPosition();
-		}
-		
-		average_position = Vector(average_position[0] / all_objects.Count(), average_position[1] / all_objects.Count(), average_position[2] / all_objects.Count());
-	
+		vector average_position = GetEditor().GetAveragePositionOfSelection();
 		vector average_mat[4] = {
 			"1 0 0",
 			"0 1 0",
