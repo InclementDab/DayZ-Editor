@@ -614,6 +614,13 @@ class Editor: Managed
 
 	void Update(float timeslice)
 	{			
+		Raycast cray = GetCursorRaycastModeSafe();
+
+		vector upp = GetGame().SurfaceGetNormal(cray.Bounce.Position[0], cray.Bounce.Position[2]);
+		upp.Normalize();
+		Debug.DrawArrow(cray.Bounce.Position, cray.Bounce.Position + cray.Bounce.Direction * 10, 1, LinearColor.RED, ShapeFlags.ONCE);
+		Debug.DrawArrow(cray.Bounce.Position, cray.Bounce.Position + upp * 10, 1, LinearColor.YELLOW, ShapeFlags.ONCE);
+		
 		ProcessInput(timeslice, GetGame().GetInput());
 		if (EditorSaveFile != string.Empty) {
 			

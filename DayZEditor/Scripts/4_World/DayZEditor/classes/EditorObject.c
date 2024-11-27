@@ -323,8 +323,18 @@ class EditorObject: EditorWorldObject
 	void SetTransform(vector mat[4]) 
 	{ 	
 		if (Locked) return;
-		GetWorldObject().SetTransform(mat); 
-		Update();
+		GetWorldObject().SetTransform(mat);	
+		GetWorldObject().Update();
+		
+		Orientation = Math3D.MatrixToAngles(mat);
+		m_Data.Orientation = Orientation;
+
+		Position = mat[3];
+		m_Data.Position = Position;
+
+		Scale = (mat[0].Length() + mat[1].Length() + mat[2].Length()) / 3;
+		m_Data.Scale = Scale;
+		//Update();
 	}
 	
 	void SetScale(float scale)
@@ -691,9 +701,9 @@ class EditorObject: EditorWorldObject
 		
 	vector GetBottomCenter()
 	{		
-		vector pos = GetPosition();
-		pos[1] = pos[1] - GetYDistance();
-		return pos;
+		vector transform[4];
+		GetTransform(transform);
+		return transform[3] - transform[1] * GetYDistance();
 	}
 	
 	float GetYDistance()

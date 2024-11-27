@@ -35,6 +35,11 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("PLACEMENT", "SpawnItemsWithAttachments", "Item Spawns", {"EMPTY", "WITH ATTACHMENT"})]
 #endif
 	int SpawnItemsWithAttachments	= 0;
+
+//#ifndef COMPONENT_SYSTEM	
+	//[RegisterProfileSettingMultistate("PLACEMENT", "AltMoveMode", "Vertical Placement Mode", {"WORLD", "LOCAL"})]
+//#endif
+	int AltMoveMode = 1;
 	
 	// todo: stub
 	////[RegisterProfileSettingMultistate("PLACEMENT", "AllowPlacementOfPersistentItems", "Place Persistent Items", {"NO", "YES"})]

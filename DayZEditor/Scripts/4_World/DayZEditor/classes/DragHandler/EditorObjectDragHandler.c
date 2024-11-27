@@ -89,79 +89,62 @@ class EditorObjectDragHandler: EditorDragHandler
 		GetEditor().GetCamera().GetTransform(camera_transform);
 
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
+		vector transform[4];
+		target.GetTransform(transform);
 
 		Ray cursor_ray = GetEditor().GetCursorRay();
-		bool use_building_collisions = GetEditor().CollisionMode;
-
-		array<Object> raycast_excludes = {};
-		raycast_excludes.Insert(target.GetWorldObject());
-
-		Raycast cursor_raycast = cursor_ray.PerformRaycastRVEX(0, GetEditor().GetCamera().GetSettings().ViewDistance, ObjIntersectView, raycast_excludes, !use_building_collisions);
-
-		vector cursor_pos = cursor_ray.GetPoint(10.0);
+		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafe(target.GetWorldObject(), GetEditor().GroundMode);
+		vector cursor_pos = cursor_ray.GetPoint(10.0) + transform[1] * target.GetYDistance();
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;
 		}
 
-		vector transform_ground_projection = ProjectToGround(target_transform);
+		vector icon_position = transform[3];
+		vector transform_ground_projection = ProjectToGround(transform);
+		vector rotation_source_pos = transform[3];
+		if (GetEditor().GroundMode) {
+			rotation_source_pos = rotation_source_pos;
+		}
 
-		//vector test_transform[4];
-		//Math3D.MatrixMultiply3(cursor_transform, target_transform, test_transform);
+		vector surface_normal = GetGame().SurfaceGetNormal(transform_ground_projection[0], transform_ground_projection[2]);		
+		vector up_dir = vector.Up;
+		//if (GetEditor().GetSettings().AltMoveMode) {
+		//	up_dir = transform[1];
+		//}
+		
+		if (GetEditor().MagnetMode) {
+			up_dir = surface_normal;
+		}
 
-		//MatrixTranspose4(target_transform, test_transform);
-		//test_transform[3] = target_transform[3];
+		up_dir.Normalize();
 
-		//cursor_transform[3] = target_transform[3];
+		if (GetEditor().GroundMode) {
+			icon_position = transform[3] - transform[1] * vector.Distance(transform_ground_projection, transform[3]);
 
-		//Shape.CreateMatrix(test_transform);
-		//Shape.CreateMatrix(cursor_transform);
-		
-		//target_transform[3] = cursor_pos;
-		
-		vector transform[4];
-		target.GetTransform(transform);
-		vector size, ground_position, surface_normal, local_dir, local_ori;
-		vector deltapos = target.GetPosition();
-		size = target.GetSize();
-		vector bounding_center = target.GetWorldObject().GetBoundingCenter();
-		float scale = target.GetScale();
-		ground_position = ProjectToGround(transform);
-		surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
-		float angle;
-		int i;
-		
-		vector average_position = GetEditor().GetAveragePositionOfSelection();
-		vector average_mat[4] = {
-			"1 0 0",
-			"0 1 0",
-			"0 0 1",
-			average_position
-		};
-		
-		/*
-		foreach (EditorObject move_object: all_objects) {
-			
-			vector move_transform[4];
-			move_object.GetTransform(move_transform);
-			
-			vector local_transform[4];
-			Math3D.MatrixInvMultiply4(average_mat, move_transform, local_transform);
-		
-						
-			vector final_transform[4];
-			Math3D.MatrixMultiply4(local_transform, average_mat, final_transform);
-			move_object.SetTransform(final_transform);
-		}*/
-		
+			// always use transform[1] because GetBottomCenter is doing the opposite of this
+			cursor_pos = cursor_pos + transform[1] * vector.Distance(transform_ground_projection, transform[3]);
+		} else {
+			icon_position = transform[3] - up_dir * target.GetYDistance();
+			cursor_pos = cursor_pos + up_dir * target.GetYDistance();
+		}
+
+		map<EditorObject, ref array<vector>> local_transforms_to_target = new map<EditorObject, ref array<vector>>();
+		foreach (EditorObject additional_drag_target: additional_drag_targets) {
+			vector additional_drag_target_mat[4];
+			additional_drag_target.GetTransform(additional_drag_target_mat);
+			vector inv_additional_drag_target_mat[4];
+			Math3D.MatrixInvMultiply4(transform, additional_drag_target_mat, inv_additional_drag_target_mat);
+			local_transforms_to_target[additional_drag_target] = {
+				inv_additional_drag_target_mat[0],
+				inv_additional_drag_target_mat[1],
+				inv_additional_drag_target_mat[2],
+				inv_additional_drag_target_mat[3]
+			};
+		}
+								
 		// Handle Z-Only motion
 		if (KeyState(KeyCode.KC_LMENU)) {			
-			// This should always be ortho
-			vector up_dir = vector.Up;
-			if (GetEditor().MagnetMode) {
-				up_dir = surface_normal;
-				up_dir.Normalize();
-			}
-			
+			// This should always be ortho			
 			vector forward_plane = up_dir * camera_transform[0];
 			Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
 			vector intersect = z_plane.Intersect(cursor_ray);
@@ -182,84 +165,57 @@ class EditorObjectDragHandler: EditorDragHandler
 		else if (KeyState(KeyCode.KC_LSHIFT)) {
 			
 			//Math3D.MatrixInvMultiply4(average_mat, 
-			
-			vector cursor_delta = ground_position - Editor.CurrentMousePosition;
-			local_ori = target.GetOrientation();
-			angle = Math.Atan2(cursor_delta[0], cursor_delta[2]);
-			local_ori[0] = local_ori[0] + ((angle - m_LastAngle) * Math.RAD2DEG);
-			local_ori.RotationMatrixFromAngles(transform);
-			
-			for (i = 0; i < 3; i++) {
-				transform[i] = transform[i] * scale;
-			}
-			
-			if (GetEditor().MagnetMode) {
-				local_dir = vector.Direction(ground_position, cursor_pos);
-				local_dir.Normalize();
-				transform[0] = surface_normal * local_dir;
-				transform[1] = surface_normal;
-				transform[2] = surface_normal * (local_dir * vector.Up);
-				
-			} else {
-				if (GetEditor().GroundMode) {
-					transform[3] = ground_position + transform[1] * vector.Distance(ground_position, transform[3]);
-				}
+			Plane3D xy_plane = new Plane3D(up_dir, icon_position);
+			vector xy_intersect = xy_plane.Intersect(cursor_ray);
+			vector cursor_intersect_dir = vector.Direction(icon_position, xy_intersect);
+			Debug.DrawArrow(icon_position, icon_position + cursor_intersect_dir * 10, 1, LinearColor.BLUE, ShapeFlags.ONCE);
+
+			vector cursor_dir_mat[4];
+			cursor_intersect_dir.Normalize();
+			Print(cursor_intersect_dir);
+			if (cursor_intersect_dir.Length() > 0 && Math.AbsFloat(vector.Dot(cursor_intersect_dir, up_dir)) != 1) {
+				Math3D.DirectionAndUpMatrix(cursor_intersect_dir, up_dir, cursor_dir_mat);
+				Math3D.MatrixOrthogonalize4(cursor_dir_mat);
+				cursor_dir_mat[3] = transform[3];
+				transform = cursor_dir_mat;
 			}
 		}
 		
 		// Handle regular motion
 		else {
+			vector transform_new[4];
 			if (GetEditor().MagnetMode) {
-				local_ori = target.GetWorldObject().GetDirection();
-				transform[0] = surface_normal * local_ori;
-				transform[1] = surface_normal;
-				transform[2] = surface_normal * (local_ori * vector.Up);
-			}
-			
-			if (GetEditor().GroundMode) {
-				if (GetEditor().MagnetMode) {
-					transform[3] = cursor_pos + surface_normal * vector.Distance(ground_position, transform[3]);				
-				} else {
-					transform[3] = cursor_pos + transform[1] * vector.Distance(ground_position, transform[3]);
-				}
-				
+				vector aside_new = transform[0] * up_dir;			
+				Math3D.DirectionAndUpMatrix(aside_new, up_dir, transform_new);
+				Math3D.MatrixOrthogonalize4(transform_new);
 			} else {
-				transform[3] = cursor_pos;
-				transform[3][1] = transform[3][1] + target.GetYDistance();
-			} 			
+				target.GetTransform(transform_new);
+			}
+
+			transform_new[3] = cursor_pos;
+			copyarray(transform, transform_new);
 		}
-		
-		deltapos = transform[3] - deltapos;
-		
+				
 		// Handle all child objects
 		foreach (EditorObject selected_object: additional_drag_targets) {
-			if (selected_object == target) { 
-				continue; 
+			if (selected_object == target) {
+				continue;
 			}
+
+			array<vector> dyn_vec_arry = local_transforms_to_target[selected_object];
+			vector local_additional_mat[4] = {
+				dyn_vec_arry[0],
+				dyn_vec_arry[1],
+				dyn_vec_arry[2],
+				dyn_vec_arry[3]
+			};
 			
-			vector selected_pos = selected_object.GetPosition();
-			vector selected_ori = selected_object.GetOrientation();
-			
-			// Handle Z-Only motion
-			if (KeyState(KeyCode.KC_LMENU)) {
-				selected_object.SetPosition(selected_object.GetPosition() + deltapos);
-			}
-			
-			else if (KeyState(KeyCode.KC_LSHIFT)) {
-				if (angle - m_LastAngle == 0) {
-					continue;
-				}
-				
-				selected_object.SetPosition(EditorMath.RotateAroundPoint(transform[3], selected_object.GetPosition(), vector.Up, Math.Cos(angle - m_LastAngle), Math.Sin(angle - m_LastAngle)));
-				vector new_ori = selected_object.GetOrientation();
-				new_ori[0] = new_ori[0] + ((angle - m_LastAngle) * Math.RAD2DEG);
-				selected_object.SetOrientation(new_ori);
-			} else {
-				selected_object.SetPosition(selected_object.GetPosition() + deltapos);
-			}
+			Math3D.MatrixOrthogonalize4(local_additional_mat);
+
+			vector output_additional_mat[4];
+			Math3D.MatrixMultiply4(transform, local_additional_mat, output_additional_mat);
+			selected_object.SetTransform(output_additional_mat);
 		}
-		
-		m_LastAngle = angle;
 		
 		target.SetTransform(transform);
 	}
