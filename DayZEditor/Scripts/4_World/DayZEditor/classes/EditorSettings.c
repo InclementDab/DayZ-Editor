@@ -132,6 +132,11 @@ class EditorSettings: ProfileSettings
 #endif
 	string ProtoFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "MapGroupProto.xml");
 	
+	#ifndef COMPONENT_SYSTEM	
+	[RegisterProfileSettingText("IMPORT/EXPORT", "BackupDirectory", "Brush File")]
+#endif
+	string BackupDirectory = SystemPath.Combine(Editor.ROOT_DIRECTORY, "Backups");
+	
 #ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingMultistate("ADVANCED", "SelectedLogLevel", "Log Level", {"TRACE", "DEBUG", "INFO", "WARNING", "ERROR"})]
 #endif
