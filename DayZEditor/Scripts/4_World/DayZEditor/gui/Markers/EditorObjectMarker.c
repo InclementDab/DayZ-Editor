@@ -140,7 +140,7 @@ class EditorObjectMarker: EditorMarker
 		}
 		
 		if (m_Editor.GetSettings().MarkerTooltips && !m_Editor.IsPlacing()) {
-			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DoTooltipCheck, 500);
+			GetEditor().GetEditorHud().CreateDelayedTooltip(w, File.GetName(m_EditorObject.GetDisplayName()), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetModelPath()), Symbols.HOUSE);
 		}
 		
 		return super.OnMouseEnter(w, x, y);
@@ -155,26 +155,11 @@ class EditorObjectMarker: EditorMarker
 			}
 		}
 		
-		if (m_Editor.GetSettings().MarkerTooltips) {
-			GetEditor().GetEditorHud().SetCurrentTooltip(null);
-		}
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
-	
-	private void DoTooltipCheck()
-	{
-		int x, y;
-		GetMousePos(x, y);
-		if (!IsMouseInside(x, y)) {
-			return;
-		}
 		
-		if (!EditorHud.CurrentMenu) {
-			GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetID())));
-		}
-	}
-	
 	private const int DRAG_THRESHOLD_SQ = 25;
 	private void CheckDragBounds(int x, int y)
 	{

@@ -759,13 +759,13 @@ class Editor: Managed
 				return;
 			}
 			
-			Raycast cursor_raycast = GetCursorRaycastModeSafe(world_object.GetWorldObject());
+			Raycast cursor_raycast = GetCursorRaycastModeSafe(world_object.GetWorldObject(), GroundMode);
 			
 			vector position;
 			if (cursor_raycast) {
 				position = cursor_raycast.Bounce.Position;
 			} else {
-				position = GetCursorRay().GetPoint(GetCameraSettings().ViewDistance);
+				position = GetCursorRay().GetPoint(50); // rather arbitrary
 			}
 			
 			if (hand_data) {
@@ -805,6 +805,7 @@ class Editor: Managed
 			return;
 		}
 		
+		Raycast cursor_raycast = GetCursorRaycast();
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		UAInputAPI input_api = GetUApi();
 		UAInput fwd_input = input_api.GetInputByName("EditorMoveObjectForward");
@@ -827,6 +828,8 @@ class Editor: Managed
 			if (EditorHud.CurrentMenu) {
 				delete EditorHud.CurrentMenu;
 			}
+			
+			GetEditorHud().SetCurrentTooltip(null);
 		}
 
 		//	left click logic
@@ -846,6 +849,7 @@ class Editor: Managed
 				EditorPlaceableItem placeable_object = GetReplaceableItem(m_ObjectUnderCursor);
 				if (placeable_object) {
 					ClearHand();
+					
 					EditorHandMap objects_in_hand = AddInHand(placeable_object);
 					foreach (EditorWorldObject object_in_hand, EditorHandData hand_data: objects_in_hand) {
 						object_in_hand.GetWorldObject().SetOrientation(m_ObjectUnderCursor.GetOrientation());
@@ -856,7 +860,6 @@ class Editor: Managed
 			}
 			
 			if (!widget_under_cursor || widget_under_cursor == m_EditorHud.Map) { //
-				Raycast cursor_raycast = GetCursorRaycast();
 				if (cursor_raycast && cursor_raycast.Hit && GetEditorHud().IsObjectSelectionEnabled()) {
 					EditorObject select_object = EditorObject.s_AllByObject[cursor_raycast.Hit];
 					if (select_object) {
@@ -1318,6 +1321,8 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
+		GetEditorHud().CreateDelayedTooltip(null, File.GetName(target.GetType()), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", target.GetShapeName()));
+
 		m_EditorHudController.ObjectReadoutName = GetObjectName(target, component_index);
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		
@@ -1333,6 +1338,7 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{
+		GetEditorHud().SetCurrentTooltip(null);
 		m_EditorHudController.ObjectReadoutName = "";
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		return true;

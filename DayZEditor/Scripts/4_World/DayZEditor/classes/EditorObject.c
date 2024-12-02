@@ -241,11 +241,19 @@ class EditorObject: EditorWorldObject
 			return m_Data.Type;
 		}
 		
-		string model_name = Editor.GetModelName(GetWorldObject());
-		auto placeable_replacement = GetEditor().GetObjectManager().GetReplaceableObjects(model_name);
-		if (placeable_replacement[0]) {
-			return placeable_replacement[0].Type;
+		string model_path = GetWorldObject().ConfigGetStringRaw("model");
+		if (model_path) {
+			return model_path;
 		}
+		
+		if (m_Data.Type.Contains(".p3d")) {
+			/*auto placeable_replacement = GetEditor().GetObjectManager().GetReplaceableObjects(string.Format("%1.p3d", model_name));
+			if (placeable_replacement[0]) {
+				return placeable_replacement[0].Type;
+			}*/
+		}
+		
+
 		
 		return string.Empty;
 	}
