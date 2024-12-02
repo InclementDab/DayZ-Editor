@@ -4,6 +4,7 @@ class EditorExportMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorExportMenu");
 		
+		AddMenuButton(m_Editor.CommandManager[EditorExportToDZEFile]);
 		AddMenuButton(m_Editor.CommandManager[EditorExportToInitFile]);
 		AddMenuButton(m_Editor.CommandManager[EditorExportToObjectSpawner]);
 		AddMenuDivider();
