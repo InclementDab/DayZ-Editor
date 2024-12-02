@@ -65,9 +65,9 @@ class EditorGizmo: Managed
 	const int INTERACTION_XY_PLANE = 6;
 	
 	// Rotation Gizmo
-	const int INTERACTION_XY_ROTATE = 1;
+	const int INTERACTION_YZ_ROTATE = 1;
 	const int INTERACTION_XZ_ROTATE = 2;
-	const int INTERACTION_YZ_ROTATE = 3;
+	const int INTERACTION_XY_ROTATE = 3;
 	
 	// Scale Gizmo
 	const int INTERACTION_X_SCALE = 1;
@@ -121,7 +121,7 @@ class EditorGizmo: Managed
 	void Update(float dt)
 	{		
 #ifdef DIAG_DEVELOPER
-		bool debug_collisions = 0;
+		bool debug_collisions = 1;
 		//GetDayZGame().ReloadShape(m_Gizmo);
 #endif
 		// todo, grabbing this every frame?
@@ -481,5 +481,70 @@ class EditorTranslationGizmo: EditorGizmo
 	override string GetGizmoMesh()
 	{
 		return "GizmoTranslation";
+	}
+}
+
+class EditorRotationGizmo: EditorGizmo
+{
+	override void RegisterInteractionClips(inout notnull map<int, ref GizmoInteractionSource> clipping_infos)	
+	{
+		super.RegisterInteractionClips(clipping_infos);
+		
+		float BOX_WIDTH_HALF = BOX_WIDTH / 2;
+		float BOX_LENGTH_HALF = BOX_LENGTH / 3;
+		
+		clipping_infos[INTERACTION_XZ_ROTATE] = new GizmoInteractionSource({
+			Vector(BOX_WIDTH, BOX_WIDTH_HALF, BOX_WIDTH), // BOX_WIDTH[0], BOX_WIDTH[2] to keep it from intersecting with others
+			Vector(BOX_LENGTH, -BOX_WIDTH_HALF, BOX_LENGTH)
+		}, LinearColor.GREEN);
+		
+		clipping_infos[INTERACTION_XY_ROTATE] = new GizmoInteractionSource({
+			Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH_HALF),
+			Vector(BOX_LENGTH, BOX_LENGTH, -BOX_WIDTH_HALF)
+		}, LinearColor.BLUE);
+		
+		clipping_infos[INTERACTION_YZ_ROTATE] = new GizmoInteractionSource({
+			Vector(BOX_WIDTH_HALF, BOX_WIDTH, BOX_WIDTH),
+			Vector(-BOX_WIDTH_HALF, BOX_LENGTH, BOX_LENGTH)
+		}, LinearColor.RED);
+	}
+
+	override string GetGizmoMesh()
+	{
+		return "GizmoRotation";
+	}
+}
+
+class EditorScaleGizmo: EditorGizmo
+{
+	override void RegisterInteractionClips(inout notnull map<int, ref GizmoInteractionSource> clipping_infos)
+	{
+		super.RegisterInteractionClips(clipping_infos);
+		
+		float BOX_WIDTH_HALF = BOX_WIDTH / 2;
+		float BOX_LENGTH_HALF = BOX_LENGTH / 3;
+		
+		// X
+		clipping_infos[INTERACTION_X_SCALE] = new GizmoInteractionSource({
+			Vector(BOX_LENGTH, -BOX_WIDTH, -BOX_WIDTH),
+			Vector(0, BOX_WIDTH, BOX_WIDTH)
+		}, LinearColor.RED);
+		
+		// Y
+		clipping_infos[INTERACTION_Y_SCALE] = new GizmoInteractionSource({
+			Vector(-BOX_WIDTH, -0, -BOX_WIDTH),
+			Vector(BOX_WIDTH, BOX_LENGTH, BOX_WIDTH)
+		}, LinearColor.GREEN);
+		
+		// Z
+		clipping_infos[INTERACTION_Z_SCALE] = new GizmoInteractionSource({
+			Vector(-BOX_WIDTH, -BOX_WIDTH, BOX_LENGTH),
+			Vector(BOX_WIDTH, BOX_WIDTH, 0)
+		}, LinearColor.BLUE);
+	}
+
+	override string GetGizmoMesh()
+	{
+		return "GizmoScale";
 	}
 }

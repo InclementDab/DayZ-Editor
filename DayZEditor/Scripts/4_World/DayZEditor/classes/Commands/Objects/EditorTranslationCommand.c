@@ -18,7 +18,7 @@ class EditorTranslationCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_W };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_E };
 	}
 
 	override Symbols GetSymbol()

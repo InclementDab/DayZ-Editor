@@ -18,7 +18,7 @@ class EditorScaleCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_R };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_T };
 	}
 
 	override Symbols GetSymbol()

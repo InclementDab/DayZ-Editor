@@ -303,15 +303,22 @@ class Editor: Managed
 		m_EditorHud.SetEditorMode(m_EditorMode);
 		
 		// please be of type EditorTranslationGizmo
-		typename gizmo_type = EditorTranslationGizmo;
 		switch (m_EditorMode) {
 			case eEditorMode.Translation: {
-				gizmo_type = EditorTranslationGizmo;
+				m_CurrentGizmoType = EditorTranslationGizmo;
+				break;
+			}
+
+			case eEditorMode.Rotation: {
+				m_CurrentGizmoType = EditorRotationGizmo;
+				break;
+			}
+
+			case eEditorMode.Scale: {
+				m_CurrentGizmoType = EditorScaleGizmo;
 				break;
 			}
 		}
-		
-		m_CurrentGizmoType = gizmo_type;
 #endif
 	}
 		
@@ -638,7 +645,7 @@ class Editor: Managed
 		}
 
 		if (GetSelectedObjects().Count() > 0) {
-			if (!m_CurrentGizmo) {
+			if (!m_CurrentGizmo || !m_CurrentGizmo.IsInherited(m_CurrentGizmoType)) {
 				m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
 				if (m_CurrentGizmo) {
 					m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0), GetSelectedObjects());

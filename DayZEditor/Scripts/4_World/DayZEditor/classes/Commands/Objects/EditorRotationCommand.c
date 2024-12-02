@@ -18,7 +18,7 @@ class EditorRotationCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_E };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_R };
 	}
 
 	override Symbols GetSymbol()

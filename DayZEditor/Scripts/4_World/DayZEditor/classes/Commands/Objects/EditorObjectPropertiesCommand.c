@@ -13,6 +13,6 @@ class EditorObjectPropertiesCommand: EditorAsyncCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_T };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_T };
 	}
 }
