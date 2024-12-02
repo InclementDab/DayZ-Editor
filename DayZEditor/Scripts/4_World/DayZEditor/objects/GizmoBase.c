@@ -330,19 +330,6 @@ class EditorTranslationGizmo: EditorGizmo
 		}
 		
 		vector cursor_intersect = vector.Zero;
-		int axis_index = m_InteractionIndex - 1;
-		switch (m_InteractionIndex) {
-			case INTERACTION_X_AXIS: {
-				axis_index = 2;
-				break;
-			}
-
-			case INTERACTION_Z_AXIS: {
-				axis_index = 0;
-				break;
-			}
-		}
-		
 		switch (m_InteractionIndex) {
 			// center interaction
 			case INTERACTION_CENTER: {
@@ -365,7 +352,6 @@ class EditorTranslationGizmo: EditorGizmo
 				// local_intersect[2] = 0;
 				// local_intersect[1] = local_intersect[1];
 				// intersect = local_intersect.Multiply4(up_dir_matrix);
-
 
 				Plane3D xy_plane = Plane3D(top_transform[1], top_transform[3]);
 				cursor_intersect = xy_plane.Intersect(cursor_ray);
