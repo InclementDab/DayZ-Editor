@@ -33,6 +33,28 @@ class Plane3D: Managed
 
 		return vector.Zero;
 	}
+	
+	void Debug(float size = 2, int color = LinearColor.BLUE, ShapeFlags flags = ShapeFlags.ONCE)
+	{
+		vector aside = vector.Aside;
+		if (Math.AbsFloat(vector.Dot(Normal, aside)) == 1) {
+			aside = vector.Up;
+		}
+
+		vector mat[4] = {
+			aside,
+			Normal,
+			aside * Normal,
+			Center
+		};
+
+		Math3D.MatrixOrthogonalize4(mat);
+
+		Shape s = Shape.Create(ShapeType.BBOX, color, flags, Vector(-size, 0, -size), Vector(size, 0, size));
+		s.SetMatrix(mat);
+
+		Shape.CreateArrow(Center, Center + Normal * size, size / 2, LinearColor.WHITE, flags);
+	}
 }
 
 class EditorObjectDragHandler: EditorDragHandler

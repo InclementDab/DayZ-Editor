@@ -330,6 +330,19 @@ class EditorTranslationGizmo: EditorGizmo
 		}
 		
 		vector cursor_intersect = vector.Zero;
+		int axis_index = m_InteractionIndex - 1;
+		switch (m_InteractionIndex) {
+			case INTERACTION_X_AXIS: {
+				axis_index = 2;
+				break;
+			}
+
+			case INTERACTION_Z_AXIS: {
+				axis_index = 0;
+				break;
+			}
+		}
+		
 		switch (m_InteractionIndex) {
 			// center interaction
 			case INTERACTION_CENTER: {
@@ -337,7 +350,7 @@ class EditorTranslationGizmo: EditorGizmo
 				cursor_intersect = camera_forward_plane.Intersect(cursor_ray);
 				break;
 			}
-			
+						
 			case INTERACTION_X_AXIS: {
 				// vector forward_plane = top_transform[1] * camera_transform[0];
 				// Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
@@ -363,7 +376,7 @@ class EditorTranslationGizmo: EditorGizmo
 				break;
 			}
 			
-			case INTERACTION_Y_AXIS: {
+			case INTERACTION_Y_AXIS: {				
 				Plane3D xz_plane = Plane3D(top_transform[2], top_transform[3]);
 				cursor_intersect = xz_plane.Intersect(cursor_ray);
 				vector cursor_intersect_xz_local = cursor_intersect.InvMultiply4(top_transform) - m_DragOffset;
@@ -410,7 +423,7 @@ class EditorTranslationGizmo: EditorGizmo
 				break;
 			}
 		}
-		
+						
 		if (cursor_intersect != vector.Zero) {
 			top_transform[3] = cursor_intersect;
 			transform_without_scale[3] = cursor_intersect;
@@ -437,6 +450,15 @@ class EditorTranslationGizmo: EditorGizmo
 			}
 			
 			editor_object.SetTopTransform(top_transform);
+			
+			vector gizmo_transform[4];
+			copyarray(gizmo_transform, top_transform);
+			gizmo_transform[0] = -gizmo_transform[0];
+			gizmo_transform[2] = -gizmo_transform[2];
+			gizmo_transform[3] = cursor_intersect;
+			
+			m_Gizmo.SetTransform(gizmo_transform);
+			m_Gizmo.Update();
 		}
 	}
 
