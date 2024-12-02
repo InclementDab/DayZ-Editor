@@ -4,7 +4,7 @@ class EditorSearchObjectCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
-		Object object = Editor.GetObjectUnderCursor();
+		Object object = GetEditor().GetObjectUnderCursor();
 		if (!object) {
 			return true;
 		}

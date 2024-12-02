@@ -30,6 +30,9 @@
 // if today is that day. fix it.
 // and message me your feedback on discord :)
 
+#ifdef DIAG_DEVELOPER
+#define GIZMOS_ENABLED
+#endif
 
 enum eEditorMode
 {
@@ -76,12 +79,7 @@ class Editor: Managed
 	/* Private Members */
 	protected Mission m_Mission;
 	protected PlayerBase m_Player, m_ControllingPlayer;
-		
-	// statics (updated in Update())
-	static Object								ObjectUnderCursor;
-	static int 									ComponentUnderCursor;
-	static vector 								CurrentMousePosition;
-	
+			
 	static const ref array<string> DELETION_BLACKLIST = {
 		"BrushBase",
 		"BoundingBoxBase",
@@ -101,6 +99,7 @@ class Editor: Managed
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
+	protected typename m_CurrentGizmoType = EditorTranslationGizmo;
 	protected ref EditorGizmo m_CurrentGizmo;
 	protected ref EditorWebApi m_RestApi;
 	
@@ -152,6 +151,15 @@ class Editor: Managed
 	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
 	
+	// Cached ray and raycast infos
+	protected ref Ray m_CameraRay;
+	protected ref Ray m_CursorRay;
+	protected ref Raycast m_CameraRaycast, m_CameraRaycastGround;
+	protected ref Raycast m_CursorRaycast, m_CursorRaycastGround;
+	
+	protected Object m_ObjectUnderCursor;
+	protected int m_ComponentIndexUnderCursor;
+
 	protected eEditorMode m_EditorMode;
 	
 	protected ref EditorObject m_PlayerObject;
@@ -304,8 +312,8 @@ class Editor: Managed
 	void SetMode(eEditorMode editor_mode)
 	{
 		m_EditorMode = editor_mode;
-#ifdef DIAG_DEVELOPER
-		//m_EditorHud.SetEditorMode(m_EditorMode);
+#ifdef GIZMOS_ENABLED
+		m_EditorHud.SetEditorMode(m_EditorMode);
 		
 		// please be of type EditorTranslationGizmo
 		typename gizmo_type = EditorTranslationGizmo;
@@ -316,10 +324,7 @@ class Editor: Managed
 			}
 		}
 		
-		//m_CurrentGizmo = EditorGizmo.Cast(gizmo_type.Spawn());
-		if (m_CurrentGizmo) {
-			//m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0), GetSelectedObjects());
-		}
+		m_CurrentGizmoType = gizmo_type;
 #endif
 	}
 		
@@ -359,12 +364,12 @@ class Editor: Managed
 
 	Ray GetCameraRay()
 	{
-		return new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraDirection());
+		return m_CameraRay;
 	}
 	
 	Ray GetCursorRay()
 	{
-		return new Ray(GetGame().GetCurrentCameraPosition(), GetDayZGame().GetPointerDirection());
+		return m_CursorRay;
 	}
 
 	Ray GetCursorRayModeSafe()
@@ -375,14 +380,30 @@ class Editor: Managed
 
 		return GetCursorRay();
 	}
-		
+
 	Raycast GetCameraRaycast(Object ignore = null, bool ground_only = false)
 	{
+		if (!ignore && !ground_only) {
+			return m_CameraRaycast;
+		}
+
+		if (!ignore) {
+			return m_CameraRaycastGround;
+		}
+
 		return PerformRaycast(GetCameraRay(), ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
 	}
 	
 	Raycast GetCursorRaycast(Object ignore = null, bool ground_only = false)
 	{
+		if (!ignore && !ground_only) {
+			return m_CursorRaycast;
+		}
+
+		if (!ignore) {
+			return m_CursorRaycastGround;
+		}
+
 		return PerformRaycast(GetCursorRay(), ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
 	}
 
@@ -424,7 +445,7 @@ class Editor: Managed
 	protected Raycast PerformRaycast(notnull Ray source_ray, Object ignore, float distance, bool ground_only)
 	{
 		Raycast camera_raycast;
-		const int interaction_layers = -1;
+		const int interaction_layers = PhxInteractionLayers.CAMERA;
 		if (!ground_only) {
 			camera_raycast = source_ray.PerformRaycast(ignore, distance, interaction_layers);
 		}
@@ -613,17 +634,42 @@ class Editor: Managed
 	}
 
 	void Update(float timeslice)
-	{			
-		Raycast cray = GetCursorRaycastModeSafe();
+	{
+		float raycast_distance = GetCameraSettings().ViewDistance;
 
-		vector upp = GetGame().SurfaceGetNormal(cray.Bounce.Position[0], cray.Bounce.Position[2]);
-		upp.Normalize();
-		Debug.DrawArrow(cray.Bounce.Position, cray.Bounce.Position + cray.Bounce.Direction * 10, 1, LinearColor.RED, ShapeFlags.ONCE);
-		Debug.DrawArrow(cray.Bounce.Position, cray.Bounce.Position + upp * 10, 1, LinearColor.YELLOW, ShapeFlags.ONCE);
+		// The most common rays and raycast for the tool to use are updated and cached at the beginning of each frame. If you need a different raycast, then you will perform it yourself
+		m_CursorRay = new Ray(GetGame().GetCurrentCameraPosition(), GetDayZGame().GetPointerDirection());
+		m_CameraRay = new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraDirection());
+		m_CameraRaycast = PerformRaycast(m_CameraRay, null, raycast_distance, false);
+		m_CameraRaycastGround = PerformRaycast(m_CameraRay, null, raycast_distance, true);
+		m_CursorRaycast = PerformRaycast(m_CursorRay, null, raycast_distance, false);
+		m_CursorRaycastGround = PerformRaycast(m_CursorRay, null, raycast_distance, true);		
 		
+#ifdef GIZMOS_ENABLED
+		if (!m_CurrentGizmoType.IsInherited(EditorGizmo)) {
+			ErrorEx("Incorrect gizmo type, must inherit from EditorGizmo");
+		}
+
+		if (GetSelectedObjects().Count() > 0) {
+			if (!m_CurrentGizmo) {
+				m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
+				if (m_CurrentGizmo) {
+					m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0), GetSelectedObjects());
+				}
+			}
+		} else {
+			delete m_CurrentGizmo;
+		}
+		
+		if (m_CurrentGizmo) {
+			m_CurrentGizmo.Update(timeslice);
+		}
+#endif
+
+		// Process input after gizmo update because gizmos will need to block input during an interaction
 		ProcessInput(timeslice, GetGame().GetInput());
+
 		if (EditorSaveFile != string.Empty) {
-			
 			m_TimeSinceLastBackup += timeslice;
 
 			switch (GetSettings().CreateSaveBackups) {
@@ -660,54 +706,23 @@ class Editor: Managed
 		set<Object> obj();
 		int x, y;
 		GetMousePos(x, y);
-		
-		if (m_EditorHud && m_EditorHud.Map.IsVisible()) {
-			CurrentMousePosition = m_EditorHud.Map.ScreenToMap(Vector(x, y, 0));
-			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
-		} else {
-			Object collision_ignore;
-			// we need to determine what object is under the cursor so we can ignore it on our next raycast
-			if (m_PlacingObjects.Count() > 0) {
-				vector _;
-				int __;
-				vector collision_ray_start = GetGame().GetCurrentCameraPosition();
-				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * m_EditorCamera.GetSettings().ViewDistance;
-				set<Object> results = new set<Object>();
-				if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
-					//collision_ignore = results[0];
-					//Print(collision_ignore.GetType());
-					
-				}
 				
-				collision_ignore = m_PlacingObjects.GetKey(0).GetWorldObject();
-			}
-			
-			// Yeah, enfusions dumb, i know
-			CurrentMousePosition = MousePosToRay(obj, collision_ignore, m_EditorCamera.GetSettings().ViewDistance, 0, !CollisionMode, m_LootEditMode);
-		}
-		
-		if (!IsPlacing() && !GetWidgetUnderCursor()) {			
-			vector hit_pos, hit_normal;
-			int component_index;		
-			set<Object> collisions = new set<Object>;
-			DayZPhysics.RaycastRV(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * m_EditorCamera.GetSettings().ViewDistance, hit_pos, hit_normal, component_index, collisions);
-			
-			Object target = collisions[0];
-			if (target) {
-				if (target != ObjectUnderCursor || component_index != ComponentUnderCursor) {
-					if (ObjectUnderCursor) { 
-						OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
+		if (!IsPlacing() && !GetWidgetUnderCursor()) {
+			if (m_CursorRaycast && m_CursorRaycast.Hit) {
+				if (m_CursorRaycast.Hit != m_ObjectUnderCursor || m_CursorRaycast.HitComponent != m_ComponentIndexUnderCursor) {
+					if (m_ObjectUnderCursor) { 
+						OnMouseExitObject(m_ObjectUnderCursor, x, y, m_ComponentIndexUnderCursor);
 					}
 
-					OnMouseEnterObject(target, x, y, component_index);
-					ObjectUnderCursor = target;
-					ComponentUnderCursor = component_index;
+					OnMouseEnterObject(m_CursorRaycast.Hit, x, y, m_CursorRaycast.HitComponent);
+					m_ObjectUnderCursor = m_CursorRaycast.Hit;
+					m_ComponentIndexUnderCursor = m_CursorRaycast.HitComponent;
 				} 
 				
-			} else if (ObjectUnderCursor) {
-				OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
-				ObjectUnderCursor = null;
-				ComponentUnderCursor = 0;
+			} else if (m_ObjectUnderCursor) {
+				OnMouseExitObject(m_ObjectUnderCursor, x, y, m_ComponentIndexUnderCursor);
+				m_ObjectUnderCursor = null;
+				m_ComponentIndexUnderCursor = 0;
 			}
 		}
 		
@@ -792,6 +807,7 @@ class Editor: Managed
 			return;
 		}
 		
+		Widget widget_under_cursor = GetWidgetUnderCursor();
 		UAInputAPI input_api = GetUApi();
 		UAInput fwd_input = input_api.GetInputByName("EditorMoveObjectForward");
 		UAInput bck_input = input_api.GetInputByName("EditorMoveObjectBackward");
@@ -803,6 +819,91 @@ class Editor: Managed
 		UAInput slow_input = input_api.GetInputByID(UALookAround);
 		UAInput big_input = input_api.GetInputByName("EditorScaleIncrease");
 		UAInput small_input = input_api.GetInputByName("EditorScaleDecrease");
+		UAInput left_click_input = input_api.GetInputByID(UAFire);
+		UAInput right_click_input = input_api.GetInputByID(UATempRaiseWeapon);
+		UAInput middle_click_input = input_api.GetInputByID(UAZoomIn);
+
+		bool any_mouse_click = left_click_input.LocalPress() || right_click_input.LocalPress() || middle_click_input.LocalPress();
+		if (any_mouse_click && !widget_under_cursor) {
+			SetFocus(null);
+			if (EditorHud.CurrentMenu) {
+				delete EditorHud.CurrentMenu;
+			}
+		}
+
+		//	left click logic
+		if (left_click_input.LocalPress()) {
+#ifdef GIZMOS_ENABLED
+			if (m_CurrentGizmo && m_CurrentGizmo.IsInteracting()) {
+				return;
+			}
+#endif
+			
+			if (IsPlacing()) {
+				PlaceObject();
+				return;
+			}
+			
+			if (KeyState(KeyCode.KC_LCONTROL) && m_ObjectUnderCursor) {
+				EditorPlaceableItem placeable_object = GetReplaceableItem(m_ObjectUnderCursor);
+				if (placeable_object) {
+					ClearHand();
+					EditorHandMap objects_in_hand = AddInHand(placeable_object);
+					foreach (EditorWorldObject object_in_hand, EditorHandData hand_data: objects_in_hand) {
+						object_in_hand.GetWorldObject().SetOrientation(m_ObjectUnderCursor.GetOrientation());
+					}
+				}
+				
+				return;
+			}
+			
+			if (!widget_under_cursor || widget_under_cursor == m_EditorHud.Map) { //
+				Raycast cursor_raycast = GetCursorRaycast();
+				if (cursor_raycast && cursor_raycast.Hit && GetEditorHud().IsObjectSelectionEnabled()) {
+					EditorObject select_object = EditorObject.s_AllByObject[cursor_raycast.Hit];
+					if (select_object) {
+						// We want to Toggle selection if you are holding control
+						if (KeyState(KeyCode.KC_LCONTROL)) {
+							ToggleSelection(select_object);
+							return;
+						} 
+													
+						if (!turbo_input.LocalValue()) {
+							ClearSelection();
+						}
+						
+						SelectObject(select_object);
+						return;
+					}
+				}
+						
+				ClearSelection();
+				GetCameraTrackManager().ClearSelection();
+				return;
+			}
+		}
+
+		if (right_click_input.LocalPress()) {
+			// no right click activity for now
+		}
+
+		if (middle_click_input.LocalPress()) {
+			// Ctrl + Middle Mouse logic
+			if (KeyState(KeyCode.KC_LCONTROL)) {
+				if (m_ObjectUnderCursor) {			
+					ClearSelection();
+					if (GetEditorObject(m_ObjectUnderCursor)) {
+						DeleteObject(GetEditorObject(m_ObjectUnderCursor));
+					} else {
+						GetGame().ObjectDelete(m_ObjectUnderCursor);
+						HideMapObject(m_ObjectUnderCursor);
+					}
+				}
+
+				return;
+			} 
+		}
+
 		if (IsPlacing()) {
 			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
@@ -1067,7 +1168,10 @@ class Editor: Managed
 			
 			case MouseState.LEFT: {
 				if (m_LootEditMode && !target) {
-					InsertLootPosition(CurrentMousePosition);
+					Raycast cursor_raycast = GetCursorRaycastModeSafe();
+					if (cursor_raycast && cursor_raycast.Bounce) {
+						InsertLootPosition(cursor_raycast.Bounce.Position);
+					}
 				}
 				
 				return true;
@@ -1080,114 +1184,6 @@ class Editor: Managed
 	bool OnMouseDown(int button)
 	{
 		EditorLog.Trace("Editor::OnMouseDown " + button);
-
-		Widget target = GetWidgetUnderCursor();
-		if (!target) { //target.GetName() != "HudPanel"
-			SetFocus(null);
-			if (EditorHud.CurrentMenu) {
-				delete EditorHud.CurrentMenu;
-			}
-		}
-		
-		switch (button) {
-			
-			case MouseState.LEFT: {
-
-				if (IsPlacing()) {
-					PlaceObject();
-					return true;
-				}
-				
-				if (!target || target == m_EditorHud.Map) { //
-					Raycast cursor_raycast = GetCursorRaycast();
-					if (cursor_raycast && cursor_raycast.Hit && GetEditorHud().IsObjectSelectionEnabled()) {
-						
-						EditorObject select_object = EditorObject.s_AllByObject[cursor_raycast.Hit];
-						if (select_object) {
-							// We want to Toggle selection if you are holding control
-							if (KeyState(KeyCode.KC_LCONTROL)) {
-								ToggleSelection(select_object);
-								return true;
-							} 
-														
-							if (!KeyState(KeyCode.KC_LSHIFT)) {
-								ClearSelection();
-							}
-							
-							SelectObject(select_object);
-							return true;
-						}
-					}
-					
-					if (m_CurrentGizmo && cursor_raycast && m_CurrentGizmo.Contains(cursor_raycast.Hit)) {
-						//if (m_CurrentGizmo.Begin(cursor_raycast.Hit)) {
-							return true;
-						//}
-					}
-					
-					ClearSelection();
-					GetCameraTrackManager().ClearSelection();
-				}
-				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
-					if (placeable_object) {
-						ClearHand();
-						EditorHandMap objects_in_hand = AddInHand(placeable_object);
-						foreach (EditorWorldObject object_in_hand, EditorHandData hand_data: objects_in_hand) {
-							object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
-						}
-					}
-					
-					return true;
-				}
-				
-				break;
-			}
-			
-			case MouseState.MIDDLE: {
-				
-				// Ctrl + Middle Mouse logic
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					if (ObjectUnderCursor) {			
-						ClearSelection();
-						if (GetEditorObject(ObjectUnderCursor)) {
-							DeleteObject(GetEditorObject(ObjectUnderCursor));
-						} else {
-							GetGame().ObjectDelete(ObjectUnderCursor);
-							HideMapObject(ObjectUnderCursor);
-						}
-					}
-					
-					return true;
-				} 
-				
-				if (IsPlayerActive()) {
-					return false;
-				}
-								
-				EditorCameraClassic classic_camera = EditorCameraClassic.Cast(m_EditorCamera);
-				if (classic_camera) {
-					// teleportation logic
-					vector mouse_pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
-					vector camera_current_pos = m_EditorCamera.GetPosition();
-					float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
-					// check if water is under mouse, to stop from teleporting under water			
-					if (IsSurfaceWater(mouse_pos)) {
-						classic_camera.SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
-						break;
-					} 
-					
-					classic_camera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
-				}
-
-				return true;
-			}
-			
-			case MouseState.RIGHT: {				
-				break;	
-			}
-		}
 		
 		
 		if (GetWorldTime() - m_LastMouseDown < 500) {
@@ -1324,11 +1320,6 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		GizmoBase gizmo = GizmoBase.Cast(target);
-		if (gizmo) {
-			gizmo.OnIntersectMouse(GetCursorRay());
-		}
-
 		m_EditorHudController.ObjectReadoutName = GetObjectName(target, component_index);
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		
@@ -1344,11 +1335,6 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{
-		GizmoBase gizmo = GizmoBase.Cast(target);
-		if (gizmo) {
-			gizmo.OnUnintersectMouse(GetCursorRay());
-		}
-
 		m_EditorHudController.ObjectReadoutName = "";
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		return true;
@@ -2116,21 +2102,6 @@ class Editor: Managed
 		return build_number.ToInt();
 	}
 	
-	static Object GetObjectUnderCursor(float raycast_distance = 3000)
-	{
-		vector ray_start = GetGame().GetCurrentCameraPosition();
-		vector ray_end = ray_start + GetGame().GetPointerDirection() * raycast_distance;
-		
-		vector hitPos, hitNormal;
-		int hitComponentIndex;		
-		set<Object> collisions = new set<Object>;
-		
-	
-		DayZPhysics.RaycastRV(ray_start, ray_end, hitPos, hitNormal, hitComponentIndex, collisions);
-		
-		return collisions.Get(0);
-	}
-	
 	static EditorHoliday GetCurrentHoliday()
 	{		
 		int year, month, day;
@@ -2609,5 +2580,20 @@ class Editor: Managed
 	EditorWebApi GetWebApi()
 	{
 		return m_RestApi;
+	}
+	
+	Object GetObjectUnderCursor()
+	{
+		return m_ObjectUnderCursor;
+	}
+
+	int GetComponentIndexUnderCursor()
+	{
+		return m_ComponentIndexUnderCursor;
+	}
+	
+	EditorGizmo GetGizmo()
+	{
+		return m_CurrentGizmo;
 	}
 }

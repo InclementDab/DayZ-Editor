@@ -72,48 +72,25 @@ class CfgVehicles
 	class GizmoBase : HouseNoDestruct
 	{
 		scope = 0;
-		hiddenSelections[] = {"main"};
-		shadow = 0;
+		hiddenSelections[] = {"x", "y", "z"};
 	};
 
-	class GizmoArrowX : GizmoBase
+	class GizmoTranslation : GizmoBase
 	{
 		scope = 1;
-		model = "\DayZEditor\Editor\TranslationWidgetX.p3d";
-		hiddenSelections[] = {"main"};
-		shadow = 0;
+		model = "\DayZEditor\Editor\MoveGizmo.p3d";
 	};
 
-	class GizmoArrowY : GizmoBase
+	class GizmoRotation: GizmoBase
 	{
 		scope = 1;
-		model = "\DayZEditor\Editor\TranslationWidgetY.p3d";
-		hiddenSelections[] = {"main"};
-		shadow = 0;
+		model = "\DayZEditor\Editor\RotateGizmo.p3d";
 	};
 
-	class GizmoArrowZ : GizmoBase
+	class GizmoScale: GizmoBase
 	{
 		scope = 1;
-		model = "\DayZEditor\Editor\TranslationWidgetZ.p3d";
-		hiddenSelections[] = {"main"};
-		shadow = 0;
-	};
-
-	class GizmoCenter : GizmoBase
-	{
-		scope = 1;
-		model = "\DayZEditor\Editor\TranslationCenter.p3d";
-		shadow = 0;
-	};
-
-	class RotationWidget : GizmoBase
-	{
-		scope = 1;
-		itemSize[]={16,16};
-		model = "\DayZEditor\Editor\RotationWidget.p3d";
-		hiddenSelections[] = {"RotationX", "RotationY", "RotationZ"};
-		shadow = 0;
+		model = "\DayZEditor\Editor\ScaleGizmo.p3d";
 	};
 
 	class BrushBase : HouseNoDestruct

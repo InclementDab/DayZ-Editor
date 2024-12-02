@@ -721,6 +721,24 @@ class EditorObject: EditorWorldObject
 		SetTransform(transform);
 	}
 	
+	void SetTopTransform(vector transform[4])
+	{
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		vector pos_offset = Vector(0, clip_info[1][1], 0).Multiply3(transform);
+		transform[3] = transform[3] - pos_offset;
+		SetTransform(transform);
+	}
+	
+	void GetTopTransform(out vector transform[4])
+	{
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		GetTransform(transform);
+		vector pos_offset = Vector(0, clip_info[1][1], 0).Multiply3(transform);
+		transform[3] = transform[3] + pos_offset;
+	}
+	
 	float GetYDistance()
 	{
 		return m_WorldObject.GetBoundingCenter()[1];
@@ -739,20 +757,17 @@ class EditorObject: EditorWorldObject
 		return a;
 	}
 	
+	// Depreciated
 	vector GetTopCenter()
 	{		
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		vector result;
-		vector up = GetTransformAxis(1);
-		result = up * (vector.Distance(Vector(0, clip_info[0][1], 0), Vector(0, clip_info[1][1], 0)) / 2);
-		result += GetPosition();
-		return result;
+		vector top_transform[4];
+		GetTopTransform(top_transform);
+		return top_transform[3];
 	}
 		
-	Param3<int, vector, vector> GetTransformArray() 
+	Param4<int, vector, vector, float> GetTransformArray() 
 	{
-		return new Param3<int, vector, vector>(GetID(), GetPosition(), GetOrientation());
+		return new Param4<int, vector, vector, float>(GetID(), GetPosition(), GetOrientation(), GetScale());
 	}
 
 	vector GetSize()

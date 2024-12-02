@@ -222,6 +222,27 @@ class EditorCameraClassic: EditorCamera
 		if (IsTargeting) {
 			LookAt(TargetPosition);
 		}
+
+		if (!GetEditor().IsPlayerActive()) {
+			// teleportation logic
+			vector current_mouse_position = GetEditor().GetCursorRay().GetPoint(100.0);
+			Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafe();
+			if (cursor_raycast) {
+				current_mouse_position = cursor_raycast.Bounce.Position;
+			}
+			
+			vector mouse_pos = Vector(current_mouse_position[0], GetGame().SurfaceY(current_mouse_position[0], current_mouse_position[2]), current_mouse_position[2]);
+			vector camera_current_pos = GetPosition();
+			float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
+			// check if water is under mouse, to stop from teleporting under water			
+			if (GetEditor().IsSurfaceWater(mouse_pos)) {
+				SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
+			} else {
+				SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
+			}
+
+			return;
+		}
 		
 		//EditorLog.Trace("EditorCamera::EOnFrame-");
 	}

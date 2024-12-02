@@ -104,7 +104,7 @@ class EditorAction
 		GetEditor().DeleteObject(object, false);
 	}
 	
-	void SetTransform(Param3<int, vector, vector> params)
+	void SetTransform(Param4<int, vector, vector, float> params)
 	{
 		//EditorLog.Trace("EditorAction::SetTransform");
 		EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
@@ -121,6 +121,7 @@ class EditorAction
 
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
+		editor_object.SetScale(params.param4);
 	}
 	
 	void Hide(Param1<int> params)

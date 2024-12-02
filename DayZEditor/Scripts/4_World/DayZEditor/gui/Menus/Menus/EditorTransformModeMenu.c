@@ -4,10 +4,12 @@ class EditorTransformModeMenu: EditorMenu
 	{
 		EditorLog.Trace("EditorTransformModeMenu");
 		
+#ifdef GIZMOS_ENABLED
 		AddMenuButton(m_Editor.CommandManager[EditorTranslationCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorRotationCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorScaleCommand]);
 		AddMenuDivider();
+#endif
 		AddMenuButton(m_Editor.CommandManager[EditorMagnetCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorGroundCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorSnapCommand]);

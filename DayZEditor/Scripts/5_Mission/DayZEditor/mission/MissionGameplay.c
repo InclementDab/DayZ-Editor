@@ -44,9 +44,9 @@ modded class MissionGameplay
 	
 	override void OnMouseButtonPress(int button)
 	{
-		if (!GetEditor() || !GetEditor().OnMouseDown(button)) {			
+		//if (!GetEditor() || !GetEditor().OnMouseDown(button)) {			
 			super.OnMouseButtonPress(button);
-		} 
+		//} 
 	}
 	
 	override void OnMouseButtonRelease(int button)

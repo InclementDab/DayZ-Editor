@@ -25,12 +25,7 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveRate", "Quick Move Speed (m/s)", 0.1, 15)]
 #endif
 	float QuickMoveRate = 2.5;
-	
-#ifndef COMPONENT_SYSTEM	
-	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveFollowsCamera", "Quick Move Mode", {"WORLD", "LOCAL"})]
-#endif
-	int QuickMoveFollowsCamera		= 0;
-	
+		
 #ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingMultistate("PLACEMENT", "SpawnItemsWithAttachments", "Item Spawns", {"EMPTY", "WITH ATTACHMENT"})]
 #endif

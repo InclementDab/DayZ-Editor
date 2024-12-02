@@ -248,6 +248,13 @@ class EditorHud: ScriptView
 			UpdateMap(Map, dt);
 		}
 		
+#ifdef GIZMOS_ENABLED
+		if (GetEditor().GetGizmo() && GetEditor().GetGizmo().IsInteracting()) {
+			ShowCursor(false);
+			return;
+		}
+#endif
+		
 		// lctrl for commands
 		if (toggle_editor.LocalPress() && !GetDayZGame().IsLeftCtrlDown() && input_unlocked) {
 			// Control current player
