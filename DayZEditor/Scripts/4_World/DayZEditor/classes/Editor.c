@@ -1321,7 +1321,9 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		GetEditorHud().CreateDelayedTooltip(null, File.GetName(target.GetType()), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", target.GetShapeName()));
+		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor()) {
+			GetEditorHud().CreateDelayedTooltip(null, File.GetName(target.GetType()), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", target.GetShapeName()));
+		}
 
 		m_EditorHudController.ObjectReadoutName = GetObjectName(target, component_index);
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
@@ -1338,7 +1340,10 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{
-		GetEditorHud().SetCurrentTooltip(null);
+		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor()) {
+			GetEditorHud().SetCurrentTooltip(null);
+		}
+		
 		m_EditorHudController.ObjectReadoutName = "";
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		return true;

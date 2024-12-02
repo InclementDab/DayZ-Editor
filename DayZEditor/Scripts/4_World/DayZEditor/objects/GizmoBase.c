@@ -1,73 +1,34 @@
-class EditorGizmo: Managed
+class GizmoInteractionSource: Managed
 {
-	const int INTERACTION_CENTER = 0;
-	
-	// Translation gizmo
-	const int INTERACTION_X_AXIS = 1;
-	const int INTERACTION_Y_AXIS = 2;
-	const int INTERACTION_Z_AXIS = 3;
-	
-	const int INTERACTION_XY_PLANE = 4;
-	const int INTERACTION_XZ_PLANE = 5;
-	const int INTERACTION_YZ_PLANE = 6;
-	
-	// Rotation Gizmo
-	const int INTERACTION_XY_ROTATE = 1;
-	const int INTERACTION_XZ_ROTATE = 2;
-	const int INTERACTION_YZ_ROTATE = 3;
-	
-	// Scale Gizmo
-	const int INTERACTION_X_SCALE = 1;
-	const int INTERACTION_Y_SCALE = 2;
-	const int INTERACTION_Z_SCALE = 3;
-	
-	// Box sizes for cursor collision
-	const float BOX_WIDTH = 0.125;
-	const float BOX_WIDTH_LARGE = 0.165;
-	const float BOX_LENGTH = 2.0;
-	
-	protected Editor m_Editor;
-	protected EditorObject m_EditorObject;
-	protected EditorObjectMap m_AllObjects;
-	protected Object m_Gizmo;
-	protected int m_InteractionIndex = -1;
-	protected vector m_DragOffset;
-	protected ref EditorAction m_RewindAction;
-	protected ref map<int, ref array<vector>> m_InteractionCollisions = new map<int, ref array<vector>>();
-	
-	void EditorGizmo()
-	{
-		m_Gizmo = GetGame().CreateObjectEx(GetGizmoMesh(), vector.Zero, ECE_NONE);
-		RegisterInteractionClips(m_InteractionCollisions);
-	}
-		
-	void ~EditorGizmo()
-	{	
-		if (m_Gizmo) {	
-			m_Gizmo.Delete();
-		}
-	}	
-	
-	void Initialize(notnull Editor editor, EditorObject editor_object, EditorObjectMap all_objects)
-	{		
-		m_Editor = editor;
-		m_EditorObject = editor_object;
-		m_AllObjects = all_objects;
-	}
+	ref array<vector> Clipping = {};
+	LinearColor DefaultColor;
+	LinearColor HoverColor;
 
-	bool CollideAABB(Ray ray, vector clip_info[2], out vector hit_pos)
+	void GizmoInteractionSource(notnull array<vector> clipping, LinearColor default_color, LinearColor hover_color = 0xFFFFFF00)
 	{
+		Clipping.Copy(clipping);
+		DefaultColor = default_color;
+		HoverColor = hover_color;
+	}
+	
+	bool CollideAABB(Ray ray, vector transform[4], out vector hit_pos)
+	{
+		vector box_clip_global[2] = {
+			Clipping[0].Multiply4(transform),
+			Clipping[1].Multiply4(transform),
+		};
+		
 		// r.dir is unit direction vector of ray
 		vector dirfrac = Vector(1.0 / ray.Direction[0], 1.0 / ray.Direction[1], 1.0 / ray.Direction[2]);
 
 		// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
 		// r.org is origin of ray
-		float t1 = (clip_info[0][0] - ray.Position[0]) * dirfrac[0];
-		float t2 = (clip_info[1][0] - ray.Position[0]) * dirfrac[0];
-		float t3 = (clip_info[0][1] - ray.Position[1]) * dirfrac[1];
-		float t4 = (clip_info[1][1] - ray.Position[1]) * dirfrac[1];
-		float t5 = (clip_info[0][2] - ray.Position[2]) * dirfrac[2];
-		float t6 = (clip_info[1][2] - ray.Position[2]) * dirfrac[2];
+		float t1 = (box_clip_global[0][0] - ray.Position[0]) * dirfrac[0];
+		float t2 = (box_clip_global[1][0] - ray.Position[0]) * dirfrac[0];
+		float t3 = (box_clip_global[0][1] - ray.Position[1]) * dirfrac[1];
+		float t4 = (box_clip_global[1][1] - ray.Position[1]) * dirfrac[1];
+		float t5 = (box_clip_global[0][2] - ray.Position[2]) * dirfrac[2];
+		float t6 = (box_clip_global[1][2] - ray.Position[2]) * dirfrac[2];
 
 		float tmin = Math.Max(Math.Max(Math.Min(t1, t2), Math.Min(t3, t4)), Math.Min(t5, t6));
 		float tmax = Math.Min(Math.Min(Math.Max(t1, t2), Math.Max(t3, t4)), Math.Max(t5, t6));
@@ -88,6 +49,68 @@ class EditorGizmo: Managed
 		hit_pos = ray.Position + ray.Direction.Normalized() * t;
 		return true;
 	}
+}
+
+class EditorGizmo: Managed
+{
+	const int INTERACTION_CENTER = 0;
+	
+	// Translation gizmo
+	const int INTERACTION_X_AXIS = 1;
+	const int INTERACTION_Y_AXIS = 2;
+	const int INTERACTION_Z_AXIS = 3;
+	
+	const int INTERACTION_YZ_PLANE = 4;
+	const int INTERACTION_XZ_PLANE = 5;
+	const int INTERACTION_XY_PLANE = 6;
+	
+	// Rotation Gizmo
+	const int INTERACTION_XY_ROTATE = 1;
+	const int INTERACTION_XZ_ROTATE = 2;
+	const int INTERACTION_YZ_ROTATE = 3;
+	
+	// Scale Gizmo
+	const int INTERACTION_X_SCALE = 1;
+	const int INTERACTION_Y_SCALE = 2;
+	const int INTERACTION_Z_SCALE = 3;
+	
+	// Box sizes for cursor collision
+	const float BOX_WIDTH = 0.125;
+	const float BOX_WIDTH_LARGE = 0.165;
+	const float BOX_LENGTH = 2.0;
+	
+	protected Editor m_Editor;
+	protected EditorObject m_EditorObject;
+	protected EditorObjectMap m_AllObjects;
+	protected EntityAI m_Gizmo;
+	protected int m_InteractionIndex = -1;
+	protected vector m_DragOffset;
+	protected ref EditorAction m_RewindAction;
+	protected ref map<int, ref GizmoInteractionSource> m_InteractionCollisions = new map<int, ref GizmoInteractionSource>();
+	
+	void EditorGizmo()
+	{
+		m_Gizmo = EntityAI.Cast(GetGame().CreateObjectEx(GetGizmoMesh(), vector.Zero, ECE_NONE));
+		RegisterInteractionClips(m_InteractionCollisions);
+
+#ifdef DIAG_DEVELOPER
+		//GetDayZGame().ReloadShape(m_Gizmo);
+#endif
+	}
+		
+	void ~EditorGizmo()
+	{	
+		if (m_Gizmo) {	
+			m_Gizmo.Delete();
+		}
+	}	
+	
+	void Initialize(notnull Editor editor, EditorObject editor_object, EditorObjectMap all_objects)
+	{		
+		m_Editor = editor;
+		m_EditorObject = editor_object;
+		m_AllObjects = all_objects;
+	}
 
 	bool IsInteracting()
 	{
@@ -98,7 +121,8 @@ class EditorGizmo: Managed
 	void Update(float dt)
 	{		
 #ifdef DIAG_DEVELOPER
-		bool debug_collisions = 1;
+		bool debug_collisions = 0;
+		//GetDayZGame().ReloadShape(m_Gizmo);
 #endif
 		// todo, grabbing this every frame?
 		EditorObjectMap all_editor_objects = GetEditor().GetSelectedObjects();
@@ -123,71 +147,65 @@ class EditorGizmo: Managed
 		m_Gizmo.SetTransform(gizmo_transform);
 
 #ifdef DIAG_DEVELOPER
-		foreach (int debug_interaction_index, array<vector> debug_clip_info: m_InteractionCollisions) {
-			LinearColor dbg_color = LinearColor.FLORAL_WHITE;
+		foreach (int debug_interaction_index, GizmoInteractionSource debug_clip_info: m_InteractionCollisions) {
+			LinearColor dbg_color = debug_clip_info.DefaultColor;
 		
-			switch (debug_interaction_index) {
-				case 1: {
-					dbg_color = LinearColor.RED;
-					break;
-				}
-
-				case 2: {
-					dbg_color = LinearColor.GREEN;
-					break;
-				}
-
-				case 3: {
-					dbg_color = LinearColor.BLUE;
-					break;
-				}
-			}
-
 			if (m_InteractionIndex == debug_interaction_index) {
 				dbg_color = LinearColor.YELLOW;
 			}
 			
 			if (debug_collisions) {
-				Shape s = Shape.Create(ShapeType.BBOX, dbg_color, ShapeFlags.TRANSP | ShapeFlags.ONCE | ShapeFlags.ADDITIVE, debug_clip_info[0], debug_clip_info[1]);
+				Shape s = Shape.Create(ShapeType.BBOX, dbg_color, ShapeFlags.TRANSP | ShapeFlags.ONCE | ShapeFlags.ADDITIVE, debug_clip_info.Clipping[0], debug_clip_info.Clipping[1]);
 				s.SetMatrix(top_transform);
 			}
 		}
 #endif
 		
 		UAInput interact_input = GetUApi().GetInputByID(UAFire);
-		if (interact_input.LocalPress() && m_InteractionIndex == -1) {
-			float collide_dist = 0;
-			int collide_index = -1;
-			vector collision_hit = vector.Zero;
-			foreach (int interaction_index, array<vector> clip_info: m_InteractionCollisions) {							
-				vector hit_pos;
-				vector box_clip_global[2] = {
-					clip_info[0].Multiply4(top_transform),
-					clip_info[1].Multiply4(top_transform),
-				};
-	
-				bool hit = CollideAABB(cursor_ray, box_clip_global, hit_pos);
-				if (!hit) {
-					continue;
-				}
-	
-				if (collide_index != -1 && vector.Distance(cursor_ray.Position, hit_pos) > collide_dist) {
-					continue;
-				}
-	
-				collide_index = interaction_index;
-				collide_dist = vector.Distance(cursor_ray.Position, hit_pos);
-				collision_hit = hit_pos;
+
+		float collide_dist = 0;
+		int collide_index = -1;
+		vector collision_hit = vector.Zero;
+		foreach (int interaction_index, GizmoInteractionSource clip_info: m_InteractionCollisions) {							
+			vector hit_pos;	
+			bool hit = clip_info.CollideAABB(cursor_ray, top_transform, hit_pos);
+			if (!hit) {
+				continue;
 			}
-			
+
+			// Check for closest collision
+			if (collide_index != -1 && vector.Distance(cursor_ray.Position, hit_pos) > collide_dist) {
+				continue;
+			}
+
+			collide_index = interaction_index;
+			collide_dist = vector.Distance(cursor_ray.Position, hit_pos);
+			collision_hit = hit_pos;
+		}
+	
+		if (m_InteractionIndex == -1 && interact_input.LocalPress()) {
 			m_DragOffset = collision_hit.InvMultiply4(top_transform);
 			m_InteractionIndex = collide_index;
-			
+
 			// Register rewinds
 			m_RewindAction = new EditorAction("SetTransform", "SetTransform");
 			foreach (EditorObject selected_rewind_object: all_editor_objects) {
 				m_RewindAction.InsertUndoParameter(selected_rewind_object.GetTransformArray());
 			}
+		}
+		
+		foreach (int interaction_index_color, GizmoInteractionSource clip_info_color: m_InteractionCollisions) {
+			LinearColor color = clip_info_color.DefaultColor;
+			if (interaction_index_color == collide_index) {
+				color = LinearColor.YELLOW;
+			}
+			
+			if (interaction_index_color == m_InteractionIndex) {
+				color = LinearColor.ORANGE;
+			}
+
+			m_Gizmo.SetObjectTexture(interaction_index_color, string.Format("#(argb,8,8,3)color(%1,%2,%3,1.000,co)", color.GetRed() / 255.0, color.GetGreen() / 255.0, color.GetBlue() / 255.0));
+			m_Gizmo.Update();
 		}
 
 		if (!interact_input.LocalValue() && m_InteractionIndex != -1) {
@@ -203,12 +221,12 @@ class EditorGizmo: Managed
 	}
 	
 	// Each clipping bounds must be vector[2]
-	void RegisterInteractionClips(inout notnull map<int, ref array<vector>> clipping_infos)
+	void RegisterInteractionClips(inout notnull map<int, ref GizmoInteractionSource> clipping_infos)
 	{
-		clipping_infos[INTERACTION_CENTER] = {
+		clipping_infos[INTERACTION_CENTER] = new GizmoInteractionSource({
 			-Vector(BOX_WIDTH_LARGE, BOX_WIDTH_LARGE, BOX_WIDTH_LARGE),
 			Vector(BOX_WIDTH_LARGE, BOX_WIDTH_LARGE, BOX_WIDTH_LARGE)
-		};
+		}, LinearColor.WHITE);
 	}
 
 	string GetGizmoMesh()
@@ -219,7 +237,7 @@ class EditorGizmo: Managed
 
 class EditorTranslationGizmo: EditorGizmo
 {
-	override void RegisterInteractionClips(inout notnull map<int, ref array<vector>> clipping_infos)
+	override void RegisterInteractionClips(inout notnull map<int, ref GizmoInteractionSource> clipping_infos)
 	{
 		super.RegisterInteractionClips(clipping_infos);
 		
@@ -227,37 +245,37 @@ class EditorTranslationGizmo: EditorGizmo
 		float BOX_LENGTH_HALF = BOX_LENGTH / 3;
 		
 		// X
-		clipping_infos[INTERACTION_X_AXIS] = {
+		clipping_infos[INTERACTION_X_AXIS] = new GizmoInteractionSource({
 			Vector(BOX_LENGTH, -BOX_WIDTH, -BOX_WIDTH),
 			Vector(0, BOX_WIDTH, BOX_WIDTH)
-		};
+		}, LinearColor.RED);
 		
 		// Y
-		clipping_infos[INTERACTION_Y_AXIS] = {
+		clipping_infos[INTERACTION_Y_AXIS] = new GizmoInteractionSource({
 			Vector(-BOX_WIDTH, -0, -BOX_WIDTH),
 			Vector(BOX_WIDTH, BOX_LENGTH, BOX_WIDTH)
-		};
+		}, LinearColor.GREEN);
 		
 		// Z
-		clipping_infos[INTERACTION_Z_AXIS] = {
+		clipping_infos[INTERACTION_Z_AXIS] = new GizmoInteractionSource({
 			Vector(-BOX_WIDTH, -BOX_WIDTH, BOX_LENGTH),
 			Vector(BOX_WIDTH, BOX_WIDTH, 0)
-		};
+		}, LinearColor.BLUE);
 		
-		clipping_infos[INTERACTION_XZ_PLANE] = {
+		clipping_infos[INTERACTION_XZ_PLANE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH, BOX_WIDTH_HALF, BOX_WIDTH), // BOX_WIDTH[0], BOX_WIDTH[2] to keep it from intersecting with others
 			Vector(BOX_LENGTH_HALF, -BOX_WIDTH_HALF, BOX_LENGTH_HALF)
-		};
+		}, LinearColor.GREEN);
 		
-		clipping_infos[INTERACTION_XY_PLANE] = {
+		clipping_infos[INTERACTION_XY_PLANE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH_HALF),
 			Vector(BOX_LENGTH_HALF, BOX_LENGTH_HALF, -BOX_WIDTH_HALF)
-		};
+		}, LinearColor.BLUE);
 		
-		clipping_infos[INTERACTION_YZ_PLANE] = {
+		clipping_infos[INTERACTION_YZ_PLANE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH_HALF, BOX_WIDTH, BOX_WIDTH),
 			Vector(-BOX_WIDTH_HALF, BOX_LENGTH_HALF, BOX_LENGTH_HALF)
-		};
+		}, LinearColor.RED);
 	}
 	
 	override void Update(float dt)
@@ -287,7 +305,7 @@ class EditorTranslationGizmo: EditorGizmo
 		vector camera_transform[4];
 		GetEditor().GetCamera().GetTransform(camera_transform);
 				
-		//GetDayZGame().ReloadShape(m_Gizmo);
+	
 	
 		// debug
 		//Shape.CreateSphere(LinearColor.GREEN, ShapeFlags.ONCE, m_DragOffset.Multiply4(top_transform), 0.1);

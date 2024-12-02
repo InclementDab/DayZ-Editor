@@ -72,13 +72,31 @@ class CfgVehicles
 	class GizmoBase : HouseNoDestruct
 	{
 		scope = 0;
-		hiddenSelections[] = {"x", "y", "z"};
 	};
 
 	class GizmoTranslation : GizmoBase
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\MoveGizmo.p3d";
+		hiddenSelections[] = {
+			"origin_ball",
+			"x_arrow", 
+			"y_arrow", 
+			"z_arrow",
+			"x_square", 
+			"y_square", 
+			"z_square"
+		};
+
+		hiddenSelectionsTextures[] = {
+			"#(argb,8,8,3)color(1.0,1.0,1.0,1.000,co)", 
+			"#(argb,8,8,3)color(1.0,0.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,1.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,0.0,1.0,1.000,co)",
+			"#(argb,8,8,3)color(1.0,0.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,1.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,0.0,1.0,1.000,co)"
+		};
 	};
 
 	class GizmoRotation: GizmoBase
