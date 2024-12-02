@@ -132,6 +132,11 @@ class EditorGizmo: Managed
 			m_DragOffset = vector.Zero;
 			return;
 		}
+		
+		// Check for interactions with other stuff here?
+		if (GetWidgetUnderCursor()) {
+			return;
+		}
 	
 		vector top_transform[4];
 		editor_object.GetTopTransform(top_transform);
@@ -196,7 +201,7 @@ class EditorGizmo: Managed
 		
 		foreach (int interaction_index_color, GizmoInteractionSource clip_info_color: m_InteractionCollisions) {
 			LinearColor color = clip_info_color.DefaultColor;
-			if (interaction_index_color == collide_index) {
+			if (interaction_index_color == collide_index && m_InteractionIndex == -1) {
 				color = LinearColor.YELLOW;
 			}
 			
@@ -205,8 +210,9 @@ class EditorGizmo: Managed
 			}
 
 			m_Gizmo.SetObjectTexture(interaction_index_color, string.Format("#(argb,8,8,3)color(%1,%2,%3,1.000,co)", color.GetRed() / 255.0, color.GetGreen() / 255.0, color.GetBlue() / 255.0));
-			m_Gizmo.Update();
 		}
+		
+		m_Gizmo.Update();
 
 		if (!interact_input.LocalValue() && m_InteractionIndex != -1) {
 			m_InteractionIndex = -1;
@@ -304,14 +310,7 @@ class EditorTranslationGizmo: EditorGizmo
 		
 		vector camera_transform[4];
 		GetEditor().GetCamera().GetTransform(camera_transform);
-				
-	
-	
-		// debug
-		//Shape.CreateSphere(LinearColor.GREEN, ShapeFlags.ONCE, m_DragOffset.Multiply4(top_transform), 0.1);
-		//Shape.Create(ShapeType.BBOX, LinearColor.BLUE, ShapeFlags.ONCE, m_InteractionCollisions[m_InteractionIndex][0].Multiply4(top_transform), m_InteractionCollisions[m_InteractionIndex][1].Multiply4(top_transform));
-		
-		
+
 		map<EditorObject, ref array<vector>> local_transforms_to_target = new map<EditorObject, ref array<vector>>();
 		foreach (EditorObject additional_drag_target: all_editor_objects) {
 			if (additional_drag_target == editor_object) {
@@ -340,6 +339,21 @@ class EditorTranslationGizmo: EditorGizmo
 			}
 			
 			case INTERACTION_X_AXIS: {
+				// vector forward_plane = top_transform[1] * camera_transform[0];
+				// Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
+				// vector intersect = z_plane.Intersect(cursor_ray);
+				
+				// vector up_dir_matrix[4];
+				// Math3D.DirectionAndUpMatrix(forward_plane, up_dir, up_dir_matrix);
+				// Math3D.MatrixOrthogonalize4(up_dir_matrix);
+				// up_dir_matrix[3] = transform[3];
+				// vector local_intersect = intersect.InvMultiply4(up_dir_matrix);
+				// local_intersect[0] = 0;
+				// local_intersect[2] = 0;
+				// local_intersect[1] = local_intersect[1];
+				// intersect = local_intersect.Multiply4(up_dir_matrix);
+
+
 				Plane3D xy_plane = Plane3D(top_transform[1], top_transform[3]);
 				cursor_intersect = xy_plane.Intersect(cursor_ray);
 				vector cursor_intersect_xy_local = cursor_intersect.InvMultiply4(top_transform) - m_DragOffset;

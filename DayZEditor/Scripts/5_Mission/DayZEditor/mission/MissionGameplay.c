@@ -41,14 +41,7 @@ modded class MissionGameplay
 			super.OnKeyRelease(key);
 		}
 	}
-	
-	override void OnMouseButtonPress(int button)
-	{
-		//if (!GetEditor() || !GetEditor().OnMouseDown(button)) {			
-			super.OnMouseButtonPress(button);
-		//} 
-	}
-	
+		
 	override void OnMouseButtonRelease(int button)
 	{
 		if (!GetEditor() || !GetEditor().OnMouseRelease(button)) {
@@ -58,12 +51,15 @@ modded class MissionGameplay
 
 	override void OnUpdate(float timeslice)
 	{
-		if (GetEditor() && GetEditor().IsActive()) {
-			GetModuleManager().OnUpdate(timeslice);
-			return;
-		} 
-				
-		super.OnUpdate(timeslice);
+		if (GetEditor()) {
+			if (GetEditor().IsPlayerControlled()) {
+				super.OnUpdate(timeslice);
+			}
+
+			GetEditor().Update(timeslice);
+		} else {
+			super.OnUpdate(timeslice);
+		}
 	}
 	
 	override void ShowInventory()
@@ -84,6 +80,35 @@ modded class MissionGameplay
 		super.OnMissionStart();
 		// On Load unhide em all
 		CF.ObjectManager.UnhideAllMapObjects();
+	}
+
+	override void OnMissionFinish()
+	{
+		super.OnMissionFinish();
+		
+		delete g_Editor;
+	}
+	
+	override void OnMissionLoaded()
+	{
+		super.OnMissionLoaded();
+
+		if (!GetGame().IsServer()) {
+			ErrorEx("Cannot run DayZ Editor on server... exiting");
+			return;
+		}
+
+		vector center_pos = Editor.GetMapCenterPosition();
+		PlayerBase player = Editor.CreateDefaultCharacter(GetGame().CreateRandomPlayer(), Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
+		if (!player) {
+			Error("Player was not created, exiting");
+			return;
+		}
+
+		GetGame().SelectPlayer(null, player);
+
+		g_Editor = new Editor(player);
+		g_Editor.SetActive(true);
 	}
 		
 	override void Continue()

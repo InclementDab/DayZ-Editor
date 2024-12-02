@@ -166,7 +166,7 @@ class Editor: Managed
 	
 	bool										KEgg; // oh?
 	
-	private void Editor(notnull PlayerBase player) 
+	void Editor(notnull PlayerBase player) 
 	{		
 #ifdef DIAG_DEVELOPER
 		EnProfiler.Enable(true, true, true);
@@ -295,20 +295,7 @@ class Editor: Managed
 		delete m_RecentlyOpenedFiles;
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
-	
-	static Editor Create(PlayerBase player)
-	{
-		EditorLog.Trace("Editor::Create");
-		g_Editor = new Editor(player);
-		return g_Editor;
-	}
-	
-	static void Destroy()
-	{
-		EditorLog.Trace("Editor::Destroy");
-		delete g_Editor;
-	}
-
+		
 	void SetMode(eEditorMode editor_mode)
 	{
 		m_EditorMode = editor_mode;
@@ -1321,7 +1308,7 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor()) {
+		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor() && !GetSelectedObjects().Count()) {
 			GetEditorHud().CreateDelayedTooltip(null, File.GetName(target.GetType()), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", target.GetShapeName()));
 		}
 
@@ -1343,7 +1330,7 @@ class Editor: Managed
 		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor()) {
 			GetEditorHud().SetCurrentTooltip(null);
 		}
-		
+
 		m_EditorHudController.ObjectReadoutName = "";
 		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		return true;
@@ -1454,6 +1441,7 @@ class Editor: Managed
 	{
 		// todo: stub
 		//delete m_PlacingObjects;
+		//m_PlacingObjects.Clear();
 	}
 	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
@@ -2005,18 +1993,7 @@ class Editor: Managed
 			InsertAction(action);
 		}
 	}
-	
-	vector GetCameraProjectPosition(bool ground_only = true, float raycast_distance = 3000)
-	{
-		vector ray_start = GetGame().GetCurrentCameraPosition();
-		vector ray_end = ray_start + GetGame().GetCurrentCameraDirection() * raycast_distance;
-		
-		vector pos, normal;
-		int component;	
-		DayZPhysics.RaycastRV(ray_start, ray_end, pos, normal, component, null, null, null, false, ground_only);
-		return pos;
-	}
-		
+			
 	static PlayerBase CreateDefaultCharacter(string type, vector position)
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
