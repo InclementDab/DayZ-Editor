@@ -143,12 +143,27 @@ class EditorGizmo: Managed
 		Ray cursor_ray = GetEditor().GetCursorRay();
 		Raycast cursor_raycast = cursor_ray.PerformRaycast();
 		
+		vector top_transform_scaled_to_gizmo[4];
+		copyarray(top_transform_scaled_to_gizmo, top_transform);
+		
+		vector camera_transform[4];
+		GetEditor().GetCamera().GetTransform(camera_transform);
+		
+		float camera_fov = GetEditor().GetCamera().GetCurrentFOV();
+		
 		// lol @lad
 		vector gizmo_transform[4];
 		copyarray(gizmo_transform, top_transform);
 		gizmo_transform[0] = -gizmo_transform[0];
 		gizmo_transform[2] = -gizmo_transform[2];
-				
+		
+		float gizmo_distance = vector.Distance(top_transform[3], camera_transform[3]);
+		float gizmo_scale = gizmo_distance * camera_fov * 0.05;
+		vector gizmo_scale_mat[4];
+		Math3D.ScaleMatrix(gizmo_scale, gizmo_scale_mat);
+		Math3D.MatrixMultiply3(gizmo_scale_mat, gizmo_transform, gizmo_transform);
+		Math3D.MatrixMultiply3(gizmo_scale_mat, top_transform_scaled_to_gizmo, top_transform_scaled_to_gizmo);
+		
 		m_Gizmo.SetTransform(gizmo_transform);
 
 #ifdef DIAG_DEVELOPER
@@ -161,7 +176,7 @@ class EditorGizmo: Managed
 			
 			if (debug_collisions) {
 				Shape s = Shape.Create(ShapeType.BBOX, dbg_color, ShapeFlags.TRANSP | ShapeFlags.ONCE | ShapeFlags.ADDITIVE, debug_clip_info.Clipping[0], debug_clip_info.Clipping[1]);
-				s.SetMatrix(top_transform);
+				s.SetMatrix(top_transform_scaled_to_gizmo);
 			}
 		}
 #endif
@@ -173,7 +188,7 @@ class EditorGizmo: Managed
 		vector collision_hit = vector.Zero;
 		foreach (int interaction_index, GizmoInteractionSource clip_info: m_InteractionCollisions) {							
 			vector hit_pos;	
-			bool hit = clip_info.CollideAABB(cursor_ray, top_transform, hit_pos);
+			bool hit = clip_info.CollideAABB(cursor_ray, top_transform_scaled_to_gizmo, hit_pos);
 			if (!hit) {
 				continue;
 			}
@@ -303,13 +318,32 @@ class EditorTranslationGizmo: EditorGizmo
 		editor_object.GetTopTransform(top_transform);
 		Ray cursor_ray = GetEditor().GetCursorRay();
 		Raycast cursor_raycast = cursor_ray.PerformRaycast();
-
+		
 		vector transform_without_scale[4];
 		copyarray(transform_without_scale, top_transform);
 		Math3D.MatrixOrthogonalize4(transform_without_scale);
 		
+		vector top_transform_scaled_to_gizmo[4];
+		copyarray(top_transform_scaled_to_gizmo, top_transform);
+		
 		vector camera_transform[4];
 		GetEditor().GetCamera().GetTransform(camera_transform);
+		
+		float camera_fov = GetEditor().GetCamera().GetCurrentFOV();
+		
+		// lol @lad
+		vector gizmo_transform[4];
+		copyarray(gizmo_transform, top_transform);
+		gizmo_transform[0] = -gizmo_transform[0];
+		gizmo_transform[2] = -gizmo_transform[2];
+		
+		float gizmo_distance = vector.Distance(top_transform[3], camera_transform[3]);
+		float gizmo_scale = gizmo_distance * camera_fov * 0.05;
+		vector gizmo_scale_mat[4];
+		Math3D.ScaleMatrix(gizmo_scale, gizmo_scale_mat);
+		Math3D.MatrixMultiply3(gizmo_scale_mat, gizmo_transform, gizmo_transform);
+		Math3D.MatrixMultiply3(gizmo_scale_mat, top_transform_scaled_to_gizmo, top_transform_scaled_to_gizmo);
+		
 
 		map<EditorObject, ref array<vector>> local_transforms_to_target = new map<EditorObject, ref array<vector>>();
 		foreach (EditorObject additional_drag_target: all_editor_objects) {
@@ -437,10 +471,6 @@ class EditorTranslationGizmo: EditorGizmo
 			
 			editor_object.SetTopTransform(top_transform);
 			
-			vector gizmo_transform[4];
-			copyarray(gizmo_transform, top_transform);
-			gizmo_transform[0] = -gizmo_transform[0];
-			gizmo_transform[2] = -gizmo_transform[2];
 			gizmo_transform[3] = cursor_intersect;
 			
 			m_Gizmo.SetTransform(gizmo_transform);
