@@ -11,6 +11,11 @@ class EditorScaleCommand: EditorCommand
 		return true;
 	}
 	
+	override bool IsToggled()
+	{
+		return GetEditor().GetMode() == eEditorMode.Scale;
+	}
+	
 	override string GetName() 
 	{
 		return "Scale";
@@ -18,7 +23,7 @@ class EditorScaleCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_T };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_NUMPAD3 };
 	}
 
 	override Symbols GetSymbol()

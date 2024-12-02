@@ -11,6 +11,11 @@ class EditorTranslationCommand: EditorCommand
 		return true;
 	}
 	
+	override bool IsToggled()
+	{
+		return GetEditor().GetMode() == eEditorMode.Translation;
+	}
+	
 	override string GetName() 
 	{
 		return "Translate";
@@ -18,7 +23,7 @@ class EditorTranslationCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_E };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_NUMPAD1 };
 	}
 
 	override Symbols GetSymbol()

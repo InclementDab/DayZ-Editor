@@ -11,6 +11,11 @@ class EditorRotationCommand: EditorCommand
 		return true;
 	}
 	
+	override bool IsToggled()
+	{
+		return GetEditor().GetMode() == eEditorMode.Rotation;
+	}
+	
 	override string GetName() 
 	{
 		return "Rotation";
@@ -18,7 +23,7 @@ class EditorRotationCommand: EditorCommand
 	
 	override ShortcutKeys GetShortcut() 
 	{
-		return { KeyCode.KC_LCONTROL, KeyCode.KC_R };
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_NUMPAD2 };
 	}
 
 	override Symbols GetSymbol()

@@ -434,7 +434,15 @@ class EditorObject: EditorWorldObject
 			case "Orientation": {
 				EditorAction orientation_undo = new EditorAction("SetTransform", "SetTransform");
 				orientation_undo.InsertUndoParameter(GetTransformArray());
-				SetOrientation(Orientation);
+				
+				vector ypr_mat[4];
+				Math3D.YawPitchRollMatrix(Orientation, ypr_mat);
+				ypr_mat[3] = Position;
+				
+				vector scale_mat[3];
+				Math3D.ScaleMatrix(Scale, scale_mat);
+				Math3D.MatrixMultiply4(scale_mat, ypr_mat, ypr_mat);
+				SetTransform(ypr_mat);
 				orientation_undo.InsertRedoParameter(GetTransformArray());
 				GetEditor().InsertAction(orientation_undo);
 				break;
@@ -494,7 +502,7 @@ class EditorObject: EditorWorldObject
 			
 			case "Health": {
 				if (m_WorldObject.HasDamageSystem()) {
-					Health = Math.Clamp(Health, 0, 100);
+					Health = Math.Clamp(Health, 0, m_WorldObject.GetMaxHealth("", "Health"));
 					m_WorldObject.SetHealth("", "Health", Health);
 				}
 				break;
