@@ -249,10 +249,12 @@ class EditorHud: ScriptView
 		}
 		
 #ifdef GIZMOS_ENABLED
-		if (GetEditor().GetGizmo() && GetEditor().GetGizmo().IsInteracting()) {
-			ShowCursor(false);
-			return;
-		}
+		
+		// todo: a cursor hide mask
+		//if (GetEditor().GetGizmo() && GetEditor().GetGizmo().IsInteracting()) {
+		//	ShowCursor(false);
+		//	return;
+		//}
 #endif
 		
 		// lctrl for commands

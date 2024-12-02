@@ -702,12 +702,10 @@ class Editor: Managed
 				}
 			}
 		}
-		
-		set<Object> obj();
-		int x, y;
-		GetMousePos(x, y);
-				
+						
 		if (!IsPlacing() && !GetWidgetUnderCursor()) {
+			int x, y;
+			GetMousePos(x, y);
 			if (m_CursorRaycast && m_CursorRaycast.Hit) {
 				if (m_CursorRaycast.Hit != m_ObjectUnderCursor || m_CursorRaycast.HitComponent != m_ComponentIndexUnderCursor) {
 					if (m_ObjectUnderCursor) { 
