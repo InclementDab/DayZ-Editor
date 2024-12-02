@@ -52,7 +52,7 @@ modded class MissionGameplay
 	override void OnUpdate(float timeslice)
 	{
 		if (GetEditor()) {
-			if (GetEditor().IsPlayerControlled()) {
+			if (!GetEditor().IsActive()) {
 				super.OnUpdate(timeslice);
 			}
 
