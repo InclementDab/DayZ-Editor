@@ -56,9 +56,9 @@ class EditorBrush
 		Raycast ray_cast = ray.PerformRaycastRVEX(BrushRadius / 100, GetEditor().GetCamera().GetSettings().ViewDistance, ObjIntersectView, null, true);
 		if (ray_cast && ray_cast.Bounce) {
 			vector transform[4] = {
-				Vector(BrushRadius / 10, 0, 0),
-				Vector(0, BrushRadius / 10, 0),
-				Vector(0, 0, BrushRadius / 10),
+				Vector(BrushRadius / 5, 0, 0),
+				Vector(0, BrushRadius / 5, 0),
+				Vector(0, 0, BrushRadius / 5),
 				ray_cast.Bounce.Position
 			};
 

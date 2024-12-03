@@ -3,28 +3,39 @@ class DeleteBrush: EditorBrush
 	override void DuringMouseDown(vector position)
 	{
 		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
-		vector contact_pos, contact_dir;
-		int component;
+		surface_normal.Normalize();					
 		
-		array<Object> objects = {};		
-		array<CargoBase> cargos = {};
-		GetGame().GetObjectsAtPosition(position, EditorBrush.BrushRadius / 2, objects, cargos);
-		//DayZPhysics.RaycastRV(position - surface_normal * 5, position + surface_normal * 500, contact_pos, contact_dir, component, results, null, null, false, false, 0, EditorBrush.GetRadius() / 2, CollisionFlags.ALLOBJECTS);
-		//GetEditor().ClearSelection();
+		vector ray_pos = position + surface_normal * 10;		
+		RaycastRVParams raycast_params = new RaycastRVParams(ray_pos, ray_pos + -surface_normal * 10);
+		raycast_params.radius = BrushRadius;
+		raycast_params.flags = CollisionFlags.ALLOBJECTS;
+		raycast_params.type = ObjIntersectView;
+		raycast_params.groundOnly = false;
+		raycast_params.sorted = false;
+		array<ref RaycastRVResult> results = {};
+		if (!DayZPhysics.RaycastRVProxy(raycast_params, results, { m_BrushDecal, GetEditor().GetCamera(), GetEditor().GetPlayer() }) || results.Count() == 0) {
+			return;
+		}
 		
 		EditorObjectMap editor_objects();
 		array<Object> deleted_objects = {};
-		foreach (Object r: objects) {
-			EditorObject eo = GetEditor().GetEditorObject(r);
+		foreach (RaycastRVResult result: results) {
+			if (!result || !result.obj) {
+				continue;
+			}
+			
+			Object result_object = result.obj;
+			if (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(result_object)) {
+				continue;
+			}
+			
+			EditorObject eo = GetEditor().GetEditorObject(result_object);
 			if (eo) {
 				editor_objects.InsertEditorObject(eo);
 			} else {
-				if (GetEditor().CanHideMapObject(r.GetType())) {
-					GetGame().ObjectDelete(r);
-					deleted_objects.Insert(r);
-				}
+				deleted_objects.Insert(result_object);
 			}
-		}	
+		}
 		
 		if (editor_objects.Count() > 0) {
 			GetEditor().DeleteObjects(editor_objects);
