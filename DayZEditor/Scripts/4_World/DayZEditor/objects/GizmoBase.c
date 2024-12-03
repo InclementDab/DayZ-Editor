@@ -343,7 +343,6 @@ class EditorTranslationGizmo: EditorGizmo
 		Math3D.ScaleMatrix(gizmo_scale, gizmo_scale_mat);
 		Math3D.MatrixMultiply3(gizmo_scale_mat, gizmo_transform, gizmo_transform);
 		Math3D.MatrixMultiply3(gizmo_scale_mat, top_transform_scaled_to_gizmo, top_transform_scaled_to_gizmo);
-		
 
 		map<EditorObject, ref array<vector>> local_transforms_to_target = new map<EditorObject, ref array<vector>>();
 		foreach (EditorObject additional_drag_target: all_editor_objects) {
@@ -373,22 +372,10 @@ class EditorTranslationGizmo: EditorGizmo
 			}
 						
 			case INTERACTION_X_AXIS: {
-				// vector forward_plane = top_transform[1] * camera_transform[0];
-				// Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
-				// vector intersect = z_plane.Intersect(cursor_ray);
-				
-				// vector up_dir_matrix[4];
-				// Math3D.DirectionAndUpMatrix(forward_plane, up_dir, up_dir_matrix);
-				// Math3D.MatrixOrthogonalize4(up_dir_matrix);
-				// up_dir_matrix[3] = transform[3];
-				// vector local_intersect = intersect.InvMultiply4(up_dir_matrix);
-				// local_intersect[0] = 0;
-				// local_intersect[2] = 0;
-				// local_intersect[1] = local_intersect[1];
-				// intersect = local_intersect.Multiply4(up_dir_matrix);
-
-				Plane3D xy_plane = Plane3D(top_transform[1], top_transform[3]);
+				vector plane_xy_norm = top_transform[0] * (camera_transform[2] * top_transform[0]);
+				Plane3D xy_plane = Plane3D(plane_xy_norm, top_transform[3]);
 				cursor_intersect = xy_plane.Intersect(cursor_ray);
+				
 				vector cursor_intersect_xy_local = cursor_intersect.InvMultiply4(top_transform) - m_DragOffset;
 				cursor_intersect_xy_local[1] = 0;
 				cursor_intersect_xy_local[2] = 0;
@@ -397,7 +384,8 @@ class EditorTranslationGizmo: EditorGizmo
 			}
 			
 			case INTERACTION_Y_AXIS: {				
-				Plane3D xz_plane = Plane3D(top_transform[2], top_transform[3]);
+				vector plane_xz_norm = top_transform[1] * (camera_transform[2] * top_transform[1]);
+				Plane3D xz_plane = Plane3D(plane_xz_norm, top_transform[3]);
 				cursor_intersect = xz_plane.Intersect(cursor_ray);
 				vector cursor_intersect_xz_local = cursor_intersect.InvMultiply4(top_transform) - m_DragOffset;
 				cursor_intersect_xz_local[0] = 0;
@@ -407,7 +395,8 @@ class EditorTranslationGizmo: EditorGizmo
 			}
 			
 			case INTERACTION_Z_AXIS: {
-				Plane3D yz_plane = Plane3D(top_transform[0], top_transform[3]);
+				vector plane_yz_norm = top_transform[2] * (camera_transform[2] * top_transform[2]);
+				Plane3D yz_plane = Plane3D(plane_yz_norm, top_transform[3]);
 				cursor_intersect = yz_plane.Intersect(cursor_ray);
 				vector cursor_intersect_yz_local = cursor_intersect.InvMultiply4(top_transform) - m_DragOffset;
 				cursor_intersect_yz_local[0] = 0;
@@ -486,6 +475,71 @@ class EditorTranslationGizmo: EditorGizmo
 
 class EditorRotationGizmo: EditorGizmo
 {
+	override void Update(float dt)
+	{
+		super.Update(dt);
+		
+		// todo: copied from above?
+		EditorObjectMap all_editor_objects = GetEditor().GetSelectedObjects();
+		EditorObject editor_object = all_editor_objects.GetElement(0);
+		if (!editor_object || all_editor_objects.Count() == 0) {
+			return;
+		}
+		
+		if (m_InteractionIndex == -1) {
+			return;
+		}
+					
+		vector top_transform[4];
+		editor_object.GetTopTransform(top_transform);
+		Ray cursor_ray = GetEditor().GetCursorRay();
+		Raycast cursor_raycast = cursor_ray.PerformRaycast();
+		
+		vector transform_without_scale[4];
+		copyarray(transform_without_scale, top_transform);
+		Math3D.MatrixOrthogonalize4(transform_without_scale);
+		
+		vector top_transform_scaled_to_gizmo[4];
+		copyarray(top_transform_scaled_to_gizmo, top_transform);
+		
+		vector camera_transform[4];
+		GetEditor().GetCamera().GetTransform(camera_transform);
+		
+		float camera_fov = GetEditor().GetCamera().GetCurrentFOV();
+		
+		// lol @lad
+		vector gizmo_transform[4];
+		copyarray(gizmo_transform, top_transform);
+		gizmo_transform[0] = -gizmo_transform[0];
+		gizmo_transform[2] = -gizmo_transform[2];
+		
+		float gizmo_distance = vector.Distance(top_transform[3], camera_transform[3]);
+		float gizmo_scale = gizmo_distance * camera_fov * 0.05;
+		vector gizmo_scale_mat[4];
+		Math3D.ScaleMatrix(gizmo_scale, gizmo_scale_mat);
+		Math3D.MatrixMultiply3(gizmo_scale_mat, gizmo_transform, gizmo_transform);
+		Math3D.MatrixMultiply3(gizmo_scale_mat, top_transform_scaled_to_gizmo, top_transform_scaled_to_gizmo);
+
+		map<EditorObject, ref array<vector>> local_transforms_to_target = new map<EditorObject, ref array<vector>>();
+		foreach (EditorObject additional_drag_target: all_editor_objects) {
+			if (additional_drag_target == editor_object) {
+				continue;
+			}
+			
+			vector additional_drag_target_mat[4];
+			additional_drag_target.GetTopTransform(additional_drag_target_mat);
+			vector inv_additional_drag_target_mat[4];
+			Math3D.MatrixInvMultiply4(transform_without_scale, additional_drag_target_mat, inv_additional_drag_target_mat);
+			local_transforms_to_target[additional_drag_target] = {
+				inv_additional_drag_target_mat[0],
+				inv_additional_drag_target_mat[1],
+				inv_additional_drag_target_mat[2],
+				inv_additional_drag_target_mat[3]
+			};
+		}
+		
+	}
+	
 	override void RegisterInteractionClips(inout notnull map<int, ref GizmoInteractionSource> clipping_infos)	
 	{
 		super.RegisterInteractionClips(clipping_infos);
@@ -517,9 +571,74 @@ class EditorRotationGizmo: EditorGizmo
 
 class EditorScaleGizmo: EditorGizmo
 {
+	override void Update(float dt)
+	{
+		super.Update(dt);
+		
+		// todo: copied from above?
+		EditorObjectMap all_editor_objects = GetEditor().GetSelectedObjects();
+		EditorObject editor_object = all_editor_objects.GetElement(0);
+		if (!editor_object || all_editor_objects.Count() == 0) {
+			return;
+		}
+		
+		if (m_InteractionIndex == -1) {
+			return;
+		}
+					
+		vector top_transform[4];
+		editor_object.GetTopTransform(top_transform);
+		Ray cursor_ray = GetEditor().GetCursorRay();
+		Raycast cursor_raycast = cursor_ray.PerformRaycast();
+		
+		vector transform_without_scale[4];
+		copyarray(transform_without_scale, top_transform);
+		Math3D.MatrixOrthogonalize4(transform_without_scale);
+		
+		vector top_transform_scaled_to_gizmo[4];
+		copyarray(top_transform_scaled_to_gizmo, top_transform);
+		
+		vector camera_transform[4];
+		GetEditor().GetCamera().GetTransform(camera_transform);
+		
+		float camera_fov = GetEditor().GetCamera().GetCurrentFOV();
+		
+		// lol @lad
+		vector gizmo_transform[4];
+		copyarray(gizmo_transform, top_transform);
+		gizmo_transform[0] = -gizmo_transform[0];
+		gizmo_transform[2] = -gizmo_transform[2];
+		
+		float gizmo_distance = vector.Distance(top_transform[3], camera_transform[3]);
+		float gizmo_scale = gizmo_distance * camera_fov * 0.05;
+		vector gizmo_scale_mat[4];
+		Math3D.ScaleMatrix(gizmo_scale, gizmo_scale_mat);
+		Math3D.MatrixMultiply3(gizmo_scale_mat, gizmo_transform, gizmo_transform);
+		Math3D.MatrixMultiply3(gizmo_scale_mat, top_transform_scaled_to_gizmo, top_transform_scaled_to_gizmo);
+
+		map<EditorObject, ref array<vector>> local_transforms_to_target = new map<EditorObject, ref array<vector>>();
+		foreach (EditorObject additional_drag_target: all_editor_objects) {
+			if (additional_drag_target == editor_object) {
+				continue;
+			}
+			
+			vector additional_drag_target_mat[4];
+			additional_drag_target.GetTopTransform(additional_drag_target_mat);
+			vector inv_additional_drag_target_mat[4];
+			Math3D.MatrixInvMultiply4(transform_without_scale, additional_drag_target_mat, inv_additional_drag_target_mat);
+			local_transforms_to_target[additional_drag_target] = {
+				inv_additional_drag_target_mat[0],
+				inv_additional_drag_target_mat[1],
+				inv_additional_drag_target_mat[2],
+				inv_additional_drag_target_mat[3]
+			};
+		}
+	}
+	
 	override void RegisterInteractionClips(inout notnull map<int, ref GizmoInteractionSource> clipping_infos)
 	{
-		super.RegisterInteractionClips(clipping_infos);
+		// no origin ball
+		//super.RegisterInteractionClips(clipping_infos);
 		
 		float BOX_WIDTH_HALF = BOX_WIDTH / 2;
 		float BOX_LENGTH_HALF = BOX_LENGTH / 3;
