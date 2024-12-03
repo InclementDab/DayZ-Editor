@@ -43,9 +43,22 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		}
 						
 		//float size = Math.Min(Math.Max(1300 / distancesq, 18), 24);
-		float size_01 = Math.InverseLerp(0, distancesq, m_MarkerDistSq);
-		size_01 = Math.Clamp(size_01, 0, 1);
-		SetSize(size_01);
+		float c = m_ViewDistance / screen_pos[2];
+		if (c < 6) {
+			c = 6;
+		}
+		
+		if (c > 28) {
+			// Perplexity came up with this and it looks kinda awesome but it wont work for this application
+			/*float t = (c - 32) / (128 - 32);  // Normalize to [0, 1] range
+		    t = t * t * (3 - 2 * t);  // Smoothstep function
+		    c = 32 + t * (128 - 32);*/   // Interpolate between 32 and 64
+
+			c = 28 + (c - 28) / 4;
+		}
+			
+		m_LayoutRoot.SetScreenSize(c, c);
+		
 		SetPos(screen_pos[0], screen_pos[1]);
 		bool show = m_Show && !GetEditor().IsMapActive();
 		Show(show);

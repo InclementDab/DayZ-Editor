@@ -79,7 +79,7 @@ modded class MissionGameplay
 	{
 		super.OnMissionStart();
 		// On Load unhide em all
-		CF.ObjectManager.UnhideAllMapObjects();
+		GetDayZGame().GetSuppressedObjectManager().UnsuppressAll();
 	}
 
 	override void OnMissionFinish()

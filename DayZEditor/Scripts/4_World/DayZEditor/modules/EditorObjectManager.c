@@ -220,7 +220,6 @@ class EditorObjectManagerModule : Managed
 	// Call to toggle selection
 	void ToggleSelection(notnull EditorObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::ToggleSelection");
 		if (target.IsSelected())
 			DeselectObject(target);
 		else
@@ -230,7 +229,6 @@ class EditorObjectManagerModule : Managed
 	// Call to clear selection
 	void ClearSelection()
 	{
-		EditorLog.Trace("EditorObjectManager::ClearSelection");
 		foreach (EditorObject editor_object: m_SelectedObjects) {
 			if (editor_object) {
 				DeselectObject(editor_object);
@@ -258,6 +256,7 @@ class EditorObjectManagerModule : Managed
 	void UnhideMapObject(int target)
 	{
 		m_EditorDeletedObjectRefs.Remove(target);
+		delete m_DeletedObjects[target]; // what happens when you have refs everywhere
 		m_DeletedObjects.Remove(target);
 	}
 
@@ -275,7 +274,6 @@ class EditorObjectManagerModule : Managed
 
 	void DeselectHiddenObject(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::DeselectHiddenObject");
 		m_SelectedDeletedObjects.RemoveEditorDeletedObject(target);
 		EditorEvents.DeletedObjectDeselected(this, target);
 		target.OnDeselected();
@@ -283,7 +281,6 @@ class EditorObjectManagerModule : Managed
 
 	void ToggleHiddenObjectSelection(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::ToggleHiddenObjectSelection");
 		if (target.IsSelected())
 			DeselectHiddenObject(target);
 		else
@@ -320,7 +317,11 @@ class EditorObjectManagerModule : Managed
 
 	bool IsObjectHidden(Object object)
 	{
-		return (CF.ObjectManager.IsMapObjectHidden(object));
+		if (!object) {
+			return true; // i mean i guess its hidden /shrug
+		}
+		
+		return (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(object));
 	}
 
 	EditorObjectMap GetSelectedObjects()

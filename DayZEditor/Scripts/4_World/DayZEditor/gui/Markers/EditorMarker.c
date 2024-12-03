@@ -3,6 +3,8 @@ class EditorMarker: ScriptView
 	static EditorMarker PressedButton;
 	static int PressedButtonButton = -1;
 	static ref array<EditorMarker> s_AllMarkers = {};
+	
+	protected float m_ViewDistance;
 
 	protected Editor m_Editor = GetEditor();
 	protected bool m_Show = true;
@@ -12,6 +14,8 @@ class EditorMarker: ScriptView
 	void EditorMarker()
 	{
 		SetHighlighted(0);
+		
+		m_ViewDistance = GetEditor().GetCameraSettings().ViewDistance;
 
 		if (!s_AllMarkers) {
 			s_AllMarkers = {};
@@ -32,7 +36,6 @@ class EditorMarker: ScriptView
 		// Offset to center of marker
 		float w, h;		
 		m_LayoutRoot.GetScreenSize(w, h);
-		
 		m_LayoutRoot.SetScreenPos(x - w / 2, y - h / 2);
 	}
 	

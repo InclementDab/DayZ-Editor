@@ -45,8 +45,10 @@ class EditorDeletedObject: EditorWorldObject
 		m_EditorDeletedListItem = new EditorDeletedListItem(this);		
 		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
 		
+		GetDayZGame().GetSuppressedObjectManager().Suppress(m_WorldObject);
 		
-		CF.ObjectManager.HideMapObject(m_WorldObject);
+		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+		m_EditorDeletedObjectWorldMarker.Show(false);
 	}
 	
 	void ~EditorDeletedObject()
@@ -56,9 +58,11 @@ class EditorDeletedObject: EditorWorldObject
 			OnDeselected();
 		}
 		
-		CF.ObjectManager.UnhideMapObject(m_WorldObject);
+		if (GetDayZGame() && GetDayZGame().GetSuppressedObjectManager()) {
+			GetDayZGame().GetSuppressedObjectManager().Unsupress(m_WorldObject);
+		}
+		
 		delete m_EditorDeletedListItem;
-		delete m_EditorDeletedObjectWorldMarker;
 	}
 	
 	EditorDeletedObjectData GetData()
@@ -79,23 +83,24 @@ class EditorDeletedObject: EditorWorldObject
 	void OnSelected()
 	{
 		m_IsSelected = true;
-		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+		
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Select();
 		}
 		
-		CF.ObjectManager.UnhideMapObject(m_WorldObject, false);
+		// Temporarily unsuppress
+		GetDayZGame().GetSuppressedObjectManager().Unsupress(m_WorldObject);
 	}
 	
 	void OnDeselected()
 	{
 		m_IsSelected = false;
-		delete m_EditorDeletedObjectWorldMarker;
+		
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Deselect();
 		}
 		
-		CF.ObjectManager.HideMapObject(m_WorldObject, false);
+		GetDayZGame().GetSuppressedObjectManager().Suppress(m_WorldObject);
 	}
 	
 	bool IsSelected()
