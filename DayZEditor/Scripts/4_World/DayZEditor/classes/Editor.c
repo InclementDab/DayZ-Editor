@@ -1325,18 +1325,49 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		if (!IsPlacing() && !IsDragging() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor() && !GetSelectedObjects().Count()) {
-			GetEditorHud().CreateDelayedTooltip(null, File.GetName(target.GetType()), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", target.GetShapeName()));
+		string type = target.GetType();
+		EditorPlaceableItem replaceable_item = GetReplaceableItem(target);
+		string replaceable_type = m_ObjectManager.ConvertP3dFileToPotentialObjectType(SystemPath.Format(target.GetShapeName()));
+		if (!type) {
+			type = replaceable_type;
 		}
 
-		m_EditorHudController.ObjectReadoutName = GetObjectName(target, component_index);
-		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
-		
-		if (m_EditorHudController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
+		if (!IsPlacing() && !IsDragging() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor() && !GetSelectedObjects().Count()) {			
+			//GetEditorHud().CreateDelayedTooltip(null, type, TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", target.GetShapeName()));
+		}
+
+		Building building = Building.Cast(target);
+		string component_type = "component";
+		if (building) {
+			if (building.GetDoorIndex(component_index) != -1) {
+				component_index = building.GetDoorIndex(component_index);
+				component_type = "door";
+			}
+		}
+
+		int interaction_layer = dBodyGetInteractionLayer(target);
+		string interaction_layer_name;
+		if (interaction_layer) {
+			if (interaction_layer & (interaction_layer - 1) == 0) {
+				interaction_layer_name = string.Format(", %1", typename.EnumToString(PhxInteractionLayers, interaction_layer), interaction_layer);
+			} else {
+				for (int i = 0; i < 32; i++) {
+					int j = (1 << i);
+					if (interaction_layer & j) {
+						interaction_layer_name += string.Format(", %1", typename.EnumToString(PhxInteractionLayers, j), j);
+					}
+				}
+			}
+		}
+	
+		m_EditorHudController.ObjectReadoutName = string.Format("%1 [%2: %3%4]", type, component_type, component_index, interaction_layer_name);
+		if (!replaceable_item) {
 			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
 		} else {
 			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
 		}
+
+		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		
 		return true;
 	}

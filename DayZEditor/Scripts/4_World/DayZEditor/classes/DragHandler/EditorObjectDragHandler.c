@@ -104,6 +104,8 @@ class EditorObjectDragHandler: EditorDragHandler
 		
 		vector camera_transform[4];
 		GetEditor().GetCamera().GetTransform(camera_transform);
+		
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 
 		vector transform[4];
 		target.GetBottomTransform(transform);

@@ -47,6 +47,7 @@ class EditorObjectManagerModule : Managed
 				type_lower.ToLower();
 				int scope = GetGame().ConfigGetInt(path + " " + type + " scope");
 				string model = SystemPath.Format(GetGame().ConfigGetTextOut(string.Format("%1 %2 model", path, type)));
+				model.ToLower();
 				// DayZ has a difficult time supporting leading slashes
 				if (model[0] == SystemPath.SEPERATOR) {
 					model = model.Substring(1, model.Length() - 1);
@@ -109,7 +110,9 @@ class EditorObjectManagerModule : Managed
 		// handle static objects
 		foreach (string model_path: paths) {
 			array<string> p3d_files = Directory.EnumerateFiles(model_path, "*.p3d");
-			foreach (string p3d_file: p3d_files) {		
+			foreach (string p3d_file_unformat: p3d_files) {
+				string p3d_file = p3d_file_unformat;
+				p3d_file.ToLower();	
 				string p3d_file_name = File.GetName(p3d_file);
 				
 				EditorPlaceableItem placeable_item_p3d = EditorPlaceableItem.Create(p3d_file);
