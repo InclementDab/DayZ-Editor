@@ -76,7 +76,7 @@ class EditorGizmo: Managed
 	
 	// Box sizes for cursor collision
 	const float BOX_WIDTH = 0.125;
-	const float BOX_WIDTH_LARGE = 0.165;
+	const float BOX_WIDTH_LARGE = 0.1875;
 	const float BOX_LENGTH = 2.0;
 	
 	protected Editor m_Editor;
@@ -92,10 +92,6 @@ class EditorGizmo: Managed
 	{
 		m_Gizmo = EntityAI.Cast(GetGame().CreateObjectEx(GetGizmoMesh(), vector.Zero, ECE_NONE));
 		RegisterInteractionClips(m_InteractionCollisions);
-
-#ifdef DIAG_DEVELOPER
-		//GetDayZGame().ReloadShape(m_Gizmo);
-#endif
 	}
 		
 	void ~EditorGizmo()
@@ -126,18 +122,13 @@ class EditorGizmo: Managed
 #endif
 		// todo, grabbing this every frame?
 		EditorObjectMap all_editor_objects = GetEditor().GetSelectedObjects();
-		EditorObject editor_object = all_editor_objects.GetElement(0);
+		EditorObject editor_object = all_editor_objects.GetElement(all_editor_objects.Count() - 1);
 		if (!editor_object || all_editor_objects.Count() == 0) {
 			m_InteractionIndex = -1;
 			m_DragOffset = vector.Zero;
 			return;
 		}
-		
-		// Check for interactions with other stuff here?
-		if (GetWidgetUnderCursor()) {
-			return;
-		}
-	
+			
 		vector top_transform[4];
 		editor_object.GetTopTransform(top_transform);
 		Ray cursor_ray = GetEditor().GetCursorRay();
@@ -305,7 +296,7 @@ class EditorTranslationGizmo: EditorGizmo
 		
 		// todo: copied from above?
 		EditorObjectMap all_editor_objects = GetEditor().GetSelectedObjects();
-		EditorObject editor_object = all_editor_objects.GetElement(0);
+		EditorObject editor_object = all_editor_objects.GetElement(all_editor_objects.Count() - 1);
 		if (!editor_object || all_editor_objects.Count() == 0) {
 			return;
 		}
@@ -537,6 +528,116 @@ class EditorRotationGizmo: EditorGizmo
 				inv_additional_drag_target_mat[3]
 			};
 		}
+		
+		switch (m_InteractionIndex) {
+			case INTERACTION_XZ_ROTATE: {
+				Plane3D xz_plane2 = Plane3D(top_transform[1], top_transform[3]);
+				vector xz_intersect = xz_plane2.Intersect(cursor_ray);				
+				if (vector.Distance(top_transform[3], xz_intersect) > 0.001) {
+					vector cursor_intersect_dir = vector.Direction(top_transform[3], xz_intersect);
+					Debug.DrawArrow(top_transform[3], top_transform[3] + cursor_intersect_dir * 10, 1, LinearColor.BLUE, ShapeFlags.ONCE);
+	
+					vector cursor_dir_mat[4];
+					cursor_intersect_dir.Normalize();
+					if (cursor_intersect_dir.Length() > 0 && Math.AbsFloat(vector.Dot(cursor_intersect_dir, top_transform[1])) != 1) {
+						cursor_dir_mat = {
+							top_transform[1] * cursor_intersect_dir,
+							top_transform[1],
+							cursor_intersect_dir,
+							top_transform[3]
+						};
+
+						Math3D.MatrixOrthogonalize4(cursor_dir_mat);
+	
+						//Math3D.MatrixMultiply3(scale_matrix, cursor_dir_mat, cursor_dir_mat);
+						top_transform = cursor_dir_mat;
+					}
+				}
+				
+				break;
+			}
+
+			case INTERACTION_YZ_ROTATE: {
+				Plane3D yz_plane2 = Plane3D(top_transform[0], top_transform[3]);
+				vector yz_intersect = yz_plane2.Intersect(cursor_ray);				
+				if (vector.Distance(top_transform[3], yz_intersect) > 0.001) {
+					vector cursor_yz_intersect_dir = vector.Direction(top_transform[3], yz_intersect);
+
+					vector cursor_yz_dir_mat[4];
+					cursor_yz_intersect_dir.Normalize();
+					if (cursor_yz_intersect_dir.Length() > 0 && Math.AbsFloat(vector.Dot(cursor_yz_intersect_dir, top_transform[0])) != 1) {
+						cursor_yz_dir_mat = {
+							top_transform[0],
+							cursor_yz_intersect_dir,
+							top_transform[0] * cursor_yz_intersect_dir,
+							top_transform[3]
+						};
+
+						Math3D.MatrixOrthogonalize4(cursor_yz_dir_mat);
+	
+						//Math3D.MatrixMultiply3(scale_matrix, cursor_yz_dir_mat, cursor_yz_dir_mat);
+						top_transform = cursor_yz_dir_mat;
+					}
+				}
+				
+				break;
+			}
+
+			case INTERACTION_XY_ROTATE: {
+				Plane3D xy_plane2 = Plane3D(top_transform[2], top_transform[3]);
+				vector xy_intersect = xy_plane2.Intersect(cursor_ray);				
+				if (vector.Distance(top_transform[3], xy_intersect) > 0.001) {
+					vector cursor_xy_intersect_dir = vector.Direction(top_transform[3], xy_intersect);
+
+					vector cursor_xy_dir_mat[4];
+					cursor_xy_intersect_dir.Normalize();
+					if (cursor_xy_intersect_dir.Length() > 0 && Math.AbsFloat(vector.Dot(cursor_xy_intersect_dir, top_transform[0])) != 1) {
+						cursor_yz_dir_mat = {
+							cursor_xy_intersect_dir,
+							top_transform[2] * cursor_xy_intersect_dir,
+							top_transform[2],
+							top_transform[3]
+						};
+
+						Math3D.MatrixOrthogonalize4(cursor_yz_dir_mat);
+	
+						//Math3D.MatrixMultiply3(scale_matrix, cursor_yz_dir_mat, cursor_yz_dir_mat);
+						top_transform = cursor_yz_dir_mat;
+					}
+				}
+				
+				break;
+			}
+		}
+
+
+		// Handle all child objects
+		foreach (EditorObject selected_object: all_editor_objects) {
+			if (selected_object == editor_object) {
+				continue;
+			}
+
+			array<vector> dyn_vec_arry = local_transforms_to_target[selected_object];
+			vector local_additional_mat[4] = {
+				dyn_vec_arry[0],
+				dyn_vec_arry[1],
+				dyn_vec_arry[2],
+				dyn_vec_arry[3]
+			};
+			
+			Math3D.MatrixOrthogonalize4(local_additional_mat);
+
+			vector output_additional_mat[4];
+			Math3D.MatrixMultiply4(transform_without_scale, local_additional_mat, output_additional_mat);
+			selected_object.SetTopTransform(output_additional_mat);
+		}
+		
+		editor_object.SetTopTransform(top_transform);
+		
+		//gizmo_transform[3] = cursor_intersect;
+		
+		m_Gizmo.SetTransform(gizmo_transform);
+		m_Gizmo.Update();
 		
 	}
 	

@@ -1315,7 +1315,7 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor() && !GetSelectedObjects().Count()) {
+		if (!IsPlacing() && !IsDragging() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor() && !GetSelectedObjects().Count()) {
 			GetEditorHud().CreateDelayedTooltip(null, File.GetName(target.GetType()), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", target.GetShapeName()));
 		}
 
