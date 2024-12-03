@@ -839,7 +839,7 @@ class Editor: Managed
 				return;
 			}
 			
-			if (GetEditor().IsCtrlDown() && m_ObjectUnderCursor) {
+			if (GetEditor().IsCtrlDown() && m_ObjectUnderCursor && !widget_under_cursor) {
 				EditorPlaceableItem placeable_object = GetReplaceableItem(m_ObjectUnderCursor);
 				if (placeable_object) {
 					ClearHand();
@@ -1196,12 +1196,12 @@ class Editor: Managed
 	
 	bool IsShiftDown()
 	{
-		return GetEditor().IsShiftDown() || KeyState(KeyCode.KC_RSHIFT);
+		return KeyState(KeyCode.KC_LSHIFT) || KeyState(KeyCode.KC_RSHIFT);
 	}
 	
 	bool IsCtrlDown()
 	{
-		return GetEditor().IsCtrlDown() || KeyState(KeyCode.KC_RCONTROL);
+		return KeyState(KeyCode.KC_LCONTROL) || KeyState(KeyCode.KC_RCONTROL);
 	}
 	
 	bool IsSurfaceWater( vector position )
@@ -1924,7 +1924,7 @@ class Editor: Managed
 			}
 			
 			GetStatistics().EditorRemovedObjects++;
-			m_ObjectManager.UnhideMapObject(deleted_object);
+			m_ObjectManager.UnhideMapObject(id);
 		}
 		
 		if (create_undo) {

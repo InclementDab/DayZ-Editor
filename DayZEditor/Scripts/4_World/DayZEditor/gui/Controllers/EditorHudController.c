@@ -363,6 +363,10 @@ class EditorHudController: EditorControllerBase
 		}
 		
 		for (int i = bottom; i < top; i++) {
+			if (!list[i]) {
+				continue;
+			}
+			
 			// if this element is filtered out
 			if (!list[i].FilterType(RightSearchBar.GetText())) {
 				continue;

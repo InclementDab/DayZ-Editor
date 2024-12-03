@@ -231,18 +231,22 @@ class EditorObjectManagerModule : Managed
 	void ClearSelection()
 	{
 		EditorLog.Trace("EditorObjectManager::ClearSelection");
-		foreach (EditorObject editor_object: m_SelectedObjects)
-			DeselectObject(editor_object);
+		foreach (EditorObject editor_object: m_SelectedObjects) {
+			if (editor_object) {
+				DeselectObject(editor_object);
+			}
+		}
 
-		foreach (EditorDeletedObject deleted_object: m_SelectedDeletedObjects)
-			DeselectHiddenObject(deleted_object);
+		foreach (EditorDeletedObject deleted_object: m_SelectedDeletedObjects) {
+			if (deleted_object) {
+				DeselectHiddenObject(deleted_object);
+			}
+		}
 	}
 
 	// Hidden object stuff
 	void HideMapObject(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::HideMapObject");
-
 		// strong ref
 		m_EditorDeletedObjectRefs[target.GetID()] = target;
 
@@ -253,27 +257,17 @@ class EditorObjectManagerModule : Managed
 
 	void UnhideMapObject(int target)
 	{
-		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
-		m_DeletedObjects.Remove(target);
-
-		// remove strong ref		
-		delete m_EditorDeletedObjectRefs[target];
 		m_EditorDeletedObjectRefs.Remove(target);
+		m_DeletedObjects.Remove(target);
 	}
 
 	void UnhideMapObject(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::UnhideMapObject");
-		m_DeletedObjects.RemoveEditorDeletedObject(target);
-
-		// remove strong ref
-		delete m_EditorDeletedObjectRefs[target.GetID()];
-		m_EditorDeletedObjectRefs.Remove(target.GetID());
+		UnhideMapObject(target.GetID());
 	}
 
 	void SelectHiddenObject(notnull EditorDeletedObject target)
 	{
-		EditorLog.Trace("EditorObjectManager::SelectHiddenObject");
 		m_SelectedDeletedObjects.InsertEditorDeletedObject(target);
 		EditorEvents.DeletedObjectSelected(this, target);
 		target.OnSelected();
