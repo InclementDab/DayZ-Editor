@@ -4,6 +4,7 @@ class EditorListItem: ScriptView
 	protected WrapSpacerWidget ListItem;
 	protected ButtonWidget ListItemShow;
 	
+	TextWidget ListItemLabel;
 	// Can be null!
 	protected CheckBoxWidget ListItemFavorites;
 	

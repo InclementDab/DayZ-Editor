@@ -99,12 +99,14 @@ modded class MissionGameplay
 		}
 
 		vector center_pos = Editor.GetMapCenterPosition();
-		PlayerBase player = Editor.CreateDefaultCharacter(GetGame().CreateRandomPlayer(), Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 500));
+		vector start_pos = Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 3500);
+		PlayerBase player = Editor.CreateDefaultCharacter(GetGame().CreateRandomPlayer(), start_pos);
 		if (!player) {
 			Error("Player was not created, exiting");
 			return;
 		}
 
+		// Make sure to select player immediately so they can be controlled
 		GetGame().SelectPlayer(null, player);
 
 		g_Editor = new Editor(player);

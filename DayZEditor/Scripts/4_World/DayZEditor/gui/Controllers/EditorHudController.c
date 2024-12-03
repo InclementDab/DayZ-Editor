@@ -484,7 +484,7 @@ class EditorHudController: EditorControllerBase
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
 	{		
 		if (RecursiveGetParent(w, ScrollWidget)) {
-			if (KeyState(KeyCode.KC_LCONTROL)) {
+			if (GetEditor().IsCtrlDown()) {
 				ScrollWidget.Cast(w).VScrollStep(wheel * 10);
 				return true;
 			}

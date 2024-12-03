@@ -18,7 +18,12 @@ class EditorRotationCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Rotation";
+		return "Rotate";
+	}
+	
+	override LinearColor GetColor()
+	{
+		return LinearColor.RED;
 	}
 	
 	override ShortcutKeys GetShortcut() 

@@ -21,6 +21,11 @@ class EditorTranslationCommand: EditorCommand
 		return "Translate";
 	}
 	
+	override LinearColor GetColor()
+	{
+		return LinearColor.GREEN;
+	}
+	
 	override ShortcutKeys GetShortcut() 
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_NUMPAD1 };

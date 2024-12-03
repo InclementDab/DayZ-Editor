@@ -39,6 +39,7 @@ class EditorHud: ScriptView
 	Widget Menubar, ToolsWrapper, InfobarFrame, ToolbarFrame;
 	Widget PlacementsTabButton, DeletionsTabButton, LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
 	Widget CameraPanel;
+	Widget LeftbarPanelSearchBarPanel, RightPanelSearchBarPanel, TabPanel;
 		
 	CanvasWidget EditorCanvas;
 	MapWidget Map;
@@ -162,12 +163,8 @@ class EditorHud: ScriptView
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Smoothing", camera, "Smoothing", 0, 1));
 						
 		ShowScreenLogs(m_Editor.GetSettings().ShowScreenLogs);
-	}
-	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		super.OnWidgetScriptInit(w);
 		
+		// Set up toolbars based on screen size
 		int screen_w, screen_h;
 		GetScreenSize(screen_w, screen_h);
 		
@@ -182,10 +179,26 @@ class EditorHud: ScriptView
 		LeftbarWrapper.GetScreenSize(lbw_s_w, lbw_s_h);
 		RightbarWrapper.GetScreenSize(rbw_s_w, rbw_s_h);
 		
-		LeftbarWrapper.SetScreenSize(m_Editor.GetSettings().LeftBarPlacement, screen_h - ib_s_h - tb_s_h);
-		RightbarWrapper.SetScreenSize(m_Editor.GetSettings().RightBarPlacement, screen_h - ib_s_h - tb_s_h);
+		float bar_height = screen_h - ib_s_h - tb_s_h;
+		LeftbarWrapper.SetScreenSize(m_Editor.GetSettings().LeftBarPlacement, bar_height);
+		RightbarWrapper.SetScreenSize(m_Editor.GetSettings().RightBarPlacement, bar_height);
+		
+		// Leftbar scroll size
+		float lbs_s_w, lbs_s_h;
+		float lpsbp_s_w, lpsbp_s_h, sftp_s_w, sftp_s_h;
+		LeftbarPanelSearchBarPanel.GetScreenSize(lpsbp_s_w, lpsbp_s_h);
+		SearchFavoriteTabPanel.GetScreenSize(sftp_s_w, sftp_s_h);
+		LeftbarScroll.GetScreenSize(lbs_s_w, lbs_s_h);
+		LeftbarScroll.SetScreenSize(lbs_s_w, bar_height - sftp_s_h - lpsbp_s_h);
+		
+		// Rightbar scroll size
+		float tp_s_w, tp_s_h, rpsbp_s_h, rpsbp_s_w, rbs_s_w, rbs_s_h;
+		TabPanel.GetScreenSize(tp_s_w, tp_s_h);
+		RightPanelSearchBarPanel.GetScreenSize(rpsbp_s_w, rpsbp_s_h);
+		RightbarScroll.GetScreenSize(rbs_s_w, rbs_s_h);
+		RightbarScroll.SetScreenSize(rbs_s_w, bar_height - tp_s_h - rpsbp_s_h);
 	}
-	
+		
 	int ReloadBrushes(string filename)
 	{
 		filename = SystemPath.Format(filename);
@@ -206,7 +219,7 @@ class EditorHud: ScriptView
 	override void Update(float dt)
 	{
 		super.Update(dt);
-				
+
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 
@@ -313,7 +326,7 @@ class EditorHud: ScriptView
 		
 		EditorCanvas.Clear();
 		m_DragBoxDelayStart -= dt;
-		if (click_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1) {	
+		if (click_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers) {	
 			switch (m_SelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
@@ -491,7 +504,7 @@ class EditorHud: ScriptView
 				}
 
 				if (click_input.LocalDoubleClick()) {
-					LeftbarWrapper.GetSize(wr_s_w, wr_s_h);
+					RightbarWrapper.GetSize(wr_s_w, wr_s_h);
 					RightbarWrapper.SetSize(DEFAULT_BAR_WIDTH_PX, wr_s_h);
 				}
 
@@ -505,7 +518,7 @@ class EditorHud: ScriptView
 					LeftbarDrag0.SetColor(LinearColor.SLATE_BLUE);
 					LeftbarCollapsePanel.GetScreenSize(wr_col_s_w, wr_col_s_h);
 					LeftbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
-					float LeftWidth = Math.Clamp(mouse_x + wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
+					float LeftWidth = Math.Clamp(mouse_x + wr_col_s_w + 25, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
 					LeftbarWrapper.SetScreenSize(LeftWidth, wr_s_h);
 					m_Editor.GetSettings().LeftBarPlacement = LeftWidth;
 					break;
@@ -515,8 +528,8 @@ class EditorHud: ScriptView
 					RightbarDrag0.SetColor(LinearColor.SLATE_BLUE);
 					RightbarCollapsePanel.GetScreenSize(wr_col_s_w, wr_col_s_h);
 					RightbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
-					float RightWidth = Math.Clamp(screen_x - mouse_x - wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
-					RightbarWrapper.SetScreenSize(Math.Clamp(screen_x - mouse_x - wr_col_s_w, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX), wr_s_h);
+					float RightWidth = Math.Clamp(screen_x - mouse_x + wr_col_s_w + 25, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
+					RightbarWrapper.SetScreenSize(RightWidth, wr_s_h);
 					m_Editor.GetSettings().RightBarPlacement = RightWidth;
 					break;
 				}

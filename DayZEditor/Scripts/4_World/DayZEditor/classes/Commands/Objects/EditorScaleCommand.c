@@ -21,6 +21,11 @@ class EditorScaleCommand: EditorCommand
 		return "Scale";
 	}
 	
+	override LinearColor GetColor()
+	{
+		return LinearColor.BLUE;
+	}
+	
 	override ShortcutKeys GetShortcut() 
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_NUMPAD3 };

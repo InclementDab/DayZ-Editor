@@ -96,7 +96,7 @@ class EditorCameraClassic: EditorCamera
 			return;
 		}
 		
-		if (!KeyState(KeyCode.KC_LCONTROL)) {
+		if (!GetEditor().IsCtrlDown()) {
 			float forward = input.LocalValue("EditorCameraForward") - input.LocalValue("EditorCameraBack");
 			float strafe = input.LocalValue("EditorCameraRight") - input.LocalValue("EditorCameraLeft");
 			float altitude = input.LocalValue("EditorCameraUp") - input.LocalValue("EditorCameraDown");
@@ -118,7 +118,7 @@ class EditorCameraClassic: EditorCamera
 			}		
 		}
 		
-		if (KeyState(KeyCode.KC_LSHIFT)) {
+		if (GetEditor().IsShiftDown()) {
 			zoomAmt *= 0.1;
 		} else {
 			zoomAmt *= 0.01;

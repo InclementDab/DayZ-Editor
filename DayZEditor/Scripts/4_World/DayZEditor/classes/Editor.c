@@ -839,7 +839,7 @@ class Editor: Managed
 				return;
 			}
 			
-			if (KeyState(KeyCode.KC_LCONTROL) && m_ObjectUnderCursor) {
+			if (GetEditor().IsCtrlDown() && m_ObjectUnderCursor) {
 				EditorPlaceableItem placeable_object = GetReplaceableItem(m_ObjectUnderCursor);
 				if (placeable_object) {
 					ClearHand();
@@ -858,7 +858,7 @@ class Editor: Managed
 					EditorObject select_object = EditorObject.s_AllByObject[cursor_raycast.Hit];
 					if (select_object) {
 						// We want to Toggle selection if you are holding control
-						if (KeyState(KeyCode.KC_LCONTROL)) {
+						if (GetEditor().IsCtrlDown()) {
 							ToggleSelection(select_object);
 							return;
 						} 
@@ -884,7 +884,7 @@ class Editor: Managed
 
 		if (middle_click_input.LocalPress()) {
 			// Ctrl + Middle Mouse logic
-			if (KeyState(KeyCode.KC_LCONTROL)) {
+			if (GetEditor().IsCtrlDown()) {
 				if (m_ObjectUnderCursor) {			
 					ClearSelection();
 					if (GetEditorObject(m_ObjectUnderCursor)) {
@@ -904,11 +904,11 @@ class Editor: Managed
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
 				
 				float factor = 9;
-				if (KeyState(KeyCode.KC_LSHIFT)) {
+				if (GetEditor().IsShiftDown()) {
 					factor /= 5;
 				}
 				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
+				if (GetEditor().IsCtrlDown()) {
 					factor *= 5;
 				}
 				
@@ -1194,6 +1194,16 @@ class Editor: Managed
 		return false;
 	}
 	
+	bool IsShiftDown()
+	{
+		return GetEditor().IsShiftDown() || KeyState(KeyCode.KC_RSHIFT);
+	}
+	
+	bool IsCtrlDown()
+	{
+		return GetEditor().IsCtrlDown() || KeyState(KeyCode.KC_RCONTROL);
+	}
+	
 	bool IsSurfaceWater( vector position )
 	{
 		CGame game = GetGame();
@@ -1380,7 +1390,7 @@ class Editor: Managed
 		m_PlacingObjects[world_object] = hand_data;
 		EditorEvents.AddInHand(this, world_object, hand_data);
 		
-		if (!KeyState(KeyCode.KC_LSHIFT)) {
+		if (!GetEditor().IsShiftDown()) {
 			ClearSelection();
 		}
 		
@@ -1430,7 +1440,7 @@ class Editor: Managed
 						
 			EditorEvents.ObjectPlaced(this, editor_object);
 			
-			if (!KeyState(KeyCode.KC_LSHIFT)) { 
+			if (!GetEditor().IsShiftDown()) { 
 				RemoveFromHand(placing_object); 
 			}
 			
@@ -2054,7 +2064,7 @@ class Editor: Managed
 		vector position;
 		position[0] = Math.RandomFloat(x - radius, x + radius);
 		position[2] = Math.RandomFloat(z - radius, z + radius);
-		position[1] = GetGame().SurfaceY(position[0], position[2]) + 1;
+		position[1] = GetGame().SurfaceY(position[0], position[2]);
 		
 		//if (GetGame().SurfaceIsSea(position[0], position[2])) {
 			// try again

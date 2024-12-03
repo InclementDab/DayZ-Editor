@@ -182,7 +182,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		}
 		
 		// Handle XY Rotation
-		else if (KeyState(KeyCode.KC_LSHIFT)) {
+		else if (GetEditor().IsShiftDown()) {
 			Plane3D xy_plane = new Plane3D(up_dir, icon_position);
 			vector xy_intersect = xy_plane.Intersect(cursor_ray);
 			if (vector.Distance(icon_position, xy_intersect) > 0.001) {

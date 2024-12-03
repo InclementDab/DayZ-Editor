@@ -26,6 +26,11 @@ class EditorUnlockAllCommand: EditorCommand
 
 	override Symbols GetSymbol()
 	{
-		return Symbols.LOCK_OPEN;
+		return Symbols.KEY_SKELETON;
+	}
+	
+	override LinearColor GetColor()
+	{
+		return LinearColor.GOLD;
 	}
 }

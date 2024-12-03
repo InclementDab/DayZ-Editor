@@ -6,13 +6,8 @@ class EditorDeletedListItem: EditorListItem
 	{
 		m_EditorDeletedObject = deleted_object;
 		
-		string item_name = m_EditorDeletedObject.GetType();
-		if (item_name.Length() >= 30) {
-			item_name = item_name.Substring(0, 28) + "...";
-		}
-		
-		m_TemplateController.Label = string.Format("%1 (%2)", item_name, m_EditorDeletedObject.GetID());
-		m_TemplateController.NotifyPropertyChanged("Label");
+		string item_name = m_EditorDeletedObject.GetData().ModelName;		
+		ListItemLabel.SetText(string.Format("%1 (%2)", item_name, m_EditorDeletedObject.GetID()));
 		
 		//m_TemplateController.Icon = m_EditorDeletedObject.GetData().Icon;
 		//m_TemplateController.NotifyPropertyChanged("Icon");
@@ -25,19 +20,19 @@ class EditorDeletedListItem: EditorListItem
 
 			case MouseState.LEFT: {
 
-				if (KeyState(KeyCode.KC_LCONTROL)) {
+				if (GetEditor().IsCtrlDown()) {
 					GetEditor().ToggleHiddenObjectSelection(m_EditorDeletedObject);
 					return true;
 				} 
 				
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
+				if (!GetEditor().IsShiftDown()) {
 					GetEditor().ClearSelection();
 				}
 				
 				GetEditor().SelectHiddenObject(m_EditorDeletedObject);
 				
 				// Multi select handling
-				if (KeyState(KeyCode.KC_LSHIFT)) {
+				if (GetEditor().IsShiftDown()) {
 					int this_index, that_index;
 					EditorListItem tertiary_item;
 					ObservableCollection<EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData;
@@ -106,6 +101,6 @@ class EditorDeletedListItem: EditorListItem
 	
 	override string GetLayoutFile() 
 	{
-		return "DayZEditor/gui/Layouts/items/EditorDeletionsListItem.layout";
+		return "DayZEditor/gui/Layouts/items/EditorPlacedListItem.layout";
 	}
 }

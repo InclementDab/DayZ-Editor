@@ -44,7 +44,7 @@ class EditorObjectMarker: EditorMarker
 		switch (button) {
 			case MouseState.LEFT: {				
 				// We want to Toggle selection if you are holding control
-				if (KeyState(KeyCode.KC_LCONTROL)) {
+				if (GetEditor().IsCtrlDown()) {
 					m_Editor.ToggleSelection(m_EditorObject);
 					return true;
 				} 
@@ -55,7 +55,7 @@ class EditorObjectMarker: EditorMarker
 					return true;
 				}
 				
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
+				if (!GetEditor().IsShiftDown()) {
 					m_Editor.ClearSelection();
 				}
 				
@@ -82,7 +82,7 @@ class EditorObjectMarker: EditorMarker
 		switch (button) {			
 			case MouseState.RIGHT: {
 				
-				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
+				if (!m_EditorObject.IsSelected() && !GetEditor().IsShiftDown()) {
 					m_Editor.ClearSelection();
 				}
 				

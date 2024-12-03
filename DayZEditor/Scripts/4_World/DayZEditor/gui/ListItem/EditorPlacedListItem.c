@@ -5,9 +5,7 @@ class EditorPlacedListItem: EditorListItem
 	{ 
 		return m_EditorObject; 
 	}
-		
-	TextWidget ListItemLabel;
-	
+			
 	ImageWidget LockedImage, ToggleBoundingBoxImage, ToggleWorldMarkerImage;
 	
 	void EditorPlacedListItem(EditorObject editor_object)
@@ -58,19 +56,19 @@ class EditorPlacedListItem: EditorListItem
 
 			case MouseState.LEFT: {
 
-				if (KeyState(KeyCode.KC_LCONTROL)) {
+				if (GetEditor().IsCtrlDown()) {
 					GetEditor().ToggleSelection(m_EditorObject);
 					return true;
 				} 
 				
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
+				if (!GetEditor().IsShiftDown()) {
 					GetEditor().ClearSelection();
 				}
 				
 				GetEditor().SelectObject(m_EditorObject);
 				
 				// Multi select handling
-				if (KeyState(KeyCode.KC_LSHIFT)) {
+				if (GetEditor().IsShiftDown()) {
 					int this_index;
 					int that_index = -1;
 					EditorListItem tertiary_item;
@@ -112,7 +110,7 @@ class EditorPlacedListItem: EditorListItem
 			}
 			
 			case MouseState.RIGHT: {
-				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
+				if (!m_EditorObject.IsSelected() && !GetEditor().IsShiftDown()) {
 					GetEditor().ClearSelection();
 				}
 				
