@@ -18,6 +18,11 @@ class EditorDeletedObjectWorldMarker: EditorMarker
 			return;
 		}
 		
+		if (!m_Editor.GetEditorHud().IsVisible()) {
+			m_LayoutRoot.Show(false);
+			return;
+		}
+		
 		if (!m_EditorDeletedObject.IsSelected()) {
 			m_LayoutRoot.Show(false);
 			return;

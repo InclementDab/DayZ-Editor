@@ -151,7 +151,6 @@ class EditorBrush
 				editor_object_brushed.SetScale(Math.RandomFloat(brushes_data[id].param2.MinScale, brushes_data[id].param2.MaxScale));
 				editor_object_brushed.SetPosition(new_pos);
 			}
-			
 		}
 	}
 

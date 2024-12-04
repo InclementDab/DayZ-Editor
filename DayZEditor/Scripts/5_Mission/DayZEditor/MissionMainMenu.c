@@ -1,18 +1,30 @@
 modded class MissionMainMenu
 {
+	protected ref EditorMainMenu m_MainMenu;
+
 	override void OnUpdate(float timeslice)
 	{
 		super.OnUpdate(timeslice);
+		
 		if (m_IntroScenePC)
 	    	m_IntroScenePC.OnUpdate(timeslice);
 	}
 	
-	override void PlayMusic()
+	override void OnInit()
 	{
-		if (Editor.GetCurrentHoliday() == EditorHoliday.CHRISTMAS || Editor.GetCurrentHoliday() == EditorHoliday.NEWYEARS) {
-			return;
+		if (!m_NoCutscene)
+		{
+			CreateIntroScene();
 		}
 		
-		super.PlayMusic();
+		delete m_MainMenu;
+		m_MainMenu = new EditorMainMenu();
+		m_mainmenu = m_MainMenu.GetUIScriptViewMenu();
+		
+		GetOnInputDeviceChanged().Insert(OnInputDeviceChanged);
+	}
+	
+	override void PlayMusic()
+	{
 	}
 }
