@@ -143,6 +143,8 @@ class EditorSettings: ProfileSettings
 	int TimesOpened;
 	
 	float LeftBarPlacement = 380, RightBarPlacement = 380;
+	
+	string FileToLoad;
 
 	// Its a pseduo-controller, preferences dialogs!!
 	void PropertyChanged(string property_name)

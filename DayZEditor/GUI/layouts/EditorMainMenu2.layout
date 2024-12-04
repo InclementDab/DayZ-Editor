@@ -1171,7 +1171,8 @@ FrameWidgetClass main_menu_root {
   }
   WrapSpacerWidgetClass Licensing {
    clipchildren 0
-   position 100 0.062
+   ignorepointer 1
+   position 100 0.072
    size 0.45 30
    valign bottom_ref
    hexactpos 1
@@ -1185,7 +1186,7 @@ FrameWidgetClass main_menu_root {
    "Size To Content V" 1
    content_valign center
    {
-    TextWidgetClass version {
+    TextWidgetClass VersionText {
      visible 1
      clipchildren 0
      ignorepointer 1
@@ -1205,6 +1206,7 @@ FrameWidgetClass main_menu_root {
     TextWidgetClass copyright {
      visible 1
      clipchildren 0
+     ignorepointer 1
      position 80 40
      size 1 0.5
      valign bottom_ref
@@ -1214,6 +1216,23 @@ FrameWidgetClass main_menu_root {
      vexactsize 0
      priority 2
      text "#copyright_disclamer"
+     font "gui/fonts/sdf_MetronLight24"
+     "exact text" 0
+     "text valign" center
+    }
+    TextWidgetClass EditorText {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     position 80 60
+     size 1 0.5
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     priority 2
+     text "DayZ Editor created by InclementDab"
      font "gui/fonts/sdf_MetronLight24"
      "exact text" 0
      "text valign" center
@@ -1254,27 +1273,43 @@ FrameWidgetClass main_menu_root {
    vexactsize 1
    priority 5
   }
-  GridSpacerWidgetClass GridSpacerWidget0 {
+  PanelWidgetClass PanelWidget4 {
+   clipchildren 0
    ignorepointer 1
-   size 48 48
+   color 0.1725 0.1922 0.2118 0.4706
+   size 1 360
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 1
+   hexactsize 0
    vexactsize 1
-   scriptclass "ViewBinding"
-   Padding 0
-   Margin 7
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_halign center
-   content_valign center
-   Columns 12
-   Rows 1
+   style rover_sim_colorable
    {
-    ScriptParamsClass {
-     Binding_Name "MapViews"
+    GridSpacerWidgetClass GridSpacerWidget0 {
+     clipchildren 0
+     ignorepointer 1
+     size 48 48
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     Padding 0
+     Margin 7
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_halign center
+     content_valign center
+     Columns 12
+     Rows 1
+     {
+      ScriptParamsClass {
+       Binding_Name "MapViews"
+      }
+     }
     }
    }
   }

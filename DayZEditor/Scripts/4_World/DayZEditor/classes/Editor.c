@@ -268,6 +268,18 @@ class Editor: Managed
 		
 		// Enable default mode
 		SetMode(eEditorMode.Translation);
+		
+		// Load default file
+		if (GetSettings().FileToLoad != string.Empty) {			
+			if (File.Exists(GetSettings().FileToLoad)) {
+				EditorOpenCommand open_command = EditorOpenCommand.Cast(CommandManager[EditorOpenCommand]);
+				LoadSaveData(open_command.ImportFile(GetSettings().FileToLoad), true);
+				SetSaveFile(GetSettings().FileToLoad);
+			}
+			
+			GetSettings().FileToLoad = string.Empty;
+			GetSettings().Save();
+		}
 	}
 	
 	void ~Editor() 

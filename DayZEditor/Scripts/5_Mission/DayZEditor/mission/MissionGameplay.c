@@ -75,13 +75,6 @@ modded class MissionGameplay
 		m_Hud.InventoryShown = false;
 	}
 	
-	override void OnMissionStart()
-	{
-		super.OnMissionStart();
-		// On Load unhide em all
-		GetDayZGame().GetSuppressedObjectManager().UnsuppressAll();
-	}
-
 	override void OnMissionFinish()
 	{
 		super.OnMissionFinish();

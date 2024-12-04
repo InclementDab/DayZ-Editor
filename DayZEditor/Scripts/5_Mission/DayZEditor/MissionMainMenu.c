@@ -17,7 +17,10 @@ modded class MissionMainMenu
 			CreateIntroScene();
 		}
 		
-		delete m_MainMenu;
+		if (m_MainMenu) {
+			m_MainMenu.Close();
+		}
+		
 		m_MainMenu = new EditorMainMenu();
 		m_mainmenu = m_MainMenu.GetUIScriptViewMenu();
 		

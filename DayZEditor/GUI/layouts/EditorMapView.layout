@@ -1,7 +1,7 @@
 ButtonWidgetClass PanelWidget4 {
  visible 1
  clipchildren 0
- ignorepointer 0
+ ignorepointer 1
  color 0.1725 0.1922 0.2118 1
  position 0 0
  size 256 256
@@ -11,6 +11,167 @@ ButtonWidgetClass PanelWidget4 {
  vexactsize 1
  style Editor
  {
+  GridSpacerWidgetClass ButtonSpacer {
+   ignorepointer 1
+   position 0 0.5
+   size 1 0
+   hexactpos 1
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   Padding 0
+   Margin 0
+   "Size To Content V" 1
+   Columns 1
+   Rows 4
+   {
+    ButtonWidgetClass StartButton {
+     disabled 0
+     ignorepointer 1
+     color 0.098 0.098 0.098 1
+     position 10 10
+     size 53 32
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Colorable
+     {
+      TextWidgetClass TextWidget0 {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "#str_editor_edit"
+       font "gui/fonts/Metron16"
+       "text halign" center
+       "text valign" center
+      }
+      ImageWidgetClass ImageWidget0 {
+       ignorepointer 1
+       position 9 0
+       size 18 18
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "SymbolHandler"
+       mode blend
+       "src alpha" 1
+       "flip u" 1
+       {
+        ScriptParamsClass {
+         Symbol_Name "helmet_safety"
+         Symbol_Size 3
+        }
+       }
+      }
+     }
+    }
+    ButtonWidgetClass LoadButton {
+     disabled 0
+     ignorepointer 1
+     color 0.098 0.098 0.098 1
+     position 10 10
+     size 53 32
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Colorable
+     {
+      TextWidgetClass TextWidget1 {
+       ignorepointer 1
+       size 0.99 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "#str_editor_open..."
+       font "gui/fonts/Metron16"
+       "text halign" center
+       "text valign" center
+      }
+      ImageWidgetClass ImageWidget1 {
+       ignorepointer 1
+       position 9 0
+       size 18 18
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "SymbolHandler"
+       mode blend
+       "src alpha" 1
+       "flip u" 0
+       {
+        ScriptParamsClass {
+         Symbol_Name "folder"
+         Symbol_Size 3
+        }
+       }
+      }
+     }
+    }
+    ButtonWidgetClass PurchaseButton {
+     visible 0
+     disabled 0
+     ignorepointer 1
+     color 0.098 0.098 0.098 1
+     position 10 10
+     size 53 32
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Colorable
+     {
+      TextWidgetClass TextWidget2 {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Purchase Map..."
+       font "gui/fonts/Metron16"
+       "text halign" center
+       "text valign" center
+      }
+      ImageWidgetClass ImageWidget2 {
+       ignorepointer 1
+       position 9 0
+       size 18 18
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "SymbolHandler"
+       mode blend
+       "src alpha" 1
+       "flip u" 0
+       {
+        ScriptParamsClass {
+         Symbol_Name "cart_shopping"
+         Symbol_Size 2
+        }
+       }
+      }
+     }
+    }
+   }
+  }
   FrameWidgetClass ImageFr {
    ignorepointer 1
    size 256 256
@@ -22,14 +183,16 @@ ButtonWidgetClass PanelWidget4 {
    vexactsize 1
    {
     ImageWidgetClass Image {
-     ignorepointer 1
-     size 256 256
+     visible 1
+     ignorepointer 0
+     color 0.5882 0.5882 0.5882 1
+     size 1 1
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 1
-     vexactsize 1
+     hexactsize 0
+     vexactsize 0
      image0 "dz\structures\signs\tourist\data\karta_co.paa"
      "clamp mode" clamp
      "stretch mode" fit_w
@@ -63,6 +226,7 @@ ButtonWidgetClass PanelWidget4 {
    {
     TextWidgetClass Text {
      ignorepointer 1
+     color 0.5882 0.5882 0.5882 1
      size 48 22
      halign center_ref
      valign center_ref
@@ -76,100 +240,6 @@ ButtonWidgetClass PanelWidget4 {
      "size to text v" 0
      "text halign" center
      "text valign" center
-    }
-   }
-  }
-  GridSpacerWidgetClass GridSpacerWidget0 {
-   ignorepointer 1
-   position 0 1
-   size 1 48
-   hexactpos 1
-   vexactpos 0
-   hexactsize 0
-   vexactsize 1
-   Padding 0
-   Margin 0
-   "Size To Content V" 1
-   Columns 1
-   Rows 4
-   {
-    ButtonWidgetClass ButtonWidget0 {
-     color 0.1725 0.1922 0.2118 1
-     position 10 10
-     size 53 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style Colorable
-     {
-      TextWidgetClass TextWidget0 {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       text "Begin Editing"
-       font "gui/fonts/Metron16"
-       "text halign" center
-       "text valign" center
-      }
-     }
-    }
-    ButtonWidgetClass ButtonWidget1 {
-     color 0.1725 0.1922 0.2118 1
-     position 10 10
-     size 53 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style Colorable
-     {
-      TextWidgetClass TextWidget1 {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       text "Load File..."
-       font "gui/fonts/Metron16"
-       "text halign" center
-       "text valign" center
-      }
-     }
-    }
-    ButtonWidgetClass ButtonWidget2 {
-     color 0.1725 0.1922 0.2118 1
-     position 10 10
-     size 53 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style Colorable
-     {
-      TextWidgetClass TextWidget2 {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       text "Purchase Map..."
-       font "gui/fonts/Metron16"
-       "text halign" center
-       "text valign" center
-      }
-     }
     }
    }
   }
