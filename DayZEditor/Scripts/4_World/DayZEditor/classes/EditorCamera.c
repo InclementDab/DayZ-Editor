@@ -31,6 +31,7 @@ class EditorCamera: Camera
 {
 	protected EditorCameraSettings m_EditorCameraSettings;
 	protected EditorCameraLight m_EditorCameraLight;
+	protected float m_CameraFovActual;
 
 	const float FOV_MIN = 0.0174533; // 1 deg
 	const float FOV_MAX = 2.44346; // 140 deg
@@ -69,11 +70,12 @@ class EditorCamera: Camera
 	void EditorCamera()
 	{
 		m_EditorCameraSettings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
-		
+		m_CameraFovActual = m_EditorCameraSettings.FieldOfView2 * Math.DEG2RAD;
+
 		NearPlane = GetNearPlane();
 		Exposure = GetGame().GetWorld().GetEyeAccom();
-		FOV = m_EditorCameraSettings.FieldOfView * Math.RAD2DEG;
-		SetFOV(m_EditorCameraSettings.FieldOfView);
+		FOV = m_CameraFovActual * Math.RAD2DEG;
+		SetFOV(m_CameraFovActual);
 	}
 
 	void SetLightState(bool state)
@@ -101,8 +103,8 @@ class EditorCamera: Camera
 		switch (property_name) {
 						
 			case "FOV": {
-				SetFOV(FOV * Math.DEG2RAD);
-				m_EditorCameraSettings.FieldOfView = FOV * Math.DEG2RAD;
+				m_CameraFovActual = FOV * Math.DEG2RAD;
+				m_EditorCameraSettings.FieldOfView2 = FOV;
 				break;
 			}			
 			
@@ -163,9 +165,9 @@ class EditorCameraSettings: ProfileSettings
 	float Speed = EditorCamera.SPEED_DEFAULT;
 
 #ifndef COMPONENT_SYSTEM
-	[RegisterProfileSettingSlider("CAMERA", "FieldOfView", "Field Of View", EditorCamera.FOV_MIN, EditorCamera.FOV_MAX)]
+	[RegisterProfileSettingSlider("CAMERA", "FieldOfView2", "Field Of View", EditorCamera.FOV_MIN * Math.RAD2DEG, EditorCamera.FOV_MAX * Math.RAD2DEG)]
 #endif
-	float FieldOfView = EditorCamera.FOV_DEFAULT;
+	float FieldOfView2 = EditorCamera.FOV_DEFAULT * Math.RAD2DEG;
 
 #ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingSlider("CAMERA", "ExposureLevel", "Exposure Level", EditorCamera.EXPOSURE_MIN, EditorCamera.EXPOSURE_MAX)]
@@ -197,9 +199,8 @@ class EditorCameraSettings: ProfileSettings
 class EditorCamera_V2: EditorCamera
 {	
 	protected float m_CameraFovVelocity[1];
-	protected float m_CameraFovActual;
 		
-	float Speed = GetEditor().GetSettings().CameraSpeed;
+	float Speed;
 	float Boost_Multiplier = 6.5;
 	float Drag = 0.05;
 	const float Mouse_Sens = 35.0;
@@ -213,7 +214,7 @@ class EditorCamera_V2: EditorCamera
 	{
 		SetEventMask(EntityEvent.FRAME);
 		
-		m_CameraFovActual = m_EditorCameraSettings.FieldOfView;
+		Speed = m_EditorCameraSettings.Speed;
 	}
 	
 	override void EOnFrame(IEntity other, float timeSlice)
@@ -227,7 +228,11 @@ class EditorCamera_V2: EditorCamera
 			return;
 		}
 		
-		ECameraLockFlag camera_lock = GetEditor().GetCameraLockFlags();
+		ECameraLockFlag camera_lock = -1;
+		if (GetEditor()) {
+			camera_lock = GetEditor().GetCameraLockFlags();
+		}
+		
 		vector movement;
 		if ((camera_lock & ECameraLockFlag.LOCK_MOVE) == 0) {
 			float forward = input.GetInputByID(UAMoveForward).LocalValue() - input.GetInputByID(UAMoveBack).LocalValue();
@@ -277,11 +282,6 @@ class EditorCamera_V2: EditorCamera
 			rotation = vector.Zero;
 		}
 		
-		if (fov != 0) {
-			m_EditorCameraSettings.FieldOfView = Math.Clamp(m_EditorCameraSettings.FieldOfView + fov, FOV_MIN, FOV_MAX);
-			m_EditorCameraSettings.Save();
-		}
-
 		if (teleport) {
 			Ray cursor_ray = GetEditor().GetCursorRayModeSafe();
 			Raycast cursor_ray_cast = GetEditor().GetCursorRaycastModeSafe();
@@ -295,7 +295,6 @@ class EditorCamera_V2: EditorCamera
 			target[1] = GetGame().SurfaceY(target[0], target[2]) + y_height;
 
 			m_Impulse = target - transform[3];
-			//transform[3] = target;
 		}
 
 		if (m_Impulse.Length() > 0.01) {
@@ -334,10 +333,10 @@ class EditorCamera_V2: EditorCamera
 		// FOV velocity
 		float p[1];
 		copyarray(p, m_CameraFovVelocity);		
-		m_CameraFovActual = Math.SmoothCD(m_CameraFovActual, m_EditorCameraSettings.FieldOfView + zoom * FOV_ZOOM_AMT, p, 0.05, 800 * (m_EditorCameraSettings.SmoothingLevel + 0.5), timeSlice);
+		m_CameraFovActual = Math.SmoothCD(m_CameraFovActual, m_EditorCameraSettings.FieldOfView2 * Math.DEG2RAD + zoom * FOV_ZOOM_AMT, p, 0.05, 800 * (m_EditorCameraSettings.SmoothingLevel + 0.5), timeSlice);
 
 		// Apply
-		//SetFOV(m_CameraFovActual);
+		SetFOV(m_CameraFovActual);
 		SetTransform(transform);
 		if (m_EditorCameraLight) {
 			m_EditorCameraLight.SetTransform(transform);
@@ -347,7 +346,9 @@ class EditorCamera_V2: EditorCamera
 		GetGame().GetWorld().SetViewDistance(m_EditorCameraSettings.ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(m_EditorCameraSettings.ViewDistance);
 		
-		GetEditor().GetStatistics().DistanceFlown += timeSlice * speed;
+		if (GetEditor()) {
+			GetEditor().GetStatistics().DistanceFlown += timeSlice * speed;
+		}
 	}
 
 	void LerpCameraPosition(vector targetpos, float time)

@@ -858,7 +858,7 @@ class Editor: Managed
 
 		float distance_traversed = GetCameraSettings().Speed * dt;
 
-		m_CameraTrackLerpNorm = (m_CameraTrackLerpNorm * track_length + distance_traversed) / track_length
+		m_CameraTrackLerpNorm = (m_CameraTrackLerpNorm * track_length + distance_traversed) / track_length;
 		if (m_CameraTrackLerpNorm > 1.0) {
 			m_CameraTrackIndex++;
 			m_CameraTrackLerpNorm = 0.0;
@@ -2391,7 +2391,7 @@ class Editor: Managed
 		
 		array<EditorCameraTrack> camera_tracks = GetObjectManager().GetCameraTracks();
 		foreach (EditorCameraTrack track: camera_tracks) {
-			save_data.CameraTracks.Insert(track.GetData());
+			save_data.CameraTracks.Insert(EditorCameraTrackData.Cast(track.GetData()));
 		}
 		
 		return save_data;

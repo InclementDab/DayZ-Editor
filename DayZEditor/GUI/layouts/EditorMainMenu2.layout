@@ -12,7 +12,7 @@ FrameWidgetClass main_menu_root {
  priority 951
  {
   WrapSpacerWidgetClass play_panel_root {
-   visible 1
+   visible 0
    clipchildren 1
    ignorepointer 1
    position 80 160
@@ -806,6 +806,7 @@ FrameWidgetClass main_menu_root {
    }
   }
   FrameWidgetClass settings_panel_root {
+   visible 0
    ignorepointer 1
    position 100 80
    size 260 40
@@ -955,7 +956,7 @@ FrameWidgetClass main_menu_root {
    }
   }
   ImageWidgetClass editor_logo_back {
-   visible 1
+   visible 0
    inheritalpha 1
    color 0.1176 0.1176 0.1176 0.7843
    position 138 75
@@ -1016,7 +1017,7 @@ FrameWidgetClass main_menu_root {
    wrap 1
   }
   FrameWidgetClass ModsDetailed {
-   visible 1
+   visible 0
    clipchildren 0
    ignorepointer 1
    position 100 340
@@ -1028,7 +1029,7 @@ FrameWidgetClass main_menu_root {
    priority 5
   }
   PanelWidgetClass last_server_info {
-   visible 1
+   visible 0
    ignorepointer 0
    color 0 0 0 0.549
    position 500 130
@@ -1169,78 +1170,8 @@ FrameWidgetClass main_menu_root {
     }
    }
   }
-  WrapSpacerWidgetClass Licensing {
-   clipchildren 0
-   ignorepointer 1
-   position 100 0.072
-   size 0.45 30
-   valign bottom_ref
-   hexactpos 1
-   vexactpos 0
-   hexactsize 0
-   vexactsize 1
-   priority 5
-   Padding 8
-   Margin 0
-   "Size To Content H" 1
-   "Size To Content V" 1
-   content_valign center
-   {
-    TextWidgetClass VersionText {
-     visible 1
-     clipchildren 0
-     ignorepointer 1
-     position 80 60
-     size 1 0.5
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     priority 2
-     text "#main_menu_version"
-     font "gui/fonts/sdf_MetronLight24"
-     "exact text" 0
-     "text valign" center
-    }
-    TextWidgetClass copyright {
-     visible 1
-     clipchildren 0
-     ignorepointer 1
-     position 80 40
-     size 1 0.5
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     priority 2
-     text "#copyright_disclamer"
-     font "gui/fonts/sdf_MetronLight24"
-     "exact text" 0
-     "text valign" center
-    }
-    TextWidgetClass EditorText {
-     visible 1
-     clipchildren 0
-     ignorepointer 1
-     position 80 60
-     size 1 0.5
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     priority 2
-     text "DayZ Editor created by InclementDab"
-     font "gui/fonts/sdf_MetronLight24"
-     "exact text" 0
-     "text valign" center
-    }
-   }
-  }
   ImageWidgetClass vignette {
-   visible 1
+   visible 0
    ignorepointer 1
    color 0 0 0 0.7843
    size 1 1
@@ -1260,7 +1191,7 @@ FrameWidgetClass main_menu_root {
    nocache 1
   }
   FrameWidgetClass ModsSimple {
-   visible 1
+   visible 0
    clipchildren 1
    ignorepointer 1
    position 80 10
@@ -1273,41 +1204,302 @@ FrameWidgetClass main_menu_root {
    vexactsize 1
    priority 5
   }
-  PanelWidgetClass PanelWidget4 {
-   clipchildren 0
+  PanelWidgetClass SafeZone {
+   clipchildren 1
    ignorepointer 1
-   color 0.1725 0.1922 0.2118 0.4706
-   size 1 360
+   size 0.9 0.82
    halign center_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 1
-   style rover_sim_colorable
+   vexactsize 0
    {
-    GridSpacerWidgetClass GridSpacerWidget0 {
-     clipchildren 0
+    GridSpacerWidgetClass ButtonSpacer {
      ignorepointer 1
      size 48 48
-     halign center_ref
-     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass "ViewBinding"
-     Padding 0
+     Padding 14
      Margin 7
      "Size To Content H" 1
      "Size To Content V" 1
-     content_halign center
-     content_valign center
-     Columns 12
+     Columns 5
      Rows 1
      {
-      ScriptParamsClass {
-       Binding_Name "MapViews"
+      ButtonWidgetClass ExitButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass ExitButton_Icon {
+         ignorepointer 1
+         size 0.8 0.8
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "person_to_door"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+      ButtonWidgetClass SettingButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass SettingButton_Icon {
+         ignorepointer 1
+         size 0.8 0.8
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "gear"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+      ButtonWidgetClass DiscordButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass DiscordButton_Icon {
+         ignorepointer 1
+         size 0.8 0.8
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass ""
+         image0 "set:brands image:discord"
+         mode blend
+         "src alpha" 1
+        }
+       }
+      }
+      ButtonWidgetClass WikiButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass WikiButton_Icon {
+         ignorepointer 1
+         size 0.8 0.8
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass ""
+         image0 "set:brands image:github"
+         mode blend
+         "src alpha" 1
+        }
+       }
+      }
+      ButtonWidgetClass TwitterButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass TwitterButton_Icon {
+         ignorepointer 1
+         size 0.8 0.8
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass ""
+         image0 "set:brands image:twitter"
+         mode blend
+         "src alpha" 1
+        }
+       }
+      }
+     }
+    }
+    GridSpacerWidgetClass Licensing {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     position 0 0
+     size 0.45 42
+     halign right_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     priority 5
+     Padding 8
+     Margin 0
+     "Size To Content V" 1
+     content_halign right
+     content_valign bottom
+     Columns 1
+     {
+      TextWidgetClass VersionText {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       position 80 60
+       size 1 0.5
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       text "#main_menu_version"
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 0
+       "text halign" right
+       "text valign" center
+      }
+      TextWidgetClass copyright {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       position 80 40
+       size 1 0.5
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       text "#copyright_disclamer"
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 0
+       "text halign" right
+       "text valign" center
+      }
+      TextWidgetClass EditorText {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       position 80 60
+       size 1 0.5
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       text "DayZ Editor created by InclementDab"
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 0
+       "text halign" right
+       "text valign" center
+      }
+     }
+    }
+    ImageWidgetClass MapSelectorFrame {
+     visible 1
+     clipchildren 1
+     ignorepointer 1
+     color 0.5647 0.5843 0.6431 0.7843
+     position 0 0
+     size 1 360
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     imageTexture "{0655A1BF79F5B291}gui/textures/loading_screens/loading_screen_1_co.edds"
+     mode blend
+     "src alpha" 0
+     {
+      ImageWidgetClass MapSelectorBackground {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       color 0.5647 0.5843 0.6431 0.7843
+       position 0 0
+       size 1 360
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       imageTexture "{0655A1BF79F5B291}gui/textures/loading_screens/loading_screen_1_co.edds"
+       mode blend
+       "src alpha" 0
+      }
+      GridSpacerWidgetClass GridSpacerWidget1 {
+       clipchildren 0
+       ignorepointer 1
+       size 48 48
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 7
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       content_valign center
+       Columns 12
+       Rows 1
+       {
+        ScriptParamsClass {
+         Binding_Name "MapViews"
+        }
+       }
       }
      }
     }

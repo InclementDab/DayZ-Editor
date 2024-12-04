@@ -6,7 +6,10 @@ class EditorMainMenuController: ViewController
 class EditorMainMenu: ScriptViewMenu
 {
 	protected EditorMainMenuController m_TemplateController;
+	protected float m_MotionSicknessDt;
 
+	ImageWidget MapSelectorBackground;
+	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton;
 	TextWidget VersionText, EditorText;
 	
 	void EditorMainMenu()
@@ -36,6 +39,131 @@ class EditorMainMenu: ScriptViewMenu
 	override void Update(float dt)
 	{
 		super.Update(dt);
+		
+		int mouse_x, mouse_y, screen_x, screen_y;
+	    GetMousePos(mouse_x, mouse_y);
+	    GetScreenSize(screen_x, screen_y);
+		
+		m_MotionSicknessDt += dt;
+		if (m_MotionSicknessDt > (1 / 30)) {			
+			const float PARALLAX_AMOUNT = 0.5;
+	        float x_relative = ((mouse_x / screen_x) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2); // 5.0 is from my extra percent size / 2
+	        float y_relative = ((mouse_y / screen_y) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2);
+	        MapSelectorBackground.SetPos(x_relative * 10, y_relative * 10);
+			m_MotionSicknessDt = 0;
+		}
+	}
+
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		ImageWidget child_image = ImageWidget.Cast(w.GetChildren());
+		if (child_image) {
+			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_H, 1.0, 90);
+			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_W, 1.0, 90);
+		}
+		
+		switch (w) {
+			case ExitButton: {
+				child_image.SetColor(LinearColor.INDIAN_RED);
+				child_image.SetImage(3);
+				break;
+			}
+
+			case SettingButton: {
+				child_image.SetColor(LinearColor.LIGHT_BLUE);
+				child_image.SetImage(3);
+				break;
+			}
+
+			case DiscordButton: {
+				child_image.SetColor(LinearColor.DISCORD);
+				break;
+			}
+
+			case WikiButton: {
+				child_image.SetColor(LinearColor.GOLDENROD);
+				child_image.SetImage(3);
+				break;
+			}			
+			
+			case TwitterButton: {
+				child_image.SetColor(LinearColor.TWITTER);
+				break;
+			}
+		}
+
+		return super.OnMouseEnter(w, x, y);
+	}
+
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		ImageWidget child_image = ImageWidget.Cast(w.GetChildren());
+		switch (w) {
+			case ExitButton:
+			case WikiButton:
+			case SettingButton: {
+				child_image.SetImage(2);
+				break;
+			}
+		}
+
+		if (child_image) {
+			child_image.SetSize(0.8, 0.8);
+			WidgetAnimator.AnimateColor(child_image, -1, 100);
+		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
+
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return super.OnClick(w, x, y, button);
+		}
+		
+		switch (w) {
+			case ExitButton: {
+				ShowDialog("#main_menu_exit", "#main_menu_exit_desc", IDC_MAIN_QUIT, DBT_YESNO, DBB_YES, DMT_QUESTION);
+				break;
+			}
+
+			case SettingButton: {
+				EnterChildMenu(MENU_OPTIONS);
+				break;
+			}
+
+			case DiscordButton: {
+				GetGame().OpenURL("https:\/\/discord.gg\/dayz-editor");
+				break;
+			}
+
+			case WikiButton: {
+				GetGame().OpenURL("https:\/\/github.com\/InclementDab\/DayZ-Editor");
+				break;
+			}
+
+			case TwitterButton: {
+				GetGame().OpenURL("https:\/\/twitter.com\/InclementDab");
+				break;
+			}
+		}
+
+		return super.OnClick(w, x, y, button);
+	}
+
+	override bool OnModalResult(Widget w, int x, int y, int code, int result)
+	{
+		switch (code) {
+			case IDC_MAIN_QUIT: {
+				if (result == 2) {
+					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.RequestExit, IDC_MAIN_QUIT);
+				}
+
+				break;
+			}
+		}
+
+		return super.OnModalResult(w, x, y, code, result);
 	}
 
 	override bool UseMouse()

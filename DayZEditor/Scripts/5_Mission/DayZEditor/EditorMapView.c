@@ -56,8 +56,6 @@ class EditorMapView: ScriptView
 		Widget child = ButtonSpacer.GetChildren();
 		while (child) {
 			bool disabled = ((child.GetFlags() & WidgetFlags.DISABLED) == WidgetFlags.DISABLED);
-
-
 			if (disabled) {
 				child.GetChildren().SetColor(LinearColor.Create(255, 150, 150, 150));
 				child.GetChildren().GetSibling().SetColor(LinearColor.Create(255, 150, 150, 150));
@@ -87,7 +85,7 @@ class EditorMapView: ScriptView
 		        float x_relative = (((mouse_x - layout_s_x) / i_s_w) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2); // 5.0 is from my extra percent size / 2
 		        float y_relative = (((mouse_y - layout_s_y) / i_s_h) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2);
 				
-		        Image.SetPos(x_relative, y_relative);
+		        //Image.SetPos(x_relative, y_relative);
 				m_MotionSicknessDt = 0;
 			}
 		}
