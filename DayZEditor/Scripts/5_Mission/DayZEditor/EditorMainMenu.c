@@ -25,6 +25,12 @@ class EditorMainMenu: ScriptViewMenu
 		VersionText.SetText(string.Format("#main_menu_version %1", version));
 		
 		EditorText.SetText(string.Format("#STR_EDITOR_MAIN_MENU_VERSION %1, created by InclementDab", Editor.Version));
+		
+		// Update global login counter
+		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
+		RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
+		ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
+		ctx.POST(new RestCallbackBase(),"api\/update-login-counter", string.Format("{\"id\":%1}", uid));
 	}
 
 	override void Update(float dt)

@@ -3,10 +3,12 @@
 #endif
 class EditorStatistics: ProfileSettings
 {		
-	int EditorPlayTime;
+	int EditorPlayTime; // seconds
 	int EditorPlacedObjects;
 	int EditorRemovedObjects;
-	float EditorDistanceFlown; // storing in km
+	int EditorPlacedCameraTracks;
+	int EditorCameraTracksRidden;
+	float DistanceFlown; // meters
 	int CharactersControlled;
 	int CharactersEdited;
 }

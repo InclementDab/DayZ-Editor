@@ -46,7 +46,7 @@ ButtonWidgetClass PanelWidget4 {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       text "#str_editor_edit"
+       text "Start"
        font "gui/fonts/Metron16"
        "text halign" center
        "text valign" center

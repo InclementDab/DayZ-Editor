@@ -182,7 +182,10 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		}
 		
 		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", editor_object, string.Empty);
-		object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", editor_object, "Health", 1, 0, editor_object.GetWorldObject().GetMaxHealth()));
+		if (editor_object.GetWorldObject().HasDamageSystem()) {
+			object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", editor_object, "Health", 1, 0, editor_object.GetWorldObject().GetMaxHealth()));
+		}
+		
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", editor_object, "EditorOnly"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", editor_object, "Simulate"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", editor_object, "Locked"));

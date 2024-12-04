@@ -28,16 +28,11 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
-		if (m_Editor.GetSelectedObjects().Count() > 0) {
+		if (m_Editor.GetSelectedObjects().Count() > 0 || m_Editor.GetSelectedHiddenObjects().Count() > 0) {
 			m_Editor.ClearSelection();
 			return true;
 		}
-		
-		if (m_Editor.GetCameraTrackManager().GetSelectedTracks().Count() > 0) {
-			m_Editor.GetCameraTrackManager().ClearSelection();
-			return true;
-		}
-		
+				
 		if (m_Editor.GetEditorHud().IsMapVisible()) {
 			m_Editor.GetEditorHud().Map.Show(false);
 			return true;

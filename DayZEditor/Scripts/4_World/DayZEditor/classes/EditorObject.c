@@ -46,6 +46,7 @@ class EditorObject: EditorWorldObject
 		
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
+	ref ScriptInvoker OnUpdated = new ScriptInvoker();
 
 	void SetDisplayName(string display_name) 
 	{
@@ -342,6 +343,7 @@ class EditorObject: EditorWorldObject
 
 		Scale = (mat[0].Length() + mat[1].Length() + mat[2].Length()) / 3;
 		m_Data.Scale = Scale;
+		OnUpdated.Invoke();
 		//Update();
 	}
 	
@@ -409,6 +411,8 @@ class EditorObject: EditorWorldObject
 		Position = GetPosition();
 		Orientation = GetOrientation();
 		Scale = GetScale();
+
+		OnUpdated.Invoke();
 	}
 	
 	// EditorObjects can also be psuedo-controllers

@@ -27,8 +27,9 @@ class EditorHudController: EditorControllerBase
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
 	// Camera bindings
-	float CameraSmoothing = 50.0;
-	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
+	float CameraSmoothing = 0.35;
+	ref ObservableCollection<ref EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<ref EditorCameraTrackListItem>(this);
+	ref array<EditorCameraTrackListItem> SelectedCameraTracks;
 	
 	ref ObservableCollection<ref ScriptView> CameraControls = new ObservableCollection<ref ScriptView>(this);
 
@@ -318,39 +319,20 @@ class EditorHudController: EditorControllerBase
 		
 	void ButtonCreateFolderExecute(ButtonCommandArgs args) 
 	{
-		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
 		EditorCollapsibleListItem category(null);
 		RightbarPlacedData.Insert(category);
 	}	
 	
 	void CameraTrackToggleExecute(ButtonCommandArgs args) 
 	{
-		EditorLog.Trace("EditorHudController::CameraTrackToggleExecute");
 		CameraTrackWrapper.Show(!CameraTrackWrapper.IsVisible());
 	}
 
 	void CameraTrackInsertNode(ButtonCommandArgs args)
 	{
-		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
-		string name = "CameraTrack" + CameraTrackData.Count();
-		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
+		GetEditor().AddCameraTrack(GetEditor().GetCamera(), 1.0 + m_Editor.GetObjectManager().GetCameraTracks().Count());
 	}
-	
-	void OnCameraTrackStart()
-	{
-		CameraTrackRunButton.SetText("Stop");
-		CameraTrackRunButton.SetColor(COLOR_RED);
-		CameraTrackButtonOutline.SetColor(COLOR_RED);
-	}
-	
-	void OnCameraTrackStop()
-	{
-		CameraTrackRunButton.SetText("Start");
-		CameraTrackRunButton.SetColor(COLOR_WHITE_A);
-		CameraTrackButtonOutline.SetColor(COLOR_WHITE);
-		CameraTrackRunButton.SetState(1);
-	}
-		
+				
 	void DoMultiSelect(int index_0, int index_1, ObservableCollection<EditorListItem> list)
 	{
 		int bottom, top;

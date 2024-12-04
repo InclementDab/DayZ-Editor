@@ -347,7 +347,7 @@ class EditorCamera_V2: EditorCamera
 		GetGame().GetWorld().SetViewDistance(m_EditorCameraSettings.ViewDistance);
 		GetGame().GetWorld().SetObjectViewDistance(m_EditorCameraSettings.ViewDistance);
 		
-		GetEditor().GetStatistics().EditorDistanceFlown += timeSlice * speed;
+		GetEditor().GetStatistics().DistanceFlown += timeSlice * speed;
 	}
 
 	void LerpCameraPosition(vector targetpos, float time)

@@ -484,7 +484,7 @@ FrameWidgetClass EditorFrame {
            "Scrollbar V Left" 1
            {
             PanelWidgetClass LeftbarFiller {
-             ignorepointer 1
+             ignorepointer 0
              color 0.1412 0.1569 0.1804 1
              position 0 0
              size 1 1
@@ -857,7 +857,7 @@ FrameWidgetClass EditorFrame {
            "Scrollbar V" 1
            {
             PanelWidgetClass RightbarFiller {
-             ignorepointer 1
+             ignorepointer 0
              color 0.1412 0.1569 0.1804 1
              position 0 0
              size 1 1
@@ -1486,11 +1486,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorNewCommand"
-                }
-               }
               }
               ButtonWidgetClass OpenButton {
                visible 1
@@ -1538,11 +1533,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorOpenCommand"
                 }
                }
               }
@@ -1594,11 +1584,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorSaveCommand"
-                }
-               }
               }
               ButtonWidgetClass SaveAsButton {
                visible 1
@@ -1646,11 +1631,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorSaveAsCommand"
                 }
                }
               }
@@ -1745,11 +1725,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorUndoCommand"
-                }
-               }
               }
               ButtonWidgetClass RedoButton {
                clipchildren 1
@@ -1794,11 +1769,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorRedoCommand"
                 }
                }
               }
@@ -1892,11 +1862,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorCutCommand"
-                }
-               }
               }
               ButtonWidgetClass CopyButton {
                clipchildren 1
@@ -1947,11 +1912,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorCopyCommand"
-                }
-               }
               }
               ButtonWidgetClass PasteButton {
                clipchildren 1
@@ -1999,11 +1959,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorPasteCommand"
                 }
                }
               }
@@ -2088,11 +2043,6 @@ FrameWidgetClass EditorFrame {
                  filter 1
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorMagnetCommand"
-                }
-               }
               }
               ButtonWidgetClass GroundButton {
                clipchildren 1
@@ -2129,11 +2079,6 @@ FrameWidgetClass EditorFrame {
                  "clamp mode" clamp
                  "stretch mode" invalid
                  filter 1
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorGroundCommand"
                 }
                }
               }
@@ -2175,11 +2120,6 @@ FrameWidgetClass EditorFrame {
                  filter 1
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorSnapCommand"
-                }
-               }
               }
               ButtonWidgetClass CollisionButton {
                clipchildren 1
@@ -2218,11 +2158,6 @@ FrameWidgetClass EditorFrame {
                  "clamp mode" clamp
                  "stretch mode" invalid
                  filter 1
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorCollisionCommand"
                 }
                }
               }
@@ -2311,11 +2246,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorToggleLightCommand"
-                }
-               }
               }
               PanelWidgetClass TogglePlayerButton {
                visible 1
@@ -2357,11 +2287,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorTogglePlayerCommand"
                 }
                }
               }
@@ -2453,11 +2378,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorObjectSelectionCommand"
-                }
-               }
               }
               PanelWidgetClass BoxSelectionButton {
                clipchildren 1
@@ -2499,11 +2419,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorBoxSelectionCommand"
                 }
                }
               }
@@ -2549,11 +2464,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorEllipseSelectionCommand"
-                }
-               }
               }
               PanelWidgetClass LassoSelectionButton {
                clipchildren 1
@@ -2595,11 +2505,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorLassoSelectionCommand"
                 }
                }
               }
@@ -3048,11 +2953,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorLockManyCommand"
-                }
-               }
               }
               PanelWidgetClass UnlockButton {
                clipchildren 1
@@ -3096,11 +2996,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorUnlockManyCommand"
-                }
-               }
               }
               PanelWidgetClass UnlockAllButton {
                clipchildren 1
@@ -3142,11 +3037,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorUnlockAllCommand"
                 }
                }
               }
@@ -3238,11 +3128,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorTranslationCommand"
-                }
-               }
               }
               PanelWidgetClass RotationButton {
                clipchildren 1
@@ -3286,11 +3171,6 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorRotationCommand"
-                }
-               }
               }
               PanelWidgetClass ScaleButton {
                clipchildren 1
@@ -3332,11 +3212,6 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
-                }
-               }
-               {
-                ScriptParamsClass {
-                 CommandType "EditorScaleCommand"
                 }
                }
               }
@@ -3417,76 +3292,6 @@ FrameWidgetClass EditorFrame {
         }
        }
       }
-      WrapSpacerWidgetClass InfobarWrapper {
-       visible 0
-       clipchildren 1
-       ignorepointer 1
-       size 1 1
-       halign right_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       Padding 24
-       Margin 0
-       "Size To Content H" 1
-       content_halign center
-       content_valign bottom
-       {
-        FrameWidgetClass CameraTextVectorSpacer {
-         ignorepointer 1
-         position 0 0
-         size 0.002 22
-         hexactpos 0
-         vexactpos 0
-         hexactsize 0
-         vexactsize 1
-        }
-        FrameWidgetClass CinematicCameraFrame {
-         visible 0
-         ignorepointer 1
-         position 0 0
-         size 0.011 22
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 1
-         scriptclass ""
-         {
-          ButtonWidgetClass CinematicCameraButton {
-           size 18 18
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           {
-            ScriptParamsClass {
-             Relay_Command "CameraTrackToggleExecute"
-            }
-           }
-          }
-          ImageWidgetClass CinematicCameraIcon {
-           ignorepointer 1
-           position -4.19127 0.38252
-           size 25 23
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           image0 "set:dayz_editor_gui image:camera"
-           mode additive
-           "src alpha" 0
-           "flip u" 0
-           "flip v" 0
-           filter 1
-          }
-         }
-        }
-       }
-      }
       FrameWidgetClass FrameWidget0 {
        ignorepointer 1
        position 0.32 0
@@ -3502,8 +3307,7 @@ FrameWidgetClass EditorFrame {
          visible 1
          color 1 1 1 0.1569
          size 22 22
-         halign center_ref
-         valign center_ref
+         halign right_ref
          hexactpos 1
          vexactpos 1
          hexactsize 1
@@ -3530,6 +3334,47 @@ FrameWidgetClass EditorFrame {
              Symbol_Size 3
             }
            }
+          }
+         }
+        }
+        ButtonWidgetClass CinematicCameraButton {
+         color 1 1 1 0.1569
+         size 22 22
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Editor
+         {
+          ImageWidgetClass CinematicCameraIcon {
+           ignorepointer 1
+           color 0.5647 0.5647 0.5647 1
+           size 0.6 0.6
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "SymbolHandler"
+           image0 ""
+           mode additive
+           "src alpha" 1
+           "flip u" 0
+           "flip v" 0
+           filter 1
+           {
+            ScriptParamsClass {
+             Symbol_Name "train_track"
+             Symbol_Size 1
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "CameraTrackToggleExecute"
           }
          }
         }
@@ -4025,27 +3870,382 @@ FrameWidgetClass EditorFrame {
      }
     }
     WrapSpacerWidgetClass CameraTrackWrapper {
-     visible 0
+     visible 1
      ignorepointer 1
-     color 0.0196 0.0196 0.0196 0.7843
-     position 285 443
-     size 0.235 0
+     color 0.1412 0.1569 0.1804 0.9216
+     position 480 24
+     size 0.235 512
      halign right_ref
      valign bottom_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
-     vexactsize 0
+     vexactsize 1
      style Colorable
-     Padding 1
-     Margin 1
-     "Size To Content V" 1
+     Padding 0
+     Margin 0
+     content_halign right
+     content_valign bottom
      {
+      PanelWidgetClass CameraTrackButtonPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 24
+       halign center_ref
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass AddNodeButton {
+         position 0.02 0
+         size 90 20
+         halign right_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Empty
+         {
+          ImageWidgetClass AddNodeButton_Icon {
+           ignorepointer 1
+           size 18 18
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "SymbolHandler"
+           mode blend
+           "src alpha" 1
+           "flip u" 1
+           "flip v" 0
+           {
+            ScriptParamsClass {
+             Symbol_Name "video_plus"
+             Symbol_Size 2
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Relay_Command "m_Editor.CommandManager.CameraTrackAddNode"
+          }
+         }
+        }
+        GridSpacerWidgetClass CameraTrackControls {
+         ignorepointer 1
+         position 0.02 0
+         size 48 1
+         valign center_ref
+         hexactpos 0
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         content_halign right
+         Columns 5
+         Rows 1
+         {
+          ButtonWidgetClass CameraTrackPreviousButton {
+           position 0 1
+           size 26 20
+           halign right_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass ""
+           switch toggle
+           {
+            ImageWidgetClass CameraTrackPreviousButton_Icon {
+             ignorepointer 1
+             size 16 16
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             "stretch mode" fit_w_center
+             {
+              ScriptParamsClass {
+               Symbol_Name "backward_step"
+               Symbol_Size 3
+              }
+             }
+            }
+           }
+          }
+          ButtonWidgetClass CameraTrackRunButton {
+           position 0 1
+           size 26 20
+           halign right_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass ""
+           switch toggle
+           {
+            ImageWidgetClass CameraTrackRunButton_Icon {
+             ignorepointer 1
+             color 0 1 0 1
+             size 16 16
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             "stretch mode" fit_w_center
+             {
+              ScriptParamsClass {
+               Symbol_Name "play"
+               Symbol_Size 3
+              }
+             }
+            }
+           }
+          }
+          ButtonWidgetClass CameraTrackNextButton {
+           position 0 1
+           size 26 20
+           halign right_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass ""
+           switch toggle
+           {
+            ImageWidgetClass CameraTrackNextButton_Icon {
+             ignorepointer 1
+             size 16 16
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             "stretch mode" fit_w_center
+             {
+              ScriptParamsClass {
+               Symbol_Name "forward_step"
+               Symbol_Size 3
+              }
+             }
+            }
+           }
+          }
+          ButtonWidgetClass CameraTrackStopButton {
+           position 0 1
+           size 26 20
+           halign right_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass ""
+           switch toggle
+           {
+            ImageWidgetClass CameraTrackStopButton_Icon {
+             ignorepointer 1
+             color 1 0 0 1
+             size 16 16
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             "stretch mode" fit_w_center
+             {
+              ScriptParamsClass {
+               Symbol_Name "square"
+               Symbol_Size 3
+              }
+             }
+            }
+           }
+          }
+          ButtonWidgetClass CameraTrackRecordButton {
+           position 0 1
+           size 26 20
+           halign right_ref
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass ""
+           switch toggle
+           {
+            ImageWidgetClass CameraTrackRecordButton_Icon {
+             ignorepointer 1
+             size 16 16
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             "stretch mode" fit_w_center
+             {
+              ScriptParamsClass {
+               Symbol_Name "record_vinyl"
+               Symbol_Size 2
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass CameraTrackSliderPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass CameraTrackSmoothingText {
+         ignorepointer 1
+         position 0 0
+         size 0.33 20
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Smoothing"
+         font "gui/fonts/Metron16"
+         "text offset" 2 0
+         "size to text h" 0
+         "text halign" center
+         "text valign" center
+        }
+        SliderWidgetClass CameraTrackSmoothingSlider {
+         color 0.5882 0.5882 0.5882 0.7451
+         position 0.02 0
+         size 0.65 20
+         halign right_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Slider_1px_alpha_50
+         maximum 1
+         step 0.01
+         current 0.33
+         "marker thickness" 0.02
+         "fill in" 1
+         "draw marker" 1
+         "listen to input" 1
+         {
+          TextWidgetClass CameraTrackSmoothingReadout {
+           ignorepointer 1
+           size 35 16
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           text "0.05"
+           "text halign" center
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "CameraSmoothing"
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "CameraSmoothing"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
+      ScrollWidgetClass CameraNodeScrollBar {
+       ignorepointer 0
+       position 0 0
+       size 1 440
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       "Scrollbar V" 1
+       {
+        WrapSpacerWidgetClass CameraNodeList {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         Padding 4
+         Margin 0
+         "Size To Content V" 1
+         {
+          ScriptParamsClass {
+           Binding_Name "CameraTrackData"
+           Two_Way_Binding 1
+          }
+         }
+        }
+       }
+      }
       PanelWidgetClass CameraTrackPanel {
        ignorepointer 1
        color 0.0784 0.0784 0.0784 1
        position 0 0
-       size 1 25
+       size 1 24
        halign center_ref
        valign bottom_ref
        hexactpos 1
@@ -4056,7 +4256,7 @@ FrameWidgetClass EditorFrame {
        {
         TextWidgetClass CameraTrackPanelText {
          ignorepointer 1
-         size 1 1.15
+         size 1 1
          halign center_ref
          valign center_ref
          hexactpos 0
@@ -4064,7 +4264,7 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 0
          text "#STR_EDITOR_CINEMATIC_CAMERA"
-         font "gui/fonts/etelkatextpro"
+         font "gui/fonts/Metron16"
          "size to text v" 0
          "text halign" center
          "text valign" center
@@ -4108,186 +4308,6 @@ FrameWidgetClass EditorFrame {
              Relay_Command "CameraTrackToggleExecute"
             }
            }
-          }
-         }
-        }
-       }
-      }
-      ScrollWidgetClass CameraNodeScrollBar {
-       ignorepointer 1
-       color 0.3137 0.3137 0.3137 1
-       position 0 0
-       size 1 350
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       "Scrollbar V" 1
-       {
-        WrapSpacerWidgetClass CameraNodeList {
-         ignorepointer 1
-         size 1 1
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 0
-         vexactsize 0
-         scriptclass "ViewBinding"
-         Padding 4
-         Margin 0
-         "Size To Content V" 1
-         {
-          ScriptParamsClass {
-           Binding_Name "CameraTrackData"
-           Two_Way_Binding 1
-          }
-         }
-        }
-       }
-      }
-      PanelWidgetClass CameraTrackSliderPanel {
-       ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
-       position 0 0
-       size 1 22
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       style rover_sim_colorable
-       {
-        TextWidgetClass CameraTrackSmoothingText {
-         ignorepointer 1
-         position 2 0
-         size 200 20
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         text "#STR_EDITOR_CINEMATIC_CAMERA_SMOOTHING"
-         "text offset" 2 0
-         "size to text h" 1
-         "text valign" center
-        }
-        SliderWidgetClass CameraTrackSmoothingSlider {
-         color 0.5882 0.5882 0.5882 0.7451
-         position 5 0
-         size 250 20
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         style Slider_1px_alpha_50
-         step 0.1
-         "fill in" 1
-         "listen to input" 1
-         {
-          TextWidgetClass CameraTrackSmoothingReadout {
-           ignorepointer 1
-           size 35 16
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 1
-           vexactsize 1
-           scriptclass "ViewBinding"
-           text "0.05"
-           "text halign" center
-           "text valign" center
-           {
-            ScriptParamsClass {
-             Binding_Name "CameraSmoothing"
-            }
-           }
-          }
-         }
-         {
-          ScriptParamsClass {
-           Binding_Name "CameraSmoothing"
-           Two_Way_Binding 1
-          }
-         }
-        }
-       }
-      }
-      PanelWidgetClass CameraTrackButtonPanel {
-       ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
-       position 0 0
-       size 1 22
-       halign center_ref
-       valign bottom_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 1
-       style rover_sim_colorable
-       {
-        ButtonWidgetClass AddNodeButton {
-         position 20 1
-         size 90 20
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         text "Add Node"
-         {
-          PanelWidgetClass AddButtonOutline {
-           ignorepointer 1
-           color 0.7059 0.7059 0.7059 0.9961
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style blank
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.CameraTrackAddNode"
-          }
-         }
-        }
-        ButtonWidgetClass CameraTrackRunButton {
-         position 20 1
-         size 80 20
-         halign right_ref
-         valign bottom_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         text "Run"
-         switch toggle
-         {
-          PanelWidgetClass CameraTrackButtonOutline {
-           ignorepointer 1
-           color 0.7059 0.7059 0.7059 0.9961
-           size 1 1
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           style blank
-          }
-         }
-         {
-          ScriptParamsClass {
-           Relay_Command "m_Editor.CommandManager.CameraTrackRun"
           }
          }
         }

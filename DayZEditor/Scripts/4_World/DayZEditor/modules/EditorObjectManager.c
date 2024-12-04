@@ -28,6 +28,8 @@ class EditorObjectManagerModule : Managed
 
 	protected ref map<string, EditorPlaceableItem> m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>;
 
+	protected ref array<EditorCameraTrack> m_CameraTracks = {};
+
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dFile = new map<string, ref array<EditorPlaceableItem>>();
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dPath = new map<string, ref array<EditorPlaceableItem>>();
@@ -141,13 +143,66 @@ class EditorObjectManagerModule : Managed
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase));
 	}
 
+	EditorCameraTrack CreateCameraTrack(notnull EditorCameraTrackData camera_track_data)
+	{
+		EditorCameraTrack camera_track = new EditorCameraTrack(camera_track_data);
+
+		// strong ref
+		m_EditorObjectRefs[camera_track.GetID()] = camera_track;
+
+		// weak ref
+		m_CameraTracks.Insert(camera_track);
+		m_WorldObjectIndex.Insert(camera_track.GetWorldObject().GetID(), camera_track);	
+		
+		EditorEvents.ObjectCreated(this, camera_track);
+
+		GetEditor().GetStatistics().EditorPlacedCameraTracks++;
+		return camera_track;
+	}
+
+	bool DeleteCameraTrack(EditorCameraTrack camera_track)
+	{
+		if (!camera_track) {
+			return false;
+		}
+
+		m_CameraTracks.RemoveItem(camera_track);
+
+		m_SelectedObjects.RemoveEditorObject(camera_track);
+		EditorEvents.ObjectDeleted(this, camera_track);
+
+		// remove strong ref
+		m_EditorObjectRefs.Remove(camera_track.GetID());
+		return true;
+	}
+	
+	int GetCameraTrackIndex(notnull EditorCameraTrack camera_track)
+	{
+		return m_CameraTracks.Find(camera_track);
+	}
+
+	void SetCameraTrackIndex(notnull EditorCameraTrack camera_track, int index)
+	{
+		int old_index = m_CameraTracks.Find(camera_track);
+		if (old_index == index || old_index == -1) {
+			return;
+		}
+
+		m_CameraTracks.Remove(old_index);
+		m_CameraTracks.InsertAt(camera_track, index);
+
+		// Updates list index for menu elements
+		camera_track.SetListIndex(index);
+	}
+	
+	array<EditorCameraTrack> GetCameraTracks()
+	{
+		return m_CameraTracks;
+	}
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{
-		EditorLog.Trace("EditorObjectManager::CreateObject");
-
 		EditorObject editor_object = new EditorObject(editor_object_data);
-		if (!editor_object || !editor_object.GetWorldObject())
-		{
+		if (!editor_object.GetWorldObject()) {
 			return null;
 		}
 
@@ -171,8 +226,14 @@ class EditorObjectManagerModule : Managed
 			return;
 		}
 
+		EditorCameraTrack camera_track = EditorCameraTrack.Cast(target);
+		if (camera_track) {
+			m_CameraTracks.RemoveItem(camera_track);
+		} else {
+			m_PlacedObjects.RemoveEditorObject(target);
+		}
+
 		m_SelectedObjects.RemoveEditorObject(target);
-		m_PlacedObjects.RemoveEditorObject(target);
 		EditorEvents.ObjectDeleted(this, target);
 
 		// remove strong ref
@@ -297,6 +358,7 @@ class EditorObjectManagerModule : Managed
 		m_SelectedObjects.Clear();
 		m_DeletedObjects.ClearSafe();
 		m_SelectedDeletedObjects.ClearSafe();
+		m_CameraTracks.Clear();
 
 		m_EditorObjectRefs.Clear();
 		m_EditorDeletedObjectRefs.Clear();

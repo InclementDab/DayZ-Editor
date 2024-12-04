@@ -181,7 +181,7 @@ class EditorCameraClassic: EditorCamera
 		}
 				
 		SetTransform(transform);
-		GetEditor().GetStatistics().EditorDistanceFlown += vector.Distance(transform[3], original_position_unchanged) / 1000; //km
+		GetEditor().GetStatistics().DistanceFlown += vector.Distance(transform[3], original_position_unchanged); //km
 		
 		if (HideCursorOnDrag) {
 			if (input.LocalPress("UATempRaiseWeapon")) {

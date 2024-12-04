@@ -17,7 +17,7 @@ class EditorHud: ScriptView
 	protected EditorHudController m_TemplateController;
 	
 	// Layout Elements
-	Widget NotificationFrame, MapContainer, LoggerFrame;
+	Widget LoggerFrame;
 
 	Widget LeftbarWrapper, RightbarWrapper;
 	Widget LeftbarDrag, RightbarDrag;
@@ -35,9 +35,12 @@ class EditorHud: ScriptView
 	protected float m_DragBoxDelayStart;
 	protected SelectionMode m_SelectionMode;
 	protected bool m_ObjectSelectToggle;
+	protected vector m_DragOffset, m_MapPosition;
+	protected float m_MapScale = 1.0, m_ScaleActual = 1.0;
+	protected float m_ScaleVelocity[1];
 	
 	Widget Menubar, ToolsWrapper, InfobarFrame, ToolbarFrame;
-	Widget PlacementsTabButton, DeletionsTabButton, LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
+	Widget LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
 	Widget CameraPanel;
 	Widget LeftbarPanelSearchBarPanel, RightPanelSearchBarPanel, TabPanel;
 		
@@ -45,7 +48,9 @@ class EditorHud: ScriptView
 	MapWidget Map;
 	ImageWidget CameraMarker;
 	ButtonWidget CameraPanelButton;
-	
+	ButtonWidget CameraTrackPreviousButton, CameraTrackRunButton, CameraTrackNextButton, CameraTrackStopButton, CameraTrackRecordButton; 
+	ImageWidget CameraTrackPreviousButton_Icon, CameraTrackRunButton_Icon, CameraTrackNextButton_Icon, CameraTrackStopButton_Icon, CameraTrackRecordButton_Icon;
+
 	EditBoxWidget LeftSearchBar, RightSearchBar;
 	Widget LeftSearchBarIcon, RightSearchBarIcon;
 	ImageWidget LeftSearchBarIconIcon, RightSearchBarIconIcon;
@@ -53,7 +58,6 @@ class EditorHud: ScriptView
 	protected ref array<vector> m_LassoHistory = {};
 	
 	static const ref array<string> ThemedWidgetStrings = {
-		"GizmoTranslateButton",
 		"LeftbarPanelSearchBarIconButton",
 		"FavoritesTabButton",
 		"ShowPrivateButton",
@@ -264,7 +268,7 @@ class EditorHud: ScriptView
 #ifdef GIZMOS_ENABLED
 		
 		// todo: a cursor hide mask
-		//if (GetEditor().GetGizmo() && GetEditor().GetGizmo().IsInteracting()) {
+		//if (m_Editor.GetGizmo() && m_Editor.GetGizmo().IsInteracting()) {
 		//	ShowCursor(false);
 		//	return;
 		//}
@@ -286,7 +290,7 @@ class EditorHud: ScriptView
 		
 		// Dont want to toggle cursor on map
 		if (toggle_cursor.LocalPress()) {
-			if (!Map.IsVisible() && !GetEditor().IsPlayerControlled() && GetEditor().IsActive() && !(m_Dialog && EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
+			if (!Map.IsVisible() && !m_Editor.IsPlayerControlled() && m_Editor.IsActive() && !(m_Dialog && EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
 				ToggleCursor();
 			}
 		}
@@ -471,13 +475,13 @@ class EditorHud: ScriptView
 			m_TemplateController.RightbarFrame.Show(!is_curtain_open);
 		}
 		
-		if (zoom_up.LocalValue() && GetEditor().GetBrush()) {
+		if (zoom_up.LocalValue() && m_Editor.GetBrush()) {
 			m_TemplateController.BrushRadius += 5;
 			m_TemplateController.BrushRadius = Math.Clamp(m_TemplateController.BrushRadius, 1, 100);
 			m_TemplateController.NotifyPropertyChanged("BrushRadius");
 		}
 		
-		if (zoom_down.LocalValue() && GetEditor().GetBrush()) {
+		if (zoom_down.LocalValue() && m_Editor.GetBrush()) {
 			m_TemplateController.BrushRadius -= 5;
 			m_TemplateController.BrushRadius = Math.Clamp(m_TemplateController.BrushRadius, 1, 100);
 			m_TemplateController.NotifyPropertyChanged("BrushRadius");
@@ -543,12 +547,14 @@ class EditorHud: ScriptView
 				RightbarDrag0.SetColor(LinearColor.Create(40, 40, 40));
 			}
 		}
+
+		if (m_Editor.IsRunningCameraTrack()) {
+			Symbols.PAUSE.Load(CameraTrackRunButton_Icon);
+		} else {
+			Symbols.PLAY.Load(CameraTrackRunButton_Icon);
+		}
 	}
-	
-	protected vector m_DragOffset, m_MapPosition;
-	protected float m_MapScale = 1.0, m_ScaleActual = 1.0;
-	protected float m_ScaleVelocity[1];
-	
+		
 	protected void UpdateMap(notnull MapWidget map_widget, float dt)
 	{
 		int mouse_x, mouse_y;
@@ -626,6 +632,37 @@ class EditorHud: ScriptView
 				CameraPanel.Show(!CameraPanel.IsVisible());
 				break;
 			}
+
+			case CameraTrackPreviousButton: {
+
+				break;
+			}
+
+			case CameraTrackRunButton: {
+				if (m_Editor.IsRunningCameraTrack()) {
+					m_Editor.PauseCameraTrack();
+				} else {
+					m_Editor.StartCameraTrack();
+				}
+
+				break;
+			}
+
+			case CameraTrackNextButton: {
+
+				break;
+			}
+
+			case CameraTrackStopButton: {
+				m_Editor.StopCameraTrack();
+				break;
+			}
+
+			case CameraTrackRecordButton: {
+
+				break;
+			}
+			
 		}
 
 		return super.OnClick(w, x, y, button);
@@ -696,7 +733,7 @@ class EditorHud: ScriptView
 		switch (w) {
 			case LeftSearchBar:
 			case RightSearchBar: {
-				GetEditor().CancelPlacing();
+				m_Editor.CancelPlacing();
 				break;
 			}
 		}

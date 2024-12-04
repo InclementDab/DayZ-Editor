@@ -73,7 +73,7 @@ modded class MainMenu
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(GetGame().GetUIManager().ShowCursor, 0, 0, true);
 		
 		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
-		RestContext ctx = CreateRestApi().GetRestContext("http:\/\/us-nyc.pylex.xyz:8226\/");
+		RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 		ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 		ctx.POST(new RestCallbackBase(),"api\/update-login-counter", string.Format("{\"id\":%1}", uid));
 		

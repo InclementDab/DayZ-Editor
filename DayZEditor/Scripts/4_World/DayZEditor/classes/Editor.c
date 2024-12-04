@@ -1,35 +1,3 @@
-//Print(__LINE__);
-//Print(__FILE__); // useful shit // tools.pak?????
-//Print(__void);
-//local string test;
-//Print(FLT_MAX);
-//Print(FLT_MIN);
-//__NULL_FUNCT
-
-
-///
-///
-/// SYNC JUNCTURES?!?!?!?
-///
-///
-
-/*
-
-<rootclass name="DefaultWeapon" /> <!-- weapons -->
-<rootclass name="DefaultMagazine" /> <!-- magazines -->
-<rootclass name="Inventory_Base" /> <!-- inventory items -->
-<rootclass name="HouseNoDestruct" reportMemoryLOD="no" /> <!-- houses, wrecks -->
-<rootclass name="SurvivorBase" act="character" reportMemoryLOD="no" /> <!-- player characters -->
-<rootclass name="DZ_LightAI" act="character" reportMemoryLOD="no" /> <!-- infected, animals -->
-<rootclass name="CarScript" act="car" reportMemoryLOD="no" /> <!-- cars (sedan, hatchback, transitBus, V3S, ...) -->
-
-*/
-
-
-// One day, someone important (likely Adam) will look over this codebase with a sny look of shame on their face
-// if today is that day. fix it.
-// and message me your feedback on discord :)
-
 #ifdef DIAG_DEVELOPER
 #define GIZMOS_ENABLED
 #endif
@@ -70,7 +38,7 @@ class EditorWebApi: WebApiBase
 {
 	override string GetBaseUrl()
 	{
-		return "http:\/\/astro.pylex.xyz:10078\/";
+		return Editor.WEB_API_ENDPOINT;
 	}
 }
 
@@ -79,7 +47,9 @@ class Editor: Managed
 	/* Private Members */
 	protected Mission m_Mission;
 	protected PlayerBase m_Player, m_ControllingPlayer;
-			
+
+	const int STATISTICS_SAVE_INTERVAL = 10;
+	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc.pylex.xyz:8226\/";
 	static const ref array<string> DELETION_BLACKLIST = {
 		"BrushBase",
 		"BoundingBoxBase",
@@ -110,7 +80,6 @@ class Editor: Managed
 	// private references
 	protected EditorHudController 					m_EditorHudController;
 	protected ref EditorObjectManagerModule 			m_ObjectManager;	
-	protected EditorCameraTrackManagerModule		m_CameraTrackManager;
 	
 	protected int 									m_LastMouseDown;
 	protected bool m_MouseVisibleOnClose;
@@ -148,9 +117,6 @@ class Editor: Managed
 	// Inventory Editor
 	protected ref EditorInventoryEditorHud 		m_EditorInventoryEditorHud;
 	
-	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
-	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
-	
 	// Cached ray and raycast infos
 	protected ref Ray m_CameraRay;
 	protected ref Ray m_CursorRay;
@@ -161,6 +127,9 @@ class Editor: Managed
 	protected int m_ComponentIndexUnderCursor;
 
 	protected eEditorMode m_EditorMode;
+	protected int m_CameraTrackIndex = 0, m_CameraTrackState = 0;
+	protected float m_CameraTrackLerpNorm = 0.0;
+	protected vector m_CameraTransformPreTrackMotion[4];
 	
 	protected ref EditorObject m_PlayerObject;
 	
@@ -199,10 +168,7 @@ class Editor: Managed
 		if (!FileExist(brush_file) && !CopyFile(BRUSH_XML_FILE, brush_file)) {
 			Error(string.Format("Could not copy brush data to %1", brush_file));
 		}
-		
-		// Init Statistics
-		m_StatisticsSaveTimer.Run(10.0, this, "OnStatisticsSave", null, true);
-								
+										
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Loading Camera");
@@ -217,12 +183,7 @@ class Editor: Managed
 		// Object Manager
 		// Loads placeable objects	
 		g_Game.ReportProgress("Loading Placeable Objects");
-		m_ObjectManager 	= new EditorObjectManagerModule(this);
-		
-		// Camera Track Manager
-		g_Game.ReportProgress("Initializing Camera Track Manager");
-		EditorLog.Info("Initializing Camera Track Manager");
-		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
+		m_ObjectManager 	= new EditorObjectManagerModule(this);	
 		
 		// Command Manager
 		g_Game.ReportProgress("Loading Commands");
@@ -244,7 +205,7 @@ class Editor: Managed
 		m_Mission = GetGame().GetMission();
 				
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(OnStatisticsSave, STATISTICS_SAVE_INTERVAL * 1000, true);
 				
 		// Register Player Object as a hidden EditorObject
 		if (GetSettings().CreateCharacterObject) {
@@ -292,9 +253,7 @@ class Editor: Managed
 			// fix if you need to delete editor safely when running for some reason (MP?)
 			//SetActive(false);
 		}
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
-		
+				
 		GetSettings().Save();
 		GetStatistics().Save();
 		
@@ -549,7 +508,7 @@ class Editor: Managed
 			m_EditorHud.SetCurrentTooltip(null);
 		}
 				
-		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
+		EditorObjectMap placed_objects = GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
 				if (!editor_object) {
@@ -615,7 +574,11 @@ class Editor: Managed
 			processed_flags |= ECameraLockFlag.LOCK;
 		}
 
-		if (GetDayZGame().IsLeftCtrlDown()) {
+		if (IsCtrlDown()) {
+			processed_flags |= ECameraLockFlag.LOCK_MOVE;
+		}
+		
+		if (IsRunningCameraTrack()) {
 			processed_flags |= ECameraLockFlag.LOCK_MOVE;
 		}
 		
@@ -634,8 +597,9 @@ class Editor: Managed
 		return processed_flags;
 	}
 		
-	void OnStatisticsSave()
+	private void OnStatisticsSave()
 	{
+		GetStatistics().EditorPlayTime += STATISTICS_SAVE_INTERVAL;
 		GetStatistics().Save();
 	}
 
@@ -755,6 +719,163 @@ class Editor: Managed
 		EditorLog.SetLevel(log_lvl);
 		
 		HandleHands();
+
+		ProcessCameraTrack(timeslice);
+	}
+
+	protected void ProcessCameraTrack(float dt)
+	{
+		float smooth_value = GetEditorHud().GetTemplateController().CameraSmoothing;
+		array<EditorCameraTrack> camera_tracks = m_ObjectManager.GetCameraTracks();
+		for (int i = 0; i < camera_tracks.Count() - 1; i++) {
+			float t = 0;
+			
+			vector p0 = camera_tracks[i].GetPosition();
+			vector p3 = camera_tracks[i + 1].GetPosition();
+			
+			vector p1 = (p0 + p3) * 0.5;
+			vector p2 = (p0 + p3) * 0.5;
+			//vector p2 = camera_tracks[i + 2].GetPosition();
+
+			float xc1 = (p0[0] + p1[0]) / 2.0;
+			float yc1 = (p0[1] + p1[1]) / 2.0;
+			float zc1 = (p0[2] + p1[2]) / 2.0;
+			float xc2 = (p1[0] + p2[0]) / 2.0;
+			float yc2 = (p1[1] + p2[1]) / 2.0;
+			float zc2 = (p1[2] + p2[2]) / 2.0;
+			float xc3 = (p2[0] + p3[0]) / 2.0;
+			float yc3 = (p2[1] + p3[1]) / 2.0;
+			float zc3 = (p2[2] + p3[2]) / 2.0;
+
+			float len1 = (p1 - p0).Length();
+			float len2 = (p2 - p1).Length();
+			float len3 = (p3 - p2).Length();
+
+			float k1 = len1 / (len1 + len2);
+			float k2 = len2 / (len2 + len3);
+
+			float xm1 = xc1 + (xc2 - xc1) * k1;
+			float ym1 = yc1 + (yc2 - yc1) * k1;
+			float zm1 = zc1 + (zc2 - zc1) * k1;
+
+			float xm2 = xc2 + (xc3 - xc2) * k2;
+			float ym2 = yc2 + (yc3 - yc2) * k2;
+			float zm2 = zc2 + (zc3 - zc2) * k2;
+
+			// Resulting control points. Here smooth_value is mentioned
+			// above coefficient K whose value should be in range [0...1].
+			float ctrl1_x = xm1 + (xc2 - xm1) * smooth_value + p1[0] - xm1;
+			float ctrl1_y = ym1 + (yc2 - ym1) * smooth_value + p1[1] - ym1;
+			float ctrl1_z = zm1 + (zc2 - zm1) * smooth_value + p1[2] - zm1;
+
+			float ctrl2_x = xm2 + (xc2 - xm2) * smooth_value + p2[0] - xm2;
+			float ctrl2_y = ym2 + (yc2 - ym2) * smooth_value + p2[1] - ym2;
+			float ctrl2_z = zm2 + (zc2 - zm2) * smooth_value + p2[2] - zm2;
+
+			Shape.CreateSphere(LinearColor.YELLOW, ShapeFlags.ONCE, Vector(xm1, ym1, zm1), 1.0);
+			Shape.CreateSphere(LinearColor.YELLOW, ShapeFlags.ONCE, Vector(xm2, ym2, zm2), 1.0);
+
+			float subdiv_step  = 0.01;
+			float subdiv_step2 = subdiv_step*subdiv_step;
+			float subdiv_step3 = subdiv_step*subdiv_step*subdiv_step;
+
+			float pre1 = 3.0 * subdiv_step;
+			float pre2 = 3.0 * subdiv_step2;
+			float pre4 = 6.0 * subdiv_step2;
+			float pre5 = 6.0 * subdiv_step3;
+
+			float tmp1x = p0[0] - p1[0] * 2.0 + p2[0];
+			float tmp1y = p0[1] - p1[1] * 2.0 + p2[1];
+			float tmp1z = p0[2] - p1[2] * 2.0 + p2[2];
+
+			float tmp2x = (p1[0] - p2[0]) * 3.0 - p0[0] + p3[0];
+			float tmp2y = (p1[1] - p2[1]) * 3.0 - p0[1] + p3[1];
+			float tmp2z = (p1[2] - p2[2]) * 3.0 - p0[2] + p3[2];
+
+			float fx = p0[0];
+			float fy = p0[1];
+			float fz = p0[2];
+
+			float dfx = (p1[0] - p0[0])*pre1 + tmp1x*pre2 + tmp2x*subdiv_step3;
+			float dfy = (p1[1] - p0[1])*pre1 + tmp1y*pre2 + tmp2y*subdiv_step3;
+			float dfz = (p1[2] - p0[2])*pre1 + tmp1y*pre2 + tmp2y*subdiv_step3;
+
+			float ddfx = tmp1x*pre4 + tmp2x*pre5;
+			float ddfy = tmp1y*pre4 + tmp2y*pre5;
+			float ddfz = tmp1z*pre4 + tmp2z*pre5;
+
+			float dddfx = tmp2x*pre5;
+			float dddfy = tmp2y*pre5;
+			float dddfz = tmp2z*pre5;
+
+			while (t < 1) {
+				vector l0 = Vector(fx, fy, fz);
+				fx   += dfx;
+				fy   += dfy;
+				fz   += dfz;
+				dfx  += ddfx;
+				dfy  += ddfy;
+				dfz  += ddfz;
+				ddfx += dddfx;
+				ddfy += dddfy;
+				ddfz += dddfz;
+				vector l1 = Vector(fx, fy, fz);
+				vector lines[2] = { 
+					l0, 
+					l1
+				};
+
+				Shape.CreateLines(LinearColor.BLUE, ShapeFlags.ONCE, lines, 2);
+				t += subdiv_step;
+			}
+		}
+
+		if (!IsRunningCameraTrack()) {
+			return;
+		}
+
+		vector camera_transform[4];
+		m_EditorCamera.GetTransform(camera_transform);
+
+		if (m_CameraTrackIndex >= camera_tracks.Count() - 1) {
+			StopCameraTrack();
+			return;
+		}
+
+		EditorCameraTrack camera_track_current = camera_tracks[m_CameraTrackIndex];
+		EditorCameraTrack camera_track_next = camera_tracks[m_CameraTrackIndex + 1];
+		
+		float q1[4], q2[4];
+		vector m1[4], m2[4];
+		camera_track_current.GetTransform(m1);
+		Math3D.MatrixToQuat(m1, q1);
+		
+		camera_track_next.GetTransform(m2);
+		Math3D.MatrixToQuat(m2, q2);
+
+		vector track_direction = m2[3] - m1[3];
+		float track_length = track_direction.Length();
+
+		float distance_traversed = GetCameraSettings().Speed * dt;
+
+		m_CameraTrackLerpNorm = (m_CameraTrackLerpNorm * track_length + distance_traversed) / track_length
+		if (m_CameraTrackLerpNorm > 1.0) {
+			m_CameraTrackIndex++;
+			m_CameraTrackLerpNorm = 0.0;
+			return;
+		}
+		
+		float qout[4];
+		Math3D.QuatLerp(qout, q1, q2, m_CameraTrackLerpNorm);
+		
+		vector mout[4];
+		Math3D.QuatToMatrix(qout, mout);
+		mout[3] = vector.Lerp(m1[3], m2[3], m_CameraTrackLerpNorm);
+		
+		DbgUI.Text(string.Format("t: %1, i: %2, cnt: %3", m_CameraTrackLerpNorm, m_CameraTrackIndex, camera_tracks.Count()));
+		Shape.CreateSphere(-1, ShapeFlags.ONCE, mout[3], 0.5);
+		//m_EditorCamera.SetTransform(mout);
+		//m_EditorCamera.Update();
 	}
 	
 	// maybe abstract this to a new class, like EditorHandsManager
@@ -851,7 +972,7 @@ class Editor: Managed
 				return;
 			}
 			
-			if (GetEditor().IsCtrlDown() && m_ObjectUnderCursor && !widget_under_cursor) {
+			if (IsCtrlDown() && m_ObjectUnderCursor && !widget_under_cursor) {
 				EditorPlaceableItem placeable_object = GetReplaceableItem(m_ObjectUnderCursor);
 				if (placeable_object) {
 					ClearHand();
@@ -870,7 +991,7 @@ class Editor: Managed
 					EditorObject select_object = EditorObject.s_AllByObject[cursor_raycast.Hit];
 					if (select_object) {
 						// We want to Toggle selection if you are holding control
-						if (GetEditor().IsCtrlDown()) {
+						if (IsCtrlDown()) {
 							ToggleSelection(select_object);
 							return;
 						} 
@@ -885,7 +1006,6 @@ class Editor: Managed
 				}
 						
 				ClearSelection();
-				GetCameraTrackManager().ClearSelection();
 				return;
 			}
 		}
@@ -896,7 +1016,7 @@ class Editor: Managed
 
 		if (middle_click_input.LocalPress()) {
 			// Ctrl + Middle Mouse logic
-			if (GetEditor().IsCtrlDown()) {
+			if (IsCtrlDown()) {
 				if (m_ObjectUnderCursor) {			
 					ClearSelection();
 					if (GetEditorObject(m_ObjectUnderCursor)) {
@@ -916,11 +1036,11 @@ class Editor: Managed
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
 				
 				float factor = 9;
-				if (GetEditor().IsShiftDown()) {
+				if (IsShiftDown()) {
 					factor /= 5;
 				}
 				
-				if (GetEditor().IsCtrlDown()) {
+				if (IsCtrlDown()) {
 					factor *= 5;
 				}
 				
@@ -1301,7 +1421,7 @@ class Editor: Managed
 			m_EditorHud.SetCurrentTooltip(null);
 		}
 				
-		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
+		EditorObjectMap placed_objects = GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
 				if (!editor_object) {
@@ -1433,7 +1553,7 @@ class Editor: Managed
 		m_PlacingObjects[world_object] = hand_data;
 		EditorEvents.AddInHand(this, world_object, hand_data);
 		
-		if (!GetEditor().IsShiftDown()) {
+		if (!IsShiftDown()) {
 			ClearSelection();
 		}
 		
@@ -1483,7 +1603,7 @@ class Editor: Managed
 						
 			EditorEvents.ObjectPlaced(this, editor_object);
 			
-			if (!GetEditor().IsShiftDown()) { 
+			if (!IsShiftDown()) { 
 				RemoveFromHand(placing_object); 
 			}
 			
@@ -1711,16 +1831,7 @@ class Editor: Managed
 		
 		return false;
 	}
-		
-	protected void OnAutoSaveTimer()
-	{		
-		if (EditorSaveFile != string.Empty && GetSettings().AutoSaveEnabled) {
-			CommandManager[EditorSaveCommand].Execute(this, null);
-		}
-		
-		m_AutoSaveTimer.Run(Math.Max(GetSettings().AutoSaveTimer, 60), this, "OnAutoSaveTimer");
-	}
-	
+			
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject " + target);	
@@ -2195,7 +2306,7 @@ class Editor: Managed
 		}
 		
 		if (clear_before) {
-			GetEditor().Clear();
+			Clear();
 		}
 				
 		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());		
@@ -2215,6 +2326,10 @@ class Editor: Managed
 			if (CreateObject(data, false)) {
 				created_objects++;
 			}			
+		}
+		
+		foreach (EditorCameraTrackData track_data: save_data.CameraTracks) {
+			AddCameraTrack(track_data, false);
 		}
 		
 		if (save_data.CameraPosition != vector.Zero) {
@@ -2272,6 +2387,11 @@ class Editor: Managed
 		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
 			save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
+		}
+		
+		array<EditorCameraTrack> camera_tracks = GetObjectManager().GetCameraTracks();
+		foreach (EditorCameraTrack track: camera_tracks) {
+			save_data.CameraTracks.Insert(track.GetData());
 		}
 		
 		return save_data;
@@ -2411,11 +2531,6 @@ class Editor: Managed
 	{
 		m_DeletedSessionCache.Remove(id);
 	}
-			
-	void UpdateStatTime(int passed_time)
-	{
-		GetStatistics().EditorPlayTime += passed_time;
-	}
 	
 	void SelectObject(notnull EditorObject target) 
 	{
@@ -2451,7 +2566,94 @@ class Editor: Managed
 	{
 		m_ObjectManager.ToggleHiddenObjectSelection(target);
 	}
+
+	bool IsRunningCameraTrack()
+	{
+		return m_CameraTrackState;
+	}
+
+	void StopCameraTrack()
+	{
+		if (!m_CameraTrackState) {
+			return;
+		}
+
+		m_CameraTrackState = 0;
+		m_CameraTrackIndex = 0;
+		m_CameraTrackLerpNorm = 0;
+
+		m_EditorCamera.SetTransform(m_CameraTransformPreTrackMotion);
+	}
+
+	void StartCameraTrack()
+	{
+		m_CameraTrackState = 1;
+
+		vector mat[4];
+
+		m_EditorCamera.GetTransform(mat);
+		copyarray(m_CameraTransformPreTrackMotion, mat);
+		GetStatistics().EditorCameraTracksRidden++;
+	}
+
+	void PauseCameraTrack()
+	{
+		m_CameraTrackState = 0;
+	}
 	
+	void AddCameraTrack(notnull EditorCamera camera, float time, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true)
+	{
+		AddCameraTrack(EditorCameraTrackData.Create(camera, time, flags), create_undo);
+	}
+	
+	EditorCameraTrack AddCameraTrack(notnull EditorCameraTrackData camera_track_data, bool create_undo = true)
+	{
+		// Cache Data (for undo / redo)
+		m_SessionCache[camera_track_data.GetID()] = camera_track_data;
+		
+		// Create Object
+		EditorCameraTrack camera_track = m_ObjectManager.CreateCameraTrack(camera_track_data);		
+		EditorAction action = new EditorAction("Delete", "Create");
+		action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
+		action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+
+		return camera_track;
+	}
+		
+	void DeleteCameraTrack(EditorCameraTrack camera_track, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Create", "Delete");
+		action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
+		action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
+
+		if (!m_ObjectManager.DeleteCameraTrack(camera_track)) {
+			return;
+		}
+
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+	
+	void DeleteCameraTracks(array<EditorCameraTrack> camera_tracks, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Create", "Delete");
+		foreach (auto camera_track: camera_tracks) {
+			action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
+			action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
+
+			m_ObjectManager.DeleteCameraTrack(camera_track);
+		}
+
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+		
 	vector GetAveragePositionOfSelection()
 	{
 		return m_ObjectManager.GetAveragePositionOfSelection();
@@ -2491,12 +2693,7 @@ class Editor: Managed
 	{
 		return m_ObjectManager;
 	}
-	
-	EditorCameraTrackManagerModule GetCameraTrackManager() 
-	{
-		return m_CameraTrackManager;
-	}
-	
+		
 	EditorObjectMap GetSelectedObjects() 
 	{
 		return m_ObjectManager.GetSelectedObjects(); 

@@ -1,19 +1,5 @@
 class EditorWorldObject
 {
-	static const ref array<string> VALID_PATHS = {
-		"DZ\\plants",
-		"DZ\\plants_bliss",
-		"DZ\\plants_sakhal",
-		"DZ\\rocks",
-		"DZ\\rocks_bliss",
-		"DZ\\rocks_sakhal",
-		"DZ/plants",
-		"DZ/plants_bliss",
-		"DZ/rocks",
-		"DZ/rocks_bliss",
-		"DZ/rocks_sakhal",
-	};
-
 	protected Object m_WorldObject;
 	Object GetWorldObject()
 	{
@@ -73,16 +59,5 @@ class EditorWorldObject
 		}
 
 		return object;
-	}
-	static bool ValidateObjectPath(string path)
-	{
-		foreach (string p: VALID_PATHS) {
-			if (path.Contains(p))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }
