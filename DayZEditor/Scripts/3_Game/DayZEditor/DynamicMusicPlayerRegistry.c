@@ -10,13 +10,8 @@ modded class DynamicMusicPlayerRegistry
 	{
 		m_TracksMenu = new array<ref DynamicMusicTrackData>();
 
-		array<string> musics = {};
-		musics.Copy(EDITOR_MENU_MUSICS);
-
-		for (int i = musics.Count() - 1; i >= 0; i--) {
-			int idx = musics.GetRandomIndex();
-			RegisterTrackMenu(musics[idx]);
-			musics.Remove(idx);
-		}
+		RegisterTrackMenu("Music_Menu_SoundSet");
+		RegisterTrackMenu("Music_Menu2_SoundSet");
+		RegisterTrackMenu("Music_Menu3_SoundSet");
 	}
 }
