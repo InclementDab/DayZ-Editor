@@ -214,23 +214,39 @@ class EditorFileDialog: EditorModal
 		
 		search_box_text.Replace(" ", "*");
 		
+		map<string, string> lower_to_upper_sort = new map<string, string>();
 		array<string> files = {};
 		foreach (auto extension: extensions) {
 			array<string> files_temp = Directory.EnumerateFiles(m_CurrentDirectory, extension.param2, 0);
 			foreach (string file_temp: files_temp) {
-				if (files.Find(file_temp) == -1 && File.WildcardMatch(file_temp, search_box_text)) {
-					files.Insert(file_temp);
+				string file_temp_temp = file_temp;
+				file_temp_temp.ToLower();
+				lower_to_upper_sort[file_temp_temp] = file_temp;
+				if (files.Find(file_temp_temp) == -1 && File.WildcardMatch(file_temp_temp, search_box_text)) {					
+					files.Insert(file_temp_temp);
 				}
 			}
 		}
 
-		array<string> folders = Directory.EnumerateDirectories(m_CurrentDirectory);
+		array<string> folders = {};
+		array<string> folders_temp = Directory.EnumerateDirectories(m_CurrentDirectory);
+		foreach (string folder: folders_temp) {
+			string folder_temp_temp = folder;
+			folder_temp_temp.ToLower();
+			lower_to_upper_sort[folder_temp_temp] = folder;
+			folders.Insert(folder_temp_temp);
+		}
 
 		folders.Sort();
 		files.Sort();
 		array<string> all_loaded_files = {};
-		all_loaded_files.InsertAll(folders);
-		all_loaded_files.InsertAll(files);
+		foreach (string loaded_folder: folders) {
+			all_loaded_files.Insert(lower_to_upper_sort[loaded_folder]);
+		}
+
+		foreach (string loaded_file: files) {
+			all_loaded_files.Insert(lower_to_upper_sort[loaded_file]);
+		}
 
 		m_TemplateController.Files.Clear();
 		foreach (string sorted_file: all_loaded_files) {

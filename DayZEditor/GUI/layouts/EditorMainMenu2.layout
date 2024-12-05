@@ -1459,7 +1459,7 @@ FrameWidgetClass main_menu_root {
      ignorepointer 1
      color 0.5647 0.5843 0.6431 0.7843
      position 0 0
-     size 1 360
+     size 1 628
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -1476,38 +1476,51 @@ FrameWidgetClass main_menu_root {
        ignorepointer 1
        color 0.5647 0.5843 0.6431 0.7843
        position 0 0
-       size 1 360
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
        hexactsize 0
-       vexactsize 1
+       vexactsize 0
        imageTexture "{0655A1BF79F5B291}gui/textures/loading_screens/loading_screen_1_co.edds"
        mode blend
        "src alpha" 0
       }
-      GridSpacerWidgetClass GridSpacerWidget1 {
-       clipchildren 0
+      ScrollWidgetClass ScrollWidget0 {
        ignorepointer 1
-       size 48 48
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "ViewBinding"
-       Padding 12
-       Margin 12
-       "Size To Content H" 1
-       "Size To Content V" 1
-       content_halign center
-       content_valign center
-       Rows 1
+       hexactsize 0
+       vexactsize 0
+       style Colorable
+       "Scrollbar H" 1
        {
-        ScriptParamsClass {
-         Binding_Name "MapViews"
+        GridSpacerWidgetClass GridSpacerWidget1 {
+         clipchildren 0
+         ignorepointer 1
+         size 48 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "ViewBinding"
+         Padding 12
+         Margin 12
+         "Size To Content H" 1
+         "Size To Content V" 1
+         content_halign center
+         content_valign center
+         Columns 12
+         Rows 1
+         {
+          ScriptParamsClass {
+           Binding_Name "MapViews"
+          }
+         }
         }
        }
       }

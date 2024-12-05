@@ -10,22 +10,43 @@ class IntroSceneEditor: Managed
 
 	void IntroSceneEditor(string map_name)
 	{
+		array<ref NamedLocation> all_locations = NamedLocation.EnumerateAllLocations();
+		NamedLocation location = all_locations.GetRandomElement();
+		while (location && location.GetImportance() < 0.65) {
+			location = all_locations.GetRandomElement();
+		}
+		
 		string build_directory = SystemPath.Combine(BUILD_LOCATIONS, map_name);
 		array<string> files = Directory.EnumerateFiles(build_directory, "*.dze");
 
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera_V2", vector.Zero, ECE_NONE));
+		vector camera_position = location.Position + vector.RandomDir2D() * location.GetImportance() * 200;
+		camera_position[1] = GetGame().SurfaceY(camera_position[0], camera_position[2]) + 300;
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera_V2", camera_position, ECE_NONE));
 		m_EditorCamera.SetActive(true);
 
 		PPEffects.Init();
 		PPEffects.SetBlur(0.621 * 0.621);
 		PPEffects.SetVignette(0.621, 0, 0, 0, 255);
 
+		vector look_at_pos = location.Position;
+		vector direction = vector.Direction(camera_position, look_at_pos);
+		vector aside = direction * vector.Up;
+		vector mat[4] = {
+			aside,
+			aside * direction,
+			direction,
+			camera_position
+		};
+
+		m_EditorCamera.LookAt(look_at_pos);
+		copyarray(m_CameraMatrix, mat);
+
 		if (files.Count() == 0) {
 			return;
 		}
 
 		m_BuildFile = files.GetRandomElement();
-		
+		/*
 		if (File.Exists(m_BuildFile)) {
 			typename file_type_type = EditorDZEFile;
 			EditorDZEFile file_type = EditorDZEFile.Cast(file_type_type.Spawn());
@@ -39,19 +60,8 @@ class IntroSceneEditor: Managed
 				}
 			}
 
-			vector look_at_pos = save_data.EditorObjects.GetRandomElement().Position;
-			vector direction = vector.Direction(save_data.CameraPosition, look_at_pos);
-			vector aside = direction * vector.Up;
-			vector mat[4] = {
-				aside,
-				aside * direction,
-				direction,
-				save_data.CameraPosition
-			};
-
-			m_EditorCamera.SetTransform(mat);
-			copyarray(m_CameraMatrix, mat);
-		}
+			
+		}*/
 	}
 	
 	void ~IntroSceneEditor()
@@ -81,7 +91,7 @@ class IntroSceneEditor: Managed
 			Math3D.YawPitchRollMatrix(Vector(x_relative * 0.01, y_relative * 0.01, 0), ypr_mat);
 
 			Math3D.MatrixMultiply4(ypr_mat, m_CameraMatrix, new_mat);
-			m_EditorCamera.SetTransform(new_mat);
+			//m_EditorCamera.SetTransform(new_mat);
 
 			m_MotionSicknessDt = 0;
 		}

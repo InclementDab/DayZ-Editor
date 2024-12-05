@@ -100,7 +100,6 @@ class EditorMainMenu: ScriptViewMenu
 		ImageWidget child_image = ImageWidget.Cast(w.GetChildren());
 		switch (w) {
 			case ExitButton:
-			case WikiButton:
 			case SettingButton: {
 				child_image.SetImage(2);
 				break;
@@ -108,6 +107,7 @@ class EditorMainMenu: ScriptViewMenu
 		}
 
 		if (child_image) {
+			WidgetAnimator.CancelAnimate(child_image);
 			child_image.SetSize(0.8, 0.8);
 			WidgetAnimator.AnimateColor(child_image, -1, 100);
 		}
