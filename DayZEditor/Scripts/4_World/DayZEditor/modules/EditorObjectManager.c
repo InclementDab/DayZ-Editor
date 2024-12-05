@@ -30,6 +30,8 @@ class EditorObjectManagerModule : Managed
 
 	protected ref array<EditorCameraTrack> m_CameraTracks = {};
 
+	protected ref array<EditorObject> m_SelectedObjectsOrdered = {};
+
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dFile = new map<string, ref array<EditorPlaceableItem>>();
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dPath = new map<string, ref array<EditorPlaceableItem>>();
@@ -169,6 +171,7 @@ class EditorObjectManagerModule : Managed
 		m_CameraTracks.RemoveItem(camera_track);
 
 		m_SelectedObjects.RemoveEditorObject(camera_track);
+		m_SelectedObjectsOrdered.RemoveItem(camera_track);
 		EditorEvents.ObjectDeleted(this, camera_track);
 
 		// remove strong ref
@@ -234,6 +237,7 @@ class EditorObjectManagerModule : Managed
 		}
 
 		m_SelectedObjects.RemoveEditorObject(target);
+		m_SelectedObjectsOrdered.RemoveItem(target);
 		EditorEvents.ObjectDeleted(this, target);
 
 		// remove strong ref
@@ -249,6 +253,7 @@ class EditorObjectManagerModule : Managed
 		
 		EditorLog.Trace("EditorObjectManager::SelectObject");
 		m_SelectedObjects.InsertEditorObject(target);
+		m_SelectedObjectsOrdered.Insert(target);
 		EditorEvents.ObjectSelected(this, target);
 		target.OnSelected();
 		
@@ -266,6 +271,7 @@ class EditorObjectManagerModule : Managed
 	{
 		EditorLog.Trace("EditorObjectManager::DeselectObject");
 		m_SelectedObjects.RemoveEditorObject(target);
+		m_SelectedObjectsOrdered.RemoveItem(target);
 		EditorEvents.ObjectDeselected(this, target);
 		target.OnDeselected();
 
@@ -356,6 +362,7 @@ class EditorObjectManagerModule : Managed
 		m_WorldObjectIndex.Clear();
 		m_PlacedObjects.Clear();
 		m_SelectedObjects.Clear();
+		m_SelectedObjectsOrdered.Clear();
 		m_DeletedObjects.ClearSafe();
 		m_SelectedDeletedObjects.ClearSafe();
 		m_CameraTracks.Clear();
@@ -392,6 +399,12 @@ class EditorObjectManagerModule : Managed
 	EditorObjectMap GetSelectedObjects()
 	{
 		return m_SelectedObjects;
+	}
+
+	// sometimes you just dont feel like refactoring
+	array<EditorObject> GetSelectedObjectsOrdered()
+	{
+		return m_SelectedObjectsOrdered;
 	}
 
 	EditorObjectMap GetPlacedObjects()

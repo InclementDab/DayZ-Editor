@@ -230,10 +230,9 @@ class EditorHud: ScriptView
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);
 
-		Input input = GetGame().GetInput();
 		UAInputAPI input_api = GetUApi();
-		
-		UAInput click_input = input_api.GetInputByID(UAFire);
+		UAInput left_mouse_input = input_api.GetInputByID(UAMenuSelect);
+		UAInput right_mouse_input = input_api.GetInputByID(UAMenuBack);
 		UAInput toggle_hud_input = input_api.GetInputByName("EditorToggleUI");
 		UAInput toggle_cursor = input_api.GetInputByName("EditorToggleCursor");
 		UAInput toggle_editor = input_api.GetInputByName("EditorToggleActive");
@@ -244,8 +243,17 @@ class EditorHud: ScriptView
 		UAInput shift_input = input_api.GetInputByID(UATurbo);
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
+		Widget focus_widget = GetFocus();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
-		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !m_Dialog;
+		bool input_unlocked = (!focus_widget || !focus_widget.IsInherited(EditBoxWidget)) && !m_Dialog;
+		bool any_mouse_press = (left_mouse_input.LocalPress() || right_mouse_input.LocalPress());
+
+		// Clear focus!
+		if (focus_widget && any_mouse_press && !widget_under_cursor) {
+			SetFocus(null);
+			delete CurrentMenu;			
+			SetCurrentTooltip(null);
+		}
 
 		if (m_Editor.IsInventoryEditorActive()) {
 			Show(false);
@@ -264,7 +272,7 @@ class EditorHud: ScriptView
 		if (Map.IsVisible()) {
 			UpdateMap(Map, dt);
 		}
-		
+				
 #ifdef GIZMOS_ENABLED
 		
 		// todo: a cursor hide mask
@@ -288,8 +296,8 @@ class EditorHud: ScriptView
 			Show(!IsVisible());
 		}
 		
-		// Dont want to toggle cursor on map
-		if (toggle_cursor.LocalPress()) {
+		// Dont want to toggle cursor on map 
+		if (toggle_cursor.LocalPress() && input_unlocked) {
 			if (!Map.IsVisible() && !m_Editor.IsPlayerControlled() && m_Editor.IsActive() && !(m_Dialog && EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
 				ToggleCursor();
 			}
@@ -310,7 +318,7 @@ class EditorHud: ScriptView
 			}
 		}
 
-		if (click_input.LocalPress() && m_DragBoxStartX == -1 && m_DragBoxStartY == -1) {
+		if (left_mouse_input.LocalPress() && m_DragBoxStartX == -1 && m_DragBoxStartY == -1) {
 			if ((!widget_under_cursor || widget_under_cursor == Map) && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging()) {
 				m_DragBoxDelayStart = 0.12;
 				GetMousePos(m_DragBoxStartX, m_DragBoxStartY);
@@ -320,7 +328,7 @@ class EditorHud: ScriptView
 			Map.SetFlags(WidgetFlags.IGNOREPOINTER);
 		}
 		
-		if (click_input.LocalRelease()) {
+		if (left_mouse_input.LocalRelease()) {
 			m_DragWidget = null;
 			m_DragBoxDelayStart = 10;
 			m_DragBoxStartX = -1;
@@ -330,7 +338,7 @@ class EditorHud: ScriptView
 		
 		EditorCanvas.Clear();
 		m_DragBoxDelayStart -= dt;
-		if (click_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers) {	
+		if (left_mouse_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers) {	
 			switch (m_SelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
@@ -382,7 +390,7 @@ class EditorHud: ScriptView
 					EditorCanvas.DrawLine(x_avg, m_DragBoxStartY, x_avg, mouse_y, mouse_x - m_DragBoxStartX, 0x644B77BE);		
 					
 					foreach (EditorMarker marker: EditorMarker.s_AllMarkers) {
-						if (!marker || !marker.GetLayoutRoot().IsVisible()) {
+						if (!marker || !marker.GetLayoutRoot() || !marker.GetLayoutRoot().IsVisible()) {
 							continue;
 						}
 						
@@ -490,11 +498,11 @@ class EditorHud: ScriptView
 		float wr_s_w, wr_s_h, wr_col_s_w, wr_col_s_h;
 		switch (widget_under_cursor) {
 			case LeftbarDrag: {
-				if (click_input.LocalPress()) {
+				if (left_mouse_input.LocalPress()) {
 					m_DragWidget = LeftbarWrapper;
 				}
 				
-				if (click_input.LocalDoubleClick()) {
+				if (left_mouse_input.LocalDoubleClick()) {
 					LeftbarWrapper.GetSize(wr_s_w, wr_s_h);
 					LeftbarWrapper.SetSize(DEFAULT_BAR_WIDTH_PX, wr_s_h);
 				}
@@ -503,11 +511,11 @@ class EditorHud: ScriptView
 			}
 
 			case RightbarDrag: {
-				if (click_input.LocalPress()) {
+				if (left_mouse_input.LocalPress()) {
 					m_DragWidget = RightbarWrapper;
 				}
 
-				if (click_input.LocalDoubleClick()) {
+				if (left_mouse_input.LocalDoubleClick()) {
 					RightbarWrapper.GetSize(wr_s_w, wr_s_h);
 					RightbarWrapper.SetSize(DEFAULT_BAR_WIDTH_PX, wr_s_h);
 				}
@@ -553,6 +561,25 @@ class EditorHud: ScriptView
 		} else {
 			Symbols.PLAY.Load(CameraTrackRunButton_Icon);
 		}
+		
+#ifdef DIAG_DEVELOPER
+		float tbf_s_w, tbf_s_h;
+		ToolbarFrame.GetScreenSize(tbf_s_w, tbf_s_h);
+		DbgUI.Begin("Editor", m_Editor.GetSettings().LeftBarPlacement + 24, tbf_s_h + 24);
+		string widget_under_cursor_name = "None";
+		string focus_widget_name = "None";
+		if (widget_under_cursor) {
+			widget_under_cursor_name = widget_under_cursor.GetName();
+		}
+		if (focus_widget) {
+			focus_widget_name = focus_widget.GetName();
+		}
+
+		DbgUI.Text(string.Format("Widget Under Cursor: %1", widget_under_cursor_name));
+		DbgUI.Text(string.Format("Focus Widget: %1", focus_widget_name));
+		DbgUI.End();
+#endif
+		
 	}
 		
 	protected void UpdateMap(notnull MapWidget map_widget, float dt)
@@ -764,7 +791,7 @@ class EditorHud: ScriptView
 				
 				LeftbarScroll.VScrollToPos(0);
 				
-				Symbols left_search_bar_icon = Ternary<Symbols>.If(!left_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.XMARK);
+				Symbols left_search_bar_icon = Ternary<Symbols>.If(!left_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 				left_search_bar_icon.Load(LeftSearchBarIconIcon);
 				break;
 			}
@@ -777,7 +804,7 @@ class EditorHud: ScriptView
 				}
 				
 				RightbarScroll.VScrollToPos(0);
-				Symbols right_search_bar_icon = Ternary<Symbols>.If(!right_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.XMARK);
+				Symbols right_search_bar_icon = Ternary<Symbols>.If(!right_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 				right_search_bar_icon.Load(RightSearchBarIconIcon);
 				break;
 			}

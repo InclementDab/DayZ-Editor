@@ -15,7 +15,7 @@ class EditorFileType: Managed
 	
 	void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
 	{
-		valid_extensions.Insert(new Param2<string, string>("Any", "*.*"));
+		//valid_extensions.Insert(new Param2<string, string>("Any", "*.*"));
 	}
 	
 	bool CanDoDeletion()

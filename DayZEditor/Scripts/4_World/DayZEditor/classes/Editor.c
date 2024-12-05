@@ -623,9 +623,6 @@ class Editor: Managed
 		if (GetSelectedObjects().Count() > 0) {
 			if (!m_CurrentGizmo || !m_CurrentGizmo.IsInherited(m_CurrentGizmoType)) {
 				m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
-				if (m_CurrentGizmo) {
-					m_CurrentGizmo.Initialize(this, GetSelectedObjects().GetElement(0), GetSelectedObjects());
-				}
 			}
 		} else {
 			delete m_CurrentGizmo;
@@ -723,110 +720,147 @@ class Editor: Managed
 		ProcessCameraTrack(timeslice);
 	}
 
+/*
+	protected ref array<vector> m_CameraSmoothingCoefficients = {};
+
+    private void CalculateCoefficients()
+    {
+		float smooth_value = GetEditorHud().GetTemplateController().CameraSmoothing;
+		array<EditorCameraTrack> camera_tracks = m_ObjectManager.GetCameraTracks();
+		array<vector> points = {};
+		points.Resize(camera_tracks.Count());
+		foreach (EditorCameraTrack track: camera_tracks) {
+			points.Insert(track.GetPosition());
+		}
+
+		int n = camera_tracks.Count();
+		array<float> h = {};
+		array<vector> d = {};
+
+		for (int i = 0; i < n - 1; i++) {
+			h[i] = points[i + 1][0] - points[i][0];
+		}
+
+		// initialize all 2d arrays
+		array<ref array<float>> a = {};
+		a.Resize(n);
+		for (int j = 0; j < n; j++) {
+			a[j] = {};
+		}
+
+		array<vector> rhs = {};
+		rhs.Resize(n);
+
+		a[0][0] = 1 + smooth_value;
+		a[n - 1][n - 1] = 1 + smooth_value;
+		for (int k = 1; k < n - 1; k++) {
+			a[k][k - 1] = h[k - 1];
+			a[k][k] = 2 * (h[k - 1] + h[k]) + smooth_value;
+			a[k][k + 1] = h[k];
+
+			rhs[k] = 3 * ((points[i + 1][1] - points[k][1]) / h[k] - (points[k][1] - points[k - 1][1]) / h[k - 1])
+		}
+
+		rhs[0] = smooth_value * points[0][1];
+		rhs[n - 1] = smooth_value * points[n - 1][1];
+
+		// Solve Tridiagonal System
+		m_CameraSmoothingCoefficients = {};
+		m_CameraSmoothingCoefficients.Resize(n);
+		array<float> c = {};
+		c.Resize(n - 1);
+		array<vector> d = {};
+		d.Resize(n);
+		float m = a[0][0];
+		d[0] = rhs[0] / m;
+
+		for (int l = 1; l < n; l++) {
+			c[l - 1] = a[l][l - 1] / m;
+			m = a[l][l] - a[l][l - 1] * d[l - 1] / m;
+			d[l] = (rhs[l] - a[l][l - 1] * d[l - 1] / m);
+		}
+
+		m_CameraSmoothingCoefficients.Insert(d[n - 1]);
+		for (int m = n - 2; m >= 0; m--) {
+			m_CameraSmoothingCoefficients.InsertAt(0, d[m] - c[m] * m_CameraSmoothingCoefficients[0]);
+		}
+    }
+
+    public Vector3D Interpolate(double x)
+    {
+        int i = points.FindIndex(p => p.X > x) - 1;
+        i = Math.Max(0, Math.Min(i, points.Count - 2));
+
+        double t = (x - points[i].X) / (points[i + 1].X - points[i].X);
+        double t2 = t * t;
+        double t3 = t2 * t;
+
+        Vector3D a = points[i];
+        Vector3D b = coefficients[i];
+        Vector3D c = 3 * (points[i + 1] - points[i]) - 2 * coefficients[i] - coefficients[i + 1];
+        Vector3D d = 2 * (points[i] - points[i + 1]) + coefficients[i] + coefficients[i + 1];
+
+        return a + b * t + c * t2 + d * t3;
+    }
+*/
+
 	protected void ProcessCameraTrack(float dt)
 	{
 		float smooth_value = GetEditorHud().GetTemplateController().CameraSmoothing;
 		array<EditorCameraTrack> camera_tracks = m_ObjectManager.GetCameraTracks();
-		for (int i = 0; i < camera_tracks.Count() - 1; i++) {
+		for (int i = 0; i < camera_tracks.Count() - 1; i++) {			
+			//vector control_p1 = vector.Zero;
+			vector point = camera_tracks[i].GetPosition();
+			vector next_point = camera_tracks[i + 1].GetPosition();
+			vector next_next_point = vector.Zero;
+			vector control_point_offset0 = vector.Zero;
+			vector control_point_offset1 = vector.Zero;
+			if (i != camera_tracks.Count() - 2) {
+				next_next_point = camera_tracks[i + 2].GetPosition();
+				vector norm = (next_point - point) * (next_next_point - next_point);
+				norm.Normalize();
+				Plane3D pl = Plane3D(norm, next_point);
+				//pl.Debug(40);
+
+				if (i == 0) {
+					control_point_offset0 = point + (next_point - point) * 0.25 + (point - next_point) * smooth_value * norm;
+				} else {
+					vector last_point = camera_tracks[i - 1].GetPosition();
+					control_point_offset0 = (last_point + (point - last_point) * 0.75) + (point - last_point) * smooth_value * norm;
+				}
+
+				control_point_offset1 = (point + (next_point - point) * 0.75) + (next_point - point) * smooth_value * norm;
+				Shape.CreateSphere(LinearColor.GREEN, ShapeFlags.ONCE, control_point_offset0, 3);
+			} else {
+				next_next_point = (next_point - point).Normalized() * vector.Distance(point, next_point);
+				Shape.CreateSphere(LinearColor.BLUE, ShapeFlags.ONCE, next_point, 4);
+				vector dir1 = (next_point - next_next_point);
+				dir1.Normalize();
+				control_point_offset0 = dir1 * smooth_value * vector.Distance(point, next_point);
+			}
+
+
+			vector excess_direction = vector.Direction(point, next_point).Normalized();
+			//Shape.CreateArrow(point, point + excess_direction * 3, 4, LinearColor.WHITE, ShapeFlags.ONCE);
+			vector control_p0 = point + control_point_offset0 + excess_direction * vector.Distance(point, next_point) * 0.5;
+			
+			Shape.CreateSphere(LinearColor.BLUE, ShapeFlags.ONCE, point, 0.5);
+			Shape.CreateSphere(LinearColor.CRIMSON, ShapeFlags.ONCE, control_p0, 3);
+			vector lines[2] = { control_p0, next_point };
+			//Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, lines, 2);
+			//Shape.CreateSphere(LinearColor.PINK, ShapeFlags.ONCE, control_p1, 0.5);
+			//Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, { control_p1, point }, 2);
+
+			float step_size = 0.01;
 			float t = 0;
-			
-			vector p0 = camera_tracks[i].GetPosition();
-			vector p3 = camera_tracks[i + 1].GetPosition();
-			
-			vector p1 = (p0 + p3) * 0.5;
-			vector p2 = (p0 + p3) * 0.5;
-			//vector p2 = camera_tracks[i + 2].GetPosition();
-
-			float xc1 = (p0[0] + p1[0]) / 2.0;
-			float yc1 = (p0[1] + p1[1]) / 2.0;
-			float zc1 = (p0[2] + p1[2]) / 2.0;
-			float xc2 = (p1[0] + p2[0]) / 2.0;
-			float yc2 = (p1[1] + p2[1]) / 2.0;
-			float zc2 = (p1[2] + p2[2]) / 2.0;
-			float xc3 = (p2[0] + p3[0]) / 2.0;
-			float yc3 = (p2[1] + p3[1]) / 2.0;
-			float zc3 = (p2[2] + p3[2]) / 2.0;
-
-			float len1 = (p1 - p0).Length();
-			float len2 = (p2 - p1).Length();
-			float len3 = (p3 - p2).Length();
-
-			float k1 = len1 / (len1 + len2);
-			float k2 = len2 / (len2 + len3);
-
-			float xm1 = xc1 + (xc2 - xc1) * k1;
-			float ym1 = yc1 + (yc2 - yc1) * k1;
-			float zm1 = zc1 + (zc2 - zc1) * k1;
-
-			float xm2 = xc2 + (xc3 - xc2) * k2;
-			float ym2 = yc2 + (yc3 - yc2) * k2;
-			float zm2 = zc2 + (zc3 - zc2) * k2;
-
-			// Resulting control points. Here smooth_value is mentioned
-			// above coefficient K whose value should be in range [0...1].
-			float ctrl1_x = xm1 + (xc2 - xm1) * smooth_value + p1[0] - xm1;
-			float ctrl1_y = ym1 + (yc2 - ym1) * smooth_value + p1[1] - ym1;
-			float ctrl1_z = zm1 + (zc2 - zm1) * smooth_value + p1[2] - zm1;
-
-			float ctrl2_x = xm2 + (xc2 - xm2) * smooth_value + p2[0] - xm2;
-			float ctrl2_y = ym2 + (yc2 - ym2) * smooth_value + p2[1] - ym2;
-			float ctrl2_z = zm2 + (zc2 - zm2) * smooth_value + p2[2] - zm2;
-
-			Shape.CreateSphere(LinearColor.YELLOW, ShapeFlags.ONCE, Vector(xm1, ym1, zm1), 1.0);
-			Shape.CreateSphere(LinearColor.YELLOW, ShapeFlags.ONCE, Vector(xm2, ym2, zm2), 1.0);
-
-			float subdiv_step  = 0.01;
-			float subdiv_step2 = subdiv_step*subdiv_step;
-			float subdiv_step3 = subdiv_step*subdiv_step*subdiv_step;
-
-			float pre1 = 3.0 * subdiv_step;
-			float pre2 = 3.0 * subdiv_step2;
-			float pre4 = 6.0 * subdiv_step2;
-			float pre5 = 6.0 * subdiv_step3;
-
-			float tmp1x = p0[0] - p1[0] * 2.0 + p2[0];
-			float tmp1y = p0[1] - p1[1] * 2.0 + p2[1];
-			float tmp1z = p0[2] - p1[2] * 2.0 + p2[2];
-
-			float tmp2x = (p1[0] - p2[0]) * 3.0 - p0[0] + p3[0];
-			float tmp2y = (p1[1] - p2[1]) * 3.0 - p0[1] + p3[1];
-			float tmp2z = (p1[2] - p2[2]) * 3.0 - p0[2] + p3[2];
-
-			float fx = p0[0];
-			float fy = p0[1];
-			float fz = p0[2];
-
-			float dfx = (p1[0] - p0[0])*pre1 + tmp1x*pre2 + tmp2x*subdiv_step3;
-			float dfy = (p1[1] - p0[1])*pre1 + tmp1y*pre2 + tmp2y*subdiv_step3;
-			float dfz = (p1[2] - p0[2])*pre1 + tmp1y*pre2 + tmp2y*subdiv_step3;
-
-			float ddfx = tmp1x*pre4 + tmp2x*pre5;
-			float ddfy = tmp1y*pre4 + tmp2y*pre5;
-			float ddfz = tmp1z*pre4 + tmp2z*pre5;
-
-			float dddfx = tmp2x*pre5;
-			float dddfy = tmp2y*pre5;
-			float dddfz = tmp2z*pre5;
-
-			while (t < 1) {
-				vector l0 = Vector(fx, fy, fz);
-				fx   += dfx;
-				fy   += dfy;
-				fz   += dfz;
-				dfx  += ddfx;
-				dfy  += ddfy;
-				dfz  += ddfz;
-				ddfx += dddfx;
-				ddfy += dddfy;
-				ddfz += dddfz;
-				vector l1 = Vector(fx, fy, fz);
-				vector lines[2] = { 
-					l0, 
-					l1
-				};
-
-				Shape.CreateLines(LinearColor.BLUE, ShapeFlags.ONCE, lines, 2);
-				t += subdiv_step;
+			while (t < 1 - step_size) {
+				vector l0 = EditorMath.CalculateCubicBezierPoint(t, point, control_point_offset0, control_point_offset1, next_point);
+				vector l1 = EditorMath.CalculateCubicBezierPoint(t + step_size, point, control_point_offset0, control_point_offset1, next_point);
+				vector lines0[2] = { l0, l1 };
+				vector lines1[2] = { vector.Lerp(point, next_point, t), vector.Lerp(point, next_point, t + step_size) };
+				Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, lines0, 2);
+				Shape.CreateLines(LinearColor.BLUE, ShapeFlags.ONCE, lines1, 2);
+				t += 0.01;
 			}
 		}
 
@@ -872,10 +906,10 @@ class Editor: Managed
 		Math3D.QuatToMatrix(qout, mout);
 		mout[3] = vector.Lerp(m1[3], m2[3], m_CameraTrackLerpNorm);
 		
-		DbgUI.Text(string.Format("t: %1, i: %2, cnt: %3", m_CameraTrackLerpNorm, m_CameraTrackIndex, camera_tracks.Count()));
-		Shape.CreateSphere(-1, ShapeFlags.ONCE, mout[3], 0.5);
-		//m_EditorCamera.SetTransform(mout);
-		//m_EditorCamera.Update();
+		//DbgUI.Text(string.Format("t: %1, i: %2, cnt: %3", m_CameraTrackLerpNorm, m_CameraTrackIndex, camera_tracks.Count()));
+		///Shape.CreateSphere(-1, ShapeFlags.ONCE, mout[3], 0.5);
+		m_EditorCamera.SetTransform(mout);
+		m_EditorCamera.Update();
 	}
 	
 	// maybe abstract this to a new class, like EditorHandsManager
@@ -950,14 +984,6 @@ class Editor: Managed
 		UAInput middle_click_input = input_api.GetInputByID(UAZoomIn);
 
 		bool any_mouse_click = left_click_input.LocalPress() || right_click_input.LocalPress() || middle_click_input.LocalPress();
-		if (any_mouse_click && !widget_under_cursor) {
-			SetFocus(null);
-			if (EditorHud.CurrentMenu) {
-				delete EditorHud.CurrentMenu;
-			}
-			
-			GetEditorHud().SetCurrentTooltip(null);
-		}
 
 		//	left click logic
 		if (left_click_input.LocalPress()) {
@@ -2697,6 +2723,11 @@ class Editor: Managed
 	EditorObjectMap GetSelectedObjects() 
 	{
 		return m_ObjectManager.GetSelectedObjects(); 
+	}
+	
+	array<EditorObject> GetSelectedObjectsOrdered()
+	{
+		return m_ObjectManager.GetSelectedObjectsOrdered();
 	}
 	
 	EditorDeletedObjectMap GetSelectedHiddenObjects()  

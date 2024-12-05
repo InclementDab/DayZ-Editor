@@ -1217,6 +1217,7 @@ FrameWidgetClass main_menu_root {
    {
     GridSpacerWidgetClass ButtonSpacer {
      ignorepointer 1
+     color 0.1412 0.1569 0.1804 0.2353
      size 48 48
      hexactpos 1
      vexactpos 1
@@ -1240,7 +1241,8 @@ FrameWidgetClass main_menu_root {
        {
         ImageWidgetClass ExitButton_Icon {
          ignorepointer 1
-         size 0.8 0.8
+         position 0 0
+         size 0.75 0.75
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1250,6 +1252,7 @@ FrameWidgetClass main_menu_root {
          scriptclass "SymbolHandler"
          mode blend
          "src alpha" 1
+         filter 1
          {
           ScriptParamsClass {
            Symbol_Name "person_to_door"
@@ -1270,7 +1273,8 @@ FrameWidgetClass main_menu_root {
        {
         ImageWidgetClass SettingButton_Icon {
          ignorepointer 1
-         size 0.8 0.8
+         position 0 0
+         size 0.75 0.75
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1280,6 +1284,7 @@ FrameWidgetClass main_menu_root {
          scriptclass "SymbolHandler"
          mode blend
          "src alpha" 1
+         filter 1
          {
           ScriptParamsClass {
            Symbol_Name "gear"
@@ -1300,7 +1305,8 @@ FrameWidgetClass main_menu_root {
        {
         ImageWidgetClass DiscordButton_Icon {
          ignorepointer 1
-         size 0.8 0.8
+         position 0 0
+         size 0.75 0.75
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1311,6 +1317,7 @@ FrameWidgetClass main_menu_root {
          image0 "set:brands image:discord"
          mode blend
          "src alpha" 1
+         filter 1
         }
        }
       }
@@ -1325,7 +1332,8 @@ FrameWidgetClass main_menu_root {
        {
         ImageWidgetClass WikiButton_Icon {
          ignorepointer 1
-         size 0.8 0.8
+         position 0 0
+         size 0.75 0.75
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1336,6 +1344,7 @@ FrameWidgetClass main_menu_root {
          image0 "set:brands image:github"
          mode blend
          "src alpha" 1
+         filter 1
         }
        }
       }
@@ -1350,7 +1359,8 @@ FrameWidgetClass main_menu_root {
        {
         ImageWidgetClass TwitterButton_Icon {
          ignorepointer 1
-         size 0.8 0.8
+         position 0 0
+         size 0.75 0.75
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -1361,6 +1371,7 @@ FrameWidgetClass main_menu_root {
          image0 "set:brands image:twitter"
          mode blend
          "src alpha" 1
+         filter 1
         }
        }
       }
@@ -1487,13 +1498,12 @@ FrameWidgetClass main_menu_root {
        hexactsize 1
        vexactsize 1
        scriptclass "ViewBinding"
-       Padding 0
-       Margin 7
+       Padding 12
+       Margin 12
        "Size To Content H" 1
        "Size To Content V" 1
        content_halign center
        content_valign center
-       Columns 12
        Rows 1
        {
         ScriptParamsClass {

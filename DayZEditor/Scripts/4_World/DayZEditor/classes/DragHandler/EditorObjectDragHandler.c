@@ -132,7 +132,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		}
 
 		vector surface_normal = GetGame().SurfaceGetNormal(rotation_source_pos[0], rotation_source_pos[2]);		
-		vector up_dir = transform[1];
+		vector up_dir = vector.Up;
 		//if (GetEditor().GetSettings().AltMoveMode) {
 		//	up_dir = transform[1];
 		//}
