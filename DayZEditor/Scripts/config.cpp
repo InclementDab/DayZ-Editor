@@ -1,12 +1,3 @@
-////////////////////////////////////////////////////////////////////
-//DeRap: config.bin
-//Produced from mikero's Dos Tools Dll version 9.44
-//https://mikero.bytex.digital/Downloads
-//'now' is Tue Feb 20 16:27:18 2024 : 'file' last modified on Tue Aug 29 20:42:44 2023
-////////////////////////////////////////////////////////////////////
-
-#define _ARMA_
-
 class CfgPatches
 {
 	class Editor_Scripts
@@ -14,7 +5,7 @@ class CfgPatches
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = 0.1;
-		requiredAddons[] = {"DZ_Scripts","JM_CF_Scripts","DF_Scripts"};
+		requiredAddons[] = {"DZ_Scripts","JM_CF_Scripts","DF_Scripts", "DZ_Gear_Navigation"};
 	};
 };
 class CfgMods
@@ -76,6 +67,33 @@ class CfgMods
 	};
 };
 
+class CfgLocationTypes
+{
+    class Name
+    {
+        name="keypoint";
+        drawStyle="name";
+        texture="#(argb,1,1,1)color(1,1,1,1)";
+        color[]={1, 1, 1, 1};
+        size=0;
+        font="gui/fonts/metron22";
+        textSize=0.03;
+        shadow=0;
+        importance=1;
+    };
+    class NameIcon
+    {
+        name="keypoint";
+        drawStyle="icon";
+        texture="#(argb,1,1,1)color(1,1,1,1)";
+        color[]={1, 1, 1, 1};
+        size=0;
+        font="gui/fonts/metron22";
+        textSize=0.03;
+        shadow=0;
+        importance=1;
+    };
+};
 class MapDefaults;
 class RscMapControl: MapDefaults
 {
