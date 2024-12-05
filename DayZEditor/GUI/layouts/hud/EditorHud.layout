@@ -1486,6 +1486,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorNewCommand"
+                }
+               }
               }
               ButtonWidgetClass OpenButton {
                visible 1
@@ -1533,6 +1538,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorOpenCommand"
                 }
                }
               }
@@ -1584,6 +1594,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorSaveCommand"
+                }
+               }
               }
               ButtonWidgetClass SaveAsButton {
                visible 1
@@ -1631,6 +1646,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorSaveAsCommand"
                 }
                }
               }
@@ -1725,6 +1745,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorUndoCommand"
+                }
+               }
               }
               ButtonWidgetClass RedoButton {
                clipchildren 1
@@ -1769,6 +1794,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorRedoCommand"
                 }
                }
               }
@@ -1862,6 +1892,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorCutCommand"
+                }
+               }
               }
               ButtonWidgetClass CopyButton {
                clipchildren 1
@@ -1912,6 +1947,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorCopyCommand"
+                }
+               }
               }
               ButtonWidgetClass PasteButton {
                clipchildren 1
@@ -1959,6 +1999,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorPasteCommand"
                 }
                }
               }
@@ -2043,6 +2088,11 @@ FrameWidgetClass EditorFrame {
                  filter 1
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorMagnetCommand"
+                }
+               }
               }
               ButtonWidgetClass GroundButton {
                clipchildren 1
@@ -2079,6 +2129,11 @@ FrameWidgetClass EditorFrame {
                  "clamp mode" clamp
                  "stretch mode" invalid
                  filter 1
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorGroundCommand"
                 }
                }
               }
@@ -2120,6 +2175,11 @@ FrameWidgetClass EditorFrame {
                  filter 1
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorSnapCommand"
+                }
+               }
               }
               ButtonWidgetClass CollisionButton {
                clipchildren 1
@@ -2158,6 +2218,11 @@ FrameWidgetClass EditorFrame {
                  "clamp mode" clamp
                  "stretch mode" invalid
                  filter 1
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorCollisionCommand"
                 }
                }
               }
@@ -2246,6 +2311,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorToggleLightCommand"
+                }
+               }
               }
               PanelWidgetClass TogglePlayerButton {
                visible 1
@@ -2287,6 +2357,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 2
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorTogglePlayerCommand"
                 }
                }
               }
@@ -2378,6 +2453,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorObjectSelectionCommand"
+                }
+               }
               }
               PanelWidgetClass BoxSelectionButton {
                clipchildren 1
@@ -2419,6 +2499,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorBoxSelectionCommand"
                 }
                }
               }
@@ -2464,6 +2549,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorEllipseSelectionCommand"
+                }
+               }
               }
               PanelWidgetClass LassoSelectionButton {
                clipchildren 1
@@ -2505,6 +2595,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorLassoSelectionCommand"
                 }
                }
               }
@@ -2953,6 +3048,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorLockManyCommand"
+                }
+               }
               }
               PanelWidgetClass UnlockButton {
                clipchildren 1
@@ -2996,6 +3096,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorUnlockManyCommand"
+                }
+               }
               }
               PanelWidgetClass UnlockAllButton {
                clipchildren 1
@@ -3037,6 +3142,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorUnlockAllCommand"
                 }
                }
               }
@@ -3128,6 +3238,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorTranslationCommand"
+                }
+               }
               }
               PanelWidgetClass RotationButton {
                clipchildren 1
@@ -3171,6 +3286,11 @@ FrameWidgetClass EditorFrame {
                  }
                 }
                }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorRotationCommand"
+                }
+               }
               }
               PanelWidgetClass ScaleButton {
                clipchildren 1
@@ -3212,6 +3332,11 @@ FrameWidgetClass EditorFrame {
                    Symbol_Size 1
                   }
                  }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorScaleCommand"
                 }
                }
               }
