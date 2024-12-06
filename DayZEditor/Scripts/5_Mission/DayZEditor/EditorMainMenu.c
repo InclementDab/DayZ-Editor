@@ -1,6 +1,6 @@
 class EditorMainMenuController: ViewController
 {
-	ref ObservableCollection<ref EditorMapView> MapViews = new ObservableCollection<ref EditorMapView>(this);
+	ref ObservableCollection<ref ScriptView> MapViews = new ObservableCollection<ref ScriptView>(this);
 }
 
 class EditorMainMenu: ScriptViewMenu
@@ -19,6 +19,12 @@ class EditorMainMenu: ScriptViewMenu
 			string name;
 			GetGame().ConfigGetChildName("CfgWorlds", i, name);
 			if (GetGame().ConfigIsExisting(string.Format("CfgWorlds %1 worldName", name))) {
+				if (i != 0) {
+					QuickView<Widget> Spacer = new QuickView<Widget>();
+					Spacer.Root.SetScreenSize(24, 24);
+					m_TemplateController.MapViews.Insert(Spacer);
+				}
+
 				m_TemplateController.MapViews.Insert(new EditorMapView(name));
 			}
 		}
@@ -49,7 +55,7 @@ class EditorMainMenu: ScriptViewMenu
 			const float PARALLAX_AMOUNT = 0.5;
 	        float x_relative = ((mouse_x / screen_x) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2); // 5.0 is from my extra percent size / 2
 	        float y_relative = ((mouse_y / screen_y) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2);
-	        MapSelectorBackground.SetPos(x_relative * 10, y_relative * 10);
+	        MapSelectorBackground.SetPos(x_relative * 100, y_relative * 100);
 			m_MotionSicknessDt = 0;
 		}
 	}

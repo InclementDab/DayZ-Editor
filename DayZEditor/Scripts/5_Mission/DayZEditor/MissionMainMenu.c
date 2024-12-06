@@ -20,7 +20,18 @@ class IntroSceneEditor: Managed
 		array<string> files = Directory.EnumerateFiles(build_directory, "*.dze");
 
 		vector camera_position = location.Position + vector.RandomDir2D() * location.GetImportance() * 200;
-		camera_position[1] = GetGame().SurfaceY(camera_position[0], camera_position[2]) + 300;
+		camera_position[1] = GetGame().SurfaceY(camera_position[0], camera_position[2]) + 120;
+		
+		int rnd = Math.RandomIntInclusive(0, 8);
+		if (rnd == 1) {
+			GetGame().GetWeather().GetRain().Set(Math.RandomFloat01());
+		} else if (rnd == 2) {
+			GetGame().GetWeather().GetSnowfall().Set(Math.RandomFloat01());
+		}
+
+		GetGame().GetWeather().GetOvercast().Set(Math.RandomFloat01());
+		GetGame().GetWeather().GetFog().Set(Math.RandomFloat01());
+		
 		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera_V2", camera_position, ECE_NONE));
 		m_EditorCamera.SetActive(true);
 

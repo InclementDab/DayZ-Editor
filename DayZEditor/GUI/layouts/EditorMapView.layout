@@ -4,7 +4,7 @@ ButtonWidgetClass PanelWidget4 {
  ignorepointer 1
  color 0.1725 0.1922 0.2118 1
  position 0 0
- size 512 512
+ size 492 492
  hexactpos 1
  vexactpos 1
  hexactsize 1

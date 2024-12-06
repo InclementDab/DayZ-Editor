@@ -1,3 +1,12 @@
+/*
+                    Euler sleeps here
+               __..--''``---....___   _..._    __
+     /// //_.-'    .-/";  `        ``<._  ``.''_ `. / // /
+    ///_.-' _..--.'_    \                    `( ) ) // //
+    / (_..-' // (< _     ;_..__               ; `' / ///
+     / // // //  `-._,_)' // / ``--...____..-' /// / //
+*/
+
 #ifdef DIAG_DEVELOPER
 #define GIZMOS_ENABLED
 #endif
@@ -98,6 +107,7 @@ class Editor: Managed
 	bool 										GroundMode;
 	bool 										SnappingMode;
 	bool 										CollisionMode;
+	bool 										LightningMode;
 	
 	ref EditorDragHandler DragHandler;
 
@@ -602,6 +612,29 @@ class Editor: Managed
 		GetStatistics().EditorPlayTime += STATISTICS_SAVE_INTERVAL;
 		GetStatistics().Save();
 	}
+	
+	protected void CreateLightning(vector position)
+	{
+		position[1] = GetGame().SurfaceY(position[0], position[2]);
+		
+		SEffectManager.PlaySound("ThunderHeavy_Near_SoundSet", position);
+		SEffectManager.PlaySound("ThunderHeavy_Far_SoundSet", position);
+
+		Object lightning1 = GetGame().CreateStaticObjectUsingP3D("DZ/data/data/blesk1.p3d", position, Vector(Math.RandomFloat(0, 360), 0, 0), 1.5, true);
+		Object lightning2 = GetGame().CreateStaticObjectUsingP3D("DZ/data/data/blesk2.p3d", position, Vector(Math.RandomFloat(0, 360), 0, 0), 1.5, true);
+
+		ScriptedLightBase light = ScriptedLightBase.CreateLight(PointLightBase, position);
+		light.SetBrightnessTo(200);
+		light.SetRadiusTo(4000);
+		light.SetLifetime(Math.RandomInt(150, 400) / 1000);
+		light.SetPulseCoef(200);
+		light.SetFlickerAmplitude(0.3);
+		light.SetFlickerSpeed(40);
+		light.SetFlareVisible(false);
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(lightning1.Delete, Math.RandomInt(150, 300));
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(lightning2.Delete, Math.RandomInt(250, 600));
+	}
 
 	void Update(float timeslice)
 	{
@@ -992,6 +1025,11 @@ class Editor: Managed
 				return;
 			}
 #endif
+			
+			if (LightningMode && cursor_raycast) {
+				CreateLightning(cursor_raycast.Bounce.Position);
+				return;
+			}
 			
 			if (IsPlacing()) {
 				PlaceObject();
@@ -1646,6 +1684,9 @@ class Editor: Managed
 	void CancelPlacing()
 	{
 		// todo: stub
+		foreach (EditorWorldObject placing_object, EditorHandData hand_data: m_PlacingObjects) {
+			RemoveFromHand(placing_object); 
+		}
 		//delete m_PlacingObjects;
 		//m_PlacingObjects.Clear();
 	}
