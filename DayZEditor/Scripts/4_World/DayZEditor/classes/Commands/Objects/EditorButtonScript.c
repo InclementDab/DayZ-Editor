@@ -92,7 +92,8 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 		if (m_Command && !EditorHud.CurrentMenu && m_Command.CanExecute()) {
 			EffectSound snd;
 			Camera.GetCurrentCamera().PlaySoundSet(snd, "Click_Editor_Soundset", 0, 0);
-			snd.GetWaveObject().SetFrequency(0.75);
+			snd.GetWaveObject().SetVolume(0.5);
+			snd.GetWaveObject().SetFrequency(1.6);
 			
 			float pos_x, pos_y, size_x, size_y;
 			m_LayoutRoot.GetScreenPos(pos_x, pos_y);
