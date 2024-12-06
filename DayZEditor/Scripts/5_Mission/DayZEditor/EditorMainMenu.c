@@ -1,6 +1,23 @@
 class EditorMainMenuController: ViewController
 {
 	ref ObservableCollection<ref ScriptView> MapViews = new ObservableCollection<ref ScriptView>(this);
+	ref ObservableCollection<ref ScriptView> StatisticsEntries = new ObservableCollection<ref ScriptView>(this);
+}
+
+class EditorStatisticsEntryView: ScriptView
+{
+	TextWidget Text, Value;
+	
+	void EditorStatisticsEntryView(string text, string value)
+	{
+		Text.SetText(text);
+		Value.SetText(value);
+	}
+	
+	override string GetLayoutFile()
+	{
+		return "DayZEditor\\GUI\\layouts\\items\\EditorStatisticsEntry.layout";
+	}
 }
 
 class EditorMainMenu: ScriptViewMenu
@@ -8,9 +25,11 @@ class EditorMainMenu: ScriptViewMenu
 	protected EditorMainMenuController m_TemplateController;
 	protected float m_MotionSicknessDt;
 
-	ImageWidget MapSelectorBackground;
+	Widget ServerShowcase, ServerShowcaseOutline;
+	ImageWidget MapSelectorBackground, ServerShowcaseImage;
 	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton;
-	TextWidget VersionText, EditorText;
+	TextWidget VersionText, EditorText, StatHeaderText;
+	RichTextWidget ServerShowcaseBackupText;
 	
 	void EditorMainMenu()
 	{
@@ -32,7 +51,6 @@ class EditorMainMenu: ScriptViewMenu
 		string version;
 		GetGame().GetVersion(version);
 		VersionText.SetText(string.Format("#main_menu_version %1", version));
-		
 		EditorText.SetText(string.Format("#STR_EDITOR_MAIN_MENU_VERSION %1, created by InclementDab", Editor.Version));
 		
 		// Update global login counter
@@ -40,12 +58,36 @@ class EditorMainMenu: ScriptViewMenu
 		RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 		ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 		ctx.POST(new RestCallbackBase(),"api\/update-login-counter", string.Format("{\"id\":%1}", uid));
+		
+		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(LoadStats, 10);
+	}
+	
+	protected void LoadStats()
+	{
+		// Get statistics
+		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
+		TimeSpan time = statistics.EditorPlayTime;
+		
+		string placed = statistics.EditorPlacedObjects.ToString();
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Placed Objects", placed));
+		
+		string removed = statistics.EditorRemovedObjects.ToString();
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Removed Objects", removed));
+		
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Distance Travelled", string.Format("%1km", statistics.DistanceFlown / 1000)));
+		string controlled = statistics.CharactersControlled.ToString();
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Controlled", controlled));
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Time Spent Editing", time.Format()));
+		
+		ServerShowcaseBackupText.SetText("Want to see your server here?\nClick for info.");
 	}
 
 	override void Update(float dt)
 	{
 		super.Update(dt);
-		
+				
 		int mouse_x, mouse_y, screen_x, screen_y;
 	    GetMousePos(mouse_x, mouse_y);
 	    GetScreenSize(screen_x, screen_y);
@@ -55,7 +97,7 @@ class EditorMainMenu: ScriptViewMenu
 			const float PARALLAX_AMOUNT = 0.5;
 	        float x_relative = ((mouse_x / screen_x) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2); // 5.0 is from my extra percent size / 2
 	        float y_relative = ((mouse_y / screen_y) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2);
-	        MapSelectorBackground.SetPos(x_relative * 100, y_relative * 100);
+	       // MapSelectorBackground.SetPos(x_relative * 100, y_relative * 100);
 			m_MotionSicknessDt = 0;
 		}
 	}
@@ -96,6 +138,11 @@ class EditorMainMenu: ScriptViewMenu
 				child_image.SetColor(LinearColor.TWITTER);
 				break;
 			}
+
+			case ServerShowcase: {
+				ServerShowcaseOutline.SetColor(EditorColors.BLUE);
+				break;
+			}
 		}
 
 		return super.OnMouseEnter(w, x, y);
@@ -109,6 +156,11 @@ class EditorMainMenu: ScriptViewMenu
 			case SettingButton: {
 				child_image.SetImage(2);
 				break;
+			}
+
+			case ServerShowcase: {
+				WidgetAnimator.AnimateColor(ServerShowcaseOutline, -1, 60);
+				return true;
 			}
 		}
 

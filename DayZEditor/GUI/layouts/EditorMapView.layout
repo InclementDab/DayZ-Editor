@@ -4,174 +4,14 @@ ButtonWidgetClass PanelWidget4 {
  ignorepointer 1
  color 0.1725 0.1922 0.2118 1
  position 0 0
- size 492 492
+ size 1 1
  hexactpos 1
  vexactpos 1
- hexactsize 1
- vexactsize 1
+ hexactsize 0
+ vexactsize 0
+ fixaspect inside
  style Editor
  {
-  GridSpacerWidgetClass ButtonSpacer {
-   ignorepointer 1
-   position 0 0.5
-   size 1 0
-   hexactpos 1
-   vexactpos 0
-   hexactsize 0
-   vexactsize 1
-   Padding 0
-   Margin 0
-   "Size To Content V" 1
-   Columns 1
-   Rows 4
-   {
-    ButtonWidgetClass StartButton {
-     disabled 0
-     ignorepointer 1
-     color 0.098 0.098 0.098 1
-     position 10 10
-     size 53 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style Colorable
-     {
-      TextWidgetClass TextWidget0 {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       text "Start"
-       font "gui/fonts/Metron16"
-       "text halign" center
-       "text valign" center
-      }
-      ImageWidgetClass ImageWidget0 {
-       ignorepointer 1
-       position 9 0
-       size 18 18
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "SymbolHandler"
-       mode blend
-       "src alpha" 1
-       "flip u" 1
-       {
-        ScriptParamsClass {
-         Symbol_Name "helmet_safety"
-         Symbol_Size 3
-        }
-       }
-      }
-     }
-    }
-    ButtonWidgetClass LoadButton {
-     disabled 0
-     ignorepointer 1
-     color 0.098 0.098 0.098 1
-     position 10 10
-     size 53 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style Colorable
-     {
-      TextWidgetClass TextWidget1 {
-       ignorepointer 1
-       size 0.99 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       text "#str_editor_open..."
-       font "gui/fonts/Metron16"
-       "text halign" center
-       "text valign" center
-      }
-      ImageWidgetClass ImageWidget1 {
-       ignorepointer 1
-       position 9 0
-       size 18 18
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "SymbolHandler"
-       mode blend
-       "src alpha" 1
-       "flip u" 0
-       {
-        ScriptParamsClass {
-         Symbol_Name "folder"
-         Symbol_Size 3
-        }
-       }
-      }
-     }
-    }
-    ButtonWidgetClass PurchaseButton {
-     visible 0
-     disabled 0
-     ignorepointer 1
-     color 0.098 0.098 0.098 1
-     position 10 10
-     size 53 32
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     style Colorable
-     {
-      TextWidgetClass TextWidget2 {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       text "Purchase Map..."
-       font "gui/fonts/Metron16"
-       "text halign" center
-       "text valign" center
-      }
-      ImageWidgetClass ImageWidget2 {
-       ignorepointer 1
-       position 9 0
-       size 18 18
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scriptclass "SymbolHandler"
-       mode blend
-       "src alpha" 1
-       "flip u" 0
-       {
-        ScriptParamsClass {
-         Symbol_Name "cart_shopping"
-         Symbol_Size 2
-        }
-       }
-      }
-     }
-    }
-   }
-  }
   FrameWidgetClass ImageFr {
    ignorepointer 1
    size 1 1
@@ -197,6 +37,122 @@ ButtonWidgetClass PanelWidget4 {
      "clamp mode" clamp
      "stretch mode" fit_w
      filter 0
+     {
+      GridSpacerWidgetClass ButtonGrid {
+       inheritalpha 0
+       ignorepointer 1
+       position 0.05 0.075
+       size 48 48
+       hexactpos 0
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       Padding 7
+       Margin 7
+       "Size To Content H" 1
+       "Size To Content V" 1
+       Columns 1
+       Rows 1
+       {
+        ButtonWidgetClass StartButton {
+         inheritalpha 0
+         position 10 10
+         size 24 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass ImageWidget3 {
+           inheritalpha 0
+           ignorepointer 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "SymbolHandler"
+           mode blend
+           "src alpha" 1
+           {
+            ScriptParamsClass {
+             Symbol_Name "play"
+             Symbol_Size 2
+            }
+           }
+          }
+         }
+        }
+        ButtonWidgetClass LoadButton {
+         inheritalpha 0
+         position 10 10
+         size 24 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass ImageWidget4 {
+           inheritalpha 0
+           ignorepointer 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "SymbolHandler"
+           mode blend
+           "src alpha" 1
+           {
+            ScriptParamsClass {
+             Symbol_Name "folder_open"
+             Symbol_Size 2
+            }
+           }
+          }
+         }
+        }
+        ButtonWidgetClass PurchaseButton {
+         inheritalpha 0
+         position 10 10
+         size 24 24
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass ImageWidget5 {
+           inheritalpha 0
+           ignorepointer 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass "SymbolHandler"
+           mode blend
+           "src alpha" 1
+           {
+            ScriptParamsClass {
+             Symbol_Name "cart_shopping"
+             Symbol_Size 2
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
     }
     GridSpacerWidgetClass SatGrid {
      visible 0
@@ -214,6 +170,167 @@ ButtonWidgetClass PanelWidget4 {
      content_valign center
      Columns 32
      Rows 32
+    }
+    GridSpacerWidgetClass ButtonSpacer {
+     ignorepointer 1
+     position 0 -0.2
+     size 1 0
+     hexactpos 1
+     vexactpos 0
+     hexactsize 0
+     vexactsize 1
+     Padding 0
+     Margin 0
+     "Size To Content V" 1
+     Columns 1
+     Rows 4
+     {
+      ButtonWidgetClass StartButton0 {
+       disabled 0
+       ignorepointer 1
+       color 0.149 0.1529 0.1608 1
+       position 10 10
+       size 53 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Colorable
+       {
+        TextWidgetClass TextWidget0 {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Start"
+         font "gui/fonts/Metron16"
+         "text halign" center
+         "text valign" center
+        }
+        ImageWidgetClass ImageWidget0 {
+         ignorepointer 1
+         position 9 0
+         size 18 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         "flip u" 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "helmet_safety"
+           Symbol_Size 3
+          }
+         }
+        }
+       }
+      }
+      ButtonWidgetClass LoadButton0 {
+       disabled 0
+       ignorepointer 1
+       color 0.149 0.1529 0.1608 1
+       position 10 10
+       size 53 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Colorable
+       {
+        TextWidgetClass TextWidget1 {
+         ignorepointer 1
+         size 0.99 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "#str_editor_open..."
+         font "gui/fonts/Metron16"
+         "text halign" center
+         "text valign" center
+        }
+        ImageWidgetClass ImageWidget1 {
+         ignorepointer 1
+         position 9 0
+         size 18 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         "flip u" 0
+         {
+          ScriptParamsClass {
+           Symbol_Name "folder"
+           Symbol_Size 3
+          }
+         }
+        }
+       }
+      }
+      ButtonWidgetClass PurchaseButton0 {
+       visible 0
+       disabled 0
+       ignorepointer 1
+       color 0.149 0.1529 0.1608 1
+       position 10 10
+       size 53 32
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Colorable
+       {
+        TextWidgetClass TextWidget2 {
+         ignorepointer 1
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         text "Purchase Map..."
+         font "gui/fonts/Metron16"
+         "text halign" center
+         "text valign" center
+        }
+        ImageWidgetClass ImageWidget2 {
+         ignorepointer 1
+         position 9 0
+         size 18 18
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         "flip u" 0
+         {
+          ScriptParamsClass {
+           Symbol_Name "cart_shopping"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+     }
     }
    }
   }

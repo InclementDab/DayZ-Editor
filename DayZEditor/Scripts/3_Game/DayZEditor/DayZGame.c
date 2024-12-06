@@ -37,7 +37,7 @@ modded class DayZGame
 		for (int i = 0; i < ConfigGetChildrenCount("CfgWorlds"); i++) {
 			string name;
 			ConfigGetChildName("CfgWorlds", i, name);
-			if (ConfigIsExisting(string.Format("CfgWorlds %1 worldName", name))) {
+			if (VerifyWorldOwnership(name) && ConfigIsExisting(string.Format("CfgWorlds %1 worldName", name))) {
 				maps.Insert(name);
 			}
 		}	

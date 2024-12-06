@@ -37,6 +37,10 @@ class EditorMapView: ScriptView
 			PurchaseButton.Show(true);
 			StartButton.Enable(false);
 			LoadButton.Enable(false);
+			
+			Text.SetText(string.Format("%1 (DLC REQUIRED)", map_name));
+		} else {
+			PurchaseButton.Show(false);
 		}
 	}
 
@@ -51,27 +55,24 @@ class EditorMapView: ScriptView
 	{
 		super.Update(dt);
 		
-		m_SoundEffectDt -= dt;
-
-		Widget child = ButtonSpacer.GetChildren();
-		while (child) {
-			bool disabled = ((child.GetFlags() & WidgetFlags.DISABLED) == WidgetFlags.DISABLED);
-			if (disabled) {
-				child.GetChildren().SetColor(LinearColor.Create(255, 150, 150, 150));
-				child.GetChildren().GetSibling().SetColor(LinearColor.Create(255, 150, 150, 150));
-			} else {
-				child.GetChildren().SetColor(-1);
-				child.GetChildren().GetSibling().SetColor(-1);
-			}
-			
-
-			child = child.GetSibling();
+		if (!m_LayoutRoot) {
+			return;
 		}
+		
+		array<Widget> buttons = { StartButton, LoadButton, PurchaseButton };
+		foreach (Widget button: buttons) {
+			if (button && button.IsVisible() && (button.GetFlags() & WidgetFlags.DISABLED) == WidgetFlags.DISABLED) {
+				button.GetChildren().SetColor(LinearColor.Create(150, 200, 200, 200));
+			}
+		}
+
+		m_SoundEffectDt -= dt;
+		Widget widget_under_cursor = GetWidgetUnderCursor();
 		
 		int mouse_x, mouse_y, screen_x, screen_y;
 	    GetMousePos(mouse_x, mouse_y);
 	    GetScreenSize(screen_x, screen_y);
-		Widget widget_under_cursor = GetWidgetUnderCursor();
+		
 		if (widget_under_cursor == Image) {
 			float layout_s_x, layout_s_y;
 			m_LayoutRoot.GetScreenPos(layout_s_x, layout_s_y);
@@ -82,8 +83,8 @@ class EditorMapView: ScriptView
 			m_MotionSicknessDt += dt;
 			if (m_MotionSicknessDt > (1 / 60)) {			
 				const float PARALLAX_AMOUNT = 4.5;
-		        float x_relative = (((mouse_x - layout_s_x) / i_s_w) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2); // 5.0 is from my extra percent size / 2
-		        float y_relative = (((mouse_y - layout_s_y) / i_s_h) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2);
+		       // float x_relative = (((mouse_x - layout_s_x) / i_s_w) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2); // 5.0 is from my extra percent size / 2
+		       // float y_relative = (((mouse_y - layout_s_y) / i_s_h) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2);
 				
 		        //Image.SetPos(x_relative, y_relative);
 				m_MotionSicknessDt = 0;
@@ -95,10 +96,10 @@ class EditorMapView: ScriptView
 	{
 		m_Opened = state;
 		if (m_Opened) {
-			WidgetAnimator.Animate(ButtonSpacer, WidgetAnimatorProperty.POSITION_Y, 1.0, 200);
+			WidgetAnimator.Animate(ButtonSpacer, WidgetAnimatorProperty.POSITION_Y, 0, 60);
 			WidgetAnimator.AnimateColor(Outline, m_EditorSettings.SelectionColor, 60);
 		} else {
-			WidgetAnimator.Animate(ButtonSpacer, WidgetAnimatorProperty.POSITION_Y, 0.5, 50);
+			WidgetAnimator.Animate(ButtonSpacer, WidgetAnimatorProperty.POSITION_Y, -0.2, 50);
 			if (GetWidgetUnderCursor() != Image) {
 				WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 1.0, 60);
 				WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 1.0, 60);
@@ -153,11 +154,11 @@ class EditorMapView: ScriptView
 			case Image: {
 				foreach (EditorMapView view: s_AllEditorMapViews) {
 					if (view != this && view.IsOpened()) {
-						view.SetOpened(false);
+						//view.SetOpened(false);
 					}
 				}
 		
-				SetOpened(!IsOpened());
+				//SetOpened(!IsOpened());
 				break;
 			}
 		}
@@ -166,7 +167,7 @@ class EditorMapView: ScriptView
 	}
 
 	override bool OnClick(Widget w, int x, int y, int button)
-	{
+	{		
 		return super.OnClick(w, x, y, button);
 	}
 	
@@ -192,12 +193,16 @@ class EditorMapView: ScriptView
 
 			WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 1.1, 120);
 			WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 1.1, 120);
-
+			
 			WidgetAnimator.AnimateColor(Image, -1, 200);
 			WidgetAnimator.AnimateColor(Text, -1, 100);
 			WidgetAnimator.AnimateColor(Outline, m_EditorSettings.HighlightColor, 60);
 
-			if (!m_Opened && m_SoundEffectDt < 0) {
+			StartButton.GetChildren().SetColor(-1);
+			LoadButton.GetChildren().SetColor(-1);
+			PurchaseButton.GetChildren().SetColor(-1);
+
+			if (!m_Opened && Image.GetColor() != -1) {
 				EffectSound snd;
 				Camera.GetCurrentCamera().PlaySoundSet(snd, "mapOut_SoundSet", 0, 0);
 				snd.SetLocalPosition(Vector(1, 0, 0));
@@ -206,7 +211,9 @@ class EditorMapView: ScriptView
 		}
 
 		if (w.IsInherited(ButtonWidget)) {
-			w.SetColor(m_EditorSettings.HighlightColor);
+			ImageWidget.Cast(w.GetChildren()).SetImage(3);
+			w.GetChildren().SetColor(m_EditorSettings.SelectionColor);
+			w.GetChildren().SetSize(1.0, 1.0);
 		}
 		
 		return true;
@@ -218,7 +225,7 @@ class EditorMapView: ScriptView
 			case Image: {
 				Image.SetImage(1);
 
-				if (!m_Opened) {
+				if (!m_Opened && (!enterW || !enterW.IsInherited(ButtonWidget))) {
 					WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 1.0, 60);
 					WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 1.0, 60);
 					WidgetAnimator.AnimateColor(Image, LinearColor.Create(150, 150, 150), 200);
@@ -230,8 +237,11 @@ class EditorMapView: ScriptView
 			}
 
 			default: {
-				if (w.IsInherited(ButtonWidget)) {
-					WidgetAnimator.AnimateColor(w, 0xff191919, 60);
+				if (w.IsInherited(ButtonWidget) && w.IsVisible() && (w.GetFlags() & WidgetFlags.DISABLED) != WidgetFlags.DISABLED) {
+					ImageWidget.Cast(w.GetChildren()).SetImage(2);
+					WidgetAnimator.AnimateColor(w.GetChildren(), -1, 60);
+					WidgetAnimator.Animate(w.GetChildren(), WidgetAnimatorProperty.SIZE_H, 0.75, 60);
+					WidgetAnimator.Animate(w.GetChildren(), WidgetAnimatorProperty.SIZE_W, 0.75, 60);
 				}
 				
 				break;
