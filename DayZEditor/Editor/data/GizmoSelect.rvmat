@@ -1,0 +1,4 @@
+renderFlags[] = { NoReceiveShadow }; 
+specularPower=5;
+PixelShaderID="CalmWater";
+VertexShaderID="CalmWater";

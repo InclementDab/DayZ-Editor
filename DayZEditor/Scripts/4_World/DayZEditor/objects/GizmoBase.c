@@ -1,10 +1,10 @@
 class GizmoInteractionSource: Managed
 {
 	ref array<vector> Clipping = {};
-	LinearColor DefaultColor;
-	LinearColor HoverColor;
+	string DefaultColor;
+	string HoverColor;
 
-	void GizmoInteractionSource(notnull array<vector> clipping, LinearColor default_color, LinearColor hover_color = 0xFFFFFF00)
+	void GizmoInteractionSource(notnull array<vector> clipping, string default_color, string hover_color = "DayZEditor\\Editor\\data\\GizmoSelect.rvmat")
 	{
 		Clipping.Copy(clipping);
 		DefaultColor = default_color;
@@ -222,15 +222,15 @@ class EditorGizmo: Managed
 		
 #ifdef DIAG_DEVELOPER
 		foreach (int debug_interaction_index, GizmoInteractionSource debug_clip_info: m_InteractionCollisions) {
-			LinearColor dbg_color = debug_clip_info.DefaultColor;
+			//LinearColor dbg_color = debug_clip_info.DefaultColor;
 		
 			if (m_InteractionIndex == debug_interaction_index) {
-				dbg_color = LinearColor.YELLOW;
+				//dbg_color = LinearColor.YELLOW;
 			}
 			
 			if (debug_collisions) {
-				Shape s = Shape.Create(ShapeType.BBOX, dbg_color, ShapeFlags.TRANSP | ShapeFlags.ONCE | ShapeFlags.ADDITIVE, debug_clip_info.Clipping[0], debug_clip_info.Clipping[1]);
-				s.SetMatrix(m_TopTransformScaledToGizmo);
+				//Shape s = Shape.Create(ShapeType.BBOX, dbg_color, ShapeFlags.TRANSP | ShapeFlags.ONCE | ShapeFlags.ADDITIVE, debug_clip_info.Clipping[0], debug_clip_info.Clipping[1]);
+				//s.SetMatrix(m_TopTransformScaledToGizmo);
 			}
 		}
 #endif
@@ -269,17 +269,13 @@ class EditorGizmo: Managed
 			}
 		}
 		
-		foreach (int interaction_index_color, GizmoInteractionSource clip_info_color: m_InteractionCollisions) {
-			LinearColor color = clip_info_color.DefaultColor;
-			if (interaction_index_color == collide_index && m_InteractionIndex == -1) {
-				color = LinearColor.YELLOW;
-			}
-			
+		foreach (int interaction_index_color, GizmoInteractionSource clip_info_color: m_InteractionCollisions) {		
+			string color = clip_info_color.DefaultColor;
 			if (interaction_index_color == m_InteractionIndex) {
-				color = LinearColor.ORANGE;
+				color = clip_info_color.HoverColor;
 			}
 
-			m_Gizmo.SetObjectTexture(interaction_index_color, string.Format("#(argb,8,8,3)color(%1,%2,%3,1.000,co)", color.GetRed() / 255.0, color.GetGreen() / 255.0, color.GetBlue() / 255.0));
+			m_Gizmo.SetObjectMaterial(interaction_index_color, color);
 		}
 		
 		m_Gizmo.Update();
@@ -310,7 +306,7 @@ class EditorGizmo: Managed
 		clipping_infos[INTERACTION_CENTER] = new GizmoInteractionSource({
 			-Vector(BOX_WIDTH_LARGE, BOX_WIDTH_LARGE, BOX_WIDTH_LARGE),
 			Vector(BOX_WIDTH_LARGE, BOX_WIDTH_LARGE, BOX_WIDTH_LARGE)
-		}, LinearColor.WHITE);
+		}, "DayZEditor\\Editor\\data\\GizmoWhite.rvmat");
 	}
 
 	string GetGizmoMesh()
@@ -332,34 +328,34 @@ class EditorTranslationGizmo: EditorGizmo
 		clipping_infos[INTERACTION_X_AXIS] = new GizmoInteractionSource({
 			Vector(BOX_LENGTH, -BOX_WIDTH, -BOX_WIDTH),
 			Vector(0, BOX_WIDTH, BOX_WIDTH)
-		}, LinearColor.RED);
+		}, "DayZEditor\\Editor\\data\\GizmoRed.rvmat");
 		
 		// Y
 		clipping_infos[INTERACTION_Y_AXIS] = new GizmoInteractionSource({
 			Vector(-BOX_WIDTH, -0, -BOX_WIDTH),
 			Vector(BOX_WIDTH, BOX_LENGTH, BOX_WIDTH)
-		}, LinearColor.GREEN);
+		}, "DayZEditor\\Editor\\data\\GizmoGreen.rvmat");
 		
 		// Z
 		clipping_infos[INTERACTION_Z_AXIS] = new GizmoInteractionSource({
 			Vector(-BOX_WIDTH, -BOX_WIDTH, BOX_LENGTH),
 			Vector(BOX_WIDTH, BOX_WIDTH, 0)
-		}, LinearColor.BLUE);
+		}, "DayZEditor\\Editor\\data\\GizmoBlue.rvmat");
 		
 		clipping_infos[INTERACTION_XZ_PLANE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH, BOX_WIDTH_HALF, BOX_WIDTH), // BOX_WIDTH[0], BOX_WIDTH[2] to keep it from intersecting with others
 			Vector(BOX_LENGTH_HALF, -BOX_WIDTH_HALF, BOX_LENGTH_HALF)
-		}, LinearColor.GREEN);
+		}, "DayZEditor\\Editor\\data\\GizmoGreen.rvmat");
 		
 		clipping_infos[INTERACTION_XY_PLANE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH_HALF),
 			Vector(BOX_LENGTH_HALF, BOX_LENGTH_HALF, -BOX_WIDTH_HALF)
-		}, LinearColor.BLUE);
+		}, "DayZEditor\\Editor\\data\\GizmoBlue.rvmat");
 		
 		clipping_infos[INTERACTION_YZ_PLANE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH_HALF, BOX_WIDTH, BOX_WIDTH),
 			Vector(-BOX_WIDTH_HALF, BOX_LENGTH_HALF, BOX_LENGTH_HALF)
-		}, LinearColor.RED);
+		}, "DayZEditor\\Editor\\data\\GizmoRed.rvmat");
 	}
 	
 	override void UpdateGizmo(float dt, inout vector gizmo_transform[4])
@@ -547,17 +543,17 @@ class EditorRotationGizmo: EditorGizmo
 		clipping_infos[INTERACTION_XZ_ROTATE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH, BOX_WIDTH_HALF, BOX_WIDTH), // BOX_WIDTH[0], BOX_WIDTH[2] to keep it from intersecting with others
 			Vector(BOX_LENGTH, -BOX_WIDTH_HALF, BOX_LENGTH)
-		}, LinearColor.GREEN);
+		}, "DayZEditor\\Editor\\data\\GizmoGreen.rvmat");
 		
 		clipping_infos[INTERACTION_XY_ROTATE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH_HALF),
 			Vector(BOX_LENGTH, BOX_LENGTH, -BOX_WIDTH_HALF)
-		}, LinearColor.BLUE);
+		}, "DayZEditor\\Editor\\data\\GizmoBlue.rvmat");
 		
 		clipping_infos[INTERACTION_YZ_ROTATE] = new GizmoInteractionSource({
 			Vector(BOX_WIDTH_HALF, BOX_WIDTH, BOX_WIDTH),
 			Vector(-BOX_WIDTH_HALF, BOX_LENGTH, BOX_LENGTH)
-		}, LinearColor.RED);
+		}, "DayZEditor\\Editor\\data\\GizmoRed.rvmat");
 	}
 
 	override string GetGizmoMesh()
@@ -644,19 +640,19 @@ class EditorScaleGizmo: EditorGizmo
 		clipping_infos[INTERACTION_X_SCALE] = new GizmoInteractionSource({
 			Vector(BOX_LENGTH - 0.5, 0, 0) - Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH) * 2,
 			Vector(BOX_LENGTH - 0.5, 0, 0) + Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH) * 2
-		}, LinearColor.RED);
+		}, "DayZEditor\\Editor\\data\\GizmoRed.rvmat");
 		
 		// Y
 		clipping_infos[INTERACTION_Y_SCALE] = new GizmoInteractionSource({
 			Vector(0, BOX_LENGTH - 0.5, 0) - Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH) * 2,
 			Vector(0, BOX_LENGTH - 0.5, 0) + Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH) * 2
-		}, LinearColor.GREEN);
+		}, "DayZEditor\\Editor\\data\\GizmoGreen.rvmat");
 		
 		// Z
 		clipping_infos[INTERACTION_Z_SCALE] = new GizmoInteractionSource({
 			Vector(0, 0, BOX_LENGTH - 0.5) - Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH) * 2,
 			Vector(0, 0, BOX_LENGTH - 0.5) + Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH) * 2
-		}, LinearColor.BLUE);
+		}, "DayZEditor\\Editor\\data\\GizmoBlue.rvmat");
 	}
 
 	override string GetGizmoMesh()

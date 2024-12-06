@@ -97,18 +97,66 @@ class CfgVehicles
 			"#(argb,8,8,3)color(0.0,1.0,0.0,1.000,co)", 
 			"#(argb,8,8,3)color(0.0,0.0,1.0,1.000,co)"
 		};
+
+		hiddenSelectionsMaterials[] = {
+			"DayZEditor\\Editor\\data\\GizmoWhite.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoRed.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoGreen.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoBlue.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoRed.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoGreen.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoBlue.rvmat", 
+		};
 	};
 
 	class GizmoRotation: GizmoBase
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\RotateGizmo.p3d";
+
+		hiddenSelections[] = {
+			"origin_ball",
+			"x_arrow", 
+			"y_arrow", 
+			"z_arrow",
+			"x_square", 
+			"y_square", 
+			"z_square"
+		};
+
+		hiddenSelectionsMaterials[] = {
+			"DayZEditor\\Editor\\data\\GizmoWhite.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoRed.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoGreen.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoBlue.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoRed.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoGreen.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoBlue.rvmat", 
+		};
 	};
 
 	class GizmoScale: GizmoBase
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\ScaleGizmo.p3d";
+
+		hiddenSelections[] = {
+			"x_arrow", 
+			"y_arrow", 
+			"z_arrow",
+			"x_square", 
+			"y_square", 
+			"z_square"
+		};
+
+		hiddenSelectionsMaterials[] = {
+			"DayZEditor\\Editor\\data\\GizmoRed.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoGreen.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoBlue.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoRed.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoGreen.rvmat", 
+			"DayZEditor\\Editor\\data\\GizmoBlue.rvmat", 
+		};
 	};
 
 	class BrushBase : HouseNoDestruct
