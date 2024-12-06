@@ -1,4 +1,4 @@
-class IntroSceneEditor: Managed
+ class IntroSceneEditor: Managed
 {		
 	const float LOCATION_TIME_MAX = 45;
 	const string BUILD_LOCATIONS = "DayZEditor\\Editor\\Builds";
@@ -52,28 +52,33 @@ class IntroSceneEditor: Managed
 	    GetMousePos(mouse_x, mouse_y);
 	    GetScreenSize(screen_x, screen_y);
 				
-		m_MotionSicknessDt += dt;
-		if (m_MotionSicknessDt > (1 / 30)) {			
-			vector camera_matrix[4];
-			m_Camera.GetTransform(camera_matrix);
-			
-			camera_matrix[3] = camera_matrix[3] + camera_matrix[2] * 1 * m_MotionSicknessDt;
-			m_Camera.SetTransform(camera_matrix);
-			
-			float new_fov = m_Camera.GetCurrentFOV() + 0.005 * m_MotionSicknessDt;
-			m_Camera.SetFOV(new_fov);
+		vector camera_matrix[4];
+		m_Camera.GetTransform(camera_matrix);
+		
+		camera_matrix[3] = camera_matrix[3] + camera_matrix[2] * 1 * m_MotionSicknessDt;
+		m_Camera.SetTransform(camera_matrix);
+		
+		float new_fov = m_Camera.GetCurrentFOV() + 0.005 * m_MotionSicknessDt;
+		m_Camera.SetFOV(new_fov);
 
-			m_MotionSicknessDt = 0;
+		Ray camera_ray = new Ray(camera_matrix[3], camera_matrix[2]);
+		Raycast camera_raycast = camera_ray.PerformRaycast();
+		vector camera_raycast_bounce_pos;
+		if (camera_raycast) {
+			if (camera_raycast.Hit) {
+				camera_raycast_bounce_pos = camera_raycast.Hit.GetPosition();
+			} else if (camera_raycast.Bounce) {
+				camera_raycast_bounce_pos = camera_raycast.Bounce.Position;
+			}
 		}
 
-		m_TimeElapsedAtLocation += dt;
-
-		if (m_TimeElapsedAtLocation > 5 - 0.1) {
-			float alpha = (m_TimeElapsedAtLocation - (5 - 1.2)) / 1.2;
-			//MainMenuView.GetLayoutRoot().SetAlpha(alpha);
+		bool we_are_about_to_hit_something;
+		if (vector.Distance(camera_matrix[3], camera_raycast_bounce_pos) < 10) {
+			we_are_about_to_hit_something = true;
 		}
 		
-		if (m_TimeElapsedAtLocation > LOCATION_TIME_MAX) {
+		m_TimeElapsedAtLocation += dt;
+		if (m_TimeElapsedAtLocation > LOCATION_TIME_MAX || we_are_about_to_hit_something) {
 			if (m_UnvisitedLocations.Count() == 0) {
 				// Reset the tape
 				foreach (auto named_location: m_MapLocations) {

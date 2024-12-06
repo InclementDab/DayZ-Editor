@@ -89,7 +89,11 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (m_Command && !EditorHud.CurrentMenu) {
+		if (m_Command && !EditorHud.CurrentMenu && m_Command.CanExecute()) {
+			EffectSound snd;
+			Camera.GetCurrentCamera().PlaySoundSet(snd, "Click_Editor_Soundset", 0, 0);
+			snd.GetWaveObject().SetFrequency(0.75);
+			
 			float pos_x, pos_y, size_x, size_y;
 			m_LayoutRoot.GetScreenPos(pos_x, pos_y);
 			m_LayoutRoot.GetScreenSize(size_x, size_y);

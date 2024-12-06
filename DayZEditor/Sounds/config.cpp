@@ -40,6 +40,26 @@ class CfgSoundShaders
 	{
 		samples[] = {{"DayZEditor\sounds\what_dreams_may_come_ltr", 1}};
 	};
+	class Click0_Editor_SoundShader: Editor_Soundshader
+	{
+		samples[] = {{"DayZEditor\sounds\Click0", 1}};
+	};
+	class Click1_Editor_SoundShader: Editor_Soundshader
+	{
+		samples[] = {{"DayZEditor\sounds\Click1", 1}};
+	};
+	class Click2_Editor_SoundShader: Editor_Soundshader
+	{
+		samples[] = {{"DayZEditor\sounds\Click2", 1}};
+	};
+	class Click3_Editor_SoundShader: Editor_Soundshader
+	{
+		samples[] = {{"DayZEditor\sounds\Click3", 1}};
+	};
+	class Click4_Editor_SoundShader: Editor_Soundshader
+	{
+		samples[] = {{"DayZEditor\sounds\Click4", 1}};
+	};
 	class THX_Soundshader: Editor_Soundshader
 	{
 		samples[] = {{"DayZEditor\sounds\thx", 1}};
@@ -55,6 +75,11 @@ class CfgSoundSets
 		spatial = 1;
 		doppler = 0;
 		loop = 0;
+	};
+
+	class Click_Editor_Soundset: Editor_Soundset
+	{
+		soundShaders[]={"Click0_Editor_SoundShader", "Click1_Editor_SoundShader", "Click2_Editor_SoundShader", "Click3_Editor_SoundShader", "Click4_Editor_SoundShader"};
 	};
 
     class Music_Menu_SoundSet

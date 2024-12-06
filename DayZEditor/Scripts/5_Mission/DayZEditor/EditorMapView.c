@@ -7,7 +7,7 @@ class EditorMapView: ScriptView
 	protected AbstractWave m_CurrentMapSound;
 	ImageWidget Image;
 	TextWidget Text;
-	Widget Outline, ButtonSpacer;
+	Widget Outline, ButtonSpacer, ImageFr;
 	ButtonWidget StartButton, LoadButton, PurchaseButton;
 	protected int m_Opened;
 	
@@ -42,6 +42,8 @@ class EditorMapView: ScriptView
 		} else {
 			PurchaseButton.Show(false);
 		}
+		
+		m_LayoutRoot.SetHandler(m_Controller.GetHandler());
 	}
 
 	void ~EditorMapView()
@@ -73,7 +75,7 @@ class EditorMapView: ScriptView
 	    GetMousePos(mouse_x, mouse_y);
 	    GetScreenSize(screen_x, screen_y);
 		
-		if (widget_under_cursor == Image) {
+		if (widget_under_cursor == ImageFr) {
 			float layout_s_x, layout_s_y;
 			m_LayoutRoot.GetScreenPos(layout_s_x, layout_s_y);
 			
@@ -100,7 +102,7 @@ class EditorMapView: ScriptView
 			WidgetAnimator.AnimateColor(Outline, m_EditorSettings.SelectionColor, 60);
 		} else {
 			WidgetAnimator.Animate(ButtonSpacer, WidgetAnimatorProperty.POSITION_Y, -0.2, 50);
-			if (GetWidgetUnderCursor() != Image) {
+			if (GetWidgetUnderCursor() != ImageFr) {
 				WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 1.0, 60);
 				WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 1.0, 60);
 				WidgetAnimator.AnimateColor(Image, LinearColor.Create(150, 150, 150), 200);
@@ -151,7 +153,7 @@ class EditorMapView: ScriptView
 				break;
 			}
 			
-			case Image: {
+			case ImageFr: {
 				foreach (EditorMapView view: s_AllEditorMapViews) {
 					if (view != this && view.IsOpened()) {
 						//view.SetOpened(false);
@@ -168,6 +170,7 @@ class EditorMapView: ScriptView
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{		
+		Print(w);
 		return super.OnClick(w, x, y, button);
 	}
 	
@@ -188,15 +191,16 @@ class EditorMapView: ScriptView
 			return true;
 		}
 		
-		if (w == Image) {
+		if (w == ImageFr) {
 			Image.SetImage(1);
 
-			WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 1.1, 120);
-			WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 1.1, 120);
+			WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 0.95, 120);
+			WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 0.95, 120);
 			
 			WidgetAnimator.AnimateColor(Image, -1, 200);
 			WidgetAnimator.AnimateColor(Text, -1, 100);
-			WidgetAnimator.AnimateColor(Outline, m_EditorSettings.HighlightColor, 60);
+			WidgetAnimator.AnimateColor(Outline, m_EditorSettings.SelectionColor, 60);
+			WidgetAnimator.AnimateColor(m_LayoutRoot, m_EditorSettings.SelectionColor, 60);
 
 			StartButton.GetChildren().SetColor(-1);
 			LoadButton.GetChildren().SetColor(-1);
@@ -222,7 +226,7 @@ class EditorMapView: ScriptView
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		switch (w) {
-			case Image: {
+			case ImageFr: {
 				Image.SetImage(1);
 
 				if (!m_Opened && (!enterW || !enterW.IsInherited(ButtonWidget))) {
@@ -231,6 +235,7 @@ class EditorMapView: ScriptView
 					WidgetAnimator.AnimateColor(Image, LinearColor.Create(150, 150, 150), 200);
 					WidgetAnimator.AnimateColor(Text, LinearColor.Create(150, 150, 150), 100);
 					WidgetAnimator.AnimateColor(Outline, 0xff191919, 60);
+					WidgetAnimator.AnimateColor(m_LayoutRoot, 0xff191919, 60);
 				}
 
 				break;

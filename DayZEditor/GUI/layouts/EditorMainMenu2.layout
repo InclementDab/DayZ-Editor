@@ -576,27 +576,51 @@ PanelWidgetClass main_menu_root {
       }
      }
     }
-    ImageWidgetClass MapSelectorFrame {
+    PanelWidgetClass MapSelectorFrame {
      visible 1
-     clipchildren 1
+     clipchildren 0
      ignorepointer 1
-     color 0.5647 0.5843 0.6431 0
      position 0 0
-     size 1 384
+     size 1248 384
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 1
-     imageTexture "{0655A1BF79F5B291}gui/textures/loading_screens/loading_screen_1_co.edds"
-     mode blend
-     "src alpha" 0
-     "clamp mode" clamp
-     "stretch mode" stretch_w_center
      {
-      ScrollWidgetClass ScrollWidget0 {
+      PanelWidgetClass PanelWidget4 {
        ignorepointer 1
+       color 0 0.4784 0.8 1
+       position 0 -24
+       size 1 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass TextWidget0 {
+         ignorepointer 1
+         position 24 0
+         size 48 24
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Available Maps"
+         font "gui/fonts/Metron14"
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      ScrollWidgetClass ScrollWidget0 {
+       ignorepointer 0
+       color 1 1 1 0.9961
        size 1 1
        halign center_ref
        valign center_ref
@@ -608,30 +632,28 @@ PanelWidgetClass main_menu_root {
        "Scrollbar H" 1
        {
         ImageWidgetClass MapSelectorBackground {
-         visible 1
+         visible 0
          clipchildren 0
          ignorepointer 1
-         color 0.5647 0.5843 0.6431 0.3922
-         position 0 0
-         size 1 1
-         halign center_ref
+         color 0.8627 0.8627 0.8627 0.8627
+         size 1248 1
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
+         hexactsize 1
          vexactsize 0
          imageTexture "{0655A1BF79F5B291}gui/textures/loading_screens/loading_screen_1_co.edds"
          mode blend
          "src alpha" 0
-         "clamp mode" border
-         "stretch mode" stretch_w_center
+         "clamp mode" wrap
+         "stretch mode" stretch_h_center
         }
-        GridSpacerWidgetClass GridSpacerWidget1 {
+        GridSpacerWidgetClass MapGrid {
          visible 1
          clipchildren 0
          ignorepointer 1
+         color 0.1725 0.1922 0.2118 1
          size 1 1
-         halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1

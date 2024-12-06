@@ -1,8 +1,8 @@
 ButtonWidgetClass PanelWidget4 {
  visible 1
  clipchildren 0
- ignorepointer 1
- color 0.1725 0.1922 0.2118 1
+ ignorepointer 0
+ color 0.0863 0.4118 0.7333 1
  position 0 0
  size 1 1
  hexactpos 1
@@ -10,10 +10,10 @@ ButtonWidgetClass PanelWidget4 {
  hexactsize 0
  vexactsize 0
  fixaspect inside
- style Editor
+ style Colorable
  {
   FrameWidgetClass ImageFr {
-   ignorepointer 1
+   ignorepointer 0
    size 1 1
    halign center_ref
    valign center_ref
@@ -24,7 +24,8 @@ ButtonWidgetClass PanelWidget4 {
    {
     ImageWidgetClass Image {
      visible 1
-     ignorepointer 0
+     clipchildren 0
+     ignorepointer 1
      color 0.5882 0.5882 0.5882 1
      size 1 1
      halign center_ref
@@ -34,14 +35,14 @@ ButtonWidgetClass PanelWidget4 {
      hexactsize 0
      vexactsize 0
      image0 "dz\structures\signs\tourist\data\karta_co.paa"
-     "clamp mode" clamp
+     "clamp mode" wrap
      "stretch mode" fit_w
      filter 0
      {
       GridSpacerWidgetClass ButtonGrid {
        inheritalpha 0
        ignorepointer 1
-       position 0.05 0.075
+       position 0.025 0.025
        size 48 48
        hexactpos 0
        vexactpos 0
@@ -153,23 +154,6 @@ ButtonWidgetClass PanelWidget4 {
        }
       }
      }
-    }
-    GridSpacerWidgetClass SatGrid {
-     visible 0
-     ignorepointer 1
-     size 1 1
-     halign center_ref
-     valign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     Padding 0
-     Margin 0
-     content_halign center
-     content_valign center
-     Columns 32
-     Rows 32
     }
     GridSpacerWidgetClass ButtonSpacer {
      ignorepointer 1

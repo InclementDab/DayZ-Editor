@@ -25,7 +25,7 @@ class EditorMainMenu: ScriptViewMenu
 	protected EditorMainMenuController m_TemplateController;
 	protected float m_MotionSicknessDt;
 
-	Widget ServerShowcase, ServerShowcaseOutline;
+	Widget ServerShowcase, ServerShowcaseOutline, MapGrid;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
 	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton;
 	TextWidget VersionText, EditorText, StatHeaderText;
@@ -38,7 +38,7 @@ class EditorMainMenu: ScriptViewMenu
 			string name;
 			GetGame().ConfigGetChildName("CfgWorlds", i, name);
 			if (GetGame().ConfigIsExisting(string.Format("CfgWorlds %1 worldName", name))) {
-				if (i != 0) {
+				if (m_TemplateController.MapViews.Count() != 0) {
 					QuickView<Widget> Spacer = new QuickView<Widget>();
 					Spacer.Root.SetScreenSize(24, 24);
 					m_TemplateController.MapViews.Insert(Spacer);
@@ -47,6 +47,10 @@ class EditorMainMenu: ScriptViewMenu
 				m_TemplateController.MapViews.Insert(new EditorMapView(name));
 			}
 		}
+		
+		float mg_s_w, mg_s_h;
+		MapGrid.GetScreenSize(mg_s_w, mg_s_h);
+		//MapSelectorBackground.SetScreenSize(mg_s_h * m_TemplateController.MapViews.Count() / 2, mg_s_h);
 		
 		string version;
 		GetGame().GetVersion(version);
@@ -105,11 +109,13 @@ class EditorMainMenu: ScriptViewMenu
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		ImageWidget child_image = ImageWidget.Cast(w.GetChildren());
-		if (child_image) {
+		if (child_image && w.IsInherited(ButtonWidget)) {
+			EffectSound snd;
+			Camera.GetCurrentCamera().PlaySoundSet(snd, "Click_Editor_Soundset", 0, 0);
 			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_H, 1.0, 90);
 			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_W, 1.0, 90);
 		}
-		
+			
 		switch (w) {
 			case ExitButton: {
 				child_image.SetColor(LinearColor.INDIAN_RED);
@@ -164,7 +170,7 @@ class EditorMainMenu: ScriptViewMenu
 			}
 		}
 
-		if (child_image) {
+		if (child_image && w.IsInherited(ButtonWidget)) {
 			WidgetAnimator.CancelAnimate(child_image);
 			child_image.SetSize(0.8, 0.8);
 			WidgetAnimator.AnimateColor(child_image, -1, 100);
