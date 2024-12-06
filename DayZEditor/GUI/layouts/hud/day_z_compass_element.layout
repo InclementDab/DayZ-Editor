@@ -1,0 +1,102 @@
+GridSpacerWidgetClass CompassTick {
+ visible 1
+ ignorepointer 1
+ color 1 1 1 0.9961
+ position 0 -32
+ size 256 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 0
+ style Empty
+ "no focus" 0
+ Padding 24
+ Margin 4
+ "Size To Content H" 1
+ content_halign center
+ content_valign center
+ Rows 1
+ {
+  FrameWidgetClass Spacer_Left0 {
+   visible 1
+   inheritalpha 1
+   ignorepointer 1
+   position 10 10
+   size 32 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   {
+    ImageWidgetClass Spacer_Left {
+     visible 1
+     inheritalpha 1
+     ignorepointer 1
+     position 0 0
+     size 2 4
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     mode blend
+     "src alpha" 0
+     filter 0
+    }
+   }
+  }
+  TextWidgetClass Tick {
+   visible 1
+   clipchildren 0
+   inheritalpha 1
+   ignorepointer 1
+   size 20 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 0
+   text "NE"
+   font "gui/fonts/Metron22"
+   "italic text" 0
+   "size to text h" 0
+   "text halign" center
+   "text valign" center
+  }
+  FrameWidgetClass Spacer_Right0 {
+   visible 1
+   inheritalpha 1
+   ignorepointer 1
+   position 10 10
+   size 32 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   {
+    ImageWidgetClass Spacer_Right {
+     visible 1
+     inheritalpha 1
+     ignorepointer 1
+     size 2 4
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 0
+     mode blend
+     filter 0
+    }
+   }
+  }
+ }
+}
