@@ -7,9 +7,8 @@
      / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
-#ifdef DIAG_DEVELOPER
 #define GIZMOS_ENABLED
-#endif
+
 
 enum eEditorMode
 {
@@ -721,6 +720,16 @@ class Editor: Managed
 				OnMouseExitObject(m_ObjectUnderCursor, x, y, m_ComponentIndexUnderCursor);
 				m_ObjectUnderCursor = null;
 				m_ComponentIndexUnderCursor = 0;
+			} 
+			
+			if (m_CursorRaycast && !m_CursorRaycast.Hit && m_CursorRaycast.Bounce) {
+				string surface_type;
+				GetGame().SurfaceGetType(m_CursorRaycast.Bounce.Position[0], m_CursorRaycast.Bounce.Position[2], surface_type);
+				surface_type = string.Format("Surface Type: %1", surface_type);
+				if (surface_type != m_EditorHudController.ObjectReadoutName) {
+					m_EditorHudController.ObjectReadoutName = surface_type;
+					m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+				}
 			}
 		}
 		
