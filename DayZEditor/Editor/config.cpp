@@ -97,6 +97,16 @@ class CfgVehicles
 			"#(argb,8,8,3)color(0.0,1.0,0.0,1.000,co)", 
 			"#(argb,8,8,3)color(0.0,0.0,1.0,1.000,co)"
 		};
+
+		hiddenSelectionsMaterials[] = {
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat",
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat"
+		};
 	};
 
 	class GizmoRotation: GizmoBase

@@ -85,6 +85,7 @@ class EditorGizmo: Managed
 	protected vector m_DragOffset;
 	protected ref EditorAction m_RewindAction;
 	protected ref map<int, ref GizmoInteractionSource> m_InteractionCollisions = new map<int, ref GizmoInteractionSource>();
+	protected ref array<int> m_VisibleSortedInteractions = new array<int>();
 	
 	void EditorGizmo()
 	{
@@ -168,7 +169,11 @@ class EditorGizmo: Managed
 
 	// called by Editor.Update
 	void Update(float dt)
-	{		
+	{
+		bool doSort = false;
+		float colorArr[4];
+		int bias = 0;
+		
 #ifdef DIAG_DEVELOPER
 		bool debug_collisions = 0;
 		//GetDayZGame().ReloadShape(m_Gizmo);
@@ -268,21 +273,6 @@ class EditorGizmo: Managed
 				m_RewindAction.InsertUndoParameter(selected_rewind_object.GetTransformArray());
 			}
 		}
-		
-		foreach (int interaction_index_color, GizmoInteractionSource clip_info_color: m_InteractionCollisions) {
-			LinearColor color = clip_info_color.DefaultColor;
-			if (interaction_index_color == collide_index && m_InteractionIndex == -1) {
-				color = LinearColor.YELLOW;
-			}
-			
-			if (interaction_index_color == m_InteractionIndex) {
-				color = LinearColor.ORANGE;
-			}
-
-			m_Gizmo.SetObjectTexture(interaction_index_color, string.Format("#(argb,8,8,3)color(%1,%2,%3,1.000,co)", color.GetRed() / 255.0, color.GetGreen() / 255.0, color.GetBlue() / 255.0));
-		}
-		
-		m_Gizmo.Update();
 
 		if (!interact_input.LocalValue() && m_InteractionIndex != -1) {
 			m_InteractionIndex = -1;
@@ -294,12 +284,70 @@ class EditorGizmo: Managed
 
 			GetEditor().InsertAction(m_RewindAction);
 		}
+		
+		m_VisibleSortedInteractions.Clear();
 
 		PreUpdateGizmo(dt);
 		UpdateGizmo(dt, gizmo_transform);
 		
+#ifdef DIAG_DEVELOPER
+		if (m_InteractionCollisions.Count() != m_VisibleSortedInteractions.Count())
+		{
+			Error("Invalid setup for sorted interactions");
+		}
+#endif
+
+		foreach (int interaction_index_color : m_VisibleSortedInteractions) {
+			GizmoInteractionSource clip_info_color = m_InteractionCollisions[interaction_index_color];
+			
+			LinearColor color = clip_info_color.DefaultColor;
+			if (interaction_index_color == collide_index && m_InteractionIndex == -1) {
+				color = LinearColor.YELLOW;
+			}
+			
+			if (interaction_index_color == m_InteractionIndex) {
+				color = LinearColor.ORANGE;
+			}
+			
+			if (doSort)
+			{
+				string materialName = string.Format("DayZEditor/Editor/data/sort_bias_%1", bias);
+	
+				string rvMaterialName = materialName + ".rvmat";
+				m_Gizmo.SetObjectMaterial(interaction_index_color, rvMaterialName);
+				m_Gizmo.SetObjectTexture(interaction_index_color, "");
+	
+				string enfMaterialName = materialName;
+				Material mat = GetGame().GetWorld().GetMaterial(enfMaterialName);
+				if (mat)
+				{
+					colorArr[0] = color.GetRed() / 255;
+					colorArr[1] = color.GetGreen() / 255;
+					colorArr[2] = color.GetBlue() / 255;
+					colorArr[3] = color.GetAlpha() / 255;
+					
+					mat.SetParam("Color", colorArr);
+					mat.SetParam("Diffuse", colorArr);
+					mat.SetParam("Ambient", colorArr);
+					//mat.SetParam("Specular", colorArr);
+				}
+				else
+				{
+					Error(string.Format("Material %1 not found", enfMaterialName));
+				}
+				
+				bias++;
+			}
+			else
+			{
+				m_Gizmo.SetObjectMaterial(interaction_index_color, "");
+				m_Gizmo.SetObjectTexture(interaction_index_color, string.Format("#(argb,8,8,3)color(%1,%2,%3,1.000,co)", color.GetRed() / 255.0, color.GetGreen() / 255.0, color.GetBlue() / 255.0));
+			}
+		}
+		
 		m_TopSelectedObject.SetTopTransform(m_TopTransform);
 		m_Gizmo.SetTransform(gizmo_transform);
+		m_Gizmo.Update();
 
 		PostUpdateGizmo(dt);
 	}
@@ -363,7 +411,15 @@ class EditorTranslationGizmo: EditorGizmo
 	}
 	
 	override void UpdateGizmo(float dt, inout vector gizmo_transform[4])
-	{			
+	{
+		m_VisibleSortedInteractions.Insert(INTERACTION_CENTER);
+		m_VisibleSortedInteractions.Insert(INTERACTION_X_AXIS);
+		m_VisibleSortedInteractions.Insert(INTERACTION_Y_AXIS);
+		m_VisibleSortedInteractions.Insert(INTERACTION_Z_AXIS);
+		m_VisibleSortedInteractions.Insert(INTERACTION_XY_PLANE);
+		m_VisibleSortedInteractions.Insert(INTERACTION_XZ_PLANE);
+		m_VisibleSortedInteractions.Insert(INTERACTION_YZ_PLANE);
+		
 		vector cursor_intersect = vector.Zero;
 		switch (m_InteractionIndex) {
 			// center interaction
@@ -451,7 +507,12 @@ class EditorTranslationGizmo: EditorGizmo
 class EditorRotationGizmo: EditorGizmo
 {
 	override void UpdateGizmo(float dt, inout vector gizmo_transform[4])
-	{		
+	{
+		m_VisibleSortedInteractions.Insert(INTERACTION_CENTER);
+		m_VisibleSortedInteractions.Insert(INTERACTION_XZ_ROTATE);
+		m_VisibleSortedInteractions.Insert(INTERACTION_YZ_ROTATE);
+		m_VisibleSortedInteractions.Insert(INTERACTION_XY_ROTATE);
+		
 		switch (m_InteractionIndex) {
 			case INTERACTION_XZ_ROTATE: {
 				Plane3D xz_plane2 = Plane3D(m_TopTransform[1], m_TopTransform[3]);
@@ -570,6 +631,11 @@ class EditorScaleGizmo: EditorGizmo
 {
 	override void UpdateGizmo(float dt, inout vector gizmo_transform[4])
 	{
+		m_VisibleSortedInteractions.Insert(INTERACTION_CENTER);
+		m_VisibleSortedInteractions.Insert(INTERACTION_X_SCALE);
+		m_VisibleSortedInteractions.Insert(INTERACTION_Y_SCALE);
+		m_VisibleSortedInteractions.Insert(INTERACTION_Z_SCALE);
+		
 		vector scale_matrix[3];
 		vector top_transform[4];
 		copyarray(top_transform, m_TopTransformOrthogonal);
