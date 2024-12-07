@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{D529F809A14264B2}DayZEditor/GUI/loadingscreens/lunna2233-1727808367.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate -1055166136
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "lunna2233-1727808367.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

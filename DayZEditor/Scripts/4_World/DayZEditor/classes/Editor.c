@@ -57,7 +57,13 @@ class Editor: Managed
 	protected PlayerBase m_Player, m_ControllingPlayer;
 
 	const int STATISTICS_SAVE_INTERVAL = 10;
+	
+#ifdef DIAG_DEVELOPER
+	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:8226\/";
+#else
 	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc.pylex.xyz:8226\/";
+#endif
+	
 	static const ref array<string> DELETION_BLACKLIST = {
 		"BrushBase",
 		"BoundingBoxBase",

@@ -1,0 +1,15 @@
+MetaFileClass {
+ Name "{524FAF8BB5480600}DayZEditor/Editor/data/Gizmo.emat"
+ Author "Dabby"
+ ChangeDate 26472809
+ Configurations {
+  EMATResourceClass PC {
+  }
+  EMATResourceClass XBOX_ONE : PC {
+  }
+  EMATResourceClass PS4 : PC {
+  }
+  EMATResourceClass LINUX : PC {
+  }
+ }
+}

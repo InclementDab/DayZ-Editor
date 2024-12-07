@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{9AB936C93B5F4DEB}DayZEditor/GUI/loadingscreens/itzmikedocherty-1727104663.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate -1826918072
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "itzmikedocherty-1727104663.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

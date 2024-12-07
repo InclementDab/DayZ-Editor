@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{808E327D3EFA0AD1}DayZEditor/GUI/loadingscreens/impipapo-1727267576.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate -2028244664
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "impipapo-1727267576.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}
