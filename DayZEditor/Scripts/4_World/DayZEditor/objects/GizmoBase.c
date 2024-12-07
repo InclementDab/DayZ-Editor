@@ -258,7 +258,7 @@ class EditorGizmo: Managed
 		}
 	
 		if (m_InteractionIndex == -1 && interact_input.LocalPress()) {
-			m_DragOffset = collision_hit.InvMultiply4(top_transform);
+			m_DragOffset = collision_hit.InvMultiply4(m_TopTransformOrthogonal);
 			m_InteractionIndex = collide_index;
 			copyarray(m_TopTransformOriginal, top_transform);
 
@@ -299,7 +299,7 @@ class EditorGizmo: Managed
 		UpdateGizmo(dt, gizmo_transform);
 		
 		m_TopSelectedObject.SetTopTransform(m_TopTransform);
-		//m_Gizmo.SetTransform(gizmo_transform);
+		m_Gizmo.SetTransform(gizmo_transform);
 
 		PostUpdateGizmo(dt);
 	}
@@ -368,69 +368,69 @@ class EditorTranslationGizmo: EditorGizmo
 		switch (m_InteractionIndex) {
 			// center interaction
 			case INTERACTION_CENTER: {
-				Plane3D camera_forward_plane = Plane3D(m_CameraTransform[2], m_TopTransform[3]);
+				Plane3D camera_forward_plane = Plane3D(m_CameraTransform[2], m_TopTransformOrthogonal[3]);
 				cursor_intersect = camera_forward_plane.Intersect(m_CursorRay);
 				break;
 			}
 						
 			case INTERACTION_X_AXIS: {
-				vector plane_xy_norm = m_TopTransform[0] * (m_CameraTransform[2] * m_TopTransform[0]);
-				Plane3D xy_plane = Plane3D(plane_xy_norm, m_TopTransform[3]);
+				vector plane_xy_norm = m_TopTransformOrthogonal[0] * (m_CameraTransform[2] * m_TopTransformOrthogonal[0]);
+				Plane3D xy_plane = Plane3D(plane_xy_norm, m_TopTransformOrthogonal[3]);
 				cursor_intersect = xy_plane.Intersect(m_CursorRay);
 				
-				vector cursor_intersect_xy_local = cursor_intersect.InvMultiply4(m_TopTransform) - m_DragOffset;
+				vector cursor_intersect_xy_local = cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset;
 				cursor_intersect_xy_local[1] = 0;
 				cursor_intersect_xy_local[2] = 0;
-				cursor_intersect = cursor_intersect_xy_local.Multiply4(m_TopTransform);
+				cursor_intersect = cursor_intersect_xy_local.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
 			
 			case INTERACTION_Y_AXIS: {				
-				vector plane_xz_norm = m_TopTransform[1] * (m_CameraTransform[2] * m_TopTransform[1]);
-				Plane3D xz_plane = Plane3D(plane_xz_norm, m_TopTransform[3]);
+				vector plane_xz_norm = m_TopTransformOrthogonal[1] * (m_CameraTransform[2] * m_TopTransformOrthogonal[1]);
+				Plane3D xz_plane = Plane3D(plane_xz_norm, m_TopTransformOrthogonal[3]);
 				cursor_intersect = xz_plane.Intersect(m_CursorRay);
-				vector cursor_intersect_xz_local = cursor_intersect.InvMultiply4(m_TopTransform) - m_DragOffset;
+				vector cursor_intersect_xz_local = cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset;
 				cursor_intersect_xz_local[0] = 0;
 				cursor_intersect_xz_local[2] = 0;
-				cursor_intersect = cursor_intersect_xz_local.Multiply4(m_TopTransform);
+				cursor_intersect = cursor_intersect_xz_local.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
 			
 			case INTERACTION_Z_AXIS: {
-				vector plane_yz_norm = m_TopTransform[2] * (m_CameraTransform[2] * m_TopTransform[2]);
-				Plane3D yz_plane = Plane3D(plane_yz_norm, m_TopTransform[3]);
+				vector plane_yz_norm = m_TopTransformOrthogonal[2] * (m_CameraTransform[2] * m_TopTransformOrthogonal[2]);
+				Plane3D yz_plane = Plane3D(plane_yz_norm, m_TopTransformOrthogonal[3]);
 				cursor_intersect = yz_plane.Intersect(m_CursorRay);
-				vector cursor_intersect_yz_local = cursor_intersect.InvMultiply4(m_TopTransform) - m_DragOffset;
+				vector cursor_intersect_yz_local = cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset;
 				cursor_intersect_yz_local[0] = 0;
 				cursor_intersect_yz_local[1] = 0;
-				cursor_intersect = cursor_intersect_yz_local.Multiply4(m_TopTransform);
+				cursor_intersect = cursor_intersect_yz_local.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
 			
 			case INTERACTION_XY_PLANE: {
-				Plane3D xy_plane2 = Plane3D(m_TopTransform[2], m_TopTransform[3]);
+				Plane3D xy_plane2 = Plane3D(m_TopTransformOrthogonal[2], m_TopTransformOrthogonal[3]);
 				cursor_intersect = xy_plane2.Intersect(m_CursorRay);
-				vector cursor_intersect_xy_local2 = (cursor_intersect.InvMultiply4(m_TopTransform) - m_DragOffset);
+				vector cursor_intersect_xy_local2 = (cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset);
 				cursor_intersect_xy_local2[2] = 0;
-				cursor_intersect = cursor_intersect_xy_local2.Multiply4(m_TopTransform);
+				cursor_intersect = cursor_intersect_xy_local2.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
 			
 			case INTERACTION_XZ_PLANE: {
-				Plane3D xz_plane2 = Plane3D(m_TopTransform[1], m_TopTransform[3]);
+				Plane3D xz_plane2 = Plane3D(m_TopTransformOrthogonal[1], m_TopTransformOrthogonal[3]);
 				cursor_intersect = xz_plane2.Intersect(m_CursorRay);
-				vector cursor_intersect_xz_local2 = (cursor_intersect.InvMultiply4(m_TopTransform) - m_DragOffset);
+				vector cursor_intersect_xz_local2 = (cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset);
 				cursor_intersect_xz_local2[1] = 0;
-				cursor_intersect = cursor_intersect_xz_local2.Multiply4(m_TopTransform);
+				cursor_intersect = cursor_intersect_xz_local2.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
 			
 			case INTERACTION_YZ_PLANE: {
-				Plane3D yz_plane2 = Plane3D(m_TopTransform[0], m_TopTransform[3]);
+				Plane3D yz_plane2 = Plane3D(m_TopTransformOrthogonal[0], m_TopTransformOrthogonal[3]);
 				cursor_intersect = yz_plane2.Intersect(m_CursorRay);
-				vector cursor_intersect_yz_local2 = (cursor_intersect.InvMultiply4(m_TopTransform) - m_DragOffset);
+				vector cursor_intersect_yz_local2 = (cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset);
 				cursor_intersect_yz_local2[0] = 0;
-				cursor_intersect = cursor_intersect_yz_local2.Multiply4(m_TopTransform);
+				cursor_intersect = cursor_intersect_yz_local2.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
 		}
