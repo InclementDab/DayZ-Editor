@@ -1010,7 +1010,7 @@ FrameWidgetClass EditorFrame {
     }
     PanelWidgetClass ToolbarFrame {
      visible 1
-     clipchildren 1
+     clipchildren 0
      ignorepointer 0
      color 0.0784 0.0863 0.0941 1
      size 1 102

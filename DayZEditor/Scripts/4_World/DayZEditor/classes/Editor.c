@@ -59,7 +59,7 @@ class Editor: Managed
 	const int STATISTICS_SAVE_INTERVAL = 10;
 	
 #ifdef DIAG_DEVELOPER
-	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:8226\/";
+	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:5000\/";
 #else
 	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc.pylex.xyz:8226\/";
 #endif
@@ -147,6 +147,7 @@ class Editor: Managed
 	protected vector m_CameraTransformPreTrackMotion[4];
 	
 	protected ref EditorObject m_PlayerObject;
+	protected ref EditorSaveData m_CurrentSaveData;
 	
 	bool										KEgg; // oh?
 	
@@ -2176,6 +2177,7 @@ class Editor: Managed
 		m_ActionStack.Clear();
 		m_SessionCache.Clear();
 		m_ObjectManager.Clear();
+		delete m_CurrentSaveData;
 	}
 		
 	bool CanHideMapObject(string type)
@@ -2363,7 +2365,7 @@ class Editor: Managed
 		
 		return EditorHoliday.NONE;
 	}
-		
+			
 	void LoadSaveData(EditorSaveData save_data, bool clear_before = false)
 	{
 		if (!save_data) {
@@ -2389,6 +2391,22 @@ class Editor: Managed
 		
 		if (clear_before) {
 			Clear();
+
+			// Basically we are no longer in import mode
+			m_CurrentSaveData = save_data;
+
+			if (save_data.CameraPosition != vector.Zero) {
+				GetCamera().SetPosition(save_data.CameraPosition);
+			}
+
+			// This is for backwards compatibility
+			if (!m_CurrentSaveData.AuthorId) {
+				string uid = GetGame().GetUserManager().GetTitleInitiator().GetUid();
+				m_CurrentSaveData.AuthorId = uid;
+				m_CurrentSaveData.CreditIds.Insert(uid);
+				m_CurrentSaveData.CreationDate = DateTime.Now();
+				m_CurrentSaveData.LastModified = DateTime.Now();
+			}
 		}
 				
 		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());		
@@ -2413,11 +2431,7 @@ class Editor: Managed
 		foreach (EditorCameraTrackData track_data: save_data.CameraTracks) {
 			AddCameraTrack(track_data, false);
 		}
-		
-		if (save_data.CameraPosition != vector.Zero) {
-			GetCamera().SetPosition(save_data.CameraPosition);
-		}
-		
+				
 		string error_message;
 		if (created_objects < save_data.EditorObjects.Count()) {
 			error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
@@ -2443,15 +2457,26 @@ class Editor: Managed
 	}
 	
 	EditorSaveData CreateSaveData(bool selected_only = false)
-	{
-		EditorSaveData save_data = new EditorSaveData();
-		
+	{	
+		string uid = GetGame().GetUserManager().GetTitleInitiator().GetUid();
+		if (!m_CurrentSaveData) {
+			m_CurrentSaveData = EditorSaveData.CreateNew(uid, DateTime.Now());
+		}
+
 		// Save world name
-		save_data.MapName = GetGame().GetWorldName();
+		m_CurrentSaveData.MapName = GetGame().GetWorldName();
 		
 		// Save Camera Position
-		save_data.CameraPosition = GetCamera().GetPosition();
+		m_CurrentSaveData.CameraPosition = GetCamera().GetPosition();
 		
+		// add last modified
+		m_CurrentSaveData.LastModified = DateTime.Now();
+		
+		// add credits
+		if (m_CurrentSaveData.CreditIds.Find(uid) == -1) {
+			m_CurrentSaveData.CreditIds.Insert(uid);
+		}
+
 		// Save Objects
 		EditorObjectMap placed_objects = GetPlacedObjects();
 		if (selected_only) {
@@ -2461,22 +2486,22 @@ class Editor: Managed
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
 				if (editor_object.GetType() != string.Empty && !(editor_object.GetFlags() & EditorObjectFlags.NOSAVE)) {
-					save_data.EditorObjects.Insert(editor_object.GetData());
+					m_CurrentSaveData.EditorObjects.Insert(editor_object.GetData());
 				}
 			}
 		}
 		
 		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
-			save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
+			m_CurrentSaveData.EditorHiddenObjects.Insert(deleted_object.GetData());
 		}
 		
 		array<EditorCameraTrack> camera_tracks = GetObjectManager().GetCameraTracks();
 		foreach (EditorCameraTrack track: camera_tracks) {
-			save_data.CameraTracks.Insert(EditorCameraTrackData.Cast(track.GetData()));
+			m_CurrentSaveData.CameraTracks.Insert(EditorCameraTrackData.Cast(track.GetData()));
 		}
 		
-		return save_data;
+		return m_CurrentSaveData;
 	}
 	
 	static string GetModelName(notnull Object object)

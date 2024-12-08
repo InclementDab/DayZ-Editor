@@ -24,6 +24,7 @@ class EditorNewCommand: EditorAsyncCommand
 		
 		m_Editor.Clear();
 		m_Editor.SetSaveFile(file_name);
+		m_Editor.CreateSaveData(); // spaghetti but it creates a new timestamped file data internally
 		
 		GetEditor().GetEditorHud().CreateNotification("New File Created");
 	}
