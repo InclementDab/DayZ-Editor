@@ -1751,8 +1751,6 @@ class Editor: Managed
 	
 	void StartInventoryEditor(EntityAI entity)
 	{
-		delete m_EditorInventoryEditorHud;
-		
 		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity);
 		
 		PlayerBase player;
@@ -1765,10 +1763,8 @@ class Editor: Managed
 		}
 		
 		SetMissionHud(false);	
-				
+		ClearSelection();
 		GetStatistics().CharactersEdited++;
-		GetStatistics().Save();
-		//m_EditorHud.ShowCursor(true);
 	}
 	
 	void StopInventoryEditor()

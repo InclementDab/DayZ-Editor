@@ -85,13 +85,13 @@ class EditorInventoryEditorHud: ScriptViewMenu
 	{		
 		PlayerBase player_entity = PlayerBase.Cast(m_Entity);
 		if (player_entity) {
-			GetEditor().SetActive(false);
+			GetEditor().ControlPlayer(player_entity);
 		}
 	}
 	
 	void ExitExecute(ButtonCommandArgs args)
 	{
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetEditor().SetActive, 0, false, true);
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetEditor().Activate, 0, false);
 	}
 	
 	void ImportExecute(ButtonCommandArgs args)
