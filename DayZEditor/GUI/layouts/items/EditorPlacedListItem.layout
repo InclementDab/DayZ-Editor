@@ -80,7 +80,7 @@ WrapSpacerWidgetClass ListItem {
      content_valign center
      {
       ButtonWidgetClass ToggleBoundingBox {
-       visible 0
+       visible 1
        color 1 1 1 0.0784
        position 0 0
        size 18 18
@@ -122,8 +122,35 @@ WrapSpacerWidgetClass ListItem {
         }
        }
       }
+      FrameWidgetClass ImageWidget0 {
+       visible 1
+       ignorepointer 1
+       color 0.7059 0.7059 0.7059 1
+       size 3 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ImageWidgetClass ImageWidget1 {
+         ignorepointer 1
+         color 0.7843 0.7843 0.7843 0.1569
+         size 1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         mode blend
+         "src alpha" 1
+        }
+       }
+      }
       ButtonWidgetClass ToggleWorldMarker {
-       visible 0
+       visible 1
        color 1 1 1 0.0784
        position 0 0
        size 18 18
@@ -165,8 +192,36 @@ WrapSpacerWidgetClass ListItem {
         }
        }
       }
+      FrameWidgetClass ImageWidget2 {
+       visible 1
+       ignorepointer 1
+       color 0.7059 0.7059 0.7059 1
+       position 0 0
+       size 3 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       {
+        ImageWidgetClass ImageWidget3 {
+         ignorepointer 1
+         color 0.7843 0.7843 0.7843 0.1569
+         size 1 0.6
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 0
+         mode blend
+         "src alpha" 1
+        }
+       }
+      }
       ButtonWidgetClass ToggleLockedButton {
-       visible 0
+       visible 1
        color 1 1 1 0.0784
        position 0 0
        size 18 18

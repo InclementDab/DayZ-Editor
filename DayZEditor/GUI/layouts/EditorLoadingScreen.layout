@@ -117,6 +117,7 @@ FrameWidgetClass LoadingFrame {
      wrap 1
     }
     WrapSpacerWidgetClass WrapSpacerWidget0 {
+     clipchildren 0
      ignorepointer 1
      color 0.1333 0.0902 0.0902 0.1569
      position 14 24
