@@ -33,7 +33,7 @@ class EditorMapView: ScriptView
 
 		m_EditorSettings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
 
-		if (!GetGame().VerifyWorldOwnership(m_MapConfig) || map_name == "Sakhal") {
+		if (!GetGame().VerifyWorldOwnership(m_MapConfig)) {
 			PurchaseButton.Show(true);
 			StartButton.Show(false);
 			LoadButton.Show(false);

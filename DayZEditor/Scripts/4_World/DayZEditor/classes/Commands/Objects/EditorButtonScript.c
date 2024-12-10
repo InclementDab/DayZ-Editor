@@ -13,6 +13,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	protected LinearColor m_DefaultColor, m_DefaultIconColor;
 	protected EditorCommand m_Command;
 	protected ImageWidget Icon;
+	protected float m_TickAccumulated;
 
 	void OnWidgetScriptInit(Widget w)
 	{
@@ -42,6 +43,11 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 
 	protected void Update(float dt)
 	{
+		m_TickAccumulated += dt;
+		if (m_TickAccumulated < 0.031) {
+			return;
+		}
+		
 		if (m_Command && Icon) {
 			if (m_Command.IsToggled()) {
 				Icon.SetColor(m_Command.GetColor());
@@ -89,12 +95,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (m_Command && !EditorHud.CurrentMenu && m_Command.CanExecute()) {
-			EffectSound snd;
-			Camera.GetCurrentCamera().PlaySoundSet(snd, "Click_Editor_Soundset", 0, 0);
-			snd.GetWaveObject().SetVolume(0.5);
-			snd.GetWaveObject().SetFrequency(1.6);
-			
+		if (m_Command && !EditorHud.CurrentMenu && m_Command.CanExecute()) {			
 			float pos_x, pos_y, size_x, size_y;
 			m_LayoutRoot.GetScreenPos(pos_x, pos_y);
 			m_LayoutRoot.GetScreenSize(size_x, size_y);

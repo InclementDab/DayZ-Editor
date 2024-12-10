@@ -8,6 +8,7 @@ class EditorMarker: ScriptView
 
 	protected Editor m_Editor = GetEditor();
 	protected bool m_Show = true;
+	protected EditorSettings m_EditorSettings;
 	
 	ImageWidget EditorMarkerColor, EditorMarkerOutline;
 	
@@ -20,6 +21,8 @@ class EditorMarker: ScriptView
 		if (!s_AllMarkers) {
 			s_AllMarkers = {};
 		}
+		
+		m_EditorSettings = GetEditor().GetSettings();
 
 		s_AllMarkers.Insert(this);
 	}

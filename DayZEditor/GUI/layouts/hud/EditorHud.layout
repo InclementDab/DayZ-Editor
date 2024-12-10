@@ -3771,7 +3771,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 0
        ignorepointer 1
        position 0.4 0
-       size 0.25 22
+       size 0.25 16
        valign center_ref
        hexactpos 0
        vexactpos 1
@@ -3789,14 +3789,15 @@ FrameWidgetClass EditorFrame {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 0 1
+         size 0 16
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          text "#STR_EDITOR_OBJECT:"
          font "gui/fonts/Metron"
+         "exact text" 0
          "size to text h" 1
          "size to text v" 0
          "text valign" center
@@ -3805,16 +3806,17 @@ FrameWidgetClass EditorFrame {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 0.6 1
+         size 0.6 16
          halign right_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          scriptclass "ViewBinding"
          text "AAAAA"
          font "gui/fonts/Metron"
+         "exact text" 0
          "size to text h" 1
          "size to text v" 0
          "text valign" center
@@ -3830,7 +3832,7 @@ FrameWidgetClass EditorFrame {
        visible 1
        ignorepointer 1
        position 0.14 0
-       size 0.2 22
+       size 0.2 16
        valign center_ref
        hexactpos 0
        vexactpos 1
@@ -3846,12 +3848,12 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass MenuCurrentFileNameCaption {
          ignorepointer 1
          position 0 0
-         size 100 1
+         size 0.505 16
          valign center_ref
          hexactpos 0
          vexactpos 0
-         hexactsize 1
-         vexactsize 0
+         hexactsize 0
+         vexactsize 1
          text "#STR_EDITOR_CURRENT_FILE:"
          font "gui/fonts/Metron"
          "exact text" 0
@@ -3863,13 +3865,13 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass MenuCurrentFileNameText {
          clipchildren 1
          ignorepointer 1
-         size 0.11 1
+         size 0.11 16
          halign right_ref
          valign center_ref
          hexactpos 0
          vexactpos 0
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          scriptclass "ViewBinding"
          style None
          font "gui/fonts/Metron"
@@ -3888,7 +3890,7 @@ FrameWidgetClass EditorFrame {
       GridSpacerWidgetClass VersionFrame {
        ignorepointer 1
        position 0.005 0
-       size 0.16 22
+       size 0.16 16
        valign center_ref
        hexactpos 0
        vexactpos 1
@@ -3903,12 +3905,12 @@ FrameWidgetClass EditorFrame {
        {
         TextWidgetClass VersionText {
          ignorepointer 1
-         size 0 1
+         size 0 16
          valign center_ref
          hexactpos 0
          vexactpos 0
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          scriptclass ""
          text "#STR_EDITOR_VERSION:"
          font "gui/fonts/Metron"
@@ -3921,17 +3923,18 @@ FrameWidgetClass EditorFrame {
         TextWidgetClass VersionNumber {
          ignorepointer 1
          position 0 0
-         size 0.18 1
+         size 0.18 16
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
          hexactsize 0
-         vexactsize 0
+         vexactsize 1
          scriptclass "ViewBinding"
          text "1.1.1"
          font "gui/fonts/Metron"
          "bold text" 1
+         "exact text" 0
          "size to text h" 1
          "size to text v" 0
          "text valign" center
@@ -3947,7 +3950,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 1
        ignorepointer 1
        position 0.21 0
-       size 1 22
+       size 1 16
        halign right_ref
        valign center_ref
        hexactpos 0
