@@ -29,7 +29,7 @@ PanelWidgetClass PanelWidget3 {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 0
+     scaled 1
      scriptclass "SymbolHandler"
      mode blend
      "src alpha" 1
@@ -53,7 +53,7 @@ PanelWidgetClass PanelWidget3 {
    hexactsize 0
    vexactsize 0
    text "MyFile.dze"
-   font "gui/fonts/Metron22"
+   font "gui/fonts/Metron"
    "size to text h" 0
    "text valign" center
   }
@@ -67,7 +67,7 @@ PanelWidgetClass PanelWidget3 {
    hexactsize 0
    vexactsize 0
    text "DayZ Editor File"
-   font "gui/fonts/Metron16"
+   font "gui/fonts/Metron"
    "exact text" 0
    "size to text h" 0
    "text valign" center
