@@ -3724,6 +3724,7 @@ FrameWidgetClass EditorFrame {
          }
         }
         ButtonWidgetClass CinematicCameraButton {
+         visible 0
          color 1 1 1 0.1569
          size 22 22
          hexactpos 1

@@ -142,6 +142,7 @@ class EditorMainMenu: ScriptViewMenu
 		}
 		
 		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));
+		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase request' in Discord\nClick to join.");
 	}
 
 	protected void OnLoginResponse(Payload_EditorLoginResponse response)
@@ -162,8 +163,6 @@ class EditorMainMenu: ScriptViewMenu
 		string controlled = statistics.CharactersControlled.ToString();
 		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Controlled", controlled));
 		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Time Spent Editing", time.Format()));
-		
-		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase request' in Discord\nClick to join.");
 		
 		if (m_IsShowcaseActive) {
 			for (int i = 0; i < response.showcases.Count(); i++) {
@@ -255,6 +254,7 @@ class EditorMainMenu: ScriptViewMenu
 			case ExitButton: {
 				child_image.SetColor(LinearColor.INDIAN_RED);
 				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "#main_menu_exit", TooltipPosition.INSIDE);
 				break;
 			}
 
@@ -285,7 +285,14 @@ class EditorMainMenu: ScriptViewMenu
 			}
 			
 			case NextServerShowcase: {
-				
+				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "Next", TooltipPosition.INSIDE);
+				break;
+			}
+			
+			case PrevServerShowcase: {
+				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "Previous", TooltipPosition.INSIDE);
 				break;
 			}
 
@@ -309,7 +316,8 @@ class EditorMainMenu: ScriptViewMenu
 	{
 		GetDayZGame().ClearTooltip();
 		
-		ImageWidget child_image = ImageWidget.Cast(w.GetChildren());
+		Widget child_icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
+		ImageWidget child_image = ImageWidget.Cast(child_icon);		
 		switch (w) {
 			case ExitButton:
 			case SettingButton: {
@@ -320,6 +328,16 @@ class EditorMainMenu: ScriptViewMenu
 			case ServerShowcase: {
 				WidgetAnimator.AnimateColor(ServerShowcaseOutline, -1, 60);
 				return true;
+			}
+			
+			case NextServerShowcase: {
+				child_image.SetImage(2);
+				break;
+			}
+			
+			case PrevServerShowcase: {
+				child_image.SetImage(2);
+				break;
 			}
 		}
 

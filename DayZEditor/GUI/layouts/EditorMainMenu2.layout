@@ -739,7 +739,7 @@ PanelWidgetClass main_menu_root {
           ImageWidgetClass ImageWidget2 {
            visible 1
            ignorepointer 1
-           color 0.8118 0.8392 0.8784 0.3922
+           color 0.1412 0.1569 0.1804 1
            size 0.75 0.75
            halign center_ref
            valign center_ref
@@ -753,7 +753,7 @@ PanelWidgetClass main_menu_root {
            {
             ImageWidgetClass NextServerShowcase_Icon {
              ignorepointer 1
-             color 0.1412 0.1569 0.1804 1
+             color 0 0 0 1
              size 0.75 0.75
              halign center_ref
              valign center_ref
@@ -790,7 +790,7 @@ PanelWidgetClass main_menu_root {
           ImageWidgetClass ImageWidget3 {
            visible 1
            ignorepointer 1
-           color 0.8118 0.8392 0.8784 0.3922
+           color 0.1412 0.1569 0.1804 1
            size 0.75 0.75
            halign center_ref
            valign center_ref
@@ -804,7 +804,6 @@ PanelWidgetClass main_menu_root {
            {
             ImageWidgetClass PrevServerShowcase_Icon {
              ignorepointer 1
-             color 0.1412 0.1569 0.1804 1
              size 0.75 0.75
              halign center_ref
              valign center_ref
