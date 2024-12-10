@@ -290,7 +290,7 @@ PanelWidgetClass main_menu_root {
          hexactsize 1
          vexactsize 1
          text "Hello, Dab!"
-         font "gui/fonts/Metron22"
+         font "gui/fonts/Metron"
          "size to text h" 1
          "text halign" center
          "text valign" center
@@ -581,7 +581,7 @@ PanelWidgetClass main_menu_root {
      clipchildren 0
      ignorepointer 1
      position 0 0
-     size 1248 384
+     size 1170 384
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -618,9 +618,9 @@ PanelWidgetClass main_menu_root {
         }
        }
       }
-      ScrollWidgetClass ScrollWidget0 {
+      ScrollWidgetClass MapScroller {
        ignorepointer 0
-       color 1 1 1 0.9961
+       color 0.1725 0.1922 0.2118 1
        size 1 1
        halign center_ref
        valign center_ref
@@ -629,7 +629,6 @@ PanelWidgetClass main_menu_root {
        hexactsize 0
        vexactsize 0
        style Colorable
-       "Scrollbar H" 1
        {
         ImageWidgetClass MapSelectorBackground {
          visible 0
@@ -654,6 +653,7 @@ PanelWidgetClass main_menu_root {
          ignorepointer 1
          color 0.1725 0.1922 0.2118 1
          size 1 1
+         halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
@@ -717,7 +717,9 @@ PanelWidgetClass main_menu_root {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       imageTexture "{9F640B3B4CDC2A81}gui/textures/dlc_panel_livonia.edds"
+       image0 ""
+       mode blend
+       "src alpha" 1
        "clamp mode" border
        "stretch mode" fit_h_center
        {
@@ -731,12 +733,13 @@ PanelWidgetClass main_menu_root {
          vexactpos 0
          hexactsize 1
          vexactsize 1
-         style Colorable
+         style Empty
          "no focus" 1
          {
           ImageWidgetClass ImageWidget2 {
+           visible 1
            ignorepointer 1
-           color 0.1412 0.1569 0.1804 1
+           color 0.8118 0.8392 0.8784 0.3922
            size 0.75 0.75
            halign center_ref
            valign center_ref
@@ -744,13 +747,29 @@ PanelWidgetClass main_menu_root {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           scriptclass "SymbolHandler"
+           scriptclass ""
            mode blend
            "src alpha" 1
            {
-            ScriptParamsClass {
-             Symbol_Name "right"
-             Symbol_Size 3
+            ImageWidgetClass NextServerShowcase_Icon {
+             ignorepointer 1
+             color 0.1412 0.1569 0.1804 1
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "right"
+               Symbol_Size 2
+              }
+             }
             }
            }
           }
@@ -765,12 +784,13 @@ PanelWidgetClass main_menu_root {
          vexactpos 0
          hexactsize 1
          vexactsize 1
-         style Colorable
+         style Empty
          "no focus" 1
          {
           ImageWidgetClass ImageWidget3 {
+           visible 1
            ignorepointer 1
-           color 0.1412 0.1569 0.1804 1
+           color 0.8118 0.8392 0.8784 0.3922
            size 0.75 0.75
            halign center_ref
            valign center_ref
@@ -778,13 +798,29 @@ PanelWidgetClass main_menu_root {
            vexactpos 1
            hexactsize 0
            vexactsize 0
-           scriptclass "SymbolHandler"
+           scriptclass ""
            mode blend
            "src alpha" 1
            {
-            ScriptParamsClass {
-             Symbol_Name "left"
-             Symbol_Size 3
+            ImageWidgetClass PrevServerShowcase_Icon {
+             ignorepointer 1
+             color 0.1412 0.1569 0.1804 1
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "left"
+               Symbol_Size 2
+              }
+             }
             }
            }
           }

@@ -49,7 +49,7 @@ class EditorLoadingScreen: LoadingScreen
 		int val = Math.RandomInt(0, LOADING_SCREENS.Count() * 100) % LOADING_SCREENS.Count();
 		
 		m_ImageWidgetBackground.LoadImageFile(0, string.Format("DayZEditor/gui/loadingscreens/%1", LOADING_SCREENS[val].FileName));
-		m_ImageCredit.SetText("Image by " + LOADING_SCREENS[val].Creator);
+		m_ImageCredit.SetText("Image Credit: " + LOADING_SCREENS[val].Creator);
 		m_ImageWidgetBackground.SetImage(0);
 		
 		m_ImageCredit.Show(!LOADING_SCREENS[val].HideLogo);

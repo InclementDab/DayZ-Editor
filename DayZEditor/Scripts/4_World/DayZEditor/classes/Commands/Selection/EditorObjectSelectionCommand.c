@@ -15,6 +15,11 @@ class EditorObjectSelectionCommand: EditorCommand
 		return "Toggle Objects Are Clickable";
 	}
 	
+	override LinearColor GetColor()
+	{
+		return LinearColor.BEIGE;
+	}
+	
 	override Symbols GetSymbol()
 	{
 		return Symbols.HOUSE_BLANK;

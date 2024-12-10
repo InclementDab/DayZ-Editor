@@ -20,19 +20,82 @@ class EditorStatisticsEntryView: ScriptView
 	}
 }
 
+class Payload_EditorLogin: Managed
+{
+	string SteamId;
+	int PlayTime;	
+	int ItemsPlaced;
+	int ItemsDeleted;
+	int CamerasPlaced;
+	int CamerasRode;
+	float DistanceFlown;
+	int CharactersControlled;
+	int CharactersEdited;
+}
+
+class Payload_ServerShowcase: Managed
+{
+	string name;
+	string imageUrl;
+	string redirectUrl;
+	string identifier;
+}
+
+class Payload_ServerShowcaseReport: Managed
+{
+	string Identifier;
+	string Reporter;
+}
+
+class Payload_EditorLoginResponse: Managed
+{
+	ref array<ref Payload_ServerShowcase> showcases = {};
+}
+
+class EditorLoginCallback: RestCallbackBase
+{
+	protected ref ScriptCaller m_OnPayloadSuccess;
+
+	void EditorLoginCallback(notnull ScriptCaller on_payload_success)
+	{
+		m_OnPayloadSuccess = on_payload_success;
+	}
+
+    override void OnSuccess(string data, int dataSize)
+	{
+		super.OnSuccess(data, dataSize);
+		
+		Payload_EditorLoginResponse response = new Payload_EditorLoginResponse();
+		string error;
+		if (!JsonFileLoader<Payload_EditorLoginResponse>.LoadData(data, response, error)) {
+			Error(error);
+			return;
+		}
+		
+		m_OnPayloadSuccess.Invoke(response);
+	}
+}
+
 class EditorMainMenu: ScriptViewMenu
 {
 	protected EditorMainMenuController m_TemplateController;
-	protected float m_MotionSicknessDt;
+	protected float m_MotionSicknessDt, m_ShowcaseTime;
+	protected ref Payload_EditorLoginResponse m_PayloadLoginInfoCache;
+	protected int m_ShowcaseIndex, m_IsShowcaseActive;
+	protected ref array<int> m_ShowcasesReported = {};
 
-	Widget ServerShowcase, ServerShowcaseOutline, MapGrid;
+	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
-	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton;
+	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase;
 	TextWidget VersionText, EditorText, StatHeaderText;
 	RichTextWidget ServerShowcaseBackupText;
+	ScrollWidget MapScroller;
 	
 	void EditorMainMenu()
 	{
+		// Slow rollout
+		m_IsShowcaseActive = (Math.RandomInt(0, 4) == 0);
+		
 		m_TemplateController = EditorMainMenuController.Cast(m_Controller);
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {
 			string name;
@@ -58,18 +121,33 @@ class EditorMainMenu: ScriptViewMenu
 		EditorText.SetText(string.Format("#STR_EDITOR_MAIN_MENU_VERSION %1, created by InclementDab", Editor.Version));
 		
 		// Update global login counter
+		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
-		RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
-		ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
-		ctx.POST(new RestCallbackBase(),"api\/update-login-counter", string.Format("{\"id\":%1}", uid));
+		Payload_EditorLogin login_payload = new Payload_EditorLogin();
+		login_payload.SteamId = uid;
+		login_payload.PlayTime = statistics.EditorPlayTime;
+		login_payload.ItemsPlaced = statistics.EditorPlacedObjects;
+		login_payload.ItemsDeleted = statistics.EditorRemovedObjects;
+		login_payload.CamerasPlaced = statistics.EditorPlacedCameraTracks;
+		login_payload.CamerasRode = statistics.EditorCameraTracksRidden;
+		login_payload.DistanceFlown = statistics.DistanceFlown;		
+		login_payload.CharactersControlled = statistics.CharactersControlled;
+		login_payload.CharactersEdited = statistics.CharactersEdited;
+		
+		string payload, error;
+		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
+			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
+			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
+			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)),"api\/login", payload);
+		}
 		
 		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(LoadStats, 10);
 	}
-	
-	protected void LoadStats()
+
+	protected void OnLoginResponse(Payload_EditorLoginResponse response)
 	{
+		m_PayloadLoginInfoCache = response;
+		
 		// Get statistics
 		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 		TimeSpan time = statistics.EditorPlayTime;
@@ -85,38 +163,95 @@ class EditorMainMenu: ScriptViewMenu
 		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Controlled", controlled));
 		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Time Spent Editing", time.Format()));
 		
-		ServerShowcaseBackupText.SetText("Want to see your server here?\nClick for info.");
-	}
+		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase request' in Discord\nClick to join.");
+		
+		if (m_IsShowcaseActive) {
+			for (int i = 0; i < response.showcases.Count(); i++) {
+				Payload_ServerShowcase showcase = response.showcases[i];
+				string file_name = string.Format("%1.dds", showcase.name);
+				array<string> url_split = {};
+				showcase.imageUrl.Split("?", url_split);
+				RestContext image_ctx = GetRestApi().GetRestContext(url_split[0]);
+				image_ctx.SetHeader("application/octet-stream");
+				image_ctx.FILE(new RestCallbackBase(), "?" + url_split[1], file_name);
+				
+				string dst_file = SystemPath.Profile(file_name);
+				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
+				if (!FileExist(src_file)) {
+					src_file = SystemPath.Saves(file_name);
+				}
+	
+				if (FileExist(src_file)) {
+					CopyFile(src_file, dst_file);
+					DeleteFile(src_file);
+				}
+				
+				ServerShowcaseImage.LoadImageFile(i, dst_file);			
+			}
+		}
 
+		m_ShowcaseIndex = 0;
+		ServerShowcaseImage.SetImage(0);
+		ServerShowcaseImage.Show(m_IsShowcaseActive);
+	}
+	
 	override void Update(float dt)
 	{
 		super.Update(dt);
 				
+		if (!GetGame().IsAppActive()) {
+			return;
+		}
+		
+		float mg_s_w, mg_s_h;
+		MapGrid.GetScreenSize(mg_s_w, mg_s_h);
+		
+		float mss_s_w, mss_s_h;
+		MapSelectorFrame.GetScreenSize(mss_s_w, mss_s_h);
+		if (mg_s_w > mss_s_w) {
+			// by default, this color will blend into the background to remain invisible
+			MapScroller.SetColor(-1);
+		}
+		
 		int mouse_x, mouse_y, screen_x, screen_y;
 	    GetMousePos(mouse_x, mouse_y);
 	    GetScreenSize(screen_x, screen_y);
 		
-		m_MotionSicknessDt += dt;
-		if (m_MotionSicknessDt > (1 / 30)) {			
-			const float PARALLAX_AMOUNT = 0.5;
-	        float x_relative = ((mouse_x / screen_x) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2); // 5.0 is from my extra percent size / 2
-	        float y_relative = ((mouse_y / screen_y) * PARALLAX_AMOUNT) - (PARALLAX_AMOUNT / 2);
-	       // MapSelectorBackground.SetPos(x_relative * 100, y_relative * 100);
-			m_MotionSicknessDt = 0;
+		if (m_IsShowcaseActive && m_PayloadLoginInfoCache && GetWidgetUnderCursor() != ServerShowcase) {
+			m_ShowcaseTime += dt;
+			auto showcase = m_PayloadLoginInfoCache.showcases[m_ShowcaseIndex];
+			if (m_ShowcaseTime > 2.0 && m_ShowcasesReported.Find(m_ShowcaseIndex) == -1) {
+				string payload, error;
+				Payload_ServerShowcaseReport report_payload = new Payload_ServerShowcaseReport();
+				report_payload.Identifier = showcase.identifier;
+				report_payload.Reporter = GetGame().GetUserManager().GetTitleInitiator().GetUid();
+				if (JsonFileLoader<Payload_ServerShowcaseReport>.MakeData(report_payload, payload, error)) {
+					RestContext ctx = GetRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
+					ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
+					ctx.POST(new RestCallbackBase(), "api\/showcase\/report-impression", payload);
+				}
+				
+				m_ShowcasesReported.Insert(m_ShowcaseIndex);
+			}
+			
+			if (m_ShowcaseTime > 10.0) {
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.showcases.Count());
+				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+				m_ShowcaseTime = 0;
+			}
 		}
 	}
 
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		ImageWidget child_image = ImageWidget.Cast(w.GetChildren());
+		Widget child_icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
+		ImageWidget child_image = ImageWidget.Cast(child_icon);
 		if (child_image && w.IsInherited(ButtonWidget)) {
-			EffectSound snd;
-			Camera.GetCurrentCamera().PlaySoundSet(snd, "Click_Editor_Soundset", 0, 0);
 			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_H, 1.0, 90);
 			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_W, 1.0, 90);
 		}
 			
-		switch (w) {
+		switch (w) {			
 			case ExitButton: {
 				child_image.SetColor(LinearColor.INDIAN_RED);
 				child_image.SetImage(3);
@@ -126,27 +261,43 @@ class EditorMainMenu: ScriptViewMenu
 			case SettingButton: {
 				child_image.SetColor(LinearColor.LIGHT_BLUE);
 				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "#main_menu_options", TooltipPosition.INSIDE);
 				break;
 			}
 
 			case DiscordButton: {
 				child_image.SetColor(LinearColor.DISCORD);
+				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
 				break;
 			}
 
 			case WikiButton: {
 				child_image.SetColor(LinearColor.GOLDENROD);
 				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/github.com\/InclementDab\/DayZ-Editor", TooltipPosition.INSIDE);
 				break;
 			}			
 			
 			case TwitterButton: {
 				child_image.SetColor(LinearColor.TWITTER);
+				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/twitter.com\/InclementDab", TooltipPosition.INSIDE);
+				break;
+			}
+			
+			case NextServerShowcase: {
+				
 				break;
 			}
 
 			case ServerShowcase: {
 				ServerShowcaseOutline.SetColor(EditorColors.BLUE);
+				if (m_IsShowcaseActive && m_PayloadLoginInfoCache) {
+					auto showcase = m_PayloadLoginInfoCache.showcases[m_ShowcaseIndex];
+					GetDayZGame().CreateDelayedTooltip(w, showcase.name, TooltipPosition.TOP_RIGHT);
+				} else {
+					GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
+				}
+
 				break;
 			}
 		}
@@ -156,6 +307,8 @@ class EditorMainMenu: ScriptViewMenu
 
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
+		GetDayZGame().ClearTooltip();
+		
 		ImageWidget child_image = ImageWidget.Cast(w.GetChildren());
 		switch (w) {
 			case ExitButton:
@@ -175,8 +328,32 @@ class EditorMainMenu: ScriptViewMenu
 			child_image.SetSize(0.8, 0.8);
 			WidgetAnimator.AnimateColor(child_image, -1, 100);
 		}
-		
+				
 		return super.OnMouseLeave(w, enterW, x, y);
+	}
+
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return super.OnMouseButtonUp(w, x, y, button);	
+		}
+
+		switch (w) {
+			case ServerShowcase: {
+				if (m_IsShowcaseActive && m_PayloadLoginInfoCache) {
+					auto showcase = m_PayloadLoginInfoCache.showcases[m_ShowcaseIndex];
+					if (showcase) {
+						GetGame().OpenURL(showcase.redirectUrl);
+					}
+				} else {
+					GetGame().OpenURL("https:\/\/discord.gg\/dayz-editor");
+				}
+
+				break;
+			}
+		}
+
+		return super.OnMouseButtonUp(w, x, y, button);
 	}
 
 	override bool OnClick(Widget w, int x, int y, int button)
@@ -208,6 +385,20 @@ class EditorMainMenu: ScriptViewMenu
 
 			case TwitterButton: {
 				GetGame().OpenURL("https:\/\/twitter.com\/InclementDab");
+				break;
+			}
+			
+			case NextServerShowcase: {
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.showcases.Count());
+				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+				m_ShowcaseTime = 0;
+				break;
+			}
+			
+			case PrevServerShowcase: {
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex - 1, 0, m_PayloadLoginInfoCache.showcases.Count());
+				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+				m_ShowcaseTime = 0;
 				break;
 			}
 		}

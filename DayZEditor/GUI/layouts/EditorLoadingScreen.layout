@@ -179,16 +179,16 @@ FrameWidgetClass LoadingFrame {
         }
        }
       }
-      TextWidgetClass ImageCredit {
+      MultilineTextWidgetClass ImageCredit {
        ignorepointer 1
        position 35 308
-       size 365 40
+       size 291 22
        hexactpos 1
        vexactpos 1
        hexactsize 1
        vexactsize 1
-       text "creditcreditcreditcreditcreditcreditcredit"
-       font "gui/fonts/MetronBook"
+       text "creditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcreditcredit"
+       font "gui/fonts/Metron"
        "size to text h" 1
        "size to text v" 0
        "text halign" center

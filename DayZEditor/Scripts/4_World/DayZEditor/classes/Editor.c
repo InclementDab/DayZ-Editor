@@ -88,7 +88,8 @@ class Editor: Managed
 	protected ref EditorWebApi m_RestApi;
 	
 	// Stack of Undo / Redo Actions
-	protected ref EditorActionStack 				m_ActionStack;
+	protected ref array<ref EditorAction> m_ActionStack = {};
+	protected int m_CurrentActionIndex = -1;
 	protected ref ShortcutKeys 						m_CurrentKeys = new ShortcutKeys();
 	
 	// private references
@@ -116,9 +117,10 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
+	static const int Experimental = 1;
 	static const int MinorVersionNumber = 0;
 	static const int VersionNumber = 34;
-	static const string Version = string.Format("1.%1%2", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty));
+	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, " Experimental", string.Empty));
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -210,7 +212,6 @@ class Editor: Managed
 		// Needs to exist on clients for Undo / Redo syncing
 		m_SessionCache 			= new map<int, ref EditorObjectData>();
 		m_DeletedSessionCache   = new map<int, ref EditorDeletedObjectData>();
-		m_ActionStack 			= new EditorActionStack();
 		
 		// Init Hud
 		g_Game.ReportProgress("Initializing Hud");
@@ -1868,51 +1869,43 @@ class Editor: Managed
 		m_EditorHudController = m_EditorHud.GetTemplateController();
 		return m_EditorHud;
 	}
+
+	void InsertAction(EditorAction action) 
+	{
+		if (m_CurrentActionIndex < m_ActionStack.Count() - 1) {
+			for (int i = m_ActionStack.Count() - m_CurrentActionIndex - 1; i >= m_CurrentActionIndex + 1; i--) {
+				m_ActionStack.RemoveOrdered(i);
+			}
+		}
+
+		m_ActionStack.Insert(action);
+		m_CurrentActionIndex = m_ActionStack.Count() - 1;
+	}
 	
 	void Undo()
 	{
-		EditorLog.Trace("EditorObjectManager::Undo");
-		foreach (EditorAction action: m_ActionStack) {
-			if (!action.IsUndone()) {
-				action.CallUndo();
-				EditorLog.Info("Undo complete");
-				return;
-			}
+		if (CanUndo()) {
+			m_ActionStack[m_CurrentActionIndex].CallUndo();
+			m_CurrentActionIndex--;
 		}
 	}
 	
 	void Redo()
 	{
-		EditorLog.Trace("EditorObjectManager::Redo");
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
-				m_ActionStack[i].CallRedo();
-				EditorLog.Info("Redo complete");
-				return;
-			}
+		if (CanRedo()) {
+			m_CurrentActionIndex++;
+			m_ActionStack[m_CurrentActionIndex].CallRedo();
 		}
 	}
 	
 	bool CanUndo() 
 	{
-		foreach (EditorAction action: m_ActionStack) {
-			if (action && !action.IsUndone()) {
-				return true;
-			}
-		}
-		
-		return false;
+		return m_CurrentActionIndex >= 0;
 	}
 	
 	bool CanRedo() 
 	{
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
-				return true;
-			}
-		}
-		
-		return false;
+		return m_CurrentActionIndex < m_ActionStack.Count() - 1;
 	}
 			
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
@@ -2765,12 +2758,7 @@ class Editor: Managed
 	{
 		return m_ObjectManager.GetAveragePositionOfSelection();
 	}
-		
-	void InsertAction(EditorAction action) 
-	{
-		m_ActionStack.InsertAction(action);
-	}
-		
+			
 	array<string> GetRecentFiles()
 	{
 		return m_RecentlyOpenedFiles;
@@ -2865,12 +2853,7 @@ class Editor: Managed
 	{
 		return m_EditorBrush;
 	}
-	
-	EditorActionStack GetActionStack() 
-	{
-		return m_ActionStack;
-	}
-	
+		
 	EditorPlaceableItem GetPlaceableObject(string type)
 	{
 		return m_ObjectManager.GetPlaceableObject(type);

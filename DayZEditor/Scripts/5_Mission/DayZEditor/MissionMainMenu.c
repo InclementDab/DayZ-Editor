@@ -16,7 +16,6 @@ modded class MissionMainMenu
 	{
 		// For reset cleanup
 		GetGame().GetUIManager().CloseAll();
-
 		if (!m_NoCutscene) {
 			string world_name;
 			GetGame().GetWorldName(world_name);

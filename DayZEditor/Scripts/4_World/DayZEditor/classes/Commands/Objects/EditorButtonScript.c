@@ -106,7 +106,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 				WidgetAnimator.AnimateColor(m_LayoutRoot, GetEditor().GetSettings().HighlightColor, 70);
 			}
 				
-			GetEditor().GetEditorHud().DelaySetCurrentTooltip(tooltip, w);
+			GetDayZGame().DelaySetCurrentTooltip(tooltip, w);
 		}
 
 		return true;
@@ -115,7 +115,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (m_Command) {
-			GetEditor().GetEditorHud().SetCurrentTooltip(null);
+			GetEditor().GetEditorHud().ClearCurrentTooltip();
 						
 			WidgetAnimator.AnimateColor(m_LayoutRoot, m_DefaultColor, 35);
 		}

@@ -39,6 +39,157 @@ FrameWidgetClass EditorFrame {
      vexactsize 0
      priority 239
     }
+    GridSpacerWidgetClass CompassTicks {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     position 0 110
+     size 0 24
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "CompassScript"
+     Padding 0
+     Margin 0
+     "Size To Content H" 1
+     "Size To Content V" 1
+     content_halign center
+     content_valign center
+     Rows 1
+     {
+      FrameWidgetClass CompassLeft {
+       clipchildren 0
+       ignorepointer 1
+       position 10 10
+       size 350 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        GridSpacerWidgetClass CompassLeftSpacer {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 311 22
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         content_halign right
+         content_valign center
+         Columns 12
+         Rows 1
+        }
+       }
+      }
+      PanelWidgetClass Compass {
+       clipchildren 0
+       ignorepointer 1
+       color 0.0588 0.0588 0.0588 0.3137
+       position 0 0
+       size 48 24
+       halign center_ref
+       hexactpos 1
+       vexactpos 0
+       hexactsize 1
+       vexactsize 1
+       scriptclass ""
+       style rover_sim_colorable
+       {
+        PanelWidgetClass Compass0 {
+         ignorepointer 1
+         position 0 0
+         size 48 24
+         halign center_ref
+         hexactpos 1
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         style Outline_1px
+         {
+          TextWidgetClass CompassText {
+           ignorepointer 1
+           size 1 0.9
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           text "256"
+           font "gui/fonts/Metron22"
+           "italic text" 0
+           "size to text h" 0
+           "text halign" center
+           "text valign" center
+          }
+         }
+        }
+        TextWidgetClass CompassIndicator {
+         ignorepointer 1
+         position 0 1
+         size 1 0.9
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 0
+         hexactsize 0
+         vexactsize 0
+         text "256"
+         font "gui/fonts/Metron22"
+         "italic text" 0
+         "size to text h" 0
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      FrameWidgetClass CompassRight {
+       clipchildren 0
+       ignorepointer 1
+       position 10 10
+       size 350 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       {
+        GridSpacerWidgetClass CompassRightSpacer {
+         visible 1
+         ignorepointer 1
+         position 0 0
+         size 0 22
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         Padding 0
+         Margin 0
+         "Size To Content H" 1
+         content_halign center
+         content_valign center
+         Columns 12
+         Rows 1
+        }
+       }
+      }
+     }
+     {
+      ScriptParamsClass {
+      }
+     }
+    }
     GridSpacerWidgetClass GizmoControls {
      visible 0
      ignorepointer 1
@@ -2658,9 +2809,10 @@ FrameWidgetClass EditorFrame {
              scaled 1
              draggable 0
              scriptclass "ViewBinding"
-             style debugUI
+             style Default
              "no focus" 0
-             font "gui/fonts/Metron22"
+             font "gui/fonts/Metron"
+             "text color" 1 1 1 0
              {
               ButtonWidgetClass BrushToggleButton {
                visible 1
@@ -2695,7 +2847,7 @@ FrameWidgetClass EditorFrame {
                  vexactsize 1
                  scriptclass "ViewBinding"
                  text "Test"
-                 font "gui/fonts/Metron22"
+                 font "gui/fonts/Metron"
                  "exact text" 0
                  "size to text h" 0
                  "size to text v" 1
@@ -4546,157 +4698,6 @@ FrameWidgetClass EditorFrame {
          }
         }
        }
-      }
-     }
-    }
-    GridSpacerWidgetClass CompassTicks {
-     visible 1
-     clipchildren 0
-     ignorepointer 1
-     position 0 110
-     size 0 24
-     halign center_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scriptclass "CompassScript"
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
-     "Size To Content V" 1
-     content_halign center
-     content_valign center
-     Rows 1
-     {
-      FrameWidgetClass CompassLeft {
-       clipchildren 0
-       ignorepointer 1
-       position 10 10
-       size 350 24
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       {
-        GridSpacerWidgetClass CompassLeftSpacer {
-         visible 1
-         ignorepointer 1
-         position 0 0
-         size 311 22
-         halign right_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         Padding 0
-         Margin 0
-         "Size To Content H" 1
-         content_halign right
-         content_valign center
-         Columns 12
-         Rows 1
-        }
-       }
-      }
-      PanelWidgetClass Compass {
-       clipchildren 0
-       ignorepointer 1
-       color 0.0588 0.0588 0.0588 0.3137
-       position 0 0
-       size 48 24
-       halign center_ref
-       hexactpos 1
-       vexactpos 0
-       hexactsize 1
-       vexactsize 1
-       scriptclass ""
-       style rover_sim_colorable
-       {
-        PanelWidgetClass Compass0 {
-         ignorepointer 1
-         position 0 0
-         size 48 24
-         halign center_ref
-         hexactpos 1
-         vexactpos 0
-         hexactsize 1
-         vexactsize 1
-         style Outline_1px
-         {
-          TextWidgetClass CompassText {
-           ignorepointer 1
-           size 1 0.9
-           halign center_ref
-           valign center_ref
-           hexactpos 1
-           vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           text "256"
-           font "gui/fonts/Metron22"
-           "italic text" 0
-           "size to text h" 0
-           "text halign" center
-           "text valign" center
-          }
-         }
-        }
-        TextWidgetClass CompassIndicator {
-         ignorepointer 1
-         position 0 1
-         size 1 0.9
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 0
-         hexactsize 0
-         vexactsize 0
-         text "256"
-         font "gui/fonts/Metron22"
-         "italic text" 0
-         "size to text h" 0
-         "text halign" center
-         "text valign" center
-        }
-       }
-      }
-      FrameWidgetClass CompassRight {
-       clipchildren 0
-       ignorepointer 1
-       position 10 10
-       size 350 24
-       hexactpos 1
-       vexactpos 1
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       {
-        GridSpacerWidgetClass CompassRightSpacer {
-         visible 1
-         ignorepointer 1
-         position 0 0
-         size 0 22
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         Padding 0
-         Margin 0
-         "Size To Content H" 1
-         content_halign center
-         content_valign center
-         Columns 12
-         Rows 1
-        }
-       }
-      }
-     }
-     {
-      ScriptParamsClass {
       }
      }
     }

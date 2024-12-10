@@ -170,7 +170,7 @@ class EditorGizmo: Managed
 	// called by Editor.Update
 	void Update(float dt)
 	{
-		bool doSort = false;
+		bool doSort = 0;
 		float colorArr[4];
 		int bias = 0;
 		

@@ -876,9 +876,9 @@ class EditorHud: ScriptView
 		GetGame().GetUIManager().ShowCursor(state);
 		
 		if (!state) {
-			delete CurrentTooltip;
 			delete CurrentMenu;
 			SetFocus(null);
+			ClearCurrentTooltip();
 		}
 	}
 		
@@ -955,44 +955,20 @@ class EditorHud: ScriptView
 	static ref EditorMenu CurrentMenu;
 	
 	// ToolTip Control
-	protected ref ScriptView CurrentTooltip;
 	void SetCurrentTooltip(ScriptView current_tooltip) 
 	{
-		delete CurrentTooltip;
-		
-		// Dont create a tooltip if conditions are met
-		if (!CanCreateTooltip()) {
-			return;
+		if (!current_tooltip) {
+			ClearCurrentTooltip();
+		} else {
+			if (CanCreateTooltip()) {
+				GetDayZGame().SetCurrentTooltip(current_tooltip);
+			}
 		}
-		
-		CurrentTooltip = current_tooltip;
 	}
-
+	
 	TooltipView CreateDelayedTooltip(Widget w, string text, TooltipPosition position, string desc = string.Empty, Symbols icon = string.Empty, int delay = 300)
 	{
-		TooltipView view = TooltipView.CreateOnWidget(w, text, position, desc, icon);
-		DelaySetCurrentTooltip(view, w, delay);
-		return view;
-	}
-
-	void DelaySetCurrentTooltip(ScriptView current_tooltip, Widget w, int delay = 300)
-	{
-		CurrentTooltip = current_tooltip;
-		CurrentTooltip.GetLayoutRoot().Show(false);
-
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(VerifyCurrentTooltip);
-		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(VerifyCurrentTooltip, delay, false, w);
-	}
-
-	protected void VerifyCurrentTooltip(Widget w)
-	{
-		if (!CanCreateTooltip() || GetWidgetUnderCursor() != w) {
-			return;
-		}
-
-		if (CurrentTooltip && CurrentTooltip.GetLayoutRoot()) {
-			CurrentTooltip.GetLayoutRoot().Show(true);
-		}
+		return GetDayZGame().CreateDelayedTooltip(w, text, position, desc, icon, delay);
 	}
 
 	protected bool CanCreateTooltip()
@@ -1002,7 +978,7 @@ class EditorHud: ScriptView
 	
 	void ClearCurrentTooltip()
 	{
-		delete CurrentTooltip;
+		GetDayZGame().ClearTooltip();
 	}
 		
 	ScriptView ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen, eDialogMode dialog_mode, eDialogFlags dialog_flags = 0)

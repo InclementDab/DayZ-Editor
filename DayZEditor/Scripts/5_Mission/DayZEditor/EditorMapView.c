@@ -7,8 +7,8 @@ class EditorMapView: ScriptView
 	protected AbstractWave m_CurrentMapSound;
 	ImageWidget Image;
 	TextWidget Text;
-	Widget Outline, ButtonSpacer, ImageFr;
-	ButtonWidget StartButton, LoadButton, PurchaseButton;
+	Widget Outline, ButtonSpacer, ImageFr, LockImage, TextPanel;
+	ButtonWidget StartButton, LoadButton, PurchaseButton, Button;
 	protected int m_Opened;
 	
 	protected EditorSettings m_EditorSettings;
@@ -33,17 +33,17 @@ class EditorMapView: ScriptView
 
 		m_EditorSettings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
 
-		if (!GetGame().VerifyWorldOwnership(m_MapConfig)) {
+		if (!GetGame().VerifyWorldOwnership(m_MapConfig) || map_name == "Sakhal") {
 			PurchaseButton.Show(true);
-			StartButton.Enable(false);
-			LoadButton.Enable(false);
-			
-			Text.SetText(string.Format("%1 (DLC REQUIRED)", map_name));
+			StartButton.Show(false);
+			LoadButton.Show(false);
+			Button.Enable(false);
+			LockImage.Show(true);
+			Image.SetColor(LinearColor.Create(75, 75, 75));
+			Text.SetText(string.Format("%1", map_name));
 		} else {
 			PurchaseButton.Show(false);
 		}
-		
-		m_LayoutRoot.SetHandler(m_Controller.GetHandler());
 	}
 
 	void ~EditorMapView()
@@ -56,7 +56,7 @@ class EditorMapView: ScriptView
 	override void Update(float dt)
 	{
 		super.Update(dt);
-		
+				
 		if (!m_LayoutRoot) {
 			return;
 		}
@@ -138,6 +138,14 @@ class EditorMapView: ScriptView
 		}
 		
 		switch (w) {
+		}
+
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+
+	override bool OnClick(Widget w, int x, int y, int button)
+	{		
+		switch (w) {
 			case StartButton: {
 				GetGame().PlayMission(CreateEditorMission(m_MapConfig));
 				break;
@@ -152,26 +160,26 @@ class EditorMapView: ScriptView
 				GetGame().GoBuyWorldDLC(m_MapConfig);
 				break;
 			}
-			
-			case ImageFr: {
-				foreach (EditorMapView view: s_AllEditorMapViews) {
-					if (view != this && view.IsOpened()) {
-						//view.SetOpened(false);
-					}
-				}
+		}
 		
-				//SetOpened(!IsOpened());
+		return super.OnClick(w, x, y, button);
+	}
+	
+	override bool OnDoubleClick(Widget w, int x, int y, int button)
+	{
+		bool disabled = ((w.GetFlags() & WidgetFlags.DISABLED) == WidgetFlags.DISABLED);
+		if (disabled || button != 0) {
+			return super.OnDoubleClick(w, x, y, button);
+		}
+		
+		switch (w) {
+			case Button: {
+				GetGame().PlayMission(CreateEditorMission(m_MapConfig));
 				break;
 			}
 		}
-
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-
-	override bool OnClick(Widget w, int x, int y, int button)
-	{		
-		Print(w);
-		return super.OnClick(w, x, y, button);
+		
+		return super.OnDoubleClick(w, x, y, button);
 	}
 	
 	protected void OnFileSelected(string file)
@@ -186,50 +194,80 @@ class EditorMapView: ScriptView
 
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{		
+		string map_name = GetGame().ConfigGetTextOut(string.Format("CfgWorlds %1 description", m_MapConfig));
 		bool disabled = ((w.GetFlags() & WidgetFlags.DISABLED) == WidgetFlags.DISABLED);
 		if (disabled) {
 			return true;
 		}
 		
-		if (w == ImageFr) {
-			Image.SetImage(1);
-
-			WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 0.95, 120);
-			WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 0.95, 120);
-			
-			WidgetAnimator.AnimateColor(Image, -1, 200);
-			WidgetAnimator.AnimateColor(Text, -1, 100);
-			WidgetAnimator.AnimateColor(Outline, m_EditorSettings.SelectionColor, 60);
-			WidgetAnimator.AnimateColor(m_LayoutRoot, m_EditorSettings.SelectionColor, 60);
-
-			StartButton.GetChildren().SetColor(-1);
-			LoadButton.GetChildren().SetColor(-1);
-			PurchaseButton.GetChildren().SetColor(-1);
-
-			if (!m_Opened && Image.GetColor() != -1) {
-				EffectSound snd;
-				Camera.GetCurrentCamera().PlaySoundSet(snd, "mapOut_SoundSet", 0, 0);
-				snd.SetLocalPosition(Vector(1, 0, 0));
-				m_SoundEffectDt = 1.0;
-			}
-		}
-
-		if (w.IsInherited(ButtonWidget)) {
-			ImageWidget.Cast(w.GetChildren()).SetImage(3);
-			w.GetChildren().SetColor(m_EditorSettings.SelectionColor);
-			w.GetChildren().SetSize(1.0, 1.0);
+		Widget child_icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
+		ImageWidget child_image = ImageWidget.Cast(child_icon);
+		if (child_image && w.IsInherited(ButtonWidget)) {
+			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_H, 1.0, 90);
+			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_W, 1.0, 90);
+			child_image.SetColor(m_EditorSettings.SelectionColor);
+			child_image.SetImage(3);
 		}
 		
-		return true;
+		switch (w) {
+			case Button: {
+				Image.SetImage(1);
+	
+				WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 0.95, 120);
+				WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 0.95, 120);
+				
+				WidgetAnimator.AnimateColor(Image, -1, 200);
+				WidgetAnimator.AnimateColor(Text, -1, 100);
+				WidgetAnimator.AnimateColor(Outline, m_EditorSettings.SelectionColor, 60);
+				WidgetAnimator.AnimateColor(m_LayoutRoot, m_EditorSettings.SelectionColor, 60);
+	
+				StartButton.GetChildren().SetColor(-1);
+				LoadButton.GetChildren().SetColor(-1);
+				PurchaseButton.GetChildren().SetColor(-1);
+	
+				if (!m_Opened && Image.GetColor() != -1) {
+					EffectSound snd;
+					Camera.GetCurrentCamera().PlaySoundSet(snd, "mapOut_SoundSet", 0, 0);
+					snd.SetLocalPosition(Vector(1, 0, 0));
+					m_SoundEffectDt = 1.0;
+				}
+				
+				break;
+			}
+			
+			case StartButton: {
+				GetDayZGame().CreateDelayedTooltip(w, string.Format("Load %1", map_name), TooltipPosition.TOP_RIGHT);
+				break;
+			}
+			
+			case LoadButton: {
+				GetDayZGame().CreateDelayedTooltip(w, string.Format("Open Existing File", map_name), TooltipPosition.TOP_RIGHT);
+				break;
+			}
+			
+			case PurchaseButton: {
+				GetDayZGame().CreateDelayedTooltip(w, string.Format("Purchase %1", map_name), TooltipPosition.TOP_RIGHT);
+				break;
+			}
+		}
+		
+		return super.OnMouseEnter(w, x, y);
 	}
 
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
+		bool disabled = ((w.GetFlags() & WidgetFlags.DISABLED) == WidgetFlags.DISABLED);
+		if (disabled) {
+			return true;
+		}
+		
+		GetDayZGame().ClearTooltip();
+		
 		switch (w) {
-			case ImageFr: {
+			case Button: {
 				Image.SetImage(1);
-
-				if (!m_Opened && (!enterW || !enterW.IsInherited(ButtonWidget))) {
+				
+				if (enterW != StartButton && enterW != LoadButton && enterW != PurchaseButton) {
 					WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_H, 1.0, 60);
 					WidgetAnimator.Animate(Image, WidgetAnimatorProperty.SIZE_W, 1.0, 60);
 					WidgetAnimator.AnimateColor(Image, LinearColor.Create(150, 150, 150), 200);
@@ -253,9 +291,6 @@ class EditorMapView: ScriptView
 			}
 		}
 		
-
-		EffectSound snd;
-		//Camera.GetCurrentCamera().PlaySoundSet(snd, "mapOut_SoundSet", 0, 0);
 		return true;
 	}
 

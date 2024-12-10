@@ -23,7 +23,7 @@ class EditorTranslationCommand: EditorCommand
 	
 	override LinearColor GetColor()
 	{
-		return LinearColor.GREEN;
+		return LinearColor.WEB_GREEN	;
 	}
 	
 	override ShortcutKeys GetShortcut() 

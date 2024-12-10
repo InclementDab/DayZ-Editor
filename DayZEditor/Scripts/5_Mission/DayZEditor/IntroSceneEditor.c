@@ -1,4 +1,4 @@
- class IntroSceneEditor: Managed
+class IntroSceneEditor: Managed
 {		
 	const float LOCATION_TIME_MAX = 45;
 	const string BUILD_LOCATIONS = "DayZEditor\\Editor\\Builds";

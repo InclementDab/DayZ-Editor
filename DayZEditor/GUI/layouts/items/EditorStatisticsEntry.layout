@@ -10,6 +10,7 @@ PanelWidgetClass Panel {
  style rover_sim_colorable
  {
   TextWidgetClass Text {
+   clipchildren 0
    ignorepointer 1
    position 4 0
    size 48 22
@@ -19,12 +20,14 @@ PanelWidgetClass Panel {
    hexactsize 1
    vexactsize 1
    text "Items Placed"
-   font "gui/fonts/Metron22"
+   font "gui/fonts/Metron"
+   "exact text" 0
    "size to text h" 1
    "text halign" center
    "text valign" center
   }
   TextWidgetClass Value {
+   clipchildren 0
    ignorepointer 1
    position 4 0
    size 48 22
@@ -35,7 +38,7 @@ PanelWidgetClass Panel {
    hexactsize 1
    vexactsize 1
    text "2483"
-   font "gui/fonts/Metron22"
+   font "gui/fonts/Metron"
    "size to text h" 1
    "text halign" center
    "text valign" center
