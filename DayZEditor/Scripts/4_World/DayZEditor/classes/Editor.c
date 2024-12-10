@@ -1205,7 +1205,7 @@ class Editor: Managed
 				}
 			}
 			
-			array<UAInput> input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input };
+			array<UAInput> input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input, big_input, small_input };
 			
 			bool input_is_value = false;
 			bool input_is_press = false;
@@ -1306,7 +1306,7 @@ class Editor: Managed
 			
 			ori_offset = ori_offset * Math.RAD2DEG;
 					
-			if (pos_offset != vector.Zero || ori_offset != vector.Zero) {
+			if (pos_offset != vector.Zero || ori_offset != vector.Zero || scale_offset != 0) {
 				foreach (int id, EditorObject selected_object: selected_objects) {
 					vector rel_mat[4];
 					selected_object.GetTransform(rel_mat);
