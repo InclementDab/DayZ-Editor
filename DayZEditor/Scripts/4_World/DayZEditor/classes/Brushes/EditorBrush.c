@@ -130,7 +130,7 @@ class EditorBrush
 				continue;
 			}
 
-			EditorObjectData brushed_object_data = EditorObjectData.Create(object_name.Name, point, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale), EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.LISTITEM);
+			EditorObjectData brushed_object_data = EditorObjectData.Create(object_name.Name, point, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale), EFE_BRUSHED);
 			
 			// pass onto second pass
 			brushes_data[brushed_object_data.GetID()] = new Param2<vector, EditorBrushObject>(point, object_name);
