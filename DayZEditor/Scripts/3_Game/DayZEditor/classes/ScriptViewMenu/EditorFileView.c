@@ -2,7 +2,7 @@ class EditorFileView: ScriptView
 {
 	protected string m_File;
 	protected ref ScriptCaller m_OnClicked, m_OnDoubleClicked;
-
+	protected bool m_IsDirectory;
 	protected float m_ClickTick;
 	
 	ImageWidget Icon;
@@ -13,6 +13,7 @@ class EditorFileView: ScriptView
 		m_File = file;
 		m_OnClicked = on_click;
 		m_OnDoubleClicked = on_double_click;
+		m_IsDirectory = is_directory;
 
 		string file_name = File.GetName(m_File);
 		string file_extension = File.GetExtension(m_File);
@@ -60,6 +61,11 @@ class EditorFileView: ScriptView
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
 		return super.OnMouseButtonUp(w, x, y, button);
+	}
+
+	bool IsDirectory()
+	{
+		return m_IsDirectory;
 	}
 
 	override string GetLayoutFile()
