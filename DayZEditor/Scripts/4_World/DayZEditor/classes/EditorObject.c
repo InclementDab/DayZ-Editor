@@ -718,14 +718,14 @@ class EditorObject: EditorWorldObject
 	vector GetBottomCenter()
 	{		
 		vector transform[4];
-		GetTransform(transform);
+		m_WorldObject.GetTransform(transform);
 		return (Vector(0, -m_BoundingCenter[1], 0)).Multiply4(transform);
 	}
 	
 	void GetBottomTransform(out vector transform[4])
 	{
 		vector mat[4];
-		GetTransform(mat);
+		m_WorldObject.GetTransform(mat);
 		copyarray(transform, mat);
 		transform[3] = (Vector(0, -m_BoundingCenter[1], 0)).Multiply4(mat);
 	}

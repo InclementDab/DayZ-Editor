@@ -426,6 +426,7 @@ class Editor: Managed
 
 	protected Raycast PerformRaycast(notnull Ray source_ray, Object ignore, float distance, bool ground_only)
 	{
+		//DumpStack();
 		Raycast camera_raycast;
 		const int interaction_layers = PhxInteractionLayers.CAMERA;
 		if (!ground_only) {
@@ -445,7 +446,7 @@ class Editor: Managed
 	
 	bool IsMapActive()
 	{
-		return m_EditorHud && m_EditorHud.Map.IsVisible();
+		return m_EditorHud.Map.IsVisible();
 	}
 
 	protected ECameraLockFlag m_CameraLockFlags;
