@@ -39,7 +39,6 @@ class EditorBrush
 
 	void SetBrushTexture(string texture)
 	{
-		EditorLog.Trace("EditorBrush::SetBrushTexture " + texture);
 		m_BrushDecal.SetObjectTexture(0, texture);
 		m_BrushDecal.Update();
 	}
@@ -50,10 +49,8 @@ class EditorBrush
 			return;
 		}
 		
-		Input input = GetGame().GetInput();
-		Ray ray = new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetPointerDirection());
-		
-		Raycast ray_cast = ray.PerformRaycastRVEX(BrushRadius / 100, GetEditor().GetCamera().GetSettings().ViewDistance, ObjIntersectView, null, true);
+		Input input = GetGame().GetInput();		
+		Raycast ray_cast = GetEditor().GetCursorRaycast(null, true);
 		if (ray_cast && ray_cast.Bounce) {
 			vector transform[4] = {
 				Vector(BrushRadius / 5, 0, 0),

@@ -34,6 +34,7 @@ class GizmoInteractionSource: Managed
 		float tmax = Math.Min(Math.Min(Math.Max(t1, t2), Math.Max(t3, t4)), Math.Max(t5, t6));
 		float t = 0;
 		// if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
+		
 		if (tmax < 0) {
 			t = tmax;
 			return false;
@@ -44,7 +45,7 @@ class GizmoInteractionSource: Managed
 			t = tmax;
 			return false;
 		}
-
+		
 		t = tmin;
 		hit_pos = ray.Position + ray.Direction.Normalized() * t;
 		return true;
@@ -175,7 +176,7 @@ class EditorGizmo: Managed
 		int bias = 0;
 		
 #ifdef DIAG_DEVELOPER
-		bool debug_collisions = 0;
+		bool debug_collisions = 1;
 		//GetDayZGame().ReloadShape(m_Gizmo);
 #endif
 		// todo, grabbing this every frame?
@@ -262,7 +263,7 @@ class EditorGizmo: Managed
 			collision_hit = hit_pos;
 		}
 	
-		if (m_InteractionIndex == -1 && interact_input.LocalPress()) {
+		if (m_InteractionIndex == -1 && interact_input.LocalPress() && !GetWidgetUnderCursor()) {
 			m_DragOffset = collision_hit.InvMultiply4(m_TopTransformOrthogonal);
 			m_InteractionIndex = collide_index;
 			copyarray(m_TopTransformOriginal, top_transform);
@@ -437,6 +438,10 @@ class EditorTranslationGizmo: EditorGizmo
 				vector cursor_intersect_xy_local = cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset;
 				cursor_intersect_xy_local[1] = 0;
 				cursor_intersect_xy_local[2] = 0;
+				if (GetEditor().IsShiftDown()) {
+					cursor_intersect_xy_local[0] = Math.Round(cursor_intersect_xy_local[0] * 2.5) / 2.5;
+				}
+				
 				cursor_intersect = cursor_intersect_xy_local.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
@@ -448,6 +453,9 @@ class EditorTranslationGizmo: EditorGizmo
 				vector cursor_intersect_xz_local = cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset;
 				cursor_intersect_xz_local[0] = 0;
 				cursor_intersect_xz_local[2] = 0;
+				if (GetEditor().IsShiftDown()) {
+					cursor_intersect_xz_local[1] = Math.Round(cursor_intersect_xz_local[1] * 2.5) / 2.5;
+				}
 				cursor_intersect = cursor_intersect_xz_local.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
@@ -459,6 +467,9 @@ class EditorTranslationGizmo: EditorGizmo
 				vector cursor_intersect_yz_local = cursor_intersect.InvMultiply4(m_TopTransformOrthogonal) - m_DragOffset;
 				cursor_intersect_yz_local[0] = 0;
 				cursor_intersect_yz_local[1] = 0;
+				if (GetEditor().IsShiftDown()) {
+					cursor_intersect_yz_local[2] = Math.Round(cursor_intersect_yz_local[2] * 2.5) / 2.5;
+				}
 				cursor_intersect = cursor_intersect_yz_local.Multiply4(m_TopTransformOrthogonal);
 				break;
 			}
@@ -603,21 +614,21 @@ class EditorRotationGizmo: EditorGizmo
 		super.RegisterInteractionClips(clipping_infos);
 		
 		float BOX_WIDTH_HALF = 0.025;
-		float BOX_LENGTH_HALF = BOX_LENGTH / 3;
+		float BOX_LENGTH_HALF = BOX_LENGTH / 2;
 		
 		clipping_infos[INTERACTION_XZ_ROTATE] = new GizmoInteractionSource({
-			Vector(BOX_WIDTH, BOX_WIDTH_HALF, BOX_WIDTH), // BOX_WIDTH[0], BOX_WIDTH[2] to keep it from intersecting with others
-			Vector(BOX_LENGTH, -BOX_WIDTH_HALF, BOX_LENGTH)
+			Vector(-BOX_LENGTH_HALF, BOX_WIDTH_HALF, -BOX_LENGTH_HALF), // BOX_WIDTH[0], BOX_WIDTH[2] to keep it from intersecting with others
+			Vector(BOX_LENGTH_HALF, -BOX_WIDTH_HALF, BOX_LENGTH_HALF)
 		}, LinearColor.GREEN);
 		
 		clipping_infos[INTERACTION_XY_ROTATE] = new GizmoInteractionSource({
-			Vector(BOX_WIDTH, BOX_WIDTH, BOX_WIDTH_HALF),
-			Vector(BOX_LENGTH, BOX_LENGTH, -BOX_WIDTH_HALF)
+			Vector(-BOX_LENGTH_HALF, -BOX_LENGTH_HALF, BOX_WIDTH_HALF),
+			Vector(BOX_LENGTH_HALF, BOX_LENGTH_HALF, -BOX_WIDTH_HALF)
 		}, LinearColor.BLUE);
 		
 		clipping_infos[INTERACTION_YZ_ROTATE] = new GizmoInteractionSource({
-			Vector(BOX_WIDTH_HALF, BOX_WIDTH, BOX_WIDTH),
-			Vector(-BOX_WIDTH_HALF, BOX_LENGTH, BOX_LENGTH)
+			Vector(BOX_WIDTH_HALF, -BOX_LENGTH_HALF, -BOX_LENGTH_HALF),
+			Vector(-BOX_WIDTH_HALF, BOX_LENGTH_HALF, BOX_LENGTH_HALF)
 		}, LinearColor.RED);
 	}
 

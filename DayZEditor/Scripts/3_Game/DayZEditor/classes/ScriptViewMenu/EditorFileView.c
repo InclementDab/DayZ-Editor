@@ -8,7 +8,7 @@ class EditorFileView: ScriptView
 	ImageWidget Icon;
 	TextWidget FileName, Extension;
 
-	void EditorFileView(string file, ScriptCaller on_click, ScriptCaller on_double_click)
+	void EditorFileView(string file, ScriptCaller on_click, ScriptCaller on_double_click, bool is_directory)
 	{
 		m_File = file;
 		m_OnClicked = on_click;
@@ -17,10 +17,13 @@ class EditorFileView: ScriptView
 		string file_name = File.GetName(m_File);
 		string file_extension = File.GetExtension(m_File);
 		FileName.SetText(file_name);
-		Extension.SetText(file_extension);
+		
 		// Set icon to folder
-		if (file_extension == string.Empty) {
+		if (is_directory) {
 			Symbols.FOLDER.Load(Icon, 3);
+			Icon.SetColor(0xFFFFCD45);
+		} else {
+			Extension.SetText(file_extension);
 		}
 	}
 	

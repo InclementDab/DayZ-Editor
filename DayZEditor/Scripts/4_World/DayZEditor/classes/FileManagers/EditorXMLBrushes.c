@@ -1,9 +1,9 @@
 // abstract to EditorXMLCallback
 class XMLEditorBrushes: XMLCallback
 {
-	private ObservableCollection<ref EditorBrushData> m_Data;
+	private array<ref EditorBrushData> m_Data;
 
-	void XMLEditorBrushes(ObservableCollection<ref EditorBrushData> data) 
+	void XMLEditorBrushes(array<ref EditorBrushData> data) 
 	{
 		m_Data = data;
 	}
@@ -89,8 +89,6 @@ class XMLEditorBrushes: XMLCallback
 				m_Data.Insert(brush_type_data);
 			}
 		}
-		
-		EditorLog.Info("Loaded %1 Brushes!", m_Data.Count().ToString());
 	}
 	
 	override void OnFailure(XMLDocument document)

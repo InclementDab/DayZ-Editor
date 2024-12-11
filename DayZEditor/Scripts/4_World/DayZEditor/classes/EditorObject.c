@@ -17,6 +17,7 @@ class EditorObject: EditorWorldObject
 	
 	protected vector m_LineCenters[12]; 
 	protected vector m_LineVerticies[8];
+	protected vector m_BoundingCenter;
 	protected bool m_IsSelected;
 	
 	// Object Data
@@ -169,6 +170,7 @@ class EditorObject: EditorWorldObject
 		
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_VectorBasePoint = base_point;
+		m_BoundingCenter = m_WorldObject.GetBoundingCenter();
 		
 		// Bounding Box
 		EnableBoundingBox(IsBoundingBoxEnabled());
@@ -395,16 +397,17 @@ class EditorObject: EditorWorldObject
 
 				m_Data.Attachments.Clear();
 				array<EntityAI> attachments = {};
-				for (int i = 0; i < entity.GetInventory().AttachmentCount(); i++) {			
-					EntityAI attachment = entity.GetInventory().GetAttachmentFromIndex(i);
-					if (!attachment) {
+				
+				entity.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, attachments);
+				for (int i = 0; i < attachments.Count(); i++) {			
+					EntityAI attachment = attachments[i];
+					if (!attachment || attachment == m_WorldObject) {
 						continue;
 					}
 					
 					m_Data.Attachments.Insert(attachment.GetType());
 				}
-			}
-			
+			}			
 		}
 		
 		Name = GetDisplayName();
@@ -439,14 +442,7 @@ class EditorObject: EditorWorldObject
 				EditorAction orientation_undo = new EditorAction("SetTransform", "SetTransform");
 				orientation_undo.InsertUndoParameter(GetTransformArray());
 				
-				vector ypr_mat[4];
-				Math3D.YawPitchRollMatrix(Orientation, ypr_mat);
-				ypr_mat[3] = Position;
-				
-				vector scale_mat[3];
-				Math3D.ScaleMatrix(Scale, scale_mat);
-				Math3D.MatrixMultiply4(scale_mat, ypr_mat, ypr_mat);
-				SetTransform(ypr_mat);
+				SetOrientation(Orientation);
 				orientation_undo.InsertRedoParameter(GetTransformArray());
 				GetEditor().InsertAction(orientation_undo);
 				break;
@@ -723,7 +719,7 @@ class EditorObject: EditorWorldObject
 	{		
 		vector transform[4];
 		GetTransform(transform);
-		return (Vector(0, -m_WorldObject.GetBoundingCenter()[1], 0)).Multiply4(transform);
+		return (Vector(0, -m_BoundingCenter[1], 0)).Multiply4(transform);
 	}
 	
 	void GetBottomTransform(out vector transform[4])
@@ -731,12 +727,12 @@ class EditorObject: EditorWorldObject
 		vector mat[4];
 		GetTransform(mat);
 		copyarray(transform, mat);
-		transform[3] = (Vector(0, -m_WorldObject.GetBoundingCenter()[1], 0)).Multiply4(mat);
+		transform[3] = (Vector(0, -m_BoundingCenter[1], 0)).Multiply4(mat);
 	}
 	
 	void SetBottomTransform(vector transform[4])
 	{
-		vector pos_offset = Vector(0, m_WorldObject.GetBoundingCenter()[1], 0).Multiply3(transform);
+		vector pos_offset = Vector(0, m_BoundingCenter[1], 0).Multiply3(transform);
 		transform[3] = transform[3] + pos_offset;
 		SetTransform(transform);
 	}
@@ -761,7 +757,7 @@ class EditorObject: EditorWorldObject
 	
 	float GetYDistance()
 	{
-		return m_WorldObject.GetBoundingCenter()[1];
+		return m_BoundingCenter[1];
 	}
 	
 	float GetAngle()

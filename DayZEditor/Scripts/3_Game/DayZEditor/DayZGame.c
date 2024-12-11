@@ -83,7 +83,9 @@ modded class DayZGame
 		}
 		
 		string random_map = maps.GetRandomElement();
-		string mission_target = SystemPath.Saves(string.Format("EditorMainMenu.%1", random_map));
+		string mission_directory = SystemPath.Saves("EditorCache");
+		MakeDirectory(mission_directory);
+		string mission_target = SystemPath.Combine(mission_directory, string.Format("EditorMainMenu.%1", random_map));
 		DeleteFile(mission_target);
 		MakeDirectory(mission_target);
 		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\init.c", SystemPath.Combine(mission_target, "init.c"));

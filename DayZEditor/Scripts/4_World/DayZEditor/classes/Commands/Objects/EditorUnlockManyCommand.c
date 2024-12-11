@@ -6,13 +6,12 @@ class EditorUnlockManyCommand: EditorCommand
 	override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		
-		if (m_Editor.GetBrush() && m_Editor.GetBrush().IsInherited(EditorUnlockBrush)) {
-			m_Editor.SetBrush(null);
+				
+		if (m_Editor.GetEditorHud().GetBrushState() && m_Editor.Brush.IsInherited(EditorUnlockBrush)) {
+			m_Editor.GetEditorHud().SetBrushState(0);
 		} else {
-			m_Editor.GetEditorHud().GetTemplateController().BrushToggleButtonState = false;
-			m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("BrushToggleButtonState");
-			m_Editor.SetBrush(new EditorUnlockBrush());
+			m_Editor.GetEditorHud().SetBrushByTypename(EditorUnlockBrush);
+			m_Editor.GetEditorHud().SetBrushState(1);
 		}
 		
 		return true;
@@ -35,6 +34,6 @@ class EditorUnlockManyCommand: EditorCommand
 	
 	override bool IsToggled()
 	{
-		return GetEditor().GetBrush() && GetEditor().GetBrush().IsInherited(EditorUnlockBrush);
+		return GetEditor().Brush && GetEditor().Brush.IsInherited(EditorUnlockBrush);
 	}
 }

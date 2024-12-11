@@ -38,8 +38,8 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
-		if (m_Editor.IsPlayerActive()) {
-			m_Editor.SetActive(true);
+		if (m_Editor.GetControllingPlayer()) {
+			m_Editor.Activate();
 			return true;
 		}
 		

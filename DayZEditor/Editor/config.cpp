@@ -113,6 +113,23 @@ class CfgVehicles
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\RotateGizmo.p3d";
+		hiddenSelections[] = {
+			"x",
+			"y",
+			"z"
+		};
+
+		hiddenSelectionsTextures[] = {
+			"#(argb,8,8,3)color(1.0,0.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,1.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,0.0,1.0,1.000,co)"
+		};
+
+		hiddenSelectionsMaterials[] = {
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat"
+		};
 	};
 
 	class GizmoScale: GizmoBase

@@ -81,7 +81,8 @@ class EditorMultiObjectCommandController
 				}
 				
 				case "Orientation": {
-					vector rot_matrix[4];
+					// commented for now cuz its spinning brushed objects 12/11
+					/*vector rot_matrix[4];
 					Math3D.YawPitchRollMatrix(Orientation, rot_matrix);
 					rot_matrix[3] = m_AveragePosition;
 
@@ -89,7 +90,7 @@ class EditorMultiObjectCommandController
 					vector new_position = (OriginalPositions[editor_object.GetWorldObject()] - m_AveragePosition).Multiply4(rot_matrix);
 					editor_object.Orientation = new_orientation;
 					editor_object.Position = new_position;
-					editor_object.PropertyChanged("Position");
+					editor_object.PropertyChanged("Position");*/
 					
 
 					//vector old_orientation = editor_object.GetOrientation();

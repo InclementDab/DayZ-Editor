@@ -7,12 +7,11 @@ class EditorLockManyCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
-		if (m_Editor.GetBrush() && m_Editor.GetBrush().IsInherited(EditorLockBrush)) {
-			m_Editor.SetBrush(null);
+		if (m_Editor.GetEditorHud().GetBrushState() && m_Editor.Brush.IsInherited(EditorLockBrush)) {
+			m_Editor.GetEditorHud().SetBrushState(0);
 		} else {
-			m_Editor.GetEditorHud().GetTemplateController().BrushToggleButtonState = false;
-			m_Editor.GetEditorHud().GetTemplateController().NotifyPropertyChanged("BrushToggleButtonState");
-			m_Editor.SetBrush(new EditorLockBrush());
+			m_Editor.GetEditorHud().SetBrushByTypename(EditorLockBrush);
+			m_Editor.GetEditorHud().SetBrushState(1);
 		}
 		
 		return true;
@@ -35,6 +34,6 @@ class EditorLockManyCommand: EditorCommand
 	
 	override bool IsToggled()
 	{
-		return GetEditor().GetBrush() && GetEditor().GetBrush().IsInherited(EditorLockBrush);
+		return GetEditor().Brush && GetEditor().Brush.IsInherited(EditorLockBrush);
 	}
 }

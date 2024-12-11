@@ -13,6 +13,7 @@ class EditorControlPlayerCommand: EditorCommand
 			return false;
 		}
 		
+		m_Editor.ClearSelection();
 		// Enable Player
 		m_Editor.ControlPlayer(control_player);
 		return true;

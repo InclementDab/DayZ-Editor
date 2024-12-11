@@ -99,6 +99,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", editor_object, "Position"));
 		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", editor_object, "Orientation"));
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", editor_object, "Scale", 0.01));
+
 		if (editor_object.GetWorldObject().IsInherited(EditorLootPoint)) {
 			general_group.Insert(new EditBoxNumberPrefab("Height", editor_object.GetWorldObject(), "Height"));
 			general_group.Insert(new EditBoxNumberPrefab("Range", editor_object.GetWorldObject(), "Range"));

@@ -37,9 +37,10 @@ class EditorMarker: ScriptView
 	void SetPos(float x, float y) 
 	{
 		// Offset to center of marker
-		float w, h;		
-		m_LayoutRoot.GetScreenSize(w, h);
-		m_LayoutRoot.SetScreenPos(x - w / 2, y - h / 2);
+		//float w, h;		
+		//m_LayoutRoot.GetScreenSize(w, h);
+		//m_LayoutRoot.SetScreenPos(x - w / 2, y - h / 2);
+		//m_LayoutRoot.SetScreenPos(x, y);
 	}
 	
 	void GetPos(out float x, out float y)

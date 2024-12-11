@@ -51,7 +51,7 @@ class EditorCamera: Camera
 
 	const int VIEW_DISTANCE_DEFAULT = 800;
 	const int VIEW_DISTANCE_MIN = 120;
-	const int VIEW_DISTANCE_MAX = 12000;
+	const int VIEW_DISTANCE_MAX = 6000;
 
 	const float TURBO_MULTIPLIER = 2.5;
 	const float SLOW_MULTIPLIER = 0.2;

@@ -78,7 +78,7 @@ class Editor: Managed
 	
 	// protected Editor Members
 	protected ref EditorHud							m_EditorHud;
-	protected ref EditorBrush						m_EditorBrush;
+	ref EditorBrush	Brush;
 	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected EditorCamera 												m_EditorCamera;
@@ -276,7 +276,7 @@ class Editor: Managed
 		
 		delete m_EditorHud;
 		delete m_EditorInventoryEditorHud;
-		delete m_EditorBrush;
+		delete Brush;
 		delete m_SessionCache;
 		delete m_DeletedSessionCache;
 		delete m_PlacingObjects;
@@ -491,6 +491,8 @@ class Editor: Managed
 		m_ControllingPlayer = new_player;
 		m_Active = false;
 		
+		delete m_EditorInventoryEditorHud;
+		
 		m_ControllingPlayer.DisableSimulation(false);
 		GetGame().SelectPlayer(null, m_ControllingPlayer);
 		m_ControllingPlayer.GetInputController().SetDisabled(false);
@@ -645,6 +647,10 @@ class Editor: Managed
 
 	void Update(float timeslice)
 	{
+		if (!GetGame().IsAppActive()) {
+			return;
+		}
+		
 		float raycast_distance = GetCameraSettings().ViewDistance;
 
 		// The most common rays and raycast for the tool to use are updated and cached at the beginning of each frame. If you need a different raycast, then you will perform it yourself
@@ -1624,11 +1630,9 @@ class Editor: Managed
 	
 	EditorHandMap AddInHand(EditorWorldObject world_object, EditorHandData hand_data = null)
 	{		
-		EditorLog.Trace("Editor::AddInHand");
-		
 		// Turn Brush off when you start to place
-		if (m_EditorBrush) {
-			SetBrush(null);
+		if (m_EditorHud.GetBrushState()) {
+			m_EditorHud.SetBrushState(0);
 		}
 		
 		m_PlacingObjects[world_object] = hand_data;
@@ -1769,6 +1773,12 @@ class Editor: Managed
 	
 	void StopInventoryEditor()
 	{
+		Entity ent = m_EditorInventoryEditorHud.GetEntity();
+		EditorObject obj =GetEditorObject(ent);
+		if (obj) {
+			obj.Update();
+		}		
+
 		delete m_EditorInventoryEditorHud;
 		Activate();
 	}
@@ -2380,7 +2390,7 @@ class Editor: Managed
 		
 		if (clear_before) {
 			Clear();
-
+			
 			// Basically we are no longer in import mode
 			m_CurrentSaveData = save_data;
 
@@ -2448,22 +2458,29 @@ class Editor: Managed
 	EditorSaveData CreateSaveData(bool selected_only = false)
 	{	
 		string uid = GetGame().GetUserManager().GetTitleInitiator().GetUid();
+		
+		// Todo a gross fix for a terrible saving scheme
 		if (!m_CurrentSaveData) {
 			m_CurrentSaveData = EditorSaveData.CreateNew(uid, DateTime.Now());
 		}
 
+		EditorSaveData save_data = new EditorSaveData();
+		save_data.CreationDate = m_CurrentSaveData.CreationDate;
+		save_data.CreditIds.Copy(m_CurrentSaveData.CreditIds);
+		save_data.AuthorId = m_CurrentSaveData.AuthorId;
+
 		// Save world name
-		m_CurrentSaveData.MapName = GetGame().GetWorldName();
+		save_data.MapName = GetGame().GetWorldName();
 		
 		// Save Camera Position
-		m_CurrentSaveData.CameraPosition = GetCamera().GetPosition();
+		save_data.CameraPosition = GetCamera().GetPosition();
 		
 		// add last modified
-		m_CurrentSaveData.LastModified = DateTime.Now();
+		save_data.LastModified = DateTime.Now();
 		
 		// add credits
-		if (m_CurrentSaveData.CreditIds.Find(uid) == -1) {
-			m_CurrentSaveData.CreditIds.Insert(uid);
+		if (save_data.CreditIds.Find(uid) == -1) {
+			save_data.CreditIds.Insert(uid);
 		}
 
 		// Save Objects
@@ -2475,22 +2492,22 @@ class Editor: Managed
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
 				if (editor_object.GetType() != string.Empty && !(editor_object.GetFlags() & EditorObjectFlags.NOSAVE)) {
-					m_CurrentSaveData.EditorObjects.Insert(editor_object.GetData());
+					save_data.EditorObjects.Insert(editor_object.GetData());
 				}
 			}
 		}
 		
 		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
-			m_CurrentSaveData.EditorHiddenObjects.Insert(deleted_object.GetData());
+			save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
 		}
 		
 		array<EditorCameraTrack> camera_tracks = GetObjectManager().GetCameraTracks();
 		foreach (EditorCameraTrack track: camera_tracks) {
-			m_CurrentSaveData.CameraTracks.Insert(EditorCameraTrackData.Cast(track.GetData()));
+			save_data.CameraTracks.Insert(EditorCameraTrackData.Cast(track.GetData()));
 		}
 		
-		return m_CurrentSaveData;
+		return save_data;
 	}
 	
 	static string GetModelName(notnull Object object)
@@ -2611,11 +2628,6 @@ class Editor: Managed
 	string GetSaveFile()
 	{
 		return EditorSaveFile;
-	}
-	
-	void SetBrush(EditorBrush brush) 
-	{
-		m_EditorBrush = brush; 
 	}
 	
 	void DeleteSessionData(int id) 
@@ -2845,11 +2857,6 @@ class Editor: Managed
 		return m_DeletedSessionCache[id];
 	}
 	
-	EditorBrush GetBrush() 
-	{
-		return m_EditorBrush;
-	}
-		
 	EditorPlaceableItem GetPlaceableObject(string type)
 	{
 		return m_ObjectManager.GetPlaceableObject(type);

@@ -18,57 +18,53 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	override void Update(float dt)
 	{
+		if (!m_EditorObject) {
+			Delete();
+			return;
+		}
+		
 		vector position = GetPosition();	
-		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
-		if (!m_Editor.GetEditorHud().IsVisible()) {
-			m_LayoutRoot.Show(false);
-			return;
-		}
-		
-		if (m_MarkerDistSq < distancesq) {
-			m_LayoutRoot.Show(false);
-			return;
-		}
-			
 		vector screen_pos = GetGame().GetScreenPos(position);
-		// Overrides the hide if the camera isnt looking at the marker
-		if (screen_pos[0] == 0 || screen_pos[0] == m_ScreenX || screen_pos[1] == 0 || screen_pos[1] == m_ScreenY || screen_pos[2] < 0) {
-			m_LayoutRoot.Show(false);
+		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;
+		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
+		bool show = m_Show && !GetEditor().IsMapActive() && !m_EditorObject.Locked && m_Editor.GetEditorHud().IsVisible() && !off_screen && m_MarkerDistSq > distancesq;
+		if (!show) {
+			if (m_LayoutRoot.IsVisible()) {
+				m_LayoutRoot.Show(false);
+			}
+
 			return;
 		}
-		
-		if (m_EditorObject.IsAttachedToObject()) {
-			m_LayoutRoot.Show(false);
-			return;
-		}
-						
+
+		m_LayoutRoot.Show(true, false);
+				
 		//float size = Math.Min(Math.Max(1300 / distancesq, 18), 24);
 		float c = m_ViewDistance / screen_pos[2];
 		
 		float size_min = 0, size_max = 0;
 		switch (m_EditorSettings.MarkerSize) {
 			case 0: {
-				size_min = 8;
-				size_max = 16;
+				size_min = 1;
+				size_max = 12;
 				break;
 			}
 			
 			case 1: {
-				size_min = 10;
-				size_max = 28;
+				size_min = 4;
+				size_max = 16;
 				break;
 			}
 			
 			case 2: {
-				size_min = 12;
-				size_max = 28;
+				size_min = 8;
+				size_max = 24;
 				break;
 			}
 			
 			case 3: {
 				// woah
-				size_min = 16;
-				size_max = 38;
+				size_min = 12;
+				size_max = 42;
 				break;
 			}
 		}
@@ -85,12 +81,10 @@ class EditorObjectWorldMarker: EditorObjectMarker
 
 			c = size_max + (c - size_max) / 4;
 		}
-			
-		m_LayoutRoot.SetScreenSize(c, c);
 		
-		SetPos(screen_pos[0], screen_pos[1]);
-		bool show = m_Show && !GetEditor().IsMapActive();
-		Show(show);
+		m_LayoutRoot.SetScreenSize(c, c, false);		
+		m_LayoutRoot.SetPos(screen_pos[0] - c / 2, screen_pos[1] - c / 2, false);
+		m_LayoutRoot.Update();
 	}
 	
 	protected vector GetPosition()

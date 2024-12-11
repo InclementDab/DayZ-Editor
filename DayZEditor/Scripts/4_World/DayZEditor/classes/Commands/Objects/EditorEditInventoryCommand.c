@@ -8,7 +8,6 @@ class EditorEditInventoryCommand: EditorCommand
 			return false;
 		}
 		
-		m_Editor.SetActive(false);
 		m_Editor.StartInventoryEditor(data.param1);
 		return true;
 	}
@@ -16,5 +15,10 @@ class EditorEditInventoryCommand: EditorCommand
 	override string GetName()
 	{
 		return "#STR_EDITOR_EDIT_INVENTORY";
+	}
+	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_LMENU, KeyCode.KC_T };
 	}
 }

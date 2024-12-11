@@ -70,19 +70,12 @@ class EditorHudController: EditorControllerBase
 	// Favorites
 	protected ref array<string> m_FavoriteItems = {};
 
-
-	// Toolvar stuff
-	ref ObservableCollection<ref EditorBrushData> BrushTypeBoxData = new ObservableCollection<ref EditorBrushData>(this);
 	Widget BrushRadiusText, BrushRadiusSlider, BrushDensityText, BrushDensitySlider, BrushWidthText, BrushWidthSlider;
 	
 	float BrushRadius = 65;
 	float BrushDensity = 0.25;
 	float BrushWidth = 2.0;
-	
-	bool BrushToggleButtonState;
-	int BrushTypeSelection;
-	string BrushToggleButtonText;
-				
+					
 	void EditorHudController() 
 	{		
 		m_Editor = GetEditor();
@@ -164,13 +157,13 @@ class EditorHudController: EditorControllerBase
 
 			case "BrushToggleButtonState":
 			case "BrushTypeSelection": {
-				
+				/*
 				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 					NotifyPropertyChanged("BrushToggleButtonText", false);
 				}
 								
-				m_Editor.CommandManager[EditorBrushToggleCommand].Execute(this, new ButtonCommandArgs(BrushToggleButton, 0));
+				m_Editor.CommandManager[EditorBrushToggleCommand].Execute(this, new ButtonCommandArgs(BrushToggleButton, 0));*/
 
 				break;
 			}
@@ -532,13 +525,19 @@ class EditorHudController: EditorControllerBase
 		switch (collection_name) {
 			
 			case "BrushTypeBoxData": {
-				
+				/*
 				m_Editor.CommandManager[EditorBrushToggleCommand].SetCanExecute(args.Source.Count() > 0);
 				
 				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
 					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
 					NotifyPropertyChanged("BrushToggleButtonText", false);
-				}
+				}*/
+				break;
+			}
+			
+			case "RightbarDeletionData":
+			case "RightbarPlacedData": {
+				
 				break;
 			}
 		}

@@ -3,6 +3,7 @@ class EditorBrushToggleCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
+		/*
 		ButtonCommandArgs button_args = ButtonCommandArgs.Cast(args);
 		
 		switch (button_args.GetMouseButton()) {
@@ -33,7 +34,7 @@ class EditorBrushToggleCommand: EditorCommand
 				m_Editor.CommandManager[EditorBrushPropertiesCommand].Execute(this, args);
 				break;
 			}
-		}
+		}*/
 		
 		return true;
 	}

@@ -54,6 +54,14 @@ class EditorHud: ScriptView
 	EditBoxWidget LeftSearchBar, RightSearchBar;
 	Widget LeftSearchBarIcon, RightSearchBarIcon;
 	ImageWidget LeftSearchBarIconIcon, RightSearchBarIconIcon;
+	
+	// Brush info new
+	ButtonWidget BrushLeft, BrushRight;
+	ImageWidget BrushLeft_Icon, BrushRight_Icon;
+	Widget BrushToggle, BrushRadiusFrame, BrushDensityFrame, BrushWidthFrame;
+	TextWidget BrushText;
+	protected int m_CurrentBrushIndex = 0, m_BrushState = 0;
+	protected ref array<ref EditorBrushData> m_BrushTypes = {};
 
 	protected ref array<vector> m_LassoHistory = {};
 	
@@ -146,7 +154,7 @@ class EditorHud: ScriptView
 		}
 
 		// Load Brushes
-		ReloadBrushes(m_Editor.GetSettings().BrushFile);		
+		ReloadBrushes(m_Editor.GetSettings().BrushFile);
 #endif		
 	
 		m_TemplateController.ShowPrivate = m_Editor.GetSettings().ShowScopeZeroObjects;
@@ -157,6 +165,7 @@ class EditorHud: ScriptView
 		
 		EditorCamera camera = m_Editor.GetCamera();
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", EditorCamera.FOV_MIN * Math.RAD2DEG, EditorCamera.FOV_MAX * Math.RAD2DEG));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("View Distance", GetEditor().GetCameraSettings(), "ViewDistance", EditorCamera.VIEW_DISTANCE_MIN, EditorCamera.VIEW_DISTANCE_MAX));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Gaussian Blur", camera, "Blur", 0, 1));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Near Plane", camera, "NearPlane",  0, 1));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Distance", camera, "DOFDistance", 0, 500));
@@ -202,28 +211,15 @@ class EditorHud: ScriptView
 		RightbarScroll.GetScreenSize(rbs_s_w, rbs_s_h);
 		RightbarScroll.SetScreenSize(rbs_s_w, bar_height - tp_s_h - rpsbp_s_h);
 	}
-		
-	int ReloadBrushes(string filename)
-	{
-		filename = SystemPath.Format(filename);
-		if (!File.Exists(filename)) {
-			PrintFormat("file not found %1", filename);
-			return 0;
-		}
-		
-		m_TemplateController.BrushToggleButtonState = false;
-		m_TemplateController.NotifyPropertyChanged("BrushToggleButtonState");
-		
-		m_TemplateController.BrushTypeBoxData.Clear();
-		XMLEditorBrushes xml_brushes = new XMLEditorBrushes(m_TemplateController.BrushTypeBoxData);
-		GetXMLApi().Read(filename, xml_brushes);
-		return m_TemplateController.BrushTypeBoxData.Count();
-	}
 	
 	override void Update(float dt)
 	{
 		super.Update(dt);
-
+		
+		if (!GetGame().IsAppActive()) {
+			return;
+		}
+		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 
@@ -249,7 +245,7 @@ class EditorHud: ScriptView
 		bool any_mouse_press = (left_mouse_input.LocalPress() || right_mouse_input.LocalPress());
 
 		// Clear focus!
-		if (focus_widget && any_mouse_press && !widget_under_cursor) {
+		if (any_mouse_press && !widget_under_cursor) {
 			SetFocus(null);
 			delete CurrentMenu;			
 			SetCurrentTooltip(null);
@@ -335,10 +331,22 @@ class EditorHud: ScriptView
 			m_DragBoxStartY = -1;
 			Map.ClearFlags(WidgetFlags.IGNOREPOINTER);
 		}
+
+		float rs_s_w, rs_s_h;
+		RightbarScroll.GetScreenSize(rs_s_w, rs_s_h);
+		if (RightbarScroll.GetVScrollPos() + rs_s_h > RightbarScroll.GetContentHeight()) {
+			RightbarScroll.VScrollToPos(RightbarScroll.GetContentHeight());
+		}
+
+		float ls_s_w, ls_s_h;
+		LeftbarScroll.GetScreenSize(ls_s_w, ls_s_h);
+		if (LeftbarScroll.GetVScrollPos() + ls_s_h > LeftbarScroll.GetContentHeight()) {
+			LeftbarScroll.VScrollToPos(LeftbarScroll.GetContentHeight());
+		}
 		
 		EditorCanvas.Clear();
 		m_DragBoxDelayStart -= dt;
-		if (left_mouse_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.GetBrush() && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers) {	
+		if (left_mouse_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.Brush && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers) {	
 			switch (m_SelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
@@ -482,18 +490,6 @@ class EditorHud: ScriptView
 			m_TemplateController.LeftbarFrame.Show(!is_curtain_open);
 			m_TemplateController.RightbarFrame.Show(!is_curtain_open);
 		}
-		
-		if (zoom_up.LocalValue() && m_Editor.GetBrush()) {
-			m_TemplateController.BrushRadius += 5;
-			m_TemplateController.BrushRadius = Math.Clamp(m_TemplateController.BrushRadius, 1, 100);
-			m_TemplateController.NotifyPropertyChanged("BrushRadius");
-		}
-		
-		if (zoom_down.LocalValue() && m_Editor.GetBrush()) {
-			m_TemplateController.BrushRadius -= 5;
-			m_TemplateController.BrushRadius = Math.Clamp(m_TemplateController.BrushRadius, 1, 100);
-			m_TemplateController.NotifyPropertyChanged("BrushRadius");
-		}
 
 		float wr_s_w, wr_s_h, wr_col_s_w, wr_col_s_h;
 		switch (widget_under_cursor) {
@@ -562,6 +558,11 @@ class EditorHud: ScriptView
 			Symbols.PLAY.Load(CameraTrackRunButton_Icon);
 		}
 		
+		int color = Ternary<int>.If(m_BrushState, m_Editor.GetSettings().SelectionColor, 0xff262729);
+		if (widget_under_cursor != BrushToggle) {
+			BrushToggle.SetColor(color);
+		}
+		
 #ifdef DIAG_DEVELOPER
 		float tbf_s_w, tbf_s_h;
 		ToolbarFrame.GetScreenSize(tbf_s_w, tbf_s_h);
@@ -579,7 +580,6 @@ class EditorHud: ScriptView
 		DbgUI.Text(string.Format("Focus Widget: %1", focus_widget_name));
 		DbgUI.End();
 #endif
-		
 	}
 		
 	protected void UpdateMap(notnull MapWidget map_widget, float dt)
@@ -690,11 +690,36 @@ class EditorHud: ScriptView
 				break;
 			}
 			
+			case BrushRight: {
+				SetBrushIndex(Math.Rollover(m_CurrentBrushIndex + 1, 0, m_BrushTypes.Count()));
+				break;
+			}
+			
+			case BrushLeft: {
+				SetBrushIndex(Math.Rollover(m_CurrentBrushIndex - 1, 0, m_BrushTypes.Count()));
+				break;
+			}
 		}
 
 		return super.OnClick(w, x, y, button);
 	}
 	
+	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
+	{
+		if (button != 0) {
+			return super.OnMouseButtonUp(w, x, y, button);
+		}
+
+		switch (w) {
+			case BrushToggle: {
+				SetBrushState(!GetBrushState());
+				break;
+			}
+		}
+
+		return super.OnMouseButtonUp(w, x, y, button);
+	}
+
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		switch (w) {
@@ -733,6 +758,23 @@ class EditorHud: ScriptView
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
 
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		switch (w) {
+			case BrushRight: {
+				BrushRight_Icon.SetImage(2);
+				break;
+			}
+			
+			case BrushLeft: {
+				BrushLeft_Icon.SetImage(2);
+				break;
+			}
+		}
+		
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
+	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		switch (w) {
@@ -743,6 +785,26 @@ class EditorHud: ScriptView
 
 			case LeftbarCategoryConfig: {
 				CreateDelayedTooltip(w, "Config Objects", TooltipPosition.TOP_LEFT, "Interactive Objects & Items");
+				break;
+			}
+			
+			case BrushToggle: {
+				if (!m_BrushState) {
+					LinearColor c = m_Editor.GetSettings().SelectionColor;
+					
+					WidgetAnimator.AnimateColor(w, c.With(3, 100), 100);
+				}
+				
+				break;
+			}
+			
+			case BrushRight: {
+				BrushRight_Icon.SetImage(3);
+				break;
+			}
+			
+			case BrushLeft: {
+				BrushLeft_Icon.SetImage(3);
 				break;
 			}
 			
@@ -979,6 +1041,93 @@ class EditorHud: ScriptView
 	void ClearCurrentTooltip()
 	{
 		GetDayZGame().ClearTooltip();
+	}
+	
+	bool ReloadBrushes(string file)
+	{
+		string brushes_filename = SystemPath.Format(file);
+		if (File.Exists(brushes_filename)) {
+			XMLEditorBrushes xml_brushes = new XMLEditorBrushes(m_BrushTypes);
+			GetXMLApi().Read(brushes_filename, xml_brushes);
+			SetBrushIndex(0);
+			
+			float largest_size;
+			for (int i = 0; i < m_BrushTypes.Count(); i++) {
+				float size = m_BrushTypes[i].Name.Length() * 12;
+				if (size > largest_size) {
+					largest_size = size;
+				}
+			}
+			
+			float bt_s_w, bt_s_h;
+			BrushToggle.GetScreenSize(bt_s_w, bt_s_h);
+			BrushToggle.SetScreenSize(largest_size, bt_s_h);
+			return true;
+		}
+
+		return false;
+	}
+
+	void SetBrushState(int state)
+	{
+		m_BrushState = state;
+		
+		EditorBrushData brush_data = m_BrushTypes[m_CurrentBrushIndex];
+		if (brush_data && m_BrushState) {
+			m_Editor.Brush = EditorBrush.Create(brush_data);
+		} else {
+			m_Editor.Brush = null;
+		}
+
+		BrushRadiusFrame.Show(m_BrushState);
+		BrushDensityFrame.Show(m_BrushState);
+		BrushWidthFrame.Show(m_BrushState);
+	}
+
+	int GetBrushState()
+	{
+		return m_BrushState;
+	}
+	
+	void SetBrushIndex(int index)
+	{
+		if (!m_BrushTypes.IsValidIndex(index)) {
+			return;
+		}
+		
+		m_CurrentBrushIndex = index;
+		EditorBrushData brush_data = m_BrushTypes[m_CurrentBrushIndex];
+		string name = m_BrushTypes[m_CurrentBrushIndex].Name;
+		BrushText.SetText(name);
+		
+		if (m_BrushState) {
+			m_Editor.Brush = EditorBrush.Create(brush_data);
+		}
+	}
+
+	int GetBrushIndex()
+	{
+		return m_CurrentBrushIndex;
+	}
+	
+	void SetBrushByTypename(typename type)
+	{
+		for (int i = 0; i < m_BrushTypes.Count(); i++) {
+			if (m_BrushTypes[i].BrushClassName == type) {
+				SetBrushIndex(i);
+				return;
+			}
+		}		
+	}
+	
+	void SetBrushByName(string name)
+	{
+		for (int i = 0; i < m_BrushTypes.Count(); i++) {
+			if (m_BrushTypes[i].Name == name || m_BrushTypes[i].BrushClassName.ToString() == name) {
+				SetBrushIndex(i);
+				return;
+			}
+		}	
 	}
 		
 	ScriptView ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen, eDialogMode dialog_mode, eDialogFlags dialog_flags = 0)

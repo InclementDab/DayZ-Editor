@@ -250,7 +250,8 @@ class EditorFileDialog: EditorModal
 
 		m_TemplateController.Files.Clear();
 		foreach (string sorted_file: all_loaded_files) {
-			m_TemplateController.Files.Insert(new EditorFileView(sorted_file, ScriptCaller.Create(OnFilePressed), ScriptCaller.Create(OnFileDoublePressed)));
+			bool is_folder = folders.Find(sorted_file) != -1;
+			m_TemplateController.Files.Insert(new EditorFileView(sorted_file, ScriptCaller.Create(OnFilePressed), ScriptCaller.Create(OnFileDoublePressed), is_folder));
 		}
 
 		array<string> directory_split = {};

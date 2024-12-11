@@ -164,6 +164,10 @@ class EditorMainMenu: ScriptViewMenu
 		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Controlled", controlled));
 		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Time Spent Editing", time.Format()));
 		
+		string cache_folder = SystemPath.Saves("EditorCache");
+		MakeDirectory(cache_folder);
+		string img_folder = SystemPath.Combine(cache_folder, "img");
+		MakeDirectory(img_folder);
 		if (m_IsShowcaseActive) {
 			for (int i = 0; i < response.showcases.Count(); i++) {
 				Payload_ServerShowcase showcase = response.showcases[i];
@@ -174,7 +178,7 @@ class EditorMainMenu: ScriptViewMenu
 				image_ctx.SetHeader("application/octet-stream");
 				image_ctx.FILE(new RestCallbackBase(), "?" + url_split[1], file_name);
 				
-				string dst_file = SystemPath.Profile(file_name);
+				string dst_file = SystemPath.Combine(img_folder, file_name);
 				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
 				if (!FileExist(src_file)) {
 					src_file = SystemPath.Saves(file_name);
