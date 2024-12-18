@@ -343,7 +343,7 @@ class EditorHud: ScriptView
 		if (LeftbarScroll.GetVScrollPos() + ls_s_h > LeftbarScroll.GetContentHeight()) {
 			LeftbarScroll.VScrollToPos(LeftbarScroll.GetContentHeight());
 		}
-		
+				
 		EditorCanvas.Clear();
 		m_DragBoxDelayStart -= dt;
 		if (left_mouse_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.Brush && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers) {	

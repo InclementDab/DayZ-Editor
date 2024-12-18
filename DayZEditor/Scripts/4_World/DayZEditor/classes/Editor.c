@@ -120,7 +120,7 @@ class Editor: Managed
 	static const int Experimental = 1;
 	static const int MinorVersionNumber = 0;
 	static const int VersionNumber = 34;
-	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, " Experimental", string.Empty));
+	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -1257,50 +1257,50 @@ class Editor: Managed
 			vector ori_offset = vector.Zero;
 			float scale_offset = 0;
 			if (GetDayZGame().IsLeftCtrlDown() && fwd_input.LocalValue()) {
-				ori_offset = Vector(0, 0, step_size);
+				ori_offset = ori_offset + Vector(0, 0, step_size);
 			}
 			
 			else if (fwd_input.LocalValue()) {
-				pos_offset = Vector(0, 0, step_size).Multiply3(camera_transform_mat);
+				pos_offset = pos_offset + Vector(0, 0, step_size).Multiply3(camera_transform_mat);
 			}
 			
 			if (GetDayZGame().IsLeftCtrlDown() && bck_input.LocalValue()) {
-				ori_offset = Vector(0, 0, -step_size);
+				ori_offset = ori_offset + Vector(0, 0, -step_size);
 			}
 			
 			else if (bck_input.LocalValue()) {
-				pos_offset = Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
+				pos_offset = pos_offset + Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
 			}
 			
 			if (GetDayZGame().IsLeftCtrlDown() && left_input.LocalValue()) {
-				ori_offset = Vector(-step_size, 0, 0);
+				ori_offset = ori_offset + Vector(-step_size, 0, 0);
 			}
 			
 			else if (left_input.LocalValue()) {
-				pos_offset = Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
+				pos_offset = pos_offset + Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
 			if (GetDayZGame().IsLeftCtrlDown() && right_input.LocalValue()) {
-				ori_offset = Vector(step_size, 0, 0);
+				ori_offset = ori_offset + Vector(step_size, 0, 0);
 			}
 			
 			else if (right_input.LocalValue()) {
-				pos_offset = Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
+				pos_offset = pos_offset + Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
 			if (GetDayZGame().IsLeftCtrlDown() && up_input.LocalValue()) {
-				ori_offset = Vector(0, step_size, 0);
+				ori_offset = ori_offset + Vector(0, step_size, 0);
 			}	
 					
 			else if (up_input.LocalValue()) {
-				pos_offset = Vector(0, step_size, 0).Multiply3(camera_transform_mat);
+				pos_offset = pos_offset + Vector(0, step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
 			if (GetDayZGame().IsLeftCtrlDown() && down_input.LocalValue()) {
-				ori_offset = Vector(0, -step_size, 0);
+				ori_offset = ori_offset + Vector(0, -step_size, 0);
 			}
 			else if (down_input.LocalValue()) {
-				pos_offset = Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
+				pos_offset = pos_offset + Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
 			if (big_input.LocalValue()) {
@@ -1311,7 +1311,7 @@ class Editor: Managed
 				scale_offset = -step_size;
 			}
 			
-			ori_offset = ori_offset * Math.RAD2DEG;
+			ori_offset = ori_offset + ori_offset * Math.RAD2DEG;
 					
 			if (pos_offset != vector.Zero || ori_offset != vector.Zero || scale_offset != 0) {
 				foreach (int id, EditorObject selected_object: selected_objects) {
@@ -2374,7 +2374,7 @@ class Editor: Managed
 		}
 		
 		int created_objects, deleted_objects;
-		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
+		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {			
 			EditorLog.Warning("Different map detected");
 			/*if (MessageBox.Show("Different Map Detected", string.Format("Switch map to %1?"), MessageBoxButtons.OKCancel) != DialogResult.OK) {
 				return null;

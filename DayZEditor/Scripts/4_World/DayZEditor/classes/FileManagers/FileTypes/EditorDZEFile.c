@@ -53,6 +53,30 @@ class EditorDZEFile: EditorFileType
 		return bug_fix_save_data;
 	}
 	
+	static string LoadMapName(string file)
+	{
+		if (FileExist(file)) {
+			string bincheck;
+			FileSerializer serializer = new FileSerializer();
+			serializer.Open(file);
+			
+			serializer.Read(bincheck);
+			if (bincheck != EditorSaveData.BIN_CHECK) {
+				return string.Empty;
+			}
+			
+			int read_version;
+			serializer.Read(read_version);
+			
+			string map_name;
+			serializer.Read(map_name);
+			
+			return map_name;
+		}
+		
+		return string.Empty;
+	}
+	
 	override EditorSaveData Import(string file, ImportSettings settings)
 	{
 		EditorSaveData save_data = new EditorSaveData();
