@@ -865,7 +865,7 @@ class Editor: Managed
 	{
 		float smooth_value = GetEditorHud().GetTemplateController().CameraSmoothing;
 		array<EditorCameraTrack> camera_tracks = m_ObjectManager.GetCameraTracks();
-		for (int i = 0; i < camera_tracks.Count() - 1; i++) {			
+		/*for (int i = 0; i < camera_tracks.Count() - 1; i++) {			
 			//vector control_p1 = vector.Zero;
 			vector point = camera_tracks[i].GetPosition();
 			vector next_point = camera_tracks[i + 1].GetPosition();
@@ -901,8 +901,8 @@ class Editor: Managed
 			//Shape.CreateArrow(point, point + excess_direction * 3, 4, LinearColor.WHITE, ShapeFlags.ONCE);
 			vector control_p0 = point + control_point_offset0 + excess_direction * vector.Distance(point, next_point) * 0.5;
 			
-			Shape.CreateSphere(LinearColor.BLUE, ShapeFlags.ONCE, point, 0.5);
-			Shape.CreateSphere(LinearColor.CRIMSON, ShapeFlags.ONCE, control_p0, 3);
+			//Shape.CreateSphere(LinearColor.BLUE, ShapeFlags.ONCE, point, 0.5);
+			//Shape.CreateSphere(LinearColor.CRIMSON, ShapeFlags.ONCE, control_p0, 3);
 			vector lines[2] = { control_p0, next_point };
 			//Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, lines, 2);
 			//Shape.CreateSphere(LinearColor.PINK, ShapeFlags.ONCE, control_p1, 0.5);
@@ -915,11 +915,11 @@ class Editor: Managed
 				vector l1 = EditorMath.CalculateCubicBezierPoint(t + step_size, point, control_point_offset0, control_point_offset1, next_point);
 				vector lines0[2] = { l0, l1 };
 				vector lines1[2] = { vector.Lerp(point, next_point, t), vector.Lerp(point, next_point, t + step_size) };
-				Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, lines0, 2);
-				Shape.CreateLines(LinearColor.BLUE, ShapeFlags.ONCE, lines1, 2);
+				//Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, lines0, 2);
+				//Shape.CreateLines(LinearColor.BLUE, ShapeFlags.ONCE, lines1, 2);
 				t += 0.01;
 			}
-		}
+		}*/
 
 		if (!IsRunningCameraTrack()) {
 			return;

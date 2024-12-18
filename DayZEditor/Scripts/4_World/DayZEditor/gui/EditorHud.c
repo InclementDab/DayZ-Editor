@@ -54,6 +54,7 @@ class EditorHud: ScriptView
 	EditBoxWidget LeftSearchBar, RightSearchBar;
 	Widget LeftSearchBarIcon, RightSearchBarIcon;
 	ImageWidget LeftSearchBarIconIcon, RightSearchBarIconIcon;
+	TextWidget CameraSpeed;
 	
 	// Brush info new
 	ButtonWidget BrushLeft, BrushRight;
@@ -562,6 +563,9 @@ class EditorHud: ScriptView
 		if (widget_under_cursor != BrushToggle) {
 			BrushToggle.SetColor(color);
 		}
+		
+		string speed_s = Math.Round(GetEditor().GetCamera().GetSettings().Speed).ToString();
+		CameraSpeed.SetText(speed_s);
 		
 #ifdef DIAG_DEVELOPER
 		float tbf_s_w, tbf_s_h;

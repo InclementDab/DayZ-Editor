@@ -3752,6 +3752,7 @@ FrameWidgetClass EditorFrame {
        {
         ButtonWidgetClass CameraPanelButton {
          visible 1
+         clipchildren 0
          color 1 1 1 0.1569
          size 22 22
          halign right_ref
@@ -3759,22 +3760,47 @@ FrameWidgetClass EditorFrame {
          vexactpos 1
          hexactsize 1
          vexactsize 1
-         style Editor
+         style Default
+         "no focus" 1
          switch toggle
          {
           ImageWidgetClass ImageWidget2 {
+           clipchildren 0
            ignorepointer 1
-           color 0.5647 0.5647 0.5647 1
-           size 0.6 0.6
+           color 0.7843 0.7843 0.7843 1
+           size 1 1
            halign center_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
            hexactsize 0
            vexactsize 0
+           fixaspect fixwidth
            scriptclass "SymbolHandler"
            mode blend
            "src alpha" 1
+           {
+            TextWidgetClass CameraSpeed {
+             clipchildren 0
+             ignorepointer 1
+             color 0.1569 0.1569 0.1569 1
+             position -3 0
+             size 20 12
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             text "24"
+             font "system/systemsmall"
+             "exact text" 0
+             "size to text h" 0
+             "size to text v" 0
+             "text halign" center
+             "text valign" center
+            }
+           }
            {
             ScriptParamsClass {
              Symbol_Name "video"
@@ -3785,7 +3811,7 @@ FrameWidgetClass EditorFrame {
          }
         }
         ButtonWidgetClass CinematicCameraButton {
-         visible 0
+         visible 1
          color 1 1 1 0.1569
          size 22 22
          hexactpos 1

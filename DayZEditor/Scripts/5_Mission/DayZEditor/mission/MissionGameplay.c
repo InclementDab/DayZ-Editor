@@ -56,7 +56,7 @@ modded class MissionGameplay
 				super.OnUpdate(timeslice);
 			}
 
-			//GetEditor().Update(timeslice);
+			GetEditor().Update(timeslice);
 		} else {
 			
 			super.OnUpdate(timeslice);
