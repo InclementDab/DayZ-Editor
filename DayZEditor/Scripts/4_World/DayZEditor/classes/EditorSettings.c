@@ -88,7 +88,10 @@ class EditorSettings: ProfileSettings
 #endif
 	float MarkerViewDistance 		= 1000.0;
 	
-	int MarkerPrimaryColor			= COLOR_WHITE;
+#ifndef COMPONENT_SYSTEM	
+	[RegisterProfileSettingColor("APPEARANCE", "MarkerColor", "Marker Color", false)]
+#endif
+	int MarkerColor			= 0xFFF5FFFA;
 	
 	// Theme Settings
 #ifndef COMPONENT_SYSTEM	
@@ -195,7 +198,6 @@ class EditorSettings: ProfileSettings
 		DebugMode 					= false;
 		MinifyCopyData = false;
 		
-		MarkerPrimaryColor			= COLOR_WHITE_A;
 		HighlightColor				= COLOR_SALMON;
 		SelectionColor				= COLOR_BLUE;
 	}
