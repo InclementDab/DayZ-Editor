@@ -177,8 +177,8 @@ class EditorMainMenu: ScriptViewMenu
 		string img_folder = SystemPath.Combine(cache_folder, "img");
 		MakeDirectory(img_folder);
 		if (m_IsShowcaseActive) {
-			for (int i = 0; i < response.showcases.Count(); i++) {
-				Payload_ServerShowcase showcase = response.showcases[i];
+			for (int i = 0; i < response.Showcases.Count(); i++) {
+				Payload_ServerShowcase showcase = response.Showcases[i];
 				string file_name = string.Format("%1.dds", showcase.name);
 				array<string> url_split = {};
 				showcase.imageUrl.Split("?", url_split);
@@ -230,7 +230,7 @@ class EditorMainMenu: ScriptViewMenu
 		
 		if (m_IsShowcaseActive && m_PayloadLoginInfoCache && GetWidgetUnderCursor() != ServerShowcase) {
 			m_ShowcaseTime += dt;
-			auto showcase = m_PayloadLoginInfoCache.showcases[m_ShowcaseIndex];
+			auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
 			if (m_ShowcaseTime > 2.0 && m_ShowcasesReported.Find(m_ShowcaseIndex) == -1) {
 				string payload, error;
 				Payload_ServerShowcaseReport report_payload = new Payload_ServerShowcaseReport();
@@ -246,7 +246,7 @@ class EditorMainMenu: ScriptViewMenu
 			}
 			
 			if (m_ShowcaseTime > 10.0) {
-				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.showcases.Count());
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
 				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
 				m_ShowcaseTime = 0;
 			}
@@ -311,7 +311,7 @@ class EditorMainMenu: ScriptViewMenu
 			case ServerShowcase: {
 				ServerShowcaseOutline.SetColor(EditorColors.BLUE);
 				if (m_IsShowcaseActive && m_PayloadLoginInfoCache) {
-					auto showcase = m_PayloadLoginInfoCache.showcases[m_ShowcaseIndex];
+					auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
 					GetDayZGame().CreateDelayedTooltip(w, showcase.name, TooltipPosition.TOP_RIGHT);
 				} else {
 					GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
@@ -371,7 +371,7 @@ class EditorMainMenu: ScriptViewMenu
 		switch (w) {
 			case ServerShowcase: {
 				if (m_IsShowcaseActive && m_PayloadLoginInfoCache) {
-					auto showcase = m_PayloadLoginInfoCache.showcases[m_ShowcaseIndex];
+					auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
 					if (showcase) {
 						GetGame().OpenURL(showcase.redirectUrl);
 					}
@@ -419,14 +419,14 @@ class EditorMainMenu: ScriptViewMenu
 			}
 			
 			case NextServerShowcase: {
-				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.showcases.Count());
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
 				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
 				m_ShowcaseTime = 0;
 				break;
 			}
 			
 			case PrevServerShowcase: {
-				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex - 1, 0, m_PayloadLoginInfoCache.showcases.Count());
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex - 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
 				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
 				m_ShowcaseTime = 0;
 				break;
