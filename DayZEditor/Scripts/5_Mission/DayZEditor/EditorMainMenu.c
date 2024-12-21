@@ -23,6 +23,7 @@ class EditorStatisticsEntryView: ScriptView
 class Payload_EditorLogin: Managed
 {
 	string SteamId;
+	string DzGuid;
 	int PlayTime;	
 	int ItemsPlaced;
 	int ItemsDeleted;
@@ -49,7 +50,10 @@ class Payload_ServerShowcaseReport: Managed
 
 class Payload_EditorLoginResponse: Managed
 {
-	ref array<ref Payload_ServerShowcase> showcases = {};
+	string Message;
+	int CurrentLoginCount;
+	string Token;
+	ref array<ref Payload_ServerShowcase> Showcases = {};
 }
 
 class EditorLoginCallback: RestCallbackBase
@@ -95,6 +99,10 @@ class EditorMainMenu: ScriptViewMenu
 	{
 		// Slow rollout
 		m_IsShowcaseActive = (Math.RandomInt(0, 4) == 0);
+		
+#ifdef DIAG_DEVELOPER
+		m_IsShowcaseActive = 1; // fast rollout
+#endif
 		
 		m_TemplateController = EditorMainMenuController.Cast(m_Controller);
 		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {
