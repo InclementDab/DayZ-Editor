@@ -138,7 +138,7 @@ class EditorMainMenu: ScriptViewMenu
 		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
 			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
-			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)),"api\/login", payload);
+			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)),"api\/user\/login", payload);
 		}
 		
 		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));

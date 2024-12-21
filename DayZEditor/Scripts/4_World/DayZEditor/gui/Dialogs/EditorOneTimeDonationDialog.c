@@ -53,7 +53,7 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 		EditorWebApi web_api = GetEditor().GetWebApi();
 		if (web_api && web_api.GetRestContext()) {
 			m_RichText = new RichTextPrefab();
-			web_api.GetRestContext().GET(new ChangelogRestCallback(ScriptCaller.Create(SetListBoxInfo)), "api\/changelog");
+			web_api.GetRestContext().GET(new ChangelogRestCallback(ScriptCaller.Create(SetListBoxInfo)), "api\/changelog\/latest");
 			AddContent(m_RichText);
 		}
 		

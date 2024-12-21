@@ -61,7 +61,7 @@ class Editor: Managed
 #ifdef DIAG_DEVELOPER
 	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:5000\/";
 #else
-	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc.pylex.xyz:8226\/";
+	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc02.pylex.xyz:8612\/";
 #endif
 	
 	static const ref array<string> DELETION_BLACKLIST = {
