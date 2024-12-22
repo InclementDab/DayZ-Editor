@@ -60,7 +60,7 @@ class EditorLoginCallback: RestCallbackBase
 {
 	protected ref ScriptCaller m_OnPayloadSuccess;
 
-	void EditorLoginCallback(notnull ScriptCaller on_payload_success)
+	void EditorLoginCallback(ScriptCaller on_payload_success)
 	{
 		m_OnPayloadSuccess = on_payload_success;
 	}
@@ -69,6 +69,7 @@ class EditorLoginCallback: RestCallbackBase
 	{
 		super.OnSuccess(data, dataSize);
 		
+		Print(data);
 		Payload_EditorLoginResponse response = new Payload_EditorLoginResponse();
 		string error;
 		if (!JsonFileLoader<Payload_EditorLoginResponse>.LoadData(data, response, error)) {
@@ -76,7 +77,9 @@ class EditorLoginCallback: RestCallbackBase
 			return;
 		}
 		
-		m_OnPayloadSuccess.Invoke(response);
+		if (m_OnPayloadSuccess) {
+			m_OnPayloadSuccess.Invoke(response);
+		}
 	}
 }
 
