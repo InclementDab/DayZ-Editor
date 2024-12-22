@@ -69,17 +69,14 @@ class EditorLoginCallback : RestCallbackBase
 	{
 		super.OnSuccess(data, dataSize);
 
-		Print(data);
 		Payload_EditorLoginResponse response = new Payload_EditorLoginResponse();
 		string error;
-		if (!JsonFileLoader<Payload_EditorLoginResponse>.LoadData(data, response, error))
-		{
+		if (!JsonFileLoader<Payload_EditorLoginResponse>.LoadData(data, response, error)) {
 			Error(error);
 			return;
 		}
 
-		if (m_OnPayloadSuccess)
-		{
+		if (m_OnPayloadSuccess) {
 			m_OnPayloadSuccess.Invoke(response);
 		}
 	}
@@ -151,8 +148,7 @@ class EditorMainMenu : ScriptViewMenu
 		login_payload.CharactersEdited = statistics.CharactersEdited;
 
 		string payload, error;
-		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false))
-		{
+		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
 			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
@@ -185,10 +181,8 @@ class EditorMainMenu : ScriptViewMenu
 		MakeDirectory(cache_folder);
 		string img_folder = SystemPath.Combine(cache_folder, "img");
 		MakeDirectory(img_folder);
-		if (m_IsShowcaseActive)
-		{
-			for (int i = 0; i < response.Showcases.Count(); i++)
-			{
+		if (m_IsShowcaseActive && response.Showcases.Count()) {
+			for (int i = 0; i < response.Showcases.Count(); i++) {
 				Payload_ServerShowcase showcase = response.Showcases[i];
 				string file_name = string.Format("%1.dds", showcase.Name);
 				array<string> url_split = { };
@@ -199,32 +193,29 @@ class EditorMainMenu : ScriptViewMenu
 
 				string dst_file = SystemPath.Combine(img_folder, file_name);
 				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
-				if (!FileExist(src_file))
-				{
+				if (!FileExist(src_file)) {
 					src_file = SystemPath.Saves(file_name);
 				}
 
-				if (FileExist(src_file))
-				{
+				if (FileExist(src_file)) {
 					CopyFile(src_file, dst_file);
 					DeleteFile(src_file);
 				}
 
 				ServerShowcaseImage.LoadImageFile(i, dst_file);
 			}
-		}
-
-		m_ShowcaseIndex = 0;
-		ServerShowcaseImage.SetImage(0);
-		ServerShowcaseImage.Show(m_IsShowcaseActive);
+			
+			m_ShowcaseIndex = 0;
+			ServerShowcaseImage.SetImage(0);
+			ServerShowcaseImage.Show(m_IsShowcaseActive);
+		}		
 	}
 
 	override void Update(float dt)
 	{
 		super.Update(dt);
 
-		if (!GetGame().IsAppActive())
-		{
+		if (!GetGame().IsAppActive()) {
 			return;
 		}
 
@@ -243,12 +234,10 @@ class EditorMainMenu : ScriptViewMenu
 		GetMousePos(mouse_x, mouse_y);
 		GetScreenSize(screen_x, screen_y);
 
-		if (m_IsShowcaseActive && m_PayloadLoginInfoCache && GetWidgetUnderCursor() != ServerShowcase)
-		{
+		if (m_IsShowcaseActive && m_PayloadLoginInfoCache && GetWidgetUnderCursor() != ServerShowcase) {
 			m_ShowcaseTime += dt;
 			auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
-			if (m_ShowcaseTime > 2.0 && m_ShowcasesReported.Find(m_ShowcaseIndex) == -1)
-			{
+			if (showcase && m_ShowcaseTime > 2.0 && m_ShowcasesReported.Find(m_ShowcaseIndex) == -1) {
 				string payload, error;
 				Payload_ServerShowcaseReport report_payload = new Payload_ServerShowcaseReport();
 				report_payload.Identifier = showcase.Identifier;
@@ -257,8 +246,7 @@ class EditorMainMenu : ScriptViewMenu
 				Print("showcase: " + showcase);
 				Print("showcase.identifier: " + showcase.Identifier);
 				Print("report_payload.Identifier" + report_payload.Identifier);
-				if (JsonFileLoader<Payload_ServerShowcaseReport>.MakeData(report_payload, payload, error))
-				{
+				if (JsonFileLoader<Payload_ServerShowcaseReport>.MakeData(report_payload, payload, error)) {
 					RestContext ctx = GetRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 					ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 					ctx.POST(new RestCallbackBase(), "api\/showcase\/report-impression", payload);
@@ -267,8 +255,7 @@ class EditorMainMenu : ScriptViewMenu
 				m_ShowcasesReported.Insert(m_ShowcaseIndex);
 			}
 
-			if (m_ShowcaseTime > 10.0)
-			{
+			if (showcase && m_ShowcaseTime > 10.0) {
 				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
 				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
 				m_ShowcaseTime = 0;
@@ -343,7 +330,7 @@ class EditorMainMenu : ScriptViewMenu
 			case ServerShowcase:
 				{
 					ServerShowcaseOutline.SetColor(EditorColors.BLUE);
-					if (m_IsShowcaseActive && m_PayloadLoginInfoCache)
+					if (m_IsShowcaseActive && m_PayloadLoginInfoCache && m_PayloadLoginInfoCache.Showcases.IsValidIndex(m_ShowcaseIndex))
 					{
 						auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
 						GetDayZGame().CreateDelayedTooltip(w, showcase.Name, TooltipPosition.TOP_RIGHT);
