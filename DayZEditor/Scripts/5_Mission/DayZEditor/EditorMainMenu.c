@@ -92,6 +92,7 @@ class EditorMainMenu : ScriptViewMenu
 	protected ref Payload_EditorLoginResponse m_PayloadLoginInfoCache;
 	protected int m_ShowcaseIndex, m_IsShowcaseActive;
 	protected ref array<int> m_ShowcasesReported = { };
+	protected ref array<int> m_ValidShowcaseSlots = {}; // extra check in case an image fails to load
 
 	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
@@ -187,37 +188,37 @@ class EditorMainMenu : ScriptViewMenu
 		MakeDirectory(cache_folder);
 		string img_folder = SystemPath.Combine(cache_folder, "img");
 		MakeDirectory(img_folder);
-		if (m_IsShowcaseActive && response.Showcases.Count())
-		{
-			for (int i = 0; i < response.Showcases.Count(); i++)
-			{
+		if (m_IsShowcaseActive && response.Showcases.Count()) {
+			// Reesize
+			m_ValidShowcaseSlots.Resize(response.Showcases.Count());
+			
+			for (int i = 0; i < response.Showcases.Count(); i++) {
 				Payload_ServerShowcase showcase = response.Showcases[i];
 				string file_name = string.Format("%1.dds", showcase.Name);
-				array<string> url_split = { };
-				showcase.ImageUrl.Split("?", url_split);
-				RestContext image_ctx = GetRestApi().GetRestContext(url_split[0]);
+				RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
 				image_ctx.SetHeader("application/octet-stream");
-				image_ctx.FILE(new RestCallbackBase(), "?" + url_split[1], file_name);
+				image_ctx.FILE(new RestCallbackBase(), "", file_name);
 
 				string dst_file = SystemPath.Combine(img_folder, file_name);
 				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
-				if (!FileExist(src_file))
-				{
+				if (!FileExist(src_file)) {
 					src_file = SystemPath.Saves(file_name);
 				}
 
-				if (FileExist(src_file))
-				{
+				if (FileExist(src_file)) {
 					CopyFile(src_file, dst_file);
 					DeleteFile(src_file);
 				}
 
-				ServerShowcaseImage.LoadImageFile(i, dst_file);
+				m_ValidShowcaseSlots[i] = ServerShowcaseImage.LoadImageFile(i, dst_file);
 			}
 
 			m_ShowcaseIndex = 0;
-			ServerShowcaseImage.SetImage(0);
-			ServerShowcaseImage.Show(m_IsShowcaseActive);
+			
+			if (m_ValidShowcaseSlots[0]) {
+				ServerShowcaseImage.SetImage(0);
+				ServerShowcaseImage.Show(true);
+			}
 		}
 	}
 
@@ -225,8 +226,7 @@ class EditorMainMenu : ScriptViewMenu
 	{
 		super.Update(dt);
 
-		if (!GetGame().IsAppActive())
-		{
+		if (!GetGame().IsAppActive()) {
 			return;
 		}
 
@@ -244,23 +244,16 @@ class EditorMainMenu : ScriptViewMenu
 		int mouse_x, mouse_y, screen_x, screen_y;
 		GetMousePos(mouse_x, mouse_y);
 		GetScreenSize(screen_x, screen_y);
-
-		if (m_IsShowcaseActive && m_PayloadLoginInfoCache && GetWidgetUnderCursor() != ServerShowcase)
-		{
+		
+		if (m_IsShowcaseActive && m_PayloadLoginInfoCache && GetWidgetUnderCursor() != ServerShowcase) {
 			m_ShowcaseTime += dt;
 			auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
-			if (showcase && m_ShowcaseTime > 2.0 && m_ShowcasesReported.Find(m_ShowcaseIndex) == -1)
-			{
+			if (showcase && m_ShowcaseTime > 2.0 && m_ShowcasesReported.Find(m_ShowcaseIndex) == -1 && m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
 				string payload, error;
 				Payload_ServerShowcaseReport report_payload = new Payload_ServerShowcaseReport();
 				report_payload.Identifier = showcase.Identifier;
 				report_payload.Reporter = GetGame().GetUserManager().GetTitleInitiator().GetUid();
-				Print("reporter: " + report_payload.Reporter);
-				Print("showcase: " + showcase);
-				Print("showcase.identifier: " + showcase.Identifier);
-				Print("report_payload.Identifier" + report_payload.Identifier);
-				if (JsonFileLoader<Payload_ServerShowcaseReport>.MakeData(report_payload, payload, error))
-				{
+				if (JsonFileLoader<Payload_ServerShowcaseReport>.MakeData(report_payload, payload, error)) {
 					RestContext ctx = GetRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 					ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 					ctx.POST(new RestCallbackBase(), "api\/showcase\/report-impression", payload);
@@ -269,12 +262,17 @@ class EditorMainMenu : ScriptViewMenu
 				m_ShowcasesReported.Insert(m_ShowcaseIndex);
 			}
 
-			if (showcase && m_ShowcaseTime > 10.0)
-			{
+			if (showcase && m_ShowcaseTime > 10.0) {
 				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
-				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-				m_ShowcaseTime = 0;
-			}
+				
+				if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+					ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+					ServerShowcaseImage.Show(true);
+					m_ShowcaseTime = 0;
+				} else {
+					ServerShowcaseImage.Show(false);
+				}
+			}			
 		}
 	}
 
@@ -479,16 +477,28 @@ class EditorMainMenu : ScriptViewMenu
 			case NextServerShowcase:
 				{
 					m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
-					ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-					m_ShowcaseTime = 0;
+					if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+						ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+						ServerShowcaseImage.Show(true);
+						m_ShowcaseTime = 0;
+					} else {
+						ServerShowcaseImage.Show(false);
+					}
+				
 					break;
 				}
 
 			case PrevServerShowcase:
 				{
 					m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex - 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
-					ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-					m_ShowcaseTime = 0;
+					if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+						ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+						ServerShowcaseImage.Show(true);
+						m_ShowcaseTime = 0;
+					} else {
+						ServerShowcaseImage.Show(false);
+					}
+				
 					break;
 				}
 		}
