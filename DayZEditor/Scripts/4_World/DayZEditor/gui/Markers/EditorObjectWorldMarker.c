@@ -79,7 +79,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		    t = t * t * (3 - 2 * t);  // Smoothstep function
 		    c = 32 + t * (128 - 32);*/   // Interpolate between 32 and 64
 
-			c = size_max + (c - size_max) / 4;
+			c = size_max;
 		}
 		
 		m_LayoutRoot.SetScreenSize(c, c, false);		
