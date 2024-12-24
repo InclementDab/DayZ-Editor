@@ -346,7 +346,7 @@ class EditorObject: EditorWorldObject
 		Scale = (mat[0].Length() + mat[1].Length() + mat[2].Length()) / 3;
 		m_Data.Scale = Scale;
 		OnUpdated.Invoke();
-		//Update();
+		Update();
 	}
 	
 	void SetScale(float scale)
@@ -412,7 +412,12 @@ class EditorObject: EditorWorldObject
 		
 		Name = GetDisplayName();
 		Position = GetPosition();
-		Orientation = GetOrientation();
+		if (m_Data.Type.Contains(".p3d")) {
+			Orientation = GetOrientation() * Math.DEG2RAD; // i hate this fucking game
+		} else {
+			Orientation = GetOrientation();
+		}
+		
 		Scale = GetScale();
 
 		OnUpdated.Invoke();
