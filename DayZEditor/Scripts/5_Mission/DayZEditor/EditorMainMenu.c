@@ -85,7 +85,7 @@ class EditorLoginCallback : RestCallbackBase
 	}
 }
 
-class EditorMainMenu : ScriptViewMenu
+class EditorMainMenu: ScriptViewMenu
 {
 	protected EditorMainMenuController m_TemplateController;
 	protected float m_MotionSicknessDt, m_ShowcaseTime;
@@ -94,12 +94,15 @@ class EditorMainMenu : ScriptViewMenu
 	protected ref array<int> m_ShowcasesReported = { };
 	protected ref array<int> m_ValidShowcaseSlots = {}; // extra check in case an image fails to load
 
+	protected float m_SoundVolume = 1.0, m_MusicVolume = 1.0;
+	
 	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
 	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase;
 	TextWidget VersionText, EditorText, StatHeaderText;
 	RichTextWidget ServerShowcaseBackupText;
 	ScrollWidget MapScroller;
+	ImageWidget SoundButton, MusicButton;
 
 	void EditorMainMenu()
 	{
@@ -111,14 +114,11 @@ class EditorMainMenu : ScriptViewMenu
 #endif
 
 		m_TemplateController = EditorMainMenuController.Cast(m_Controller);
-		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++)
-		{
+		for (int i = 0; i < GetGame().ConfigGetChildrenCount("CfgWorlds"); i++) {
 			string name;
 			GetGame().ConfigGetChildName("CfgWorlds", i, name);
-			if (GetGame().ConfigIsExisting(string.Format("CfgWorlds %1 worldName", name)))
-			{
-				if (m_TemplateController.MapViews.Count() != 0)
-				{
+			if (GetGame().ConfigIsExisting(string.Format("CfgWorlds %1 worldName", name))) {
+				if (m_TemplateController.MapViews.Count() != 0) {
 					QuickView<Widget> Spacer = new QuickView<Widget>();
 					Spacer.Root.SetScreenSize(24, 24);
 					m_TemplateController.MapViews.Insert(Spacer);
@@ -154,8 +154,7 @@ class EditorMainMenu : ScriptViewMenu
 		login_payload.CharactersEdited = statistics.CharactersEdited;
 
 		string payload, error;
-		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false))
-		{
+		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
 			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
@@ -163,6 +162,17 @@ class EditorMainMenu : ScriptViewMenu
 
 		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));
 		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase request' in Discord\nClick to join.");
+		
+		m_SoundVolume = GetGame().GetSoundScene().GetSoundVolume();
+		m_MusicVolume = GetGame().GetSoundScene().GetMusicVolume();
+		
+		if (m_SoundVolume <= 0.0) {
+			Symbols.VOLUME_SLASH.Load(SoundButton);
+		}
+		
+		if (m_MusicVolume <= 0.0) {
+			Symbols.MUSIC_SLASH.Load(MusicButton);
+		}
 	}
 
 	protected void OnLoginResponse(Payload_EditorLoginResponse response)
@@ -215,8 +225,8 @@ class EditorMainMenu : ScriptViewMenu
 
 			m_ShowcaseIndex = 0;
 			
-			if (m_ValidShowcaseSlots[0]) {
-				ServerShowcaseImage.SetImage(0);
+			if (m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
 				ServerShowcaseImage.Show(true);
 			}
 		}
@@ -229,14 +239,13 @@ class EditorMainMenu : ScriptViewMenu
 		if (!GetGame().IsAppActive()) {
 			return;
 		}
-
+		
 		float mg_s_w, mg_s_h;
 		MapGrid.GetScreenSize(mg_s_w, mg_s_h);
 
 		float mss_s_w, mss_s_h;
 		MapSelectorFrame.GetScreenSize(mss_s_w, mss_s_h);
-		if (mg_s_w > mss_s_w)
-		{
+		if (mg_s_w > mss_s_w) {
 			// by default, this color will blend into the background to remain invisible
 			MapScroller.SetColor(-1);
 		}
@@ -280,81 +289,68 @@ class EditorMainMenu : ScriptViewMenu
 	{
 		Widget child_icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		ImageWidget child_image = ImageWidget.Cast(child_icon);
-		if (child_image && w.IsInherited(ButtonWidget))
-		{
+		if (child_image && w.IsInherited(ButtonWidget)) {
 			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_H, 1.0, 90);
 			WidgetAnimator.Animate(child_image, WidgetAnimatorProperty.SIZE_W, 1.0, 90);
 		}
 
-		switch (w)
-		{
-			case ExitButton:
-				{
-					child_image.SetColor(LinearColor.INDIAN_RED);
-					child_image.SetImage(3);
-					GetDayZGame().CreateDelayedTooltip(w, "#main_menu_exit", TooltipPosition.INSIDE);
-					break;
-				}
+		switch (w) {
+			case ExitButton: {
+				child_image.SetColor(LinearColor.INDIAN_RED);
+				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "#main_menu_exit", TooltipPosition.INSIDE);
+				break;
+			}
 
-			case SettingButton:
-				{
-					child_image.SetColor(LinearColor.LIGHT_BLUE);
-					child_image.SetImage(3);
-					GetDayZGame().CreateDelayedTooltip(w, "#main_menu_options", TooltipPosition.INSIDE);
-					break;
-				}
+			case SettingButton: {
+				child_image.SetColor(LinearColor.LIGHT_BLUE);
+				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "#main_menu_options", TooltipPosition.INSIDE);
+				break;
+			}
 
-			case DiscordButton:
-				{
-					child_image.SetColor(LinearColor.DISCORD);
+			case DiscordButton: {
+				child_image.SetColor(LinearColor.DISCORD);
+				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
+				break;
+			}
+
+			case WikiButton: {
+				child_image.SetColor(LinearColor.GOLDENROD);
+				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/github.com\/InclementDab\/DayZ-Editor", TooltipPosition.INSIDE);
+				break;
+			}
+
+			case TwitterButton: {
+				child_image.SetColor(LinearColor.TWITTER);
+				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/twitter.com\/InclementDab", TooltipPosition.INSIDE);
+				break;
+			}
+
+			case NextServerShowcase: {
+				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "Next", TooltipPosition.INSIDE);
+				break;
+			}
+
+			case PrevServerShowcase: {
+				child_image.SetImage(3);
+				GetDayZGame().CreateDelayedTooltip(w, "Previous", TooltipPosition.INSIDE);
+				break;
+			}
+
+			case ServerShowcase: {
+				ServerShowcaseOutline.SetColor(EditorColors.BLUE);
+				if (m_IsShowcaseActive && m_PayloadLoginInfoCache && m_PayloadLoginInfoCache.Showcases.IsValidIndex(m_ShowcaseIndex)) {
+					auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
+					GetDayZGame().CreateDelayedTooltip(w, showcase.RedirectUrl, TooltipPosition.TOP_RIGHT);
+				} else {
 					GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
-					break;
 				}
 
-			case WikiButton:
-				{
-					child_image.SetColor(LinearColor.GOLDENROD);
-					child_image.SetImage(3);
-					GetDayZGame().CreateDelayedTooltip(w, "https:\/\/github.com\/InclementDab\/DayZ-Editor", TooltipPosition.INSIDE);
-					break;
-				}
-
-			case TwitterButton:
-				{
-					child_image.SetColor(LinearColor.TWITTER);
-					GetDayZGame().CreateDelayedTooltip(w, "https:\/\/twitter.com\/InclementDab", TooltipPosition.INSIDE);
-					break;
-				}
-
-			case NextServerShowcase:
-				{
-					child_image.SetImage(3);
-					GetDayZGame().CreateDelayedTooltip(w, "Next", TooltipPosition.INSIDE);
-					break;
-				}
-
-			case PrevServerShowcase:
-				{
-					child_image.SetImage(3);
-					GetDayZGame().CreateDelayedTooltip(w, "Previous", TooltipPosition.INSIDE);
-					break;
-				}
-
-			case ServerShowcase:
-				{
-					ServerShowcaseOutline.SetColor(EditorColors.BLUE);
-					if (m_IsShowcaseActive && m_PayloadLoginInfoCache && m_PayloadLoginInfoCache.Showcases.IsValidIndex(m_ShowcaseIndex))
-					{
-						auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
-						GetDayZGame().CreateDelayedTooltip(w, showcase.Name, TooltipPosition.TOP_RIGHT);
-					}
-					else
-					{
-						GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
-					}
-
-					break;
-				}
+				break;
+			}
 		}
 
 		return super.OnMouseEnter(w, x, y);
@@ -369,33 +365,28 @@ class EditorMainMenu : ScriptViewMenu
 		switch (w)
 		{
 			case ExitButton:
-			case SettingButton:
-				{
-					child_image.SetImage(2);
-					break;
-				}
+			case SettingButton: {
+				child_image.SetImage(2);
+				break;
+			}
 
-			case ServerShowcase:
-				{
-					WidgetAnimator.AnimateColor(ServerShowcaseOutline, -1, 60);
-					return true;
-				}
+			case ServerShowcase: {
+				WidgetAnimator.AnimateColor(ServerShowcaseOutline, -1, 60);
+				return true;
+			}
 
-			case NextServerShowcase:
-				{
-					child_image.SetImage(2);
-					break;
-				}
+			case NextServerShowcase: {
+				child_image.SetImage(2);
+				break;
+			}
 
-			case PrevServerShowcase:
-				{
-					child_image.SetImage(2);
-					break;
-				}
+			case PrevServerShowcase: {
+				child_image.SetImage(2);
+				break;
+			}
 		}
 
-		if (child_image && w.IsInherited(ButtonWidget))
-		{
+		if (child_image && w.IsInherited(ButtonWidget)) {
 			WidgetAnimator.CancelAnimate(child_image);
 			child_image.SetSize(0.8, 0.8);
 			WidgetAnimator.AnimateColor(child_image, -1, 100);
@@ -406,30 +397,52 @@ class EditorMainMenu : ScriptViewMenu
 
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
-		if (button != 0)
-		{
+		if (button != 0) {
 			return super.OnMouseButtonUp(w, x, y, button);
 		}
 
-		switch (w)
-		{
-			case ServerShowcase:
-				{
-					if (m_IsShowcaseActive && m_PayloadLoginInfoCache)
-					{
-						auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
-						if (showcase)
-						{
-							GetGame().OpenURL(showcase.RedirectUrl);
-						}
+		switch (w) {
+			case ServerShowcase: {
+				if (m_IsShowcaseActive && m_PayloadLoginInfoCache) {
+					auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
+					if (showcase) {
+						GetGame().OpenURL(showcase.RedirectUrl);
 					}
-					else
-					{
-						GetGame().OpenURL("https:\/\/discord.gg\/dayz-editor");
-					}
-
-					break;
 				}
+				else {
+					GetGame().OpenURL("https:\/\/discord.gg\/dayz-editor");
+				}
+
+				break;
+			}
+			
+			case SoundButton: {
+				float sound_volume = GetGame().GetSoundScene().GetSoundVolume();
+				if (sound_volume) {
+					m_SoundVolume = sound_volume;
+					GetGame().GetSoundScene().SetSoundVolume(0.0, 0.0);
+					Symbols.VOLUME_SLASH.Load(SoundButton);
+				} else {
+					GetGame().GetSoundScene().SetSoundVolume(m_SoundVolume, 0.0);
+					Symbols.VOLUME.Load(SoundButton);
+				}
+				
+				break;
+			}
+			
+			case MusicButton: {
+				float music_volume = GetGame().GetSoundScene().GetMusicVolume();
+				if (music_volume) {
+					m_MusicVolume = music_volume;
+					GetGame().GetSoundScene().SetMusicVolume(0.0, 1.0);
+					Symbols.MUSIC_SLASH.Load(MusicButton);
+				} else {
+					GetGame().GetSoundScene().SetMusicVolume(m_MusicVolume, 0.0);
+					Symbols.MUSIC.Load(MusicButton);
+				}
+				
+				break;
+			}
 		}
 
 		return super.OnMouseButtonUp(w, x, y, button);

@@ -295,7 +295,7 @@ PanelWidgetClass main_menu_root {
          "text halign" center
          "text valign" center
         }
-        FrameWidgetClass ImageWidget0 {
+        FrameWidgetClass FrameWidget1 {
          visible 1
          ignorepointer 1
          position 12 0
@@ -308,6 +308,7 @@ PanelWidgetClass main_menu_root {
          vexactsize 1
          {
           ImageWidgetClass ImageWidget1 {
+           visible 1
            ignorepointer 1
            position 0 0
            size 0.75 0.75
@@ -323,7 +324,91 @@ PanelWidgetClass main_menu_root {
            {
             ScriptParamsClass {
              Symbol_Name "chart_simple"
-             Symbol_Size 2
+             Symbol_Size 3
+            }
+           }
+          }
+         }
+        }
+        GridSpacerWidgetClass SoundSpacer {
+         ignorepointer 1
+         position 6 0
+         size 48 48
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         "Size To Content H" 1
+         "Size To Content V" 1
+         Columns 2
+         Rows 1
+         {
+          FrameWidgetClass FrameWidget0 {
+           visible 1
+           ignorepointer 1
+           position 12 0
+           size 24 24
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass SoundButton {
+             ignorepointer 0
+             position 0 0
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "volume"
+               Symbol_Size 2
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass FrameWidget2 {
+           visible 0
+           ignorepointer 1
+           position 12 0
+           size 24 24
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass MusicButton {
+             ignorepointer 0
+             position 0 0
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "music"
+               Symbol_Size 2
+              }
+             }
             }
            }
           }
@@ -708,7 +793,7 @@ PanelWidgetClass main_menu_root {
        wrap 1
       }
       ImageWidgetClass ServerShowcaseImage {
-       visible 0
+       visible 1
        ignorepointer 1
        size 1 1
        halign center_ref
@@ -717,7 +802,7 @@ PanelWidgetClass main_menu_root {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       image0 ""
+       image0 "P:\Profiles\DayZEditor\client\Users\tyler\EditorCache\img\string.dds"
        mode blend
        "src alpha" 1
        "clamp mode" border
@@ -753,7 +838,6 @@ PanelWidgetClass main_menu_root {
            {
             ImageWidgetClass NextServerShowcase_Icon {
              ignorepointer 1
-             color 0 0 0 1
              size 0.75 0.75
              halign center_ref
              valign center_ref
@@ -846,6 +930,7 @@ PanelWidgetClass main_menu_root {
    visible 1
    ignorepointer 1
    color 0 0 0 0.7843
+   position 0 -0.74009
    size 1 1
    halign center_ref
    valign center_ref
