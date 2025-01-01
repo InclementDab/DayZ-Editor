@@ -793,7 +793,7 @@ PanelWidgetClass main_menu_root {
        wrap 1
       }
       ImageWidgetClass ServerShowcaseImage {
-       visible 1
+       visible 0
        ignorepointer 1
        size 1 1
        halign center_ref
@@ -802,7 +802,7 @@ PanelWidgetClass main_menu_root {
        vexactpos 1
        hexactsize 0
        vexactsize 0
-       image0 "P:\Profiles\DayZEditor\client\Users\tyler\EditorCache\img\string.dds"
+       image0 ""
        mode blend
        "src alpha" 1
        "clamp mode" border

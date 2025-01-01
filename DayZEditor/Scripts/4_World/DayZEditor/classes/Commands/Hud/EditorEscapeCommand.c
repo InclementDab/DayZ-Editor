@@ -38,11 +38,6 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		}
 		
-		if (m_Editor.GetControllingPlayer()) {
-			m_Editor.Activate();
-			return true;
-		}
-		
 		if (m_Editor.IsPlayerControlled()) {
 			m_Editor.SetPlayerControlled(false);
 			return true;
@@ -52,7 +47,7 @@ class EditorEscapeCommand: EditorCommand
 			m_Editor.FinishEditLootSpawns();
 			return true;
 		} 
-
+		
 		if (GetGame().GetUIManager().GetMenu() && GetGame().GetUIManager().GetMenu().GetID() == MENU_INGAME) {
 			GetGame().GetUIManager().Back();
 			return true;

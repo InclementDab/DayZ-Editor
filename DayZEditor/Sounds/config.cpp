@@ -38,7 +38,7 @@ class CfgSoundShaders
 	};
 	class MainMenu4_Editor_SoundShader: Editor_Soundshader
 	{
-		samples[] = {{"DayZEditor\sounds\what_dreams_may_come_ltr", 1}};
+		samples[] = {{"DayZEditor\sounds\fast_lee_haris_ltr", 1}};
 	};
 	class Click0_Editor_SoundShader: Editor_Soundshader
 	{

@@ -7,6 +7,7 @@ modded class DynamicMusicPlayerRegistry
 		RegisterTrackMenu("Music_Menu_SoundSet", true);
 		RegisterTrackMenu("Music_Menu_2_SoundSet", true);
 		RegisterTrackMenu("Music_Menu_3_SoundSet", true);
+		RegisterTrackMenu("Music_Menu_4_SoundSet", true);
 	}
 
 	protected override void RegisterTracksTime()
