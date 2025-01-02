@@ -7,7 +7,12 @@ class EditorTranslationCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
-		GetEditor().SetMode(eEditorMode.Translation);
+		if (GetEditor().GetMode() == eEditorMode.Translation) {
+			GetEditor().SetMode(eEditorMode.None);
+		} else {
+			GetEditor().SetMode(eEditorMode.Translation);
+		}
+		
 		return true;
 	}
 	
@@ -18,12 +23,12 @@ class EditorTranslationCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Translate";
+		return "Translation Mode";
 	}
 	
 	override LinearColor GetColor()
 	{
-		return LinearColor.WEB_GREEN	;
+		return LinearColor.GREEN;
 	}
 	
 	override ShortcutKeys GetShortcut() 

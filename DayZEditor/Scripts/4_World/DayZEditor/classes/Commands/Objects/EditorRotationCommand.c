@@ -7,7 +7,12 @@ class EditorRotationCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
-		GetEditor().SetMode(eEditorMode.Rotation);
+		if (GetEditor().GetMode() == eEditorMode.Rotation) {
+			GetEditor().SetMode(eEditorMode.None);
+		} else {
+			GetEditor().SetMode(eEditorMode.Rotation);
+		}
+
 		return true;
 	}
 	
@@ -18,7 +23,7 @@ class EditorRotationCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Rotate";
+		return "Rotation Mode";
 	}
 	
 	override LinearColor GetColor()

@@ -7,7 +7,12 @@ class EditorScaleCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
-		GetEditor().SetMode(eEditorMode.Scale);
+		if (GetEditor().GetMode() == eEditorMode.Scale) {
+			GetEditor().SetMode(eEditorMode.None);
+		} else {
+			GetEditor().SetMode(eEditorMode.Scale);
+		}
+		
 		return true;
 	}
 	
@@ -18,7 +23,7 @@ class EditorScaleCommand: EditorCommand
 	
 	override string GetName() 
 	{
-		return "Scale";
+		return "Scaling Mode";
 	}
 	
 	override LinearColor GetColor()

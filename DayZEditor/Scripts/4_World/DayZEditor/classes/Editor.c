@@ -12,6 +12,7 @@
 
 enum eEditorMode
 {
+	None = 0,
 	Translation,
 	Rotation,
 	Scale
@@ -245,7 +246,7 @@ class Editor: Managed
 		GetSettings().TimesOpened++;
 		
 		// Enable default mode
-		SetMode(eEditorMode.Translation);
+		SetMode(eEditorMode.None);
 		
 		// Load default file
 		if (GetSettings().FileToLoad != string.Empty) {			
@@ -304,6 +305,11 @@ class Editor: Managed
 
 			case eEditorMode.Scale: {
 				m_CurrentGizmoType = EditorScaleGizmo;
+				break;
+			}
+			
+			case eEditorMode.None: {
+				m_CurrentGizmoType = EMPTY_TYPENAME;
 				break;
 			}
 		}
@@ -663,20 +669,24 @@ class Editor: Managed
 		m_CursorRaycastGround = PerformRaycast(m_CursorRay, null, raycast_distance, true);		
 		
 #ifdef GIZMOS_ENABLED
-		if (!m_CurrentGizmoType.IsInherited(EditorGizmo)) {
-			ErrorEx("Incorrect gizmo type, must inherit from EditorGizmo");
-		}
-
-		if (GetSelectedObjects().Count() > 0) {
-			if (!m_CurrentGizmo || !m_CurrentGizmo.IsInherited(m_CurrentGizmoType)) {
-				m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
-			}
-		} else {
+		if (m_CurrentGizmoType == EMPTY_TYPENAME) {
 			delete m_CurrentGizmo;
-		}
-		
-		if (m_CurrentGizmo) {
-			m_CurrentGizmo.Update(timeslice);
+		} else {
+			if (!m_CurrentGizmoType.IsInherited(EditorGizmo)) {
+				ErrorEx("Incorrect gizmo type, must inherit from EditorGizmo");
+			}
+
+			if (GetSelectedObjects().Count() > 0) {
+				if (!m_CurrentGizmo || !m_CurrentGizmo.IsInherited(m_CurrentGizmoType)) {
+					m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
+				}
+			} else {
+				delete m_CurrentGizmo;
+			}
+			
+			if (m_CurrentGizmo) {
+				m_CurrentGizmo.Update(timeslice);
+			}
 		}
 #endif
 
