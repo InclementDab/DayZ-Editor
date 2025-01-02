@@ -594,7 +594,14 @@ class EditorHud: ScriptView
 		UAInput left_mouse_input = input.GetInputByID(UAMenuSelect);
 		UAInput right_mouse_input =  input.GetInputByID(UAMenuBack);
 		UAInput speed_modifier_input =  input.GetInputByID(UATurbo);
+		Widget widget_under_cursor = GetWidgetUnderCursor();
 		int world_size = GetGame().GetWorld().GetWorldSize();
+		
+		if (widget_under_cursor) {
+			map_widget.SetFlags(WidgetFlags.IGNOREPOINTER);
+		} else {
+			map_widget.ClearFlags(WidgetFlags.IGNOREPOINTER);
+		}
 		
 		vector mouse_world = map_widget.ScreenToMap(Vector(mouse_x, mouse_y, 0));
 		
@@ -626,7 +633,7 @@ class EditorHud: ScriptView
 		
 		float p[1];
 		copyarray(p, m_ScaleVelocity);		
-				
+		//Print(widget_under_cursor);
 		if (!right_mouse_input.LocalValue()) {
 			//Scale = Math.Clamp(Scale, 0.05, 0.95);
 			
@@ -1053,6 +1060,14 @@ class EditorHud: ScriptView
 		if (File.Exists(brushes_filename)) {
 			XMLEditorBrushes xml_brushes = new XMLEditorBrushes(m_BrushTypes);
 			GetXMLApi().Read(brushes_filename, xml_brushes);
+			Print(RegisterBrush.Instances.Count());
+			foreach (auto instance: RegisterBrush.Instances) {
+				EditorBrushData brush_data = new EditorBrushData();
+				brush_data.Name = instance.param2;
+				brush_data.BrushClassName = instance.param1;
+				m_BrushTypes.Insert(brush_data);
+			}
+			
 			SetBrushIndex(0);
 			
 			float largest_size;

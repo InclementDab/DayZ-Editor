@@ -2,12 +2,14 @@ PanelWidgetClass EditorMarkerInteract {
  visible 1
  clipchildren 0
  ignorepointer 0
+ position -18 -18
  size 36 36
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
  scaled 0
+ priority 400
  draggable 0
  scriptclass ""
  style blank

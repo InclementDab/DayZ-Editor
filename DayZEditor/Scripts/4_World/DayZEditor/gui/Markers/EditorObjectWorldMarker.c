@@ -13,7 +13,8 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	void OnEditorMapToggled(Class context, MapWidget editor_map, bool state)
 	{
-		m_Show = !state;
+		//m_Show = !state;
+		m_Show = true;
 	}
 	
 	override void Update(float dt)
@@ -25,9 +26,16 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		
 		vector position = GetPosition();	
 		vector screen_pos = GetGame().GetScreenPos(position);
+		if (m_MapWidget.IsVisible()) {
+			screen_pos = m_MapWidget.MapToScreen(position);
+		}
+		
+		
+		
 		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;
 		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
-		bool show = m_Show && !GetEditor().IsMapActive() && !m_EditorObject.Locked && m_Editor.GetEditorHud().IsVisible() && !off_screen && m_MarkerDistSq > distancesq;
+		
+		bool show = m_Show && !m_EditorObject.Locked && m_Editor.GetEditorHud().IsVisible() && !off_screen && m_MarkerDistSq > distancesq;
 		if (!show) {
 			if (m_LayoutRoot.IsVisible()) {
 				m_LayoutRoot.Show(false);
@@ -39,7 +47,10 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		m_LayoutRoot.Show(true, false);
 				
 		//float size = Math.Min(Math.Max(1300 / distancesq, 18), 24);
-		float c = m_ViewDistance / screen_pos[2];
+		float c = 4.0;
+		if (screen_pos[2] != 0 && !m_MapWidget.IsVisible()) {
+			 c = m_ViewDistance / screen_pos[2];
+		}
 		
 		float size_min = 0, size_max = 0;
 		switch (m_EditorSettings.MarkerSize) {
@@ -82,7 +93,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			c = size_max;
 		}
 		
-		m_LayoutRoot.SetScreenSize(c, c, false);		
+		m_LayoutRoot.SetScreenSize(size_max, size_max, false);		
 		m_LayoutRoot.SetPos(screen_pos[0] - c / 2, screen_pos[1] - c / 2, false);
 		m_LayoutRoot.Update();
 	}
