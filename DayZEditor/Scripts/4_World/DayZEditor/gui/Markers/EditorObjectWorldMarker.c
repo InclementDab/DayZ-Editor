@@ -30,12 +30,10 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			screen_pos = m_MapWidget.MapToScreen(position);
 		}
 		
-		
-		
 		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;
 		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
-		
-		bool show = m_Show && !m_EditorObject.Locked && m_Editor.GetEditorHud().IsVisible() && !off_screen && m_MarkerDistSq > distancesq;
+		bool in_distance = m_MarkerDistSq > distancesq || m_MapWidget.IsVisible();
+		bool show = m_Show && !m_EditorObject.Locked && m_Editor.GetEditorHud().IsVisible() && !off_screen && in_distance;
 		if (!show) {
 			if (m_LayoutRoot.IsVisible()) {
 				m_LayoutRoot.Show(false);

@@ -59,7 +59,7 @@ class EditorHud: ScriptView
 	// Brush info new
 	ButtonWidget BrushLeft, BrushRight;
 	ImageWidget BrushLeft_Icon, BrushRight_Icon;
-	Widget BrushToggle, BrushRadiusFrame, BrushDensityFrame, BrushWidthFrame;
+	Widget BrushToggle, BrushRadiusFrame, BrushDensityFrame, BrushWidthFrame, CinematicCameraButton;
 	TextWidget BrushText;
 	protected int m_CurrentBrushIndex = 0, m_BrushState = 0;
 	protected ref array<ref EditorBrushData> m_BrushTypes = {};
@@ -211,6 +211,8 @@ class EditorHud: ScriptView
 		RightPanelSearchBarPanel.GetScreenSize(rpsbp_s_w, rpsbp_s_h);
 		RightbarScroll.GetScreenSize(rbs_s_w, rbs_s_h);
 		RightbarScroll.SetScreenSize(rbs_s_w, bar_height - tp_s_h - rpsbp_s_h);
+
+		CinematicCameraButton.Show(Editor.Experimental);
 	}
 	
 	override void Update(float dt)
