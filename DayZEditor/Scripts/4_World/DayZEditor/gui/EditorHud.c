@@ -1054,15 +1054,7 @@ class EditorHud: ScriptView
 		string brushes_filename = SystemPath.Format(file);
 		if (File.Exists(brushes_filename)) {
 			XMLEditorBrushes xml_brushes = new XMLEditorBrushes(m_BrushTypes);
-			GetXMLApi().Read(brushes_filename, xml_brushes);
-			Print(RegisterBrush.Instances.Count());
-			foreach (auto instance: RegisterBrush.Instances) {
-				EditorBrushData brush_data = new EditorBrushData();
-				brush_data.Name = instance.param2;
-				brush_data.BrushClassName = instance.param1;
-				m_BrushTypes.Insert(brush_data);
-			}
-			
+			GetXMLApi().Read(brushes_filename, xml_brushes);			
 			SetBrushIndex(0);
 			
 			float largest_size;

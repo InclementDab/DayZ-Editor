@@ -1,6 +1,7 @@
 class EditorDeletedListItem: EditorListItem
 {
 	protected EditorDeletedObject m_EditorDeletedObject;
+	Widget WrapSpacerWidget1;
 	
 	void EditorDeletedListItem(EditorDeletedObject deleted_object)
 	{
@@ -9,6 +10,7 @@ class EditorDeletedListItem: EditorListItem
 		string item_name = m_EditorDeletedObject.GetData().ModelName;		
 		ListItemLabel.SetText(string.Format("%1 (%2)", item_name, m_EditorDeletedObject.GetID()));
 		
+		WrapSpacerWidget1.Show(false);
 		//m_TemplateController.Icon = m_EditorDeletedObject.GetData().Icon;
 		//m_TemplateController.NotifyPropertyChanged("Icon");
 	}
