@@ -11,6 +11,7 @@ class EditorInventoryEditorController: ViewController
 	string SearchBarRight;
 	string SearchBarRightIcon = "set:dayz_editor_gui image:search";
 	EntityAI CurrentActiveItem;
+	protected EditorObjectData m_DataStorage;
 
 	ref map<int, ref array<ref EditorWearableItem>> LoadedWearableItems = new map<int, ref array<ref EditorWearableItem>>();
 	
@@ -73,9 +74,10 @@ class EditorInventoryEditorController: ViewController
 		}
 	}
 	
-	void SetEntity(notnull EntityAI entity)
+	void SetEntity(notnull EntityAI entity, EditorObjectData storage_data = null)
 	{
 		m_Entity = entity;
+		m_DataStorage = storage_data;
 				
 		TIntArray attachment_slots = GetAttachmentSlotsFromEntity(m_Entity);
 		foreach (int slot: attachment_slots) {
@@ -170,11 +172,23 @@ class EditorInventoryEditorController: ViewController
 	void OnListItemSelected(EditorWearableListItem list_item, EditorWearableItem wearable_item)
 	{		
 		// Very special, probably use some type of enum in the future
-		if (list_item.GetSlot() == InventorySlots.GetSlotIdFromString("Hands") && GetEntityAsPlayer()) {
+		int hands_slot_id = InventorySlots.GetSlotIdFromString("Hands");
+		if (list_item.GetSlot() == hands_slot_id && GetEntityAsPlayer()) {
 			GetGame().ObjectDelete(GetEntityAsPlayer().GetHumanInventory().GetEntityInHands());
-			if (list_item == EmptyItem) return;
+			if (list_item == EmptyItem) {
+				if (m_DataStorage) {
+					m_DataStorage.AttachmentMap.Remove(hands_slot_id);
+				}
+				
+				return;
+			}
 			
-			SetCurrentActiveItem(GetEntityAsPlayer().GetHumanInventory().CreateInHands(wearable_item.Type));
+			EntityAI new_item_hands = GetEntityAsPlayer().GetHumanInventory().CreateInHands(wearable_item.Type);
+			if (m_DataStorage) {
+				m_DataStorage.AttachmentMap[hands_slot_id] = EditorObjectData.Create(new_item_hands, EFE_ATTACHMENT);
+			}
+
+			SetCurrentActiveItem(new_item_hands);
 		} 
 		
 		else {
@@ -182,10 +196,23 @@ class EditorInventoryEditorController: ViewController
 			
 			// Clear existing item
 			GetGame().ObjectDelete(m_Entity.GetInventory().FindAttachment(slot_id));
-			if (list_item == EmptyItem) return;
+			if (list_item == EmptyItem) {
+				if (m_DataStorage) {
+					m_DataStorage.AttachmentMap.Remove(slot_id);
+				}
+
+				return;
+			}
 			
 			// Create new item on player
-			SetCurrentActiveItem(m_Entity.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id));
+			EntityAI new_item_attachment = m_Entity.GetInventory().CreateAttachmentEx(wearable_item.Type, slot_id);
+
+			// Add to list of attachments
+			if (m_DataStorage) {
+				m_DataStorage.AttachmentMap[slot_id] = EditorObjectData.Create(new_item_attachment, EFE_ATTACHMENT);
+			}
+
+			SetCurrentActiveItem(new_item_attachment);
 		}
 		
 		// Deselect all other things

@@ -13,7 +13,7 @@
 	
 	protected ref EditorFileDialog m_FileDialog;
 	
-	void EditorInventoryEditorHud(notnull EntityAI entity)
+	void EditorInventoryEditorHud(notnull EntityAI entity, EditorObjectData storage_data = null)
 	{
 		m_Entity = entity;
 		m_EditorObject = GetEditor().GetEditorObject(m_Entity);
@@ -32,7 +32,7 @@
 		m_Camera.SetActive(true);
 		
 		m_TemplateController = EditorInventoryEditorController.Cast(m_Controller);
-		m_TemplateController.SetEntity(m_Entity);
+		m_TemplateController.SetEntity(m_Entity, storage_data);
 		
 		m_Entity.DisableSimulation(false);
 		GetGame().GetUIManager().ShowCursor(true);
@@ -130,7 +130,7 @@
 		PlayerSpawnPreset preset = new PlayerSpawnPreset();
 		preset.attachmentSlotItemSets = {}; 
 		preset.discreteUnsortedItemSets = {}; // nothing makes sense BI why do u do this crap
-		preset.name = m_EditorObject.Name;
+		preset.name = m_EditorObject.GetDisplayName();
 		preset.characterTypes = { m_Entity.GetType() };
 		preset.spawnWeight = 1;
 		

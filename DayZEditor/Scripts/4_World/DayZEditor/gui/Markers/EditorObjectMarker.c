@@ -24,7 +24,7 @@ class EditorObjectMarker: EditorMarker
 	override void Show(bool show)
 	{
 		// dont show if locked
-		if (show && m_EditorObject && m_EditorObject.Locked) {
+		if (show && m_EditorObject && m_EditorObject.IsLocked()) {
 			return;
 		}
 		

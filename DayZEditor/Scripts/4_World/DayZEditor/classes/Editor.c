@@ -1998,7 +1998,7 @@ class Editor: Managed
 	void DeleteObject(EditorObject editor_object, bool create_undo = true) 
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-		if (!editor_object.Locked && editor_object.Show) {
+		if (!editor_object.IsLocked() && editor_object.IsVisible()) {
 			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 			m_ObjectManager.DeleteObject(editor_object);
@@ -2014,7 +2014,7 @@ class Editor: Managed
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (EditorObject editor_object: editor_objects) {
-			if (!editor_object.Locked) {
+			if (!editor_object.IsLocked()) {
 				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
@@ -2028,7 +2028,7 @@ class Editor: Managed
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (int id, EditorObject editor_object: editor_object_map) {
-			if (!editor_object.Locked && editor_object.Show) {
+			if (!editor_object.IsLocked() && editor_object.IsVisible()) {
 				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
@@ -2225,7 +2225,7 @@ class Editor: Managed
 	{
 		EditorAction action = new EditorAction("Unlock", "Lock");
 		foreach (int id, EditorObject editor_object: editor_object_map) {
-			if (editor_object && !editor_object.Locked) {
+			if (editor_object && !editor_object.IsLocked()) {
 				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
 				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
 				editor_object.Lock(true);
@@ -2252,7 +2252,7 @@ class Editor: Managed
 	{
 		EditorAction action = new EditorAction("Lock", "Unlock");
 		foreach (int id, EditorObject editor_object: editor_object_map) {
-			if (editor_object && editor_object.Locked) {
+			if (editor_object && editor_object.IsLocked()) {
 				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
 				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
 				editor_object.Lock(false);

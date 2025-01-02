@@ -24,7 +24,7 @@ class IntroSceneEditor: Managed
 			}
 		}
 
-		m_Camera = Camera.Cast(GetGame().CreateObjectEx("Camera", vector.Zero, ECE_NONE));
+		m_Camera = Camera.Cast(GetGame().CreateObjectEx("StaticCamera", vector.Zero, ECE_NONE));
 		m_Camera.SetActive(true);
 
 		PPEffects.Init();

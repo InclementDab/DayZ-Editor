@@ -19,7 +19,7 @@ class EditorPlacedListItem: EditorListItem
 		m_TemplateController.Icon = m_EditorObject.GetData().Icon;
 		m_TemplateController.NotifyPropertyChanged("Icon");
 		
-		LockedImage.Show(m_EditorObject.Locked);
+		LockedImage.Show(m_EditorObject.IsLocked());
 		ToggleBoundingBoxImage.Show(m_EditorObject.GetFlags() & EditorObjectFlags.BBOX);
 		ToggleWorldMarkerImage.Show(m_EditorObject.GetFlags() & EditorObjectFlags.OBJECTMARKER);
 		ListItemLabel.SetText(editor_object.GetDisplayName());
@@ -147,8 +147,8 @@ class EditorPlacedListItem: EditorListItem
 	
 	bool OnToggleLockExecute(ButtonCommandArgs args)
 	{
-		m_EditorObject.Lock(!m_EditorObject.Locked);
-		if (m_EditorObject.Locked) {
+		m_EditorObject.Lock(!m_EditorObject.IsLocked());
+		if (m_EditorObject.IsLocked()) {
 			ToggleBoundingBoxImage.Show(false);
 			ToggleWorldMarkerImage.Show(false);
 		} else {
@@ -207,11 +207,11 @@ class EditorPlacedListItem: EditorListItem
 		switch (w) {
 			case LockedImage.GetParent(): {
 				if (mouse_down) {
-					m_EditorObject.Lock(!m_EditorObject.Locked);
+					m_EditorObject.Lock(!m_EditorObject.IsLocked());
 					return true;
 				}
 				
-				if (LockedImage.IsVisible() && m_EditorObject.Locked) {					
+				if (LockedImage.IsVisible() && m_EditorObject.IsLocked()) {					
 					string command_name = GetEditor().CommandManager[EditorUnlockCommand].GetName();
 					string command_shortcut = GetEditor().CommandManager[EditorUnlockCommand].GetShortcutString();
 					GetDayZGame().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(command_name, LockedImage.GetParent(), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", command_shortcut)), w);

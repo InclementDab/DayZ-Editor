@@ -25,13 +25,13 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuButton(m_Editor.CommandManager[EditorResetAlignmentCommand]);
 		
 		AddMenuDivider();
-		if (context.Show) {
+		if (context.IsVisible()) {
 			AddMenuButton(m_Editor.CommandManager[EditorHideCommand]);
 		} else {
 			AddMenuButton(m_Editor.CommandManager[EditorShowCommand]);
 		}
 		
-		if (context.Locked) {
+		if (context.IsLocked()) {
 			AddMenuButton(m_Editor.CommandManager[EditorUnlockCommand]);
 		} else {
 			AddMenuButton(m_Editor.CommandManager[EditorLockCommand]);

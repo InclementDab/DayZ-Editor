@@ -19,35 +19,11 @@ class EditorObject: EditorWorldObject
 	protected vector m_LineVerticies[8];
 	protected vector m_BoundingCenter;
 	protected bool m_IsSelected;
-	
-	// Object Data
-	int ObjectID;
-	string Name;
-	vector Position;
-	vector Orientation;
-	float Scale = 1.0;
-	
-	// Object Properties
-	float Health = 100;
-	bool Show = true;
-	bool Locked;
-	bool Simulate;
-	bool Physics;
-	bool AllowDamage = false;
-	bool Collision = true;
-	bool EditorOnly = false;
-	
-	// Human Properties
-	int CurrentAnimation;
-	bool Animate;
-	
-	// Custom stuff 
-	string ExpansionTraderType;
-	string TestingScript;
-		
+			
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	ref ScriptInvoker OnUpdated = new ScriptInvoker();
+	ref ScriptInvoker OnChanged = new ScriptInvoker();
 
 	void SetDisplayName(string display_name) 
 	{
@@ -122,25 +98,11 @@ class EditorObject: EditorWorldObject
 		// Version 2
 		EntityAI entity = EntityAI.Cast(m_WorldObject);
 		if (entity) {
-			foreach (string attachment: data.Attachments) {
-				entity.GetInventory().CreateAttachment(attachment);
+			foreach (int slot_id, EditorObjectData attachment: data.AttachmentMap) {
+				entity.GetInventory().CreateAttachmentEx(attachment.Type, slot_id);
 			}
 		}
-		
-		if (data.Parameters["ExpansionTraderType"]) {
-			ExpansionTraderType = SerializableParam1<string>.Cast(data.Parameters["ExpansionTraderType"]).param1;
-		}
-		
-		// Version 3
-		Locked = m_Data.Locked;
-		EditorOnly = m_Data.EditorOnly;
-		AllowDamage = m_Data.AllowDamage;
-		
-		// If network light
-		if (NetworkLightBase.Cast(m_WorldObject)) {
-			NetworkLightBase.Cast(m_WorldObject).Read(m_Data.Parameters);
-		}
-		
+				
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 	
@@ -183,16 +145,12 @@ class EditorObject: EditorWorldObject
 
 		// Browser item
 		EnableListItem(IsListItemEnabled());
-
-		if (m_WorldObject.HasDamageSystem()) {
-			Health = m_WorldObject.GetHealth("", "Health");
-		}
 		
 		// This is deliberately split due to issues with null errors, but i have to assign
 		// Locked higher up or it gets set to 0 always. this is a mess, please fix
-		PropertyChanged("Locked");
-		PropertyChanged("EditorOnly");
-		PropertyChanged("AllowDamage");
+		//PropertyChanged("Locked");
+		//PropertyChanged("EditorOnly");
+		//PropertyChanged("AllowDamage");
 		
 		// Load animations
 		array<string> paths = {
@@ -268,7 +226,7 @@ class EditorObject: EditorWorldObject
 	
 	void OnSelected()
 	{
-		if (Locked || IsSelected()) {
+		if (IsLocked() || IsSelected()) {
 			return;
 		}
 
@@ -312,17 +270,39 @@ class EditorObject: EditorWorldObject
 	
 	void SetPosition(vector pos) 
 	{ 
-		if (Locked) return;
+		if (IsLocked()) return;
 		GetWorldObject().SetPosition(pos);
+
+		if (IsStatic()) {
+			m_Data.Position = pos - m_WorldObject.GetBoundingCenter();
+		} else {
+			m_Data.Position = pos;
+		}
+
+		// idk about this one
+		m_Data.BottomCenter = GetBottomCenter();
+
 		Update();
 	}
 	
-	vector GetOrientation() { return GetWorldObject().GetOrientation(); }
-	void SetOrientation(vector pos) 
+	vector GetOrientation() 
 	{ 
-		if (Locked) return;
-		GetWorldObject().SetOrientation(pos);
-		GetWorldObject().SetScale(Scale);
+		return GetWorldObject().GetOrientation(); 
+	}
+
+	void SetOrientation(vector orientation) 
+	{ 
+		if (IsLocked()) return;
+
+		GetWorldObject().SetOrientation(orientation);
+		GetWorldObject().SetScale(m_Data.Scale);
+
+		if (IsStatic()) {
+			m_Data.Orientation = orientation * Math.DEG2RAD;
+		} else {
+			m_Data.Orientation = orientation;
+		}
+		
 		Update();
 	}
 	
@@ -333,26 +313,31 @@ class EditorObject: EditorWorldObject
 	
 	void SetTransform(vector mat[4]) 
 	{ 	
-		if (Locked) return;
+		if (IsLocked()) return;
+		
 		GetWorldObject().SetTransform(mat);	
 		GetWorldObject().Update();
 		
-		Orientation = Math3D.MatrixToAngles(mat);
-		m_Data.Orientation = Orientation;
-
-		Position = mat[3];
-		m_Data.Position = Position;
-
-		Scale = (mat[0].Length() + mat[1].Length() + mat[2].Length()) / 3;
-		m_Data.Scale = Scale;
-		OnUpdated.Invoke();
+		vector orientation = Math3D.MatrixToAngles(mat);		
+		if (IsStatic()) {
+			m_Data.Position = mat[3] - m_WorldObject.GetBoundingCenter();
+			m_Data.Orientation = orientation * Math.DEG2RAD;
+		} else {
+			m_Data.Position = mat[3];
+			m_Data.Orientation = orientation;
+		}
+		
+		m_Data.Scale = (mat[0].Length() + mat[1].Length() + mat[2].Length()) / 3;
+		m_Data.BottomCenter = GetBottomCenter();
 		Update();
 	}
 	
 	void SetScale(float scale)
 	{		
-		if (Locked) return;
+		if (IsLocked()) return;
 		GetWorldObject().SetScale(scale);
+
+		m_Data.Scale = scale;
 		Update();
 	}
 	
@@ -360,180 +345,21 @@ class EditorObject: EditorWorldObject
 	{
 		return GetWorldObject().GetScale();
 	}
+
+	bool IsStatic()
+	{
+		return m_Data.Type.Contains(".p3d");
+	}
 	
 	void Update() 
 	{ 
-		if (!m_WorldObject) {
-			return;
+		if (m_WorldObject) {
+			m_WorldObject.Update(); 
 		}
 		
-		m_WorldObject.Update(); 
-				
-		ObjectID = m_WorldObject.GetID();
-		if (m_Data) {
-			// 11/15/24 - to combat the horrid world object bugs, we are going to forcibly offset this value
-			 /* Chat, you're not gonna believe this */
-			if (m_Data.Type.Contains(".p3d")) {
-				m_Data.Position = GetPosition() - GetWorldObject().GetBoundingCenter();
-				m_Data.Orientation = GetOrientation() * Math.DEG2RAD;
-			} else {
-				m_Data.Position = GetPosition();
-				m_Data.Orientation = GetOrientation();
-			}
-			
-			m_Data.Scale = GetScale();
-			m_Data.BottomCenter = GetBottomCenter();
-			
-			m_Data.Locked = Locked;
-			m_Data.EditorOnly = EditorOnly;
-			m_Data.AllowDamage = AllowDamage;
-			
-			// Update Attachments
-			EntityAI entity = EntityAI.Cast(m_WorldObject);
-			if (entity) {
-				if (!m_Data.Attachments) {
-					m_Data.Attachments = {};
-				}
-
-				m_Data.Attachments.Clear();
-				array<EntityAI> attachments = {};
-				
-				entity.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, attachments);
-				for (int i = 0; i < attachments.Count(); i++) {			
-					EntityAI attachment = attachments[i];
-					if (!attachment || attachment == m_WorldObject) {
-						continue;
-					}
-					
-					m_Data.Attachments.Insert(attachment.GetType());
-				}
-			}			
-		}
-		
-		Name = GetDisplayName();
-		Position = GetPosition();
-		if (m_Data.Type.Contains(".p3d")) {
-			Orientation = GetOrientation() * Math.DEG2RAD; // i hate this fucking game
-		} else {
-			Orientation = GetOrientation();
-		}
-		
-		Scale = GetScale();
-
 		OnUpdated.Invoke();
 	}
 	
-	// EditorObjects can also be psuedo-controllers
-	void PropertyChanged(string property_name)
-	{
-		//EditorLog.Trace("EditorObject::PropertyChanged %1", property_name);
-		EntityAI entity_world_object = EntityAI.Cast(m_WorldObject);
-		switch (property_name) {
-			case "Name": {
-				SetDisplayName(Name);
-				break;
-			}
-			
-			case "Position": {
-				EditorAction position_undo = new EditorAction("SetTransform", "SetTransform");
-				position_undo.InsertUndoParameter(GetTransformArray());
-				SetPosition(Position);
-				position_undo.InsertRedoParameter(GetTransformArray());
-				GetEditor().InsertAction(position_undo);
-				break;
-			}
-			
-			case "Orientation": {
-				EditorAction orientation_undo = new EditorAction("SetTransform", "SetTransform");
-				orientation_undo.InsertUndoParameter(GetTransformArray());
-				
-				SetOrientation(Orientation);
-				orientation_undo.InsertRedoParameter(GetTransformArray());
-				GetEditor().InsertAction(orientation_undo);
-				break;
-			}
-			
-			case "Scale": {
-				if (Scale < 0.000001) {
-					Scale = 0.000001;
-				}
-								
-				SetScale(Scale);
-				break;
-			}
-			
-			case "Show": {
-				Show(Show);
-				break;
-			}
-			
-			case "Locked": {
-				Lock(Locked);
-				break;
-			}
-			
-			case "Physics": {
-				if (!PlayerBase.Cast(m_WorldObject)) {
-					EnablePhysics(Physics);
-				}
-				break;
-			}
-			
-			case "Simulate": {
-				if (entity_world_object) {
-					entity_world_object.DisableSimulation(!Simulate);
-				}
-				break;
-			}
-									
-			case "Animate": {
-				PlayerBase emote_player = PlayerBase.Cast(m_WorldObject);
-				if (emote_player) {
-					emote_player.GetEmoteManager().PlayEmote(CurrentAnimation);
-				}
-				
-				break;
-			}
-						
-			case "EditorOnly": {
-				//m_Data.EditorOnly = EditorOnly;
-				break;
-			}
-			
-			case "AllowDamage": {
-				m_WorldObject.SetAllowDamage(AllowDamage);
-				break;
-			}
-			
-			case "Health": {
-				if (m_WorldObject.HasDamageSystem()) {
-					Health = Math.Clamp(Health, 0, m_WorldObject.GetMaxHealth("", "Health"));
-					m_WorldObject.SetHealth("", "Health", Health);
-				}
-				break;
-			}
-			
-			case "Collision": {
-				if (Collision) {
-					m_WorldObject.SetFlags(EntityFlags.SOLID, true);
-				} else {
-					m_WorldObject.ClearFlags(EntityFlags.SOLID, true);
-				}
-				
-				m_WorldObject.Update();
-				break;
-			}
-			
-			case "ExpansionTraderType": {
-				// storing the custom data				
-				m_Data.Parameters["ExpansionTraderType"] = SerializableParam1<string>.Create(ExpansionTraderType);
-				break;
-			}
-		}
-			
-		Update();
-	}
-
 	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) 
 	{
 		EntityAI ent;
@@ -694,21 +520,19 @@ class EditorObject: EditorWorldObject
 	
 	void Show(bool show) 
 	{
-		Show = show;
-		
-		if (m_EditorObjectMapMarker) {
-			m_EditorObjectMapMarker.Show(Show);
-		}
-		
-		if (m_EditorObjectWorldMarker) {
-			m_EditorObjectWorldMarker.Show(Show);
-		}
-		
-		if (Show) {
+		if (show) {
+			m_Data.Flags &= ~EditorObjectFlags.HIDDEN;
 			GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
+			m_EditorObjectMapMarker.Show(true);
+			m_EditorObjectWorldMarker.Show(true);
 		} else {
+			m_Data.Flags |= EditorObjectFlags.HIDDEN;
 			GetWorldObject().ClearFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
+			m_EditorObjectMapMarker.Show(false);
+			m_EditorObjectWorldMarker.Show(false);
 		}
+
+		OnChanged.Invoke();
 	}
 	
 	void ShowWorldObject(bool show) 
@@ -718,6 +542,66 @@ class EditorObject: EditorWorldObject
 		} else {
 			GetWorldObject().ClearFlags(EntityFlags.VISIBLE, false);
 		}
+	}
+
+	void SetAllowDamage(bool damage)
+	{
+		m_WorldObject.SetAllowDamage(damage);
+		m_Data.AllowDamage = damage;
+		OnChanged.Invoke();
+	}
+
+	void SetSimulate(bool simulate)
+	{
+		EntityAI entity_world_object = EntityAI.Cast(GetWorldObject());
+		if (entity_world_object) {
+			entity_world_object.DisableSimulation(!simulate);
+			m_Data.Simulate = simulate;
+			OnChanged.Invoke();
+		}
+	}
+
+	void SetPhysicsEnabled(bool physics)
+	{
+		if (!PlayerBase.Cast(m_WorldObject)) {
+			if (m_WorldObject) {
+				if (physics) {
+					m_WorldObject.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+					m_WorldObject.SetDynamicPhysicsLifeTime(-1);
+					dBodySetMass(m_WorldObject, 100);
+				} else {
+					m_WorldObject.SetDynamicPhysicsLifeTime(0.001);
+				}
+			}
+
+			//m_Data.Physics = physics;
+			OnChanged.Invoke();
+		}
+	}
+	
+	void SetHealth(float health)
+	{
+		m_WorldObject.SetHealth("GlobalHealth", "Health", health);
+	}
+
+	bool IsLocked()
+	{
+		return m_Data.Locked;
+	}
+
+	bool IsVisible()
+	{
+		return !((m_Data.Flags & EditorObjectFlags.HIDDEN) == EditorObjectFlags.HIDDEN);
+	}
+
+	bool IsEditorOnly()
+	{
+		return m_Data.EditorOnly;
+	}
+
+	bool IsAllowDamage()
+	{
+		return m_Data.AllowDamage;
 	}
 		
 	vector GetBottomCenter()
@@ -918,34 +802,17 @@ class EditorObject: EditorWorldObject
 		
 	void Lock(bool locked) 
 	{
-		Locked = locked;
-		m_Data.Locked = Locked;
+		m_Data.Locked = locked;
 		
 		EditorObjectMarker marker = GetMarker();
 		if (marker) {
-			marker.Show(!Locked);
+			marker.Show(!locked);
 		}
 				
 		if (m_EditorPlacedListItem) {
-			m_EditorPlacedListItem.LockedImage.Show(Locked);
+			m_EditorPlacedListItem.LockedImage.Show(locked);
 		}
 	}
-	
-	void EnablePhysics(bool enable)
-	{
-		Physics = enable;
-		
-		if (m_WorldObject) {
-			if (enable) {
-				m_WorldObject.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
-				m_WorldObject.SetDynamicPhysicsLifeTime(-1);
-				dBodySetMass(m_WorldObject, 100);
-			} else {
-				m_WorldObject.SetDynamicPhysicsLifeTime(0.001);
-			}
-		}
-	}
-
 	bool IsBoundingBoxEnabled()
 	{
 		return ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);
@@ -1014,9 +881,8 @@ class EditorObject: EditorWorldObject
 	// pass in `this` in the context of the WorldObject
 	void ExecuteCode(string script_content = string.Empty)
 	{
-		Print(TestingScript);
 		if (script_content == string.Empty) {
-			script_content = TestingScript;
+			//script_content = TestingScript;
 		}
 		
 		if (script_content == string.Empty) {
