@@ -118,7 +118,7 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 1;
+	static const int Experimental = 0;
 	static const int MinorVersionNumber = 1;
 	static const int VersionNumber = 34;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
@@ -162,6 +162,8 @@ class Editor: Managed
 
 		EditorLog.Trace("Editor");
 		g_Game.ReportProgress("Loading Editor");
+
+		PrintFormat("Loading DayZ Editor v%1", Version);
 
 		g_Editor = this;
 		m_Player = player;

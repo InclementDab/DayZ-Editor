@@ -10,9 +10,11 @@ class RichTextPrefab: ScriptView
 
 class Payload_Changelog: Managed
 {
-	ref array<string> changelog = {};
-	string uploadDate;
-	string updateVersion;
+	int Id;
+	ref array<string> ChangelogContent = {};
+	string UploadDate;
+	string UpdateVersion;
+	string CreatedAt;
 }
 
 class ChangelogRestCallback: RestCallbackBase
@@ -74,16 +76,16 @@ class EditorOneTimeDonationDialog: EditorDialogBase
 			return;
 		}
 		
-		m_RichText.ListBox.AddItem(string.Format("Change Log (%1)", pl.uploadDate), null, 0);
-		m_RichText.ListBox.AddItem(string.Format("Version %1", pl.updateVersion), null, 0);
+		m_RichText.ListBox.AddItem(string.Format("Change Log (%1)", pl.UploadDate), null, 0);
+		m_RichText.ListBox.AddItem(string.Format("Version %1", pl.UpdateVersion), null, 0);
 		m_RichText.ListBox.AddItem("", null, 0);
-		foreach (string message_line: pl.changelog) {
+		foreach (string message_line: pl.ChangelogContent) {
 			m_RichText.ListBox.AddItem(message_line, null, 0);
 		}
 		
 		float s_x, s_y;
 		m_RichText.ListBox.GetScreenSize(s_x, s_y);
-		m_RichText.ListBox.SetScreenSize(s_x, pl.changelog.Count() * 22);
+		m_RichText.ListBox.SetScreenSize(s_x, pl.ChangelogContent.Count() * 22);
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetupDialog, 10);
 	}
