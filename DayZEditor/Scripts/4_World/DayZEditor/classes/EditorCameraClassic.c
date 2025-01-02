@@ -223,7 +223,7 @@ class EditorCameraClassic: EditorCamera
 			LookAt(TargetPosition);
 		}
 
-		if (!GetEditor().IsPlayerActive()) {
+		if (!GetEditor().IsPlayerActive() && GetUApi().GetInputByID(UAZoomIn).LocalPress()) {
 			// teleportation logic
 			vector current_mouse_position = GetEditor().GetCursorRay().GetPoint(100.0);
 			Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafe();
