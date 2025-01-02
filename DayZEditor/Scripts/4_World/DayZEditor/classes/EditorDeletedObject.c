@@ -23,7 +23,7 @@ class EditorDeletedObject: EditorWorldObject
 		if (!m_WorldObject) {
 			m_WorldObject = m_Data.FindObject();
 			if (!m_WorldObject) {
-				EditorLog.Error("Failed to find object with name %1 at position %2", m_Data.Type, m_Data.Position.ToString());
+				EditorLog.Error("Failed to find object with name %1:%3 at position %2", m_Data.Type, m_Data.Position.ToString(), m_Data.ModelName);
 				return;
 			}
 		}

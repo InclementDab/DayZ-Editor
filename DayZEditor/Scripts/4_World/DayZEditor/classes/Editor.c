@@ -335,6 +335,11 @@ class Editor: Managed
 	void OnDeactivateMessage()
 	{
 		m_MouseVisibleOnClose = GetGame().GetUIManager().IsCursorVisible() && IsActive();
+
+		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
+			GetGame().ObjectDelete(world_object.GetWorldObject());
+		}
+
 		m_PlacingObjects.Clear();
 	}
 	

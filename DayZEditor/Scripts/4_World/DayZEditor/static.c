@@ -21,16 +21,15 @@ static void SpawnStaticObject(string type, vector position, vector orientation)
 
 /* Used for Offline Editor Mission Creation */
 static string CreateEditorMission(string map_name = "ChernarusPlus")
-{
-	EditorLog.Trace("CreateEditorMission");
-	string mission = "$saves:/Editor/Missions/DayZEditor." + map_name;
+{	
+	string mission = "$saves:Editor/Missions/DayZEditor." + map_name;
 	
-	if (!MakeDirectory("$saves:/Editor/")) {
+	if (!MakeDirectory("$saves:Editor/")) {
 		EditorLog.Error("Failed to create Editor Directory");
 		return mission;
 	}
 	
-	if (!MakeDirectory("$saves:/Editor/Missions/")) {
+	if (!MakeDirectory("$saves:Editor/Missions/")) {
 		EditorLog.Error("Failed to create Editor Mission Directory");
 		return mission;
 	}

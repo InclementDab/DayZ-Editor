@@ -161,7 +161,7 @@ class EditorMainMenu: ScriptViewMenu
 		}
 
 		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));
-		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase request' in Discord\nClick to join.");
+		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase_request' in Discord\nClick to join.");
 		
 		m_SoundVolume = GetGame().GetSoundScene().GetSoundVolume();
 		m_MusicVolume = GetGame().GetSoundScene().GetMusicVolume();

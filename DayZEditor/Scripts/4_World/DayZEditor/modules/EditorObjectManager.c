@@ -263,6 +263,8 @@ class EditorObjectManagerModule : Managed
 		diff[1] = diff[1] / count_flt;
 		diff[2] = diff[2] / count_flt;
 		m_AveragePositionOfSelection = m_AveragePositionOfSelection + diff;
+
+		target.OnUpdated.Insert(OnSelectedObjectUpdate);
 		// todo perhaps propagate selections to the children of the object?
 	}
 
@@ -285,8 +287,25 @@ class EditorObjectManagerModule : Managed
 			n[2] = n[2] / count_flt;
 			m_AveragePositionOfSelection = n;
 		}
+
+		target.OnUpdated.Remove(OnSelectedObjectUpdate);
 	}
 
+	// When a selected object gets updated we must re-cacluate the average position
+	protected void OnSelectedObjectUpdate()
+	{
+		float count_flt = m_SelectedObjects.Count();
+		vector total_position = vector.Zero;
+		foreach (EditorObject selected_object: m_SelectedObjects) {
+			total_position = total_position + selected_object.GetPosition();
+		}
+
+		total_position[0] = total_position[0] / count_flt;
+		total_position[1] = total_position[1] / count_flt;
+		total_position[2] = total_position[2] / count_flt;
+		m_AveragePositionOfSelection = total_position;
+	}
+	
 	// Call to toggle selection
 	void ToggleSelection(notnull EditorObject target)
 	{

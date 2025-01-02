@@ -63,6 +63,7 @@ class EditorHud: ScriptView
 	TextWidget BrushText;
 	protected int m_CurrentBrushIndex = 0, m_BrushState = 0;
 	protected ref array<ref EditorBrushData> m_BrushTypes = {};
+	protected EditorSettings m_EditorSettings;
 
 	protected ref array<vector> m_LassoHistory = {};
 	
@@ -89,6 +90,7 @@ class EditorHud: ScriptView
 	void EditorHud(notnull Editor editor)
 	{	
 		m_Editor = editor;
+		m_EditorSettings = m_Editor.GetSettings();
 		
 		Map.Show(false);
 		
@@ -99,7 +101,7 @@ class EditorHud: ScriptView
 		
 		// Load Placeable Items
 #ifndef COMPONENT_SYSTEM		
-		int item_size = m_Editor.GetSettings().ListItemSize;
+		int item_size = m_EditorSettings.ListItemSize;
 		array<ref EditorPlaceableItem> placeable_items = m_Editor.GetPlaceableObjects();
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
 			ObservableCollection<ref EditorPlaceableListItem> TargetList;
@@ -150,18 +152,18 @@ class EditorHud: ScriptView
 		foreach (string themed_widget_name: ThemedWidgetStrings) {
 			Widget themed_widget = m_LayoutRoot.FindAnyWidget(themed_widget_name);
 			if (themed_widget) {
-				themed_widget.SetColor(m_Editor.GetSettings().SelectionColor);
+				themed_widget.SetColor(m_EditorSettings.SelectionColor);
 			}
 		}
 
 		// Load Brushes
-		ReloadBrushes(m_Editor.GetSettings().BrushFile);
+		ReloadBrushes(m_EditorSettings.BrushFile);
 #endif		
 	
-		m_TemplateController.ShowPrivate = m_Editor.GetSettings().ShowScopeZeroObjects;
+		m_TemplateController.ShowPrivate = m_EditorSettings.ShowScopeZeroObjects;
 		m_TemplateController.NotifyPropertyChanged("ShowPrivate");
 
-		m_TemplateController.FavoritesToggle = m_Editor.GetSettings().ShowFavoriteObjects;
+		m_TemplateController.FavoritesToggle = m_EditorSettings.ShowFavoriteObjects;
 		m_TemplateController.NotifyPropertyChanged("FavoritesToggle");
 		
 		EditorCamera camera = m_Editor.GetCamera();
@@ -175,9 +177,7 @@ class EditorHud: ScriptView
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Sharpness", camera, "Sharpness", 0, 1));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Exposure", camera, "Exposure", 0, 3));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Smoothing", camera, "Smoothing", 0, 1));
-						
-		ShowScreenLogs(m_Editor.GetSettings().ShowScreenLogs);
-		
+								
 		// Set up toolbars based on screen size
 		int screen_w, screen_h;
 		GetScreenSize(screen_w, screen_h);
@@ -194,8 +194,8 @@ class EditorHud: ScriptView
 		RightbarWrapper.GetScreenSize(rbw_s_w, rbw_s_h);
 		
 		float bar_height = screen_h - ib_s_h - tb_s_h;
-		LeftbarWrapper.SetScreenSize(m_Editor.GetSettings().LeftBarPlacement, bar_height);
-		RightbarWrapper.SetScreenSize(m_Editor.GetSettings().RightBarPlacement, bar_height);
+		LeftbarWrapper.SetScreenSize(m_EditorSettings.LeftBarPlacement, bar_height);
+		RightbarWrapper.SetScreenSize(m_EditorSettings.RightBarPlacement, bar_height);
 		
 		// Leftbar scroll size
 		float lbs_s_w, lbs_s_h;
@@ -220,6 +220,11 @@ class EditorHud: ScriptView
 		super.Update(dt);
 		
 		if (!GetGame().IsAppActive()) {
+			m_DragWidget = null;
+			m_DragBoxDelayStart = 10;
+			m_DragBoxStartX = -1;
+			m_DragBoxStartY = -1;
+			Map.ClearFlags(WidgetFlags.IGNOREPOINTER);
 			return;
 		}
 		
@@ -297,7 +302,7 @@ class EditorHud: ScriptView
 		
 		// Dont want to toggle cursor on map 
 		if (toggle_cursor.LocalPress() && input_unlocked) {
-			if (!Map.IsVisible() && !m_Editor.IsPlayerControlled() && m_Editor.IsActive() && !(m_Dialog && EditorHud.CurrentDialog && m_Editor.GetSettings().LockCameraDuringDialogs)) {	
+			if (!Map.IsVisible() && !m_Editor.IsPlayerControlled() && m_Editor.IsActive() && !(m_Dialog && EditorHud.CurrentDialog && m_EditorSettings.LockCameraDuringDialogs)) {	
 				ToggleCursor();
 			}
 		}
@@ -531,7 +536,7 @@ class EditorHud: ScriptView
 					LeftbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
 					float LeftWidth = Math.Clamp(mouse_x + wr_col_s_w + 25, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
 					LeftbarWrapper.SetScreenSize(LeftWidth, wr_s_h);
-					m_Editor.GetSettings().LeftBarPlacement = LeftWidth;
+					m_EditorSettings.LeftBarPlacement = LeftWidth;
 					break;
 				}
 
@@ -541,7 +546,7 @@ class EditorHud: ScriptView
 					RightbarWrapper.GetScreenSize(wr_s_w, wr_s_h);
 					float RightWidth = Math.Clamp(screen_x - mouse_x + wr_col_s_w + 25, BAR_WIDTH_MINIMUM_PX, BAR_WIDTH_MAXIMUM_PX);
 					RightbarWrapper.SetScreenSize(RightWidth, wr_s_h);
-					m_Editor.GetSettings().RightBarPlacement = RightWidth;
+					m_EditorSettings.RightBarPlacement = RightWidth;
 					break;
 				}
 			}			
@@ -561,7 +566,7 @@ class EditorHud: ScriptView
 			Symbols.PLAY.Load(CameraTrackRunButton_Icon);
 		}
 		
-		int color = Ternary<int>.If(m_BrushState, m_Editor.GetSettings().SelectionColor, 0xff262729);
+		int color = Ternary<int>.If(m_BrushState, m_EditorSettings.SelectionColor, 0xff262729);
 		if (widget_under_cursor != BrushToggle) {
 			BrushToggle.SetColor(color);
 		}
@@ -569,10 +574,20 @@ class EditorHud: ScriptView
 		string speed_s = Math.Round(GetEditor().GetCamera().GetSettings().Speed).ToString();
 		CameraSpeed.SetText(speed_s);
 		
+		LoggerFrame.Show(m_EditorSettings.ShowScreenLogs);
+
+		if (m_EditorSettings.RuleOfThirds) {			
+			EditorCanvas.DrawLine(screen_x / 3, 0, screen_x / 3, screen_y, 1, COLOR_BLACK);
+			EditorCanvas.DrawLine((screen_x / 3) * 2, 0, (screen_x / 3) * 2, screen_y, 1, COLOR_BLACK);
+			
+			EditorCanvas.DrawLine(0, screen_y / 3, screen_x, screen_y / 3, 1, COLOR_BLACK);
+			EditorCanvas.DrawLine(0, (screen_y / 3) * 2, screen_x, (screen_y / 3) * 2, 1, COLOR_BLACK);
+		}	
+		
 #ifdef DIAG_DEVELOPER
 		float tbf_s_w, tbf_s_h;
 		ToolbarFrame.GetScreenSize(tbf_s_w, tbf_s_h);
-		DbgUI.Begin("Editor", m_Editor.GetSettings().LeftBarPlacement + 24, tbf_s_h + 24);
+		DbgUI.Begin("Editor", m_EditorSettings.LeftBarPlacement + 24, tbf_s_h + 24);
 		string widget_under_cursor_name = "None";
 		string focus_widget_name = "None";
 		if (widget_under_cursor) {
@@ -803,7 +818,7 @@ class EditorHud: ScriptView
 			
 			case BrushToggle: {
 				if (!m_BrushState) {
-					LinearColor c = m_Editor.GetSettings().SelectionColor;
+					LinearColor c = m_EditorSettings.SelectionColor;
 					
 					WidgetAnimator.AnimateColor(w, c.With(3, 100), 100);
 				}
@@ -940,7 +955,7 @@ class EditorHud: ScriptView
 	void ToggleCursor() 
 	{	
 		// An excellent place to do this!	
-		m_Editor.GetSettings().Save();
+		m_EditorSettings.Save();
 		m_Editor.GetCameraSettings().Save();
 		
 		ShowCursor(!GetGame().GetUIManager().IsCursorVisible());
@@ -956,17 +971,12 @@ class EditorHud: ScriptView
 			ClearCurrentTooltip();
 		}
 	}
-		
-	void ShowScreenLogs(bool state)
-	{
-		LoggerFrame.Show(state);
-	}
-		
+			
 	void CreateNotification(string text, float duration = 4.0)
 	{		
 		WidgetAnimator.CancelAnimate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y);
 		WidgetAnimator.Animate(NotificationPanel, WidgetAnimatorProperty.POSITION_Y, -24, 100);
-		NotificationPanel.SetColor(m_Editor.GetSettings().SelectionColor);
+		NotificationPanel.SetColor(m_EditorSettings.SelectionColor);
 		NotificationText.SetText(text);
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Remove(CleanupNotification);
@@ -993,24 +1003,7 @@ class EditorHud: ScriptView
 		
 		//VScrollToWidget(list_item.GetLayoutRoot());
 	}
-	
-	void ShowRuleOfThirds(bool state)
-	{
-		if (!state) {
-			EditorCanvas.Clear();
-			return;
-		}
 		
-		int x, y;
-
-		GetScreenSize(x, y);				
-		EditorCanvas.DrawLine(x / 3, 0, x / 3, y, 1, COLOR_BLACK);
-		EditorCanvas.DrawLine((x / 3) * 2, 0, (x / 3) * 2, y, 1, COLOR_BLACK);
-		
-		EditorCanvas.DrawLine(0, y / 3, x, y / 3, 1, COLOR_BLACK);
-		EditorCanvas.DrawLine(0, (y / 3) * 2, x, (y / 3) * 2, 1, COLOR_BLACK);
-	}
-	
 	bool IsObjectSelectionEnabled()
 	{
 		return m_ObjectSelectToggle;

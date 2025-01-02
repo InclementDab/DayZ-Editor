@@ -6,14 +6,14 @@ class EditorSettings: ProfileSettings
 	bool AutoSaveEnabled			= true;
 	float AutoSaveTimer 			= 240;
 	
-	#ifndef COMPONENT_SYSTEM
+#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingMultistate("ADVANCED", "HideCursorOnPlayerControl", "Hide Cursor When Controlling Player", {"NO", "YES"})]
-	#endif
+#endif
 	int HideCursorOnPlayerControl;
 
 #ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingMultistate("ADVANCED", "DrawCameraLightShadows", "Draw Camera Light Shadows", {"NO", "YES"})]
-	#endif
+#endif
 	int DrawCameraLightShadows = 0;
 
 #ifndef COMPONENT_SYSTEM	
@@ -46,6 +46,10 @@ class EditorSettings: ProfileSettings
 	// Camera Settings
 	float CameraSpeed				= 25;
 	float CameraTilt				= 0;
+	
+#ifndef COMPONENT_SYSTEM
+	[RegisterProfileSettingMultistate("ADVANCED", "RuleOfThirds", "Draw Rule of Thirds", {"NO", "YES"})]
+#endif
 	bool RuleOfThirds				= false;
 	bool AllowBelowGround 			= false;
 	
@@ -123,17 +127,17 @@ class EditorSettings: ProfileSettings
 #ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingText("PLACEMENT", "BrushFile", "Brush File")]
 #endif
-	string BrushFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "Brushes.xml");
+	string BrushFile 			= SystemPath.Combine(SystemPath.Combine(SystemPath.Saves(), "Editor"), "Brushes.xml");
 	
 #ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingText("PLACEMENT", "ProtoFile", "CE Proto File")]
 #endif
-	string ProtoFile 			= SystemPath.Combine(Editor.ROOT_DIRECTORY, "MapGroupProto.xml");
+	string ProtoFile 			= SystemPath.Combine(SystemPath.Combine(SystemPath.Saves(), "Editor"), "MapGroupProto.xml");
 	
 	#ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingText("IMPORT/EXPORT", "BackupDirectory", "Brush File")]
 #endif
-	string BackupDirectory = SystemPath.Combine(Editor.ROOT_DIRECTORY, "Backups");
+	string BackupDirectory = SystemPath.Combine(SystemPath.Combine(SystemPath.Saves(), "Editor"), "Backups");
 	
 #ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingMultistate("ADVANCED", "SelectedLogLevel", "Log Level", {"TRACE", "DEBUG", "INFO", "WARNING", "ERROR"})]
@@ -149,40 +153,6 @@ class EditorSettings: ProfileSettings
 	
 	string FileToLoad;
 
-	// Its a pseduo-controller, preferences dialogs!!
-	void PropertyChanged(string property_name)
-	{		
-		switch (property_name) {
-						
-			case "SelectedLogLevel": {
-				EditorLog.Warning("Changed log level to %1", typename.EnumToString(LogLevel, SelectedLogLevel));
-				break; 
-			}
-						
-			case "ShowScreenLogs": {
-				GetEditor().GetEditorHud().ShowScreenLogs(ShowScreenLogs);
-				break;
-			}
-			
-			case "MarkerColor": {
-				EditorObjectMap editor_objects = GetEditor().GetObjectManager().GetPlacedObjects();
-				foreach (int id, EditorObject editor_object: editor_objects) {
-					EditorObjectMarker marker = editor_object.GetMarker();
-					if (marker) {
-						//marker.Update();
-					}
-				}
-				
-				break;
-			}
-						
-			case "RuleOfThirds": {
-				GetEditor().GetEditorHud().ShowRuleOfThirds(RuleOfThirds);
-				break;
-			}
-		}
-	}
-	
 	void SetDefaults()
 	{
 		CameraSpeed					= 0.05; // 25

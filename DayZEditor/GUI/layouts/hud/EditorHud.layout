@@ -195,7 +195,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 1
      position 0 102
-     size 400 256
+     size 400 512
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -206,7 +206,7 @@ FrameWidgetClass EditorFrame {
      {
       PanelWidgetClass LeftbarFrame {
        visible 1
-       clipchildren 1
+       clipchildren 0
        ignorepointer 0
        keepsafezone 1
        color 0.1412 0.1569 0.1804 1
@@ -628,6 +628,7 @@ FrameWidgetClass EditorFrame {
          }
         }
         PanelWidgetClass LeftbarDrag {
+         clipchildren 0
          ignorepointer 0
          position -10 0
          size 12 1
@@ -649,6 +650,51 @@ FrameWidgetClass EditorFrame {
            hexactsize 1
            vexactsize 0
            style rover_sim_colorable
+          }
+          FrameWidgetClass LoggerFrame {
+           visible 1
+           ignorepointer 1
+           position 34 0
+           size 425 230
+           valign bottom_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ScrollWidgetClass LoggerScroll {
+             ignorepointer 1
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             style blank
+             {
+              WrapSpacerWidgetClass LoggerSpacer {
+               ignorepointer 1
+               size 425 10
+               halign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               scriptclass "ViewBinding"
+               Padding 0
+               Margin 0
+               "Size To Content V" 1
+               content_valign bottom
+               {
+                ScriptParamsClass {
+                 Binding_Name "EditorLogEntries"
+                }
+               }
+              }
+             }
+            }
+           }
           }
          }
         }
@@ -4294,51 +4340,6 @@ FrameWidgetClass EditorFrame {
              }
             }
            }
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-    FrameWidgetClass LoggerFrame {
-     visible 0
-     ignorepointer 1
-     position 290 21
-     size 425 230
-     valign bottom_ref
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     {
-      ScrollWidgetClass LoggerScroll {
-       ignorepointer 1
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       style blank
-       {
-        WrapSpacerWidgetClass LoggerSpacer {
-         ignorepointer 1
-         size 425 10
-         halign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scriptclass "ViewBinding"
-         Padding 0
-         Margin 0
-         "Size To Content V" 1
-         content_valign bottom
-         {
-          ScriptParamsClass {
-           Binding_Name "EditorLogEntries"
           }
          }
         }
