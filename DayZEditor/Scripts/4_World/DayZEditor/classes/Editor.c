@@ -1769,9 +1769,9 @@ class Editor: Managed
 		loot_editor_dialog.ShowDialog();
 	}
 	
-	void StartInventoryEditor(EntityAI entity)
+	void StartInventoryEditor(EntityAI entity, EditorObjectData object_data = null)
 	{
-		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity);
+		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity, object_data);
 		
 		PlayerBase player;
 		if (Class.CastTo(player, entity)) {

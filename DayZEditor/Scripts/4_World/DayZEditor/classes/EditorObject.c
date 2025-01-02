@@ -53,13 +53,7 @@ class EditorObject: EditorWorldObject
 	}
 	
 	override Object GetWorldObject() 
-	{
-		if (!m_WorldObject && m_Data) {
-			//EditorLog.Error("World Object was null! ID: %1", GetID().ToString());
-			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);
-			m_Data.WorldObject = m_WorldObject;
-		}
-		
+	{		
 		return m_WorldObject;
 	}
 	
@@ -69,12 +63,28 @@ class EditorObject: EditorWorldObject
 		m_Data = data;
 		
 		if (!m_Data.WorldObject) {
-			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);			
+			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);
 			m_Data.WorldObject = m_WorldObject;
-		}
 
-		if (!m_Data.Attachments) {
-			m_Data.Attachments = {};
+			EntityAI entity = EntityAI.Cast(m_WorldObject);
+			if (entity) {
+				foreach (int slot_id, EditorObjectData attachment: m_Data.AttachmentMap) {
+					entity.GetInventory().CreateAttachmentEx(attachment.Type, slot_id);
+				}
+
+				// After we've spawned everything in teh dze file, go back and grab stuff that mightve been spawned by OnDebugSpawn
+
+				array<EntityAI> entities = {};
+				entity.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, entities);
+				foreach (EntityAI existing_entity: entities) {
+					InventoryLocation il_loc = new InventoryLocation();
+					existing_entity.GetInventory().GetCurrentInventoryLocation(il_loc);
+					int slot_id2 = il_loc.GetSlot();
+					if (!m_Data.AttachmentMap[slot_id2]) {
+						m_Data.AttachmentMap[slot_id2] = EditorObjectData.Create(existing_entity);
+					}
+				}
+			}
 		}
 		
 		m_WorldObject = m_Data.WorldObject;
@@ -93,14 +103,6 @@ class EditorObject: EditorWorldObject
 		
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
-		}
-		
-		// Version 2
-		EntityAI entity = EntityAI.Cast(m_WorldObject);
-		if (entity) {
-			foreach (int slot_id, EditorObjectData attachment: data.AttachmentMap) {
-				entity.GetInventory().CreateAttachmentEx(attachment.Type, slot_id);
-			}
 		}
 				
 		vector clip_info[2];
