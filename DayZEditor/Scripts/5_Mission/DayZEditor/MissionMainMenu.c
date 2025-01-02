@@ -28,4 +28,13 @@ modded class MissionMainMenu
 		
 		GetOnInputDeviceChanged().Insert(OnInputDeviceChanged);
 	}
+	
+	override void OnMissionFinish()
+	{
+		super.OnMissionFinish();
+		
+		if (GetHive()) {
+			DestroyHive();
+		}
+	}
 }
