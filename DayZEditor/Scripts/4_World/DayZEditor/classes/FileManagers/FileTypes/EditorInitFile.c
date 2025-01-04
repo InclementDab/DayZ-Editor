@@ -55,23 +55,14 @@ class EditorInitFile : EditorFileType
 					scale = temp.ToFloat();
 				}
 
-				// [11/16/24] dab: bugfix for inconsistent DayZ crap. the other end of this bugfix is in EditorObject.Update
 				string type = tokens[1];
 				vector position = tokens[3].ToVector();
 				vector orientation = tokens[5].ToVector();
-
-				if (type.Contains(".p3d"))
-				{
-					// Because DayZ is inconsistent, we need to have these checks
-					Object p3d_test_object = GetGame().CreateStaticObjectUsingP3D(type, vector.Zero, vector.Zero, 1.0, true);
-					if (p3d_test_object)
-					{
-						orientation = orientation * Math.RAD2DEG;
-						position = position + p3d_test_object.GetBoundingCenter();
-						GetGame().ObjectDelete(p3d_test_object);
-					}
+				if (type.Contains(".p3d")) {
+					vector center = GetP3dBoundingCenter(type);
+					position = position + center;
+					orientation = orientation * Math.RAD2DEG;
 				}
-
 
 				save_data.EditorObjects.Insert(EditorObjectData.Create(type, position, orientation, scale, EFE_DEFAULT));
 			}
@@ -105,6 +96,13 @@ class EditorInitFile : EditorFileType
 		foreach (EditorObjectData editor_object: data.EditorObjects) {
 			string itype = editor_object.Type;
 			itype.Replace("\\", "\/");
+			
+			if (itype.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(itype);
+				editor_object.Position = editor_object.Position - center;
+				editor_object.Orientation = editor_object.Orientation * Math.DEG2RAD;
+			}
+			
 			spawn_method.Insert(string.Format("SpawnObject(\"%1\", \"%2\", \"%3\", %4);", itype, editor_object.Position.ToString(false), editor_object.Orientation.ToString(false), editor_object.Scale));
 		}
 

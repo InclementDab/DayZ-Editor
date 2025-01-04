@@ -275,12 +275,7 @@ class EditorObject: EditorWorldObject
 		if (IsLocked()) return;
 		GetWorldObject().SetPosition(pos);
 
-		if (IsStatic()) {
-			m_Data.Position = pos - m_WorldObject.GetBoundingCenter();
-		} else {
-			m_Data.Position = pos;
-		}
-
+		m_Data.Position = pos;
 		// idk about this one
 		m_Data.BottomCenter = GetBottomCenter();
 
@@ -299,12 +294,8 @@ class EditorObject: EditorWorldObject
 		GetWorldObject().SetOrientation(orientation);
 		GetWorldObject().SetScale(m_Data.Scale);
 
-		if (IsStatic()) {
-			m_Data.Orientation = orientation * Math.DEG2RAD;
-		} else {
-			m_Data.Orientation = orientation;
-		}
-		
+		m_Data.Orientation = orientation;
+				
 		Update();
 	}
 	
@@ -321,13 +312,8 @@ class EditorObject: EditorWorldObject
 		GetWorldObject().Update();
 		
 		vector orientation = Math3D.MatrixToAngles(mat);		
-		if (IsStatic()) {
-			m_Data.Position = mat[3] - m_WorldObject.GetBoundingCenter();
-			m_Data.Orientation = orientation * Math.DEG2RAD;
-		} else {
-			m_Data.Position = mat[3];
-			m_Data.Orientation = orientation;
-		}
+		m_Data.Position = mat[3];
+		m_Data.Orientation = orientation;
 		
 		m_Data.Scale = (mat[0].Length() + mat[1].Length() + mat[2].Length()) / 3;
 		m_Data.BottomCenter = GetBottomCenter();

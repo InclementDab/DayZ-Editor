@@ -1,3 +1,15 @@
+static vector GetP3dBoundingCenter(string p3d)
+{
+	Object object = GetGame().CreateStaticObjectUsingP3D(p3d, vector.Zero, vector.Zero, 1.0);
+	if (!object) {
+		return vector.Zero;
+	}
+
+	vector center = object.GetBoundingCenter();
+	GetGame().ObjectDelete(object);
+	return center;
+}
+
 class EditorObjectSpawnerFile : EditorFileType
 {
 	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
@@ -16,6 +28,17 @@ class EditorObjectSpawnerFile : EditorFileType
 			spawn_object.ypr[2] = object_data.Orientation[2];
 			spawn_object.scale = object_data.Scale;
 			spawn_object.enableCEPersistency = false;
+
+			if (spawn_object.name.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(spawn_object.name);
+				spawn_object.pos[0] = object_data.Position[0] - center[0];
+				spawn_object.pos[1] = object_data.Position[1] - center[1];
+				spawn_object.pos[2] = object_data.Position[2] - center[2];
+				spawn_object.ypr[0] = object_data.Orientation[0] * Math.DEG2RAD;
+				spawn_object.ypr[1] = object_data.Orientation[1] * Math.DEG2RAD;
+				spawn_object.ypr[2] = object_data.Orientation[2] * Math.DEG2RAD;
+			}
+
 			export_data.Objects.Insert(spawn_object);
 		}
 
@@ -34,18 +57,15 @@ class EditorObjectSpawnerFile : EditorFileType
 			{
 				scene_object.scale = 1;
 			}
+			
 			EditorObjectData dta = EditorObjectData.Create(scene_object.name, Vector(scene_object.pos[0], scene_object.pos[1], scene_object.pos[2]), Vector(scene_object.ypr[0], scene_object.ypr[1], scene_object.ypr[2]), scene_object.scale, EFE_DEFAULT);
-			if (dta.Type.Contains(".p3d"))
-			{
-				// Because DayZ is inconsistent, we need to have these checks
-				Object p3d_test_object = GetGame().CreateStaticObjectUsingP3D(dta.Type, vector.Zero, vector.Zero, 1.0, true);
-				if (p3d_test_object)
-				{
-					dta.Orientation = dta.Orientation * Math.RAD2DEG;
-					dta.Position = dta.Position + p3d_test_object.GetBoundingCenter();
-					GetGame().ObjectDelete(p3d_test_object);
-				}
+			
+			if (dta.Type.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(dta.Type);
+				dta.Position = dta.Position + center;
+				dta.Orientation = dta.Orientation * Math.RAD2DEG;
 			}
+			
 			save_data.EditorObjects.Insert(dta);
 		}
 

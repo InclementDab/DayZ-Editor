@@ -39,6 +39,8 @@ class EditorDZEFile: EditorFileType
 			}
 			
 			EditorObjectData dta = EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags);
+			
+			
 			bug_fix_save_data.EditorObjects.Insert(dta);
 		}
 			
@@ -92,19 +94,15 @@ class EditorDZEFile: EditorFileType
 			save_data = LoadJsonFile(file);
 		}
 		
-		// [11/16/24] dab: bugfix for inconsistent DayZ crap. the other end of this bugfix is in EditorObject.Update
-		foreach (EditorObjectData placed_object_data: save_data.EditorObjects) {
-			if (placed_object_data.Type.Contains(".p3d")) {
-				// Because DayZ is inconsistent, we need to have these checks
-				Object p3d_test_object = GetGame().CreateStaticObjectUsingP3D(placed_object_data.Type, vector.Zero, vector.Zero, 1.0, true);
-				if (p3d_test_object) {
-					placed_object_data.Orientation = placed_object_data.Orientation * Math.RAD2DEG;
-					placed_object_data.Position = placed_object_data.Position + p3d_test_object.GetBoundingCenter();
-					GetGame().ObjectDelete(p3d_test_object);
-				}
+		foreach (EditorObjectData object_data: save_data.EditorObjects) {
+			if (object_data.Type.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(object_data.Type);
+				object_data.Position = object_data.Position + center;
+				object_data.Orientation = object_data.Orientation * Math.RAD2DEG;
 			}
 		}
-				
+		
+						
 		return save_data;
 	}
 	
@@ -112,6 +110,15 @@ class EditorDZEFile: EditorFileType
 	{		
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
+		}
+		
+		// sigh
+		foreach (EditorObjectData object_data: data.EditorObjects) {
+			if (object_data.Type.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(object_data.Type);
+				object_data.Position = object_data.Position - center;
+				object_data.Orientation = object_data.Orientation * Math.DEG2RAD;
+			}
 		}
 		
 		//if (settings.Binarized) {
