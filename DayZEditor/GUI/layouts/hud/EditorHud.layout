@@ -3376,6 +3376,54 @@ FrameWidgetClass EditorFrame {
                 }
                }
               }
+              PanelWidgetClass DeleteButton {
+               clipchildren 1
+               color 0.149 0.1529 0.1608 1
+               position 0 0
+               size 32 1
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
+               style rover_sim_colorable
+               "no focus" 1
+               {
+                ImageWidgetClass DeleteButton_Icon {
+                 clipchildren 1
+                 inheritalpha 0
+                 ignorepointer 1
+                 position 0 0
+                 size 24 24
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 1
+                 priority 1
+                 scriptclass "SymbolHandler"
+                 image0 ""
+                 mode blend
+                 "src alpha" 1
+                 "clamp mode" clamp
+                 filter 1
+                 {
+                  ScriptParamsClass {
+                   Symbol_Name "trash_can"
+                   Symbol_Size 1
+                  }
+                 }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorDeleteBrushCommand"
+                }
+               }
+              }
               PanelWidgetClass UnlockAllButton {
                clipchildren 1
                color 0.149 0.1529 0.1608 1

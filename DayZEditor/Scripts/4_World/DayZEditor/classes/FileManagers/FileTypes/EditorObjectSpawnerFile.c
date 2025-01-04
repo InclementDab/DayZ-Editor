@@ -18,8 +18,14 @@ class EditorObjectSpawnerFile : EditorFileType
 		ObjectSpawnerJson export_data = new ObjectSpawnerJson();
 		export_data.Objects = { };
 		foreach (EditorObjectData object_data: data.EditorObjects) {
-			ITEM_SpawnerObject spawn_object = new ITEM_SpawnerObject();
-			spawn_object.name = object_data.Type;
+			ITEM_SpawnerObject spawn_object = new ITEM_SpawnerObject();			
+			string name = object_data.Type;
+			// sheesh, DayZ is a lil crazy @ObjectSpawner.c:70
+			if (name.Contains("dz")) {				
+				name.Replace("dz", "DZ");
+			}
+			
+			spawn_object.name = name;
 			spawn_object.pos[0] = object_data.Position[0];
 			spawn_object.pos[1] = object_data.Position[1];
 			spawn_object.pos[2] = object_data.Position[2];

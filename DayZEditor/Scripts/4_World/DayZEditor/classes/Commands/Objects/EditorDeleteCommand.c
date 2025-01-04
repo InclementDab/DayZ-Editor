@@ -1,3 +1,31 @@
+[RegisterEditorCommand(EditorDeleteBrushCommand)]
+class EditorDeleteBrushCommand: EditorCommand
+{
+	override bool Execute(Class sender, CommandArgs args) 
+	{
+		super.Execute(sender, args);
+
+		if (m_Editor.GetEditorHud().GetBrushState() && m_Editor.Brush.IsInherited(DeleteBrush)) {
+			m_Editor.GetEditorHud().SetBrushState(0);
+		} else {
+			m_Editor.GetEditorHud().SetBrushByTypename(DeleteBrush);
+			m_Editor.GetEditorHud().SetBrushState(1);
+		}
+		
+		return true;	
+	}
+		
+	override string GetName() 
+	{
+		return "#STR_EDITOR_DELETE";
+	}
+		
+	override Symbols GetSymbol()
+	{
+		return Symbols.TRASH_CAN;
+	}
+}
+
 class EditorDeleteCommand: EditorCommand
 {
 	override bool Execute(Class sender, CommandArgs args) 
