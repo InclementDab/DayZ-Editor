@@ -101,6 +101,7 @@ class EditorFileDialog: EditorModal
 	protected ref ScriptCaller m_ScriptCallback;
 	protected ref EditorFileType m_FileType;
 	protected ref EditorMessageBox m_EditorMessageBox;
+	protected string m_DefaultFile;
 	
 	Widget ExtraSetting;
 	CheckBoxWidget ExtraSettingCheckBox;
@@ -109,7 +110,7 @@ class EditorFileDialog: EditorModal
 	ButtonWidget SaveButton, CancelButton, ExplorerBack, ExplorerFwd, TitleClose, RefreshButton;
 	ImageWidget ExplorerBackImage, ExplorerFwdImage;
 
-	void EditorFileDialog(typename file_type, ScriptCaller on_file_selected, eDialogMode dialog_mode, eDialogFlags dialog_flags)
+	void EditorFileDialog(typename file_type, ScriptCaller on_file_selected, eDialogMode dialog_mode, eDialogFlags dialog_flags, string default_value)
 	{
 		m_TemplateController = EditorFileDialogController.Cast(m_Controller);
 		m_FileType = EditorFileType.Cast(file_type.Spawn());
@@ -117,11 +118,18 @@ class EditorFileDialog: EditorModal
 		m_DialogMode = dialog_mode;
 		m_DialogFlags = dialog_flags;
 		m_DialogSettings = m_FileType.GetExportSettings();
+		m_DefaultFile = default_value;
 
 		if (!file_type.IsInherited(EditorFileType) || !m_FileType) {
 			Error("invalid file_type parameter");
 			Delete();
 			return;
+		}
+		
+		if (m_DefaultFile && !SystemPath.IsPathRooted(m_DefaultFile)) {
+			//m_DefaultFile = SystemPath.Combine(Editor.ROOT_DIRECTORY, m_DefaultFile);
+			array<string> files = { SystemPath.Saves(), "Editor", m_DefaultFile };
+			m_DefaultFile = SystemPath.Combine(files); // careful not using constants
 		}
 
 		foreach (string directory: AVAILABLE_DIRECTORIES) {
@@ -169,6 +177,20 @@ class EditorFileDialog: EditorModal
 		m_TemplateController.Directories[0].GetLayoutRoot().SetColor(0xff007acc);
 
 		SetDirectory(SystemPath.Combine(SystemPath.Saves(), "Editor"));
+		
+		if (m_DefaultFile) {
+			string extension = File.GetExtension(m_DefaultFile);
+			string current_file_with_extension = m_DefaultFile;
+			current_file_with_extension.Replace(extension, m_FileType.GetExtension());
+			m_CurrentFile = current_file_with_extension;
+			FileNameBox.SetText(File.GetName(m_CurrentFile));
+
+			for (int i = 0; i < m_TemplateController.Files.Count(); i++) {
+				if (m_TemplateController.Files[i].GetFile() == m_CurrentFile) {
+					m_TemplateController.Files[i].GetLayoutRoot().SetColor(0xff007acc);
+				}
+			}
+		}
 	}
 
 	override void Update(float dt)

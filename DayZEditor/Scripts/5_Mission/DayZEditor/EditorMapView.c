@@ -152,7 +152,7 @@ class EditorMapView: ScriptView
 			}
 
 			case LoadButton: {
-				m_LoadFileDialog = new EditorFileDialog(EditorDZEFile, ScriptCaller.Create(OnFileSelected), eDialogMode.OPEN, eDialogFlags.ALLOW_DOUBLE_CLICK);
+				m_LoadFileDialog = new EditorFileDialog(EditorDZEFile, ScriptCaller.Create(OnFileSelected), eDialogMode.OPEN, eDialogFlags.ALLOW_DOUBLE_CLICK, string.Empty);
 				break;
 			}
 

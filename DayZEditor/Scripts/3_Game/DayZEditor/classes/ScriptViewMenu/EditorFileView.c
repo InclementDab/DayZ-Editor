@@ -67,6 +67,11 @@ class EditorFileView: ScriptView
 	{
 		return m_IsDirectory;
 	}
+	
+	string GetFile()
+	{
+		return m_File;
+	}
 
 	override string GetLayoutFile()
 	{

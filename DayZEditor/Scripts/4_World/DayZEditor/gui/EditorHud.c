@@ -1136,9 +1136,9 @@ class EditorHud: ScriptView
 		}	
 	}
 		
-	ScriptView ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen, eDialogMode dialog_mode, eDialogFlags dialog_flags = 0)
+	ScriptView ShowFileDialog(string title, typename file_type, ScriptCaller on_file_chosen, eDialogMode dialog_mode, eDialogFlags dialog_flags = 0, string default_file = string.Empty)
 	{
-		EditorFileDialog dialog = new EditorFileDialog(file_type, on_file_chosen, dialog_mode, dialog_flags);
+		EditorFileDialog dialog = new EditorFileDialog(file_type, on_file_chosen, dialog_mode, dialog_flags, default_file);
 		m_Dialog = dialog;
 		
 		GetGame().GetUIManager().ShowCursor(true);

@@ -6,7 +6,7 @@ class EditorExportCommandBase: EditorCommand
 	{
 		super.Execute(sender, args);
 		
-		GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnFileSelected), eDialogMode.EXPORT, eDialogFlags.WARN_ON_OVERWRITE);
+		GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnFileSelected), eDialogMode.EXPORT, eDialogFlags.WARN_ON_OVERWRITE, GetEditor().GetSaveFile());
 		
 		return true;
 	}

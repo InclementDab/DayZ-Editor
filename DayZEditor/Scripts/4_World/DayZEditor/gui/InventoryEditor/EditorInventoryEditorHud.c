@@ -95,12 +95,12 @@
 	
 	void ImportExecute(ButtonCommandArgs args)
 	{
-		m_FileDialog = new EditorFileDialog(EditorSpawnPresetFile, ScriptCaller.Create(OnImportSelected), eDialogMode.IMPORT, eDialogFlags.ALLOW_DOUBLE_CLICK);
+		m_FileDialog = new EditorFileDialog(EditorSpawnPresetFile, ScriptCaller.Create(OnImportSelected), eDialogMode.IMPORT, eDialogFlags.ALLOW_DOUBLE_CLICK, string.Empty);
 	}
 	
 	void ExportExecute(ButtonCommandArgs args)
 	{
-		m_FileDialog = new EditorFileDialog(EditorSpawnPresetFile, ScriptCaller.Create(OnExportSelected), eDialogMode.EXPORT, eDialogFlags.WARN_ON_OVERWRITE);
+		m_FileDialog = new EditorFileDialog(EditorSpawnPresetFile, ScriptCaller.Create(OnExportSelected), eDialogMode.EXPORT, eDialogFlags.WARN_ON_OVERWRITE, string.Empty);
 	}
 
 	protected void OnImportSelected(string file)

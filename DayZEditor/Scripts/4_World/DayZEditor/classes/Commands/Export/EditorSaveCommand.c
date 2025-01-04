@@ -5,7 +5,7 @@ class EditorSaveCommand: EditorExportCommandBase
 		//super.Execute(sender, args);
 		string file_name = GetEditor().GetSaveFile();
 		if (file_name == string.Empty) {			
-			GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnSaveFileSelected), eDialogMode.SAVE, eDialogFlags.WARN_ON_OVERWRITE);
+			GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnSaveFileSelected), eDialogMode.SAVE, eDialogFlags.WARN_ON_OVERWRITE, GetEditor().GetSaveFile());
 		} else {
 			OnSaveFileSelected(file_name, 0);
 		}

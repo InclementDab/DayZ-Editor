@@ -1886,11 +1886,15 @@ class Editor: Managed
 
 	EditorHud ReloadHud() 
 	{
+#ifdef DIAG_DEVELOPER
 		delete m_EditorHud;
 		
 		m_EditorHud = new EditorHud(this);
 		m_EditorHudController = m_EditorHud.GetTemplateController();
 		return m_EditorHud;
+#else
+		return m_EditorHud;
+#endif
 	}
 
 	void InsertAction(EditorAction action) 
