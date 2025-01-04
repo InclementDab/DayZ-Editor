@@ -3,6 +3,7 @@ class EditorEditorMenu: EditorMenu
 	void EditorEditorMenu()
 	{
 		AddMenuButton(m_Editor.CommandManager[EditorReloadBrushesCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorFixStaticFileCommand]);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorEnvironmentControlCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorOptionsCommand]);
