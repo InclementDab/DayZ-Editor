@@ -20,94 +20,29 @@ class EditorStatisticsEntryView : ScriptView
 	}
 }
 
-class Payload_EditorLogin : Managed
-{
-	string SteamId;
-	string SteamUsername;
-	string DzGuid;
-	int PlayTime;
-	int ItemsPlaced;
-	int ItemsDeleted;
-	int CamerasPlaced;
-	int CamerasRode;
-	float DistanceFlown;
-	int CharactersControlled;
-	int CharactersEdited;
-}
-
-class Payload_ServerShowcase : Managed
-{
-	string Name;
-	string ImageUrl;
-	string RedirectUrl;
-	string Identifier;
-}
-
-class Payload_ServerShowcaseReport : Managed
-{
-	string Identifier;
-	string Reporter;
-}
-
-class Payload_EditorLoginResponse : Managed
-{
-	string Message;
-	int CurrentLoginCount;
-	string Token;
-	ref array<ref Payload_ServerShowcase> Showcases = { };
-}
-
-class EditorLoginCallback : RestCallbackBase
-{
-	protected ref ScriptCaller m_OnPayloadSuccess;
-
-	void EditorLoginCallback(ScriptCaller on_payload_success)
-	{
-		m_OnPayloadSuccess = on_payload_success;
-	}
-
-	override void OnSuccess(string data, int dataSize)
-	{
-		super.OnSuccess(data, dataSize);
-
-		Payload_EditorLoginResponse response = new Payload_EditorLoginResponse();
-		string error;
-		if (!JsonFileLoader<Payload_EditorLoginResponse>.LoadData(data, response, error))
-		{
-			Error(error);
-			return;
-		}
-
-		if (m_OnPayloadSuccess)
-		{
-			m_OnPayloadSuccess.Invoke(response);
-		}
-	}
-}
-
 class EditorMainMenu: ScriptViewMenu
 {
 	protected EditorMainMenuController m_TemplateController;
 	protected float m_MotionSicknessDt, m_ShowcaseTime;
-	protected ref Payload_EditorLoginResponse m_PayloadLoginInfoCache;
 	protected int m_ShowcaseIndex, m_IsShowcaseActive;
 	protected ref array<int> m_ShowcasesReported = { };
 	protected ref array<int> m_ValidShowcaseSlots = {}; // extra check in case an image fails to load
 
 	protected float m_SoundVolume = 1.0, m_MusicVolume = 1.0;
+	protected bool m_GlobalStatsVisible;
 	
-	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame;
+	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame, GlobeFrame;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
 	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase;
 	TextWidget VersionText, EditorText, StatHeaderText;
 	RichTextWidget ServerShowcaseBackupText;
 	ScrollWidget MapScroller;
-	ImageWidget SoundButton, MusicButton;
+	ImageWidget SoundButton, MusicButton, GlobeButton;
 
 	void EditorMainMenu()
 	{
 		// Slow rollout
-		m_IsShowcaseActive = (Math.RandomInt(0, 4) == 0);
+		m_IsShowcaseActive = (Math.RandomInt(0, 2) == 0);
 
 #ifdef DIAG_DEVELOPER
 		m_IsShowcaseActive = 1; // fast rollout
@@ -137,29 +72,6 @@ class EditorMainMenu: ScriptViewMenu
 		VersionText.SetText(string.Format("#main_menu_version %1", version));
 		EditorText.SetText(string.Format("#STR_EDITOR_MAIN_MENU_VERSION %1, created by InclementDab", Editor.Version));
 
-		// Update global login counter
-		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
-		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
-		string username = GetGame().GetUserManager().GetSelectedUser().GetName();
-		Payload_EditorLogin login_payload = new Payload_EditorLogin();
-		login_payload.SteamId = uid;
-		login_payload.SteamUsername = username;
-		login_payload.PlayTime = statistics.EditorPlayTime;
-		login_payload.ItemsPlaced = statistics.EditorPlacedObjects;
-		login_payload.ItemsDeleted = statistics.EditorRemovedObjects;
-		login_payload.CamerasPlaced = statistics.EditorPlacedCameraTracks;
-		login_payload.CamerasRode = statistics.EditorCameraTracksRidden;
-		login_payload.DistanceFlown = statistics.DistanceFlown;
-		login_payload.CharactersControlled = statistics.CharactersControlled;
-		login_payload.CharactersEdited = statistics.CharactersEdited;
-
-		string payload, error;
-		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
-			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
-			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
-			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
-		}
-
 		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));
 		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase_request' in Discord\nClick to join.");
 		
@@ -173,65 +85,95 @@ class EditorMainMenu: ScriptViewMenu
 		if (m_MusicVolume <= 0.0) {
 			Symbols.MUSIC_SLASH.Load(MusicButton);
 		}
+				
+		Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
+		if (login_cache) {
+			SetStatisticsMode(m_GlobalStatsVisible);
+	
+			string cache_folder = SystemPath.Saves("EditorCache");
+			MakeDirectory(cache_folder);
+			string img_folder = SystemPath.Combine(cache_folder, "img");
+			MakeDirectory(img_folder);
+			if (m_IsShowcaseActive && login_cache.Showcases.Count()) {
+				// Reesize
+				m_ValidShowcaseSlots.Resize(login_cache.Showcases.Count());
+				
+				for (int j = 0; j < login_cache.Showcases.Count(); j++) {
+					Payload_ServerShowcase showcase = login_cache.Showcases[j];
+					string file_name = string.Format("%1.dds", showcase.Name);
+					RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
+					image_ctx.SetHeader("application/octet-stream");
+					image_ctx.FILE(new RestCallbackBase(), "", file_name);
+	
+					string dst_file = SystemPath.Combine(img_folder, file_name);
+					string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
+					if (!FileExist(src_file)) {
+						src_file = SystemPath.Saves(file_name);
+					}
+	
+					if (FileExist(src_file)) {
+						CopyFile(src_file, dst_file);
+						DeleteFile(src_file);
+		 			}
+	
+					m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
+				}
+	
+				m_ShowcaseIndex = 0;
+				
+				if (m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+					ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+					ServerShowcaseImage.Show(true);
+				}
+			}
+		}
 	}
 
-	protected void OnLoginResponse(Payload_EditorLoginResponse response)
+	protected void SetStatisticsMode(bool global)
 	{
-		m_PayloadLoginInfoCache = response;
-
+		if (!GetDayZGame().LoginCache) {
+			global = false;
+			GlobeFrame.Show(false);
+		} else {
+			GlobeFrame.Show(true);
+		}
+		
+		m_GlobalStatsVisible = global;
+		
+		if (m_GlobalStatsVisible) {
+			Symbols.GLOBE.Load(GlobeButton);
+		} else {
+			Symbols.USER.Load(GlobeButton);
+		}
+		
 		// Get statistics
 		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 		TimeSpan time = statistics.EditorPlayTime;
 
 		string placed = statistics.EditorPlacedObjects.ToString();
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Placed Objects", placed));
-
 		string removed = statistics.EditorRemovedObjects.ToString();
+		string controlled = statistics.CharactersControlled.ToString();
+		string edited = statistics.CharactersEdited.ToString();
+		if (global) {
+			placed = GetDayZGame().LoginCache.GlobalItemsPlaced;
+			removed = GetDayZGame().LoginCache.GlobalItemsDeleted;
+			controlled = GetDayZGame().LoginCache.GlobalCharactersControlled;
+			edited = GetDayZGame().LoginCache.GlobalCharactersEdited;
+		}
+		
+		m_TemplateController.StatisticsEntries.Clear();
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Placed Objects", placed));
 		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Removed Objects", removed));
 
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Distance Travelled", string.Format("%1km", statistics.DistanceFlown / 1000)));
-		string controlled = statistics.CharactersControlled.ToString();
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Controlled", controlled));
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Time Spent Editing", time.Format()));
-
-		string cache_folder = SystemPath.Saves("EditorCache");
-		MakeDirectory(cache_folder);
-		string img_folder = SystemPath.Combine(cache_folder, "img");
-		MakeDirectory(img_folder);
-		if (m_IsShowcaseActive && response.Showcases.Count()) {
-			// Reesize
-			m_ValidShowcaseSlots.Resize(response.Showcases.Count());
-			
-			for (int i = 0; i < response.Showcases.Count(); i++) {
-				Payload_ServerShowcase showcase = response.Showcases[i];
-				string file_name = string.Format("%1.dds", showcase.Name);
-				RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
-				image_ctx.SetHeader("application/octet-stream");
-				image_ctx.FILE(new RestCallbackBase(), "", file_name);
-
-				string dst_file = SystemPath.Combine(img_folder, file_name);
-				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
-				if (!FileExist(src_file)) {
-					src_file = SystemPath.Saves(file_name);
-				}
-
-				if (FileExist(src_file)) {
-					CopyFile(src_file, dst_file);
-					DeleteFile(src_file);
-				}
-
-				m_ValidShowcaseSlots[i] = ServerShowcaseImage.LoadImageFile(i, dst_file);
-			}
-
-			m_ShowcaseIndex = 0;
-			
-			if (m_ValidShowcaseSlots[m_ShowcaseIndex]) {
-				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-				ServerShowcaseImage.Show(true);
-			}
+		if (!global) {
+			m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Distance Travelled", string.Format("%1km", statistics.DistanceFlown / 1000)));
 		}
+		
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Controlled", controlled));
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Edited", edited));
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Time Spent Editing", time.Format()));
 	}
-
+	
 	override void Update(float dt)
 	{
 		super.Update(dt);
@@ -254,9 +196,10 @@ class EditorMainMenu: ScriptViewMenu
 		GetMousePos(mouse_x, mouse_y);
 		GetScreenSize(screen_x, screen_y);
 		
-		if (m_IsShowcaseActive && m_PayloadLoginInfoCache && GetWidgetUnderCursor() != ServerShowcase) {
+		Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
+		if (m_IsShowcaseActive && login_cache && GetWidgetUnderCursor() != ServerShowcase) {
 			m_ShowcaseTime += dt;
-			auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
+			auto showcase = login_cache.Showcases[m_ShowcaseIndex];
 			if (showcase && m_ShowcaseTime > 2.0 && m_ShowcasesReported.Find(m_ShowcaseIndex) == -1 && m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
 				string payload, error;
 				Payload_ServerShowcaseReport report_payload = new Payload_ServerShowcaseReport();
@@ -272,7 +215,7 @@ class EditorMainMenu: ScriptViewMenu
 			}
 
 			if (showcase && m_ShowcaseTime > 10.0) {
-				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, login_cache.Showcases.Count());
 				
 				if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
 					ServerShowcaseImage.SetImage(m_ShowcaseIndex);
@@ -342,8 +285,9 @@ class EditorMainMenu: ScriptViewMenu
 
 			case ServerShowcase: {
 				ServerShowcaseOutline.SetColor(EditorColors.BLUE);
-				if (m_IsShowcaseActive && m_PayloadLoginInfoCache && m_PayloadLoginInfoCache.Showcases.IsValidIndex(m_ShowcaseIndex)) {
-					auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
+				Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
+				if (m_IsShowcaseActive && login_cache && login_cache.Showcases.IsValidIndex(m_ShowcaseIndex)) {
+					auto showcase = login_cache.Showcases[m_ShowcaseIndex];
 					GetDayZGame().CreateDelayedTooltip(w, showcase.RedirectUrl, TooltipPosition.TOP_RIGHT);
 				} else {
 					GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
@@ -400,11 +344,12 @@ class EditorMainMenu: ScriptViewMenu
 		if (button != 0) {
 			return super.OnMouseButtonUp(w, x, y, button);
 		}
-
+		
+		Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
 		switch (w) {
 			case ServerShowcase: {
-				if (m_IsShowcaseActive && m_PayloadLoginInfoCache) {
-					auto showcase = m_PayloadLoginInfoCache.Showcases[m_ShowcaseIndex];
+				if (m_IsShowcaseActive && login_cache) {
+					auto showcase = login_cache.Showcases[m_ShowcaseIndex];
 					if (showcase) {
 						GetGame().OpenURL(showcase.RedirectUrl);
 					}
@@ -443,6 +388,11 @@ class EditorMainMenu: ScriptViewMenu
 				
 				break;
 			}
+			
+			case GlobeButton: {
+				SetStatisticsMode(!m_GlobalStatsVisible);
+				break;
+			}
 		}
 
 		return super.OnMouseButtonUp(w, x, y, button);
@@ -454,66 +404,60 @@ class EditorMainMenu: ScriptViewMenu
 		{
 			return super.OnClick(w, x, y, button);
 		}
+		
+		Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
 
-		switch (w)
-		{
-			case ExitButton:
-				{
-					ShowDialog("#main_menu_exit", "#main_menu_exit_desc", IDC_MAIN_QUIT, DBT_YESNO, DBB_YES, DMT_QUESTION);
-					break;
-				}
+		switch (w) {
+			case ExitButton: {
+				ShowDialog("#main_menu_exit", "#main_menu_exit_desc", IDC_MAIN_QUIT, DBT_YESNO, DBB_YES, DMT_QUESTION);
+				break;
+			}
 
-			case SettingButton:
-				{
-					EnterChildMenu(MENU_OPTIONS);
-					break;
-				}
+			case SettingButton: {
+				EnterChildMenu(MENU_OPTIONS);
+				break;
+			}
 
-			case DiscordButton:
-				{
-					GetGame().OpenURL("https:\/\/discord.gg\/dayz-editor");
-					break;
-				}
+			case DiscordButton: {
+				GetGame().OpenURL("https:\/\/discord.gg\/dayz-editor");
+				break;
+			}
 
-			case WikiButton:
-				{
-					GetGame().OpenURL("https:\/\/github.com\/InclementDab\/DayZ-Editor");
-					break;
-				}
+			case WikiButton: {
+				GetGame().OpenURL("https:\/\/github.com\/InclementDab\/DayZ-Editor");
+				break;
+			}
 
-			case TwitterButton:
-				{
-					GetGame().OpenURL("https:\/\/twitter.com\/InclementDab");
-					break;
-				}
+			case TwitterButton: {
+				GetGame().OpenURL("https:\/\/twitter.com\/InclementDab");
+				break;
+			}
 
-			case NextServerShowcase:
-				{
-					m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
-					if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
-						ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-						ServerShowcaseImage.Show(true);
-						m_ShowcaseTime = 0;
-					} else {
-						ServerShowcaseImage.Show(false);
-					}
-				
-					break;
+			case NextServerShowcase: {
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex + 1, 0, login_cache.Showcases.Count());
+				if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+					ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+					ServerShowcaseImage.Show(true);
+					m_ShowcaseTime = 0;
+				} else {
+					ServerShowcaseImage.Show(false);
 				}
+			
+				break;
+			}
 
-			case PrevServerShowcase:
-				{
-					m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex - 1, 0, m_PayloadLoginInfoCache.Showcases.Count());
-					if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
-						ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-						ServerShowcaseImage.Show(true);
-						m_ShowcaseTime = 0;
-					} else {
-						ServerShowcaseImage.Show(false);
-					}
-				
-					break;
+			case PrevServerShowcase: {
+				m_ShowcaseIndex = Math.Rollover(m_ShowcaseIndex - 1, 0, login_cache.Showcases.Count());
+				if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+					ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+					ServerShowcaseImage.Show(true);
+					m_ShowcaseTime = 0;
+				} else {
+					ServerShowcaseImage.Show(false);
 				}
+			
+				break;
+			}
 		}
 
 		return super.OnClick(w, x, y, button);
@@ -523,15 +467,13 @@ class EditorMainMenu: ScriptViewMenu
 	{
 		switch (code)
 		{
-			case IDC_MAIN_QUIT:
-				{
-					if (result == 2)
-					{
-						GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.RequestExit, IDC_MAIN_QUIT);
-					}
-
-					break;
+			case IDC_MAIN_QUIT: {
+				if (result == 2) {
+					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.RequestExit, IDC_MAIN_QUIT);
 				}
+
+				break;
+			}
 		}
 
 		return super.OnModalResult(w, x, y, code, result);

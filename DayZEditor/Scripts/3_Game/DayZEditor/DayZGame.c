@@ -2,6 +2,12 @@ modded class DayZGame
 {
 	protected ref ScriptView m_CurrentTooltip;
 	
+#ifdef DIAG_DEVELOPER
+	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:5000\/";
+#else
+	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc02.pylex.xyz:8612\/";
+#endif
+	
 	// args: string
 	ref ScriptInvoker OnProgressReport;
 
@@ -9,6 +15,8 @@ modded class DayZGame
 	ref ScriptInvoker Event_OnDeactivateMessage = new ScriptInvoker();
 		
 	string EditorFileToLoad;
+	
+	ref Payload_EditorLoginResponse LoginCache;
 	
 	void DayZGame()
 	{	
@@ -19,6 +27,45 @@ modded class DayZGame
 		#endif
 		
 		ReportProgress("Loading Game");
+	}
+
+	override bool OnInitialize()
+	{
+		if (!super.OnInitialize()) {
+			return false;
+		}
+
+		// Update global login counter
+		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
+		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
+		string username = GetGame().GetUserManager().GetSelectedUser().GetName();
+		Payload_EditorLogin login_payload = new Payload_EditorLogin();
+		login_payload.SteamId = uid;
+		login_payload.SteamUsername = username;
+		login_payload.PlayTime = statistics.EditorPlayTime;
+		login_payload.ItemsPlaced = statistics.EditorPlacedObjects;
+		login_payload.ItemsDeleted = statistics.EditorRemovedObjects;
+		login_payload.CamerasPlaced = statistics.EditorPlacedCameraTracks;
+		login_payload.CamerasRode = statistics.EditorCameraTracksRidden;
+		login_payload.DistanceFlown = statistics.DistanceFlown;
+		login_payload.CharactersControlled = statistics.CharactersControlled;
+		login_payload.CharactersEdited = statistics.CharactersEdited;
+
+		string payload, error;
+		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
+			RestContext ctx = CreateRestApi().GetRestContext(WEB_API_ENDPOINT);
+			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
+			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
+		}
+
+		return true;
+	}
+	
+	protected void OnLoginResponse(Payload_EditorLoginResponse response)
+	{
+		LoginCache = response;
+		Print(LoginCache);
+		Print("OnLoginResponse");		
 	}
 	
 	// ToolTip Control, migrated from editorhud

@@ -260,7 +260,7 @@ PanelWidgetClass main_menu_root {
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scriptclass "ViewBinding"
+     scriptclass ""
      Padding 0
      Margin 0
      "Size To Content V" 1
@@ -295,8 +295,7 @@ PanelWidgetClass main_menu_root {
          "text halign" center
          "text valign" center
         }
-        FrameWidgetClass FrameWidget1 {
-         visible 1
+        GridSpacerWidgetClass StatSpacer {
          ignorepointer 1
          position 12 0
          size 24 24
@@ -306,25 +305,80 @@ PanelWidgetClass main_menu_root {
          vexactpos 1
          hexactsize 1
          vexactsize 1
+         "Size To Content H" 1
+         "Size To Content V" 1
+         content_halign center
+         content_valign center
+         Columns 2
+         Rows 1
          {
-          ImageWidgetClass ImageWidget1 {
-           visible 1
+          FrameWidgetClass GlobeFrame {
+           visible 0
            ignorepointer 1
            position 0 0
-           size 0.75 0.75
-           halign center_ref
+           size 24 24
+           halign right_ref
            valign center_ref
            hexactpos 1
            vexactpos 1
-           hexactsize 0
-           vexactsize 0
-           scriptclass "SymbolHandler"
-           mode blend
-           "src alpha" 1
+           hexactsize 1
+           vexactsize 1
            {
-            ScriptParamsClass {
-             Symbol_Name "chart_simple"
-             Symbol_Size 3
+            ImageWidgetClass GlobeButton {
+             visible 1
+             ignorepointer 0
+             position 0 0
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "user"
+               Symbol_Size 2
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass FrameWidget1 {
+           visible 1
+           ignorepointer 1
+           position 12 0
+           size 24 24
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass ImageWidget1 {
+             visible 1
+             ignorepointer 1
+             position 0 0
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "chart_simple"
+               Symbol_Size 3
+              }
+             }
             }
            }
           }
@@ -416,10 +470,26 @@ PanelWidgetClass main_menu_root {
         }
        }
       }
-     }
-     {
-      ScriptParamsClass {
-       Binding_Name "StatisticsEntries"
+      GridSpacerWidgetClass GridSpacerWidget1 {
+       ignorepointer 1
+       size 316 48
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 0
+       "Size To Content V" 1
+       content_halign right
+       Columns 1
+       Rows 1
+       {
+        ScriptParamsClass {
+         Binding_Name "StatisticsEntries"
+        }
+       }
       }
      }
     }
