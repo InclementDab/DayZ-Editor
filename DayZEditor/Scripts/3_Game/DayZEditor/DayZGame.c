@@ -8,6 +8,8 @@ modded class DayZGame
 	ref ScriptInvoker Event_OnActivateMessage = new ScriptInvoker();
 	ref ScriptInvoker Event_OnDeactivateMessage = new ScriptInvoker();
 		
+	string EditorFileToLoad;
+	
 	void DayZGame()
 	{	
 		#ifndef NO_GUI

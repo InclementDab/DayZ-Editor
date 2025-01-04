@@ -251,15 +251,14 @@ class Editor: Managed
 		SetMode(eEditorMode.None);
 		
 		// Load default file
-		if (GetSettings().FileToLoad != string.Empty) {			
-			if (File.Exists(GetSettings().FileToLoad)) {
+		if (GetDayZGame().EditorFileToLoad != string.Empty) {			
+			if (File.Exists(GetDayZGame().EditorFileToLoad)) {
 				EditorOpenCommand open_command = EditorOpenCommand.Cast(CommandManager[EditorOpenCommand]);
-				LoadSaveData(open_command.ImportFile(GetSettings().FileToLoad), true);
-				SetSaveFile(GetSettings().FileToLoad);
+				LoadSaveData(open_command.ImportFile(GetDayZGame().EditorFileToLoad), true);
+				SetSaveFile(GetDayZGame().EditorFileToLoad);
 			}
 			
-			GetSettings().FileToLoad = string.Empty;
-			GetSettings().Save();
+			GetDayZGame().EditorFileToLoad = string.Empty;
 		}
 	}
 	

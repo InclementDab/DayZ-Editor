@@ -180,7 +180,8 @@ FrameWidgetClass LoadingFrame {
         }
        }
       }
-      MultilineTextWidgetClass ImageCredit {
+      TextWidgetClass ImageCredit {
+       visible 1
        ignorepointer 1
        position 35 308
        size 291 22

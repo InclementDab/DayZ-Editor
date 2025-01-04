@@ -3949,7 +3949,7 @@ FrameWidgetClass EditorFrame {
          vexactsize 1
          scriptclass "ViewBinding"
          text "AAAAA"
-         font "gui/fonts/Metron"
+         font "system/system"
          "exact text" 0
          "size to text h" 1
          "size to text v" 0

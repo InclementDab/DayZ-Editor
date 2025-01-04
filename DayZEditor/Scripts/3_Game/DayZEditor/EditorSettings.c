@@ -151,8 +151,6 @@ class EditorSettings: ProfileSettings
 	
 	float LeftBarPlacement = 380, RightBarPlacement = 380;
 	
-	string FileToLoad;
-
 	void SetDefaults()
 	{
 		CameraSpeed					= 0.05; // 25

@@ -188,7 +188,7 @@ class EditorMapView: ScriptView
 			return;
 		}
 		
-		m_EditorSettings.FileToLoad = file;
+		GetDayZGame().EditorFileToLoad = file;
 		GetGame().PlayMission(CreateEditorMission(m_MapConfig));
 	}
 
