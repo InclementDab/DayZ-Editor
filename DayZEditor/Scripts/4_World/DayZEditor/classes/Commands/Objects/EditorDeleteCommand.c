@@ -24,6 +24,16 @@ class EditorDeleteBrushCommand: EditorCommand
 	{
 		return Symbols.TRASH_CAN;
 	}
+	
+	override LinearColor GetColor()
+	{
+		return LinearColor.RED;
+	}
+	
+	override bool IsToggled()
+	{
+		return GetEditor().Brush && GetEditor().Brush.IsInherited(DeleteBrush);
+	}
 }
 
 class EditorDeleteCommand: EditorCommand
