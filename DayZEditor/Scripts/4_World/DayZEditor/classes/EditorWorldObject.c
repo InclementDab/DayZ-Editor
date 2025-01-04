@@ -25,11 +25,12 @@ class EditorWorldObject
 				formatted_path = formatted_path.Substring(1, formatted_path.Length() - 1);
 			}
 			
-			object = GetGame().CreateStaticObjectUsingP3D(formatted_path, position, orientation, scale);
+			object = GetGame().CreateStaticObjectUsingP3D(formatted_path, position, orientation * Math.DEG2RAD, scale);
 		}
 		else
 		{
 			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
+			object.SetOrientation(orientation);
 		}
 
 		if (!object)
@@ -39,8 +40,6 @@ class EditorWorldObject
 		}
 
 		object.SetFlags(EntityFlags.VISIBLE, true);
-		object.SetPosition(position);
-		object.SetOrientation(orientation);
 		object.SetScale(scale);
 		object.Update();
 		
