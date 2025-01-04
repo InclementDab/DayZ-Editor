@@ -163,13 +163,15 @@ class EditorMainMenu: ScriptViewMenu
 
 				string dst_file = SystemPath.Combine(img_folder, file_name);
 				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
+				
 				if (!FileExist(src_file)) {
 					src_file = SystemPath.Saves(file_name);
 				}
-
+				
 				if (FileExist(src_file)) {
-					CopyFile(src_file, dst_file);
-					DeleteFile(src_file);
+					if (CopyFile(src_file, dst_file)) {
+						DeleteFile(src_file);
+					}
 				}
 
 				m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
@@ -501,7 +503,7 @@ class EditorMainMenu: ScriptViewMenu
 			}
 
 			case SettingButton: {
-				Print(EnterChildMenu(MENU_OPTIONS));
+				EnterChildMenu(MENU_OPTIONS);
 				break;
 			}
 
