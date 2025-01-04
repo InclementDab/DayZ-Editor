@@ -20,7 +20,7 @@ static void SpawnStaticObject(string type, vector position, vector orientation)
 }
 
 /* Used for Offline Editor Mission Creation */
-static string CreateEditorMission(string map_name = "ChernarusPlus")
+static string CreateEditorMissionFolder(string map_name = "ChernarusPlus")
 {	
 	string mission = "$saves:Editor/Missions/DayZEditor." + map_name;
 	

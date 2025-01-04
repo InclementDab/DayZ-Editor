@@ -1,6 +1,6 @@
 modded class MainMenu 
 {
-	protected ref EditorMainMenuStats m_EditorMainMenuStats;
+	//protected ref EditorMainMenuStats m_EditorMainMenuStats;
 	protected Widget m_JoinDiscord;
 	protected Widget m_OpenWiki;
 	
@@ -35,7 +35,7 @@ modded class MainMenu
 		
 		m_LastPlayedTooltipTimer	= new WidgetFadeTimer();
 		
-		m_EditorMainMenuStats		= new EditorMainMenuStats( layoutRoot.FindAnyWidget( "character_stats_root" ) );
+		//m_EditorMainMenuStats		= new EditorMainMenuStats( layoutRoot.FindAnyWidget( "character_stats_root" ) );
 		
 		m_Mission					= MissionMainMenu.Cast( GetGame().GetMission() );
 		
@@ -94,7 +94,7 @@ modded class MainMenu
 		DialogResult result = select_dialog.ShowDialog(selected_map);
 		
 		if (selected_map != string.Empty && result == DialogResult.OK) {
-			GetGame().PlayMission(CreateEditorMission(selected_map));
+			GetGame().PlayMission(CreateEditorMissionFolder(selected_map));
 		}
 	}
 

@@ -38,4 +38,5 @@ class Payload_EditorLoginResponse : Managed
     string GlobalItemsDeleted;
     string GlobalCharactersControlled;
     string GlobalCharactersEdited;
+	string GlobalTimePlayed;
 }

@@ -8,16 +8,45 @@ class EditorStatisticsEntryView : ScriptView
 {
 	TextWidget Text, Value;
 
-	void EditorStatisticsEntryView(string text, string value)
+	void EditorStatisticsEntryView(string text, string value, bool global)
 	{
 		Text.SetText(text);
-		Value.SetText(value);
+		Value.SetText(string.Format("%1%2", value, Ternary<string>.If(global, " (Global)", string.Empty)));
 	}
 
 	override string GetLayoutFile()
 	{
 		return "DayZEditor\\GUI\\layouts\\items\\EditorStatisticsEntry.layout";
 	}
+}
+
+class SimpleButton: ScriptWidgetBase
+{
+	ButtonWidget Button;
+
+	override void OnWidgetScriptInit(Widget w)
+	{
+		super.OnWidgetScriptInit(w);
+
+		Button = ButtonWidget.Cast(w);
+		if (!Button) {
+			Error("SimpleButton script must be defined on Button Widget!");
+			return;
+		}
+	}
+
+	/*
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		
+
+		return true;
+	}
+
+	override bool OnMouseLeave(Widget w, int x, int y, Widget enterW)
+	{
+		return true;
+	}*/
 }
 
 class EditorMainMenu: ScriptViewMenu
@@ -85,50 +114,78 @@ class EditorMainMenu: ScriptViewMenu
 		if (m_MusicVolume <= 0.0) {
 			Symbols.MUSIC_SLASH.Load(MusicButton);
 		}
-				
-		Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
-		if (login_cache) {
-			SetStatisticsMode(m_GlobalStatsVisible);
-	
-			string cache_folder = SystemPath.Saves("EditorCache");
-			MakeDirectory(cache_folder);
-			string img_folder = SystemPath.Combine(cache_folder, "img");
-			MakeDirectory(img_folder);
-			if (m_IsShowcaseActive && login_cache.Showcases.Count()) {
-				// Reesize
-				m_ValidShowcaseSlots.Resize(login_cache.Showcases.Count());
-				
-				for (int j = 0; j < login_cache.Showcases.Count(); j++) {
-					Payload_ServerShowcase showcase = login_cache.Showcases[j];
-					string file_name = string.Format("%1.dds", showcase.Name);
-					RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
-					image_ctx.SetHeader("application/octet-stream");
-					image_ctx.FILE(new RestCallbackBase(), "", file_name);
-	
-					string dst_file = SystemPath.Combine(img_folder, file_name);
-					string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
-					if (!FileExist(src_file)) {
-						src_file = SystemPath.Saves(file_name);
-					}
-	
-					if (FileExist(src_file)) {
-						CopyFile(src_file, dst_file);
-						DeleteFile(src_file);
-		 			}
-	
-					m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
-				}
-	
-				m_ShowcaseIndex = 0;
-				
-				if (m_ValidShowcaseSlots[m_ShowcaseIndex]) {
-					ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-					ServerShowcaseImage.Show(true);
-				}
-			}
+		
+		// Update global login counter
+		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
+		string uid = GetDayZGame().GetUserManager().GetSelectedUser().GetUid();
+		string username = GetDayZGame().GetUserManager().GetSelectedUser().GetName();
+		Payload_EditorLogin login_payload = new Payload_EditorLogin();
+		login_payload.SteamId = uid;
+		login_payload.SteamUsername = username;
+		login_payload.PlayTime = statistics.EditorPlayTime;
+		login_payload.ItemsPlaced = statistics.EditorPlacedObjects;
+		login_payload.ItemsDeleted = statistics.EditorRemovedObjects;
+		login_payload.CamerasPlaced = statistics.EditorPlacedCameraTracks;
+		login_payload.CamerasRode = statistics.EditorCameraTracksRidden;
+		login_payload.DistanceFlown = statistics.DistanceFlown;
+		login_payload.CharactersControlled = statistics.CharactersControlled;
+		login_payload.CharactersEdited = statistics.CharactersEdited;
+
+		string payload, error;
+		if (GetDayZGame().LoginCache) {
+			OnLoginResponse(GetDayZGame().LoginCache);
+		}
+		else if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
+			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
+			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
+			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
 		}
 	}
 
+	protected void OnLoginResponse(Payload_EditorLoginResponse login_cache)	
+	{
+		GetDayZGame().LoginCache = login_cache;
+
+		string cache_folder = SystemPath.Saves("EditorCache");
+		MakeDirectory(cache_folder);
+		string img_folder = SystemPath.Combine(cache_folder, "img");
+		MakeDirectory(img_folder);
+		if (m_IsShowcaseActive && login_cache.Showcases.Count()) {
+			// Reesize
+			m_ValidShowcaseSlots.Resize(login_cache.Showcases.Count());
+			
+			for (int j = 0; j < login_cache.Showcases.Count(); j++) {
+				Payload_ServerShowcase showcase = login_cache.Showcases[j];
+				string file_name = string.Format("%1.dds", showcase.Name);
+				RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
+				image_ctx.SetHeader("application/octet-stream");
+				image_ctx.FILE(new RestCallbackBase(), "", file_name);
+
+				string dst_file = SystemPath.Combine(img_folder, file_name);
+				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
+				if (!FileExist(src_file)) {
+					src_file = SystemPath.Saves(file_name);
+				}
+
+				if (FileExist(src_file)) {
+					CopyFile(src_file, dst_file);
+					DeleteFile(src_file);
+				}
+
+				m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
+			}
+
+			m_ShowcaseIndex = 0;
+			
+			if (m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+				ServerShowcaseImage.Show(true);
+			}
+		}
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetStatisticsMode, 0, 0, m_GlobalStatsVisible);
+	}
+	
 	protected void SetStatisticsMode(bool global)
 	{
 		if (!GetDayZGame().LoginCache) {
@@ -140,10 +197,10 @@ class EditorMainMenu: ScriptViewMenu
 		
 		m_GlobalStatsVisible = global;
 		
-		if (m_GlobalStatsVisible) {
+		if (!m_GlobalStatsVisible) {
 			Symbols.GLOBE.Load(GlobeButton);
 		} else {
-			Symbols.USER.Load(GlobeButton);
+			Symbols.CHART_SIMPLE.Load(GlobeButton);
 		}
 		
 		// Get statistics
@@ -154,24 +211,26 @@ class EditorMainMenu: ScriptViewMenu
 		string removed = statistics.EditorRemovedObjects.ToString();
 		string controlled = statistics.CharactersControlled.ToString();
 		string edited = statistics.CharactersEdited.ToString();
+		string edit_time = time.Format();
 		if (global) {
 			placed = GetDayZGame().LoginCache.GlobalItemsPlaced;
 			removed = GetDayZGame().LoginCache.GlobalItemsDeleted;
 			controlled = GetDayZGame().LoginCache.GlobalCharactersControlled;
 			edited = GetDayZGame().LoginCache.GlobalCharactersEdited;
+			edit_time = GetDayZGame().LoginCache.GlobalTimePlayed;
 		}
 		
 		m_TemplateController.StatisticsEntries.Clear();
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Placed Objects", placed));
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Removed Objects", removed));
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Placed Objects", placed, global));
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Removed Objects", removed, global));
 
 		if (!global) {
-			m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Distance Travelled", string.Format("%1km", statistics.DistanceFlown / 1000)));
+			m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Distance Travelled", string.Format("%1km", statistics.DistanceFlown / 1000), global));
 		}
 		
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Controlled", controlled));
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Edited", edited));
-		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Time Spent Editing", time.Format()));
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Controlled", controlled, global));
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Characters Edited", edited, global));
+		m_TemplateController.StatisticsEntries.Insert(new EditorStatisticsEntryView("Time Edited", edit_time, global));
 	}
 	
 	override void Update(float dt)
@@ -282,6 +341,21 @@ class EditorMainMenu: ScriptViewMenu
 				GetDayZGame().CreateDelayedTooltip(w, "Previous", TooltipPosition.INSIDE);
 				break;
 			}
+			
+			case GlobeButton: {
+				GlobeButton.SetImage(3);
+				break;
+			}
+			
+			case SoundButton: {
+				SoundButton.SetImage(3);
+				break;
+			}
+			
+			case MusicButton: {
+				MusicButton.SetImage(3);
+				break;
+			}
 
 			case ServerShowcase: {
 				ServerShowcaseOutline.SetColor(EditorColors.BLUE);
@@ -306,8 +380,7 @@ class EditorMainMenu: ScriptViewMenu
 
 		Widget child_icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		ImageWidget child_image = ImageWidget.Cast(child_icon);
-		switch (w)
-		{
+		switch (w) {
 			case ExitButton:
 			case SettingButton: {
 				child_image.SetImage(2);
@@ -326,6 +399,21 @@ class EditorMainMenu: ScriptViewMenu
 
 			case PrevServerShowcase: {
 				child_image.SetImage(2);
+				break;
+			}
+			
+			case GlobeButton: {
+				GlobeButton.SetImage(2);
+				break;
+			}
+			
+			case SoundButton: {
+				SoundButton.SetImage(2);
+				break;
+			}
+			
+			case MusicButton: {
+				MusicButton.SetImage(2);
 				break;
 			}
 		}
@@ -400,8 +488,7 @@ class EditorMainMenu: ScriptViewMenu
 
 	override bool OnClick(Widget w, int x, int y, int button)
 	{
-		if (button != 0)
-		{
+		if (button != 0) {
 			return super.OnClick(w, x, y, button);
 		}
 		
@@ -414,7 +501,7 @@ class EditorMainMenu: ScriptViewMenu
 			}
 
 			case SettingButton: {
-				EnterChildMenu(MENU_OPTIONS);
+				Print(EnterChildMenu(MENU_OPTIONS));
 				break;
 			}
 

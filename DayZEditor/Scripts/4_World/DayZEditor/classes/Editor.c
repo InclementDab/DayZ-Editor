@@ -2403,7 +2403,7 @@ class Editor: Managed
 			EditorLog.Info("Loading Map %1", save_data.MapName);
 			g_Game.ReportProgress(string.Format("Loading Map %1", save_data.MapName));
 			
-			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
+			GetGame().PlayMission(CreateEditorMissionFolder(save_data.MapName));
 			
 			m_Editor = GetEditor();
 			*/

@@ -29,43 +29,9 @@ modded class DayZGame
 		ReportProgress("Loading Game");
 	}
 
-	override bool OnInitialize()
-	{
-		if (!super.OnInitialize()) {
-			return false;
-		}
-
-		// Update global login counter
-		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
-		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
-		string username = GetGame().GetUserManager().GetSelectedUser().GetName();
-		Payload_EditorLogin login_payload = new Payload_EditorLogin();
-		login_payload.SteamId = uid;
-		login_payload.SteamUsername = username;
-		login_payload.PlayTime = statistics.EditorPlayTime;
-		login_payload.ItemsPlaced = statistics.EditorPlacedObjects;
-		login_payload.ItemsDeleted = statistics.EditorRemovedObjects;
-		login_payload.CamerasPlaced = statistics.EditorPlacedCameraTracks;
-		login_payload.CamerasRode = statistics.EditorCameraTracksRidden;
-		login_payload.DistanceFlown = statistics.DistanceFlown;
-		login_payload.CharactersControlled = statistics.CharactersControlled;
-		login_payload.CharactersEdited = statistics.CharactersEdited;
-
-		string payload, error;
-		if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
-			RestContext ctx = CreateRestApi().GetRestContext(WEB_API_ENDPOINT);
-			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
-			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
-		}
-
-		return true;
-	}
-	
 	protected void OnLoginResponse(Payload_EditorLoginResponse response)
 	{
-		LoginCache = response;
-		Print(LoginCache);
-		Print("OnLoginResponse");		
+		LoginCache = response;	
 	}
 	
 	// ToolTip Control, migrated from editorhud
@@ -134,10 +100,19 @@ modded class DayZGame
 		string random_map = maps.GetRandomElement();
 		string mission_directory = SystemPath.Saves("EditorCache");
 		MakeDirectory(mission_directory);
+
 		string mission_target = SystemPath.Combine(mission_directory, string.Format("EditorMainMenu.%1", random_map));
+		string mission_ce_folder = SystemPath.Combine(mission_target, "db");
+
 		DeleteFile(mission_target);
+
 		MakeDirectory(mission_target);
-		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\init.c", SystemPath.Combine(mission_target, "init.c"));
+		MakeDirectory(mission_ce_folder);
+
+		string init_file = SystemPath.Combine(mission_target, "init.c");
+		string econ_file = SystemPath.Combine(mission_ce_folder, "economy.xml");
+		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\init.c", init_file);
+		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\economy.xml", econ_file);
 		mission_target.Replace("/", "\\");
 		mission_target.Replace(":\\", ":");
 		PlayMission(mission_target);

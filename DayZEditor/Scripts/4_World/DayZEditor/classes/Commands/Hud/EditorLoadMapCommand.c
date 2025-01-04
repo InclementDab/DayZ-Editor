@@ -10,7 +10,7 @@ class EditorLoadMapCommand: EditorAsyncCommand
 			EditorLog.Info("Loading Map %1", selected_map);
 			m_Editor.Clear();
 			g_Game.ReportProgress("Loading " + selected_map);
-			GetGame().PlayMission(CreateEditorMission(selected_map));
+			GetGame().PlayMission(CreateEditorMissionFolder(selected_map));
 		}
 	}
 	

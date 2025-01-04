@@ -1,10 +1,10 @@
-class MissionMainMenuDummy: MissionMainMenu
+class MissionMainMenuDummy: EditorMainMenuMission
 {
 }
 
 Mission CreateCustomMission(string path)
 {
-	return new MissionMainMenuDummy();
+	return new MissionMainMenuDummy(path);
 }
 
 void main()

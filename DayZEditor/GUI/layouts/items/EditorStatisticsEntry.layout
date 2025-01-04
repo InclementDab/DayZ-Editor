@@ -2,7 +2,7 @@ PanelWidgetClass Panel {
  ignorepointer 1
  color 0.1412 0.1569 0.1804 0.4902
  position 0 0
- size 1 28
+ size 1 24
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -12,15 +12,15 @@ PanelWidgetClass Panel {
   TextWidgetClass Text {
    clipchildren 0
    ignorepointer 1
-   position 4 0
-   size 48 22
+   position 7 0
+   size 48 24
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
    text "Items Placed"
-   font "gui/fonts/Metron"
+   font "gui/fonts/Metron16"
    "exact text" 0
    "size to text h" 1
    "text halign" center
@@ -29,7 +29,7 @@ PanelWidgetClass Panel {
   TextWidgetClass Value {
    clipchildren 0
    ignorepointer 1
-   position 4 0
+   position 7 0
    size 48 22
    halign right_ref
    valign center_ref
@@ -38,7 +38,7 @@ PanelWidgetClass Panel {
    hexactsize 1
    vexactsize 1
    text "2483"
-   font "gui/fonts/Metron"
+   font "gui/fonts/Metron16"
    "size to text h" 1
    "text halign" center
    "text valign" center

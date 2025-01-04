@@ -147,7 +147,7 @@ class EditorMapView: ScriptView
 	{		
 		switch (w) {
 			case StartButton: {
-				GetGame().PlayMission(CreateEditorMission(m_MapConfig));
+				GetGame().PlayMission(CreateEditorMissionFolder(m_MapConfig));
 				break;
 			}
 
@@ -174,7 +174,7 @@ class EditorMapView: ScriptView
 		
 		switch (w) {
 			case Button: {
-				GetGame().PlayMission(CreateEditorMission(m_MapConfig));
+				GetGame().PlayMission(CreateEditorMissionFolder(m_MapConfig));
 				break;
 			}
 		}
@@ -189,7 +189,7 @@ class EditorMapView: ScriptView
 		}
 		
 		GetDayZGame().EditorFileToLoad = file;
-		GetGame().PlayMission(CreateEditorMission(m_MapConfig));
+		GetGame().PlayMission(CreateEditorMissionFolder(m_MapConfig));
 	}
 
 	override bool OnMouseEnter(Widget w, int x, int y)
