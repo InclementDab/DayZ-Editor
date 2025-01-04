@@ -1,21 +1,3 @@
-Mission CreateEditorMission(string path)
-{
-	PrintFormat("CreateEditorMission: %1", path);
-	if (GetGame().IsDedicatedServer()) {
-		for (int i = 0; i < 32; i++) {
-			Print("Cannot Load DayZ Editor on Dedicated Servers!");
-		}
-		
-		return null;
-	}
-	
-	if (path.Contains("intro")) {
-		return new EditorMainMenuMission(path);
-	}
-	
-	return new EditorMission(path);
-}
-
 class EditorMainMenuMission: MissionBase
 {
 	protected ref EditorMainMenu m_MainMenu;
