@@ -9,8 +9,10 @@ Mission CreateCustomMission(string path)
 
 void main()
 {
-    Hive ce = CreateHive();
-    if (ce) {
-        ce.InitSandbox();
+    if (!IsEditorCLEForceDisabled()) {
+        Hive ce = CreateHive();
+        if (ce) {
+            ce.InitSandbox();
+        }
     }
 }

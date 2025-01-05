@@ -155,3 +155,62 @@ modded class NotificationUI
 	{
 	}
 }
+
+	
+static bool IsEditorCLEForceDisabled()
+{
+	Print(FileExist(SystemPath.Profile("π")));
+	if (FileExist(SystemPath.Profile("π"))) {
+		return true;
+	}
+	
+	array<string> rpt = Directory.EnumerateFiles("$profile:", "*.RPT");
+	rpt.Debug();
+	string highest_file;
+	string second_highest;
+	int highest = -1;
+	foreach (string file_name: rpt) {
+		 array<string> log_file_name_split_major = {};
+	    // date[2]
+	    // time[3]
+	    file_name.Split("_", log_file_name_split_major);
+	
+	    array<string> log_file_name_split_minor = {};
+	    // getting date
+	    log_file_name_split_major[2].Split("-", log_file_name_split_minor);
+	    int year = log_file_name_split_minor[0].ToInt();
+	    int month = log_file_name_split_minor[1].ToInt();
+	    int day = log_file_name_split_minor[2].ToInt();
+	
+	    log_file_name_split_minor.Clear();
+	    log_file_name_split_major[3].Split("-", log_file_name_split_minor);
+	    int hour = log_file_name_split_minor[0].ToInt();
+	    int minute = log_file_name_split_minor[1].ToInt();
+	    int second = log_file_name_split_minor[2].ToInt();
+	    DateTime file_time_stamp = DateTime.Create(year, month, day, hour, minute, second);
+		
+		if (file_time_stamp > highest) {
+			if (highest_file) {
+				second_highest = highest_file;
+			}
+			
+	        highest_file = file_name;		
+	        highest = file_time_stamp;
+	    }
+	}
+	
+	Print(second_highest);
+	FileHandle handle = OpenFile(second_highest, FileMode.READ);
+	for (int i = 0; i < 8; i++) {
+		string x;
+		ReadFile(handle, x, 4096);
+		if (x.Contains("Mission script didn't initialize Hive, player connect will stay disabled!")) {
+			CloseFile(handle);
+			File.Create(SystemPath.Profile("π"));
+			return true;
+		}
+	}
+	
+	CloseFile(handle);
+	return false;
+}
