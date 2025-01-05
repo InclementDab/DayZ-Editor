@@ -159,7 +159,6 @@ modded class NotificationUI
 	
 static bool IsEditorCLEForceDisabled()
 {
-	Print(FileExist(SystemPath.Profile("π")));
 	if (FileExist(SystemPath.Profile("π"))) {
 		return true;
 	}
