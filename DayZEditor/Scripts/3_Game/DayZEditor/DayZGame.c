@@ -159,6 +159,9 @@ modded class NotificationUI
 	
 static bool IsEditorCLEForceDisabled()
 {
+	// for now, I was unable to fully test this feature and got no feedback from experimental testing. todo?
+	return false;
+
 	if (FileExist(SystemPath.Profile("π"))) {
 		return true;
 	}
@@ -198,7 +201,6 @@ static bool IsEditorCLEForceDisabled()
 	    }
 	}
 	
-	Print(second_highest);
 	FileHandle handle = OpenFile(second_highest, FileMode.READ);
 	for (int i = 0; i < 8; i++) {
 		string x;
