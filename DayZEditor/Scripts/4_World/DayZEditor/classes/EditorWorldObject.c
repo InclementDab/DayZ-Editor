@@ -38,6 +38,7 @@ class EditorWorldObject
 			return null;
 		}
 
+		object.SetPosition(position);
 		object.SetOrientation(orientation);
 		object.SetFlags(EntityFlags.VISIBLE, true);
 		object.SetScale(scale);
