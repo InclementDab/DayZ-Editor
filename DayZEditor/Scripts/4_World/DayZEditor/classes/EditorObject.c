@@ -511,6 +511,12 @@ class EditorObject: EditorWorldObject
 		if (show) {
 			m_Data.Flags &= ~EditorObjectFlags.HIDDEN;
 			GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
+			if (m_IsSelected) {
+				ShowBoundingBox();
+			} else {
+				HideBoundingBox();
+			}
+			
 			m_EditorObjectMapMarker.Show(true);
 			m_EditorObjectWorldMarker.Show(true);
 		} else {
