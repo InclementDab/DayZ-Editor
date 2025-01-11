@@ -103,6 +103,7 @@ class EditorObjectManagerModule : Managed
 					if (!ObjectSpawnerHandler.ValidatePath(model)) {
 						placeable_item_static_variant.Scope = 0;
 					}
+					
 					m_PlaceableObjectsByP3dPath[model].Insert(placeable_item_static_variant);
 					m_PlaceableObjectsByP3dFile[model_file].Insert(placeable_item_static_variant);
 					m_PlaceableObjects.Insert(placeable_item_static_variant);
@@ -130,7 +131,7 @@ class EditorObjectManagerModule : Managed
 					m_PlaceableObjectsByP3dFile[p3d_file_name] = {};
 				}
 				
-				if (!ObjectSpawnerHandler.ValidatePath(p3d_file)) {
+				if (!ObjectSpawnerHandler.ValidatePath(p3d_file_unformat)) {
 					placeable_item_p3d.Scope = 0;
 				}
 

@@ -69,7 +69,7 @@ class EditorPlaceableItem : Managed
 	static EditorPlaceableItem Create(typename scripted_type)
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
-		placeable_item.Scope = 2;
+		placeable_item.Scope = 0;
 		placeable_item.Type = scripted_type.ToString();
 		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
 		return placeable_item;

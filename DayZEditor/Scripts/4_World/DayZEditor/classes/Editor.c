@@ -97,9 +97,7 @@ class Editor: Managed
 	protected EditorHudController 					m_EditorHudController;
 	protected ref EditorObjectManagerModule 			m_ObjectManager;	
 	
-	protected int 									m_LastMouseDown;
 	protected bool m_MouseVisibleOnClose;
-	protected MouseState							m_LastMouseInput = -1;
 	protected bool 									m_Active;
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
@@ -1074,6 +1072,15 @@ class Editor: Managed
 
 		bool any_mouse_click = left_click_input.LocalPress() || right_click_input.LocalPress() || middle_click_input.LocalPress();
 
+		if (left_click_input.LocalDoubleClick()) {
+			if (m_LootEditMode && !widget_under_cursor) {
+				if (cursor_raycast && cursor_raycast.Bounce) {
+					InsertLootPosition(cursor_raycast.Bounce.Position);
+					return;
+				}
+			}
+		}
+		
 		//	left click logic
 		if (left_click_input.LocalPress()) {
 #ifdef GIZMOS_ENABLED
@@ -1368,7 +1375,6 @@ class Editor: Managed
 			}
 		}
 		
-		
 		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !GetWidgetUnderCursor() && !IsPlacing()) {
 			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
 				GetCamera().GetSettings().Speed += Math.Ln(GetCamera().GetSettings().Speed + 1);
@@ -1406,46 +1412,7 @@ class Editor: Managed
 			}
 		}
 	}
-	
-	bool OnDoubleClick(int button)
-	{
-		EditorLog.Trace("Editor::OnDoubleClick");
-		Widget target = GetWidgetUnderCursor();
-		switch (button) {
-			
-			case MouseState.LEFT: {
-				if (m_LootEditMode && !target) {
-					Raycast cursor_raycast = GetCursorRaycastModeSafe();
-					if (cursor_raycast && cursor_raycast.Bounce) {
-						InsertLootPosition(cursor_raycast.Bounce.Position);
-					}
-				}
-				
-				return true;
-			}
-		}
 		
-		return false;
-	}
-	
-	bool OnMouseDown(int button)
-	{
-		EditorLog.Trace("Editor::OnMouseDown " + button);
-		
-		
-		if (GetWorldTime() - m_LastMouseDown < 500) {
-			m_LastMouseDown = 0;
-			if (OnDoubleClick(button) && m_LastMouseInput == button) {
-				m_LastMouseInput = -1;
-				return true; // return is so we dont call GetWorldTime again
-			}
-		}
-	
-		m_LastMouseInput = button;
-		m_LastMouseDown = GetWorldTime();
-		return false;
-	}
-	
 	bool IsShiftDown()
 	{
 		return KeyState(KeyCode.KC_LSHIFT) || KeyState(KeyCode.KC_RSHIFT);
