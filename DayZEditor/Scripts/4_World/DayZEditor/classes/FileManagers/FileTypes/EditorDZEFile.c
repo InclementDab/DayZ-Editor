@@ -112,6 +112,12 @@ class EditorDZEFile: EditorFileType
 			return;
 		}
 		
+		FileSerializer file_serializer = new FileSerializer();
+		if (!file_serializer.Open(file, FileMode.WRITE)) {
+			EditorLog.Error("Failed to open file %1", file);
+			return;
+		}
+		
 		// sigh
 		foreach (EditorObjectData object_data: data.EditorObjects) {
 			if (object_data.Type.Contains(".p3d")) {
@@ -119,21 +125,18 @@ class EditorDZEFile: EditorFileType
 				object_data.Position = object_data.Position - center;
 				object_data.Orientation = object_data.Orientation * Math.DEG2RAD;
 			}
-		}
+		}	
 		
-		//if (settings.Binarized) {
-			FileSerializer file_serializer = new FileSerializer();
-			if (!file_serializer.Open(file, FileMode.WRITE)) {
-				EditorLog.Error("Failed to open file %1", file);
-				return;
+		data.Write(file_serializer, EditorSaveData.Version);
+		file_serializer.Close();
+		
+		// Undo the crap you just had to do
+		foreach (EditorObjectData object_data2: data.EditorObjects) {
+			if (object_data2.Type.Contains(".p3d")) {
+				object_data2.Position = object_data2.Position + GetP3dBoundingCenter(object_data2.Type);
+				object_data2.Orientation = object_data2.Orientation * Math.RAD2DEG;
 			}
-			
-			data.Write(file_serializer, EditorSaveData.Version);
-			file_serializer.Close();
-			
-		//} else {
-		//	EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
-		//}
+		}
 	}
 	
 	override string GetExtension() 

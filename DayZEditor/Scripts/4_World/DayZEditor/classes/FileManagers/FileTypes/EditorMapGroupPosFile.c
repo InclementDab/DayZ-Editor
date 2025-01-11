@@ -34,6 +34,10 @@ class EditorMapGroupPosFile: EditorFileType
 				continue;
 			}
 			
+			if (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(world_object)) {
+				continue;
+			}
+			
 			vector orientation = world_object.GetOrientation();
 			vector rpy = Vector(orientation[2], orientation[1], orientation[0]);
 			float a;
