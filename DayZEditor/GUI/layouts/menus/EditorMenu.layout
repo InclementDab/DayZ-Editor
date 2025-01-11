@@ -7,7 +7,7 @@ GridSpacerWidgetClass EditorMenuContent {
  hexactsize 1
  vexactsize 1
  scaled 0
- priority 252
+ priority 451
  scriptclass "ViewBinding"
  style Colorable
  Padding 0

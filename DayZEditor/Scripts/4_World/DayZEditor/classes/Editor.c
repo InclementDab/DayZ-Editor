@@ -116,7 +116,7 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 1;
+	static const int Experimental = 0;
 	static const int MinorVersionNumber = 3;
 	static const int VersionNumber = 34;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
@@ -1053,6 +1053,8 @@ class Editor: Managed
 			return;
 		}
 		
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
 		Raycast cursor_raycast = GetCursorRaycast();
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		UAInputAPI input_api = GetUApi();
@@ -1071,6 +1073,30 @@ class Editor: Managed
 		UAInput middle_click_input = input_api.GetInputByID(UAZoomIn);
 
 		bool any_mouse_click = left_click_input.LocalPress() || right_click_input.LocalPress() || middle_click_input.LocalPress();
+
+		if (right_click_input.LocalPress()) {
+			
+			// Opens context menu when right clicking objects. but this is a drastic change im not ready for
+			/*if (cursor_raycast.Hit) {
+				EditorObject editor_object_context = EditorObject.s_AllByObject[cursor_raycast.Hit];
+				if (editor_object_context) {
+					if (EditorHud.CurrentMenu) {
+						delete EditorHud.CurrentMenu;
+					}
+					
+					EditorHud.CurrentMenu = new EditorPlacedContextMenu(mouse_x, mouse_y, editor_object_context);
+					return;
+				}
+			}*/
+			// no right click activity for now
+		}
+
+		// Clear focus, specifically after we check and create things that could be deleted here
+		if (any_mouse_click && !widget_under_cursor) {
+			SetFocus(null);
+			delete EditorHud.CurrentMenu;			
+			GetEditorHud().SetCurrentTooltip(null);
+		}
 
 		if (left_click_input.LocalDoubleClick()) {
 			if (m_LootEditMode && !widget_under_cursor) {
@@ -1135,10 +1161,6 @@ class Editor: Managed
 				ClearSelection();
 				return;
 			}
-		}
-
-		if (right_click_input.LocalPress()) {
-			// no right click activity for now
 		}
 
 		if (middle_click_input.LocalPress()) {

@@ -7,6 +7,18 @@ class EditorMainMenuMission: MissionBase
 	{
 		m_Path = path;
 	}
+	
+	bool CanLaunchCLE()	
+	{
+		for (int i = 0; i < m_Path.LengthUtf8(); i++) {
+			string char = m_Path.SubstringUtf8(i, 1);
+			if (char.ToAscii() < 0) {
+				return false;
+			}
+		}
+
+		return true;
+	}
 
 	override void OnUpdate(float timeslice)
 	{

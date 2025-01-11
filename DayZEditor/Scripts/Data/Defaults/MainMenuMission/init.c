@@ -9,7 +9,9 @@ Mission CreateCustomMission(string path)
 
 void main()
 {
-    if (!IsEditorCLEForceDisabled()) {
+    MissionMainMenuDummy mission = MissionMainMenuDummy.Cast(GetGame().GetMission());
+    bool can_launch_cle = mission.CanLaunchCLE();
+    if (can_launch_cle) {
         Hive ce = CreateHive();
         if (ce) {
             ce.InitSandbox();

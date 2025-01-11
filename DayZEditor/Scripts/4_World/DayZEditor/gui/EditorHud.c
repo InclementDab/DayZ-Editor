@@ -252,13 +252,6 @@ class EditorHud: ScriptView
 		bool input_unlocked = (!focus_widget || !focus_widget.IsInherited(EditBoxWidget)) && !m_Dialog;
 		bool any_mouse_press = (left_mouse_input.LocalPress() || right_mouse_input.LocalPress());
 
-		// Clear focus!
-		if (any_mouse_press && !widget_under_cursor) {
-			SetFocus(null);
-			delete CurrentMenu;			
-			SetCurrentTooltip(null);
-		}
-
 		if (m_Editor.IsInventoryEditorActive()) {
 			Show(false);
 			return;
