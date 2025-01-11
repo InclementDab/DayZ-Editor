@@ -153,6 +153,28 @@ class EditorAction
 		}
 	}
 	
+	void Unshow(Param1<int> params)
+	{
+		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
+		if (!object) {
+			EditorLog.Error("EditorAction::Delete Object was null!");
+			return;
+		}
+
+		object.Show(false);
+	}
+
+	void Show(Param1<int> params)
+	{
+		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
+		if (!object) {
+			EditorLog.Error("EditorAction::Delete Object was null!");
+			return;
+		}
+
+		object.Show(true);
+	}
+	
 	void Lock(Param1<EditorObject> param)
 	{
 		param.param1.Lock(true);
