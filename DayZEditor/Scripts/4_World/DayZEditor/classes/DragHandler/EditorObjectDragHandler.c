@@ -102,6 +102,11 @@ class EditorObjectDragHandler: EditorDragHandler
 		all_objects.Insert(target);
 		all_objects.InsertAll(additional_drag_targets);
 		
+		array<Object> all_object_instances = {};
+		foreach (EditorObject editor_object_get_object: all_objects) {
+			all_object_instances.Insert(editor_object_get_object.GetWorldObject());
+		}
+		
 		vector camera_transform[4];
 		GetEditor().GetCamera().GetTransform(camera_transform);
 		
@@ -117,8 +122,8 @@ class EditorObjectDragHandler: EditorDragHandler
 		vector scale_matrix[3];
 		Math3D.ScaleMatrix(transform[0].Length(), scale_matrix);
 
-		Ray cursor_ray = GetEditor().GetCursorRay();
-		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafe(target.GetWorldObject(), GetEditor().GroundMode);
+		Ray cursor_ray = GetEditor().GetCursorRay();		
+		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(all_object_instances, GetEditor().GroundMode);
 		vector cursor_pos = cursor_ray.GetPoint(10.0);
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;

@@ -140,6 +140,19 @@ class EditorMainMenu: ScriptViewMenu
 			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
 		}
+		
+		if (!Editor.Experimental) {
+			RestContext version_ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
+			version_ctx.GET(new EditorVersionCallback(ScriptCaller.Create(OnVersionResponse)), "api\/changelog\/Version");
+		}
+	}
+
+	protected void OnVersionResponse(Payload_EditorVersionResponse version_response)
+	{		
+		// We never started major / minor versions in the db so i'm just doing it like this
+		if (version_response.Version != Editor.Version) {
+			ShowDialog("Editor Version Mismatch", string.Format("Please repair DayZ Editor in the Launcher to get the latest tool version.\n\nMODS -> Right click 'DayZ Editor' -> Repair\n\n(%1 < %2)", version_response.Version, Editor.Version), 1432, DBT_OK, DBB_OK, DMT_EXCLAMATION);
+		}
 	}
 
 	protected void OnLoginResponse(Payload_EditorLoginResponse login_cache)	

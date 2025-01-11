@@ -118,8 +118,8 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 0;
-	static const int MinorVersionNumber = 2;
+	static const int Experimental = 1;
+	static const int MinorVersionNumber = 3;
 	static const int VersionNumber = 34;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
 	
@@ -417,6 +417,17 @@ class Editor: Managed
 
 		return GetCursorRaycast(ignore, ground_only);
 	}
+	
+	Raycast GetCursorRaycastModeSafeEx(array<Object> ignores = null, bool ground_only = false)
+	{
+		if (IsMapActive()) {
+			Ray map_ray = GetMapRay(0.0);
+			map_ray.Direction = -vector.Up;
+			return PerformRaycastEx(map_ray, ignores, m_EditorCamera.GetSettings().ViewDistance, ground_only);
+		}
+		
+		return PerformRaycastEx(GetCursorRay(), ignores, m_EditorCamera.GetSettings().ViewDistance, ground_only);
+	}
 
 	void GetCameraTransform(out vector transform[4])
 	{
@@ -446,14 +457,19 @@ class Editor: Managed
 		}
 
 		if (!camera_raycast) {
-			camera_raycast = source_ray.PerformRaycastRV(ignore, null, 0, distance, ObjIntersectView, ground_only);
+			camera_raycast = source_ray.PerformRaycastRV(ignore, null, 0, distance, ObjIntersectFire, ground_only);
 		}
 
 		if (!camera_raycast) {
-			camera_raycast = source_ray.PerformRaycastRVEX(0, distance, ObjIntersectView, { ignore }, ground_only);
+			camera_raycast = source_ray.PerformRaycastRVEX(0, distance, ObjIntersectFire, { ignore }, ground_only);
 		}
 		
 		return camera_raycast;
+	}
+	
+	protected Raycast PerformRaycastEx(notnull Ray source_ray, array<Object> ignores, float distance, bool ground_only)
+	{
+		return source_ray.PerformRaycastRVEX(0, distance, ObjIntersectFire, ignores, ground_only);
 	}
 	
 	bool IsMapActive()

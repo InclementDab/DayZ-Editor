@@ -109,10 +109,11 @@ modded class DayZGame
 		MakeDirectory(mission_target);
 		MakeDirectory(mission_ce_folder);
 
-		string init_file = SystemPath.Combine(mission_target, "init.c");
-		string econ_file = SystemPath.Combine(mission_ce_folder, "economy.xml");
-		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\init.c", init_file);
-		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\economy.xml", econ_file);
+		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\init.c", SystemPath.Combine(mission_target, "init.c"));
+		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\economy.xml", SystemPath.Combine(mission_ce_folder, "economy.xml"));
+		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\globals.xml", SystemPath.Combine(mission_ce_folder, "globals.xml"));
+		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\events.xml", SystemPath.Combine(mission_ce_folder, "events.xml"));
+		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\types.xml", SystemPath.Combine(mission_ce_folder, "types.xml"));
 		mission_target.Replace("/", "\\");
 		mission_target.Replace(":\\", ":");
 		PlayMission(mission_target);

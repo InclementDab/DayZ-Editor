@@ -23,7 +23,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			Delete();
 			return;
 		}
-		
+				
 		vector position = GetPosition();	
 		vector screen_pos = GetGame().GetScreenPos(position);
 		if (m_MapWidget.IsVisible()) {
@@ -92,7 +92,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		}
 		
 		m_LayoutRoot.SetScreenSize(size_max, size_max, false);		
-		m_LayoutRoot.SetPos(screen_pos[0] - c / 2, screen_pos[1] - c / 2, false);
+		m_LayoutRoot.SetScreenPos(screen_pos[0] - size_max / 2, screen_pos[1] - size_max / 2, false);
 		m_LayoutRoot.Update();
 	}
 	

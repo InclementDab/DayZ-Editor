@@ -8,17 +8,6 @@ static const int DRAG_BOX_THICKNESS = 1;
 static const int LIST_ITEM_COLOR_ON_DELETED = COLOR_RED;
 static const string LIST_ITEM_DEFAULT_ICON = "DayZEditor/gui/images/dayz_editor_icon_black.edds";
 
-
-static void SpawnStaticObject(string type, vector position, vector orientation)
-{
-	EditorLog.Trace("SpawnStaticObject %1", type);
-    auto obj = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS);
-    obj.SetPosition(position);
-    obj.SetOrientation(orientation);
-    obj.SetOrientation(obj.GetOrientation());
-    obj.Update();
-}
-
 /* Used for Offline Editor Mission Creation */
 static string CreateEditorMissionFolder(string map_name = "ChernarusPlus")
 {	

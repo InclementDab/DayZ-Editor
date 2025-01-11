@@ -151,8 +151,6 @@ class EditorGizmo: Managed
 				dyn_vec_arry[3]
 			};
 			
-			Math3D.MatrixOrthogonalize4(local_additional_mat);
-
 			vector output_additional_mat[4];
 			Math3D.MatrixMultiply4(m_TopTransformOrthogonal, local_additional_mat, output_additional_mat);
 			selected_object.SetTopTransform(output_additional_mat);
