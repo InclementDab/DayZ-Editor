@@ -96,7 +96,12 @@ class EditorTerrainBuilderFile: EditorFileType
                 continue;
             }
 
-            object_POS[0] = object_POS[0] + 200000;
+            string x_pos = object_POS[0].ToString();
+            array<string> split = {};
+            x_pos.Split(".", split);
+            int cnt = split[0].Length();
+            x_pos = String("200000").Substring(0, 6 - cnt) + x_pos;
+
             object_POS[1] = object_POS[1] - object_BC[1];
 
 
@@ -104,7 +109,7 @@ class EditorTerrainBuilderFile: EditorFileType
 
             vector oriExtrinsic = matExtrinsic.ToYawPitchRoll();
 
-            string extrinsic_line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8", model_name, object_POS[0], object_POS[2], oriExtrinsic[0], oriExtrinsic[1], oriExtrinsic[2], 1.0, object_POS[1]);
+            string extrinsic_line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8", model_name, x_pos, object_POS[2], oriExtrinsic[0], oriExtrinsic[1], oriExtrinsic[2], editor_object.Scale, object_POS[1]);
             FPrintln(handle, extrinsic_line);
 
         }
