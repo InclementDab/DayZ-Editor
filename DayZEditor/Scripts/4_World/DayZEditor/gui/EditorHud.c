@@ -168,6 +168,7 @@ class EditorHud: ScriptView
 		
 		EditorCamera camera = m_Editor.GetCamera();
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", EditorCamera.FOV_MIN * Math.RAD2DEG, EditorCamera.FOV_MAX * Math.RAD2DEG));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Tilt", camera, "Tilt", -90, 90));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("View Distance", GetEditor().GetCameraSettings(), "ViewDistance", EditorCamera.VIEW_DISTANCE_MIN, EditorCamera.VIEW_DISTANCE_MAX));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Gaussian Blur", camera, "Blur", 0, 1));
 		m_TemplateController.CameraControls.Insert(new SliderPrefab("Near Plane", camera, "NearPlane",  0, 1));
@@ -682,7 +683,7 @@ class EditorHud: ScriptView
 			}
 
 			case CameraTrackPreviousButton: {
-
+				m_Editor.CameraTrackPrevious();
 				break;
 			}
 
@@ -697,7 +698,7 @@ class EditorHud: ScriptView
 			}
 
 			case CameraTrackNextButton: {
-
+				m_Editor.CameraTrackNext();
 				break;
 			}
 

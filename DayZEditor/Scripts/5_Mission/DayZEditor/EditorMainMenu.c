@@ -70,8 +70,7 @@ class EditorMainMenu: ScriptViewMenu
 
 	void EditorMainMenu()
 	{
-		// Slow rollout
-		m_IsShowcaseActive = (Math.RandomInt(0, 2) == 0);
+		m_IsShowcaseActive = 1; // WE LIVE
 
 #ifdef DIAG_DEVELOPER
 		m_IsShowcaseActive = 1; // fast rollout

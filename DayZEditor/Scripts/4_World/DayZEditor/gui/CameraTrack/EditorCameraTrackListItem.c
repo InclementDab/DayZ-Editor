@@ -46,7 +46,7 @@ class EditorCameraTrackListItem: ScriptView
 	//OutlineColor
 	Widget MainContainerWrapper;
 	//CameraIconColor
-	ButtonWidget CollapseButton, ReorderUpButton, ReorderDownButton;
+	ButtonWidget DeleteButton, CollapseButton, ReorderUpButton, ReorderDownButton;
 	ImageWidget CollapseButton_Icon;
 	
 	TextWidget CameraTrackNodeTitle;
@@ -115,6 +115,11 @@ class EditorCameraTrackListItem: ScriptView
 					GetEditor().GetObjectManager().SetCameraTrackIndex(m_CameraTrack, old_index++);
 				}
 
+				return true;
+			}
+			
+			case DeleteButton: {
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetEditor().DeleteObject, 0, false, m_CameraTrack, true);
 				return true;
 			}
 		}

@@ -28,6 +28,8 @@ class EditorHudController: EditorControllerBase
 	
 	// Camera bindings
 	float CameraSmoothing = 0.35;
+	float CameraTrackSpeed = 40;
+	string CameraTrackSpeedText = "40m/s";
 	ref ObservableCollection<ref EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<ref EditorCameraTrackListItem>(this);
 	ref array<EditorCameraTrackListItem> SelectedCameraTracks;
 	
@@ -129,6 +131,12 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController::PropertyChanged: %1", property_name);
 		
 		switch (property_name) {
+			case "CameraTrackSpeed": {
+				CameraTrackSpeedText = string.Format("%1 m/s", CameraTrackSpeed);
+				NotifyPropertyChanged("CameraTrackSpeedText");
+				break;
+			}
+			
 			case "FavoritesToggle":
 			case "ShowPrivate": {
 				GetEditor().GetSettings().ShowFavoriteObjects = FavoritesToggle;

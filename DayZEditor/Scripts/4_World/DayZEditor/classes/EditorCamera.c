@@ -62,7 +62,7 @@ class EditorCamera: Camera
 	const float SPEED_MAX = 300;
 	const float SPEED_MIN = 1;
 	
-	float FOV = 90, DOFDistance, DOFBlur, Blur, Vignette, Sharpness, NearPlane, Exposure;
+	float FOV = 90, DOFDistance, DOFBlur, Blur, Vignette, Sharpness, NearPlane, Exposure, Tilt;
 	int ColorCorrection = -1;
 	
 	protected bool m_LightState;
@@ -310,6 +310,7 @@ class EditorCamera_V2: EditorCamera
 		m_AngularVelocity = m_AngularVelocity + (rotation * Math.RAD2DEG * 2);
 		orientation = orientation - m_AngularVelocity * timeSlice;
 		orientation[1] = Math.Clamp(orientation[1], MIN_LOOK_Y_DEG, MAX_LOOK_Y_DEG);
+		orientation[2] = Tilt;
 
 		vector ypr_matrix[3];
 		// normalize it

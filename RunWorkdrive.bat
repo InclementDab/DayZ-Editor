@@ -14,6 +14,8 @@ for /f "tokens=2,*" %%a in ('reg query "HKCU\SOFTWARE\Bohemia Interactive\Dayz T
     set "dayz_tools=%%b"
 )
 
+set "dayz_tools=C:\Program Files (x86)\Steam\steamapps\common\DayZ Experimental Tools"
+
 :: Check if the last part of the dayz_tools path is "DayZ Tools"
 if "%dayz_tools:~-10%"=="DayZ Tools" (
     set "profile_path=%homedrive%%homepath%\Documents\DayZ"
@@ -21,6 +23,6 @@ if "%dayz_tools:~-10%"=="DayZ Tools" (
     set "profile_path=%homedrive%%homepath%\Documents\DayZ Exp"
 )
 
-start "" /b "%dayz_tools%\Bin\Workbench\workbenchApp.exe" "-profiles=%profile_path% -repository=\"%repository%\""
+start "" /b "%dayz_tools%\Bin\Workbench\workbenchApp.exe" "-profiles=%profile_path% -repository=\"%repository%\"" -newErrorsAreWarnings=1
 
 exit

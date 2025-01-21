@@ -4399,7 +4399,7 @@ FrameWidgetClass EditorFrame {
      visible 0
      ignorepointer 1
      color 0.1412 0.1569 0.1804 0.9216
-     position 480 24
+     position 480 52
      size 0.235 512
      halign right_ref
      valign bottom_ref
@@ -4410,6 +4410,7 @@ FrameWidgetClass EditorFrame {
      style Colorable
      Padding 0
      Margin 0
+     "Size To Content V" 1
      content_halign right
      content_valign bottom
      {
@@ -4653,6 +4654,82 @@ FrameWidgetClass EditorFrame {
              }
             }
            }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass CameraTrackSpeedPanel {
+       ignorepointer 1
+       color 0.0784 0.0784 0.0784 1
+       position 0 0
+       size 1 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass CameraTrackSmoothingText0 {
+         ignorepointer 1
+         position 0 0
+         size 0.33 20
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         text "Speed"
+         font "gui/fonts/Metron16"
+         "text offset" 2 0
+         "size to text h" 0
+         "text halign" center
+         "text valign" center
+        }
+        SliderWidgetClass CameraTrackSmoothingSlider0 {
+         color 0.5882 0.5882 0.5882 0.7451
+         position 0.02 0
+         size 0.65 20
+         halign right_ref
+         valign center_ref
+         hexactpos 0
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         style Slider_1px_alpha_50
+         maximum 200
+         current 40
+         "marker thickness" 0.02
+         "fill in" 1
+         "draw marker" 1
+         "listen to input" 1
+         {
+          TextWidgetClass CameraTrackSmoothingReadout0 {
+           ignorepointer 1
+           size 35 16
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           scriptclass "ViewBinding"
+           text "40 m/s"
+           "size to text h" 1
+           "text halign" center
+           "text valign" center
+           {
+            ScriptParamsClass {
+             Binding_Name "CameraTrackSpeedText"
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "CameraTrackSpeed"
+           Two_Way_Binding 1
           }
          }
         }

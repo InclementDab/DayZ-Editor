@@ -116,7 +116,7 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 0;
+	static const int Experimental = 1;
 	static const int MinorVersionNumber = 3;
 	static const int VersionNumber = 34;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
@@ -625,7 +625,7 @@ class Editor: Managed
 		}
 		
 		if (IsRunningCameraTrack()) {
-			processed_flags |= ECameraLockFlag.LOCK_MOVE;
+			processed_flags |= ECameraLockFlag.LOCK_MOVE | ECameraLockFlag.LOCK_LOOK;
 		}
 		
 		if (IsMapActive()) {
@@ -890,66 +890,80 @@ class Editor: Managed
         return a + b * t + c * t2 + d * t3;
     }
 */
-
+	
+	// https://www.cubic.org/docs/hermite.htm
+	private static float H00(float t) { return (2 * t * t * t) - (3 * t * t) + 1; }
+	private static float H10(float t) { return (t * t * t) - (2 * t * t) + t; }
+	private static float H01(float t) { return (-2 * t * t * t) + (3 * t * t); }
+	private static float H11(float t) { return (t * t * t) - (t * t); }
+	
+	private static vector InterpolateHermite(vector p0, vector p1, vector m0, vector m1, float t)
+	{
+		return p0 * H00(t) + m0 * H10(t) + p1 * H01(t) + m1 * H11(t);
+	}
+	
+	private static array<vector> ComputeHermiteTangents(array<vector> points, float tension = 0)
+	{
+		array<vector> tangents = {};
+		tangents.Resize(points.Count());
+		for (int i = 0; i < points.Count(); i++) {
+			if (i == 0) {
+				tangents[i] = (points[i + 1] - points[i]) * (1 - tension);
+			} else if (i == points.Count() - 1) {
+				tangents[i] = (points[i] - points[i - 1]) * (1 - tension);
+			} else {
+				tangents[i] = (points[i + 1] - points[i - 1]) * (0.5 * (1 - tension));
+			}
+		}
+		
+		return tangents;
+	}
+	
+	private static array<vector> GenerateHermiteCurve(array<vector> points, int segments, float tension = 0)
+	{
+		array<vector> tangents = ComputeHermiteTangents(points, tension);
+		array<vector> curve = {};
+		for (int i = 0; i < points.Count() - 1; i++) {
+			vector p0 = points[i];
+			vector p1 = points[i + 1];
+			vector m0 = tangents[i];
+			vector m1 = tangents[i + 1];
+			for (int j = 0; j <= segments; j++) {
+				float t = (float)j / (float)segments;
+				curve.Insert(InterpolateHermite(p0, p1, m0, m1, t));
+			}
+		}
+		
+		return curve;
+	}
+	
 	protected void ProcessCameraTrack(float dt)
 	{
-		float smooth_value = GetEditorHud().GetTemplateController().CameraSmoothing;
+		float smooth_value = 1 - GetEditorHud().GetTemplateController().CameraSmoothing;
+		float speed = GetEditorHud().GetTemplateController().CameraTrackSpeed;
 		array<EditorCameraTrack> camera_tracks = m_ObjectManager.GetCameraTracks();
-		/*for (int i = 0; i < camera_tracks.Count() - 1; i++) {			
-			//vector control_p1 = vector.Zero;
-			vector point = camera_tracks[i].GetPosition();
-			vector next_point = camera_tracks[i + 1].GetPosition();
-			vector next_next_point = vector.Zero;
-			vector control_point_offset0 = vector.Zero;
-			vector control_point_offset1 = vector.Zero;
-			if (i != camera_tracks.Count() - 2) {
-				next_next_point = camera_tracks[i + 2].GetPosition();
-				vector norm = (next_point - point) * (next_next_point - next_point);
-				norm.Normalize();
-				Plane3D pl = Plane3D(norm, next_point);
-				//pl.Debug(40);
 
-				if (i == 0) {
-					control_point_offset0 = point + (next_point - point) * 0.25 + (point - next_point) * smooth_value * norm;
-				} else {
-					vector last_point = camera_tracks[i - 1].GetPosition();
-					control_point_offset0 = (last_point + (point - last_point) * 0.75) + (point - last_point) * smooth_value * norm;
-				}
+		array<vector> camera_track_points = {};
+		camera_track_points.Resize(camera_tracks.Count());
+		for (int i = 0; i < camera_tracks.Count(); i++) {
+			camera_track_points[i] = camera_tracks[i].GetPosition();
+		}
 
-				control_point_offset1 = (point + (next_point - point) * 0.75) + (next_point - point) * smooth_value * norm;
-				Shape.CreateSphere(LinearColor.GREEN, ShapeFlags.ONCE, control_point_offset0, 3);
-			} else {
-				next_next_point = (next_point - point).Normalized() * vector.Distance(point, next_point);
-				Shape.CreateSphere(LinearColor.BLUE, ShapeFlags.ONCE, next_point, 4);
-				vector dir1 = (next_point - next_next_point);
-				dir1.Normalize();
-				control_point_offset0 = dir1 * smooth_value * vector.Distance(point, next_point);
+#ifdef DIAG_DEVELOPER
+		array<vector> debug_curve = GenerateHermiteCurve(camera_track_points, 20, smooth_value);
+		for (int k = 0; k < debug_curve.Count() - 1; k++) {
+			vector p[2] = { debug_curve[k], debug_curve[k + 1] };
+			Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, p, 2);
+		}
+#endif
+
+		for (int c = 0; c < camera_tracks.Count(); c++) {
+			EditorCameraTrack camera_track_hideshow = camera_tracks[c];
+			if (camera_track_hideshow && camera_track_hideshow.GetWorldObject()) {
+				float camera_distance_from_track = vector.Distance(camera_track_hideshow.GetPosition(), m_EditorCamera.GetPosition());
+				camera_track_hideshow.Show(!IsRunningCameraTrack() && camera_distance_from_track > 10);
 			}
-
-
-			vector excess_direction = vector.Direction(point, next_point).Normalized();
-			//Shape.CreateArrow(point, point + excess_direction * 3, 4, LinearColor.WHITE, ShapeFlags.ONCE);
-			vector control_p0 = point + control_point_offset0 + excess_direction * vector.Distance(point, next_point) * 0.5;
-			
-			//Shape.CreateSphere(LinearColor.BLUE, ShapeFlags.ONCE, point, 0.5);
-			//Shape.CreateSphere(LinearColor.CRIMSON, ShapeFlags.ONCE, control_p0, 3);
-			vector lines[2] = { control_p0, next_point };
-			//Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, lines, 2);
-			//Shape.CreateSphere(LinearColor.PINK, ShapeFlags.ONCE, control_p1, 0.5);
-			//Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, { control_p1, point }, 2);
-
-			float step_size = 0.01;
-			float t = 0;
-			while (t < 1 - step_size) {
-				vector l0 = EditorMath.CalculateCubicBezierPoint(t, point, control_point_offset0, control_point_offset1, next_point);
-				vector l1 = EditorMath.CalculateCubicBezierPoint(t + step_size, point, control_point_offset0, control_point_offset1, next_point);
-				vector lines0[2] = { l0, l1 };
-				vector lines1[2] = { vector.Lerp(point, next_point, t), vector.Lerp(point, next_point, t + step_size) };
-				//Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, lines0, 2);
-				//Shape.CreateLines(LinearColor.BLUE, ShapeFlags.ONCE, lines1, 2);
-				t += 0.01;
-			}
-		}*/
+		}
 
 		if (!IsRunningCameraTrack()) {
 			return;
@@ -973,11 +987,11 @@ class Editor: Managed
 		
 		camera_track_next.GetTransform(m2);
 		Math3D.MatrixToQuat(m2, q2);
-
+				
 		vector track_direction = m2[3] - m1[3];
 		float track_length = track_direction.Length();
 
-		float distance_traversed = GetCameraSettings().Speed * dt;
+		float distance_traversed = speed * dt;
 
 		m_CameraTrackLerpNorm = (m_CameraTrackLerpNorm * track_length + distance_traversed) / track_length;
 		if (m_CameraTrackLerpNorm > 1.0) {
@@ -986,15 +1000,21 @@ class Editor: Managed
 			return;
 		}
 		
+		array<vector> tangents = ComputeHermiteTangents(camera_track_points, smooth_value);
+		vector p0 = camera_track_points[m_CameraTrackIndex];
+		vector p1 = camera_track_points[m_CameraTrackIndex + 1];
+		vector tan0 = tangents[m_CameraTrackIndex];
+		vector tan1 = tangents[m_CameraTrackIndex + 1];
+		
+		vector camera_position = InterpolateHermite(p0, p1, tan0, tan1, m_CameraTrackLerpNorm);
+		
 		float qout[4];
 		Math3D.QuatLerp(qout, q1, q2, m_CameraTrackLerpNorm);
 		
 		vector mout[4];
 		Math3D.QuatToMatrix(qout, mout);
-		mout[3] = vector.Lerp(m1[3], m2[3], m_CameraTrackLerpNorm);
+		mout[3] = camera_position;
 		
-		//DbgUI.Text(string.Format("t: %1, i: %2, cnt: %3", m_CameraTrackLerpNorm, m_CameraTrackIndex, camera_tracks.Count()));
-		///Shape.CreateSphere(-1, ShapeFlags.ONCE, mout[3], 0.5);
 		m_EditorCamera.SetTransform(mout);
 		m_EditorCamera.Update();
 	}
@@ -2708,10 +2728,6 @@ class Editor: Managed
 
 	void StopCameraTrack()
 	{
-		if (!m_CameraTrackState) {
-			return;
-		}
-
 		m_CameraTrackState = 0;
 		m_CameraTrackIndex = 0;
 		m_CameraTrackLerpNorm = 0;
@@ -2733,6 +2749,36 @@ class Editor: Managed
 	void PauseCameraTrack()
 	{
 		m_CameraTrackState = 0;
+	}
+	
+	void CameraTrackNext()
+	{
+		array<EditorCameraTrack> tracks = GetObjectManager().GetCameraTracks();
+		if (tracks.Count() == 0) {
+			return;
+		}
+
+		m_CameraTrackIndex = Math.Rollover(m_CameraTrackIndex + 1, 0, tracks.Count());
+		m_CameraTrackLerpNorm = 0;
+		
+		vector mat[4];
+		tracks[m_CameraTrackIndex].GetTransform(mat);
+		m_EditorCamera.SetTransform(mat);
+	}
+	
+	void CameraTrackPrevious()
+	{
+		array<EditorCameraTrack> tracks = GetObjectManager().GetCameraTracks();
+		if (tracks.Count() == 0) {
+			return;
+		}
+
+		m_CameraTrackIndex = Math.Rollover(m_CameraTrackIndex - 1, 0, tracks.Count());
+		m_CameraTrackLerpNorm = 0;
+		
+		vector mat[4];
+		tracks[m_CameraTrackIndex].GetTransform(mat);
+		m_EditorCamera.SetTransform(mat);
 	}
 	
 	void AddCameraTrack(notnull EditorCamera camera, float time, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true)
