@@ -14,7 +14,7 @@ for /f "tokens=2,*" %%a in ('reg query "HKCU\SOFTWARE\Bohemia Interactive\Dayz T
     set "dayz_tools=%%b"
 )
 
-set "dayz_tools=C:\Program Files (x86)\Steam\steamapps\common\DayZ Experimental Tools"
+set "dayz_tools=C:\Program Files (x86)\Steam\steamapps\common\DayZ Tools"
 
 :: Check if the last part of the dayz_tools path is "DayZ Tools"
 if "%dayz_tools:~-10%"=="DayZ Tools" (

@@ -72,6 +72,8 @@ class EditorDZEFile: EditorFileType
 			
 			string map_name;
 			serializer.Read(map_name);
+
+			serializer.Close();
 			
 			return map_name;
 		}
