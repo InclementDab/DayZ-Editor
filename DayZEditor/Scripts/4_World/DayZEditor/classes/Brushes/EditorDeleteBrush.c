@@ -1,47 +1,39 @@
-class DeleteBrush: EditorBrush
-{	
+class DeleteBrush : EditorBrush
+{
 	override void DuringMouseDown(vector position)
 	{
-		vector surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
-		surface_normal.Normalize();					
-		
-		vector ray_pos = position + surface_normal * 10;		
-		RaycastRVParams raycast_params = new RaycastRVParams(ray_pos, ray_pos + -surface_normal * 10);
-		raycast_params.radius = BrushRadius;
-		raycast_params.flags = CollisionFlags.ALLOBJECTS;
-		raycast_params.type = ObjIntersectView;
-		raycast_params.groundOnly = false;
-		raycast_params.sorted = false;
-		array<ref RaycastRVResult> results = {};
-		if (!DayZPhysics.RaycastRVProxy(raycast_params, results, { m_BrushDecal, GetEditor().GetCamera(), GetEditor().GetPlayer() }) || results.Count() == 0) {
-			return;
-		}
-		
-		EditorObjectMap editor_objects();
-		array<Object> deleted_objects = {};
-		foreach (RaycastRVResult result: results) {
-			if (!result || !result.obj) {
+		array<Object> objects = { };
+		GetGame().GetObjectsAtPosition3D(position, BrushRadius, objects, null);
+
+		EditorObjectMap editorObjects = new EditorObjectMap();
+		array<Object> deleted_objects = { };
+
+		foreach (Object object : objects) {
+			if (!object) continue;
+
+			if (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(object))
+			{
 				continue;
 			}
-			
-			Object result_object = result.obj;
-			if (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(result_object)) {
-				continue;
+
+			EditorObject eo = GetEditor().GetEditorObject(object);
+			if (eo)
+			{
+				editorObjects.InsertEditorObject(eo);
 			}
-			
-			EditorObject eo = GetEditor().GetEditorObject(result_object);
-			if (eo) {
-				editor_objects.InsertEditorObject(eo);
-			} else {
-				deleted_objects.Insert(result_object);
+			else
+			{
+				deleted_objects.Insert(object);
 			}
 		}
-		
-		if (editor_objects.Count() > 0) {
-			GetEditor().DeleteObjects(editor_objects);
+
+		if (editorObjects.Count() > 0)
+		{
+			GetEditor().DeleteObjects(editorObjects);
 		}
-		
-		if (deleted_objects.Count() > 0) {
+
+		if (deleted_objects.Count() > 0)
+		{
 			GetEditor().HideMapObjects(deleted_objects);
 		}
 	}
