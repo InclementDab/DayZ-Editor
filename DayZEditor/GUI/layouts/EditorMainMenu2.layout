@@ -957,6 +957,24 @@ PanelWidgetClass main_menu_root {
       }
      }
     }
+    WrapSpacerWidgetClass WrapSpacerWidget0 {
+     ignorepointer 1
+     size 256 372
+     halign right_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     Padding 0
+     Margin 0
+     {
+      ScriptParamsClass {
+       Binding_Name "SupporterList"
+      }
+     }
+    }
    }
   }
   ImageWidgetClass vignette {

@@ -2,6 +2,23 @@ class EditorMainMenuController : ViewController
 {
 	ref ObservableCollection<ref ScriptView> MapViews = new ObservableCollection<ref ScriptView>(this);
 	ref ObservableCollection<ref ScriptView> StatisticsEntries = new ObservableCollection<ref ScriptView>(this);
+	ref ObservableCollection<ref ScriptView> SupporterList = new ObservableCollection<ref ScriptView>(this);
+}
+
+class EditorSupporterView: ScriptView
+{
+	TextWidget SupporterName;
+	ImageWidget SupporterIcon;
+	
+	void EditorSupporterView(string name, int level)
+	{
+		SupporterName.SetText(name);
+	}
+	
+	override string GetLayoutFile()
+	{
+		return "DayZEditor\\GUI\\layouts\\EditorSupporterView.layout";
+	}
 }
 
 class EditorStatisticsEntryView : ScriptView
@@ -59,6 +76,7 @@ class EditorMainMenu: ScriptViewMenu
 
 	protected float m_SoundVolume = 1.0, m_MusicVolume = 1.0;
 	protected bool m_GlobalStatsVisible;
+	protected bool m_ShowcaseLoaded;
 	
 	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame, GlobeFrame;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
@@ -140,9 +158,20 @@ class EditorMainMenu: ScriptViewMenu
 			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
 		}
 		
+		RestContext supporter_ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
+		supporter_ctx.GET(new EditorSupporterCallback(ScriptCaller.Create(OnSupporterResponse)), "api\/user\/supporters");
+		
 		if (!Editor.Experimental) {
 			RestContext version_ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			version_ctx.GET(new EditorVersionCallback(ScriptCaller.Create(OnVersionResponse)), "api\/changelog\/Version");
+		}
+	}
+	
+	protected void OnSupporterResponse(Payload_EditorSupporterResponse supporter_response)
+	{
+		m_TemplateController.SupporterList.Clear();
+		foreach (auto supporter: supporter_response.Supporters) {
+			m_TemplateController.SupporterList.Insert(new EditorSupporterView(supporter.DisplayName, supporter.Level));
 		}
 	}
 
@@ -158,10 +187,6 @@ class EditorMainMenu: ScriptViewMenu
 	{
 		GetDayZGame().LoginCache = login_cache;
 
-		string cache_folder = SystemPath.Saves("EditorCache");
-		MakeDirectory(cache_folder);
-		string img_folder = SystemPath.Combine(cache_folder, "img");
-		MakeDirectory(img_folder);
 		if (m_IsShowcaseActive && login_cache.Showcases.Count()) {
 			// Reesize
 			m_ValidShowcaseSlots.Resize(login_cache.Showcases.Count());
@@ -171,33 +196,47 @@ class EditorMainMenu: ScriptViewMenu
 				string file_name = string.Format("%1.dds", showcase.Name);
 				RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
 				image_ctx.SetHeader("application/octet-stream");
-				image_ctx.FILE(new RestCallbackBase(), "", file_name);
-
-				string dst_file = SystemPath.Combine(img_folder, file_name);
-				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
-				
-				if (!FileExist(src_file)) {
-					src_file = SystemPath.Saves(file_name);
-				}
-				
-				if (FileExist(src_file)) {
-					if (CopyFile(src_file, dst_file)) {
-						DeleteFile(src_file);
-					}
-				}
-
-				m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
-			}
-
-			m_ShowcaseIndex = 0;
-			
-			if (m_ValidShowcaseSlots[m_ShowcaseIndex]) {
-				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-				ServerShowcaseImage.Show(true);
+				auto callback = new EditorShowcaseResponse(ScriptCaller.Create(OnShowcaseResponse));
+				callback.Index = j;
+				image_ctx.FILE(callback, "", file_name);
 			}
 		}
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetStatisticsMode, 0, 0, m_GlobalStatsVisible);
+	}
+	
+	protected void OnShowcaseResponse(string image_file, int showcase_index)
+	{
+		string cache_folder = SystemPath.Saves("EditorCache");
+		MakeDirectory(cache_folder);
+		string img_folder = SystemPath.Combine(cache_folder, "img");
+		MakeDirectory(img_folder);
+		
+		string dst_file = SystemPath.Combine(img_folder, image_file);
+		string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", image_file));
+		
+		if (!FileExist(src_file)) {
+			src_file = SystemPath.Saves(image_file);
+		}
+		
+		if (FileExist(src_file)) {
+			if (CopyFile(src_file, dst_file)) {
+				DeleteFile(src_file);
+			}
+		}
+
+		m_ValidShowcaseSlots[showcase_index] = ServerShowcaseImage.LoadImageFile(showcase_index, dst_file);
+		
+		if (m_ValidShowcaseSlots[showcase_index] && !m_ShowcaseLoaded) {
+			m_ShowcaseIndex = showcase_index;
+				
+			if (m_ValidShowcaseSlots[showcase_index]) {
+				ServerShowcaseImage.SetImage(showcase_index);
+				ServerShowcaseImage.Show(true);
+			}
+			
+			m_ShowcaseLoaded = 1;
+		}
 	}
 	
 	protected void SetStatisticsMode(bool global)

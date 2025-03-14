@@ -60,7 +60,7 @@ class EditorCamera: Camera
 	
 	const float SPEED_DEFAULT = 60;
 	const float SPEED_MAX = 300;
-	const float SPEED_MIN = 1;
+	const float SPEED_MIN = 0.05;
 	
 	float FOV = 90, DOFDistance, DOFBlur, Blur, Vignette, Sharpness, NearPlane, Exposure, Tilt;
 	int ColorCorrection = -1;

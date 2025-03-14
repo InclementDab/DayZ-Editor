@@ -1,0 +1,34 @@
+
+  PanelWidgetClass PanelWidget5 {
+   ignorepointer 1
+   size 1 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   {
+    ImageWidgetClass SupporterIcon {
+     ignorepointer 1
+     position 1 1
+     size 22 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+    }
+    TextWidgetClass SupporterName {
+     ignorepointer 1
+     position 24 0
+     size 48 18
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "This is a supporter"
+     font "gui/fonts/Metron"
+     "size to text h" 1
+    }
+   }
+  }
+ 
