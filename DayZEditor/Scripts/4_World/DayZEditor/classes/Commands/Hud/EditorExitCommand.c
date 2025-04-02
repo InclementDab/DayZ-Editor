@@ -9,9 +9,10 @@ class EditorExitCommand: EditorAsyncCommand
 		
 		if (m_Editor) {
 			m_Editor.Clear();
-		}
+		}	
 		
-		GetGame().AbortMission();
+		g_Game.ReportProgress("Exiting to main menu...");
+		GetDayZGame().MainMenuLaunch();
 	}
 	
 	override string GetName() 

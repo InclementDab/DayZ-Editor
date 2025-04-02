@@ -91,12 +91,12 @@ class XMLEventsCallback: XMLCallback
 {
 	private ref array<ref EditorEventSpawn> m_Events;
 	
-	void XMLEventsCallback(ref array<ref EditorEventSpawn> events)
+	void XMLEventsCallback(array<ref EditorEventSpawn> events)
 	{
 		m_Events = events;
 	}
 	
-	bool SearchEventSpawns(out ref EditorEventSpawn event_spawn, string name)
+	bool SearchEventSpawns(out EditorEventSpawn event_spawn, string name)
 	{
 		name.ToLower();
 		foreach (EditorEventSpawn espawn: m_Events) {

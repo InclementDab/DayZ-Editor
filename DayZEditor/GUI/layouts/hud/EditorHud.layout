@@ -3952,7 +3952,7 @@ FrameWidgetClass EditorFrame {
        visible 1
        clipchildren 0
        ignorepointer 1
-       position 0.4 0
+       position 0.3 0
        size 0.25 16
        valign center_ref
        hexactpos 0

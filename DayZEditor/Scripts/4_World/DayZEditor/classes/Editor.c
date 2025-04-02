@@ -148,7 +148,10 @@ class Editor: Managed
 	protected vector m_CameraTransformPreTrackMotion[4];
 	
 	protected ref EditorObject m_PlayerObject;
-	protected ref EditorSaveData m_CurrentSaveData;
+	
+	// we are facing some issues with serializing files randomly breaking. this is a remedy for that poor code
+	protected DateTime m_CurrentFileCreationDate = 0;
+	protected ref array<string> m_CurrentFileAuthorCredits = {};
 	
 	bool										KEgg; // oh?
 	
@@ -159,7 +162,7 @@ class Editor: Managed
 #endif
 
 		EditorLog.Trace("Editor");
-		g_Game.ReportProgress("Loading Editor");
+		g_Game.ReportProgress("Loading Editor...");
 
 		PrintFormat("Loading DayZ Editor v%1", Version);
 
@@ -190,7 +193,7 @@ class Editor: Managed
 										
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
-		g_Game.ReportProgress("Loading Camera");
+		g_Game.ReportProgress("Loading Camera...");
 		EditorCameraSettings camera_settings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
 		string camera_type = "EditorCamera_V2";
 		if (camera_settings.LegacyCamera) {
@@ -205,7 +208,7 @@ class Editor: Managed
 		m_ObjectManager 	= new EditorObjectManagerModule(this);	
 		
 		// Command Manager
-		g_Game.ReportProgress("Loading Commands");
+		g_Game.ReportProgress("Loading Editor Commands...");
 		EditorLog.Info("Initializing Command Manager");
 		CommandManager 		= new EditorCommandManager();
 		CommandManager.Init();
@@ -215,7 +218,7 @@ class Editor: Managed
 		m_DeletedSessionCache   = new map<int, ref EditorDeletedObjectData>();
 		
 		// Init Hud
-		g_Game.ReportProgress("Initializing Hud");
+		g_Game.ReportProgress("Loading Editor Hud...");
 		m_EditorHud 		= new EditorHud(this);
 		EditorLog.Info("Initializing Hud");
 		m_EditorHudController = m_EditorHud.GetTemplateController();
@@ -258,6 +261,8 @@ class Editor: Managed
 			
 			GetDayZGame().EditorFileToLoad = string.Empty;
 		}
+		
+		g_Game.ReportProgress("Loading Editor...");
 	}
 	
 	void ~Editor() 
@@ -1598,24 +1603,31 @@ class Editor: Managed
 		}
 
 		Building building = Building.Cast(target);
-		string component_type = "component";
+		string component_type = "Component";
 		if (building) {
 			if (building.GetDoorIndex(component_index) != -1) {
 				component_index = building.GetDoorIndex(component_index);
-				component_type = "door";
+				component_type = "Door";
 			}
 		}
 
 		int interaction_layer = dBodyGetInteractionLayer(target);
 		string interaction_layer_name;
+		string interaction_layer_single;
 		if (interaction_layer) {
 			if (interaction_layer & (interaction_layer - 1) == 0) {
-				interaction_layer_name = string.Format(", %1", typename.EnumToString(PhxInteractionLayers, interaction_layer), interaction_layer);
+				interaction_layer_single = typename.EnumToString(PhxInteractionLayers, interaction_layer);
+				if (interaction_layer_single != "unknown") {
+					interaction_layer_name = string.Format(", %1", interaction_layer_single, interaction_layer);	
+				}
 			} else {
 				for (int i = 0; i < 32; i++) {
 					int j = (1 << i);
 					if (interaction_layer & j) {
-						interaction_layer_name += string.Format(", %1", typename.EnumToString(PhxInteractionLayers, j), j);
+						interaction_layer_single = typename.EnumToString(PhxInteractionLayers, j);
+						if (interaction_layer_single != "unknown") {
+							interaction_layer_name += string.Format(", %1", interaction_layer_single, j);
+						}
 					}
 				}
 			}
@@ -2222,7 +2234,8 @@ class Editor: Managed
 		m_ActionStack.Clear();
 		m_SessionCache.Clear();
 		m_ObjectManager.Clear();
-		delete m_CurrentSaveData;
+		m_CurrentFileAuthorCredits.Clear();
+		m_CurrentFileCreationDate = 0;
 	}
 		
 	bool CanHideMapObject(string type)
@@ -2437,20 +2450,16 @@ class Editor: Managed
 		if (clear_before) {
 			Clear();
 			
-			// Basically we are no longer in import mode
-			m_CurrentSaveData = save_data;
-
 			if (save_data.CameraPosition != vector.Zero) {
 				GetCamera().SetPosition(save_data.CameraPosition);
 			}
-
-			// This is for backwards compatibility
-			if (!m_CurrentSaveData.AuthorId) {
-				string uid = GetGame().GetUserManager().GetTitleInitiator().GetUid();
-				m_CurrentSaveData.AuthorId = uid;
-				m_CurrentSaveData.CreditIds.Insert(uid);
-				m_CurrentSaveData.CreationDate = DateTime.Now();
-				m_CurrentSaveData.LastModified = DateTime.Now();
+			
+			m_CurrentFileCreationDate = save_data.CreationDate;
+			m_CurrentFileAuthorCredits.Copy(save_data.CreditIds);
+			
+			string uid = GetGame().GetUserManager().GetTitleInitiator().GetUid();
+			if (m_CurrentFileAuthorCredits.Find(uid) == -1) {
+				m_CurrentFileAuthorCredits.Insert(uid);
 			}
 		}
 				
@@ -2505,16 +2514,17 @@ class Editor: Managed
 	{	
 		string uid = GetGame().GetUserManager().GetTitleInitiator().GetUid();
 		
-		// Todo a gross fix for a terrible saving scheme
-		if (!m_CurrentSaveData) {
-			m_CurrentSaveData = EditorSaveData.CreateNew(uid, DateTime.Now());
-		}
-
 		EditorSaveData save_data = new EditorSaveData();
-		save_data.CreationDate = m_CurrentSaveData.CreationDate;
-		save_data.CreditIds.Copy(m_CurrentSaveData.CreditIds);
-		save_data.AuthorId = m_CurrentSaveData.AuthorId;
-
+		save_data.AuthorId = uid;
+		save_data.CreditIds.Copy(m_CurrentFileAuthorCredits);
+		save_data.LastModified = DateTime.Now();
+		
+		if (m_CurrentFileCreationDate == 0) {
+			m_CurrentFileCreationDate = DateTime.Now();	
+		}
+		
+		save_data.CreationDate = m_CurrentFileCreationDate;
+		
 		// Save world name
 		save_data.MapName = GetGame().GetWorldName();
 		

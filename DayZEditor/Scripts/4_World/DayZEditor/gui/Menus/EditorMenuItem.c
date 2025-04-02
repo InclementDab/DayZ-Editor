@@ -94,7 +94,7 @@ class EditorMenuItemCategory: EditorMenuItem
 	protected typename m_ChildMenuType;
 	protected Widget Expand;
 	
-	void EditorMenuItemCategory(notnull EditorMenu parent_menu, EditorCommand editor_command = null, string label = string.Empty, typename child_menu_type = EMPTY_TYPENAME, Symbols icon = string.Empty)
+	void EditorMenuItemCategory(notnull EditorMenu editor_menu, EditorCommand editor_command = null, string label = string.Empty, typename child_menu_type = EMPTY_TYPENAME, Symbols icon = string.Empty)
 	{
 		m_ChildMenuType = child_menu_type;
 		if (!m_ChildMenuType.IsInherited(EditorMenu)) {
@@ -137,7 +137,7 @@ class EditorOpenRecentListItem: EditorMenuItem
 {	
 	// todo: EditorFile struct like in EditorSaveFile
 	protected string m_File;
-	void EditorOpenRecentListItem(notnull EditorMenu parent_menu, EditorCommand editor_command = null, string file_path = string.Empty)
+	void EditorOpenRecentListItem(notnull EditorMenu editor_menu, EditorCommand editor_command = null, string file_path = string.Empty)
 	{	
 		m_File = file_path;
 		Label.SetText(file_path);
@@ -157,7 +157,7 @@ class EditorOpenRecentListItem: EditorMenuItem
 class EditorPreferencesListItem: EditorMenuItem
 {	
 	protected string m_Setting;
-	void EditorPreferencesListItem(notnull EditorMenu parent_menu, EditorCommand editor_command = null, string setting = string.Empty)
+	void EditorPreferencesListItem(notnull EditorMenu editor_menu, EditorCommand editor_command = null, string setting = string.Empty)
 	{		
 		m_Setting = setting;
 		Label.SetText(setting);

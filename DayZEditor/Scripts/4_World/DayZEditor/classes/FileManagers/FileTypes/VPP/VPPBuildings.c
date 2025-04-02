@@ -49,7 +49,7 @@ class VPPToEditorBuildingSet
       }
    }
 
-   void SetBuildingsArray(ref array<ref VPPToEditorSpawnedBuilding> data)
+   void SetBuildingsArray(array<ref VPPToEditorSpawnedBuilding> data)
    {
 	  m_Buildings = data;
    }
