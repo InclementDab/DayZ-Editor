@@ -190,7 +190,7 @@ class EditorMainMenu: ScriptViewMenu
 			}
 
 			m_ShowcaseIndex = 0;
-			if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex)) {
+			if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
 				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
 				ServerShowcaseImage.Show(true);
 			}
