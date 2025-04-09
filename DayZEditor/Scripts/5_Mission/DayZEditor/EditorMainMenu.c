@@ -185,13 +185,12 @@ class EditorMainMenu: ScriptViewMenu
 						DeleteFile(src_file);
 					}
 				}
-
+								
 				m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
 			}
 
 			m_ShowcaseIndex = 0;
-			
-			if (m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+			if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex)) {
 				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
 				ServerShowcaseImage.Show(true);
 			}
@@ -250,7 +249,7 @@ class EditorMainMenu: ScriptViewMenu
 	override void Update(float dt)
 	{
 		super.Update(dt);
-
+				
 		if (!GetGame().IsAppActive()) {
 			return;
 		}
@@ -299,6 +298,9 @@ class EditorMainMenu: ScriptViewMenu
 				}
 			}			
 		}
+		
+		NextServerShowcase.Show(m_ValidShowcaseSlots.Count() > 1);
+		PrevServerShowcase.Show(m_ValidShowcaseSlots.Count() > 1);
 	}
 
 	override bool OnMouseEnter(Widget w, int x, int y)
