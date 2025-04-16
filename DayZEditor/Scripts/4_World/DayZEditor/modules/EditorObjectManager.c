@@ -144,6 +144,57 @@ class EditorObjectManagerModule : Managed
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkPointLight));
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase));
+
+		//	Experimental lights
+		if (GetEditor().GetSettings().UseExperimentalLights) {
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(AnniversaryMainLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(BlowtorchLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(BonfireLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(BrightnessTestLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(ChemlightLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(EntranceLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(EntranceLightStairs1));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(EntranceLightStairs2));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(EntranceLightMain1));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(EntranceLightMain2));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(FireplaceLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(FlareLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(FlareLightRed));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(FlareLightGreen));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(FlareLightBlue));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(FlareLightContamination));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(GoatLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(MuzzleFlashLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(MuzzleFlashLight_1));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(MuzzleFlashLight_2));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(PartyLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(PersonalLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(PortableGasLampLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(RoadflareLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(StoveLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(TorchLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(WarheadStorageLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(XmasSleighLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(XmasTreeLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(ZombieMummyLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(CivilianSedanFrontLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(CivilianSedanRearLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(Hatchback_02FrontLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(Hatchback_02RearLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(Offroad_02FrontLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(Offroad_02RearLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(OffroadHatchbackFrontLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(OffroadHatchbackRearLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(Sedan_02FrontLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(Sedan_02RearLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(Truck_01FrontLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(Truck_01RearLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(FlashlightLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(HeadtorchLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(PistollightLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(SpotlightLight));
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(UniversallightLight));
+		}
 	}
 
 	EditorCameraTrack CreateCameraTrack(notnull EditorCameraTrackData camera_track_data)

@@ -169,38 +169,40 @@ class EditorMainMenu: ScriptViewMenu
 			for (int j = 0; j < login_cache.Showcases.Count(); j++) {
 				Payload_ServerShowcase showcase = login_cache.Showcases[j];
 				string file_name = string.Format("%1.dds", showcase.Name);
-				RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
-				image_ctx.SetHeader("application/octet-stream");
-				image_ctx.FILE(new RestCallbackBase(), "", file_name);
-
 				string dst_file = SystemPath.Combine(img_folder, file_name);
-				string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
-				
-				if (!FileExist(src_file)) {
-					src_file = SystemPath.Saves(file_name);
-				}
-				
-				if (FileExist(src_file)) {
-					if (CopyFile(src_file, dst_file)) {
-						DeleteFile(src_file);
+				if (!FileExist(dst_file)) {
+					RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
+					image_ctx.SetHeader("application/octet-stream");
+					image_ctx.FILE_now("", file_name);
+					
+					string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
+					
+					if (!FileExist(src_file)) {
+						src_file = SystemPath.Saves(file_name);
+					}
+							
+					if (FileExist(src_file)) {
+						if (CopyFile(src_file, dst_file)) {
+							DeleteFile(src_file);
+						}
 					}
 				}
-								
+												
 				m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
-			}
-
-			m_ShowcaseIndex = 0;
-			if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
-				ServerShowcaseImage.SetImage(m_ShowcaseIndex);
-				ServerShowcaseImage.Show(true);
 			}
 		}
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetStatisticsMode, 0, 0, m_GlobalStatsVisible);
 	}
-	
+			
 	protected void SetStatisticsMode(bool global)
 	{
+		m_ShowcaseIndex = 0;
+		if (m_ValidShowcaseSlots.IsValidIndex(m_ShowcaseIndex) && m_ValidShowcaseSlots[m_ShowcaseIndex]) {
+			ServerShowcaseImage.SetImage(m_ShowcaseIndex);
+			ServerShowcaseImage.Show(true);
+		}
+			
 		if (!GetDayZGame().LoginCache) {
 			global = false;
 			GlobeFrame.Show(false);
@@ -252,6 +254,13 @@ class EditorMainMenu: ScriptViewMenu
 				
 		if (!GetGame().IsAppActive()) {
 			return;
+		}
+		
+		if (GetEditor()) {
+			UAInput input = GetUApi().GetInputByName("UAUIBack");
+			if (input.LocalPress()) {
+				GetGame().GetMission().Continue();
+			}
 		}
 		
 		float mg_s_w, mg_s_h;

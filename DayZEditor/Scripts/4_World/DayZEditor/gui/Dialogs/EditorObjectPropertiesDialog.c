@@ -17,7 +17,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	bool Show = true;
 	bool Locked;
 	bool Simulate;
-	bool Physics;
+	bool UsePhysics;
 	bool AllowDamage = false;
 	bool Collision = true;
 	bool EditorOnly = false;
@@ -94,7 +94,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", m_EditorMultiObjectCommandController, "EditorOnly"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", m_EditorMultiObjectCommandController, "Simulate"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", m_EditorMultiObjectCommandController, "Locked"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_EditorMultiObjectCommandController, "Physics"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_EditorMultiObjectCommandController, "UsePhysics"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", m_EditorMultiObjectCommandController, "AllowDamage"));
 		
 		AddContent(general_group);
@@ -227,7 +227,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", this, "EditorOnly"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", this, "Simulate"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", this, "Locked"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", this, "Physics"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", this, "UsePhysics"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", this, "AllowDamage"));
 		//object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_COLLISION", editor_object, "Collision"));
 		string expansion_check = "ExpansionMarketModule";
@@ -329,8 +329,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 				break;
 			}
 			
-			case "Physics": {
-				m_EditorObject.SetPhysicsEnabled(Physics);
+			case "UsePhysics": {
+				m_EditorObject.SetPhysicsEnabled(UsePhysics);
 				break;
 			}
 			

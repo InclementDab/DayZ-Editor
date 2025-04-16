@@ -59,11 +59,11 @@ class Editor: Managed
 
 	const int STATISTICS_SAVE_INTERVAL = 10;
 	
-#ifdef DIAG_DEVELOPER
-	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:5000\/";
-#else
+//#ifdef DIAG_DEVELOPER
+//	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:5000\/";
+//#else
 	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc02.pylex.xyz:8612\/";
-#endif
+//#endif
 	
 	static const ref array<string> DELETION_BLACKLIST = {
 		"BrushBase",
@@ -676,7 +676,7 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(lightning1.Delete, Math.RandomInt(150, 300));
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(lightning2.Delete, Math.RandomInt(250, 600));
 	}
-
+	
 	void Update(float timeslice)
 	{
 		if (!GetGame().IsAppActive()) {

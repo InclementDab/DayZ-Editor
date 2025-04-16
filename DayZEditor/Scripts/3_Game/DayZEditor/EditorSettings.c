@@ -36,6 +36,9 @@ class EditorSettings: ProfileSettings
 //#endif
 	int AltMoveMode = 1;
 	
+	[RegisterProfileSettingMultistate("ADVANCED", "UseExperimentalLights", "Experimental Lights", {"DISABLED", "ENABLED"})]
+	int UseExperimentalLights = 0;
+	
 	// todo: stub
 	////[RegisterProfileSettingMultistate("PLACEMENT", "AllowPlacementOfPersistentItems", "Place Persistent Items", {"NO", "YES"})]
 	bool AllowPlacementOfPersistentItems = false; 

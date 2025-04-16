@@ -41,7 +41,7 @@ class EditorMultiObjectCommandController
 	
 	float Health = 100;
 	bool Locked;
-	bool Physics;
+	bool UsePhysics;
 	bool AllowDamage = false;
 	bool Collision = true;
 	bool EditorOnly = false;
@@ -94,8 +94,8 @@ class EditorMultiObjectCommandController
 					break;
 				}
 				
-				case "Physics": {
-					editor_object.SetPhysicsEnabled(Physics);
+				case "UsePhysics": {
+					editor_object.SetPhysicsEnabled(UsePhysics);
 					break;
 				}
 				
