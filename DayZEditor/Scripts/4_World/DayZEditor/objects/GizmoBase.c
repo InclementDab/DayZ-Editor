@@ -108,7 +108,7 @@ class EditorGizmo: Managed
 	}
 	
 	protected void PreUpdateGizmo(float dt)
-	{
+	{		
 		m_LocalTransformsToTarget = new map<EditorObject, ref array<vector>>();
 		foreach (EditorObject additional_drag_target: m_AllSelectedObjects) {
 			if (additional_drag_target == m_TopSelectedObject) {
@@ -132,11 +132,10 @@ class EditorGizmo: Managed
 
 	protected void UpdateGizmo(float dt, inout vector gizmo_transform[4])
 	{
-
 	}
 
 	protected void PostUpdateGizmo(float dt)
-	{
+	{		
 		// Handle all child objects
 		foreach (EditorObject selected_object: m_AllSelectedObjects) {
 			if (selected_object == m_TopSelectedObject) {
@@ -169,6 +168,7 @@ class EditorGizmo: Managed
 	// called by Editor.Update
 	void Update(float dt)
 	{
+		ScopedFunctionTimer Scope0("EditorGizmo::Update");
 		bool doSort = 0;
 		float colorArr[4];
 		int bias = 0;
@@ -292,7 +292,10 @@ class EditorGizmo: Managed
 		m_VisibleSortedInteractions.Clear();
 
 		PreUpdateGizmo(dt);
+		Scope0.Dump("PreUpdate");
+		
 		UpdateGizmo(dt, gizmo_transform);
+		Scope0.Dump("Update");
 		
 		foreach (int interaction_index_color, GizmoInteractionSource clip_info_color: m_InteractionCollisions) {
 			
@@ -318,6 +321,7 @@ class EditorGizmo: Managed
 		m_Gizmo.Update();
 
 		PostUpdateGizmo(dt);
+		Scope0.Dump("PostUpdate");
 	}
 	
 	// Each clipping bounds must be vector[2]

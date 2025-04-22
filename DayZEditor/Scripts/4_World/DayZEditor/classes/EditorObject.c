@@ -267,13 +267,13 @@ class EditorObject: EditorWorldObject
 
 	vector GetPosition() 
 	{ 
-		return GetWorldObject().GetPosition(); 
+		return m_WorldObject.GetPosition(); 
 	}
 	
 	void SetPosition(vector pos) 
 	{ 
 		if (IsLocked()) return;
-		GetWorldObject().SetPosition(pos);
+		m_WorldObject.SetPosition(pos);
 
 		m_Data.Position = pos;
 		// idk about this one
@@ -291,8 +291,8 @@ class EditorObject: EditorWorldObject
 	{ 
 		if (IsLocked()) return;
 
-		GetWorldObject().SetOrientation(orientation);
-		GetWorldObject().SetScale(m_Data.Scale);
+		m_WorldObject.SetOrientation(orientation);
+		m_WorldObject.SetScale(m_Data.Scale);
 
 		m_Data.Orientation = orientation;
 				
@@ -308,9 +308,8 @@ class EditorObject: EditorWorldObject
 	{ 	
 		if (IsLocked()) return;
 		
-		GetWorldObject().SetTransform(mat);	
-		GetWorldObject().Update();
-		
+		m_WorldObject.SetTransform(mat);	
+				
 		vector orientation = Math3D.MatrixToAngles(mat);		
 		m_Data.Position = mat[3];
 		m_Data.Orientation = orientation;
@@ -323,7 +322,7 @@ class EditorObject: EditorWorldObject
 	void SetScale(float scale)
 	{		
 		if (IsLocked()) return;
-		GetWorldObject().SetScale(scale);
+		m_WorldObject.SetScale(scale);
 
 		m_Data.Scale = scale;
 		Update();
@@ -456,7 +455,6 @@ class EditorObject: EditorWorldObject
 				bounding_box_thickness = 0.064;
 				break;
 			}
-			
 		}
 		
 		vector size = GetSize();

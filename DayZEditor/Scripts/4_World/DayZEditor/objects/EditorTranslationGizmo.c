@@ -43,6 +43,8 @@ class EditorTranslationGizmo: EditorGizmo
 	
 	override void UpdateGizmo(float dt, inout vector gizmo_transform[4])
 	{
+		super.UpdateGizmo(dt, gizmo_transform);
+		
 		m_VisibleSortedInteractions.Insert(INTERACTION_CENTER);
 		m_VisibleSortedInteractions.Insert(INTERACTION_X_AXIS);
 		m_VisibleSortedInteractions.Insert(INTERACTION_Y_AXIS);

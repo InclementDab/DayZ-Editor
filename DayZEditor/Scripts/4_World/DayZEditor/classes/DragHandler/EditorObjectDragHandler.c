@@ -98,6 +98,8 @@ class EditorObjectDragHandler: EditorDragHandler
 	
 	protected override void OnDragging(notnull EditorObject target, notnull array<EditorObject> additional_drag_targets)
 	{
+		ScopedFunctionTimer Scope0("EditorObjectDragHandler.OnDragging");
+
 		array<EditorObject> all_objects = {};
 		all_objects.Insert(target);
 		all_objects.InsertAll(additional_drag_targets);

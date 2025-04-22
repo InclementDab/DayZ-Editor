@@ -243,7 +243,7 @@ class EditorCamera_V2: EditorCamera
 				movement = -movement;
 			}
 		}
-
+				
 		vector rotation;
 		float zoom;
 		float fov;

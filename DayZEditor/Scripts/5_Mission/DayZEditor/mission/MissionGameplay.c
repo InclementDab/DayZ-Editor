@@ -100,7 +100,7 @@ modded class MissionGameplay
 		}
 
 		// Make sure to select player immediately so they can be controlled
-		GetGame().SelectPlayer(null, player);
+		//GetGame().SelectPlayer(null, player);
 
 		g_Editor = new Editor(player);
 		g_Editor.SetActive(true);

@@ -1,6 +1,4 @@
-#ifndef COMPONENT_SYSTEM
 [RegisterProfileSetting(EditorSettings, "EDITOR")]
-#endif
 class EditorSettings: ProfileSettings
 {	
 	bool AutoSaveEnabled			= true;
