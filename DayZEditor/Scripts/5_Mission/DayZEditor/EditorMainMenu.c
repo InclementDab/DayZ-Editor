@@ -23,7 +23,7 @@ class EditorStatisticsEntryView : ScriptView
 class SimpleButton: ScriptWidgetBase
 {
 	ButtonWidget Button;
-
+	
 	override void OnWidgetScriptInit(Widget w)
 	{
 		super.OnWidgetScriptInit(w);
@@ -58,11 +58,11 @@ class EditorMainMenu: ScriptViewMenu
 	protected ref array<int> m_ValidShowcaseSlots = {}; // extra check in case an image fails to load
 
 	protected float m_SoundVolume = 1.0, m_MusicVolume = 1.0;
-	protected bool m_GlobalStatsVisible;
+	protected bool m_GlobalStatsVisible, m_DeletionPending;
 	
 	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame, GlobeFrame;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
-	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase;
+	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase, ContinueButton;
 	TextWidget VersionText, EditorText, StatHeaderText;
 	RichTextWidget ServerShowcaseBackupText;
 	ScrollWidget MapScroller;
@@ -103,6 +103,8 @@ class EditorMainMenu: ScriptViewMenu
 		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));
 		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase_request' in Discord\nClick to join.");
 		
+		ContinueButton.Show(GetEditor() != null);
+			
 		m_SoundVolume = GetGame().GetSoundScene().GetSoundVolume();
 		m_MusicVolume = GetGame().GetSoundScene().GetMusicVolume();
 		
@@ -140,9 +142,10 @@ class EditorMainMenu: ScriptViewMenu
 			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
 		}
 		
-		if (!Editor.Experimental) {
+		if (!Editor.Experimental && !Editor.HasTestedVersion) {
 			RestContext version_ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			version_ctx.GET(new EditorVersionCallback(ScriptCaller.Create(OnVersionResponse)), "api\/changelog\/Version");
+			Editor.HasTestedVersion = true;
 		}
 	}
 
@@ -251,15 +254,20 @@ class EditorMainMenu: ScriptViewMenu
 	override void Update(float dt)
 	{
 		super.Update(dt);
-				
+		
 		if (!GetGame().IsAppActive()) {
 			return;
 		}
-		
+				
+		if (m_DeletionPending) {
+			return;
+		}
+							
 		if (GetEditor()) {
 			UAInput input = GetUApi().GetInputByName("UAUIBack");
 			if (input.LocalPress()) {
-				GetGame().GetMission().Continue();
+				m_DeletionPending = true;
+				return;
 			}
 		}
 		
@@ -354,6 +362,12 @@ class EditorMainMenu: ScriptViewMenu
 				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/twitter.com\/InclementDab", TooltipPosition.INSIDE);
 				break;
 			}
+				
+			case ContinueButton: {
+				child_image.SetColor(LinearColor.PINK);
+				GetDayZGame().CreateDelayedTooltip(w, "Continue", TooltipPosition.INSIDE);
+				break;
+			}
 
 			case NextServerShowcase: {
 				child_image.SetImage(3);
@@ -381,7 +395,7 @@ class EditorMainMenu: ScriptViewMenu
 				MusicButton.SetImage(3);
 				break;
 			}
-
+				
 			case ServerShowcase: {
 				ServerShowcaseOutline.SetColor(EditorColors.BLUE);
 				Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
@@ -446,7 +460,7 @@ class EditorMainMenu: ScriptViewMenu
 		if (child_image && w.IsInherited(ButtonWidget)) {
 			WidgetAnimator.CancelAnimate(child_image);
 			child_image.SetSize(0.8, 0.8);
-			WidgetAnimator.AnimateColor(child_image, -1, 100);
+			child_image.SetColor(-1);
 		}
 
 		return super.OnMouseLeave(w, enterW, x, y);
@@ -543,6 +557,12 @@ class EditorMainMenu: ScriptViewMenu
 			case TwitterButton: {
 				GetGame().OpenURL("https:\/\/twitter.com\/InclementDab");
 				break;
+			}
+				
+			case ContinueButton: {
+				m_DeletionPending = true;
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetMission().Continue);
+				break;	
 			}
 
 			case NextServerShowcase: {

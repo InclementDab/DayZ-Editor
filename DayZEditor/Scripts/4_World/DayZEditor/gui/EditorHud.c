@@ -229,6 +229,11 @@ class EditorHud: ScriptView
 			return;
 		}
 		
+		if (GetGame().GetMission().IsPaused()) {
+			ShowCursor(true);
+			return;
+		}
+		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 
@@ -593,6 +598,13 @@ class EditorHud: ScriptView
 
 		DbgUI.Text(string.Format("Widget Under Cursor: %1", widget_under_cursor_name));
 		DbgUI.Text(string.Format("Focus Widget: %1", focus_widget_name));
+		
+		array<ref EditorAction> action_stack = EnScriptVar<array<ref EditorAction>>.Get(GetEditor(), "m_ActionStack", 0)
+		for (int a = action_stack.Count() - 1; a >= 0; a--) {
+			string format_action_string = string.Format("[%3] Undo: %1, Redo: %2", action_stack[a].GetUndoAction(), action_stack[a].GetRedoAction(), a);
+			DbgUI.Text(format_action_string);
+		}
+				
 		DbgUI.End();
 #endif
 	}

@@ -120,6 +120,7 @@ class Editor: Managed
 	static const int MinorVersionNumber = 4;
 	static const int VersionNumber = 34;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
+	static bool HasTestedVersion = false;
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -678,7 +679,7 @@ class Editor: Managed
 	}
 	
 	void Update(float timeslice)
-	{
+	{				
 		if (!GetGame().IsAppActive()) {
 			return;
 		}
@@ -1936,11 +1937,11 @@ class Editor: Managed
 
 	void InsertAction(EditorAction action) 
 	{
-		if (m_CurrentActionIndex < m_ActionStack.Count() - 1) {
-			for (int i = m_ActionStack.Count() - m_CurrentActionIndex - 1; i >= m_CurrentActionIndex + 1; i--) {
-				m_ActionStack.RemoveOrdered(i);
-			}
+		
+		for (int i = m_ActionStack.Count() - 1; i >= m_CurrentActionIndex + 1; i--) {
+			m_ActionStack.RemoveOrdered(i);
 		}
+		
 
 		m_ActionStack.Insert(action);
 		m_CurrentActionIndex = m_ActionStack.Count() - 1;

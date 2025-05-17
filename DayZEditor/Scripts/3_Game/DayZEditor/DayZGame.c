@@ -1,13 +1,7 @@
 modded class DayZGame
 {
 	protected ref ScriptView m_CurrentTooltip;
-	
-#ifdef DIAG_DEVELOPER
-	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:5000\/";
-#else
-	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc02.pylex.xyz:8612\/";
-#endif
-	
+
 	// args: string
 	ref ScriptInvoker OnProgressReport;
 

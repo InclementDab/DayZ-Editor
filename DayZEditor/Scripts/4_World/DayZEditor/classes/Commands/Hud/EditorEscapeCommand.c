@@ -48,13 +48,22 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		} 
 		
-		if (GetGame().GetUIManager().GetMenu() && GetGame().GetUIManager().GetMenu().GetID() == MENU_INGAME) {
+		if (GetGame().GetMission().IsPaused()) {
 			GetGame().GetUIManager().Back();
+			GetEditor().GetEditorHud().Show(true);
 			return true;
-		} 
+		}
+		
+		//if (GetGame().GetUIManager().GetMenu() && GetGame().GetUIManager().GetMenu().GetID() == MENU_INGAME) {
+		//	GetGame().GetUIManager().Back();
+		//	return true;
+		//} 
 		
 		//GetEditor().GetEditorHud().EnterChildMenu(MENU_INGAME);
-		GetGame().GetUIManager().EnterScriptedMenu(MENU_INGAME, null);
+		//GetGame().GetUIManager().EnterScriptedMenu(MENU_INGAME, null);
+		//GetUApi().SupressNextFrame(true);
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetMission().Pause);
+		GetEditor().GetEditorHud().Show(false);
 		return true;
 	}
 	

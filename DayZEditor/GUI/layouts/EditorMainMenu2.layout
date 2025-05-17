@@ -469,7 +469,7 @@ PanelWidgetClass main_menu_root {
      Margin 7
      "Size To Content H" 1
      "Size To Content V" 1
-     Columns 5
+     Columns 6
      Rows 1
      {
       ButtonWidgetClass ExitButton {
@@ -611,6 +611,33 @@ PanelWidgetClass main_menu_root {
          vexactsize 0
          scriptclass ""
          image0 "set:brands image:twitter"
+         mode blend
+         "src alpha" 1
+         filter 1
+        }
+       }
+      }
+      ButtonWidgetClass ContinueButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass ContinueButton_Icon {
+         ignorepointer 1
+         position 0 0
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass ""
+         image0 "set:solid image:forward_step"
          mode blend
          "src alpha" 1
          filter 1

@@ -1,5 +1,7 @@
 modded class MissionGameplay
 {	
+	protected ref EditorMainMenu m_PauseMenu;
+	
 	override void OnInit()
 	{
 		super.OnInit();
@@ -100,16 +102,64 @@ modded class MissionGameplay
 		}
 
 		// Make sure to select player immediately so they can be controlled
-		//GetGame().SelectPlayer(null, player);
+		GetGame().SelectPlayer(null, player);
 
 		g_Editor = new Editor(player);
 		g_Editor.SetActive(true);
 	}
 		
+	/*
 	override void Continue()
 	{
 		super.Continue();
 		
+		if (GetEditor().IsActive())	{
+			GetEditor().GetEditorHud().Show(true);
+		}
+	}*/
+	
+	override bool IsPaused()
+	{
+		return m_PauseMenu != null;
+	}
+	
+	override void Pause()
+	{
+		if (IsPaused() || m_PauseMenu)
+		{
+			return;
+		}
+
+		m_PauseQueued = true;
+
+		if (g_Game.GetGameState() != DayZGameState.IN_GAME) {
+			return;
+		}
+		
+		PlayerBase player = PlayerBase.Cast(GetGame().GetPlayer());
+		if (player && !player.IsPlayerLoaded() || IsPlayerRespawning()) {
+			return;
+		}
+		
+		CloseAllMenus();
+		
+		// open ingame menu
+		m_PauseMenu = new EditorMainMenu();
+
+		AddActiveInputExcludes({"menu"});
+		AddActiveInputRestriction(EInputRestrictors.INVENTORY);
+
+		m_PauseQueued = false;
+	}
+	
+	override void Continue()
+	{
+		//GetGame().GetUIManager().Back();
+		
+		RemoveActiveInputExcludes({"menu"},true);
+		RemoveActiveInputRestriction(EInputRestrictors.INVENTORY);
+		delete m_PauseMenu;
+			
 		if (GetEditor().IsActive())	{
 			GetEditor().GetEditorHud().Show(true);
 		}
