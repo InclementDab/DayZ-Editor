@@ -346,7 +346,12 @@ class EditorObjectManagerModule : Managed
 	// When a selected object gets updated we must re-cacluate the average position
 	protected void OnSelectedObjectUpdate()
 	{
-		float count_flt = m_SelectedObjects.Count();
+		if (m_SelectedObjects.Count() == 0) {
+			m_AveragePositionOfSelection = vector.Zero;
+			return;
+		}
+		
+		float count_flt = m_SelectedObjects.Count();		
 		vector total_position = vector.Zero;
 		foreach (EditorObject selected_object: m_SelectedObjects) {
 			total_position = total_position + selected_object.GetPosition();
