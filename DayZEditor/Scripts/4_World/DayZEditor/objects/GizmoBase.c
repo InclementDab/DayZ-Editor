@@ -168,7 +168,7 @@ class EditorGizmo: Managed
 	// called by Editor.Update
 	void Update(float dt)
 	{
-		ScopedFunctionTimer Scope0("EditorGizmo::Update");
+		//ScopedFunctionTimer Scope0("EditorGizmo::Update");
 		bool doSort = 0;
 		float colorArr[4];
 		int bias = 0;
@@ -292,10 +292,10 @@ class EditorGizmo: Managed
 		m_VisibleSortedInteractions.Clear();
 
 		PreUpdateGizmo(dt);
-		Scope0.Dump("PreUpdate");
+		//Scope0.Dump("PreUpdate");
 		
 		UpdateGizmo(dt, gizmo_transform);
-		Scope0.Dump("Update");
+		//Scope0.Dump("Update");
 		
 		foreach (int interaction_index_color, GizmoInteractionSource clip_info_color: m_InteractionCollisions) {
 			
@@ -321,7 +321,7 @@ class EditorGizmo: Managed
 		m_Gizmo.Update();
 
 		PostUpdateGizmo(dt);
-		Scope0.Dump("PostUpdate");
+		//Scope0.Dump("PostUpdate");
 	}
 	
 	// Each clipping bounds must be vector[2]

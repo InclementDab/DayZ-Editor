@@ -137,6 +137,10 @@ class EditorMainMenu: ScriptViewMenu
 			OnLoginResponse(GetDayZGame().LoginCache);
 		}
 		else if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
+			// load a dummy into the login cache so we dont keep calling it.
+			// the response will either assign or null it depending on the success
+			GetDayZGame().LoginCache = new Payload_EditorLoginResponse();
+			
 			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
@@ -159,8 +163,6 @@ class EditorMainMenu: ScriptViewMenu
 
 	protected void OnLoginResponse(Payload_EditorLoginResponse login_cache)	
 	{
-		GetDayZGame().LoginCache = login_cache;
-
 		string cache_folder = SystemPath.Saves("EditorCache");
 		MakeDirectory(cache_folder);
 		string img_folder = SystemPath.Combine(cache_folder, "img");

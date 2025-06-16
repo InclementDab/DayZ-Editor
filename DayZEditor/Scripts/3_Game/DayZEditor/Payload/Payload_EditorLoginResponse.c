@@ -7,22 +7,29 @@ class EditorLoginCallback : RestCallbackBase
 		m_OnPayloadSuccess = on_payload_success;
 	}
 
+	override void OnError(int errorCode)
+	{
+		super.OnError(errorCode);
+		
+		GetDayZGame().LoginCache = null;
+	}
+	
 	override void OnSuccess(string data, int dataSize)
 	{
 		super.OnSuccess(data, dataSize);
 
 		Payload_EditorLoginResponse response = new Payload_EditorLoginResponse();
 		string error;
-		if (!JsonFileLoader<Payload_EditorLoginResponse>.LoadData(data, response, error))
-		{
+		if (!JsonFileLoader<Payload_EditorLoginResponse>.LoadData(data, response, error)) {
 			Error(error);
 			return;
 		}
 
-		if (m_OnPayloadSuccess)
-		{
+		if (m_OnPayloadSuccess) {
 			m_OnPayloadSuccess.Invoke(response);
 		}
+		
+		GetDayZGame().LoginCache = response;
 	}
 }
 

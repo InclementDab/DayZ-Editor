@@ -3,6 +3,15 @@ class EditorCommand: RelayCommand
 	protected Editor m_Editor;	
 	protected ref Param m_Param;
 	string Text;
+	
+	void EditorCommand()
+	{
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
+	}
+	
+	protected void Update(float dt)
+	{
+	}
 
 	override bool Execute(Class sender, CommandArgs args) 
 	{

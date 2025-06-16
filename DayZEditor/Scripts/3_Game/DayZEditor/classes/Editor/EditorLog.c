@@ -4,6 +4,10 @@ modded class RelayCommand
 	
 	void SetCanExecute(bool state)
 	{
+		if (m_CanExecute == state) {
+			return;
+		}
+		
 		m_CanExecute = state;
 		CanExecuteChanged(m_CanExecute);
 	}

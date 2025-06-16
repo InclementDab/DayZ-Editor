@@ -19,7 +19,7 @@ class EditorPlacedContextMenu: EditorContextMenu
 			m_Editor.CommandManager[EditorControlPlayerCommand].SetData(new Param1<EditorObject>(context));
 			AddMenuButton(m_Editor.CommandManager[EditorControlPlayerCommand]);
 		}
-		
+				
 		AddMenuButton(m_Editor.CommandManager[EditorAlignToSurfaceCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorSnapToSurfaceCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorResetAlignmentCommand]);
@@ -41,7 +41,9 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuButton(m_Editor.CommandManager[EditorDuplicateCommand]);
 		
 		m_Editor.CommandManager[EditorExportEventPos].SetData(new Param1<EntityAI>(EntityAI.Cast(context.GetWorldObject())));
+		m_Editor.CommandManager[EditorExportSelectionAsEventGroup].SetData(new Param1<EditorObject>(context));
 		AddMenuButton(m_Editor.CommandManager[EditorExportEventPos]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportSelectionAsEventGroup]);
 		AddMenuButton(m_Editor.CommandManager[EditorObjectPropertiesCommand]);
 	}
 }

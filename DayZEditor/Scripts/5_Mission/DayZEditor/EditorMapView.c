@@ -227,8 +227,11 @@ class EditorMapView: ScriptView
 	
 				if (!m_Opened && Image.GetColor() != -1) {
 					EffectSound snd;
-					Camera.GetCurrentCamera().PlaySoundSet(snd, "mapOut_SoundSet", 0, 0);
-					snd.SetLocalPosition(Vector(1, 0, 0));
+					if (Camera.GetCurrentCamera()) {
+						Camera.GetCurrentCamera().PlaySoundSet(snd, "mapOut_SoundSet", 0, 0);
+						snd.SetLocalPosition(Vector(1, 0, 0));					
+					}
+					
 					m_SoundEffectDt = 1.0;
 				}
 				

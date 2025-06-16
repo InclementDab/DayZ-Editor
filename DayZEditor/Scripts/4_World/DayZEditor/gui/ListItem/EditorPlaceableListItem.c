@@ -159,7 +159,8 @@ class EditorPlaceableListItem: EditorListItem
 		//! bugfix
 		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;
 		
-		if (m_PlaceableItem) {
+		bool preview_disabled = GetGame().IsKindOf(m_PlaceableItem.Type, "Man") || GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI");
+		if (m_PlaceableItem && !preview_disabled) {
 			Object preview = GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE);
 			if (!preview) {
 				// DOESNT WORK @JACOB
