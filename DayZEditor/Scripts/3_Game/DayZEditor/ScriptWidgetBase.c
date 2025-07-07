@@ -6,7 +6,7 @@ class ScriptWidgetBase: ScriptedWidgetEventHandler
 	{
 		m_LayoutRoot = w;
 		if (m_LayoutRoot) {
-			ScriptView.LoadWidgetsAsVariables(this, new PropertyTypeHashMap(Type()), w);
+			ScriptView.LoadWidgetsAsVariables(this, w);
 		}
 		
 		if (g_Game) {

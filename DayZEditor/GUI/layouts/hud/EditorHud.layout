@@ -554,6 +554,7 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 1
            scaled 1
+           priority 410
            scriptclass ""
            style Colorable
            "no focus" 1
@@ -571,6 +572,7 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 0
              vexactsize 0
+             priority 410
              style rover_sim_colorable
             }
             WrapSpacerWidgetClass LeftbarPlacementsConfig {
@@ -585,6 +587,7 @@ FrameWidgetClass EditorFrame {
              vexactpos 0
              hexactsize 0
              vexactsize 0
+             priority 411
              scriptclass "ViewBinding"
              style Colorable
              Padding 0
@@ -611,6 +614,7 @@ FrameWidgetClass EditorFrame {
              vexactpos 0
              hexactsize 0
              vexactsize 0
+             priority 411
              scriptclass "ViewBinding"
              Padding 0
              Margin 0
@@ -978,6 +982,7 @@ FrameWidgetClass EditorFrame {
            hexactsize 0
            vexactsize 1
            scaled 1
+           priority 410
            style Colorable
            "Scrollbar V" 1
            {
@@ -990,6 +995,7 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 0
              vexactsize 0
+             priority 410
              style rover_sim_colorable
             }
             WrapSpacerWidgetClass RightbarPlacementsList {
@@ -1004,6 +1010,7 @@ FrameWidgetClass EditorFrame {
              vexactpos 0
              hexactsize 0
              vexactsize 0
+             priority 411
              scriptclass "ViewBinding"
              style Colorable
              Padding 0
@@ -1030,6 +1037,7 @@ FrameWidgetClass EditorFrame {
              vexactpos 0
              hexactsize 0
              vexactsize 0
+             priority 411
              scriptclass "ViewBinding"
              style Colorable
              Padding 0

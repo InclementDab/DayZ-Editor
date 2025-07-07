@@ -9,7 +9,6 @@ PanelWidgetClass EditorMarkerInteract {
  hexactsize 1
  vexactsize 1
  scaled 0
- priority 400
  draggable 0
  scriptclass ""
  style blank
