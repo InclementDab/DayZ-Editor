@@ -43,7 +43,7 @@ class EditorDialogBase: DialogBase
 		} else {
 			int sx, sy;
 			GetScreenSize(sx, sy);
-			float dcu, dcv;	
+			float dcu, dcv;
 			DialogContent.GetScreenSize(dcu, dcv);
 			if (dcv > sy * 0.8) {
 				dcv = sy * 0.8;

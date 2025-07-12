@@ -267,7 +267,7 @@ class EditorCamera_V2: EditorCamera
 							
 		float speed = m_EditorCameraSettings.Speed;
 		if (input.GetInputByID(UATurbo).LocalValue()) {
-			speed *= TURBO_MULTIPLIER;
+			speed *= (TURBO_MULTIPLIER * TURBO_MULTIPLIER);
 		}
 		
 		if (input.GetInputByID(UALookAround).LocalValue()) {
@@ -319,7 +319,7 @@ class EditorCamera_V2: EditorCamera
 
 		// Process linear velocity
 		m_LinearVelocity = m_LinearVelocity + transform[0] * movement[0] * speed;
-		m_LinearVelocity = m_LinearVelocity + transform[1] * movement[1] * speed;
+		m_LinearVelocity = m_LinearVelocity + transform[1] * movement[1] * speed * 2;
 		m_LinearVelocity = m_LinearVelocity + transform[2] * movement[2] * speed;
 
 		transform[3] = transform[3] + (m_LinearVelocity * timeSlice);

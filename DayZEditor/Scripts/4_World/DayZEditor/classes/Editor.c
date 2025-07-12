@@ -116,7 +116,7 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 0;
+	static const int Experimental = 1;
 	static const int MinorVersionNumber = 5;
 	static const int VersionNumber = 34;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
@@ -292,7 +292,7 @@ class Editor: Managed
 		
 	void SetMode(eEditorMode editor_mode)
 	{
-		m_EditorMode = editor_mode;
+		m_EditorMode = Math.Rollover(editor_mode, 0, 4);
 #ifdef GIZMOS_ENABLED
 		m_EditorHud.SetEditorMode(m_EditorMode);
 		
@@ -525,6 +525,8 @@ class Editor: Managed
 		m_Active = false;
 		
 		delete m_EditorInventoryEditorHud;
+		
+		ClearSelection();
 		
 		m_ControllingPlayer.DisableSimulation(false);
 		GetGame().SelectPlayer(null, m_ControllingPlayer);
@@ -812,90 +814,6 @@ class Editor: Managed
 
 		ProcessCameraTrack(timeslice);
 	}
-
-/*
-	protected ref array<vector> m_CameraSmoothingCoefficients = {};
-
-    private void CalculateCoefficients()
-    {
-		float smooth_value = GetEditorHud().GetTemplateController().CameraSmoothing;
-		array<EditorCameraTrack> camera_tracks = m_ObjectManager.GetCameraTracks();
-		array<vector> points = {};
-		points.Resize(camera_tracks.Count());
-		foreach (EditorCameraTrack track: camera_tracks) {
-			points.Insert(track.GetPosition());
-		}
-
-		int n = camera_tracks.Count();
-		array<float> h = {};
-		array<vector> d = {};
-
-		for (int i = 0; i < n - 1; i++) {
-			h[i] = points[i + 1][0] - points[i][0];
-		}
-
-		// initialize all 2d arrays
-		array<ref array<float>> a = {};
-		a.Resize(n);
-		for (int j = 0; j < n; j++) {
-			a[j] = {};
-		}
-
-		array<vector> rhs = {};
-		rhs.Resize(n);
-
-		a[0][0] = 1 + smooth_value;
-		a[n - 1][n - 1] = 1 + smooth_value;
-		for (int k = 1; k < n - 1; k++) {
-			a[k][k - 1] = h[k - 1];
-			a[k][k] = 2 * (h[k - 1] + h[k]) + smooth_value;
-			a[k][k + 1] = h[k];
-
-			rhs[k] = 3 * ((points[i + 1][1] - points[k][1]) / h[k] - (points[k][1] - points[k - 1][1]) / h[k - 1])
-		}
-
-		rhs[0] = smooth_value * points[0][1];
-		rhs[n - 1] = smooth_value * points[n - 1][1];
-
-		// Solve Tridiagonal System
-		m_CameraSmoothingCoefficients = {};
-		m_CameraSmoothingCoefficients.Resize(n);
-		array<float> c = {};
-		c.Resize(n - 1);
-		array<vector> d = {};
-		d.Resize(n);
-		float m = a[0][0];
-		d[0] = rhs[0] / m;
-
-		for (int l = 1; l < n; l++) {
-			c[l - 1] = a[l][l - 1] / m;
-			m = a[l][l] - a[l][l - 1] * d[l - 1] / m;
-			d[l] = (rhs[l] - a[l][l - 1] * d[l - 1] / m);
-		}
-
-		m_CameraSmoothingCoefficients.Insert(d[n - 1]);
-		for (int m = n - 2; m >= 0; m--) {
-			m_CameraSmoothingCoefficients.InsertAt(0, d[m] - c[m] * m_CameraSmoothingCoefficients[0]);
-		}
-    }
-
-    public Vector3D Interpolate(double x)
-    {
-        int i = points.FindIndex(p => p.X > x) - 1;
-        i = Math.Max(0, Math.Min(i, points.Count - 2));
-
-        double t = (x - points[i].X) / (points[i + 1].X - points[i].X);
-        double t2 = t * t;
-        double t3 = t2 * t;
-
-        Vector3D a = points[i];
-        Vector3D b = coefficients[i];
-        Vector3D c = 3 * (points[i + 1] - points[i]) - 2 * coefficients[i] - coefficients[i + 1];
-        Vector3D d = 2 * (points[i] - points[i + 1]) + coefficients[i] + coefficients[i + 1];
-
-        return a + b * t + c * t2 + d * t3;
-    }
-*/
 	
 	// https://www.cubic.org/docs/hermite.htm
 	private static float H00(float t) { return (2 * t * t * t) - (3 * t * t) + 1; }
@@ -1097,6 +1015,7 @@ class Editor: Managed
 		UAInput left_click_input = input_api.GetInputByID(UAFire);
 		UAInput right_click_input = input_api.GetInputByID(UATempRaiseWeapon);
 		UAInput middle_click_input = input_api.GetInputByID(UAZoomIn);
+		UAInput cycle_mode_input = input_api.GetInputByName("EditorCycleWidget");
 
 		bool any_mouse_click = left_click_input.LocalPress() || right_click_input.LocalPress() || middle_click_input.LocalPress();
 
@@ -1116,7 +1035,7 @@ class Editor: Managed
 			}*/
 			// no right click activity for now
 		}
-
+	
 		// Clear focus, specifically after we check and create things that could be deleted here
 		if (any_mouse_click && !widget_under_cursor) {
 			SetFocus(null);
@@ -1228,6 +1147,10 @@ class Editor: Managed
 					hand_ori[0] = hand_ori[0] + factor;
 					placing_object.GetWorldObject().SetOrientation(hand_ori);			
 				}
+			}
+		} else {
+			if (cycle_mode_input.LocalPress()) {
+				SetMode(m_EditorMode + 1);
 			}
 		}
 									
@@ -1424,12 +1347,13 @@ class Editor: Managed
 		}
 		
 		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !GetWidgetUnderCursor() && !IsPlacing()) {
+			float scale_change_value = 0.1 * GetCamera().GetSettings().Speed;
 			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
-				GetCamera().GetSettings().Speed += Math.Ln(GetCamera().GetSettings().Speed + 1);
+				GetCamera().GetSettings().Speed += scale_change_value;
 			}
 			
 			if (input.LocalValue("EditorCameraToolSpeedDecrease")) {
-				GetCamera().GetSettings().Speed -= Math.Ln(GetCamera().GetSettings().Speed + 1);
+				GetCamera().GetSettings().Speed -= scale_change_value;
 			}
 			
 			GetCamera().GetSettings().Speed = Math.Clamp(GetCamera().GetSettings().Speed, EditorCamera.SPEED_MIN, EditorCamera.SPEED_MAX);

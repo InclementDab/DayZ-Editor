@@ -24,6 +24,7 @@
 			
 			<input name="EditorToggleMap" loc="Map" />
 			<input name="EditorDeleteObject" loc="Delete Object" />
+			<input name="EditorCycleWidget" loc="Cycle Transform Mode" />
 
 			<input name="EditorMoveObjectForward" loc="Move Selection Forward" />
 			<input name="EditorMoveObjectBackward" loc="Move Selection Backward" />
@@ -39,6 +40,9 @@
     </inputs>
 
     <preset>
+    	<input name="EditorCycleWidget">
+            <btn name="kE"/>
+        </input>
     	<input name="EditorCameraToolSpeedIncrease">
             <btn name="mWheelUp"/>
         </input>

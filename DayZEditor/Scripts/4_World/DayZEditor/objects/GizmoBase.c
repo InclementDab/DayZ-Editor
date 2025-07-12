@@ -185,7 +185,7 @@ class EditorGizmo: Managed
 			//m_DragOffset = vector.Zero;
 			return;
 		}
-			
+		
 		// Cursor raycasts
 		m_CursorRay = GetEditor().GetCursorRay();
 		m_CameraFieldOfView = GetEditor().GetCamera().GetCurrentFOV();
