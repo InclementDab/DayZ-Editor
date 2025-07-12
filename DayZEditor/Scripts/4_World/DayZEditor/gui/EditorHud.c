@@ -584,6 +584,7 @@ class EditorHud: ScriptView
 		}	
 		
 #ifdef DIAG_DEVELOPER
+		/*
 		float tbf_s_w, tbf_s_h;
 		ToolbarFrame.GetScreenSize(tbf_s_w, tbf_s_h);
 		DbgUI.Begin("Editor", m_EditorSettings.LeftBarPlacement + 24, tbf_s_h + 24);
@@ -605,7 +606,7 @@ class EditorHud: ScriptView
 			DbgUI.Text(format_action_string);
 		}
 				
-		DbgUI.End();
+		DbgUI.End();*/
 #endif
 	}
 		
