@@ -460,9 +460,9 @@ class Editor: Managed
 			camera_raycast = source_ray.PerformRaycast(ignore, distance, interaction_layers);
 		}
 
-		if (!camera_raycast) {
-			camera_raycast = source_ray.PerformRaycastRV(ignore, null, 0, distance, ObjIntersectFire, ground_only);
-		}
+		//if (!camera_raycast) {
+		//	camera_raycast = source_ray.PerformRaycastRV(ignore, null, 0, distance, ObjIntersectFire, ground_only);
+		//}
 
 		if (!camera_raycast) {
 			camera_raycast = source_ray.PerformRaycastRVEX(0, distance, ObjIntersectFire, { ignore }, ground_only);

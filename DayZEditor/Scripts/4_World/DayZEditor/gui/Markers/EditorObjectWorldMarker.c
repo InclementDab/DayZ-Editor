@@ -24,6 +24,14 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 				
+		if (m_EditorObject.IsLocked() || !m_Editor.GetEditorHud().IsVisible() || !m_Show) {
+			if (m_LayoutRoot.IsVisible()) {
+				m_LayoutRoot.Show(false);
+			}
+
+			return;
+		}
+		
 		vector position = GetPosition();	
 		vector screen_pos = GetGame().GetScreenPos(position);
 		if (m_MapWidget.IsVisible()) {
@@ -33,8 +41,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;
 		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
 		bool in_distance = m_MarkerDistSq > distancesq || m_MapWidget.IsVisible();
-		bool show = m_Show && !m_EditorObject.IsLocked() && m_Editor.GetEditorHud().IsVisible() && !off_screen && in_distance;
-		if (!show) {
+		if (off_screen || !in_distance) {
 			if (m_LayoutRoot.IsVisible()) {
 				m_LayoutRoot.Show(false);
 			}
@@ -99,16 +106,16 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	protected vector GetPosition()
 	{		
 		// Should the position be raycasted on the ground, or locked to the object
-		if (m_Editor.GroundMode) {
-			vector position;
-			vector object_transform[4];
-			m_EditorObject.GetTransform(object_transform);
-			vector ground_dir; int component;
-			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, null, null, m_EditorObject.GetWorldObject(), false, true); // set to ground only
-			return position;
+		if (!m_Editor.GroundMode) {
+			return m_EditorObject.GetBottomCenter();
 		} 
 		
-		return m_EditorObject.GetBottomCenter();
+		vector position;
+		vector object_transform[4];
+		m_EditorObject.GetTransform(object_transform);
+		vector ground_dir; int component;
+		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, null, null, m_EditorObject.GetWorldObject(), false, true); // set to ground only
+		return position;
 	}
 	
 	
