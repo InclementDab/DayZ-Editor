@@ -1,5 +1,7 @@
 class GizmoInteractionSource: Managed
 {
+	static float Scale = 1.0;
+	
 	ref array<vector> Clipping = {};
 	LinearColor DefaultColor;
 	LinearColor HoverColor;
@@ -11,43 +13,34 @@ class GizmoInteractionSource: Managed
 		HoverColor = hover_color;
 	}
 	
-	bool CollideAABB(Ray ray, vector transform[4], out vector hit_pos)
+	bool CollideOBB(Ray ray, vector transform[4], out vector hit_pos)
 	{
-		vector box_clip_global[2] = {
-			Clipping[0].Multiply4(transform),
-			Clipping[1].Multiply4(transform),
-		};
-		
-		// r.dir is unit direction vector of ray
-		vector dirfrac = Vector(1.0 / ray.Direction[0], 1.0 / ray.Direction[1], 1.0 / ray.Direction[2]);
-
-		// lb is the corner of AABB with minimal coordinates - left bottom, rt is maximal corner
-		// r.org is origin of ray
-		float t1 = (box_clip_global[0][0] - ray.Position[0]) * dirfrac[0];
-		float t2 = (box_clip_global[1][0] - ray.Position[0]) * dirfrac[0];
-		float t3 = (box_clip_global[0][1] - ray.Position[1]) * dirfrac[1];
-		float t4 = (box_clip_global[1][1] - ray.Position[1]) * dirfrac[1];
-		float t5 = (box_clip_global[0][2] - ray.Position[2]) * dirfrac[2];
-		float t6 = (box_clip_global[1][2] - ray.Position[2]) * dirfrac[2];
-
-		float tmin = Math.Max(Math.Max(Math.Min(t1, t2), Math.Min(t3, t4)), Math.Min(t5, t6));
-		float tmax = Math.Min(Math.Min(Math.Max(t1, t2), Math.Max(t3, t4)), Math.Max(t5, t6));
-		float t = 0;
-		// if tmax < 0, ray (line) is intersecting AABB, but the whole AABB is behind us
-		
-		if (tmax < 0) {
-			t = tmax;
-			return false;
-		}
-
-		// if tmin > tmax, ray doesn't intersect AABB
-		if (tmin > tmax) {
-			t = tmax;
-			return false;
+		vector position_delta = transform[3] - ray.Position;
+		float tmin = 0;
+		float tmax = 1000000;
+		vector clip_min = Clipping[0] * Scale * Scale;
+		vector clip_max = Clipping[1] * Scale * Scale;
+	
+		for (int i = 0; i < 3; i++) {
+			float e = vector.Dot(transform[i], position_delta);
+			float f = vector.Dot(ray.Direction, transform[i]);
+			
+			float t1 = (e + clip_min[i]) / f;
+			float t2 = (e + clip_max[i]) / f;
+			if (t1 > t2) {
+				float w = t1;
+				t1 = t2;
+				t2 = w;
+			}
+			
+			if (t2 < tmax) tmax = t2;
+			if (t1 > tmin) tmin = t1;
+			if (tmax < tmin) {
+				return false;
+			}
 		}
 		
-		t = tmin;
-		hit_pos = ray.Position + ray.Direction.Normalized() * t;
+		hit_pos = ray.Position + ray.Direction.Normalized() * tmin;
 		return true;
 	}
 }
@@ -83,6 +76,7 @@ class EditorGizmo: Managed
 	protected Editor m_Editor;
 	protected EntityAI m_Gizmo;
 	protected int m_InteractionIndex = -1;
+	protected vector m_DragRotationOffset;
 	protected vector m_DragOffset;
 	protected ref EditorAction m_RewindAction;
 	protected ref map<int, ref GizmoInteractionSource> m_InteractionCollisions = new map<int, ref GizmoInteractionSource>();
@@ -152,6 +146,7 @@ class EditorGizmo: Managed
 			
 			vector output_additional_mat[4];
 			Math3D.MatrixMultiply4(m_TopTransformOrthogonal, local_additional_mat, output_additional_mat);
+						
 			selected_object.SetTopTransform(output_additional_mat);
 		}
 	}
@@ -174,7 +169,7 @@ class EditorGizmo: Managed
 		int bias = 0;
 		
 #ifdef DIAG_DEVELOPER
-		bool debug_collisions = 0;
+		bool debug_collisions = 1;
 		//GetDayZGame().ReloadShape(m_Gizmo);
 #endif
 		
@@ -212,6 +207,7 @@ class EditorGizmo: Managed
 		
 		float gizmo_distance = vector.Distance(top_transform[3], camera_transform[3]);
 		float gizmo_scale = gizmo_distance * m_CameraFieldOfView * 0.05;
+		GizmoInteractionSource.Scale = gizmo_scale; // update collision scaling
 		vector gizmo_scale_mat[4];
 		Math3D.ScaleMatrix(gizmo_scale, gizmo_scale_mat);
 		Math3D.MatrixMultiply3(gizmo_scale_mat, gizmo_transform, gizmo_transform);
@@ -231,7 +227,7 @@ class EditorGizmo: Managed
 		vector collision_hit = vector.Zero;
 		foreach (int interaction_index, GizmoInteractionSource clip_info: m_InteractionCollisions) {							
 			vector hit_pos;	
-			bool hit = clip_info.CollideAABB(m_CursorRay, m_TopTransformScaledToGizmo, hit_pos);
+			bool hit = clip_info.CollideOBB(m_CursorRay, m_TopTransformScaledToGizmo, hit_pos);
 			if (!hit) {
 				continue;
 			}
@@ -244,9 +240,13 @@ class EditorGizmo: Managed
 			collide_index = interaction_index;
 			collide_dist = vector.Distance(m_CursorRay.Position, hit_pos);
 			collision_hit = hit_pos;
+			
+			Shape.CreateSphere(-1, ShapeFlags.ONCE, collision_hit, 0.5);
 		}
 		
 #ifdef DIAG_DEVELOPER
+		DbgUI.Text(string.Format("Collide Index: %1", collide_index));
+		
 		foreach (int debug_interaction_index, GizmoInteractionSource debug_clip_info: m_InteractionCollisions) {
 			LinearColor dbg_color = debug_clip_info.DefaultColor;
 		
@@ -259,7 +259,7 @@ class EditorGizmo: Managed
 			}
 			
 			if (debug_collisions) {
-				Shape s = Shape.Create(ShapeType.BBOX, dbg_color, ShapeFlags.TRANSP | ShapeFlags.ONCE | ShapeFlags.ADDITIVE, debug_clip_info.Clipping[0], debug_clip_info.Clipping[1]);
+				Shape s = Shape.Create(ShapeType.BBOX, dbg_color, ShapeFlags.TRANSP | ShapeFlags.ONCE, debug_clip_info.Clipping[0], debug_clip_info.Clipping[1]);
 				s.SetMatrix(m_TopTransformScaledToGizmo);
 			}
 		}
@@ -268,6 +268,7 @@ class EditorGizmo: Managed
 		if (m_InteractionIndex == -1 && interact_input.LocalPress() && !GetWidgetUnderCursor()) {
 			m_DragOffset = collision_hit.InvMultiply4(m_TopTransformOrthogonal);
 			m_InteractionIndex = collide_index;
+			m_DragRotationOffset = m_DragOffset.InvMultiply4(m_TopTransformOrthogonal).VectorToAngles();			
 			copyarray(m_TopTransformOriginal, top_transform);
 
 			// Register rewinds
@@ -280,7 +281,8 @@ class EditorGizmo: Managed
 		if (interact_input.LocalRelease() && m_InteractionIndex != -1) {
 			m_InteractionIndex = -1;
 			m_DragOffset = vector.Zero;
-			
+			m_DragRotationOffset = vector.Zero;
+						
 			foreach (EditorObject selected_rewind_object2: m_AllSelectedObjects) {
 				m_RewindAction.InsertRedoParameter(selected_rewind_object2.GetTransformArray());
 			}

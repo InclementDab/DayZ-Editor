@@ -6,14 +6,13 @@ class EditorRotationGizmo: EditorGizmo
 		m_VisibleSortedInteractions.Insert(INTERACTION_XZ_ROTATE);
 		m_VisibleSortedInteractions.Insert(INTERACTION_YZ_ROTATE);
 		m_VisibleSortedInteractions.Insert(INTERACTION_XY_ROTATE);
-		
+				
 		switch (m_InteractionIndex) {
 			case INTERACTION_XZ_ROTATE: {
 				Plane3D xz_plane2 = Plane3D(m_TopTransform[1], m_TopTransform[3]);
-				vector xz_intersect = xz_plane2.Intersect(m_CursorRay);
+				vector xz_intersect = xz_plane2.Intersect(m_CursorRay);				
 				if (vector.Distance(m_TopTransform[3], xz_intersect) > 0.001) {
 					vector cursor_intersect_dir = vector.Direction(m_TopTransform[3], xz_intersect);
-					Debug.DrawArrow(m_TopTransform[3], m_TopTransform[3] + cursor_intersect_dir * 10, 1, LinearColor.BLUE, ShapeFlags.ONCE);
 	
 					vector cursor_dir_mat[4];
 					cursor_intersect_dir.Normalize();
@@ -31,6 +30,7 @@ class EditorRotationGizmo: EditorGizmo
 	
 						//Math3D.MatrixMultiply3(scale_matrix, cursor_dir_mat, cursor_dir_mat);
 						copyarray(m_TopTransform, cursor_dir_mat);
+						//Math3D.YawPitchRollMatrix(Math3D.MatrixToAngles(m_TopTransform) - m_DragRotationOffset, m_TopTransform);		
 					}
 				}
 				
@@ -100,18 +100,18 @@ class EditorRotationGizmo: EditorGizmo
 		float BOX_LENGTH_HALF = BOX_LENGTH / 2;
 		
 		clipping_infos[INTERACTION_XZ_ROTATE] = new GizmoInteractionSource({
-			Vector(-BOX_LENGTH_HALF, BOX_WIDTH_HALF, -BOX_LENGTH_HALF), // BOX_WIDTH[0], BOX_WIDTH[2] to keep it from intersecting with others
-			Vector(BOX_LENGTH_HALF, -BOX_WIDTH_HALF, BOX_LENGTH_HALF)
+			Vector(-BOX_LENGTH_HALF, BOX_WIDTH_HALF, -BOX_LENGTH_HALF) * 2, // BOX_WIDTH[0], BOX_WIDTH[2] to keep it from intersecting with others
+			Vector(BOX_LENGTH_HALF, -BOX_WIDTH_HALF, BOX_LENGTH_HALF) * 2
 		}, LinearColor.GREEN);
 		
 		clipping_infos[INTERACTION_XY_ROTATE] = new GizmoInteractionSource({
-			Vector(-BOX_LENGTH_HALF, -BOX_LENGTH_HALF, BOX_WIDTH_HALF),
-			Vector(BOX_LENGTH_HALF, BOX_LENGTH_HALF, -BOX_WIDTH_HALF)
+			Vector(-BOX_LENGTH_HALF, -BOX_LENGTH_HALF, BOX_WIDTH_HALF) * 2,
+			Vector(BOX_LENGTH_HALF, BOX_LENGTH_HALF, -BOX_WIDTH_HALF) * 2
 		}, LinearColor.BLUE);
 		
 		clipping_infos[INTERACTION_YZ_ROTATE] = new GizmoInteractionSource({
-			Vector(BOX_WIDTH_HALF, -BOX_LENGTH_HALF, -BOX_LENGTH_HALF),
-			Vector(-BOX_WIDTH_HALF, BOX_LENGTH_HALF, BOX_LENGTH_HALF)
+			Vector(BOX_WIDTH_HALF, -BOX_LENGTH_HALF, -BOX_LENGTH_HALF) * 2,
+			Vector(-BOX_WIDTH_HALF, BOX_LENGTH_HALF, BOX_LENGTH_HALF) * 2
 		}, LinearColor.RED);
 	}
 
