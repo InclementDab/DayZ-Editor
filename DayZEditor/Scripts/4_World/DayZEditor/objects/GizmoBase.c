@@ -240,8 +240,11 @@ class EditorGizmo: Managed
 			collide_index = interaction_index;
 			collide_dist = vector.Distance(m_CursorRay.Position, hit_pos);
 			collision_hit = hit_pos;
-			
-			Shape.CreateSphere(-1, ShapeFlags.ONCE, collision_hit, 0.5);
+#ifdef DIAG_DEVELOPER			
+			if (debug_collisions) {
+				Shape.CreateSphere(-1, ShapeFlags.ONCE, collision_hit, 0.5);
+			}
+#endif
 		}
 		
 #ifdef DIAG_DEVELOPER
