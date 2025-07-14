@@ -169,7 +169,7 @@ class EditorGizmo: Managed
 		int bias = 0;
 		
 #ifdef DIAG_DEVELOPER
-		bool debug_collisions = 1;
+		bool debug_collisions = 0;
 		//GetDayZGame().ReloadShape(m_Gizmo);
 #endif
 		
