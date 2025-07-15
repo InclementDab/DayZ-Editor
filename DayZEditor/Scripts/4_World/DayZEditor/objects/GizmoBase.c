@@ -24,6 +24,9 @@ class GizmoInteractionSource: Managed
 		for (int i = 0; i < 3; i++) {
 			float e = vector.Dot(transform[i], position_delta);
 			float f = vector.Dot(ray.Direction, transform[i]);
+			if (f == 0) {
+				return false;
+			}
 			
 			float t1 = (e + clip_min[i]) / f;
 			float t2 = (e + clip_max[i]) / f;

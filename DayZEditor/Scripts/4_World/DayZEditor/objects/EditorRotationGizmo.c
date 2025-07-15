@@ -6,6 +6,10 @@ class EditorRotationGizmo: EditorGizmo
 		m_VisibleSortedInteractions.Insert(INTERACTION_XZ_ROTATE);
 		m_VisibleSortedInteractions.Insert(INTERACTION_YZ_ROTATE);
 		m_VisibleSortedInteractions.Insert(INTERACTION_XY_ROTATE);
+		
+		float scale = m_TopTransform[1].Length();
+		vector scale_mat[3];
+		Math3D.ScaleMatrix(scale, scale_mat);
 				
 		switch (m_InteractionIndex) {
 			case INTERACTION_XZ_ROTATE: {
@@ -28,8 +32,10 @@ class EditorRotationGizmo: EditorGizmo
 						vector output_mat[4];
 						//Math3D.MatrixMultiply4(cursor_dir_mat, m_TopTransform, output_mat);
 	
-						//Math3D.MatrixMultiply3(scale_matrix, cursor_dir_mat, cursor_dir_mat);
 						copyarray(m_TopTransform, cursor_dir_mat);
+						Math3D.MatrixMultiply3(scale_mat, m_TopTransform, m_TopTransform);
+						
+						copyarray(m_TopTransformOrthogonal, cursor_dir_mat);
 						//Math3D.YawPitchRollMatrix(Math3D.MatrixToAngles(m_TopTransform) - m_DragRotationOffset, m_TopTransform);		
 					}
 				}
@@ -57,6 +63,9 @@ class EditorRotationGizmo: EditorGizmo
 	
 						//Math3D.MatrixMultiply3(scale_matrix, cursor_yz_dir_mat, cursor_yz_dir_mat);
 						copyarray(m_TopTransform, cursor_yz_dir_mat);
+						Math3D.MatrixMultiply3(scale_mat, m_TopTransform, m_TopTransform);
+						
+						copyarray(m_TopTransformOrthogonal, cursor_yz_dir_mat);
 					}
 				}
 				
@@ -84,6 +93,9 @@ class EditorRotationGizmo: EditorGizmo
 	
 						//Math3D.MatrixMultiply3(scale_matrix, cursor_xy_dir_mat, cursor_xy_dir_mat);
 						copyarray(m_TopTransform, cursor_xy_dir_mat);
+						Math3D.MatrixMultiply3(scale_mat, m_TopTransform, m_TopTransform);
+						
+						copyarray(m_TopTransformOrthogonal, cursor_xy_dir_mat);
 					}
 				}
 				
