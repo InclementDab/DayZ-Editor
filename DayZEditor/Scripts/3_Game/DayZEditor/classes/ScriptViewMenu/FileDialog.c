@@ -66,7 +66,7 @@ enum eDialogMode
 	SAVE = 2,
 	EXPORT = 3,
 	IMPORT = 4,
-	NEW
+	NEW = 5
 }
 
 enum eDialogFlags
@@ -139,26 +139,31 @@ class EditorFileDialog: EditorModal
 		switch (m_DialogMode) {
 			case eDialogMode.OPEN: {
 				SaveButton.SetText("#STR_EDITOR_OPEN");
+				TitleText.SetText("#STR_EDITOR_OPEN");
 				break;
 			}
 			
 			case eDialogMode.SAVE: {
 				SaveButton.SetText("#STR_EDITOR_SAVE");
+				TitleText.SetText("#STR_EDITOR_SAVE");
 				break;
 			}
 			
 			case eDialogMode.IMPORT: {
 				SaveButton.SetText("#STR_EDITOR_IMPORT");
+				TitleText.SetText("#STR_EDITOR_IMPORT");
 				break;
 			}
 			
 			case eDialogMode.EXPORT: {
 				SaveButton.SetText("#STR_EDITOR_EXPORT");
+				TitleText.SetText("#STR_EDITOR_EXPORT");
 				break;
 			}
 			
 			case eDialogMode.NEW: {
 				SaveButton.SetText("#STR_EDITOR_NEW");
+				TitleText.SetText("#STR_EDITOR_NEW");
 				break;
 			}
 		}

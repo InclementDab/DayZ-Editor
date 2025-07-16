@@ -172,6 +172,10 @@ class EditorObject: EditorWorldObject
 		}			
 		
 		Update();
+		
+#ifdef DIAG_DEVELOPER
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
+#endif
 	}
 		
 	void ~EditorObject()
@@ -195,6 +199,20 @@ class EditorObject: EditorWorldObject
 		
 		delete OnObjectSelected;
 		delete OnObjectDeselected;
+	}
+	
+	protected void OnFrame(float dt)
+	{
+		//vector mat[4];
+		//GetTransform(mat);
+		
+		
+		//vector min_max[2];
+		//m_WorldObject.ClippingInfo(min_max);
+		//Print(min_max);
+		//Shape.CreateSphere(-1, ShapeFlags.ONCE | ShapeFlags.NOZWRITE, m_WorldObject.GetBoundingCenter().Multiply4(mat), min_max[1][1]);
+		
+		
 	}
 	
 	// Gets full model path, starting with DZ// etc..
@@ -608,10 +626,10 @@ class EditorObject: EditorWorldObject
 		vector mat[4];
 		m_WorldObject.GetTransform(mat);
 		copyarray(transform, mat);
-		transform[3] = (Vector(0, -m_BoundingCenter[1], 0)).Multiply4(mat);
-	}
+		transform[3] = (Vector(0, -m_BoundingCenter[1],	 0)).Multiply4(mat);
+	}	
 	
-	void SetBottomTransform(vector transform[4])
+	void SetBottomTransform(vector transform[4])	
 	{
 		vector pos_offset = Vector(0, m_BoundingCenter[1], 0).Multiply3(transform);
 		transform[3] = transform[3] + pos_offset;
