@@ -270,8 +270,8 @@ class EditorGizmo: Managed
 			}
 		}
 #endif
-	
-		if (m_InteractionIndex == -1 && interact_input.LocalPress() && !GetWidgetUnderCursor()) {
+		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";
+		if (m_InteractionIndex == -1 && interact_input.LocalPress() && !useful_widget_under_cursor) {
 			m_DragOffset = collision_hit.InvMultiply4(m_TopTransformOrthogonal);
 			m_InteractionIndex = collide_index;
 			m_DragRotationOffset = m_DragOffset.InvMultiply4(m_TopTransformOrthogonal).VectorToAngles();			

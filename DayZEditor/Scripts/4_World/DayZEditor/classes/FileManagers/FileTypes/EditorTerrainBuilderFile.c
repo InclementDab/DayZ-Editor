@@ -63,58 +63,69 @@ class EditorTerrainBuilderFile: EditorFileType
     override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
     {
         EditorLog.Trace("EditorTerrainBuilderFile::Export");
-        FileHandle handle = OpenFile(file, FileMode.WRITE);
-        if (!handle)
-        {
-            EditorLog.Error("File in use %1", file);
-            return;
-        }
+		FileHandle handle = OpenFile(file, FileMode.WRITE);
+		if (!handle)
+		{
+			EditorLog.Error("File in use %1", file);
+			return;
+		}
 
-        foreach (EditorObjectData editor_object: data.EditorObjects)
-        {
-            vector object_POS = editor_object.WorldObject.GetPosition();
-            vector object_ROT = editor_object.WorldObject.GetOrientation();
-            vector object_BC = editor_object.WorldObject.GetBoundingCenter();
-            vector object_mat[4];
-            editor_object.WorldObject.GetTransform(object_mat);
-            object_BC = object_BC.Multiply3(object_mat);
-            string type = editor_object.Type;
-            string model_name;
-            float scale = editor_object.WorldObject.GetScale();
+		foreach (EditorObjectData editor_object: data.EditorObjects)
+		{
+			vector object_POS = editor_object.Position; //weird value when calling WorldObject instead
+			vector object_ROT = editor_object.Orientation; //weird value when calling WorldObject instead
+			vector object_BC = editor_object.WorldObject.GetBoundingCenter();
+			vector object_mat[4];
+			editor_object.WorldObject.GetTransform(object_mat);
+			object_BC = object_BC.Multiply3(object_mat);
 
-            if (type.Contains("Land_"))
-            {
-                type.Replace("Land_", "");
-                model_name = type;
-            }
-            else
-            {
-                model_name = GetGame().GetModelName(type);
-            }
+			string type = editor_object.Type;
+			float scale = editor_object.WorldObject.GetScale();
 
-            if (model_name == "UNKNOWN_P3D_FILE")
-            {
-                continue;
-            }
+			//Wonky way to export Statics and Brushed Objects to Terrain Builder that works for 99% of objects 
+			string model_name = GetGame().GetModelName(type);
+			if (model_name == "UNKNOWN_P3D_FILE")
+			{
+				model_name = editor_object.Type;
+			}
 
-            string position_x_string = object_POS[0].ToString();
+			if (model_name != "")
+			{
+				array<string> split_path = {};
+				model_name.Replace("/", "\\");
+				model_name.Split("\\", split_path);
+				if (split_path.Count() > 0)
+				{
+					model_name = split_path[split_path.Count() - 1];
+				}
+				if (model_name.Contains(".p3d"))
+				{
+					model_name.Replace(".p3d", "");
+				}
+				if (model_name.Contains("Land_"))
+				{
+					model_name.Replace("Land_", "");
+				}
+			}
+			if (model_name == "")
+			{
+				model_name = "UNKNOWN_OBJECT";
+			}
+
+			string position_x_string = object_POS[0].ToString();
 			array<string> split = {};
 			position_x_string.Split(".", split);
 			int cnt = split[0].Length();
 			position_x_string = String("200000").Substring(0, 6 - cnt) + position_x_string;
 
-            object_POS[1] = object_POS[1] - object_BC[1];
+			object_POS[1] = object_POS[1] - object_BC[1];
 
-
-            EditorMatrix3 matExtrinsic = BuildRotationMatrix(object_ROT[0], object_ROT[1], object_ROT[2]);
-
-            vector oriExtrinsic = matExtrinsic.ToYawPitchRoll();
-
+			EditorMatrix3 matExtrinsic = BuildRotationMatrix(object_ROT[0], object_ROT[1], object_ROT[2]);
+			vector oriExtrinsic = matExtrinsic.ToYawPitchRoll();
             string extrinsic_line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8", model_name, position_x_string, object_POS[2], oriExtrinsic[0], oriExtrinsic[1], oriExtrinsic[2], scale, object_POS[1]);
-            FPrintln(handle, extrinsic_line);
-
-        }
-        CloseFile(handle);
+			FPrintln(handle, extrinsic_line);
+		}
+		CloseFile(handle);
     }
 
     override string GetExtension()

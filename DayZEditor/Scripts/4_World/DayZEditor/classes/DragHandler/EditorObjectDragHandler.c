@@ -124,8 +124,12 @@ class EditorObjectDragHandler: EditorDragHandler
 		vector scale_matrix[3];
 		Math3D.ScaleMatrix(transform[0].Length(), scale_matrix);
 
+		array<Object> ignored_objects = {};
+		ignored_objects.InsertAll(all_object_instances);
+		ignored_objects.Insert(GetEditor().GetPlayer());
+
 		Ray cursor_ray = GetEditor().GetCursorRay();		
-		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(all_object_instances, GetEditor().GroundMode);
+		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(ignored_objects, GetEditor().GroundMode);
 		vector cursor_pos = cursor_ray.GetPoint(10.0);
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;

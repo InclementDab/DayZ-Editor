@@ -282,73 +282,97 @@ class EditorObject: EditorWorldObject
 	{
 		return true;
 	}
+				
+	private void ApplyTransform()
+	{
+	    vector rot3[3];
+	    Math3D.YawPitchRollMatrix(m_Data.Orientation, rot3);
 
+	    vector mat[4];
+	    mat[0] = rot3[0] * m_Data.Scale;
+	    mat[1] = rot3[1] * m_Data.Scale;
+	    mat[2] = rot3[2] * m_Data.Scale;
+	    mat[3] = m_Data.Position;
+
+	    m_WorldObject.SetTransform(mat);
+	    m_WorldObject.Update();
+	}
+	
 	vector GetPosition() 
 	{ 
 		return m_WorldObject.GetPosition(); 
 	}
 	
-	void SetPosition(vector pos) 
-	{ 
-		if (IsLocked()) return;
-		m_WorldObject.SetPosition(pos);
+	void SetPosition(vector pos)
+	{
+	    if (IsLocked()) return;
 
-		m_Data.Position = pos;
-		// idk about this one
-		m_Data.BottomCenter = GetBottomCenter();
+	    m_Data.Position     = pos;
+	    m_Data.BottomCenter = GetBottomCenter();
 
-		Update();
+	    m_WorldObject.SetPosition(pos);
+	    Update();
 	}
 	
-	vector GetOrientation() 
-	{ 
-		return GetWorldObject().GetOrientation(); 
+	vector GetOrientation()
+	{
+	    return m_Data.Orientation;
 	}
 
-	void SetOrientation(vector orientation) 
-	{ 
-		if (IsLocked()) return;
+	void SetOrientation(vector orientation)
+	{
+	    if (IsLocked()) return;
 
-		m_WorldObject.SetOrientation(orientation);
-		m_WorldObject.SetScale(m_Data.Scale);
-
-		m_Data.Orientation = orientation;
-				
-		Update();
+	    m_Data.Orientation = orientation;
+	    ApplyTransform(); 
+	    Update();
 	}
-	
-	void GetTransform(out vector mat[4]) 
-	{ 
-		GetWorldObject().GetTransform(mat); 
-	}
-	
-	void SetTransform(vector mat[4]) 
-	{ 	
-		if (IsLocked()) return;
-		
-		m_WorldObject.SetTransform(mat);	
-				
-		vector orientation = Math3D.MatrixToAngles(mat);		
-		m_Data.Position = mat[3];
-		m_Data.Orientation = orientation;
-		
-		m_Data.Scale = (mat[0].Length() + mat[1].Length() + mat[2].Length()) / 3;
-		m_Data.BottomCenter = GetBottomCenter();
-		Update();
-	}
-	
+	    
 	void SetScale(float scale)
-	{		
-		if (IsLocked()) return;
-		m_WorldObject.SetScale(scale);
+	{
+	    if (IsLocked()) return;
 
-		m_Data.Scale = scale;
-		Update();
+	    m_Data.Scale = scale;
+	    ApplyTransform();
+
+	    Update();
 	}
-	
+
 	float GetScale()
 	{
-		return GetWorldObject().GetScale();
+		return m_Data.Scale;
+	}
+
+	void GetTransform(out vector mat[4]) 
+	{ 
+		m_WorldObject.GetTransform(mat); 
+	}
+	
+	void SetTransform(vector mat[4])
+	{
+	    if (IsLocked()) return;
+
+	    m_Data.Position = mat[3];
+
+	    float len0 = mat[0].Length();
+	    float len1 = mat[1].Length();
+	    float len2 = mat[2].Length();
+	    m_Data.Scale = (len0 + len1 + len2) / 3.0;
+
+		float inv0 = 1.0 / len0;
+		float inv1 = 1.0 / len1;
+		float inv2 = 1.0 / len2;
+
+		vector normMat[4];
+		normMat[0] = mat[0] * inv0;
+		normMat[1] = mat[1] * inv1;
+		normMat[2] = mat[2] * inv2;
+		normMat[3] = mat[3];
+		m_Data.Orientation = Math3D.MatrixToAngles(normMat);
+	    m_Data.BottomCenter = GetBottomCenter();
+
+	    ApplyTransform();
+	    Update();
 	}
 
 	bool IsStatic()

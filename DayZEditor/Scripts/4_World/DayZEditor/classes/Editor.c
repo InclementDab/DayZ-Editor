@@ -721,6 +721,12 @@ class Editor: Managed
 		// Process input after gizmo update because gizmos will need to block input during an interaction
 		ProcessInput(timeslice, GetGame().GetInput());
 
+		if (IsPlayerActive()) {
+			bool cursor_active = GetGame().GetUIManager().IsCursorVisible();
+			m_Player.GetInputController().SetDisabled(cursor_active);
+			m_Player.DisableSimulation(cursor_active);
+		}
+
 		if (EditorSaveFile != string.Empty) {
 			m_TimeSinceLastBackup += timeslice;
 
@@ -754,8 +760,9 @@ class Editor: Managed
 				}
 			}
 		}
-						
-		if (!IsPlacing() && !GetWidgetUnderCursor()) {
+
+		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";				
+		if (!IsPlacing() && !useful_widget_under_cursor) {
 			int x, y;
 			GetMousePos(x, y);
 			if (m_CursorRaycast && m_CursorRaycast.Hit) {
@@ -951,7 +958,7 @@ class Editor: Managed
 				return;
 			}
 			
-			Raycast cursor_raycast = GetCursorRaycastModeSafe(world_object.GetWorldObject(), GroundMode);
+			Raycast cursor_raycast = GetCursorRaycastModeSafeEx({ world_object.GetWorldObject(), m_Player }, GroundMode);
 			
 			vector position;
 			if (cursor_raycast) {
@@ -1346,7 +1353,8 @@ class Editor: Managed
 			}
 		}
 		
-		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !GetWidgetUnderCursor() && !IsPlacing()) {
+		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";
+		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !useful_widget_under_cursor && !IsPlacing()) {
 			float scale_change_value = 0.1 * GetCamera().GetSettings().Speed;
 			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
 				GetCamera().GetSettings().Speed += scale_change_value;
@@ -1573,7 +1581,8 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{
-		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor()) {
+		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";
+		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !useful_widget_under_cursor) {
 			GetEditorHud().SetCurrentTooltip(null);
 		}
 
@@ -1632,7 +1641,9 @@ class Editor: Managed
 	array<EditorObject> PlaceObject()
 	{
 		EditorLog.Trace("Editor::PlaceObject");
-		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().IsInherited(MapWidget)) {
+		
+		// I hate all these exceptions but were dealing with vanilla UI bullshit
+		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().IsInherited(MapWidget) && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons") {
 			return null;
 		}
 		

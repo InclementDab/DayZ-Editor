@@ -297,6 +297,7 @@ class EditorHud: ScriptView
 		
 		if (toggle_hud_input.LocalPress() && input_unlocked && !GetDayZGame().IsLeftCtrlDown()) {		
 			Show(!IsVisible());
+			m_Editor.ClearSelection();
 		}
 		
 		// Dont want to toggle cursor on map 
