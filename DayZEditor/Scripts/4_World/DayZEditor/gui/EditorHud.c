@@ -253,6 +253,7 @@ class EditorHud: ScriptView
 		UAInput shift_input = input_api.GetInputByID(UATurbo);
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
+		bool useful_widget_under_cursor = widget_under_cursor && widget_under_cursor.GetName() != "HudPanel" && widget_under_cursor.GetName() != "CursorIcons";
 		Widget focus_widget = GetFocus();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
 		bool input_unlocked = (!focus_widget || !focus_widget.IsInherited(EditBoxWidget)) && !m_Dialog;
@@ -270,6 +271,10 @@ class EditorHud: ScriptView
 		
 			EditorEvents.MapToggled(this, Map, Map.IsVisible());
 			return;
+		}
+		
+		if (any_mouse_press && !useful_widget_under_cursor) {
+			SetFocus(null);
 		}
 		
 		if (Map.IsVisible()) {
@@ -308,7 +313,7 @@ class EditorHud: ScriptView
 		}
 		
 		// Teleport the player
-		if (teleport_to_cursor.LocalPress() && GetGame().GetUIManager().IsCursorVisible() && !GetDayZGame().IsLeftCtrlDown()) {
+		if (teleport_to_cursor.LocalPress() && GetGame().GetUIManager().IsCursorVisible() && !GetDayZGame().IsLeftCtrlDown() && input_unlocked) {
 			PlayerBase teleport_player = m_Editor.GetControllingPlayer();
 			if (!teleport_player) {
 				teleport_player = m_Editor.GetPlayer();

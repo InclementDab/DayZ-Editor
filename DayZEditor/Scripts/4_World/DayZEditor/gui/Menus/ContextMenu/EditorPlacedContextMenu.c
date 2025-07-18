@@ -42,8 +42,10 @@ class EditorPlacedContextMenu: EditorContextMenu
 		
 		m_Editor.CommandManager[EditorExportEventPos].SetData(new Param1<EntityAI>(EntityAI.Cast(context.GetWorldObject())));
 		m_Editor.CommandManager[EditorExportSelectionAsEventGroup].SetData(new Param1<EditorObject>(context));
+		m_Editor.CommandManager[EditorExportSelectionRelativeToBuilding].SetData(new Param1<EditorObject>(context));
 		AddMenuButton(m_Editor.CommandManager[EditorExportEventPos]);
 		AddMenuButton(m_Editor.CommandManager[EditorExportSelectionAsEventGroup]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportSelectionRelativeToBuilding]);
 		AddMenuButton(m_Editor.CommandManager[EditorObjectPropertiesCommand]);
 	}
 }

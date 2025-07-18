@@ -36,6 +36,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		vector screen_pos = GetGame().GetScreenPos(position);
 		if (m_MapWidget.IsVisible()) {
 			screen_pos = m_MapWidget.MapToScreen(position);
+			m_LayoutRoot.SetSort(100);
+		} else {
+			m_LayoutRoot.SetSort(0);
 		}
 		
 		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;
