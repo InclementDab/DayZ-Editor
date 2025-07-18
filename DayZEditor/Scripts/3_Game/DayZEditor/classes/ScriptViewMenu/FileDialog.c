@@ -125,11 +125,14 @@ class EditorFileDialog: EditorModal
 			Delete();
 			return;
 		}
+
+		if (default_value && !File.GetExtension(default_value)) {
+			default_value += m_DefaultFile.GetExtension();
+		}
 		
 		if (m_DefaultFile && !SystemPath.IsPathRooted(m_DefaultFile)) {
 			//m_DefaultFile = SystemPath.Combine(Editor.ROOT_DIRECTORY, m_DefaultFile);
-			array<string> files = { SystemPath.Saves(), "Editor", m_DefaultFile };
-			m_DefaultFile = SystemPath.Combine(files); // careful not using constants
+			m_DefaultFile = SystemPath.Combine(SystemPath.Saves("Editor"), m_DefaultFile); // careful not using constants
 		}
 
 		foreach (string directory: AVAILABLE_DIRECTORIES) {
