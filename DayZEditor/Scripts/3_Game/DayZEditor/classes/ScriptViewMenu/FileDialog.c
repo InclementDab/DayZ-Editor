@@ -127,7 +127,7 @@ class EditorFileDialog: EditorModal
 		}
 
 		if (default_value && !File.GetExtension(default_value)) {
-			default_value += m_DefaultFile.GetExtension();
+			default_value += m_FileType.GetExtension();
 		}
 		
 		if (m_DefaultFile && !SystemPath.IsPathRooted(m_DefaultFile)) {
