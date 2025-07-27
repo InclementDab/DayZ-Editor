@@ -31,16 +31,10 @@ class EditorObjectWorldMarker: EditorObjectMarker
 
 			return;
 		}
-		
-		vector position = GetPosition();	
+
+		// first get a crude position to see if we are off screen. this check is very very fast
+		vector position = m_EditorObject.GetPosition();
 		vector screen_pos = GetGame().GetScreenPos(position);
-		if (m_MapWidget.IsVisible()) {
-			screen_pos = m_MapWidget.MapToScreen(position);
-			m_LayoutRoot.SetSort(100);
-		} else {
-			m_LayoutRoot.SetSort(0);
-		}
-		
 		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;
 		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
 		bool in_distance = m_MarkerDistSq > distancesq || m_MapWidget.IsVisible();
@@ -52,6 +46,24 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 
+		// now get a more accurate position for the visual representation since we've determined this will be drawn
+		// Should the position be raycasted on the ground, or locked to the object
+		if (!m_Editor.GroundMode) {
+			position = m_EditorObject.GetBottomCenter();
+		} else {
+			vector object_transform[4];
+			m_EditorObject.GetTransform(object_transform);
+			vector ground_dir; int component;
+			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, null, null, m_EditorObject.GetWorldObject(), false, true); // set to ground only
+		}
+		
+		if (m_MapWidget.IsVisible()) {
+			screen_pos = m_MapWidget.MapToScreen(position);
+			m_LayoutRoot.SetSort(100);
+		} else {
+			m_LayoutRoot.SetSort(0);
+		}
+		
 		m_LayoutRoot.Show(true, false);
 				
 		//float size = Math.Min(Math.Max(1300 / distancesq, 18), 24);
@@ -108,17 +120,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 	
 	protected vector GetPosition()
 	{		
-		// Should the position be raycasted on the ground, or locked to the object
-		if (!m_Editor.GroundMode) {
-			return m_EditorObject.GetBottomCenter();
-		} 
 		
-		vector position;
-		vector object_transform[4];
-		m_EditorObject.GetTransform(object_transform);
-		vector ground_dir; int component;
-		DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, null, null, m_EditorObject.GetWorldObject(), false, true); // set to ground only
-		return position;
 	}
 	
 	

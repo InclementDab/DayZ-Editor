@@ -37,6 +37,9 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("ADVANCED", "UseExperimentalLights", "Experimental Lights", {"DISABLED", "ENABLED"})]
 	int UseExperimentalLights = 0;
 	
+	[RegisterProfileSettingMultistate("ADVANCED", "BrushedObjectsRespectOtherObjects", "Brush On Objects", {"DISABLED", "ENABLED"})]
+	int BrushedObjectsRespectOtherObjects = 0;
+	
 	// todo: stub
 	////[RegisterProfileSettingMultistate("PLACEMENT", "AllowPlacementOfPersistentItems", "Place Persistent Items", {"NO", "YES"})]
 	bool AllowPlacementOfPersistentItems = false; 

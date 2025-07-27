@@ -87,7 +87,7 @@ class EditorFileDialog: EditorModal
 	static const ref array<string> AVAILABLE_DIRECTORIES = {
 		SystemPath.Saves(),
 		SystemPath.Profile(),
-//		SystemPath.Mission()
+		SystemPath.Mission()
 	};
 
 	protected EditorFileDialogController m_TemplateController;

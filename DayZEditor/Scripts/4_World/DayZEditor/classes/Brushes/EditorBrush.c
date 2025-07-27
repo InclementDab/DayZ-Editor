@@ -1,5 +1,8 @@
 class EditorBrush
 {
+	// todo: when next DF update these objects should be populated on file load. right now reloading the file will mess this up
+	static ref array<Object> s_AllBrushedObjects = {};
+	
 	protected EditorSettings m_EditorSettings;
 	protected EntityAI m_BrushDecal;
 	protected ref EditorBrushData m_BrushData;
@@ -112,12 +115,12 @@ class EditorBrush
 			float x_random = position[0] + radius_random * Math.Cos(theta_random);
 			float z_random = position[2] + radius_random * Math.Sin(theta_random);
 			vector point = { x_random, GetGame().SurfaceY(x_random, z_random), z_random };
-			
+						
 			EditorBrushObject object_name = m_BrushData.GetRandomObject();
 			if (!object_name) {
 				continue;
 			}
-
+		
 			//TODO config objects can have magnet. P3D need to stay zeroed 
 			vector ori = "0 0 0";
 			ori[0] = Math.RandomFloatInclusive(0, 360);
@@ -127,7 +130,7 @@ class EditorBrush
 			array<Object> objects = {};
 			GetGame().GetObjectsAtPosition3D(point, BrushWidth, objects, null);
 			if (objects.Count() > 0) {
-				continue;
+				//continue;
 			}
 
 			EditorObjectData brushed_object_data = EditorObjectData.Create(object_name.Name, point, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale), EFE_BRUSHED);
@@ -138,13 +141,35 @@ class EditorBrush
 			// just for u boba
 			created_data.Insert(brushed_object_data);
 		}
-
+		
 		EditorObjectMap object_map = GetEditor().CreateObjects(created_data, true);
+		if (m_EditorSettings.BrushedObjectsRespectOtherObjects) {
+			foreach (int id2, EditorObject editor_object_brushed2: object_map) {
+				if (editor_object_brushed2) {
+					s_AllBrushedObjects.Insert(editor_object_brushed2.GetWorldObject());
+				}
+			}
+		}
+		
 		foreach (int id, EditorObject editor_object_brushed: object_map) {
 			if (editor_object_brushed) {
 				vector new_pos = brushes_data[id].param1;
-				vector size = editor_object_brushed.GetWorldObject().GetBoundingCenter();
-				new_pos[1] = GetGame().SurfaceY(new_pos[0], new_pos[2]) + size[1] + brushes_data[id].param2.ZOffset;
+				vector size = editor_object_brushed.GetWorldObject().GetBoundingCenter();		
+				float y_offset = GetGame().SurfaceY(new_pos[0], new_pos[2]);		
+				
+				if (m_EditorSettings.BrushedObjectsRespectOtherObjects) {
+					vector surface_normal = GetGame().SurfaceGetNormal(new_pos[0], new_pos[2]);
+					Ray brush_object_ray = new Ray(new_pos + Vector(0, 100, 0), -vector.Up);
+					brush_object_ray.Debug(-1, ShapeFlags.TRANSP);
+					Raycast brush_object_raycast = brush_object_ray.PerformRaycastRVEX(0, 1000, ObjIntersectView, s_AllBrushedObjects);
+					if (brush_object_raycast) {
+						new_pos = brush_object_raycast.Bounce.Position;
+						y_offset = brush_object_raycast.Bounce.Position[1];
+					}
+				}
+				
+				new_pos[1] = y_offset + size[1] + brushes_data[id].param2.ZOffset;
+				
 				editor_object_brushed.SetScale(Math.RandomFloat(brushes_data[id].param2.MinScale, brushes_data[id].param2.MaxScale));
 				editor_object_brushed.SetPosition(new_pos);
 			}
