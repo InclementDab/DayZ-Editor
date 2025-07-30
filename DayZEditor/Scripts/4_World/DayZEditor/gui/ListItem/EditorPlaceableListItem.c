@@ -6,7 +6,6 @@ class EditorPlaceableListItemLarge: EditorPlaceableListItem
 	
 	void EditorPlaceableListItemLarge(EditorPlaceableItem placeable_item)
 	{
-		Print(placeable_item.Type);
 		Object preview_object = GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_NONE);
 		if (preview_object) {
 			m_PreviewItem = EntityAI.Cast(preview_object);

@@ -53,7 +53,7 @@ class EditorBrush
 		}
 		
 		Input input = GetGame().GetInput();		
-		Raycast ray_cast = GetEditor().GetCursorRaycast(null, true);
+		Raycast ray_cast = GetEditor().GetCursorRaycast(null, !m_EditorSettings.BrushedObjectsRespectOtherObjects);
 		if (ray_cast && ray_cast.Bounce) {
 			vector transform[4] = {
 				Vector(BrushRadius / 5, 0, 0),
@@ -159,9 +159,9 @@ class EditorBrush
 				
 				if (m_EditorSettings.BrushedObjectsRespectOtherObjects) {
 					vector surface_normal = GetGame().SurfaceGetNormal(new_pos[0], new_pos[2]);
-					Ray brush_object_ray = new Ray(new_pos + Vector(0, 100, 0), -vector.Up);
+					Ray brush_object_ray = new Ray(new_pos + Vector(0, 500, 0), -vector.Up);
 					brush_object_ray.Debug(-1, ShapeFlags.TRANSP);
-					Raycast brush_object_raycast = brush_object_ray.PerformRaycastRVEX(0, 1000, ObjIntersectView, s_AllBrushedObjects);
+					Raycast brush_object_raycast = brush_object_ray.PerformRaycastRVEX(0, 500, ObjIntersectView, s_AllBrushedObjects);
 					if (brush_object_raycast) {
 						new_pos = brush_object_raycast.Bounce.Position;
 						y_offset = brush_object_raycast.Bounce.Position[1];

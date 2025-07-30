@@ -13,5 +13,8 @@ class EditorPlaceableContextMenu: EditorContextMenu
 		}
 		
 		AddMenuButton(m_Editor.CommandManager[EditorLootEditorCommand]);
+		
+		m_Editor.CommandManager[EditorCopyPlaceableToClipboard].SetData(new Param1<EditorPlaceableListItem>(context));
+		AddMenuButton(m_Editor.CommandManager[EditorCopyPlaceableToClipboard]);
 	}
 }

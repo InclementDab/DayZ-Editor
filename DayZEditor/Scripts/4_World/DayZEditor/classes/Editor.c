@@ -389,7 +389,7 @@ class Editor: Managed
 			return m_CameraRaycastGround;
 		}
 
-		return PerformRaycast(GetCameraRay(), ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
+		return PerformRaycast(GetCameraRay(), ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
 	}
 	
 	Raycast GetCursorRaycast(Object ignore = null, bool ground_only = false)
@@ -402,7 +402,7 @@ class Editor: Managed
 			return m_CursorRaycastGround;
 		}
 
-		return PerformRaycast(GetCursorRay(), ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
+		return PerformRaycast(GetCursorRay(), ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
 	}
 
 	// Returns a top-down raycast, height defined by y_offset_raycast
@@ -410,7 +410,7 @@ class Editor: Managed
 	{
 		Ray map_ray = GetMapRay(y_offset_raycast);
 		map_ray.Direction = -vector.Up;
-		return PerformRaycast(map_ray, ignore, m_EditorCamera.GetSettings().ViewDistance, ground_only);
+		return PerformRaycast(map_ray, ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
 	}
 
 	Raycast GetCursorRaycastModeSafe(Object ignore = null, bool ground_only = false)
@@ -427,10 +427,10 @@ class Editor: Managed
 		if (IsMapActive()) {
 			Ray map_ray = GetMapRay(0.0);
 			map_ray.Direction = -vector.Up;
-			return PerformRaycastEx(map_ray, ignores, m_EditorCamera.GetSettings().ViewDistance, ground_only);
+			return PerformRaycastEx(map_ray, ignores, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
 		}
 		
-		return PerformRaycastEx(GetCursorRay(), ignores, m_EditorCamera.GetSettings().ViewDistance, ground_only);
+		return PerformRaycastEx(GetCursorRay(), ignores, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
 	}
 
 	void GetCameraTransform(out vector transform[4])
@@ -786,17 +786,10 @@ class Editor: Managed
 				string surface_type;
 				GetGame().SurfaceGetType(m_CursorRaycast.Bounce.Position[0], m_CursorRaycast.Bounce.Position[2], surface_type);
 				surface_type = string.Format("Surface Type: %1", surface_type);
-				if (surface_type != m_EditorHudController.ObjectReadoutName) {
-					m_EditorHudController.ObjectReadoutName = surface_type;
-					m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
-				}
+				m_EditorHud.ObjectHoverSelectObjectReadout.SetText(surface_type);
 			}
 		}
-		
-		// Just shutting the logger up for a minute
-		int log_lvl = EditorLog.GetLevel();
-		EditorLog.SetLevel(LogLevel.WARNING);
-		
+
 		if (m_EditorCamera && m_EditorHudController) {
 			vector cam_pos = m_EditorCamera.GetPosition();
 			
@@ -804,19 +797,11 @@ class Editor: Managed
 			m_EditorHudController.cam_y = cam_pos[1];
 			m_EditorHudController.cam_z = cam_pos[2];
 			
-			m_EditorHudController.NotifyPropertyChanged("cam_x");
-			m_EditorHudController.NotifyPropertyChanged("cam_y");
-			m_EditorHudController.NotifyPropertyChanged("cam_z");
-		}
-		
-		EditorObjectMap selected_objects = GetSelectedObjects();
-		if (selected_objects.Count() > 0 && selected_objects[0]) {
-			// Spams errors
-			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
+			//m_EditorHudController.NotifyPropertyChanged("cam_x");
+			//m_EditorHudController.NotifyPropertyChanged("cam_y");
+			//m_EditorHudController.NotifyPropertyChanged("cam_z");
 		}
 				
-		EditorLog.SetLevel(log_lvl);
-		
 		HandleHands();
 
 		ProcessCameraTrack(timeslice);

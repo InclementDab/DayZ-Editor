@@ -54,7 +54,7 @@ class EditorHud: ScriptView
 	EditBoxWidget LeftSearchBar, RightSearchBar;
 	Widget LeftSearchBarIcon, RightSearchBarIcon;
 	ImageWidget LeftSearchBarIconIcon, RightSearchBarIconIcon;
-	TextWidget CameraSpeed;
+	TextWidget CameraSpeed, ObjectHoverSelectObjectReadout;	
 	
 	// Brush info new
 	ButtonWidget BrushLeft, BrushRight;
@@ -588,6 +588,12 @@ class EditorHud: ScriptView
 			EditorCanvas.DrawLine(0, screen_y / 3, screen_x, screen_y / 3, 1, COLOR_BLACK);
 			EditorCanvas.DrawLine(0, (screen_y / 3) * 2, screen_x, (screen_y / 3) * 2, 1, COLOR_BLACK);
 		}	
+		
+		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		if (selected_objects.Count() > 0 && selected_objects[0]) {
+			// Spams errors
+			GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
+		}
 		
 #ifdef DIAG_DEVELOPER
 		/*
