@@ -37,6 +37,8 @@ class EditorDragHandler: Managed
 			selected_object.UpdateNet();
 		}
 		
+		m_Target.UpdateNet();
+		
 		GetEditor().InsertAction(m_RewindAction);
 		
 		m_Target = null;
