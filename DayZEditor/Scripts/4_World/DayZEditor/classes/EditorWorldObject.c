@@ -25,7 +25,7 @@ class EditorWorldObject
 				formatted_path = formatted_path.Substring(1, formatted_path.Length() - 1);
 			}
 			
-			object = GetGame().CreateStaticObjectUsingP3D(formatted_path, position, orientation, scale);
+			object = GetGame().CreateStaticObjectUsingP3D(formatted_path, position, orientation, scale, true);
 		}
 		else
 		{

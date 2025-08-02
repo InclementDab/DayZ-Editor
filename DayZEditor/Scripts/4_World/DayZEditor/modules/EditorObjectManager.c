@@ -259,6 +259,7 @@ class EditorObjectManagerModule : Managed
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{
+		Print(editor_object_data.Type);
 		string uuid = UUID.Generate();
 		EditorObject created_object = CreateObject(uuid, editor_object_data);
 		
@@ -303,14 +304,13 @@ class EditorObjectManagerModule : Managed
 			return;
 		}
 		
-		if (GetGame().IsMultiplayer()) {
+		if (GetGame().IsMultiplayer() && m_EditorObjectsByUuid.Contains(target.Uuid)) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Write(target.Uuid);
 			rpc.Send(null, 39253, true);
+			m_EditorObjectsByUuid.Remove(target.Uuid);
 		}
 		
-		m_EditorObjectsByUuid.Remove(target.Uuid);
-
 		EditorCameraTrack camera_track = EditorCameraTrack.Cast(target);
 		if (camera_track) {
 			m_CameraTracks.RemoveItem(camera_track);
@@ -330,7 +330,9 @@ class EditorObjectManagerModule : Managed
 	void DeleteObject(string uuid)
 	{
 		if (m_EditorObjectsByUuid[uuid]) {
-			DeleteObject(m_EditorObjectsByUuid[uuid]);
+			EditorObject object_to_delete = m_EditorObjectsByUuid[uuid];
+			m_EditorObjectsByUuid.Remove(uuid);
+			DeleteObject(object_to_delete);
 		}
 	}
 	

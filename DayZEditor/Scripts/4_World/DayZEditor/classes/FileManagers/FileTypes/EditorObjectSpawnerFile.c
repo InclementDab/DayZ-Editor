@@ -1,6 +1,6 @@
 static vector GetP3dBoundingCenter(string p3d)
 {
-	Object object = GetGame().CreateStaticObjectUsingP3D(p3d, vector.Zero, vector.Zero, 1.0);
+	Object object = GetGame().CreateStaticObjectUsingP3D(p3d, vector.Zero, vector.Zero, 1.0, true);
 	if (!object) {
 		return vector.Zero;
 	}
