@@ -28,6 +28,8 @@ modded class MissionGameplay
 		
 		GetGame().GetWeather().SetWind(vector.Zero);
 		GetGame().GetWeather().SetWindSpeed(0);
+		
+		DayZGame.Event_OnRPC.Insert(OnRPC);
 	}
 	
 	override void OnKeyPress(int key)
@@ -88,10 +90,11 @@ modded class MissionGameplay
 	{
 		super.OnMissionLoaded();
 
+		/*
 		if (!GetGame().IsServer()) {
 			ErrorEx("Cannot run DayZ Editor on server... exiting");
 			return;
-		}
+		}*/
 
 		vector center_pos = Editor.GetMapCenterPosition();
 		vector start_pos = Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 3500);
@@ -164,4 +167,46 @@ modded class MissionGameplay
 			GetEditor().GetEditorHud().Show(true);
 		}
 	}
+	
+	void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
+	{
+		switch (rpc_type) {
+            case 39252: {
+				
+				if (GetGame().IsMultiplayer()) {
+                	EditorObjectData dta = new EditorObjectData();
+					string uuid;
+					ctx.Read(uuid);
+                	dta.Read(ctx, int.MAX);
+					
+					GetEditor().GetObjectManager().CreateObject(uuid, dta);
+				}
+				
+                break;
+            }
+			
+			case 39253: {
+				if (GetGame().IsMultiplayer()) {
+					string uuid2;
+					ctx.Read(uuid2);					
+					GetEditor().GetObjectManager().DeleteObject(uuid2);
+				}
+				
+                break;
+            }
+			
+			case 39254: {
+				if (GetGame().IsMultiplayer()) {
+					string uuid3;
+					ctx.Read(uuid3);			
+					EditorObjectData dta2 = new EditorObjectData();		
+					dta2.Read(ctx, int.MAX);
+					
+					GetEditor().GetObjectManager().UpdateObject(uuid3, dta2);
+				}
+				
+                break;
+            }
+        }
+    } 
 }

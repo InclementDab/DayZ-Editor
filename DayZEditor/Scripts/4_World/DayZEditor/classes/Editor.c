@@ -172,12 +172,12 @@ class Editor: Managed
 		m_ControllingPlayer = m_Player;
 
 #ifdef SERVER
-		for (int i = 0; i < 100; i++) {
+		/*for (int i = 0; i < 100; i++) {
             Print("[EDITOR][ERROR] SERVER ADMINISTRATOR ERROR! DAYZ EDITOR SHOULD NOT BE LOADED ON THE SERVER!");
 		}
 		
 		delete g_Editor;
-		return;
+		return;*/
 #endif
 				
 		// Player god mode

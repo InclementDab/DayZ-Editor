@@ -19,6 +19,8 @@ class EditorObject: EditorWorldObject
 	protected vector m_LineVerticies[8];
 	protected vector m_BoundingCenter;
 	protected bool m_IsSelected;
+	
+	string Uuid;
 			
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
@@ -233,9 +235,7 @@ class EditorObject: EditorWorldObject
 				return placeable_replacement[0].Type;
 			}*/
 		}
-		
-
-		
+				
 		return string.Empty;
 	}
 	
@@ -385,8 +385,18 @@ class EditorObject: EditorWorldObject
 		if (m_WorldObject) {
 			m_WorldObject.Update(); 
 		}
-		
+				
 		OnUpdated.Invoke();
+	}
+	
+	void UpdateNet()
+	{
+		if (GetGame().IsMultiplayer()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(Uuid);
+			m_Data.Write(rpc, int.MAX);
+			rpc.Send(null, 39254, true);
+		}
 	}
 	
 	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) 
@@ -512,7 +522,7 @@ class EditorObject: EditorWorldObject
 				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + bounding_box_thickness;						
 			}
 			 
-			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_NONE));
+			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_LOCAL));
 			m_BBoxLines[i].SetTransform(transform);
 			
 			AddChild(m_BBoxLines[i], -1);

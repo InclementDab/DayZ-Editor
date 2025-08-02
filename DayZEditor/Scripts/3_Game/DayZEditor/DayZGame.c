@@ -124,10 +124,10 @@ modded class DayZGame
 		OnProgressReport.Invoke(report);
 	}
 		
-	override void ConnectFromCLI()
+	/*override void ConnectFromCLI()
 	{
 		Error("You cannot run the DayZ Editor in a multiplayer environment. Launch the tool via the \"Open Editor\" button on the main menu!");
-	}
+	}*/
 
 	override void OnActivateMessage()
 	{

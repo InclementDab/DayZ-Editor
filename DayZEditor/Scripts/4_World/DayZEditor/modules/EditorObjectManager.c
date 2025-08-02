@@ -23,6 +23,8 @@ class EditorObjectManagerModule : Managed
 	protected ref EditorDeletedObjectMap m_DeletedObjects = new EditorDeletedObjectMap();
 
 	protected ref EditorDeletedObjectMap m_SelectedDeletedObjects = new EditorDeletedObjectMap();
+	
+	protected ref map<string, EditorObject> m_EditorObjectsByUuid = new map<string, EditorObject>();
 
 	protected ref array<ref EditorPlaceableItem> m_PlaceableObjects = {};
 
@@ -254,12 +256,31 @@ class EditorObjectManagerModule : Managed
 	{
 		return m_CameraTracks;
 	}
+	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
+	{
+		string uuid = UUID.Generate();
+		EditorObject created_object = CreateObject(uuid, editor_object_data);
+		
+		if (GetGame().IsMultiplayer()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(uuid);
+			editor_object_data.Write(rpc, int.MAX);
+			rpc.Send(null, 39252, true);
+		}
+		
+		m_EditorObjectsByUuid[uuid] = created_object;
+		return created_object;
+	}
+	
+	EditorObject CreateObject(string uuid, notnull EditorObjectData editor_object_data)
 	{
 		EditorObject editor_object = new EditorObject(editor_object_data);
 		if (!editor_object.GetWorldObject()) {
 			return null;
 		}
+		
+		editor_object.Uuid = uuid;
 
 		// strong ref
 		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
@@ -268,8 +289,8 @@ class EditorObjectManagerModule : Managed
 		m_WorldObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
 
 		EditorEvents.ObjectCreated(this, editor_object);
-
 		GetEditor().GetStatistics().EditorPlacedObjects++;
+		
 		return editor_object;
 	}
 
@@ -279,6 +300,12 @@ class EditorObjectManagerModule : Managed
 		
 		if (target.GetFlags() & EditorObjectFlags.NODELETE) {
 			return;
+		}
+		
+		if (GetGame().IsMultiplayer()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(target.Uuid);
+			rpc.Send(null, 39253, true);
 		}
 
 		EditorCameraTrack camera_track = EditorCameraTrack.Cast(target);
@@ -294,6 +321,26 @@ class EditorObjectManagerModule : Managed
 
 		// remove strong ref
 		m_EditorObjectRefs.Remove(target.GetID());
+	}
+	
+	void DeleteObject(string uuid)
+	{
+		if (m_EditorObjectsByUuid[uuid]) {
+			DeleteObject(m_EditorObjectsByUuid[uuid]);
+		}
+	}
+	
+	void UpdateObject(string uuid, EditorObjectData data)
+	{
+		auto object = m_EditorObjectsByUuid[uuid];
+		if (!object) {
+			return;
+		}
+		
+		object.SetPosition(data.Position);
+		object.SetOrientation(data.Orientation);
+		object.SetScale(data.Scale);
+		object.Lock(data.Locked);
 	}
 
 	// Call to select an object

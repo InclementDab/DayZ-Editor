@@ -33,6 +33,8 @@ class EditorDragHandler: Managed
 			if (selected_object != m_Target) {
 				m_RewindAction.InsertRedoParameter(selected_object.GetTransformArray());
 			}
+			
+			selected_object.UpdateNet();
 		}
 		
 		GetEditor().InsertAction(m_RewindAction);

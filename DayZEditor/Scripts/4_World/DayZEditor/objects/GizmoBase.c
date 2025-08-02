@@ -88,7 +88,7 @@ class EditorGizmo: Managed
 	void EditorGizmo()
 	{
 		m_Editor = GetEditor();
-		m_Gizmo = EntityAI.Cast(GetGame().CreateObjectEx(GetGizmoMesh(), vector.Zero, ECE_NONE));
+		m_Gizmo = EntityAI.Cast(GetGame().CreateObjectEx(GetGizmoMesh(), vector.Zero, ECE_LOCAL));
 		RegisterInteractionClips(m_InteractionCollisions);
 	}
 		
