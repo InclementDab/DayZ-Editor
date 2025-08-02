@@ -156,7 +156,7 @@ class Editor: Managed
 	
 	bool										KEgg; // oh?
 	
-	void Editor(notnull PlayerBase player) 
+	void Editor(PlayerBase player) 
 	{		
 #ifdef DIAG_DEVELOPER
 		EnProfiler.Enable(true, true, true);
@@ -181,7 +181,9 @@ class Editor: Managed
 #endif
 				
 		// Player god mode
-		m_Player.SetAllowDamage(false);
+		if (m_Player) {
+			m_Player.SetAllowDamage(false);
+		}
 
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(ROOT_DIRECTORY);
@@ -201,7 +203,9 @@ class Editor: Managed
 			camera_type = "EditorCameraClassic";
 		}
 
+#ifndef NO_GUI
 		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+#endif
 		
 		// Object Manager
 		// Loads placeable objects	
@@ -221,6 +225,7 @@ class Editor: Managed
 		// Init Hud
 		g_Game.ReportProgress("Loading Editor Hud...");
 		m_EditorHud 		= new EditorHud(this);
+
 		EditorLog.Info("Initializing Hud");
 		m_EditorHudController = m_EditorHud.GetTemplateController();
 		
@@ -230,7 +235,7 @@ class Editor: Managed
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(OnStatisticsSave, STATISTICS_SAVE_INTERVAL * 1000, true);
 				
 		// Register Player Object as a hidden EditorObject
-		if (GetSettings().CreateCharacterObject) {
+		if (GetSettings().CreateCharacterObject && m_Player) {
 			m_PlayerObject = CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER | EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE, false);
 			m_Player.SetPosition(m_Player.GetPosition());
 		}

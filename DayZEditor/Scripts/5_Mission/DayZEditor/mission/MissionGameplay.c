@@ -172,7 +172,6 @@ modded class MissionGameplay
 	{
 		switch (rpc_type) {
             case 39252: {
-				
 				if (GetGame().IsMultiplayer()) {
                 	EditorObjectData dta = new EditorObjectData();
 					string uuid;

@@ -281,6 +281,7 @@ class EditorObjectManagerModule : Managed
 		}
 		
 		editor_object.Uuid = uuid;
+		m_EditorObjectsByUuid[uuid] = editor_object;
 
 		// strong ref
 		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
@@ -307,6 +308,8 @@ class EditorObjectManagerModule : Managed
 			rpc.Write(target.Uuid);
 			rpc.Send(null, 39253, true);
 		}
+		
+		m_EditorObjectsByUuid.Remove(target.Uuid);
 
 		EditorCameraTrack camera_track = EditorCameraTrack.Cast(target);
 		if (camera_track) {
@@ -321,6 +324,7 @@ class EditorObjectManagerModule : Managed
 
 		// remove strong ref
 		m_EditorObjectRefs.Remove(target.GetID());
+		
 	}
 	
 	void DeleteObject(string uuid)
