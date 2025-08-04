@@ -29,7 +29,7 @@ modded class MissionGameplay
 		GetGame().GetWeather().SetWind(vector.Zero);
 		GetGame().GetWeather().SetWindSpeed(0);
 		
-		DayZGame.Event_OnRPC.Insert(OnRPC);
+		DayZGame.Event_OnRPC.Insert(OnERPC);
 	}
 	
 	override void OnKeyPress(int key)
@@ -168,7 +168,7 @@ modded class MissionGameplay
 		}
 	}
 	
-	void OnRPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
+	void OnERPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{
 		switch (rpc_type) {
             case 39252: {

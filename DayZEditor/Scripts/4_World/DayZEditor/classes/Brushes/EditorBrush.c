@@ -17,7 +17,7 @@ class EditorBrush
 	void EditorBrush(EditorBrushData settings = null)
 	{
 		m_BrushData = settings;
-		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_NONE));
+		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL));
 		m_EditorSettings = GetEditor().GetSettings();
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}

@@ -6,7 +6,7 @@ class EditorPlaceableListItemLarge: EditorPlaceableListItem
 	
 	void EditorPlaceableListItemLarge(EditorPlaceableItem placeable_item)
 	{
-		Object preview_object = GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_NONE);
+		Object preview_object = GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_LOCAL);
 		if (preview_object) {
 			m_PreviewItem = EntityAI.Cast(preview_object);
 			if (!m_PreviewItem) {
@@ -160,12 +160,12 @@ class EditorPlaceableListItem: EditorListItem
 		
 		bool preview_disabled = GetGame().IsKindOf(m_PlaceableItem.Type, "Man") || GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI");
 		if (m_PlaceableItem && !preview_disabled) {
-			Object preview = GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE);
+			Object preview = GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_LOCAL);
 			if (!preview) {
 				// DOESNT WORK @JACOB
 				string new_type = GetEditor().GetObjectManager().ConvertP3dFileToPotentialObjectType(m_PlaceableItem.Type);
 				if (new_type) {
-					preview = GetGame().CreateObjectEx(new_type, Vector(0, -1000, 0), ECE_NONE);
+					preview = GetGame().CreateObjectEx(new_type, Vector(0, -1000, 0), ECE_LOCAL);
 				}
 			}
 
