@@ -47,7 +47,7 @@ class EditorInitFile : EditorFileType
 				tokens[6]; // Scale
 				*/
 				float scale = 1.0;
-				if (tokens[6])
+				if (tokens[6] != ");")
 				{
 					string temp = tokens[6];
 					temp.Replace(", ", "");
