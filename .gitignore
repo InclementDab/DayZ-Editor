@@ -11,21 +11,52 @@ Profiles/**/Users/*
 
 texHeaders.bin
 dayz.bin
-build.bin
-launch.bin
 
 .vscode/
 .idea/
 
 Missions/**/storage_*
+**/config.bin
+**/config.cpp.ignore
 
-*.vsidx
+launch.bin
+build.bin
+
+*.swp
+*.*~
+project.lock.json
+.DS_Store
+*.pyc
+
+# Visual Studio Code
+.vscode
+
+# User-specific files
 *.suo
-*.db
-*.ipch
-*.so
-*.lib
-*.dll
-*.dylib
-*.cache
 *.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+msbuild.log
+msbuild.err
+msbuild.wrn
+
+# Visual Studio 2015
+.vs/
+
+*.dll
+*.pdb
+*.exe
+*.cache
+RunJacobWorkdrive.bat
