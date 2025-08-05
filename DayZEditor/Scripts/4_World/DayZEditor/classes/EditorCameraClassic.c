@@ -22,8 +22,6 @@ class EditorCameraClassic: EditorCamera
 	
 	void EditorCameraClassic()
 	{
-		EditorLog.Trace("EditorCamera");
-		SetEventMask(EntityEvent.FRAME);
 		SelectTarget(null);
 		
 		NearPlane = GetNearPlane();

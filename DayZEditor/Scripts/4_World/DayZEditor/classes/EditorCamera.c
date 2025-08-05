@@ -69,6 +69,7 @@ class EditorCamera: Camera
 
 	void EditorCamera()
 	{
+		SetEventMask(EntityEvent.FRAME);
 		m_EditorCameraSettings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
 		m_CameraFovActual = m_EditorCameraSettings.FieldOfView2 * Math.DEG2RAD;
 
@@ -76,6 +77,21 @@ class EditorCamera: Camera
 		Exposure = GetGame().GetWorld().GetEyeAccom();
 		FOV = m_CameraFovActual * Math.RAD2DEG;
 		SetFOV(m_CameraFovActual);
+	}
+	
+	override void EOnFrame(IEntity other, float timeSlice)
+	{
+		if (GetGame().IsMultiplayer()) {
+			float camera_quat[4];
+			vector mat[4];
+			GetTransform(mat);
+			Math3D.MatrixToQuat(mat, camera_quat);
+			
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(mat[3]);
+			rpc.Write(camera_quat);
+			rpc.Send(null, 39257, false);
+		}
 	}
 
 	void SetLightState(bool state)
@@ -211,9 +227,7 @@ class EditorCamera_V2: EditorCamera
 	protected vector m_Impulse;
 	
 	void EditorCamera_V2()
-	{
-		SetEventMask(EntityEvent.FRAME);
-		
+	{		
 		Speed = m_EditorCameraSettings.Speed;
 	}
 	

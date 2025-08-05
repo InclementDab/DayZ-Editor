@@ -1,3 +1,4 @@
+// Depreciated.
 modded class MainMenu 
 {
 	//protected ref EditorMainMenuStats m_EditorMainMenuStats;
