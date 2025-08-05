@@ -5,6 +5,42 @@ enum SelectionMode
 	LASSO // ???? are you CRAZY?
 };
 
+class EditorCameraMarker: ScriptView
+{
+	Widget IconFrame;
+	TextWidget Text;
+	vector WorldPosition, WorldOrientation;
+	
+	void EditorCameraMarker(string text)
+	{
+		Text.SetText(text);
+	}
+	
+	override void Update(float dt)
+	{
+		MapWidget map_widget = GetEditor().GetEditorHud().Map;
+		if (!map_widget.IsVisible()) {
+			m_LayoutRoot.Show(false);
+		}
+		
+		m_LayoutRoot.Show(true);
+
+		// Camera yaw matrix
+		vector map_to_screen_cam = map_widget.MapToScreen(WorldPosition);
+		float c_s_x, c_s_y;
+		IconFrame.GetScreenSize(c_s_x, c_s_y);
+		m_LayoutRoot.SetScreenPos(map_to_screen_cam[0] - c_s_x / 2, map_to_screen_cam[1] - c_s_y / 2);
+		
+		float camera_yaw = WorldOrientation.VectorToAngles()[0];
+		IconFrame.SetRotation(0, 0, camera_yaw - 90);		
+	}
+	
+	override string GetLayoutFile()
+	{
+		return "DayZEditor\\GUI\\layouts\\EditorCameraMarker.layout";
+	}
+}
+
 class EditorHud: ScriptView
 {
 	const float DEFAULT_BAR_WIDTH_PX = 380.0;
@@ -46,7 +82,6 @@ class EditorHud: ScriptView
 		
 	CanvasWidget EditorCanvas;
 	MapWidget Map;
-	ImageWidget CameraMarker;
 	ButtonWidget CameraPanelButton;
 	ButtonWidget CameraTrackPreviousButton, CameraTrackRunButton, CameraTrackNextButton, CameraTrackStopButton, CameraTrackRecordButton; 
 	ImageWidget CameraTrackPreviousButton_Icon, CameraTrackRunButton_Icon, CameraTrackNextButton_Icon, CameraTrackStopButton_Icon, CameraTrackRecordButton_Icon;
@@ -66,6 +101,8 @@ class EditorHud: ScriptView
 	protected EditorSettings m_EditorSettings;
 
 	protected ref array<vector> m_LassoHistory = {};
+	
+	protected ref EditorCameraMarker m_EditorCameraMarker;
 	
 	static const ref array<string> ThemedWidgetStrings = {
 		"LeftbarPanelSearchBarIconButton",
@@ -214,6 +251,8 @@ class EditorHud: ScriptView
 		RightbarScroll.SetScreenSize(rbs_s_w, bar_height - tp_s_h - rpsbp_s_h);
 
 		CinematicCameraButton.Show(Editor.Experimental);
+		
+		m_EditorCameraMarker = new EditorCameraMarker(GetGame().GetUserManager().GetSelectedUser().GetName());
 	}
 	
 	override void Update(float dt)
@@ -688,15 +727,6 @@ class EditorHud: ScriptView
 		}
 		
 		map_widget.SetMapPos(m_MapPosition);
-		
-		// Camera yaw matrix
-		vector map_to_screen_cam = map_widget.MapToScreen(GetGame().GetCurrentCameraPosition());
-		float c_s_x, c_s_y;
-		CameraMarker.GetScreenSize(c_s_x, c_s_y);
-		CameraMarker.SetScreenPos(map_to_screen_cam[0] - c_s_x / 2, map_to_screen_cam[1] - c_s_y / 2);
-		
-		float camera_yaw = GetGame().GetCurrentCameraDirection().VectorToAngles()[0];
-		CameraMarker.SetRotation(0, 0, camera_yaw - 90);		
 	}
 
 	override bool OnClick(Widget w, int x, int y, int button)

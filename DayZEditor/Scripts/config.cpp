@@ -5,7 +5,7 @@ class CfgPatches
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = 0.1;
-		requiredAddons[] = {"DZ_Scripts","JM_CF_Scripts","DF_Scripts", "DZ_Gear_Navigation"};
+		requiredAddons[] = {"DZ_Scripts","JM_CF_Scripts","DF_Scripts", "DZ_Gear_Navigation", "DZ_Worlds_Enoch"};
 	};
 };
 class CfgMods
@@ -60,40 +60,13 @@ class CfgMods
 			};
 			class missionScriptModule
 			{
-				value = "";
+				value = "CreateEditorMission";
 				files[] = {"DayZEditor/scripts/common","DayZEditor/scripts/5_Mission"};
 			};
 		};
 	};
 };
 
-class CfgLocationTypes
-{
-    class Name
-    {
-        name="keypoint";
-        drawStyle="name";
-        texture="#(argb,1,1,1)color(1,1,1,1)";
-        color[]={1, 1, 1, 1};
-        size=0;
-        font="gui/fonts/metron22";
-        textSize=0.03;
-        shadow=0;
-        importance=1;
-    };
-    class NameIcon
-    {
-        name="keypoint";
-        drawStyle="icon";
-        texture="#(argb,1,1,1)color(1,1,1,1)";
-        color[]={1, 1, 1, 1};
-        size=0;
-        font="gui/fonts/metron22";
-        textSize=0.03;
-        shadow=0;
-        importance=1;
-    };
-};
 class MapDefaults;
 class RscMapControl: MapDefaults
 {
@@ -120,4 +93,44 @@ class RscMapControl: MapDefaults
 	fontNames = "gui\fonts\metron22";
 	fontInfo = "gui\fonts\metron22";
 	fontLevel = "gui\fonts\metron22";
+};
+
+class CfgMissions
+{
+    class Cutscenes
+    {
+        class ChernarusPlusIntro
+        {
+            directory="$saves:\MainMenu.ChernarusPlus";
+        };
+
+		class EnochIntro
+		{
+			directory="$saves:\MainMenu.Enoch";
+		};
+
+		class SakhalIntro
+		{
+			directory="$saves:\MainMenu.Sakhal";
+		};
+    };
+};
+
+class CfgWorlds
+{
+    class CAWorld;
+    class ChernarusPlus: CAWorld
+    {
+        ceFiles="DayZEditor\Scripts\Data\ce";
+	};
+
+	class Enoch: CAWorld
+	{
+		ceFiles="DayZEditor\Scripts\Data\ce";
+	};
+
+	class Sakhal: CAWorld
+	{
+		ceFiles="DayZEditor\Scripts\Data\ce";
+	};
 };

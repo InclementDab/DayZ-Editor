@@ -120,7 +120,7 @@ class EditorHudController: EditorControllerBase
 		}*/
 	}
 			
-	void InsertMapMarker(EditorMarker map_marker)
+	void InsertMapMarker(ScriptView map_marker)
 	{
 		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
 		m_Editor.GetEditorHud().Map.AddChild(map_marker.GetLayoutRoot());

@@ -87,30 +87,26 @@ modded class DayZGame
 			string name;
 			ConfigGetChildName("CfgWorlds", i, name);
 			if (VerifyWorldOwnership(name) && ConfigIsExisting(string.Format("CfgWorlds %1 worldName", name))) {
-				maps.Insert(name);
+				string text = ConfigGetTextOut(string.Format("CfgWorlds %1 ceFiles", name));
+				if (text.Contains("DayZEditor")) {
+					maps.Insert(name);
+				}				
 			}
 		}
 		
+		// For more of these to work, define CfgMissions Cutscenes ChernarusPlusIntro to the $saves dir
 		string random_map = maps.GetRandomElement();
-		string mission_directory = SystemPath.Saves("EditorCache");
+		
+		string mission_directory = SystemPath.Saves(string.Format("MainMenu.%1", random_map));
+		string mission_ce_folder = SystemPath.Combine(mission_directory, "db");
+		
 		MakeDirectory(mission_directory);
-
-		string mission_target = SystemPath.Combine(mission_directory, string.Format("EditorMainMenu.%1", random_map));
-		string mission_ce_folder = SystemPath.Combine(mission_target, "db");
-
-		DeleteFile(mission_target);
-
-		MakeDirectory(mission_target);
-		MakeDirectory(mission_ce_folder);
-
-		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\init.c", SystemPath.Combine(mission_target, "init.c"));
-		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\economy.xml", SystemPath.Combine(mission_ce_folder, "economy.xml"));
-		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\globals.xml", SystemPath.Combine(mission_ce_folder, "globals.xml"));
-		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\events.xml", SystemPath.Combine(mission_ce_folder, "events.xml"));
-		CopyFile("DayZEditor\\Scripts\\Data\\Defaults\\MainMenuMission\\types.xml", SystemPath.Combine(mission_ce_folder, "types.xml"));
-		mission_target.Replace("/", "\\");
-		mission_target.Replace(":\\", ":");
-		PlayMission(mission_target);
+		
+		SetMainMenuWorld(random_map);
+		StartRandomCutscene(random_map);
+		
+		SetGameState(DayZGameState.MAIN_MENU);
+		SetLoadState(DayZLoadState.MAIN_MENU_START);
 		
 		DeleteTitleScreen();
 	}

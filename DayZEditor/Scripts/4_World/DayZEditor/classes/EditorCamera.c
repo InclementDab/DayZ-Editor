@@ -67,6 +67,8 @@ class EditorCamera: Camera
 	
 	protected bool m_LightState;
 
+	protected float m_UpdateDtAccumulated;
+	
 	void EditorCamera()
 	{
 		SetEventMask(EntityEvent.FRAME);
@@ -81,7 +83,8 @@ class EditorCamera: Camera
 	
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		if (GetGame().IsMultiplayer()) {
+		m_UpdateDtAccumulated += timeSlice;
+		if (GetGame().IsMultiplayer() && m_UpdateDtAccumulated > 0.5) {
 			float camera_quat[4];
 			vector mat[4];
 			GetTransform(mat);
@@ -91,6 +94,8 @@ class EditorCamera: Camera
 			rpc.Write(mat[3]);
 			rpc.Write(camera_quat);
 			rpc.Send(null, 39257, false);
+			
+			m_UpdateDtAccumulated = 0.0;
 		}
 	}
 

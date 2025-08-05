@@ -2,6 +2,10 @@ modded class MissionGameplay
 {	
 	protected ref EditorMainMenu m_PauseMenu;
 	
+	ref map<int, Object> Cameras = new map<int, Object>();
+	
+	ref map<int, ref EditorCameraMarker> CameraMarkers = new map<int, ref EditorCameraMarker>();
+	
 	override void OnInit()
 	{
 		super.OnInit();
@@ -181,14 +185,9 @@ modded class MissionGameplay
 				// Initialize editor
 				PlayerBase player;
 				ctx.Read(player);
-				
-				Object camera;
-				ctx.Read(camera);
-				
+								
 				g_Editor = new Editor(player);
 				g_Editor.SetActive(true);
-				
-				GetGame().ObjectDeleteOnClient(camera);
 				break;
 			}
 			
@@ -261,6 +260,36 @@ modded class MissionGameplay
 				}
 				
 				GetEditor().UnhideMapObjectsByUuid(unhide_objects, true);
+				break;
+			}
+			
+			case 39257: {
+				int player_id;
+				float camera_quat[4];
+				vector camera_pos;
+				
+				ctx.Read(player_id);
+				ctx.Read(camera_pos);
+				ctx.Read(camera_quat);
+				
+				vector mat[4];
+				Math3D.QuatToMatrix(camera_quat, mat);
+				mat[3] = camera_pos;
+				
+				Object camera = Cameras[player_id];
+				if (!camera) {
+					Cameras[player_id] = GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL);
+					CameraMarkers[player_id] = new EditorCameraMarker(player_id.ToString());
+					GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(CameraMarkers[player_id]);
+					camera = Cameras[player_id];
+					PrintFormat("Created camera for %1", player_id);
+				}
+				
+				camera.SetTransform(mat);
+				camera.Update();
+				
+				CameraMarkers[player_id].WorldPosition = mat[3];
+				CameraMarkers[player_id].WorldOrientation = Math3D.MatrixToAngles(mat);
 				break;
 			}
         }
