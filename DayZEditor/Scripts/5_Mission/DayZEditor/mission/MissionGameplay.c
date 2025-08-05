@@ -89,12 +89,11 @@ modded class MissionGameplay
 	override void OnMissionLoaded()
 	{
 		super.OnMissionLoaded();
-
-		/*
-		if (!GetGame().IsServer()) {
-			ErrorEx("Cannot run DayZ Editor on server... exiting");
+		
+		// Server can handle itself
+		if (GetGame().IsMultiplayer()) {
 			return;
-		}*/
+		}
 
 		vector center_pos = Editor.GetMapCenterPosition();
 		vector start_pos = Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 3500);
@@ -178,6 +177,21 @@ modded class MissionGameplay
 		}
 		
 		switch (rpc_type) {
+			case 39250: {
+				// Initialize editor
+				PlayerBase player;
+				ctx.Read(player);
+				
+				Object camera;
+				ctx.Read(camera);
+				
+				g_Editor = new Editor(player);
+				g_Editor.SetActive(true);
+				
+				GetGame().ObjectDeleteOnClient(camera);
+				break;
+			}
+			
             case 39252: {
 				
                	ctx.Read(count);
