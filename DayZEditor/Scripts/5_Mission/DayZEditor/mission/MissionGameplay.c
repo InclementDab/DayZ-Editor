@@ -170,42 +170,85 @@ modded class MissionGameplay
 	
 	void OnERPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{
+		int count, i;
+		string uuid;
+		
+		if (!GetGame().IsMultiplayer()) {
+			return;
+		}
+		
 		switch (rpc_type) {
             case 39252: {
-				if (GetGame().IsMultiplayer()) {
-                	EditorObjectData dta = new EditorObjectData();
-					string uuid;
+				
+               	ctx.Read(count);
+				map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
+				
+				for (i = 0; i < count; i++) {
+					EditorObjectData dta = new EditorObjectData();
+
 					ctx.Read(uuid);
-                	dta.Read(ctx, int.MAX);
-					
-					GetEditor().GetObjectManager().CreateObject(uuid, dta);
+               		dta.Read(ctx, int.MAX);
 				}
 				
+				GetEditor().CreateObjectsByUuid(data_map, true);
                 break;
             }
 			
 			case 39253: {
-				if (GetGame().IsMultiplayer()) {
-					string uuid2;
-					ctx.Read(uuid2);					
-					GetEditor().GetObjectManager().DeleteObject(uuid2);
+				ctx.Read(count);
+				
+				array<string> deleted_data = {};
+				for (i = 0; i < count; i++) {
+					ctx.Read(uuid);
+					
+					deleted_data.Insert(uuid);
 				}
+				
+				GetEditor().DeleteObjectsByUuid(deleted_data);				
 				
                 break;
             }
 			
 			case 39254: {
-				if (GetGame().IsMultiplayer()) {
-					string uuid3;
-					ctx.Read(uuid3);			
-					EditorObjectData dta2 = new EditorObjectData();		
+				ctx.Read(count);
+				for (i = 0; i < count; i++) {
+					EditorObjectData dta2 = new EditorObjectData();
+					ctx.Read(uuid);
 					dta2.Read(ctx, int.MAX);
-					
-					GetEditor().GetObjectManager().UpdateObject(uuid3, dta2);
-				}
+
+					GetEditor().UpdateObjectByUuid(uuid, dta2);
+				}				
 				
                 break;
             }
+			
+			case 39255: {
+				ctx.Read(count);
+				map<string, Object> hidden_objects = new map<string, Object>();
+				for (i = 0; i < count; i++) {
+					ctx.Read(uuid);
+					
+					Object entity;
+					ctx.Read(entity);
+					
+					hidden_objects[uuid] = entity;
+				}
+				
+				GetEditor().HideMapObjectsByUuid(hidden_objects, true);
+				break;
+			}
+			
+			case 39256: {
+				ctx.Read(count);
+				array<string> unhide_objects = {};
+				for (i = 0; i < count; i++) {
+					ctx.Read(uuid);
+					unhide_objects.Insert(uuid);
+				}
+				
+				GetEditor().UnhideMapObjectsByUuid(unhide_objects, true);
+				break;
+			}
         }
     } 
 }

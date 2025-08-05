@@ -24,8 +24,6 @@ class EditorObjectManagerModule : Managed
 
 	protected ref EditorDeletedObjectMap m_SelectedDeletedObjects = new EditorDeletedObjectMap();
 	
-	protected ref map<string, EditorObject> m_EditorObjectsByUuid = new map<string, EditorObject>();
-
 	protected ref array<ref EditorPlaceableItem> m_PlaceableObjects = {};
 
 	protected ref map<string, EditorPlaceableItem> m_PlaceableObjectsByType = new map<string, EditorPlaceableItem>;
@@ -256,61 +254,28 @@ class EditorObjectManagerModule : Managed
 	{
 		return m_CameraTracks;
 	}
-	
+		
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
-	{
-		Print(editor_object_data.Type);
-		string uuid = UUID.Generate();
-		EditorObject created_object = CreateObject(uuid, editor_object_data);
-		
-		if (GetGame().IsMultiplayer()) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(uuid);
-			editor_object_data.Write(rpc, int.MAX);
-			rpc.Send(null, 39252, true);
-		}
-		
-		m_EditorObjectsByUuid[uuid] = created_object;
-		return created_object;
-	}
-	
-	EditorObject CreateObject(string uuid, notnull EditorObjectData editor_object_data)
 	{
 		EditorObject editor_object = new EditorObject(editor_object_data);
 		if (!editor_object.GetWorldObject()) {
 			return null;
 		}
 		
-		editor_object.Uuid = uuid;
-		m_EditorObjectsByUuid[uuid] = editor_object;
-
 		// strong ref
 		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
 
 		m_PlacedObjects.InsertEditorObject(editor_object);
 		m_WorldObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
 
-		EditorEvents.ObjectCreated(this, editor_object);
-		GetEditor().GetStatistics().EditorPlacedObjects++;
-		
+		EditorEvents.ObjectCreated(this, editor_object);		
 		return editor_object;
 	}
 
 	void DeleteObject(notnull EditorObject target)
 	{
 		EditorLog.Trace("EditorObjectManager::DeleteObject");
-		
-		if (target.GetFlags() & EditorObjectFlags.NODELETE) {
-			return;
-		}
-		
-		if (GetGame().IsMultiplayer() && m_EditorObjectsByUuid.Contains(target.Uuid)) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(target.Uuid);
-			rpc.Send(null, 39253, true);
-			m_EditorObjectsByUuid.Remove(target.Uuid);
-		}
-		
+				
 		EditorCameraTrack camera_track = EditorCameraTrack.Cast(target);
 		if (camera_track) {
 			m_CameraTracks.RemoveItem(camera_track);
@@ -324,31 +289,8 @@ class EditorObjectManagerModule : Managed
 
 		// remove strong ref
 		m_EditorObjectRefs.Remove(target.GetID());
+	}
 		
-	}
-	
-	void DeleteObject(string uuid)
-	{
-		if (m_EditorObjectsByUuid[uuid]) {
-			EditorObject object_to_delete = m_EditorObjectsByUuid[uuid];
-			m_EditorObjectsByUuid.Remove(uuid);
-			DeleteObject(object_to_delete);
-		}
-	}
-	
-	void UpdateObject(string uuid, EditorObjectData data)
-	{
-		auto object = m_EditorObjectsByUuid[uuid];
-		if (!object) {
-			return;
-		}
-		
-		object.SetPosition(data.Position);
-		object.SetOrientation(data.Orientation);
-		object.SetScale(data.Scale);
-		object.Lock(data.Locked);
-	}
-
 	// Call to select an object
 	void SelectObject(notnull EditorObject target)
 	{

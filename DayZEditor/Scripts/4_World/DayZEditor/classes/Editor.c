@@ -82,6 +82,8 @@ class Editor: Managed
 	ref EditorBrush	Brush;
 	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
+	protected ref map<string, EditorObject> m_EditorObjectsByUuid = new map<string, EditorObject>();
+	protected ref map<string, EditorDeletedObject> m_HiddenObjectsByUuid = new map<string, EditorDeletedObject>();
 	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
 	protected typename m_CurrentGizmoType = EditorTranslationGizmo;
@@ -1904,19 +1906,35 @@ class Editor: Managed
 		return CreateObject(EditorObjectData.Create(target, flags), create_undo);
 	}
 	
-	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true) 
+	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
 	{
-		EditorLog.Trace("Editor::CreateObject " + editor_object_data);
+		string uuid = UUID.Generate();
+		EditorObject created_object = CreateObjectByUuid(uuid, editor_object_data, create_undo);
+		if (GetGame().IsMultiplayer()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(1);
+			rpc.Write(uuid);
+			editor_object_data.Write(rpc, int.MAX);
+			rpc.Send(null, 39252, true);
+		}
 		
+		// dont increment if someone else placed something for u
+		GetStatistics().EditorPlacedObjects--;
+				
+		return created_object;
+	}
+	
+	EditorObject CreateObjectByUuid(string uuid, notnull EditorObjectData editor_object_data, bool create_undo = true)
+	{		
 		// Cache Data (for undo / redo)
-		if (!editor_object_data) return null;
 		m_SessionCache[editor_object_data.GetID()] = editor_object_data;
-		
+						
 		// Create Object
-		
 		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data);
 		if (!editor_object) return null;
 		
+		editor_object.Uuid = uuid;
+		m_EditorObjectsByUuid[uuid] = editor_object;
 		EditorAction action = new EditorAction("Delete", "Create");
 		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
@@ -1925,21 +1943,43 @@ class Editor: Managed
 			InsertAction(action);
 		}
 		
+		GetStatistics().EditorPlacedObjects++;
+		
 		return editor_object;
 	}
-		
-	EditorObjectMap CreateObjects(array<ref EditorObjectData> data_list, bool create_undo = true) 
+	
+	EditorObjectMap CreateObjects(notnull array<ref EditorObjectData> data_list, bool create_undo = true, bool send_net_message = true) 
 	{
-		EditorLog.Trace("Editor::CreateObject");
+		map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
 		
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(data_list.Count());
+		for (int i = 0; i < data_list.Count(); i++) {
+			string uuid = UUID.Generate();
+			rpc.Write(uuid);
+			data_list[i].Write(rpc, int.MAX);
+			data_map[uuid] = data_list[i];
+		}
+		
+		GetStatistics().EditorPlacedObjects -= data_list.Count();
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39252, true);
+		}
+				
+		return CreateObjectsByUuid(data_map, create_undo);
+	}
+	
+	EditorObjectMap CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
+	{
 		EditorObjectMap object_set = new EditorObjectMap();
 		EditorAction action = new EditorAction("Delete", "Create");
 		
-		foreach (EditorObjectData editor_object_data: data_list) {
+		foreach (string uuid, EditorObjectData editor_object_data: data_list) {
 			
 			// Cache Data (for undo / redo)
 			if (!editor_object_data) continue;
-
+			
 			// Create a copy to avoid reference loss
 			// todo:
 			//EditorObjectData editor_object_data_copy = editor_object_data.CreateCopy();
@@ -1948,12 +1988,16 @@ class Editor: Managed
 			// Create Object
 			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 			if (!editor_object) continue;
-			
+						
 			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 			
 			object_set.Insert(editor_object.GetID(), editor_object);
 
+			editor_object.Uuid = uuid;
+			m_EditorObjectsByUuid[uuid] = editor_object;
+			
+			GetStatistics().EditorPlacedObjects++;
 		}
 		
 		if (create_undo) {
@@ -1962,50 +2006,138 @@ class Editor: Managed
 		
 		return object_set;
 	}
-	
-	void DeleteObject(EditorObject editor_object, bool create_undo = true) 
+		
+	bool DeleteObject(notnull EditorObject editor_object, bool create_undo = true, bool send_net_message = true) 
 	{
-		EditorAction action = new EditorAction("Create", "Delete");
-		if (!editor_object.IsLocked() && editor_object.IsVisible()) {
-			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-			m_ObjectManager.DeleteObject(editor_object);
+		if (editor_object.GetFlags() & EditorObjectFlags.NODELETE) {
+			return false;
 		}
+		
+		if (editor_object.IsLocked()) {
+			return false;
+		}
+		
+		if (!editor_object.IsVisible()) {
+			return false;
+		}
+		
+		EditorAction action = new EditorAction("Create", "Delete");
+		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+		m_ObjectManager.DeleteObject(editor_object);
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(1);
+			rpc.Write(editor_object.Uuid);
+			rpc.Send(null, 39253, true);
+			m_EditorObjectsByUuid.Remove(editor_object.Uuid);
+		}
+		
+		return true;
+	}
+
+	bool DeleteObjectByUuid(string uuid, bool create_undo = true) 
+	{
+		if (m_EditorObjectsByUuid[uuid]) {
+			return DeleteObject(m_EditorObjectsByUuid[uuid], create_undo, false);
+		}
+				
+		return false;
+	}
+	
+	int DeleteObjectsByUuid(notnull array<string> uuids, bool create_undo = true)
+	{
+		array<EditorObject> editor_objects = {};
+		foreach (string uuid: uuids) {
+			if (m_EditorObjectsByUuid[uuid]) {
+				editor_objects.Insert(m_EditorObjectsByUuid[uuid]);
+			}
+		}
+		
+		return DeleteObjects(editor_objects, create_undo, false);
 	}
 	
 	// If you want to directly delete without undo, get the object manager and do it there
-	void DeleteObjects(notnull array<EditorObject> editor_objects)
+	int DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true, bool send_net_message = true)
 	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(editor_objects.Count());
+		
+		int count;
 		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (EditorObject editor_object: editor_objects) {
 			if (!editor_object.IsLocked()) {
 				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
-			}
-		}
-		
-		InsertAction(action);
-	}
-	
-	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
-	{
-		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (int id, EditorObject editor_object: editor_object_map) {
-			if (!editor_object.IsLocked() && editor_object.IsVisible()) {
-				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-				m_ObjectManager.DeleteObject(editor_object);
+				count++;
+				
+				if (m_EditorObjectsByUuid.Contains(editor_object.Uuid)) {
+					rpc.Write(editor_object.Uuid);
+					m_EditorObjectsByUuid.Remove(editor_object.Uuid);
+				}
 			}
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39253, true);
+		}
+		
+		return count;
+	}
+		
+	int DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true, bool send_net_message = true)
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(editor_object_map.Count());
+		
+		int count;
+		EditorAction action = new EditorAction("Create", "Delete");
+		foreach (int id, EditorObject editor_object: editor_object_map) {
+			if (!editor_object.IsLocked() && editor_object.IsVisible()) {
+				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+				m_ObjectManager.DeleteObject(editor_object);
+				count++;
+				
+				if (m_EditorObjectsByUuid.Contains(editor_object.Uuid)) {
+					rpc.Write(editor_object.Uuid);
+					m_EditorObjectsByUuid.Remove(editor_object.Uuid);
+				}
+			}
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39253, true);
+		}
+		
+		return count;
+	}
+	
+	void UpdateObjectByUuid(string uuid, EditorObjectData data)
+	{
+		auto object = m_EditorObjectsByUuid[uuid];
+		if (!object) {
+			return;
+		}
+		
+		object.SetPosition(data.Position);
+		object.SetOrientation(data.Orientation);
+		object.SetScale(data.Scale);
+		object.Lock(data.Locked);
 	}
 
 	bool HideMapObject(string type, vector position, bool create_undo = true)
@@ -2013,17 +2145,33 @@ class Editor: Managed
 		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(type, position)), create_undo);
 	}
 	
-	bool HideMapObject(Object object, bool create_undo = true)
+	bool HideMapObject(notnull Object object, bool create_undo = true)
 	{
 		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(object)), create_undo);
 	}
 		
-	bool HideMapObject(EditorDeletedObjectData deleted_object_data, bool create_undo = true)
+	bool HideMapObject(notnull EditorDeletedObjectData deleted_object_data, bool create_undo = true)
 	{
 		return HideMapObject(new EditorDeletedObject(deleted_object_data), create_undo);
 	}
 	
-	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+	bool HideMapObject(notnull EditorDeletedObject map_object, bool create_undo = true, bool send_net_message = true)
+	{
+		string uuid = UUID.Generate();
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(1);
+			rpc.Write(uuid);
+			rpc.Write(map_object.GetWorldObject());
+			rpc.Send(null, 39255, true);
+		}
+		
+		GetStatistics().EditorRemovedObjects--;
+		
+		return HideMapObject(uuid, map_object, create_undo);
+	}
+	
+	bool HideMapObject(string uuid, notnull EditorDeletedObject map_object, bool create_undo = true)
 	{
 		if (!CanHideMapObject(map_object.GetType())) {
 			return false;
@@ -2049,15 +2197,36 @@ class Editor: Managed
 		GetStatistics().EditorRemovedObjects++;
 		
 		m_ObjectManager.HideMapObject(map_object);
-		
+		m_HiddenObjectsByUuid[uuid] = map_object;
 		return true;
 	}
+		
+	void HideMapObjects(array<Object> deleted_objects, bool create_undo = true, bool send_net_message = true)
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(deleted_objects.Count());
+		
+		map<string, Object> deleted_object_map = new map<string, Object>();
+		foreach (Object deleted_object: deleted_objects) {
+			string uuid = UUID.Generate();
+			rpc.Write(uuid);
+			rpc.Write(deleted_object);
+			
+			deleted_object_map[uuid] = deleted_object;
+		}
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39255, true);
+		}
+		
+		HideMapObjectsByUuid(deleted_object_map, create_undo);
+	}
 	
-	void HideMapObjects(array<Object> deleted_objects, bool create_undo = true)
+	void HideMapObjectsByUuid(notnull map<string, Object> deleted_object_map, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		
-		foreach (Object object: deleted_objects) {
+		foreach (string uuid, Object object: deleted_object_map) {
 			if (!object) {
 				continue;
 			}
@@ -2077,7 +2246,10 @@ class Editor: Managed
 				action.InsertRedoParameter(new Param1<int>(deleted_object_data.ID));
 			}
 			
-			m_ObjectManager.HideMapObject(new EditorDeletedObject(deleted_object_data));
+			EditorDeletedObject deleted_object = new EditorDeletedObject(deleted_object_data);
+			deleted_object.Uuid = uuid;
+			m_ObjectManager.HideMapObject(deleted_object);
+			m_HiddenObjectsByUuid[uuid] = deleted_object;
 		}
 		
 		if (create_undo) {
@@ -2105,7 +2277,7 @@ class Editor: Managed
 		m_ObjectManager.UnhideMapObject(data.ID);
 		return true;
 	}
-	
+		
 	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true)
 	{
 		if (!map_object) {  
@@ -2129,14 +2301,17 @@ class Editor: Managed
 		
 		return true;
 	}
-	
-	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
+		
+	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true, bool send_net_message = true)
 	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(deleted_objects.Count());
+		
 		EditorAction action;
 		if (create_undo) {
 			action = new EditorAction("Hide", "Unhide");
 		}
-		
+				
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
 			if (create_undo) {
 				action.InsertUndoParameter(new Param1<int>(id));
@@ -2145,11 +2320,34 @@ class Editor: Managed
 			
 			GetStatistics().EditorRemovedObjects++;
 			m_ObjectManager.UnhideMapObject(id);
+
+			rpc.Write(deleted_object.Uuid);
+			
+			m_HiddenObjectsByUuid.Remove(deleted_object.Uuid);
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
+
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39255, true);
+		}
+	}
+
+	void UnhideMapObjectsByUuid(notnull array<string> deleted_object_uuids, bool create_undo = true)
+	{
+		EditorDeletedObjectMap deleted_objects = new EditorDeletedObjectMap();
+		foreach (string deleted_object_uuid: deleted_object_uuids) {
+			if (m_HiddenObjectsByUuid.Contains(deleted_object_uuid)) {
+				EditorDeletedObject hidden_object = m_HiddenObjectsByUuid[deleted_object_uuid];
+				deleted_objects[hidden_object.GetID()] = hidden_object;
+			}
+		}
+		
+		GetStatistics().EditorRemovedObjects -= deleted_object_uuids.Count();
+
+		UnhideMapObjects(deleted_objects, create_undo, false);
 	}
 		
 	void Clear()

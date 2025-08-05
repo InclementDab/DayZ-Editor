@@ -1,5 +1,7 @@
 class EditorDeletedObject: EditorWorldObject
 {
+	string Uuid;
+	
 	protected bool m_IsSelected;
 	
 	protected string m_Type;
