@@ -1,3 +1,45 @@
+// Mission creation framework when?
+Mission CreateEditorMission(string path)
+{
+	Print("Creating Mission: "+ path);
+	
+	// g_Game.SetMissionPath(path); Done from C++ now
+
+	if (g_Game.IsMultiplayer() && g_Game.IsServer())
+	{
+		return new MissionServer;
+	}
+
+#ifdef NO_GUI
+	return new MissionDummy;
+#endif
+	MissionMainMenu m;
+	if (path.Contains("NoCutscene"))
+	{
+		m = new MissionMainMenu();
+		m.m_NoCutscene = true;
+		return m;
+	}
+	
+	if (path.Contains("MainMenu"))
+	{
+		EditorMainMenuMission mm = new EditorMainMenuMission(path);
+		return mm;
+	}
+	else
+	{
+		if( path == "" )
+		{
+			return new MissionDummy;
+		}
+#ifndef NO_GUI_INGAME
+		return new MissionGameplay;
+#else
+		return new MissionDummy;
+#endif
+	}
+}
+
 class EditorMainMenuMission: MissionBase
 {
 	protected ref EditorMainMenu m_MainMenu;
@@ -6,6 +48,20 @@ class EditorMainMenuMission: MissionBase
 	void EditorMainMenuMission(string path)
 	{
 		m_Path = path;
+		
+		if (CanLaunchCLE()) {
+	        Hive ce = CreateHive();
+	        if (ce) {
+	            ce.InitOffline();
+	        }
+	    }
+	}
+	
+	void ~EditorMainMenuMission()
+	{
+		if (GetHive()) {
+			DestroyHive();	
+		}
 	}
 	
 	bool CanLaunchCLE()	
