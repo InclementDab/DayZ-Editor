@@ -575,7 +575,8 @@ FrameWidgetClass EditorFrame {
              priority 410
              style rover_sim_colorable
             }
-            WrapSpacerWidgetClass LeftbarPlacementsConfig {
+            GridSpacerWidgetClass LeftbarPlacementsConfig {
+             visible 1
              disabled 0
              clipchildren 1
              ignorepointer 0
@@ -592,12 +593,15 @@ FrameWidgetClass EditorFrame {
              style Colorable
              Padding 0
              Margin 0
+             "Size To Content H" 1
              "Size To Content V" 1
              content_halign center
              content_valign center
+             Columns 1
+             Rows 1
              {
               ScriptParamsClass {
-               Binding_Name "LeftbarSpacerConfig"
+               Binding_Name "LeftContent"
               }
              }
             }
@@ -2217,7 +2221,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 22 24
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2261,7 +2265,7 @@ FrameWidgetClass EditorFrame {
                 ImageWidgetClass GroundButton_Icon {
                  inheritalpha 0
                  ignorepointer 1
-                 size 24 24
+                 size 22 24
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2304,7 +2308,7 @@ FrameWidgetClass EditorFrame {
                 ImageWidgetClass SnapButton_Icon {
                  inheritalpha 0
                  ignorepointer 1
-                 size 24 24
+                 size 22 24
                  halign center_ref
                  valign center_ref
                  hexactpos 1

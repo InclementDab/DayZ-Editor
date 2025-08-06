@@ -93,7 +93,6 @@ class EditorPlaceableListItem: EditorListItem
 	bool ListItemExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
-
 			case 0: {
 				GetEditor().ClearHand();
 				GetEditor().AddInHand(m_PlaceableItem);
@@ -105,7 +104,7 @@ class EditorPlaceableListItem: EditorListItem
 				Select();
 				int x, y;
 				GetMousePos(x, y);
-				EditorHud.CurrentMenu = new EditorPlaceableContextMenu(x, y, this);
+				EditorHud.CurrentMenu = new EditorPlaceableContextMenu(x, y, m_PlaceableItem);
 				break;
 			}
 		}

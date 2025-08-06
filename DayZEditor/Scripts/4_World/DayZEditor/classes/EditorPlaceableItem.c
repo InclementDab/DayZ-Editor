@@ -8,8 +8,9 @@ enum EditorPlaceableItemCategory
 class EditorPlaceableItem : Managed
 {
 	int Scope;
+	string Name;
 	string Type; // Item Type
-	string Path; // config path
+	string Path; // config path CfgVehicles, CfgWeapons etc...
 	EditorPlaceableItemCategory Category;
 
 	private void EditorPlaceableItem()
@@ -51,6 +52,7 @@ class EditorPlaceableItem : Managed
 		placeable_item.Scope = 2;
 		placeable_item.Type = SystemPath.Format(p3d_file);
 		placeable_item.Path = p3d_file;
+		placeable_item.Name = File.GetName(p3d_file);
 		placeable_item.Category = EditorPlaceableItemCategory.STATIC;
 		return placeable_item;
 	}
@@ -61,6 +63,7 @@ class EditorPlaceableItem : Managed
 		placeable_item.Scope = scope;
 		placeable_item.Path = config_path;
 		placeable_item.Type = config_type;
+		placeable_item.Name = config_type;
 		placeable_item.Category = EditorPlaceableItemCategory.CONFIG;
 
 		return placeable_item;
@@ -71,6 +74,7 @@ class EditorPlaceableItem : Managed
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
 		placeable_item.Scope = 0;
 		placeable_item.Type = scripted_type.ToString();
+		placeable_item.Name = scripted_type.ToString();
 		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
 		return placeable_item;
 	}
@@ -100,5 +104,14 @@ class EditorPlaceableItem : Managed
 		}
 		// default
 		return LIST_ITEM_DEFAULT_ICON;
+	}
+	
+	string GetModelName()
+	{
+		if (Type.Contains(".p3d")) {
+			return Type;
+		}
+		
+		return GetDayZGame().ConfigGetTextOut(string.Format("%1 %2 model", Path, Type));
 	}
 }

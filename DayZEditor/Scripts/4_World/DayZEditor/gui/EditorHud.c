@@ -124,7 +124,9 @@ class EditorHud: ScriptView
 		"AddNodeButton",
 		"CameraTrackRunButton"
 	};
-
+	
+	protected ref map<string, EditorFolderListNode> m_FolderNodes = new map<string, EditorFolderListNode>();		
+	
 	void EditorHud(notnull Editor editor)
 	{	
 		m_Editor = editor;
@@ -141,7 +143,71 @@ class EditorHud: ScriptView
 #ifndef COMPONENT_SYSTEM		
 		int item_size = m_EditorSettings.ListItemSize;
 		array<ref EditorPlaceableItem> placeable_items = m_Editor.GetPlaceableObjects();
-		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
+			
+		int jjj = 0;
+		foreach (EditorPlaceableItem placeable_item: placeable_items) {		
+			
+			//Print(placeable_item.Type);
+			
+			string model_name = placeable_item.GetModelName();
+			model_name.Replace(SystemPath.SEPERATOR_ALT, SystemPath.SEPERATOR);
+			model_name.ToLower();
+			if (model_name[0] == SystemPath.SEPERATOR) {
+				model_name = model_name.Substring(1, model_name.Length());
+			}
+			
+			if (model_name == "bmp" || model_name == "bmp.p3d" || model_name == string.Empty) {
+				continue;
+			}
+			
+			array<string> model_path_split = {};
+			model_name.Split(SystemPath.SEPERATOR, model_path_split);
+			for (int i = 0; i < model_path_split.Count(); i++) {
+				string folder_name = model_path_split[i];
+				string full_path = string.Empty;
+				for (int j = 0; j <= i; j++) {
+					full_path += model_path_split[j];
+					if (j != i) {
+						full_path += SystemPath.SEPERATOR;
+					}
+				}
+												
+				if (i < model_path_split.Count() - 1) {
+					EditorFolderListNode folder_node;
+					if (m_FolderNodes.Contains(full_path)) {
+						folder_node = m_FolderNodes[full_path];
+					} else {
+						folder_node = new EditorFolderListNode(folder_name);
+						m_FolderNodes[full_path] = folder_node;
+							
+						if (i == 0) {
+							m_TemplateController.LeftContent.Insert(folder_node);
+						} else {
+							string directory_parent = full_path.Substring(0, full_path.LastIndexOf(SystemPath.SEPERATOR));
+							EditorFolderListNode parent_node = m_FolderNodes[directory_parent];
+							if (parent_node) {
+								parent_node.InsertChild(folder_node);
+							}
+						}
+					}
+										
+				} else {
+					
+				}
+				
+			}
+			
+			string model_directory = model_name.Substring(0, model_name.LastIndexOf(SystemPath.SEPERATOR));
+			EditorPlaceableListNode placeable_node = new EditorPlaceableListNode(placeable_item);
+			m_FolderNodes[model_directory].InsertChild(placeable_node);			
+			
+			jjj++;
+			if (jjj > 300) {
+				break;
+			}
+			
+			continue;
+					
 			ObservableCollection<ref EditorPlaceableListItem> TargetList;
 			// Makes stuff look good when first loading
 			switch (placeable_item.Category) {

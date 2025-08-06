@@ -3,12 +3,12 @@ class EditorRemoveFromFavoritesCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		Param1<EditorPlaceableListItem> data = Param1<EditorPlaceableListItem>.Cast(GetData());
+		Param1<EditorPlaceableItem> data = Param1<EditorPlaceableItem>.Cast(GetData());
 		if (!data) {
 			return false;
 		}
 		
-		data.param1.SetFavorite(false);		
+		//data.param1.SetFavorite(false);		
 		return true;
 	}
 	
