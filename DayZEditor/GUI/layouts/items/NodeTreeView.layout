@@ -146,11 +146,17 @@ FrameWidgetClass NodeView {
        hexactsize 1
        vexactsize 1
        scaled 0
-       scriptclass ""
-       image0 "set:regular image:folder"
+       scriptclass "SymbolHandler"
+       image0 ""
        mode blend
        "src alpha" 1
        filter 1
+       {
+        ScriptParamsClass {
+         Symbol_Name "folder"
+         Symbol_Size 2
+        }
+       }
       }
      }
     }

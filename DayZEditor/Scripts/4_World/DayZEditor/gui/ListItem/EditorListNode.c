@@ -19,13 +19,13 @@ class EditorListNode: ScriptView
 	void EditorListNode()
 	{
 		m_TemplateController = EditorListNodeController.Cast(m_Controller);
-		CollapseButton.Show(false);
+		Collapse.Show(false);
 	}
 		
 	void InsertChild(notnull EditorListNode list_node)
 	{
 		m_TemplateController.ChildrenItems.Insert(list_node);
-		CollapseButton.Show(m_TemplateController.ChildrenItems.Count());
+		Collapse.Show(m_TemplateController.ChildrenItems.Count());
 		
 		//RecalculateSize();
 	}
@@ -48,10 +48,16 @@ class EditorListNode: ScriptView
 			parent = parent.GetParent().GetParent();
 		}
 		
+		if (!collapsed) {
+			IconImage.SetImage(3);
+		} else {
+			IconImage.SetImage(2);
+		}
+		
 		RecalculateSize();
 	}
 	
-	protected void RecalculateSize()
+	void RecalculateSize()
 	{
 		float w, h, x, y;
 		Children.Update();
@@ -154,7 +160,11 @@ class EditorPlaceableListNode: EditorListNode
 		m_PlaceableItem = placeable_item;
 		
 		Text.SetText(m_PlaceableItem.Name);
-		Symbols.TREE.Load(IconImage);
+		if (placeable_item.Type.Contains(".p3d")) {
+			Symbols.TREE_DECIDUOUS.Load(IconImage, 3);
+		} else {
+			Symbols.HOUSE_BLANK.Load(IconImage, 3);
+		}
 	}
 				
 	override bool OnMouseEnter(Widget w, int x, int y)

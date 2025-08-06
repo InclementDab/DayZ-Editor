@@ -983,6 +983,8 @@ class EditorHud: ScriptView
 	{
 		switch (w) {
 			case LeftSearchBar: {
+				
+				/*
 				string left_search_bar_text = LeftSearchBar.GetText();
 				array<ObservableCollection<ref EditorPlaceableListItem>> collections = { m_TemplateController.LeftbarSpacerConfig, m_TemplateController.LeftbarSpacerStatic };
 				foreach (auto collection: collections) {
@@ -998,11 +1000,39 @@ class EditorHud: ScriptView
 
 						collection[j].GetLayoutRoot().Show(!hide);
 					}
+				}*/
+				
+				string search_string = LeftSearchBar.GetText();
+				search_string.ToLower();
+				Print(search_string);
+				foreach (string search_data, EditorListNode view: m_FolderNodes) {
+					search_data.ToLower();
+					//Print(search_data);					
+					if (search_data.Contains(search_string) || !search_string) {
+						view.GetLayoutRoot().Show(true);
+						
+						/*
+						Widget p = view.GetLayoutRoot().GetParent().GetParent();
+						EditorListNode nv;
+						while (p && p.GetName() == "NodeView") {
+							p.GetUserData(nv);
+							nv.GetLayoutRoot().Show(true);
+							GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(nv.RecalculateSize, 5);
+							p = p.GetParent().GetParent();
+						}
+						
+						GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(view.RecalculateSize);
+						//view.RecalculateSize();*/
+						
+					} else {
+						view.GetLayoutRoot().Show(false);
+					}
 				}
+				
 				
 				LeftbarScroll.VScrollToPos(0);
 				
-				Symbols left_search_bar_icon = Ternary<Symbols>.If(!left_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
+				Symbols left_search_bar_icon = Ternary<Symbols>.If(!search_string.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 				left_search_bar_icon.Load(LeftSearchBarIconIcon);
 				break;
 			}
