@@ -1,16 +1,15 @@
 modded class DayZGame
-{
+{	
 	protected ref ScriptView m_CurrentTooltip;
 
 	// args: string
 	ref ScriptInvoker OnProgressReport;
+	ref Payload_EditorLoginResponse LoginCache;
 
 	ref ScriptInvoker Event_OnActivateMessage = new ScriptInvoker();
 	ref ScriptInvoker Event_OnDeactivateMessage = new ScriptInvoker();
 		
 	string EditorFileToLoad;
-	
-	ref Payload_EditorLoginResponse LoginCache;
 	
 	void DayZGame()
 	{	

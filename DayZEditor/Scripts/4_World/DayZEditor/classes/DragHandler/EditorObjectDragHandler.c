@@ -98,7 +98,7 @@ class EditorObjectDragHandler: EditorDragHandler
 	
 	protected override void OnDragging(notnull EditorObject target, notnull array<EditorObject> additional_drag_targets)
 	{
-		//ScopedFunctionTimer Scope0("EditorObjectDragHandler.OnDragging");
+		ScopedFunctionTimer Scope0("EditorObjectDragHandler.OnDragging");
 
 		array<EditorObject> all_objects = {};
 		all_objects.Insert(target);
@@ -160,20 +160,6 @@ class EditorObjectDragHandler: EditorDragHandler
 			// always use transform[1] because GetBottomCenter is doing the opposite of this
 			cursor_pos = cursor_pos + transform[1].Normalized() * vector.Distance(transform_ground_projection, transform[3]);
 		}
-
-		map<EditorObject, ref array<vector>> local_transforms_to_target = new map<EditorObject, ref array<vector>>();
-		foreach (EditorObject additional_drag_target: additional_drag_targets) {
-			vector additional_drag_target_mat[4];
-			additional_drag_target.GetBottomTransform(additional_drag_target_mat);
-			vector inv_additional_drag_target_mat[4];
-			Math3D.MatrixInvMultiply4(transform_without_scale, additional_drag_target_mat, inv_additional_drag_target_mat);
-			local_transforms_to_target[additional_drag_target] = {
-				inv_additional_drag_target_mat[0],
-				inv_additional_drag_target_mat[1],
-				inv_additional_drag_target_mat[2],
-				inv_additional_drag_target_mat[3]
-			};
-		}
 								
 		// Handle Z-Only motion
 		if (KeyState(KeyCode.KC_LMENU)) {			
@@ -200,13 +186,15 @@ class EditorObjectDragHandler: EditorDragHandler
 			vector xy_intersect = xy_plane.Intersect(cursor_ray);
 			if (vector.Distance(icon_position, xy_intersect) > 0.001) {
 				vector cursor_intersect_dir = vector.Direction(icon_position, xy_intersect);
+#ifdef DIAG_DEVELOPER
 				Debug.DrawArrow(icon_position, icon_position + cursor_intersect_dir * 10, 1, LinearColor.BLUE, ShapeFlags.ONCE);
+#endif
 
 				vector cursor_dir_mat[4];
 				cursor_intersect_dir.Normalize();
 				if (cursor_intersect_dir.Length() > 0 && Math.AbsFloat(vector.Dot(cursor_intersect_dir, up_dir)) != 1) {
 					Math3D.DirectionAndUpMatrix(cursor_intersect_dir, up_dir, cursor_dir_mat);
-					Math3D.MatrixOrthogonalize4(cursor_dir_mat);
+					Math3D.MatrixOrthogonalize3(cursor_dir_mat);
 
 					//cursor_dir_mat[3] = icon_position.InvMultiply4(transform) + transform[3];
 					Math3D.MatrixMultiply3(scale_matrix, cursor_dir_mat, cursor_dir_mat);
@@ -222,7 +210,7 @@ class EditorObjectDragHandler: EditorDragHandler
 			if (GetEditor().MagnetMode) {
 				vector aside_new = transform[0] * up_dir;			
 				Math3D.DirectionAndUpMatrix(aside_new, up_dir, transform_new);
-				Math3D.MatrixOrthogonalize4(transform_new);
+			//	Math3D.MatrixOrthogonalize4(transform_new);
 				Math3D.MatrixMultiply3(scale_matrix, transform_new, transform_new);
 			} else {
 				target.GetTransform(transform_new);
@@ -241,7 +229,7 @@ class EditorObjectDragHandler: EditorDragHandler
 				continue;
 			}
 
-			array<vector> dyn_vec_arry = local_transforms_to_target[selected_object];
+			array<vector> dyn_vec_arry = m_LocalTransformsToTarget[selected_object];
 			vector local_additional_mat[4] = {
 				dyn_vec_arry[0],
 				dyn_vec_arry[1],
@@ -253,7 +241,8 @@ class EditorObjectDragHandler: EditorDragHandler
 
 			vector output_additional_mat[4];
 			Math3D.MatrixMultiply4(transform_without_scale, local_additional_mat, output_additional_mat);
-			selected_object.SetBottomTransform(output_additional_mat);
+			selected_object.GetWorldObject().SetTransform(output_additional_mat);
+			selected_object.GetWorldObject().Update();
 		}
 		
 		target.SetBottomTransform(transform);

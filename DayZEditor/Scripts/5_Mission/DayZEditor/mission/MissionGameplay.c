@@ -187,7 +187,9 @@ modded class MissionGameplay
 				ctx.Read(player);
 								
 				g_Editor = new Editor(player);
-				g_Editor.SetActive(true);
+				if (g_Editor) {
+					g_Editor.SetActive(true);
+				}
 				break;
 			}
 			
@@ -291,6 +293,15 @@ modded class MissionGameplay
 				CameraMarkers[player_id].WorldPosition = mat[3];
 				CameraMarkers[player_id].WorldOrientation = Math3D.MatrixToAngles(mat);
 				break;
+			}
+			
+			case 39251: {
+				int player_id2;
+				ctx.Read(player_id2);
+				Cameras[player_id2].Delete();
+				Cameras.Remove(player_id2);
+				CameraMarkers.Remove(player_id2);
+				break;	
 			}
         }
     } 

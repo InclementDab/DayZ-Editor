@@ -4,6 +4,7 @@ class EditorDragHandler: Managed
 	protected ref array<EditorObject> m_AdditionalDragTargets = {};
 	protected ref EditorAction m_RewindAction;
 	protected bool m_IsDragging;
+	protected ref map<EditorObject, ref array<vector>> m_LocalTransformsToTarget = new map<EditorObject, ref array<vector>>();
 	
 	void OnDragStart(notnull EditorObject target, array<EditorObject> additional_targets = null)
 	{
@@ -15,9 +16,24 @@ class EditorDragHandler: Managed
 		m_RewindAction = new EditorAction("SetTransform", "SetTransform");
 		m_RewindAction.InsertUndoParameter(m_Target.GetTransformArray());
 
+		vector transform_without_scale[4];
+		m_Target.GetTransform(transform_without_scale);
+		Math3D.MatrixOrthogonalize4(transform_without_scale);
+		
 		foreach (EditorObject selected_object: m_AdditionalDragTargets) {
 			if (selected_object != m_Target) {
 				m_RewindAction.InsertUndoParameter(selected_object.GetTransformArray());
+				
+				vector additional_drag_target_mat[4];
+				selected_object.GetWorldObject().GetTransform(additional_drag_target_mat);
+				vector inv_additional_drag_target_mat[4];
+				Math3D.MatrixInvMultiply4(transform_without_scale, additional_drag_target_mat, inv_additional_drag_target_mat);
+				m_LocalTransformsToTarget[selected_object] = {
+					inv_additional_drag_target_mat[0],
+					inv_additional_drag_target_mat[1],
+					inv_additional_drag_target_mat[2],
+					inv_additional_drag_target_mat[3]
+				};
 			}
 		}
 

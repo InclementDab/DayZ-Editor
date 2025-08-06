@@ -73,7 +73,7 @@ class Editor: Managed
 		"EditorCamera_V2",
 		"EditorCameraClassic"
 	};
-	
+		
 	// public properties
 	ref EditorCommandManager 					CommandManager;
 	
@@ -168,19 +168,25 @@ class Editor: Managed
 		g_Game.ReportProgress("Loading Editor...");
 
 		PrintFormat("Loading DayZ Editor v%1", Version);
+		
+		if (GetGame().IsMultiplayer()) {
+			string address;
+			int port;
+			GetDayZGame().GetHostAddress(address, port);
+			array<int> valid_ips = { 
+				-1707972227,
+				1201824834
+			};
+			
+			if (valid_ips.Find(address.Hash()) == -1) {
+				delete this;
+				return;
+			}
+		}
 
 		g_Editor = this;
 		m_Player = player;
 		m_ControllingPlayer = m_Player;
-
-#ifdef SERVER
-		/*for (int i = 0; i < 100; i++) {
-            Print("[EDITOR][ERROR] SERVER ADMINISTRATOR ERROR! DAYZ EDITOR SHOULD NOT BE LOADED ON THE SERVER!");
-		}
-		
-		delete g_Editor;
-		return;*/
-#endif
 				
 		// Player god mode
 		if (m_Player) {
@@ -1461,6 +1467,11 @@ class Editor: Managed
 	private bool _bugfixFirstGrab;
 	void SetActive(bool active)
 	{	
+		// just in case we get deleted first
+		if (!m_EditorCamera) {
+			return;
+		}
+		
 		EditorLog.Info("Set Active %1", active.ToString());		
 		m_Active = active;
 				
