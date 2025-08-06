@@ -1,4 +1,4 @@
-GridSpacerWidgetClass Root {
+FrameWidgetClass NodeView {
  visible 1
  clipchildren 0
  position 0 0
@@ -10,12 +10,6 @@ GridSpacerWidgetClass Root {
  scaled 0
  draggable 1
  scriptclass ""
- Padding 0
- Margin 0
- "Size To Content H" 1
- "Size To Content V" 1
- Columns 1
- Rows 2
  {
   GridSpacerWidgetClass Wrapper {
    visible 1
@@ -321,53 +315,26 @@ GridSpacerWidgetClass Root {
     }
    }
   }
-  GridSpacerWidgetClass Children {
+  WrapSpacerWidgetClass Children {
    visible 0
+   disabled 0
+   clipchildren 1
    ignorepointer 1
-   position 0 0
-   size 1 30
+   position 30 30
+   size 1 1
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 1
+   vexactsize 0
+   scaled 0
+   scriptclass "ViewBinding"
    Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
-   Columns 2
-   Rows 1
    {
-    FrameWidgetClass Spacer1 {
-     ignorepointer 1
-     size 24 30
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 0
-    }
-    WrapSpacerWidgetClass ChildrenContainer {
-     visible 1
-     disabled 0
-     clipchildren 1
-     ignorepointer 1
-     position 30 30
-     size 1 1
-     hexactpos 1
-     vexactpos 1
-     hexactsize 0
-     vexactsize 0
-     scaled 0
-     scriptclass "ViewBinding"
-     Padding 0
-     Margin 0
-     "Size To Content H" 1
-     "Size To Content V" 1
-     {
-      ScriptParamsClass {
-       Binding_Name "ChildrenItems"
-      }
-     }
+    ScriptParamsClass {
+     Binding_Name "ChildrenItems"
     }
    }
   }

@@ -25,8 +25,9 @@ class EditorListNode: ScriptView
 	void InsertChild(notnull EditorListNode list_node)
 	{
 		m_TemplateController.ChildrenItems.Insert(list_node);
-		
 		CollapseButton.Show(m_TemplateController.ChildrenItems.Count());
+		
+		//RecalculateSize();
 	}
 	
 	void SetCollapsed(bool collapsed)
@@ -38,6 +39,27 @@ class EditorListNode: ScriptView
 		}
 		
 		collapse_icon.Load(CollapseIcon, 0);
+		
+		Widget parent = m_LayoutRoot.GetParent().GetParent();
+		while (parent && parent.GetName() == "NodeView") {
+			EditorListNode node;
+			parent.GetUserData(node);
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(node.RecalculateSize);			
+			parent = parent.GetParent().GetParent();
+		}
+		
+		RecalculateSize();
+	}
+	
+	protected void RecalculateSize()
+	{
+		float w, h, x, y;
+		Children.Update();
+		Children.GetScreenSize(w, h);	
+		
+		m_LayoutRoot.GetScreenSize(x, y);
+		m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
+		m_LayoutRoot.Update();
 	}
 	
 	bool IsCollapsed()

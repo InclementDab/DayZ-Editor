@@ -27,17 +27,23 @@ class EditorListItem: ScriptView
 	
 	void Select() 
 	{
-		ListItem.SetColor(m_Editor.GetSettings().SelectionColor);
+		if (ListItem) {
+			ListItem.SetColor(m_Editor.GetSettings().SelectionColor);
+		}
 	}
 	
 	void Highlight()
 	{
-		ListItem.SetColor(m_Editor.GetSettings().HighlightColor);
+		if (ListItem) {
+			ListItem.SetColor(m_Editor.GetSettings().HighlightColor);
+		}
 	}
 	
 	void Deselect() 
 	{	
-		ListItem.SetColor(COLOR_EMPTY);
+		if (ListItem) {
+			ListItem.SetColor(COLOR_EMPTY);
+		}
 	}
 	
 	// Abstract

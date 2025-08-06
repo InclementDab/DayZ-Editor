@@ -144,7 +144,6 @@ class EditorHud: ScriptView
 		int item_size = m_EditorSettings.ListItemSize;
 		array<ref EditorPlaceableItem> placeable_items = m_Editor.GetPlaceableObjects();
 			
-		int jjj = 0;
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {		
 			
 			//Print(placeable_item.Type);
@@ -152,12 +151,13 @@ class EditorHud: ScriptView
 			string model_name = placeable_item.GetModelName();
 			model_name.Replace(SystemPath.SEPERATOR_ALT, SystemPath.SEPERATOR);
 			model_name.ToLower();
-			if (model_name[0] == SystemPath.SEPERATOR) {
-				model_name = model_name.Substring(1, model_name.Length());
+			model_name.TrimInPlace();
+			if (model_name == "bmp" || model_name == "bmp.p3d" || model_name.Length() == 0) {
+				continue;
 			}
 			
-			if (model_name == "bmp" || model_name == "bmp.p3d" || model_name == string.Empty) {
-				continue;
+			if (model_name[0] == SystemPath.SEPERATOR) {
+				model_name = model_name.Substring(1, model_name.Length() - 1);
 			}
 			
 			array<string> model_path_split = {};
@@ -200,11 +200,6 @@ class EditorHud: ScriptView
 			string model_directory = model_name.Substring(0, model_name.LastIndexOf(SystemPath.SEPERATOR));
 			EditorPlaceableListNode placeable_node = new EditorPlaceableListNode(placeable_item);
 			m_FolderNodes[model_directory].InsertChild(placeable_node);			
-			
-			jjj++;
-			if (jjj > 300) {
-				break;
-			}
 			
 			continue;
 					

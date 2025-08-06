@@ -23,6 +23,11 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			Delete();
 			return;
 		}
+		
+		// idk man
+		if (!m_MapWidget) {
+			m_MapWidget = m_Editor.GetEditorHud().Map;
+		}
 				
 		if (m_EditorObject.IsLocked() || !m_Editor.GetEditorHud().IsVisible() || !m_Show || m_EditorObject.IsBeingDragged) {
 			if (m_LayoutRoot.IsVisible()) {
@@ -45,7 +50,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 
 			return;
 		}
-
+		
 		// now get a more accurate position for the visual representation since we've determined this will be drawn
 		// Should the position be raycasted on the ground, or locked to the object
 		if (!m_Editor.GroundMode) {
