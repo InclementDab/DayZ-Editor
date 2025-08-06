@@ -41,6 +41,8 @@ class EditorDragHandler: Managed
 		}
 
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_OnDragging);
+		
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 	}
 	
 	void OnDragFinish()

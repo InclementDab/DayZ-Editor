@@ -17,6 +17,7 @@ class EditorHudController: EditorControllerBase
 	
 	// Main data		
 	ref ObservableCollection<ref EditorListNode> LeftContent = new ObservableCollection<ref EditorListNode>(this);
+	ref ObservableCollection<ref EditorListNode> RightContent = new ObservableCollection<ref EditorListNode>(this);
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerConfig = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerStatic = new ObservableCollection<ref EditorPlaceableListItem>(this);

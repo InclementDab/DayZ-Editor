@@ -29,7 +29,7 @@ FrameWidgetClass NodeView {
    "Size To Content H" 1
    "Size To Content V" 1
    content_valign center
-   Columns 4
+   Columns 6
    Rows 1
    {
     FrameWidgetClass Collapse {
@@ -208,6 +208,183 @@ FrameWidgetClass NodeView {
          mode additive
          "src alpha" 1
          filter 1
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass BoundingBox {
+     visible 0
+     ignorepointer 1
+     position 7 0
+     size 0.04 30
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     {
+      ButtonWidgetClass BoundingBoxButton {
+       visible 1
+       clipchildren 1
+       color 1 1 1 0.3922
+       position 0 0
+       size 20 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass ""
+       style Empty
+       font "gui/fonts/etelkatextpro14"
+       switch toggle
+       {
+        ImageWidgetClass BoundingBoxIcon {
+         visible 1
+         clipchildren 0
+         ignorepointer 1
+         color 1 1 1 0.5882
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         scriptclass "SymbolHandler"
+         image0 ""
+         mode additive
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "cube"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass Lock {
+     visible 0
+     ignorepointer 1
+     position 7 0
+     size 0.04 30
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     {
+      ButtonWidgetClass LockButton {
+       visible 1
+       clipchildren 1
+       color 1 1 1 0.3922
+       position 0 0
+       size 20 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass ""
+       style Empty
+       font "gui/fonts/etelkatextpro14"
+       switch toggle
+       {
+        ImageWidgetClass LockIcon {
+         visible 1
+         clipchildren 0
+         ignorepointer 1
+         color 1 1 1 0.5882
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         scriptclass "SymbolHandler"
+         image0 ""
+         mode additive
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "lock"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    FrameWidgetClass Marker {
+     visible 0
+     ignorepointer 1
+     position 7 0
+     size 0.04 30
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scaled 0
+     {
+      ButtonWidgetClass MarkerButton {
+       visible 1
+       clipchildren 1
+       color 1 1 1 0.3922
+       position 0 0
+       size 20 18
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass ""
+       style Empty
+       font "gui/fonts/etelkatextpro14"
+       switch toggle
+       {
+        ImageWidgetClass MarkerIcon {
+         visible 1
+         clipchildren 0
+         ignorepointer 1
+         color 1 1 1 0.5882
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scaled 0
+         scriptclass "SymbolHandler"
+         image0 ""
+         mode additive
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "globe_pointer"
+           Symbol_Size 2
+          }
+         }
         }
        }
       }
