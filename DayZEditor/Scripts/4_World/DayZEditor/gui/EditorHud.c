@@ -21,6 +21,7 @@ class EditorCameraMarker: ScriptView
 		MapWidget map_widget = GetEditor().GetEditorHud().Map;
 		if (!map_widget.IsVisible()) {
 			m_LayoutRoot.Show(false);
+			return;
 		}
 		
 		m_LayoutRoot.Show(true);
@@ -31,7 +32,7 @@ class EditorCameraMarker: ScriptView
 		IconFrame.GetScreenSize(c_s_x, c_s_y);
 		m_LayoutRoot.SetScreenPos(map_to_screen_cam[0] - c_s_x / 2, map_to_screen_cam[1] - c_s_y / 2);
 		
-		float camera_yaw = WorldOrientation.VectorToAngles()[0];
+		float camera_yaw = WorldOrientation[0];
 		IconFrame.SetRotation(0, 0, camera_yaw - 90);		
 	}
 	
@@ -640,6 +641,9 @@ class EditorHud: ScriptView
 			// Spams errors
 			GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
+		
+		m_EditorCameraMarker.WorldPosition = GetEditor().GetCamera().GetPosition();
+		m_EditorCameraMarker.WorldOrientation = GetEditor().GetCamera().GetOrientation();
 		
 #ifdef DIAG_DEVELOPER
 		/*

@@ -8,6 +8,7 @@ FrameWidgetClass Root {
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ scaled 0
  priority 400
  {
   TextWidgetClass Text {
@@ -18,6 +19,7 @@ FrameWidgetClass Root {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   scaled 0
    priority 400
    text "dab"
    font "gui/fonts/sdf_MetronBook24"
@@ -32,6 +34,7 @@ FrameWidgetClass Root {
    vexactpos 1
    hexactsize 1
    vexactsize 1
+   scaled 0
    priority 400
    {
     ImageWidgetClass Icon0 {
@@ -46,6 +49,7 @@ FrameWidgetClass Root {
      vexactpos 1
      hexactsize 0
      vexactsize 0
+     scaled 0
      priority 400
      image0 "set:solid image:video"
      mode blend
@@ -65,6 +69,7 @@ FrameWidgetClass Root {
      vexactpos 1
      hexactsize 0
      vexactsize 0
+     scaled 0
      priority 400
      image0 "set:solid image:video"
      mode blend
