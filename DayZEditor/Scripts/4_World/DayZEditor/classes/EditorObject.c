@@ -21,6 +21,7 @@ class EditorObject: EditorWorldObject
 	protected bool m_IsSelected;
 	
 	string Uuid;
+	bool IsBeingDragged;
 			
 	ref ScriptInvoker OnObjectSelected = new ScriptInvoker();
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();

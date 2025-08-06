@@ -699,15 +699,19 @@ class Editor: Managed
 			return;
 		}
 		
-		float raycast_distance = GetCameraSettings().ViewDistance;
+		float raycast_distance = GetCameraSettings().ViewDistance / 3;
 
 		// The most common rays and raycast for the tool to use are updated and cached at the beginning of each frame. If you need a different raycast, then you will perform it yourself
 		m_CursorRay = new Ray(GetGame().GetCurrentCameraPosition(), GetDayZGame().GetPointerDirection());
 		m_CameraRay = new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraDirection());
-		m_CameraRaycast = PerformRaycast(m_CameraRay, null, raycast_distance, false);
-		m_CameraRaycastGround = PerformRaycast(m_CameraRay, null, raycast_distance, true);
-		m_CursorRaycast = PerformRaycast(m_CursorRay, null, raycast_distance, false);
-		m_CursorRaycastGround = PerformRaycast(m_CursorRay, null, raycast_distance, true);		
+				
+		if (GetGame().GetUIManager().IsCursorVisible()) {
+			m_CursorRaycast = PerformRaycast(m_CursorRay, null, raycast_distance, false);
+			m_CursorRaycastGround = PerformRaycast(m_CursorRay, null, raycast_distance, true);		
+		} else {
+			m_CameraRaycast = PerformRaycast(m_CameraRay, null, raycast_distance, false);
+			m_CameraRaycastGround = PerformRaycast(m_CameraRay, null, raycast_distance, true);
+		}
 		
 #ifdef GIZMOS_ENABLED
 		if (m_CurrentGizmoType == EMPTY_TYPENAME) {

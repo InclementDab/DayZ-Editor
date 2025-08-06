@@ -24,7 +24,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 				
-		if (m_EditorObject.IsLocked() || !m_Editor.GetEditorHud().IsVisible() || !m_Show) {
+		if (m_EditorObject.IsLocked() || !m_Editor.GetEditorHud().IsVisible() || !m_Show || m_EditorObject.IsBeingDragged) {
 			if (m_LayoutRoot.IsVisible()) {
 				m_LayoutRoot.Show(false);
 			}
@@ -57,6 +57,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, null, null, m_EditorObject.GetWorldObject(), false, true); // set to ground only
 		}
 		
+		screen_pos = GetGame().GetScreenPos(position);
 		if (m_MapWidget.IsVisible()) {
 			screen_pos = m_MapWidget.MapToScreen(position);
 			m_LayoutRoot.SetSort(100);

@@ -237,7 +237,7 @@ class EditorObjectDragHandler: EditorDragHandler
 				dyn_vec_arry[3]
 			};
 			
-			//Math3D.MatrixOrthogonalize4(local_additional_mat);
+			Math3D.MatrixOrthogonalize4(local_additional_mat);
 
 			vector output_additional_mat[4];
 			Math3D.MatrixMultiply4(transform_without_scale, local_additional_mat, output_additional_mat);

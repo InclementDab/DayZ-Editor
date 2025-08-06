@@ -26,6 +26,7 @@ class EditorDragHandler: Managed
 				
 				vector additional_drag_target_mat[4];
 				selected_object.GetWorldObject().GetTransform(additional_drag_target_mat);
+				Math3D.MatrixOrthogonalize4(additional_drag_target_mat);
 				vector inv_additional_drag_target_mat[4];
 				Math3D.MatrixInvMultiply4(transform_without_scale, additional_drag_target_mat, inv_additional_drag_target_mat);
 				m_LocalTransformsToTarget[selected_object] = {
@@ -35,6 +36,8 @@ class EditorDragHandler: Managed
 					inv_additional_drag_target_mat[3]
 				};
 			}
+			
+			selected_object.IsBeingDragged = true;
 		}
 
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_OnDragging);
@@ -51,6 +54,7 @@ class EditorDragHandler: Managed
 			}
 			
 			selected_object.UpdateNet();
+			selected_object.IsBeingDragged = false;
 		}
 		
 		m_Target.UpdateNet();
