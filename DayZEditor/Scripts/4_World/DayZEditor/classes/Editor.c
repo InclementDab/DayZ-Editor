@@ -2278,7 +2278,7 @@ class Editor: Managed
 		return true;
 	}
 		
-	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true, bool send_net_message = true)
 	{
 		if (!map_object) {  
 			return false;
@@ -2288,18 +2288,38 @@ class Editor: Managed
 			return false;
 		}
 		
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(1);
+		
 		EditorAction action = new EditorAction("Hide", "Unhide");
 		// todo refactor
 		action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
 		action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
 				
+		rpc.Write(map_object.Uuid);
+		m_HiddenObjectsByUuid.Remove(map_object.Uuid);
+		
 		m_ObjectManager.UnhideMapObject(map_object);
 
 		if (create_undo) {
 			InsertAction(action);
 		}
 		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39255, true);
+		}
+		
 		return true;
+	}
+	
+	bool UnhideMapObjectByUuid(string uuid, bool create_undo = true)
+	{
+		GetStatistics().EditorRemovedObjects--;
+		if (m_HiddenObjectsByUuid.Contains(uuid)) {
+			return UnhideMapObject(m_HiddenObjectsByUuid[uuid], create_undo, false);
+		}
+		
+		return false;
 	}
 		
 	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true, bool send_net_message = true)
