@@ -44,8 +44,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	void ~EditorObjectPropertiesDialog()
 	{
-		delete m_EditorObjects;
-		delete m_EditorMultiObjectCommandController;
+		foreach (EditorObject editor_object: m_EditorObjects) {
+			editor_object.UpdateNet();
+		}
 	}
 			
 	protected void OnObjectSelected(Class context, EditorObject editor_object)

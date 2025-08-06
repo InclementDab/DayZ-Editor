@@ -13,14 +13,15 @@ PanelWidgetClass Panel {
    clipchildren 0
    ignorepointer 1
    position 7 0
-   size 48 24
+   size 48 18
    valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
    text "Items Placed"
-   font "gui/fonts/Metron16"
+   font "gui/fonts/sdf_MetronBook24"
+   "bold text" 1
    "exact text" 0
    "size to text h" 1
    "text halign" center
@@ -30,7 +31,7 @@ PanelWidgetClass Panel {
    clipchildren 0
    ignorepointer 1
    position 7 0
-   size 48 22
+   size 48 16
    halign right_ref
    valign center_ref
    hexactpos 1
@@ -38,7 +39,7 @@ PanelWidgetClass Panel {
    hexactsize 1
    vexactsize 1
    text "2483"
-   font "gui/fonts/Metron16"
+   font "gui/fonts/sdf_MetronBook24"
    "size to text h" 1
    "text halign" center
    "text valign" center

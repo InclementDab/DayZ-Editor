@@ -394,13 +394,13 @@ class Editor: Managed
 
 	Raycast GetCameraRaycast(Object ignore = null, bool ground_only = false)
 	{
-		if (!ignore && !ground_only) {
+		/*if (!ignore && !ground_only) {
 			return m_CameraRaycast;
 		}
 
 		if (!ignore) {
 			return m_CameraRaycastGround;
-		}
+		}*/
 
 		return PerformRaycast(GetCameraRay(), ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
 	}
@@ -1351,6 +1351,8 @@ class Editor: Managed
 					res_mat[2] = res_mat[2] + res_mat[2].Normalized() * scale_offset;
 										
 					selected_object.SetTransform(res_mat);
+					
+					selected_object.UpdateNet();
 				}
 			}
 		}
