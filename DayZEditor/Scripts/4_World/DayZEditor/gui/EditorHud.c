@@ -362,6 +362,13 @@ class EditorHud: ScriptView
 				Raycast teleport_player_raycast = m_Editor.GetCursorRaycastModeSafe(teleport_player);
 				if (teleport_player_raycast) {
 					teleport_player.SetPosition(teleport_player_raycast.Bounce.Position);
+					
+					if (GetGame().IsMultiplayer()) {
+						ScriptRPC rpc_teleport = new ScriptRPC();
+						rpc_teleport.Write(teleport_player);
+						rpc_teleport.Write(teleport_player_raycast.Bounce.Position);
+						rpc_teleport.Send(null, 39258, false);
+					}
 				}
 			}
 		}

@@ -2431,14 +2431,14 @@ class Editor: Managed
 		}
 	}
 			
-	static PlayerBase CreateDefaultCharacter(string type, vector position)
+	static PlayerBase CreateDefaultCharacter(string type, vector position, PlayerIdentity identity = null)
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
 		if (GetGame().GetPlayer()) {
 			return PlayerBase.Cast(GetGame().GetPlayer());
 		} 
 
-		PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(null, type, position, 0, string.Empty));
+		PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(identity, type, position, 0, string.Empty));
 		if (!player) {
 			EditorLog.Error("Failed to create new player, type %1", type);
 			return null;
