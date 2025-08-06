@@ -192,7 +192,6 @@ modded class MissionGameplay
 			}
 			
             case 39252: {
-				
                	ctx.Read(count);
 				map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
 				
@@ -201,6 +200,7 @@ modded class MissionGameplay
 
 					ctx.Read(uuid);
                		dta.Read(ctx, int.MAX);
+					data_map[uuid] = dta;
 				}
 				
 				GetEditor().CreateObjectsByUuid(data_map, true);
