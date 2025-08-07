@@ -11,7 +11,7 @@ static const string LIST_ITEM_DEFAULT_ICON = "DayZEditor/gui/images/dayz_editor_
 /* Used for Offline Editor Mission Creation */
 static string CreateEditorMissionFolder(string map_name = "ChernarusPlus")
 {	
-	string mission = "$saves:Editor/Missions/DayZEditor." + map_name;
+	string mission = "$saves:Editor/Missions/Editor." + map_name;
 	
 	if (!MakeDirectory("$saves:Editor/")) {
 		EditorLog.Error("Failed to create Editor Directory");
@@ -29,8 +29,6 @@ static string CreateEditorMissionFolder(string map_name = "ChernarusPlus")
 	}
 	
 	string init_file = mission + "/init.c";
-	// force a deletion of the init file since 1.28 changed the requirement of a main() function
-	DeleteFile(init_file);
 	if (!FileExist(init_file)) {
 		EditorLog.Info("Editor Init not found, creating....");
 		CopyFile("DayZEditor/scripts/data/Defaults/Mission/init.c", init_file);

@@ -1,3 +1,36 @@
+class EditorServerView: ScriptView
+{
+	protected string m_ServerAddress;
+	protected int m_ServerPort;
+	TextWidget ServerText, ServerPop;
+	ButtonWidget ServerConnect;
+	
+	void EditorServerView(string server_name, string server_address, int server_port)
+	{
+		m_ServerAddress = server_address;
+		m_ServerPort = server_port;
+		
+		ServerText.SetText(server_name);
+	}
+	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{		
+		switch (w) {
+			case ServerConnect: {
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(g_Game.ConnectFromJoin, 0, 0, m_ServerAddress, m_ServerPort);
+				return true;
+			}
+		}
+		
+		return super.OnClick(w, x, y, button);
+	}
+	
+	override string GetLayoutFile()
+	{
+		return "DayZEditor\\GUI\\layouts\\EditorServerEntry.layout";
+	}
+}
+
 class EditorMapView: ScriptView
 {
 	static ref array<EditorMapView> s_AllEditorMapViews = {};
@@ -8,7 +41,7 @@ class EditorMapView: ScriptView
 	ImageWidget Image;
 	TextWidget Text;
 	Widget Outline, ButtonSpacer, ImageFr, LockImage, TextPanel;
-	ButtonWidget StartButton, LoadButton, PurchaseButton, Button;
+	ButtonWidget StartButton, LoadButton, PurchaseButton, Button, RentServerButton;
 	protected int m_Opened;
 	
 	protected EditorSettings m_EditorSettings;
@@ -158,6 +191,11 @@ class EditorMapView: ScriptView
 
 			case PurchaseButton: {
 				GetGame().GoBuyWorldDLC(m_MapConfig);
+				break;
+			}
+			
+			case RentServerButton: {
+				
 				break;
 			}
 		}

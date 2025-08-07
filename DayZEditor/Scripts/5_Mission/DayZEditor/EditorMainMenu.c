@@ -2,6 +2,7 @@ class EditorMainMenuController : ViewController
 {
 	ref ObservableCollection<ref ScriptView> MapViews = new ObservableCollection<ref ScriptView>(this);
 	ref ObservableCollection<ref ScriptView> StatisticsEntries = new ObservableCollection<ref ScriptView>(this);
+	ref ObservableCollection<ref ScriptView> ServerEntries = new ObservableCollection<ref ScriptView>(this);
 }
 
 class EditorStatisticsEntryView : ScriptView
@@ -59,15 +60,18 @@ class EditorMainMenu: ScriptViewMenu
 
 	protected float m_SoundVolume = 1.0, m_MusicVolume = 1.0;
 	protected bool m_GlobalStatsVisible, m_DeletionPending;
+	protected bool m_MenuMode; // 0 offline, 1 online
 	
 	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame, GlobeFrame;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
-	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase, ContinueButton;
+	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase, ContinueButton, ModeOffline, ModeOnline;
 	TextWidget VersionText, EditorText, StatHeaderText;
 	RichTextWidget ServerShowcaseBackupText;
-	ScrollWidget MapScroller;
+	ScrollWidget MapScroller, ServerScroller;
 	ImageWidget SoundButton, MusicButton, GlobeButton;
-
+	Widget ModeOfflinePanel, ModeOnlinePanel;
+	TextWidget ModeOfflineText, ModeOnlineText;
+	
 	void EditorMainMenu()
 	{
 		m_IsShowcaseActive = 1; // WE LIVE
@@ -90,6 +94,8 @@ class EditorMainMenu: ScriptViewMenu
 				m_TemplateController.MapViews.Insert(new EditorMapView(name));
 			}
 		}
+		
+		m_TemplateController.ServerEntries.Insert(new EditorServerView("Editor Online Beta v1", "73.250.152.69", 2350));
 
 		float mg_s_w, mg_s_h;
 		MapGrid.GetScreenSize(mg_s_w, mg_s_h);
@@ -410,6 +416,16 @@ class EditorMainMenu: ScriptViewMenu
 
 				break;
 			}
+			
+			case ModeOnline: {
+				WidgetAnimator.Animate(ModeOnlineText, WidgetAnimatorProperty.SIZE_H, 24, 90);
+				break;
+			}
+			
+			case ModeOffline: {
+				WidgetAnimator.Animate(ModeOfflineText, WidgetAnimatorProperty.SIZE_H, 24, 90);
+				break;
+			}
 		}
 
 		return super.OnMouseEnter(w, x, y);
@@ -455,6 +471,16 @@ class EditorMainMenu: ScriptViewMenu
 			
 			case MusicButton: {
 				MusicButton.SetImage(2);
+				break;
+			}
+			
+			case ModeOnline: {
+				WidgetAnimator.Animate(ModeOnlineText, WidgetAnimatorProperty.SIZE_H, 20, 90);
+				break;
+			}
+			
+			case ModeOffline: {
+				WidgetAnimator.Animate(ModeOfflineText, WidgetAnimatorProperty.SIZE_H, 20, 90);
 				break;
 			}
 		}
@@ -590,6 +616,24 @@ class EditorMainMenu: ScriptViewMenu
 					ServerShowcaseImage.Show(false);
 				}
 			
+				break;
+			}
+			
+			case ModeOnline: {
+				ServerScroller.Show(true);
+				MapScroller.Show(false);
+				
+				WidgetAnimator.AnimateColor(ModeOnlinePanel, 0xFF0069b1, 90);
+				WidgetAnimator.AnimateColor(ModeOfflinePanel, 0xFF2b3035, 90);
+				break;
+			}
+			
+			case ModeOffline: {
+				ServerScroller.Show(false);
+				MapScroller.Show(true);
+				
+				WidgetAnimator.AnimateColor(ModeOfflinePanel, 0xFF0069b1, 90);
+				WidgetAnimator.AnimateColor(ModeOnlinePanel, 0xFF2b3035, 90);
 				break;
 			}
 		}

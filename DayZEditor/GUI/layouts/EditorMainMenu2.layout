@@ -2,7 +2,7 @@ PanelWidgetClass main_menu_root {
  visible 1
  ignorepointer 1
  color 0 0 0 0
- position 0 0
+ position 0 -0.99527
  size 1 1
  halign center_ref
  valign center_ref
@@ -727,7 +727,7 @@ PanelWidgetClass main_menu_root {
      clipchildren 0
      ignorepointer 1
      position 0 0
-     size 1170 384
+     size 1116 384
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -764,6 +764,23 @@ PanelWidgetClass main_menu_root {
         }
        }
       }
+      ImageWidgetClass MapSelectorBackground {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       color 0.1725 0.1922 0.2118 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       mode opaque
+       "src alpha" 0
+       "clamp mode" wrap
+       "stretch mode" stretch_h_center
+      }
       ScrollWidgetClass MapScroller {
        ignorepointer 0
        size 1 1
@@ -776,23 +793,6 @@ PanelWidgetClass main_menu_root {
        style blank
        "Scrollbar H" 1
        {
-        ImageWidgetClass MapSelectorBackground {
-         visible 0
-         clipchildren 0
-         ignorepointer 1
-         color 0.8627 0.8627 0.8627 0.8627
-         size 1248 1
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 0
-         imageTexture "{0655A1BF79F5B291}gui/textures/loading_screens/loading_screen_1_co.edds"
-         mode blend
-         "src alpha" 0
-         "clamp mode" wrap
-         "stretch mode" stretch_h_center
-        }
         GridSpacerWidgetClass MapGrid {
          visible 1
          clipchildren 0
@@ -814,6 +814,197 @@ PanelWidgetClass main_menu_root {
          {
           ScriptParamsClass {
            Binding_Name "MapViews"
+          }
+         }
+        }
+       }
+      }
+      ScrollWidgetClass ServerScroller {
+       visible 0
+       ignorepointer 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       {
+        GridSpacerWidgetClass ServerListItems {
+         ignorepointer 1
+         size 1 48
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         Padding 0
+         Margin 7
+         "Size To Content V" 1
+         content_halign right
+         Columns 1
+         Rows 1
+         {
+          PanelWidgetClass ServerRoot {
+           visible 1
+           ignorepointer 1
+           color 0.0588 0.0588 0.0588 0.7843
+           size 1 36
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            ButtonWidgetClass RentServerButton {
+             color 0.9373 0.9098 0.8196 1
+             position 0.05 0
+             size 280 28
+             halign right_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             {
+              TextWidgetClass ServerConnectText {
+               ignorepointer 1
+               size 48 18
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text "Rent a Server"
+               font "gui/fonts/sdf_MetronBook24"
+               "text color" 0.0706 0.5608 0.1922 1
+               "italic text" 0
+               "bold text" 1
+               "size to text h" 1
+               "text halign" center
+               "text valign" center
+              }
+              PanelWidgetClass PanelWidget5 {
+               ignorepointer 1
+               color 0.9373 0.9098 0.8196 1
+               position 0 0
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               style Outline
+              }
+             }
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "ServerEntries"
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass ModeSelector {
+       ignorepointer 1
+       position 0 -36
+       size 152 36
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 7
+       Margin 0
+       "Size To Content H" 1
+       Columns 2
+       Rows 1
+       {
+        ButtonWidgetClass ModeOffline {
+         position 10 10
+         size 114 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass ModeOfflinePanel {
+           ignorepointer 1
+           color 0 0.4118 0.6941 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           {
+            TextWidgetClass ModeOfflineText {
+             ignorepointer 1
+             size 48 20
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             text "OFFLINE"
+             font "gui/fonts/sdf_MetronBook24"
+             "bold text" 1
+             "size to text h" 1
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+         }
+        }
+        ButtonWidgetClass ModeOnline {
+         position 10 10
+         size 114 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass ModeOnlinePanel {
+           ignorepointer 1
+           color 0.1686 0.1882 0.2078 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           {
+            TextWidgetClass ModeOnlineText {
+             ignorepointer 1
+             position 0 0
+             size 48 20
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             text "ONLINE"
+             font "gui/fonts/sdf_MetronBook24"
+             "bold text" 1
+             "size to text h" 1
+             "text halign" center
+             "text valign" center
+            }
+           }
           }
          }
         }
