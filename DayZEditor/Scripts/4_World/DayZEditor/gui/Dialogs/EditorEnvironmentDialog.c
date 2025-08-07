@@ -86,7 +86,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 	}
 			
 	void PropertyChanged(string property_name)
-	{
+	{		
 		switch (property_name) {
 			case "m_Year":
 			case "m_Month":
@@ -159,6 +159,26 @@ class EditorEnvironmentDialog: EditorDialogBase
 				m_WorldLighting.SetGlobalLighting(m_LightingConfig);
 				break;
 			}
+		}
+		
+		if (GetGame().IsMultiplayer()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(m_Year);
+			rpc.Write(m_Month);
+			rpc.Write(m_Day);
+			rpc.Write(m_Hour);
+			rpc.Write(m_Minute);
+			rpc.Write(snow);
+			rpc.Write(snowscale);
+			rpc.Write(rain);
+			rpc.Write(fog);
+			rpc.Write(overcast);
+			rpc.Write(winddir);
+			rpc.Write(wind);
+			rpc.Write(m_DynFogHeightBias);
+			rpc.Write(m_DynFogHeightDensity);
+			rpc.Write(m_DynFogDistanceDensity);
+			rpc.Send(null, 39259, true);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 class PlayerCameraData
 {
+	float Timestamp;
 	float Quat[4];
 	vector Position;
 }
@@ -9,6 +10,8 @@ modded class MissionGameplay
 	protected ref EditorMainMenu m_PauseMenu;
 	
 	ref map<int, Object> Cameras = new map<int, Object>();
+	ref map<int, ref PlayerCameraData> LastCameraData = new map<int, ref PlayerCameraData>();
+	ref map<int, ref PlayerCameraData> CameraData = new map<int, ref PlayerCameraData>();
 	
 	ref map<int, ref EditorCameraMarker> CameraMarkers = new map<int, ref EditorCameraMarker>();
 	
@@ -73,6 +76,36 @@ modded class MissionGameplay
 			GetEditor().Update(timeslice);
 		} else {
 			super.OnUpdate(timeslice);
+		}
+		
+		if (GetGame().IsMultiplayer()) {
+			foreach (int player_id, Object camera: Cameras) {
+				
+				PlayerCameraData last_camera_data = LastCameraData[player_id];
+				PlayerCameraData camera_data = CameraData[player_id];
+				if (!last_camera_data || !camera_data) {
+					continue;
+				}
+				
+				float time_passed = camera_data.Timestamp - last_camera_data.Timestamp;
+				if (time_passed >= 1.0) {
+					continue;
+				}
+				
+				float qout[4];
+				Math3D.QuatLerp(qout, last_camera_data.Quat, camera_data.Quat, time_passed);
+				
+				
+				vector mat[4];
+				Math3D.QuatToMatrix(qout, mat);
+				mat[3] = vector.Lerp(last_camera_data.Position, camera_data.Position, time_passed);
+								
+				camera.SetTransform(mat);
+				camera.Update();
+				
+				CameraMarkers[player_id].WorldPosition = mat[3];
+				CameraMarkers[player_id].WorldOrientation = Math3D.MatrixToAngles(mat);
+			}
 		}
 	}
 	
@@ -191,11 +224,23 @@ modded class MissionGameplay
 				// Initialize editor
 				PlayerBase player;
 				ctx.Read(player);
-								
-				g_Editor = new Editor(player);
-				if (g_Editor) {
-					g_Editor.SetActive(true);
+				
+				PlayerIdentity identity;
+				ctx.Read(identity);
+				
+				if (identity.GetId() == GetGame().GetPlayer().GetIdentity().GetId()) {				
+					g_Editor = new Editor(player);
+					if (g_Editor) {
+						g_Editor.SetActive(true);
+					}
+				} else {
+					int player_id3 = identity.GetPlayerId();
+					Cameras[player_id3] = GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL);
+					CameraMarkers[player_id3] = new EditorCameraMarker(identity.GetName());
+					GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(CameraMarkers[player_id3]);
+					PrintFormat("Created camera for %1", player_id3);
 				}
+				
 				break;
 			}
 			
@@ -280,24 +325,12 @@ modded class MissionGameplay
 				ctx.Read(camera_pos);
 				ctx.Read(camera_quat);
 				
-				vector mat[4];
-				Math3D.QuatToMatrix(camera_quat, mat);
-				mat[3] = camera_pos;
-				
-				Object camera = Cameras[player_id];
-				if (!camera) {
-					Cameras[player_id] = GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL);
-					CameraMarkers[player_id] = new EditorCameraMarker(player_id.ToString());
-					GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(CameraMarkers[player_id]);
-					camera = Cameras[player_id];
-					PrintFormat("Created camera for %1", player_id);
-				}
-				
-				camera.SetTransform(mat);
-				camera.Update();
-				
-				CameraMarkers[player_id].WorldPosition = mat[3];
-				CameraMarkers[player_id].WorldOrientation = Math3D.MatrixToAngles(mat);
+				PlayerCameraData camera_data = new PlayerCameraData();
+				copyarray(camera_data.Quat, camera_quat);
+				camera_data.Position = camera_pos;
+				camera_data.Timestamp = GetDayZGame().GetTickTime();
+				LastCameraData[player_id] = CameraData[player_id];
+				CameraData[player_id] = camera_data;
 				break;
 			}
 			

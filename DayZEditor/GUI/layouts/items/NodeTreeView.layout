@@ -397,7 +397,7 @@ FrameWidgetClass NodeView {
      ignorepointer 1
      color 0.0275 0.4353 0.5725 0
      position 67 0
-     size 0.88 22
+     size 0.49 22
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -407,6 +407,7 @@ FrameWidgetClass NodeView {
      scriptclass ""
      style Colorable
      Padding 0
+     "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
      content_valign center
@@ -419,12 +420,12 @@ FrameWidgetClass NodeView {
        clipchildren 0
        ignorepointer 1
        color 0.1569 0.1569 0.1569 0
-       size 1 1
+       size 0 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
+       hexactsize 1
        vexactsize 0
        scaled 0
        draggable 0
@@ -434,11 +435,10 @@ FrameWidgetClass NodeView {
        Padding 0
        Margin 4
        "Size To Content H" 1
-       "Size To Content V" 1
        content_halign center
        content_valign center
        Columns 1
-       Rows 2
+       Rows 1
        {
         TextWidgetClass Text {
          visible 1
@@ -463,7 +463,7 @@ FrameWidgetClass NodeView {
          "exact text" 0
          "exact text size" 16
          "size to text h" 1
-         "size to text v" 1
+         "size to text v" 0
          "text valign" center
          {
           EditBoxWidgetClass Edit {

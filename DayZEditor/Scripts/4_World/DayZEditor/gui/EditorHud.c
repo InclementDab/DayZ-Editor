@@ -161,7 +161,7 @@ class EditorHud: ScriptView
 				model_name = model_name.Substring(1, model_name.Length() - 1);
 			}
 			
-			PrintFormat("%3] %1: %2", placeable_item.Type, model_name, placeable_item.Scope);
+			//PrintFormat("%3] %1: %2", placeable_item.Type, model_name, placeable_item.Scope);
 			
 			array<string> model_path_split = {};
 			model_name.Split(SystemPath.SEPERATOR, model_path_split);

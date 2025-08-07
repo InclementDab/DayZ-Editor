@@ -76,9 +76,14 @@ class EditorListNode: ScriptView
 			if (parent && parent.GetName() == "NodeView") {
 				EditorListNode node;
 				parent.GetUserData(node);
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(node.Show, 0, 0, show);
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(node.ShowCuzDayZSucksAss, 0, 0, show);
 			}
 		}
+	}
+	
+	protected void ShowCuzDayZSucksAss(bool show)
+	{
+		Show(show);
 	}
 	
 	protected void RecalculateSize()
