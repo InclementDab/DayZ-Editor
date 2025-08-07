@@ -36,8 +36,6 @@ class EditorListNode: ScriptView
 	{
 		m_TemplateController.ChildrenItems.Insert(list_node);
 		Collapse.Show(m_TemplateController.ChildrenItems.Count());
-		
-		//RecalculateSize();
 	}
 	
 	void SetCollapsed(bool collapsed)
@@ -50,11 +48,13 @@ class EditorListNode: ScriptView
 		
 		collapse_icon.Load(CollapseIcon, 0);
 		
+		RecalculateSize();
+		
 		Widget parent = m_LayoutRoot.GetParent().GetParent();
 		while (parent && parent.GetName() == "NodeView") {
 			EditorListNode node;
 			parent.GetUserData(node);
-			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(node.RecalculateSize);			
+			node.RecalculateSize();
 			parent = parent.GetParent().GetParent();
 		}
 		
@@ -63,11 +63,25 @@ class EditorListNode: ScriptView
 		} else {
 			IconImage.SetImage(2);
 		}
-		
-		RecalculateSize();
 	}
 	
-	void RecalculateSize()
+	override void Show(bool show)
+	{
+		super.Show(show);
+		
+		RecalculateSize();
+		
+		if (show) {
+			Widget parent = m_LayoutRoot.GetParent().GetParent();
+			if (parent && parent.GetName() == "NodeView") {
+				EditorListNode node;
+				parent.GetUserData(node);
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(node.Show, 0, 0, show);
+			}
+		}
+	}
+	
+	protected void RecalculateSize()
 	{
 		float w, h, x, y;
 		Children.Update();

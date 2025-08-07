@@ -73,7 +73,7 @@ class EditorObjectManagerModule : Managed
 
 				// Yikes
 				if (GetGame().IsKindOf(type, "Inventory_Base") || GetGame().IsKindOf(type, "Weapon_Base") || GetGame().IsKindOf(type, "DZ_LightAI") || GetGame().IsKindOf(type, "Magazine_Base")) {
-					placeable_item.Scope = 0;
+					placeable_item.Scope = 1;
 				}
 
 				// Register as placeable
@@ -101,7 +101,7 @@ class EditorObjectManagerModule : Managed
 					// Add static variant of all config items
 					EditorPlaceableItem placeable_item_static_variant = EditorPlaceableItem.Create(SystemPath.Format(model));
 					if (!ObjectSpawnerHandler.ValidatePath(model)) {
-						placeable_item_static_variant.Scope = 0;
+						placeable_item_static_variant.Scope = 1;
 					}
 					
 					m_PlaceableObjectsByP3dPath[model].Insert(placeable_item_static_variant);

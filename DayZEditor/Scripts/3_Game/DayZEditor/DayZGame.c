@@ -93,7 +93,7 @@ modded class DayZGame
 				string text = ConfigGetTextOut(string.Format("CfgWorlds %1 ceFiles", name));
 				if (text.Contains("DayZEditor")) {
 					maps.Insert(name);
-				}				
+				}
 			}
 		}
 		

@@ -252,6 +252,7 @@ FrameWidgetClass EditorFrame {
            "Size To Content V" 1
            {
             ButtonWidgetClass FavoritesTabButton {
+             visible 1
              color 0.2941 0.4667 0.7451 1
              position 0 0
              size 1 22
@@ -295,6 +296,7 @@ FrameWidgetClass EditorFrame {
              }
             }
             ButtonWidgetClass ShowPrivateButton {
+             visible 0
              color 0.2941 0.4667 0.7451 1
              position 0 0
              size 1 22
@@ -378,6 +380,7 @@ FrameWidgetClass EditorFrame {
              }
             }
             PanelWidgetClass LeftbarCategoryPanel {
+             visible 0
              ignorepointer 1
              position 0 22
              size 1 22
@@ -581,9 +584,7 @@ FrameWidgetClass EditorFrame {
              clipchildren 1
              ignorepointer 0
              color 0.1725 0.1922 0.2118 1
-             position 0 0
              size 1 1
-             halign center_ref
              hexactpos 0
              vexactpos 0
              hexactsize 0
@@ -611,9 +612,7 @@ FrameWidgetClass EditorFrame {
              clipchildren 1
              ignorepointer 0
              color 0.1412 0.1569 0.1804 1
-             position 0 0
              size 1 1
-             halign center_ref
              hexactpos 0
              vexactpos 0
              hexactsize 0

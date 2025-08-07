@@ -125,7 +125,7 @@ class EditorHud: ScriptView
 		"CameraTrackRunButton"
 	};
 	
-	protected ref map<string, EditorFolderListNode> m_FolderNodes = new map<string, EditorFolderListNode>();		
+	protected ref map<string, EditorListNode> m_FolderNodes = new map<string, EditorListNode>();		
 	
 	void EditorHud(notnull Editor editor)
 	{	
@@ -144,6 +144,7 @@ class EditorHud: ScriptView
 		int item_size = m_EditorSettings.ListItemSize;
 		array<ref EditorPlaceableItem> placeable_items = m_Editor.GetPlaceableObjects();
 			
+		int jjjj;
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {		
 			
 			//Print(placeable_item.Type);
@@ -159,6 +160,8 @@ class EditorHud: ScriptView
 			if (model_name[0] == SystemPath.SEPERATOR) {
 				model_name = model_name.Substring(1, model_name.Length() - 1);
 			}
+			
+			PrintFormat("%3] %1: %2", placeable_item.Type, model_name, placeable_item.Scope);
 			
 			array<string> model_path_split = {};
 			model_name.Split(SystemPath.SEPERATOR, model_path_split);
@@ -199,7 +202,13 @@ class EditorHud: ScriptView
 			
 			string model_directory = model_name.Substring(0, model_name.LastIndexOf(SystemPath.SEPERATOR));
 			EditorPlaceableListNode placeable_node = new EditorPlaceableListNode(placeable_item);
+			m_FolderNodes[model_name] = placeable_node;
 			m_FolderNodes[model_directory].InsertChild(placeable_node);			
+			
+			//jjjj++;
+			//if (jjjj > 100) {
+				//break;
+			//}
 			
 			continue;
 					
@@ -1007,9 +1016,16 @@ class EditorHud: ScriptView
 				Print(search_string);
 				foreach (string search_data, EditorListNode view: m_FolderNodes) {
 					search_data.ToLower();
-					//Print(search_data);					
-					if (search_data.Contains(search_string) || !search_string) {
-						view.GetLayoutRoot().Show(true);
+					
+
+					//bool match = File.WildcardMatch(search_data, search_string);
+					/*if (!match) {
+						
+					}*/
+					
+					if (search_data.Contains(search_string) || search_string.Contains(search_data) || !search_string) {						
+						Print(search_data);
+						view.Show(true);
 						
 						/*
 						Widget p = view.GetLayoutRoot().GetParent().GetParent();
@@ -1025,7 +1041,7 @@ class EditorHud: ScriptView
 						//view.RecalculateSize();*/
 						
 					} else {
-						view.GetLayoutRoot().Show(false);
+						view.Show(false);
 					}
 				}
 				

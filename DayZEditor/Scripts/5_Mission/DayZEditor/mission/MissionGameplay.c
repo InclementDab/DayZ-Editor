@@ -1,3 +1,9 @@
+class PlayerCameraData
+{
+	float Quat[4];
+	vector Position;
+}
+
 modded class MissionGameplay
 {	
 	protected ref EditorMainMenu m_PauseMenu;

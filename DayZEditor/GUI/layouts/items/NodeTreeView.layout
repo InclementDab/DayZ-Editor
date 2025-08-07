@@ -2,10 +2,10 @@ FrameWidgetClass NodeView {
  visible 1
  clipchildren 0
  position 0 0
- size 0.99 30
+ size 2000 30
  hexactpos 1
  vexactpos 1
- hexactsize 0
+ hexactsize 1
  vexactsize 1
  scaled 0
  draggable 1
@@ -24,7 +24,7 @@ FrameWidgetClass NodeView {
    vexactsize 1
    scaled 0
    draggable 1
-   Padding 7
+   Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
@@ -39,10 +39,10 @@ FrameWidgetClass NodeView {
      inheritalpha 0
      ignorepointer 1
      position 7 0
-     size 0.04 30
+     size 32 30
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 1
      scaled 0
      {
@@ -50,7 +50,7 @@ FrameWidgetClass NodeView {
        visible 1
        clipchildren 1
        position 0 0
-       size 16 16
+       size 24 24
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -58,6 +58,7 @@ FrameWidgetClass NodeView {
        hexactsize 1
        vexactsize 1
        scaled 0
+       fixaspect inside
        scriptclass ""
        style Empty
        font "gui/fonts/etelkatextpro14"
@@ -68,15 +69,14 @@ FrameWidgetClass NodeView {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 1 1
+         size 20 20
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scaled 0
-         fixaspect outside
          scriptclass ""
          image0 "set:thin image:square_plus"
          mode additive
@@ -126,10 +126,10 @@ FrameWidgetClass NodeView {
      visible 1
      ignorepointer 1
      position 37 0
-     size 0.04 30
+     size 32 30
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 1
      scaled 0
      {
@@ -164,10 +164,10 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 0.04 30
+     size 34 30
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 1
      scaled 0
      {
@@ -217,10 +217,10 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 0.04 30
+     size 34 30
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 1
      scaled 0
      {
@@ -276,10 +276,10 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 0.04 30
+     size 34 30
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 1
      scaled 0
      {
@@ -335,10 +335,10 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 0.04 30
+     size 34 30
      hexactpos 1
      vexactpos 1
-     hexactsize 0
+     hexactsize 1
      vexactsize 1
      scaled 0
      {

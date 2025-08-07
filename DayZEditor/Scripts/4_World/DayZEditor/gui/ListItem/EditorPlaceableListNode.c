@@ -6,9 +6,10 @@ class EditorPlaceableListNode: EditorListNode
 	{
 		m_PlaceableItem = placeable_item;
 		
-		Text.SetText(m_PlaceableItem.Name);
+		Text.SetText(m_PlaceableItem.Name);		
 		if (placeable_item.Type.Contains(".p3d")) {
 			Symbols.TREE_DECIDUOUS.Load(IconImage, 3);
+			m_LayoutRoot.SetSort(100);
 		} else {
 			Symbols.HOUSE_BLANK.Load(IconImage, 3);
 		}
