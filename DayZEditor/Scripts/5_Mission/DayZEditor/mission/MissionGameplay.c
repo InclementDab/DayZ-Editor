@@ -210,6 +210,19 @@ modded class MissionGameplay
 		}
 	}
 	
+	override void OnEvent(EventType eventTypeId, Param params)
+	{
+		super.OnEvent(eventTypeId, params);
+		
+		switch (eventTypeId)
+		{
+			case ChatMessageEventTypeID:
+				ChatMessageEventParams chat_params = ChatMessageEventParams.Cast(params);			
+				GetEditor().GetEditorHud().GetChat().Add(chat_params);				
+				break;
+		}
+	}
+	
 	void OnERPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{
 		int count, i;

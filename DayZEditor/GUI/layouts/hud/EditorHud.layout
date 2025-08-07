@@ -4924,6 +4924,60 @@ FrameWidgetClass EditorFrame {
       }
      }
     }
+    PanelWidgetClass ChatBox {
+     visible 1
+     clipchildren 0
+     color 0.1569 0.1569 0.1569 0.7843
+     position 0 80
+     size 0.4 28
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      EditBoxWidgetClass InputEditBoxWidget {
+       color 0 0 0 1
+       position 0 0
+       size 1 28
+       halign center_ref
+       valign center_ref
+       hexactsize 0
+       vexactsize 1
+       priority 1
+       style Default
+       "limit visible" 1
+       "exact text" 0
+       font "gui/fonts/sdf_MetronLight24"
+      }
+      TextWidgetClass ChannelText {
+       visible 0
+       size 1 1
+       valign center_ref
+       hexactpos 0
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "#layout_chat_channel"
+       "exact text" 1
+       "text valign" center
+      }
+      PanelWidgetClass ChatFrameWidget {
+       clipchildren 0
+       ignorepointer 1
+       position 0 34
+       size 5 300
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       priority 4
+       style blank
+      }
+     }
+    }
    }
   }
   MapWidgetClass Map {

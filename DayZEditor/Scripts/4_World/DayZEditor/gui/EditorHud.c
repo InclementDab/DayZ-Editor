@@ -97,6 +97,12 @@ class EditorHud: ScriptView
 	ImageWidget BrushLeft_Icon, BrushRight_Icon;
 	Widget BrushToggle, BrushRadiusFrame, BrushDensityFrame, BrushWidthFrame, CinematicCameraButton;
 	TextWidget BrushText;
+	
+	Widget ChatBox;
+	EditBoxWidget InputEditBoxWidget;
+	Widget ChatFrameWidget;
+	protected ref EditorChat m_Chat;
+	
 	protected int m_CurrentBrushIndex = 0, m_BrushState = 0;
 	protected ref array<ref EditorBrushData> m_BrushTypes = {};
 	protected EditorSettings m_EditorSettings;
@@ -267,6 +273,11 @@ class EditorHud: ScriptView
 		// Load Brushes
 		ReloadBrushes(m_EditorSettings.BrushFile);
 #endif		
+		
+		if (GetGame().IsMultiplayer()) {
+			m_Chat = new EditorChat();
+			m_Chat.Init(ChatFrameWidget);
+		}
 	
 		m_TemplateController.ShowPrivate = m_EditorSettings.ShowScopeZeroObjects;
 		m_TemplateController.NotifyPropertyChanged("ShowPrivate");
@@ -361,6 +372,7 @@ class EditorHud: ScriptView
 		UAInput zoom_up = input_api.GetInputByID(UAZoomInOptics);
 		UAInput zoom_down = input_api.GetInputByID(UAZoomOutOptics);
 		UAInput shift_input = input_api.GetInputByID(UATurbo);
+		UAInput chat_input = input_api.GetInputByID(UAChat);
 		
 		Widget widget_under_cursor = GetWidgetUnderCursor();
 		bool useful_widget_under_cursor = widget_under_cursor && widget_under_cursor.GetName() != "HudPanel" && widget_under_cursor.GetName() != "CursorIcons";
@@ -614,6 +626,14 @@ class EditorHud: ScriptView
 			}
 		}
 		
+		float lb_d_s_x, lb_d_s_y;
+		LeftbarDrag.GetScreenPos(lb_d_s_x, lb_d_s_y);
+		ChatBox.SetScreenPos(lb_d_s_x + 12, 80);
+		
+		if (chat_input.LocalPress() && GetFocus() != InputEditBoxWidget && GetGame().IsMultiplayer()) {
+			ChatBox.Show(true);
+			SetFocus(InputEditBoxWidget);
+		}
 
 		bool is_curtain_open = m_TemplateController.LeftbarFrame.IsVisible() || m_TemplateController.RightbarFrame.IsVisible();
 		if (input_api.GetInputByID(UAGear).LocalPress()) {
@@ -1013,32 +1033,10 @@ class EditorHud: ScriptView
 				
 				string search_string = LeftSearchBar.GetText();
 				search_string.ToLower();
-				Print(search_string);
 				foreach (string search_data, EditorListNode view: m_FolderNodes) {
-					search_data.ToLower();
-					
-
-					//bool match = File.WildcardMatch(search_data, search_string);
-					/*if (!match) {
-						
-					}*/
-					
+					search_data.ToLower();					
 					if (search_data.Contains(search_string) || search_string.Contains(search_data) || !search_string) {						
-						Print(search_data);
 						view.Show(true);
-						
-						/*
-						Widget p = view.GetLayoutRoot().GetParent().GetParent();
-						EditorListNode nv;
-						while (p && p.GetName() == "NodeView") {
-							p.GetUserData(nv);
-							nv.GetLayoutRoot().Show(true);
-							GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(nv.RecalculateSize, 5);
-							p = p.GetParent().GetParent();
-						}
-						
-						GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(view.RecalculateSize);
-						//view.RecalculateSize();*/
 						
 					} else {
 						view.Show(false);
@@ -1063,6 +1061,27 @@ class EditorHud: ScriptView
 				RightbarScroll.VScrollToPos(0);
 				Symbols right_search_bar_icon = Ternary<Symbols>.If(!right_search_bar_text.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 				right_search_bar_icon.Load(RightSearchBarIconIcon);
+				break;
+			}
+			
+			case InputEditBoxWidget: {
+				if (!finished) {
+					return false;
+				}
+		
+				string text = InputEditBoxWidget.GetText();
+				if (text != "") {
+					GetGame().ChatPlayer(text);
+					if (!GetGame().IsMultiplayer()) {
+						string name;
+						GetGame().GetPlayerName(name);
+						ChatMessageEventParams chat_params = new ChatMessageEventParams(CCDirect, name, text, "");
+						m_Chat.Add(chat_params);
+					}
+				}
+				
+				GetUApi().GetInputByID(UAPersonView).Supress();	
+				
 				break;
 			}
 		}
@@ -1348,6 +1367,11 @@ class EditorHud: ScriptView
 	vector GetLastDialogPosition(ScriptView dialog)
 	{
 		return m_LastDialogPosition[dialog.Type()];
+	}
+	
+	EditorChat GetChat()
+	{
+		return m_Chat;
 	}
 	
 	EditorHudController GetTemplateController()
