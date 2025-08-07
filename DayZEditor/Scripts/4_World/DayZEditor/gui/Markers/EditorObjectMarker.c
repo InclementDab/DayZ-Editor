@@ -131,7 +131,7 @@ class EditorObjectMarker: EditorMarker
 		if (m_Editor.IsPlacing() || m_Editor.Brush) { 
 			return false;
 		}
-		
+				
 		if (!IsSelected()) {
 			SetHighlighted(1);
 			if (m_EditorObject.GetListItem()) {
