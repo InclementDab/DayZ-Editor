@@ -973,7 +973,7 @@ class Editor: Managed
 				position += hand_data.PositionOffset;
 			}
 			
-			position[1] = position[1] + world_object.GetWorldObject().GetBoundingCenter()[1];
+			//position[1] = position[1] + world_object.GetWorldObject().GetBoundingCenter()[1];
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -982,7 +982,6 @@ class Editor: Managed
 			};
 			
 			vector surface_normal = vector.Up;
-			float surface_height = GetGame().SurfaceY(position[0], position[2]);
 			if (MagnetMode) {
 				surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 			}
@@ -992,6 +991,9 @@ class Editor: Managed
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
+			transform[3] = Vector(0, world_object.GetWorldObject().GetBoundingCenter()[1], 0).Multiply4(transform);
+			
+			Math3D.MatrixOrthogonalize4(transform);
 			
 			world_object.GetWorldObject().SetTransform(transform);
 		}

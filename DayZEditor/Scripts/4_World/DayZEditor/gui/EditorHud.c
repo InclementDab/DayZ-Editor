@@ -1207,7 +1207,7 @@ class EditorHud: ScriptView
 	}
 
 	protected bool CanCreateTooltip()
-	{
+	{		
 		return !IsSelectionBoxActive();
 	}
 	

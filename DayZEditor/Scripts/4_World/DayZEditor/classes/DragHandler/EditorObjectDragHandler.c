@@ -134,29 +134,28 @@ class EditorObjectDragHandler: EditorDragHandler
 		}
 
 		vector icon_position = target.GetBottomCenter();
-		vector transform_ground_projection = ProjectToGround(transform);
-		vector rotation_source_pos = target.GetBottomCenter();
+		
+		vector rotation_source_pos = icon_position;
 		if (GetEditor().GroundMode) {
-			rotation_source_pos = transform_ground_projection;
+			rotation_source_pos = ProjectToGround(transform);
 		}
 
-		vector surface_normal = GetGame().SurfaceGetNormal(rotation_source_pos[0], rotation_source_pos[2]);		
 		vector up_dir = vector.Up;
 		//if (GetEditor().GetSettings().AltMoveMode) {
 		//	up_dir = transform[1];
 		//}
 		
 		if (GetEditor().MagnetMode) {
-			up_dir = surface_normal;
+			up_dir = GetGame().SurfaceGetNormal(rotation_source_pos[0], rotation_source_pos[2]);		
 		}
 
 		//up_dir.Normalize();
 
 		if (GetEditor().GroundMode) {
-			icon_position = transform[3] - transform[1].Normalized() * vector.Distance(transform_ground_projection, transform[3]);
+			icon_position = transform[3] - transform[1].Normalized() * vector.Distance(rotation_source_pos, transform[3]);
 
 			// always use transform[1] because GetBottomCenter is doing the opposite of this
-			cursor_pos = cursor_pos + transform[1].Normalized() * vector.Distance(transform_ground_projection, transform[3]);
+			cursor_pos = cursor_pos + transform[1].Normalized() * vector.Distance(rotation_source_pos, transform[3]);
 		}
 								
 		// Handle Z-Only motion
@@ -220,6 +219,11 @@ class EditorObjectDragHandler: EditorDragHandler
 
 		copyarray(transform_without_scale, transform);
 		Math3D.MatrixOrthogonalize4(transform_without_scale);
+		
+		vector transform_from_object_center[4];
+		copyarray(transform_from_object_center, transform);
+		transform_from_object_center[3] = Vector(0, target.GetWorldObject().GetBoundingCenter()[1], 0).Multiply4(transform_from_object_center);
+		Math3D.MatrixOrthogonalize4(transform_from_object_center);
 				
 		// Handle all child objects
 		foreach (EditorObject selected_object: additional_drag_targets) {
@@ -238,9 +242,9 @@ class EditorObjectDragHandler: EditorDragHandler
 			Math3D.MatrixOrthogonalize4(local_additional_mat);
 
 			vector output_additional_mat[4];
-			Math3D.MatrixMultiply4(transform_without_scale, local_additional_mat, output_additional_mat);
+			Math3D.MatrixMultiply4(transform_from_object_center, local_additional_mat, output_additional_mat);
 			selected_object.GetWorldObject().SetTransform(output_additional_mat);
-			selected_object.GetWorldObject().Update();
+			//selected_object.GetWorldObject().Update(); // the slowest part is updating all those damn bounding boxes
 		}
 		
 		target.SetBottomTransform(transform);

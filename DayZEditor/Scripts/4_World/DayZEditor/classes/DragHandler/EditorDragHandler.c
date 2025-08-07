@@ -26,6 +26,13 @@ class EditorDragHandler: Managed
 				
 				vector additional_drag_target_mat[4];
 				selected_object.GetWorldObject().GetTransform(additional_drag_target_mat);
+				
+				IEntity children = selected_object.GetWorldObject().GetChildren();
+				while (children) {
+					children.ClearFlags(EntityFlags.VISIBLE, false);
+					children = children.GetSibling();
+				}
+				
 				Math3D.MatrixOrthogonalize4(additional_drag_target_mat);
 				vector inv_additional_drag_target_mat[4];
 				Math3D.MatrixInvMultiply4(transform_without_scale, additional_drag_target_mat, inv_additional_drag_target_mat);
@@ -55,6 +62,13 @@ class EditorDragHandler: Managed
 				m_RewindAction.InsertRedoParameter(selected_object.GetTransformArray());
 			}
 			
+			IEntity children = selected_object.GetWorldObject().GetChildren();
+			while (children) {
+				children.SetFlags(EntityFlags.VISIBLE, false);
+				children = children.GetSibling();
+			}
+			
+			selected_object.Update();
 			selected_object.UpdateNet();
 			selected_object.IsBeingDragged = false;
 		}

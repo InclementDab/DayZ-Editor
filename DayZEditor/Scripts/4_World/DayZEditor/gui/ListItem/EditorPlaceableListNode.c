@@ -20,10 +20,8 @@ class EditorPlaceableListNode: EditorListNode
 		EditorPlaceableTooltip tooltip = new EditorPlaceableTooltip();
 		
 		float size_x, size_y, pos_x, pos_y;
-		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
-		m_LayoutRoot.GetScreenSize(size_x, size_y);
-		
-		tooltip.SetPosition(pos_x + size_x + 7, pos_y);
+		GetEditor().GetEditorHud().LeftbarScroll.GetScreenSize(size_x, size_y);
+		tooltip.SetPosition(size_x + 12, y);
 		
 		//! bugfix
 		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;

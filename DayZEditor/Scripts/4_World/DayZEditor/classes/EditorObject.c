@@ -373,7 +373,6 @@ class EditorObject: EditorWorldObject
 	    m_Data.BottomCenter = GetBottomCenter();
 
 	    ApplyTransform();
-	    Update();
 	}
 
 	bool IsStatic()
@@ -383,10 +382,14 @@ class EditorObject: EditorWorldObject
 	
 	void Update() 
 	{ 
+		m_Data.Position = m_WorldObject.GetPosition();
+		m_Data.Orientation = m_WorldObject.GetOrientation();
+		m_Data.Scale = m_WorldObject.GetScale();
+		
 		if (m_WorldObject) {
 			m_WorldObject.Update(); 
 		}
-				
+		
 		OnUpdated.Invoke();
 	}
 	

@@ -435,6 +435,7 @@ FrameWidgetClass NodeView {
        Padding 0
        Margin 4
        "Size To Content H" 1
+       "Size To Content V" 1
        content_halign center
        content_valign center
        Columns 1
@@ -446,7 +447,7 @@ FrameWidgetClass NodeView {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 451 16
+         size 451 18
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -503,7 +504,7 @@ FrameWidgetClass NodeView {
    disabled 0
    clipchildren 1
    ignorepointer 1
-   position 30 30
+   position 32 30
    size 1 1
    hexactpos 1
    vexactpos 1
@@ -520,6 +521,18 @@ FrameWidgetClass NodeView {
      Binding_Name "ChildrenItems"
     }
    }
+  }
+  ImageWidgetClass ChildrenHeight {
+   ignorepointer 1
+   color 0.7843 0.7843 0.7843 1
+   position 16 0
+   size 2 0
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
   }
  }
 }

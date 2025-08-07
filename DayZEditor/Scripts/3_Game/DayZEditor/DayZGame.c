@@ -49,7 +49,7 @@ modded class DayZGame
 	{
 		m_CurrentTooltip = current_tooltip;
 		m_CurrentTooltip.GetLayoutRoot().Show(false);
-
+		
 		GetCallQueue(CALL_CATEGORY_GUI).Remove(VerifyCurrentTooltip);
 		GetCallQueue(CALL_CATEGORY_GUI).CallLater(VerifyCurrentTooltip, delay, false, w);
 	}
@@ -57,6 +57,10 @@ modded class DayZGame
 	protected void VerifyCurrentTooltip(Widget w)
 	{
 		if (GetWidgetUnderCursor() != w) {
+			return;
+		}
+		
+		if (GetMouseState(MouseState.LEFT) || GetMouseState(MouseState.RIGHT)) {
 			return;
 		}
 

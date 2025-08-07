@@ -9,7 +9,7 @@ class EditorListNode: ScriptView
 	
 	protected EditorListNodeController m_TemplateController;
 	
-	Widget Collapse, IconFrame, Hide, Panel, BoundingBox, Lock, Marker;
+	Widget Collapse, IconFrame, Hide, Panel, BoundingBox, Lock, Marker, ChildrenHeight;
 	ButtonWidget CollapseButton, HideButton, BoundingBoxButton, LockButton, MarkerButton;
 	ImageWidget CollapseIcon, IconImage, HideIcon, BoundingBoxIcon, LockIcon, MarkerIcon;
 	TextWidget Text;
@@ -20,16 +20,12 @@ class EditorListNode: ScriptView
 	{
 		m_TemplateController = EditorListNodeController.Cast(m_Controller);
 		Collapse.Show(false);
+		m_LayoutRoot.SetSort(1);
 	}
 		
 	override void Update(float dt)
 	{
 		super.Update(dt);
-		if (IsSelected()) {
-			Panel.SetColor(g_Editor.GetSettings().SelectionColor);
-		} else {
-			Panel.SetColor(0);
-		}
 	}
 	
 	void InsertChild(notnull EditorListNode list_node)
@@ -94,7 +90,8 @@ class EditorListNode: ScriptView
 		
 		m_LayoutRoot.GetScreenSize(x, y);
 		m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
-		m_LayoutRoot.Update();
+				
+		ChildrenHeight.SetSize(2, h * Children.IsVisible());
 	}
 	
 	bool IsCollapsed()
@@ -112,7 +109,28 @@ class EditorListNode: ScriptView
 		}
 				
 		return true;
+	}		
+	
+	override bool OnDrag(Widget w, int x, int y)
+	{
+		w.SetPos(0, 0);
+		
+		return super.OnDrag(w, x, y);
 	}
+	
+	override bool OnDragging(Widget w, int x, int y, Widget reciever)
+	{
+		w.SetPos(0, 0);
+		
+		return super.OnDragging(w, x, y, reciever);
+	}
+	
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
+	{
+		w.SetPos(0, 0);
+		
+		return super.OnDrop(w, x, y, reciever);
+	}	
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
@@ -133,7 +151,12 @@ class EditorListNode: ScriptView
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{		
-		s_SelectedNode = this;				
+		if (s_SelectedNode) {
+			s_SelectedNode.Panel.SetColor(0);
+		}
+		
+		s_SelectedNode = this;		
+		Panel.SetColor(g_Editor.GetSettings().SelectionColor);		
 		return true;
 	}
 	
@@ -168,6 +191,7 @@ class EditorFolderListNode: EditorListNode
 	void EditorFolderListNode(string text)
 	{
 		Text.SetText(text);
+		m_LayoutRoot.SetSort(0);
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
