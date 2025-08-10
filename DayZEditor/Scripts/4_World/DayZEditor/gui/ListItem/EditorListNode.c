@@ -9,6 +9,8 @@ class EditorListNode: ScriptView
 	
 	protected EditorListNodeController m_TemplateController;
 	
+	protected bool m_QueueRecalculateSize;
+	
 	Widget Collapse, IconFrame, Hide, Panel, BoundingBox, Lock, Marker, ChildrenHeight;
 	ButtonWidget CollapseButton, HideButton, BoundingBoxButton, LockButton, MarkerButton;
 	ImageWidget CollapseIcon, IconImage, HideIcon, BoundingBoxIcon, LockIcon, MarkerIcon;
@@ -21,11 +23,26 @@ class EditorListNode: ScriptView
 		m_TemplateController = EditorListNodeController.Cast(m_Controller);
 		Collapse.Show(false);
 		m_LayoutRoot.SetSort(1);
+		CollapseIcon.LoadImageFile(0, "set:solid image:square_minus");
+		CollapseIcon.LoadImageFile(1, "set:regular image:square_plus");
 	}
 		
 	override void Update(float dt)
 	{
 		super.Update(dt);
+		
+		if (m_QueueRecalculateSize) {
+			float w, h, x, y;
+			Children.Update();
+			Children.GetScreenSize(w, h);	
+			
+			m_LayoutRoot.GetScreenSize(x, y);
+			m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
+					
+			ChildrenHeight.SetSize(2, h * Children.IsVisible());
+			
+			m_QueueRecalculateSize = false;
+		}
 	}
 	
 	void InsertChild(notnull EditorListNode list_node)
@@ -35,25 +52,20 @@ class EditorListNode: ScriptView
 	}
 	
 	void SetCollapsed(bool collapsed)
-	{
+	{	
 		Children.Show(!collapsed);
-		Symbols collapse_icon = Symbols.SQUARE_PLUS;
-		if (!collapsed) {
-			collapse_icon = Symbols.SQUARE_MINUS;
-		}
-		
-		collapse_icon.Load(CollapseIcon, 0);
-		
+		CollapseIcon.SetImage(collapsed);
+				
 		RecalculateSize();
 		
-		Widget parent = m_LayoutRoot.GetParent().GetParent();
-		while (parent && parent.GetName() == "NodeView") {
-			EditorListNode node;
-			parent.GetUserData(node);
-			node.RecalculateSize();
-			parent = parent.GetParent().GetParent();
+		EditorListNode node_parent = GetParentNode();
+		if (!collapsed) {
+			// Recursive
+			if (node_parent) {
+				node_parent.SetCollapsed(false);
+			}
 		}
-		
+								
 		if (!collapsed) {
 			IconImage.SetImage(3);
 		} else {
@@ -64,17 +76,15 @@ class EditorListNode: ScriptView
 	override void Show(bool show)
 	{
 		super.Show(show);
-		
-		RecalculateSize();
-		
+				
 		if (show) {
-			Widget parent = m_LayoutRoot.GetParent().GetParent();
-			if (parent && parent.GetName() == "NodeView") {
-				EditorListNode node;
-				parent.GetUserData(node);
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(node.ShowCuzDayZSucksAss, 0, 0, show);
+			EditorListNode parent_node = GetParentNode();
+			if (parent_node) {
+				parent_node.Show(show);
 			}
 		}
+		
+		RecalculateSize();
 	}
 	
 	protected void ShowCuzDayZSucksAss(bool show)
@@ -84,14 +94,13 @@ class EditorListNode: ScriptView
 	
 	protected void RecalculateSize()
 	{
-		float w, h, x, y;
-		Children.Update();
-		Children.GetScreenSize(w, h);	
+		//PrintFormat("RecalculateSize: %1", m_TemplateController.ChildrenItems.Count());
+		m_QueueRecalculateSize = true;
 		
-		m_LayoutRoot.GetScreenSize(x, y);
-		m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
-				
-		ChildrenHeight.SetSize(2, h * Children.IsVisible());
+		EditorListNode node_parent = GetParentNode();
+		if (node_parent) {
+			node_parent.RecalculateSize();
+		}
 	}
 	
 	bool IsCollapsed()
@@ -156,7 +165,9 @@ class EditorListNode: ScriptView
 		}
 		
 		s_SelectedNode = this;		
-		Panel.SetColor(g_Editor.GetSettings().SelectionColor);		
+		Panel.SetColor(g_Editor.GetSettings().SelectionColor);
+		
+		SetFocus(null);
 		return true;
 	}
 	
@@ -184,13 +195,39 @@ class EditorListNode: ScriptView
 	{
 		return EditorListNodeController;
 	}
+	
+	EditorListNode GetParentNode()
+	{
+		Widget parent = m_LayoutRoot.GetParent().GetParent();
+		if (parent && parent.GetName() == "NodeView") {
+			EditorListNode node;
+			parent.GetUserData(node);
+			return node;
+		}
+		
+		return null;
+	}
+	
+	protected override bool UseUpdateLoop()
+	{
+		return false;
+	}
+	
+	bool FilterType(string filter)
+	{
+		return false;
+	}
 }
 
 class EditorFolderListNode: EditorListNode
 {
+	protected string m_Text;
+	
 	void EditorFolderListNode(string text)
 	{
+		m_Text = text;
 		Text.SetText(text);
+		m_Text.ToLower();
 		m_LayoutRoot.SetSort(0);
 	}
 	
@@ -200,5 +237,10 @@ class EditorFolderListNode: EditorListNode
 		
 		SetCollapsed(!IsCollapsed());
 		return true;
+	}
+	
+	override bool FilterType(string filter)
+	{
+		return m_Text.Contains(filter);
 	}
 }

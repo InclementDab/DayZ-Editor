@@ -1,3 +1,44 @@
+class EditorGenericCallback: RestCallbackBase
+{
+	ref ScriptCaller SuccessCallback;
+	ref ScriptCaller FileCallback;
+	
+	ref Param Data;
+	
+	void EditorGenericCallback(ScriptCaller success = null, ScriptCaller file = null, Param data = null)
+	{
+		SuccessCallback = success;
+		FileCallback = file;
+		Data = data;
+	}
+	
+	override void OnSuccess(string data, int dataSize)
+	{
+		super.OnSuccess(data, dataSize);
+		
+		if (SuccessCallback) {
+			if (Data) {
+				SuccessCallback.Invoke(data, dataSize, Data);
+			} else {
+				SuccessCallback.Invoke(data, dataSize);
+			}
+		}
+	}
+	
+	override void OnFileCreated(string fileName, int dataSize)
+	{
+		super.OnFileCreated(fileName, dataSize);
+		
+		if (FileCallback) {
+			if (Data) {
+				FileCallback.Invoke(fileName, dataSize, Data);
+			} else {
+				FileCallback.Invoke(fileName, dataSize);
+			}
+		}
+	}
+}
+
 class EditorLoginCallback : RestCallbackBase
 {
 	protected ref ScriptCaller m_OnPayloadSuccess;

@@ -1,10 +1,16 @@
 class EditorPlaceableListNode: EditorListNode
 {
 	protected EditorPlaceableItem m_PlaceableItem;
+	protected string m_SearchString1, m_SearchString2;
 	
 	void EditorPlaceableListNode(notnull EditorPlaceableItem placeable_item)
 	{
 		m_PlaceableItem = placeable_item;
+		m_SearchString1 = m_PlaceableItem.Type;
+		m_SearchString2 = m_PlaceableItem.Name;
+		
+		m_SearchString1.ToLower();
+		m_SearchString2.ToLower();
 		
 		Text.SetText(m_PlaceableItem.Name);		
 		if (placeable_item.Type.Contains(".p3d")) {
@@ -101,5 +107,10 @@ class EditorPlaceableListNode: EditorListNode
 		}
 		
 		return super.OnDrop(w, x, y, reciever);
+	}
+	
+	override bool FilterType(string filter)
+	{		
+		return m_SearchString1.Contains(filter) || m_SearchString2.Contains(filter);		
 	}
 }

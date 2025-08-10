@@ -132,6 +132,7 @@ class EditorHud: ScriptView
 	};
 	
 	protected ref map<string, EditorListNode> m_FolderNodes = new map<string, EditorListNode>();		
+	protected ref map<int, ref array<EditorListNode>> m_FolderNodesByDepth = new map<int, ref array<EditorListNode>>();		
 	
 	void EditorHud(notnull Editor editor)
 	{	
@@ -171,6 +172,7 @@ class EditorHud: ScriptView
 			
 			array<string> model_path_split = {};
 			model_name.Split(SystemPath.SEPERATOR, model_path_split);
+			int depth = model_path_split.Count() - 1;
 			for (int i = 0; i < model_path_split.Count(); i++) {
 				string folder_name = model_path_split[i];
 				string full_path = string.Empty;
@@ -188,6 +190,13 @@ class EditorHud: ScriptView
 					} else {
 						folder_node = new EditorFolderListNode(folder_name);
 						m_FolderNodes[full_path] = folder_node;
+						
+						if (!m_FolderNodesByDepth[i]) {
+							m_FolderNodesByDepth[i] = {};
+						}
+						
+						//PrintFormat("%1: %2", full_path, i);
+						m_FolderNodesByDepth[i].Insert(folder_node);
 							
 						if (i == 0) {
 							m_TemplateController.LeftContent.Insert(folder_node);
@@ -209,7 +218,13 @@ class EditorHud: ScriptView
 			string model_directory = model_name.Substring(0, model_name.LastIndexOf(SystemPath.SEPERATOR));
 			EditorPlaceableListNode placeable_node = new EditorPlaceableListNode(placeable_item);
 			m_FolderNodes[model_name] = placeable_node;
-			m_FolderNodes[model_directory].InsertChild(placeable_node);			
+			m_FolderNodes[model_directory].InsertChild(placeable_node);		
+			
+			if (!m_FolderNodesByDepth[depth]) {
+				m_FolderNodesByDepth[depth] = {};
+			}	
+			
+			m_FolderNodesByDepth[depth].Insert(placeable_node);
 			
 			//jjjj++;
 			//if (jjjj > 100) {
@@ -386,13 +401,23 @@ class EditorHud: ScriptView
 			return;
 		}
 		
-		if (toggle_map.LocalPress() && input_unlocked) {
+		if (toggle_map.LocalPress() && input_unlocked && m_LayoutRoot.IsVisible()) {
 			Map.Show(!Map.IsVisible());
 			Map.SetMapPos(GetGame().GetCurrentCameraPosition());
 			ShowCursor(true);
 		
 			EditorEvents.MapToggled(this, Map, Map.IsVisible());
 			return;
+		}
+		
+		if (!m_LayoutRoot.IsVisible() && Map.IsVisible()) {
+			Map.Show(false);
+			EditorEvents.MapToggled(this, Map, Map.IsVisible());
+			return;
+		}
+		
+		if (Map.IsVisible()) {
+			GetGame().GetUIManager().ShowCursor(true);
 		}
 		
 		if (any_mouse_press && !useful_widget_under_cursor) {
@@ -628,10 +653,13 @@ class EditorHud: ScriptView
 		
 		float lb_d_s_x, lb_d_s_y;
 		LeftbarDrag.GetScreenPos(lb_d_s_x, lb_d_s_y);
-		ChatBox.SetScreenPos(lb_d_s_x + 12, 80);
+		if (ChatBox) {
+			ChatBox.SetScreenPos(lb_d_s_x + 12, screen_y / 4);
+			ChatBox.Show(true);
+		}
 		
 		if (chat_input.LocalPress() && GetFocus() != InputEditBoxWidget && GetGame().IsMultiplayer()) {
-			ChatBox.Show(true);
+			InputEditBoxWidget.Show(true);
 			SetFocus(InputEditBoxWidget);
 		}
 
@@ -732,6 +760,20 @@ class EditorHud: ScriptView
 			GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
 		
+		// Update loop runs from inside out to deterministically resize nodes correctly
+		for (int i = m_FolderNodesByDepth.Count() - 1; i >= 0; --i) {
+			// See there should be folders at every depth. this will never happen unless some gap occurs. 
+			if (!m_FolderNodesByDepth[i]) {
+				Error(string.Format("GAP OCCURED AT INDEX %1", i));
+				continue;
+			}
+			
+			array<EditorListNode> list_nodes = m_FolderNodesByDepth[i];
+			foreach (EditorListNode list_node: list_nodes) {
+				list_node.Update(dt);
+			}
+		}
+				
 		m_EditorCameraMarker.WorldPosition = GetEditor().GetCamera().GetPosition();
 		m_EditorCameraMarker.WorldOrientation = GetEditor().GetCamera().GetOrientation();
 		
@@ -1010,6 +1052,7 @@ class EditorHud: ScriptView
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
+		int i;
 		switch (w) {
 			case LeftSearchBar: {
 				
@@ -1033,18 +1076,33 @@ class EditorHud: ScriptView
 				
 				string search_string = LeftSearchBar.GetText();
 				search_string.ToLower();
-				foreach (string search_data, EditorListNode view: m_FolderNodes) {
-					search_data.ToLower();					
-					if (search_data.Contains(search_string) || search_string.Contains(search_data) || !search_string) {						
-						view.Show(true);
+				if (search_string.Length() >= 3 || !search_string) {
+					for (i = 0; i < m_FolderNodesByDepth.Count(); i++) {
+						// See there should be folders at every depth. this will never happen unless some gap occurs. 
+						if (!m_FolderNodesByDepth[i]) {
+							Error(string.Format("GAP OCCURED AT INDEX %1", i));
+							continue;
+						}
 						
-					} else {
-						view.Show(false);
+						array<EditorListNode> list_nodes = m_FolderNodesByDepth[i];
+						foreach (EditorListNode list_node: list_nodes) {
+							if (list_node.FilterType(search_string) || !search_string) {
+								if (search_string) {
+									list_node.SetCollapsed(false);
+								}
+								
+								list_node.Show(true);
+							} else {
+								//list_node.SetCollapsed(true);
+								list_node.Show(false);
+							}
+						}
+							
 					}
+					
+					LeftbarScroll.VScrollToPos(0);				
 				}
-				
-				
-				LeftbarScroll.VScrollToPos(0);
+										
 				
 				Symbols left_search_bar_icon = Ternary<Symbols>.If(!search_string.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 				left_search_bar_icon.Load(LeftSearchBarIconIcon);
@@ -1054,7 +1112,7 @@ class EditorHud: ScriptView
 			case RightSearchBar: {
 				string right_search_bar_text = RightSearchBar.GetText();
 				auto right_spacer_config = Ternary<ObservableCollection<EditorListItem>>.If(m_TemplateController.CategoryPlacements, m_TemplateController.RightbarPlacedData, m_TemplateController.RightbarDeletionData);
-				for (int i = 0; i < right_spacer_config.Count(); i++) {					
+				for (i = 0; i < right_spacer_config.Count(); i++) {					
 					right_spacer_config[i].GetLayoutRoot().Show(right_spacer_config[i].FilterType(right_search_bar_text));
 				}
 				
@@ -1080,8 +1138,10 @@ class EditorHud: ScriptView
 					}
 				}
 				
-				GetUApi().GetInputByID(UAPersonView).Supress();	
-				
+				GetUApi().GetInputByID(UAChat).Supress();	
+				InputEditBoxWidget.SetText(string.Empty);	
+				InputEditBoxWidget.Show(false);
+				SetFocus(null);				
 				break;
 			}
 		}

@@ -118,9 +118,9 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 0;
-	static const int MinorVersionNumber = 6;
-	static const int VersionNumber = 34;
+	static const int Experimental = 1;
+	static const int MinorVersionNumber = 0;
+	static const int VersionNumber = 35;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
 	static bool HasTestedVersion = false;
 	
@@ -741,7 +741,10 @@ class Editor: Managed
 		if (IsPlayerActive()) {
 			bool cursor_active = GetGame().GetUIManager().IsCursorVisible();
 			m_Player.GetInputController().SetDisabled(cursor_active);
-			m_Player.DisableSimulation(cursor_active);
+			
+			if (GetGame().IsMultiplayer()) {
+				m_Player.DisableSimulation(cursor_active);
+			}
 		}
 
 		if (EditorSaveFile != string.Empty) {
@@ -1095,7 +1098,7 @@ class Editor: Managed
 				return;
 			}
 			
-			if (!widget_under_cursor || widget_under_cursor == m_EditorHud.Map) { //
+			if (!widget_under_cursor || widget_under_cursor == m_EditorHud.Map || widget_under_cursor.GetName() == "HudPanel") { //
 				if (cursor_raycast && cursor_raycast.Hit && GetEditorHud().IsObjectSelectionEnabled()) {
 					EditorObject select_object = EditorObject.s_AllByObject[cursor_raycast.Hit];
 					if (select_object) {
@@ -1577,14 +1580,12 @@ class Editor: Managed
 			}
 		}
 	
-		m_EditorHudController.ObjectReadoutName = string.Format("%1 [%2: %3%4]", type, component_type, component_index, interaction_layer_name);
+		m_EditorHudController.ObjectHoverSelectObjectReadout.SetText(string.Format("%1 [%2: %3%4]", type, component_type, component_index, interaction_layer_name));
 		if (!replaceable_item) {
 			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
 		} else {
 			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
 		}
-
-		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
 		
 		return true;
 	}
@@ -1597,8 +1598,7 @@ class Editor: Managed
 			GetEditorHud().SetCurrentTooltip(null);
 		}
 
-		m_EditorHudController.ObjectReadoutName = "";
-		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+		m_EditorHudController.ObjectHoverSelectObjectReadout.SetText(string.Empty);
 		return true;
 	}	
 	

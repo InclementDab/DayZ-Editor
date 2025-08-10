@@ -74,6 +74,7 @@ class EditorMainMenu: ScriptViewMenu
 	
 	void EditorMainMenu()
 	{
+		ScopedFunctionTimer t0("EditorMainMenu");
 		m_IsShowcaseActive = 1; // WE LIVE
 
 #ifdef DIAG_DEVELOPER
@@ -105,7 +106,7 @@ class EditorMainMenu: ScriptViewMenu
 		GetGame().GetVersion(version);
 		VersionText.SetText(string.Format("#main_menu_version %1", version));
 		EditorText.SetText(string.Format("#STR_EDITOR_MAIN_MENU_VERSION %1, created by InclementDab", Editor.Version));
-
+		t0.Dump("t1");
 		StatHeaderText.SetText(string.Format("Welcome, %1", GetGame().GetUserManager().GetTitleInitiator().GetName()));
 		ServerShowcaseBackupText.SetText("Want your service here?\nUse '/showcase_request' in Discord\nClick to join.");
 		
@@ -151,7 +152,7 @@ class EditorMainMenu: ScriptViewMenu
 			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
 			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
 		}
-		
+				
 		if (!Editor.Experimental && !Editor.HasTestedVersion) {
 			RestContext version_ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			version_ctx.GET(new EditorVersionCallback(ScriptCaller.Create(OnVersionResponse)), "api\/changelog\/Version");
@@ -184,26 +185,35 @@ class EditorMainMenu: ScriptViewMenu
 				if (!FileExist(dst_file)) {
 					RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
 					image_ctx.SetHeader("application/octet-stream");
-					image_ctx.FILE_now("", file_name);
-					
-					string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
-					
-					if (!FileExist(src_file)) {
-						src_file = SystemPath.Saves(file_name);
-					}
-							
-					if (FileExist(src_file)) {
-						if (CopyFile(src_file, dst_file)) {
-							DeleteFile(src_file);
-						}
-					}
+					image_ctx.FILE(new EditorGenericCallback(null, ScriptCaller.Create(OnShowcaseLoaded), new Param2<int, string>(j, dst_file)), "", file_name);
 				}
-												
-				m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
 			}
 		}
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetStatisticsMode, 0, 0, m_GlobalStatsVisible);
+	}
+	
+	protected void OnShowcaseLoaded(string file_name, int data_size, Param data)
+	{
+		Param2<int, string> data_cast = Param2<int, string>.Cast(data);
+		
+#ifdef DIAG_DEVELOPER
+		PrintFormat("OnShowcaseLoaded: %1, idx:%2, dst:%3", file_name, data_cast.param1, data_cast.param2);
+#endif
+		
+		string src_file = SystemPath.Profile(string.Format("Users/Survivor/%1", file_name));
+					
+		if (!FileExist(src_file)) {
+			src_file = SystemPath.Saves(file_name);
+		}
+
+		if (FileExist(src_file)) {
+			if (CopyFile(src_file, data_cast.param2)) {
+				DeleteFile(src_file);
+			}
+		}
+		
+		m_ValidShowcaseSlots[data_cast.param1] = ServerShowcaseImage.LoadImageFile(data_cast.param1, data_cast.param2);
 	}
 			
 	protected void SetStatisticsMode(bool global)

@@ -1,10 +1,7 @@
 class EditorHudController: EditorControllerBase
 {
 	string Version = Editor.Version;
-	
-	//	
-	string ObjectReadoutName;
-	
+		
 	bool CategoryPlacements = true;
 	bool CategoryDeletions;
 	bool CategoryConfig = true;
