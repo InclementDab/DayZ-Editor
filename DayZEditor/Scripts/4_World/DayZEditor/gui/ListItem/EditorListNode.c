@@ -86,12 +86,7 @@ class EditorListNode: ScriptView
 		
 		RecalculateSize();
 	}
-	
-	protected void ShowCuzDayZSucksAss(bool show)
-	{
-		Show(show);
-	}
-	
+		
 	protected void RecalculateSize()
 	{
 		//PrintFormat("RecalculateSize: %1", m_TemplateController.ChildrenItems.Count());
@@ -99,7 +94,7 @@ class EditorListNode: ScriptView
 		
 		EditorListNode node_parent = GetParentNode();
 		if (node_parent) {
-			node_parent.RecalculateSize();
+			//node_parent.RecalculateSize();
 		}
 	}
 	
