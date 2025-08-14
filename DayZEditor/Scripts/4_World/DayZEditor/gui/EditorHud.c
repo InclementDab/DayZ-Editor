@@ -491,7 +491,7 @@ class EditorHud: ScriptView
 			Map.SetFlags(WidgetFlags.IGNOREPOINTER);
 		}
 		
-		if (left_mouse_input.LocalRelease()) {
+		if (left_mouse_input.LocalRelease() || !GetDayZGame().IsAppActive()) {
 			m_DragWidget = null;
 			m_DragBoxDelayStart = 10;
 			m_DragBoxStartX = -1;
