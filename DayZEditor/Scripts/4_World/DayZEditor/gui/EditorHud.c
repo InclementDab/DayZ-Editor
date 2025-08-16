@@ -770,7 +770,9 @@ class EditorHud: ScriptView
 			
 			array<EditorListNode> list_nodes = m_FolderNodesByDepth[i];
 			foreach (EditorListNode list_node: list_nodes) {
-				list_node.Update(dt);
+				if (list_node) {
+					list_node.Update(dt);
+				}
 			}
 		}
 				

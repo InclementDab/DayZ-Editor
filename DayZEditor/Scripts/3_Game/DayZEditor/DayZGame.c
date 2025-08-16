@@ -69,11 +69,38 @@ modded class DayZGame
 		}
 	}
 	
+	protected string GetUniqueEditorName()
+	{
+		BiosUserManager manager = g_Game.GetUserManager();
+
+		// set user as steam user
+		if (manager && manager.GetTitleInitiator()) {
+			manager.SelectUserEx(manager.GetTitleInitiator());
+		}
+
+		// get steam name
+		if (manager && manager.GetSelectedUser()) {
+			return manager.GetSelectedUser().GetName();
+		}
+
+		return GetProfileName();
+	}
+	
 	override bool OnInitialize()
 	{
 		// this will never happen, maybe requestexit -1 
 		if (GetLoadState() != DayZLoadState.UNDEFINED) {
 			return false;
+		}
+		
+		// set unique player name
+		string name;
+		GetPlayerName(name);
+		name.ToLower();
+
+		// change name if default
+		if (name == "survivor") {
+			SetPlayerName(GetUniqueEditorName());
 		}
 
 		// vanilla
@@ -91,12 +118,12 @@ modded class DayZGame
 				
 		array<string> maps = {};
 		for (int i = 0; i < ConfigGetChildrenCount("CfgWorlds"); i++) {
-			string name;
-			ConfigGetChildName("CfgWorlds", i, name);
-			if (VerifyWorldOwnership(name) && ConfigIsExisting(string.Format("CfgWorlds %1 worldName", name))) {
-				string text = ConfigGetTextOut(string.Format("CfgWorlds %1 ceFiles", name));
+			string map_name;
+			ConfigGetChildName("CfgWorlds", i, map_name);
+			if (VerifyWorldOwnership(map_name) && ConfigIsExisting(string.Format("CfgWorlds %1 worldName", map_name))) {
+				string text = ConfigGetTextOut(string.Format("CfgWorlds %1 ceFiles", map_name));
 				if (text.Contains("DayZEditor")) {
-					maps.Insert(name);
+					maps.Insert(map_name);
 				}
 			}
 		}

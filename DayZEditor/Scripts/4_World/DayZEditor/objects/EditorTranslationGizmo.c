@@ -139,6 +139,22 @@ class EditorTranslationGizmo: EditorGizmo
 			m_TopTransformOrthogonal[3] = cursor_intersect;
 			gizmo_transform[3] = cursor_intersect;
 		}
+		
+		if (GetEditor().GridMode) {
+			vector t = m_TopTransform[3].InvMultiply4(m_TopTransform);			
+			t = Vector(
+				Math.Round(t[0] / 1) * 1, 
+				Math.Round(t[1] / 1) * 1, 
+				Math.Round(t[2] / 1) * 1);
+			m_TopTransform[3] = t.Multiply4(m_TopTransform);
+			
+			t = gizmo_transform[3].InvMultiply4(gizmo_transform);			
+			t = Vector(
+				Math.Round(t[0] / 1) * 1, 
+				Math.Round(t[1] / 1) * 1, 
+				Math.Round(t[2] / 1) * 1);
+			gizmo_transform[3] = t.Multiply4(gizmo_transform);
+		}
 	}
 
 	override string GetGizmoMesh()

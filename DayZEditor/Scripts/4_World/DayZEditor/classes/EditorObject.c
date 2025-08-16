@@ -286,13 +286,27 @@ class EditorObject: EditorWorldObject
 				
 	private void ApplyTransform()
 	{
+		if (GetEditor().GridMode) {
+			//m_Data.Orientation = Vector(Math.Round(m_Data.Orientation[0] / 10) * 10, Math.Round(m_Data.Orientation[1] / 10) * 10, Math.Round(m_Data.Orientation[2] / 10) * 10);
+		}
+		
 	    vector rot3[3];
 	    Math3D.YawPitchRollMatrix(m_Data.Orientation, rot3);
-
+		
+		// handle grid snapping
+		if (GetEditor().GridMode) {
+			vector t = m_Data.Position.InvMultiply3(rot3);			
+			t = Vector(
+				Math.Round(t[0] / 1) * 1, 
+				Math.Round(t[1] / 1) * 1, 
+				Math.Round(t[2] / 1) * 1);
+			m_Data.Position = t.Multiply3(rot3);
+		}
+		
 	    vector mat[4];
 	    mat[0] = rot3[0] * m_Data.Scale;
 	    mat[1] = rot3[1] * m_Data.Scale;
-	    mat[2] = rot3[2] * m_Data.Scale;
+	    mat[2] = rot3[2] * m_Data.Scale;		
 	    mat[3] = m_Data.Position;
 
 	    m_WorldObject.SetTransform(mat);
@@ -308,6 +322,19 @@ class EditorObject: EditorWorldObject
 	{
 	    if (IsLocked()) return;
 
+		// handle grid snapping
+		if (GetEditor().GridMode) {
+			vector rot3[3];
+		    Math3D.YawPitchRollMatrix(m_Data.Orientation, rot3);
+			
+			vector t = pos.InvMultiply3(rot3);			
+			t = Vector(
+				Math.Round(t[0] / 1) * 1, 
+				Math.Round(t[1] / 1) * 1, 
+				Math.Round(t[2] / 1) * 1);
+			pos = t.Multiply3(rot3);
+		}
+		
 	    m_Data.Position     = pos;
 	    m_Data.BottomCenter = GetBottomCenter();
 
@@ -325,6 +352,7 @@ class EditorObject: EditorWorldObject
 	    if (IsLocked()) return;
 
 	    m_Data.Orientation = orientation;
+		
 	    ApplyTransform(); 
 	    Update();
 	}

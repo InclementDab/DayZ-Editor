@@ -115,6 +115,7 @@ class Editor: Managed
 	bool 										SnappingMode;
 	bool 										CollisionMode;
 	bool 										LightningMode;
+	bool 										GridMode;
 	
 	ref EditorDragHandler DragHandler;
 
@@ -740,10 +741,10 @@ class Editor: Managed
 
 		if (IsPlayerActive()) {
 			bool cursor_active = GetGame().GetUIManager().IsCursorVisible();
-			m_Player.GetInputController().SetDisabled(cursor_active);
+			//m_Player.GetInputController().SetDisabled(false);
 			
 			if (GetGame().IsMultiplayer()) {
-				m_Player.DisableSimulation(cursor_active);
+				//m_Player.DisableSimulation(cursor_active);
 			}
 		}
 
@@ -1194,6 +1195,7 @@ class Editor: Managed
 				}
 			}
 		} else if (selected_objects.Count()) {
+			m_ObjectManager.RecalculateCenterOfSelectedObjects();
 			vector average_position = GetAveragePositionOfSelection();
 			vector average_mat[4] = {
 				"1 0 0",
@@ -1277,53 +1279,63 @@ class Editor: Managed
 				InsertAction(m_QuickMoveUndoAction);
 			}
 			
+			bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalPress() && GridMode);
+			bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalPress() && GridMode);
+			bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalPress() && GridMode);
+			bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalPress() && GridMode);
+			bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalPress() && GridMode);
+			bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalPress() && GridMode);
+			if (GridMode) {
+				step_size = 1;
+			}
+			
 			vector pos_offset = vector.Zero;
 			vector ori_offset = vector.Zero;
 			float scale_offset = 0;
-			if (GetDayZGame().IsLeftCtrlDown() && fwd_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && fwd_on) {
 				ori_offset = ori_offset + Vector(0, 0, step_size);
 			}
 			
-			else if (fwd_input.LocalValue()) {
+			else if (fwd_on) {
 				pos_offset = pos_offset + Vector(0, 0, step_size).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && bck_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && bck_on) {
 				ori_offset = ori_offset + Vector(0, 0, -step_size);
 			}
 			
-			else if (bck_input.LocalValue()) {
+			else if (bck_on) {
 				pos_offset = pos_offset + Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && left_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && left_on) {
 				ori_offset = ori_offset + Vector(-step_size, 0, 0);
 			}
 			
-			else if (left_input.LocalValue()) {
+			else if (left_on) {
 				pos_offset = pos_offset + Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && right_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && right_on) {
 				ori_offset = ori_offset + Vector(step_size, 0, 0);
 			}
 			
-			else if (right_input.LocalValue()) {
+			else if (right_on) {
 				pos_offset = pos_offset + Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && up_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && up_on) {
 				ori_offset = ori_offset + Vector(0, step_size, 0);
 			}	
 					
-			else if (up_input.LocalValue()) {
+			else if (up_on) {
 				pos_offset = pos_offset + Vector(0, step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && down_input.LocalValue()) {
+			if (GetDayZGame().IsLeftCtrlDown() && down_on) {
 				ori_offset = ori_offset + Vector(0, -step_size, 0);
 			}
-			else if (down_input.LocalValue()) {
+			else if (down_on) {
 				pos_offset = pos_offset + Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
@@ -2476,7 +2488,7 @@ class Editor: Managed
 		if (GetGame().GetPlayer()) {
 			return PlayerBase.Cast(GetGame().GetPlayer());
 		} 
-
+	
 		PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(identity, type, position, 0, string.Empty));
 		if (!player) {
 			EditorLog.Error("Failed to create new player, type %1", type);

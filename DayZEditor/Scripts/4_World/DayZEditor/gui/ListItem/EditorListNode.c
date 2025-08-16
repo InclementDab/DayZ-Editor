@@ -54,7 +54,7 @@ class EditorListNode: ScriptView
 	void SetCollapsed(bool collapsed)
 	{	
 		Children.Show(!collapsed);
-		CollapseIcon.SetImage(collapsed);
+		CollapseIcon.SetImage(!collapsed);
 				
 		RecalculateSize();
 		
@@ -65,12 +65,13 @@ class EditorListNode: ScriptView
 				node_parent.SetCollapsed(false);
 			}
 		}
-								
-		if (!collapsed) {
+		
+		/*						
+		if (collapsed) {
 			IconImage.SetImage(3);
 		} else {
 			IconImage.SetImage(2);
-		}
+		}*/
 	}
 	
 	override void Show(bool show)
@@ -94,7 +95,7 @@ class EditorListNode: ScriptView
 		
 		EditorListNode node_parent = GetParentNode();
 		if (node_parent) {
-			//node_parent.RecalculateSize();
+			node_parent.RecalculateSize();
 		}
 	}
 	

@@ -2,7 +2,7 @@ FrameWidgetClass NodeView {
  visible 1
  clipchildren 0
  position 0 0
- size 2000 30
+ size 2000 28
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -17,11 +17,11 @@ FrameWidgetClass NodeView {
    inheritalpha 0
    ignorepointer 1
    position 0 0
-   size 1 30
+   size 1 1
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 1
+   vexactsize 0
    scaled 0
    draggable 1
    Padding 0
@@ -29,7 +29,7 @@ FrameWidgetClass NodeView {
    "Size To Content H" 1
    "Size To Content V" 1
    content_valign center
-   Columns 6
+   Columns 7
    Rows 1
    {
     FrameWidgetClass Collapse {
@@ -39,7 +39,7 @@ FrameWidgetClass NodeView {
      inheritalpha 0
      ignorepointer 1
      position 7 0
-     size 32 30
+     size 22 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -50,13 +50,13 @@ FrameWidgetClass NodeView {
        visible 1
        clipchildren 1
        position 0 0
-       size 24 24
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        scaled 0
        fixaspect inside
        scriptclass ""
@@ -69,7 +69,7 @@ FrameWidgetClass NodeView {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 20 20
+         size 14 16
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -85,48 +85,13 @@ FrameWidgetClass NodeView {
         }
        }
       }
-      PanelWidgetClass Minimize {
-       visible 1
-       ignorepointer 0
-       position 0 1
-       size 8 0
-       halign center_ref
-       hexactpos 0
-       vexactpos 0
-       hexactsize 1
-       vexactsize 1
-       scaled 0
-       scriptclass ""
-       {
-        ImageWidgetClass Texture {
-         visible 1
-         ignorepointer 1
-         color 1 1 1 0.3922
-         position 0 0
-         size 1 1
-         halign center_ref
-         valign center_ref
-         hexactpos 0
-         vexactpos 0
-         hexactsize 1
-         vexactsize 0
-         scaled 0
-         scriptclass ""
-         image0 ""
-         mode additive
-         "src alpha" 1
-         "clamp mode" clamp
-         filter 1
-        }
-       }
-      }
      }
     }
     FrameWidgetClass IconFrame {
      visible 1
      ignorepointer 1
      position 37 0
-     size 32 30
+     size 22 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -138,7 +103,7 @@ FrameWidgetClass NodeView {
        disabled 0
        ignorepointer 1
        position 0 0
-       size 20 20
+       size 16 16
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -164,7 +129,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 34 30
+     size 22 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -174,15 +139,15 @@ FrameWidgetClass NodeView {
       ButtonWidgetClass HideButton {
        visible 1
        clipchildren 1
-       color 1 1 1 0.3922
+       color 1 1 1 0.392
        position 0 0
-       size 20 18
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        scaled 0
        scriptclass ""
        style Empty
@@ -193,15 +158,15 @@ FrameWidgetClass NodeView {
          visible 1
          clipchildren 0
          ignorepointer 1
-         color 1 1 1 0.5882
+         color 1 1 1 0.588
          position 0 0
-         size 1 1
+         size 14 16
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scaled 0
          scriptclass ""
          image0 "set:regular image:eye"
@@ -217,7 +182,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 34 30
+     size 22 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -227,15 +192,15 @@ FrameWidgetClass NodeView {
       ButtonWidgetClass BoundingBoxButton {
        visible 1
        clipchildren 1
-       color 1 1 1 0.3922
+       color 1 1 1 0.392
        position 0 0
-       size 20 18
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        scaled 0
        scriptclass ""
        style Empty
@@ -246,15 +211,15 @@ FrameWidgetClass NodeView {
          visible 1
          clipchildren 0
          ignorepointer 1
-         color 1 1 1 0.5882
+         color 1 1 1 0.588
          position 0 0
-         size 1 1
+         size 14 16
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scaled 0
          scriptclass "SymbolHandler"
          image0 ""
@@ -276,7 +241,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 34 30
+     size 18 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -286,15 +251,15 @@ FrameWidgetClass NodeView {
       ButtonWidgetClass LockButton {
        visible 1
        clipchildren 1
-       color 1 1 1 0.3922
+       color 1 1 1 0.392
        position 0 0
-       size 20 18
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        scaled 0
        scriptclass ""
        style Empty
@@ -305,15 +270,15 @@ FrameWidgetClass NodeView {
          visible 1
          clipchildren 0
          ignorepointer 1
-         color 1 1 1 0.5882
+         color 1 1 1 0.588
          position 0 0
-         size 1 1
+         size 14 16
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scaled 0
          scriptclass "SymbolHandler"
          image0 ""
@@ -335,7 +300,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 34 30
+     size 22 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -345,15 +310,15 @@ FrameWidgetClass NodeView {
       ButtonWidgetClass MarkerButton {
        visible 1
        clipchildren 1
-       color 1 1 1 0.3922
+       color 1 1 1 0.392
        position 0 0
-       size 20 18
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 1
-       vexactsize 1
+       hexactsize 0
+       vexactsize 0
        scaled 0
        scriptclass ""
        style Empty
@@ -364,15 +329,15 @@ FrameWidgetClass NodeView {
          visible 1
          clipchildren 0
          ignorepointer 1
-         color 1 1 1 0.5882
+         color 1 1 1 0.588
          position 0 0
-         size 1 1
+         size 14 16
          halign center_ref
          valign center_ref
          hexactpos 1
          vexactpos 1
-         hexactsize 0
-         vexactsize 0
+         hexactsize 1
+         vexactsize 1
          scaled 0
          scriptclass "SymbolHandler"
          image0 ""
@@ -395,9 +360,9 @@ FrameWidgetClass NodeView {
      disabled 0
      clipchildren 1
      ignorepointer 1
-     color 0.0275 0.4353 0.5725 0
+     color 0.027 0.435 0.572 0
      position 67 0
-     size 0.49 22
+     size 0.41 22
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -419,7 +384,7 @@ FrameWidgetClass NodeView {
        disabled 0
        clipchildren 0
        ignorepointer 1
-       color 0.1569 0.1569 0.1569 0
+       color 0.157 0.157 0.157 0
        size 0 1
        halign center_ref
        valign center_ref
@@ -504,7 +469,7 @@ FrameWidgetClass NodeView {
    disabled 0
    clipchildren 1
    ignorepointer 1
-   position 32 30
+   position 22 30
    size 1 1
    hexactpos 1
    vexactpos 1
@@ -524,8 +489,8 @@ FrameWidgetClass NodeView {
   }
   ImageWidgetClass ChildrenHeight {
    ignorepointer 1
-   color 0.7843 0.7843 0.7843 1
-   position 16 0
+   color 0.784 0.784 0.784 1
+   position 10 0
    size 2 0
    valign bottom_ref
    hexactpos 1

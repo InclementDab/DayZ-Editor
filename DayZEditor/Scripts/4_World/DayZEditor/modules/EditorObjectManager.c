@@ -311,7 +311,7 @@ class EditorObjectManagerModule : Managed
 		diff[2] = diff[2] / count_flt;
 		m_AveragePositionOfSelection = m_AveragePositionOfSelection + diff;
 
-		target.OnUpdated.Insert(OnSelectedObjectUpdate);
+		target.OnUpdated.Insert(RecalculateCenterOfSelectedObjects);
 		// todo perhaps propagate selections to the children of the object?
 	}
 
@@ -335,11 +335,11 @@ class EditorObjectManagerModule : Managed
 			m_AveragePositionOfSelection = n;
 		}
 
-		target.OnUpdated.Remove(OnSelectedObjectUpdate);
+		target.OnUpdated.Remove(RecalculateCenterOfSelectedObjects);
 	}
 
 	// When a selected object gets updated we must re-cacluate the average position
-	protected void OnSelectedObjectUpdate()
+	void RecalculateCenterOfSelectedObjects()
 	{
 		if (m_SelectedObjects.Count() == 0) {
 			m_AveragePositionOfSelection = vector.Zero;
