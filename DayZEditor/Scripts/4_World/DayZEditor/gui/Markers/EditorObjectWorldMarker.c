@@ -24,6 +24,11 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 		
+		if (!m_EditorObject.GetWorldObject()) {
+			m_LayoutRoot.Show(false);
+			return;
+		}
+		
 		// idk man
 		if (!m_MapWidget) {
 			m_MapWidget = m_Editor.GetEditorHud().Map;
