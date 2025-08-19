@@ -698,6 +698,9 @@ class EditorHud: ScriptView
 			}
 		}
 		
+		m_LayoutRoot.FindAnyWidget("LeftbarFiller").SetColor(LinearColor.Create(180, 0, 0, 0));
+		LeftbarScroll.SetColor(LinearColor.Create(255, 255, 255, 255));
+		
 		if (m_DragWidget) {
 			switch (m_DragWidget) {
 				case LeftbarWrapper: {

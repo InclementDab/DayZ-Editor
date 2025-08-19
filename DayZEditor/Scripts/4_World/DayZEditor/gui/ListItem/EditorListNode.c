@@ -23,8 +23,8 @@ class EditorListNode: ScriptView
 		m_TemplateController = EditorListNodeController.Cast(m_Controller);
 		Collapse.Show(false);
 		m_LayoutRoot.SetSort(1);
-		CollapseIcon.LoadImageFile(0, "set:solid image:square_minus");
-		CollapseIcon.LoadImageFile(1, "set:regular image:square_plus");
+		CollapseIcon.LoadImageFile(1, "set:solid image:square_minus");
+		CollapseIcon.LoadImageFile(0, "set:regular image:square_plus");
 	}
 		
 	override void Update(float dt)

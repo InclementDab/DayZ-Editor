@@ -28,8 +28,8 @@ FrameWidgetClass EditorFrame {
    {
     CanvasWidgetClass EditorCanvas {
      ignorepointer 1
-     color 0.0588 0.0588 0.0588 1
-     position -0.00082 0
+     color 0.059 0.059 0.059 1
+     position -0.003 0
      size 1 1
      halign center_ref
      valign center_ref
@@ -94,7 +94,7 @@ FrameWidgetClass EditorFrame {
       PanelWidgetClass Compass {
        clipchildren 0
        ignorepointer 1
-       color 0.0588 0.0588 0.0588 0.3137
+       color 0.059 0.059 0.059 0.314
        position 0 0
        size 48 24
        halign center_ref
@@ -209,7 +209,7 @@ FrameWidgetClass EditorFrame {
        clipchildren 0
        ignorepointer 0
        keepsafezone 1
-       color 0.1412 0.1569 0.1804 1
+       color 0 0 0 0.706
        size 0.92 1
        hexactpos 0
        vexactpos 0
@@ -238,7 +238,7 @@ FrameWidgetClass EditorFrame {
          {
           WrapSpacerWidgetClass SearchFavoriteTabPanel {
            ignorepointer 1
-           color 0.1412 0.1569 0.1804 1
+           color 0.141 0.157 0.18 1
            position 0 36
            size 1 66
            halign center_ref
@@ -253,7 +253,7 @@ FrameWidgetClass EditorFrame {
            {
             ButtonWidgetClass FavoritesTabButton {
              visible 1
-             color 0.2941 0.4667 0.7451 1
+             color 0.294 0.467 0.745 1
              position 0 0
              size 1 22
              halign center_ref
@@ -264,7 +264,7 @@ FrameWidgetClass EditorFrame {
              scriptclass "ViewBinding"
              style Default
              font "gui/fonts/etelkatextpro"
-             "text color" 0.7451 0.7451 0.7451 1
+             "text color" 0.745 0.745 0.745 1
              switch toggle
              {
               TextWidgetClass FavoritesText {
@@ -297,7 +297,7 @@ FrameWidgetClass EditorFrame {
             }
             ButtonWidgetClass ShowPrivateButton {
              visible 0
-             color 0.2941 0.4667 0.7451 1
+             color 0.294 0.467 0.745 1
              position 0 0
              size 1 22
              halign center_ref
@@ -308,7 +308,7 @@ FrameWidgetClass EditorFrame {
              scriptclass "ViewBinding"
              style Default
              font "gui/fonts/etelkatextpro"
-             "text color" 0.7451 0.7451 0.7451 1
+             "text color" 0.745 0.745 0.745 1
              switch toggle
              {
               WrapSpacerWidgetClass WrapSpacerWidget0 {
@@ -391,7 +391,7 @@ FrameWidgetClass EditorFrame {
              style blank
              {
               ButtonWidgetClass LeftbarCategoryStatic {
-               color 0.7529 0.3686 0.3255 1
+               color 0.753 0.369 0.326 1
                size 0.5 1
                halign right_ref
                valign center_ref
@@ -402,7 +402,7 @@ FrameWidgetClass EditorFrame {
                scaled 1
                scriptclass "ViewBinding"
                style Default
-               "disabled text color" 1 1 1 0.9961
+               "disabled text color" 1 1 1 0.996
                switch toggle
                {
                 TextWidgetClass StaticText {
@@ -431,7 +431,7 @@ FrameWidgetClass EditorFrame {
                }
               }
               ButtonWidgetClass LeftbarCategoryConfig {
-               color 0.1176 0.1176 0.1176 1
+               color 0.118 0.118 0.118 1
                size 0.5 1
                valign center_ref
                hexactpos 1
@@ -441,7 +441,7 @@ FrameWidgetClass EditorFrame {
                scriptclass "ViewBinding"
                style Default
                font "gui/fonts/etelkatextpro"
-               "text color" 0.7451 0.7451 0.7451 1
+               "text color" 0.745 0.745 0.745 1
                switch normal
                {
                 TextWidgetClass ConfigsText {
@@ -478,7 +478,7 @@ FrameWidgetClass EditorFrame {
           PanelWidgetClass LeftbarPanelSearchBarPanel {
            visible 1
            ignorepointer 1
-           color 0.0392 0.0392 0.0392 1
+           color 0.039 0.039 0.039 1
            size 1 36
            hexactpos 0
            vexactpos 0
@@ -526,7 +526,7 @@ FrameWidgetClass EditorFrame {
             }
             EditBoxWidgetClass LeftSearchBar {
              visible 1
-             color 0.6353 0.6353 0.6353 1
+             color 0.635 0.635 0.635 1
              position 0.1 0
              size 0.9 36
              hexactpos 0
@@ -549,7 +549,6 @@ FrameWidgetClass EditorFrame {
           ScrollWidgetClass LeftbarScroll {
            clipchildren 1
            ignorepointer 0
-           color 1 1 1 0.8627
            size 1 256
            valign bottom_ref
            hexactpos 0
@@ -559,7 +558,7 @@ FrameWidgetClass EditorFrame {
            scaled 1
            priority 410
            scriptclass ""
-           style Colorable
+           style blank
            "no focus" 1
            "next left" ""
            "next right" ""
@@ -568,7 +567,6 @@ FrameWidgetClass EditorFrame {
            {
             PanelWidgetClass LeftbarFiller {
              ignorepointer 0
-             color 0.1412 0.1569 0.1804 1
              position 0 0
              size 1 1
              hexactpos 1
@@ -576,14 +574,13 @@ FrameWidgetClass EditorFrame {
              hexactsize 0
              vexactsize 0
              priority 410
-             style rover_sim_colorable
+             style blank
             }
             GridSpacerWidgetClass LeftbarPlacementsConfig {
              visible 1
              disabled 0
              clipchildren 1
              ignorepointer 0
-             color 0.1725 0.1922 0.2118 1
              size 1 1
              hexactpos 0
              vexactpos 0
@@ -611,7 +608,7 @@ FrameWidgetClass EditorFrame {
              disabled 0
              clipchildren 1
              ignorepointer 0
-             color 0.1412 0.1569 0.1804 1
+             color 0.141 0.157 0.18 1
              size 1 1
              hexactpos 0
              vexactpos 0
@@ -649,7 +646,7 @@ FrameWidgetClass EditorFrame {
          {
           PanelWidgetClass LeftbarDrag0 {
            ignorepointer 1
-           color 0.1569 0.1569 0.1569 1
+           color 0.157 0.157 0.157 1
            size 2 1
            valign center_ref
            hexactpos 1
@@ -723,7 +720,7 @@ FrameWidgetClass EditorFrame {
         ButtonWidgetClass LeftbarHide {
          visible 1
          clipchildren 1
-         color 0.0196 0.0196 0.0196 0.7843
+         color 0.02 0.02 0.02 0.784
          position 0 0.04
          size 24 36
          halign right_ref
@@ -781,7 +778,7 @@ FrameWidgetClass EditorFrame {
        disabled 0
        ignorepointer 1
        keepsafezone 1
-       color 0.1412 0.1569 0.1804 1
+       color 0 0 0 0.706
        size 0.92 1
        halign center_ref
        valign bottom_ref
@@ -806,7 +803,7 @@ FrameWidgetClass EditorFrame {
           PanelWidgetClass TabPanel {
            visible 1
            ignorepointer 1
-           color 0.1412 0.1569 0.1804 1
+           color 0.141 0.157 0.18 1
            position 0 0
            size 1 22
            hexactpos 1
@@ -816,7 +813,7 @@ FrameWidgetClass EditorFrame {
            style rover_sim_colorable
            {
             ButtonWidgetClass DeletionsTabButton {
-             color 0.1176 0.1176 0.1176 1
+             color 0.118 0.118 0.118 1
              position 0 0
              size 0.5 1
              halign right_ref
@@ -828,7 +825,7 @@ FrameWidgetClass EditorFrame {
              scriptclass "ViewBinding"
              style Default
              font "gui/fonts/etelkatextpro"
-             "text color" 0.7451 0.7451 0.7451 1
+             "text color" 0.745 0.745 0.745 1
              switch normal
              {
               TextWidgetClass DeletionsText {
@@ -859,7 +856,7 @@ FrameWidgetClass EditorFrame {
              }
             }
             ButtonWidgetClass PlacementsTabButton {
-             color 0.7529 0.3686 0.3255 1
+             color 0.753 0.369 0.326 1
              position 0 0
              size 0.5 1
              valign center_ref
@@ -870,7 +867,7 @@ FrameWidgetClass EditorFrame {
              scaled 1
              scriptclass "ViewBinding"
              style Default
-             "disabled text color" 1 1 1 0.9961
+             "disabled text color" 1 1 1 0.996
              switch toggle
              {
               TextWidgetClass PlacementsText {
@@ -902,7 +899,7 @@ FrameWidgetClass EditorFrame {
           PanelWidgetClass RightPanelSearchBarPanel {
            visible 1
            ignorepointer 1
-           color 0.0392 0.0392 0.0392 1
+           color 0.039 0.039 0.039 1
            position 0 0
            size 1 36
            hexactpos 1
@@ -951,7 +948,7 @@ FrameWidgetClass EditorFrame {
             }
             EditBoxWidgetClass RightSearchBar {
              visible 1
-             color 0.6353 0.6353 0.6353 1
+             color 0.635 0.635 0.635 1
              position 0.1 0
              size 0.9 36
              hexactpos 0
@@ -976,7 +973,6 @@ FrameWidgetClass EditorFrame {
            clipchildren 1
            ignorepointer 0
            keepsafezone 0
-           color 1 1 1 0.8627
            position 0 0
            size 1 256
            halign center_ref
@@ -986,12 +982,11 @@ FrameWidgetClass EditorFrame {
            vexactsize 1
            scaled 1
            priority 410
-           style Colorable
+           style blank
            "Scrollbar V" 1
            {
             PanelWidgetClass RightbarFiller {
              ignorepointer 0
-             color 0.1412 0.1569 0.1804 1
              position 0 0
              size 1 1
              hexactpos 1
@@ -999,13 +994,12 @@ FrameWidgetClass EditorFrame {
              hexactsize 0
              vexactsize 0
              priority 410
-             style rover_sim_colorable
+             style blank
             }
             WrapSpacerWidgetClass RightbarPlacementsList {
              visible 1
              ignorepointer 0
              keepsafezone 0
-             color 0.1412 0.1569 0.1804 1
              size 1 1
              halign center_ref
              valign center_ref
@@ -1031,7 +1025,7 @@ FrameWidgetClass EditorFrame {
              visible 0
              ignorepointer 0
              keepsafezone 0
-             color 0.1412 0.1569 0.1804 1
+             color 0.141 0.157 0.18 1
              position 0 0
              size 1 1
              halign center_ref
@@ -1071,7 +1065,7 @@ FrameWidgetClass EditorFrame {
          {
           PanelWidgetClass RightbarDrag0 {
            ignorepointer 1
-           color 0.1569 0.1569 0.1569 1
+           color 0.157 0.157 0.157 1
            size 2 1
            halign right_ref
            valign center_ref
@@ -1099,7 +1093,7 @@ FrameWidgetClass EditorFrame {
        {
         ButtonWidgetClass RightbarHide {
          clipchildren 1
-         color 0.0196 0.0196 0.0196 0.7843
+         color 0.02 0.02 0.02 0.784
          position 0 0.04
          size 24 36
          hexactpos 0
@@ -1147,7 +1141,7 @@ FrameWidgetClass EditorFrame {
      visible 1
      clipchildren 0
      ignorepointer 0
-     color 0.0784 0.0863 0.0941 1
+     color 0.078 0.086 0.094 1
      size 1 102
      hexactpos 1
      vexactpos 1
@@ -1161,7 +1155,7 @@ FrameWidgetClass EditorFrame {
       ImageWidgetClass ToolbarBorder {
        visible 0
        ignorepointer 1
-       color 0.1412 0.1569 0.1804 1
+       color 0.141 0.157 0.18 1
        size 1 2
        halign center_ref
        valign bottom_ref
@@ -1189,7 +1183,7 @@ FrameWidgetClass EditorFrame {
          visible 1
          clipchildren 0
          ignorepointer 1
-         color 0.0784 0.0863 0.0941 1
+         color 0.078 0.086 0.094 1
          size 1 28
          hexactpos 1
          vexactpos 1
@@ -1258,7 +1252,7 @@ FrameWidgetClass EditorFrame {
                "text valign" center
                {
                 ButtonWidgetClass MenuBarFile {
-                 color 0.749 0.3725 0.3725 1
+                 color 0.749 0.373 0.373 1
                  size 1 1
                  halign center_ref
                  valign center_ref
@@ -1318,7 +1312,7 @@ FrameWidgetClass EditorFrame {
                "text valign" center
                {
                 ButtonWidgetClass MenuBarEdit {
-                 color 0.749 0.3725 0.3725 1
+                 color 0.749 0.373 0.373 1
                  size 1 1
                  halign center_ref
                  valign center_ref
@@ -1376,7 +1370,7 @@ FrameWidgetClass EditorFrame {
                "text valign" center
                {
                 ButtonWidgetClass MenuBarView {
-                 color 0.749 0.3725 0.3725 1
+                 color 0.749 0.373 0.373 1
                  size 1 1
                  halign center_ref
                  valign center_ref
@@ -1435,7 +1429,7 @@ FrameWidgetClass EditorFrame {
                "text valign" center
                {
                 ButtonWidgetClass MenuBarEditor {
-                 color 0.749 0.3725 0.3725 1
+                 color 0.749 0.373 0.373 1
                  size 1 1
                  halign center_ref
                  valign center_ref
@@ -1483,7 +1477,7 @@ FrameWidgetClass EditorFrame {
          visible 1
          clipchildren 0
          ignorepointer 1
-         color 0.1176 0.1176 0.1176 1
+         color 0.118 0.118 0.118 1
          size 1 72
          halign center_ref
          hexactpos 1
@@ -1498,7 +1492,7 @@ FrameWidgetClass EditorFrame {
            visible 1
            disabled 0
            ignorepointer 1
-           color 0.2588 0.6863 0.3647 1
+           color 0.259 0.686 0.365 1
            position 0 0
            size 1 24
            halign center_ref
@@ -1532,7 +1526,7 @@ FrameWidgetClass EditorFrame {
            visible 1
            clipchildren 0
            ignorepointer 1
-           color 0.149 0.1529 0.1608 1
+           color 0.149 0.153 0.161 1
            size 1 36
            hexactpos 1
            vexactpos 1
@@ -1558,7 +1552,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider9 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -1590,7 +1584,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass NewButton {
                visible 1
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                valign center_ref
@@ -1610,7 +1604,7 @@ FrameWidgetClass EditorFrame {
                  clipchildren 1
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -1645,7 +1639,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass OpenButton {
                visible 1
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                valign center_ref
@@ -1664,7 +1658,7 @@ FrameWidgetClass EditorFrame {
                  visible 1
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -1699,7 +1693,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass SaveButton {
                visible 1
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                valign center_ref
@@ -1718,7 +1712,7 @@ FrameWidgetClass EditorFrame {
                  visible 1
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -1753,7 +1747,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass SaveAsButton {
                visible 1
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                valign center_ref
@@ -1772,7 +1766,7 @@ FrameWidgetClass EditorFrame {
                  visible 1
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -1818,7 +1812,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider7 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -1851,7 +1845,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass UndoButton {
                visible 1
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                size 32 1
                valign center_ref
                hexactpos 1
@@ -1869,7 +1863,7 @@ FrameWidgetClass EditorFrame {
                  disabled 0
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -1904,7 +1898,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass RedoButton {
                clipchildren 1
                ignorepointer 0
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -1920,7 +1914,7 @@ FrameWidgetClass EditorFrame {
                 ImageWidgetClass RedoButton_Icon {
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -1967,7 +1961,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider3 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -1998,7 +1992,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass CutButton {
                clipchildren 1
                ignorepointer 0
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2016,7 +2010,7 @@ FrameWidgetClass EditorFrame {
                  visible 1
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -2051,7 +2045,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass CopyButton {
                clipchildren 1
                ignorepointer 0
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2069,7 +2063,7 @@ FrameWidgetClass EditorFrame {
                  visible 1
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -2106,7 +2100,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass PasteButton {
                clipchildren 1
                ignorepointer 0
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2124,7 +2118,7 @@ FrameWidgetClass EditorFrame {
                  visible 1
                  inheritalpha 0
                  ignorepointer 1
-                 color 1 1 1 0.7843
+                 color 1 1 1 0.784
                  position 0 0
                  size 24 24
                  halign center_ref
@@ -2172,7 +2166,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider5 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -2203,7 +2197,7 @@ FrameWidgetClass EditorFrame {
              {
               ButtonWidgetClass MagnetButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2246,7 +2240,7 @@ FrameWidgetClass EditorFrame {
               }
               ButtonWidgetClass GroundButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                halign center_ref
@@ -2289,7 +2283,7 @@ FrameWidgetClass EditorFrame {
               }
               ButtonWidgetClass SnapButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                halign center_ref
@@ -2334,7 +2328,7 @@ FrameWidgetClass EditorFrame {
               ButtonWidgetClass CollisionButton {
                visible 0
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                halign center_ref
@@ -2379,7 +2373,7 @@ FrameWidgetClass EditorFrame {
               }
               ButtonWidgetClass GridButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                halign center_ref
@@ -2455,7 +2449,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider1 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -2486,7 +2480,7 @@ FrameWidgetClass EditorFrame {
               PanelWidgetClass CameraLightButton {
                visible 1
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2534,7 +2528,7 @@ FrameWidgetClass EditorFrame {
               PanelWidgetClass TogglePlayerButton {
                visible 1
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2594,7 +2588,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider11 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -2627,7 +2621,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass ObjectSelectionButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2675,7 +2669,7 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass BoxSelectionButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2723,7 +2717,7 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass EllipseSelectionButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2771,7 +2765,7 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass LassoSelectionButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -2832,7 +2826,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider15 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -2911,7 +2905,7 @@ FrameWidgetClass EditorFrame {
                {
                 GridSpacerWidgetClass BrushToggle {
                  ignorepointer 0
-                 color 0.149 0.1529 0.1608 1
+                 color 0.149 0.153 0.161 1
                  size 129 24
                  halign center_ref
                  valign center_ref
@@ -3000,7 +2994,7 @@ FrameWidgetClass EditorFrame {
                visible 1
                clipchildren 1
                ignorepointer 0
-               color 0.7529 0.3686 0.3255 1
+               color 0.753 0.369 0.326 1
                position 0 0
                size 0.74 24
                halign center_ref
@@ -3073,7 +3067,7 @@ FrameWidgetClass EditorFrame {
               PanelWidgetClass BrushRadiusSliderBackground {
                visible 1
                ignorepointer 1
-               color 0.1373 0.1373 0.1373 1
+               color 0.137 0.137 0.137 1
                position 0 0
                size 0.857 28
                halign center_ref
@@ -3086,7 +3080,7 @@ FrameWidgetClass EditorFrame {
               }
               SliderWidgetClass BrushRadiusSlider {
                visible 1
-               color 1 1 1 0.1961
+               color 1 1 1 0.196
                size 0.857 28
                halign center_ref
                valign center_ref
@@ -3148,7 +3142,7 @@ FrameWidgetClass EditorFrame {
               PanelWidgetClass BrushDensitySliderBackground {
                visible 1
                ignorepointer 1
-               color 0.1373 0.1373 0.1373 1
+               color 0.137 0.137 0.137 1
                position 0 0
                size 0.857 28
                halign center_ref
@@ -3161,7 +3155,7 @@ FrameWidgetClass EditorFrame {
               }
               SliderWidgetClass BrushDensitySlider {
                visible 1
-               color 1 1 1 0.1961
+               color 1 1 1 0.196
                position 0 0
                size 0.857 28
                halign center_ref
@@ -3227,7 +3221,7 @@ FrameWidgetClass EditorFrame {
               PanelWidgetClass BrushWidthSliderBackground {
                visible 1
                ignorepointer 1
-               color 0.1373 0.1373 0.1373 1
+               color 0.137 0.137 0.137 1
                position 0 0
                size 0.857 28
                halign center_ref
@@ -3240,7 +3234,7 @@ FrameWidgetClass EditorFrame {
               }
               SliderWidgetClass BrushWidthSlider {
                visible 1
-               color 1 1 1 0.1961
+               color 1 1 1 0.196
                position 0 0
                size 0.857 28
                halign center_ref
@@ -3298,7 +3292,7 @@ FrameWidgetClass EditorFrame {
            visible 1
            clipchildren 0
            ignorepointer 1
-           color 0.149 0.1529 0.1608 1
+           color 0.149 0.153 0.161 1
            position 0 36
            size 1 36
            hexactpos 1
@@ -3324,7 +3318,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider115 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -3357,7 +3351,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass LockButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -3405,7 +3399,7 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass UnlockButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -3453,7 +3447,7 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass DeleteButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -3501,7 +3495,7 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass UnlockAllButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1
                hexactpos 1
@@ -3562,7 +3556,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider111 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -3595,7 +3589,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass TranslationButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1.01
                hexactpos 1
@@ -3643,7 +3637,7 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass RotationButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1.01
                hexactpos 1
@@ -3691,7 +3685,7 @@ FrameWidgetClass EditorFrame {
               }
               PanelWidgetClass ScaleButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1.01
                hexactpos 1
@@ -3752,7 +3746,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider113 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -3785,7 +3779,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass LightningButton {
                clipchildren 1
-               color 0.149 0.1529 0.1608 1
+               color 0.149 0.153 0.161 1
                position 0 0
                size 32 1.01
                hexactpos 1
@@ -3846,7 +3840,7 @@ FrameWidgetClass EditorFrame {
              {
               PanelWidgetClass Divider117 {
                ignorepointer 1
-               color 0 0 0 0.5882
+               color 0 0 0 0.588
                position 0 0
                size 0.1 0.6
                halign center_ref
@@ -3870,7 +3864,7 @@ FrameWidgetClass EditorFrame {
     PanelWidgetClass InfobarFrame {
      clipchildren 0
      ignorepointer 0
-     color 0.0784 0.0863 0.0941 1
+     color 0.078 0.086 0.094 1
      position 0 0
      size 1 22
      halign right_ref
@@ -3886,7 +3880,7 @@ FrameWidgetClass EditorFrame {
       GridSpacerWidgetClass CameraPanel {
        visible 0
        ignorepointer 1
-       color 0.1725 0.1922 0.2118 1
+       color 0.172 0.192 0.212 1
        position 553 24
        size 360 48
        halign right_ref
@@ -3922,7 +3916,7 @@ FrameWidgetClass EditorFrame {
         ButtonWidgetClass CameraPanelButton {
          visible 1
          clipchildren 0
-         color 1 1 1 0.1569
+         color 1 1 1 0.157
          size 22 22
          halign right_ref
          hexactpos 1
@@ -3936,7 +3930,7 @@ FrameWidgetClass EditorFrame {
           ImageWidgetClass ImageWidget2 {
            clipchildren 0
            ignorepointer 1
-           color 0.7843 0.7843 0.7843 1
+           color 0.784 0.784 0.784 1
            size 1 1
            halign center_ref
            valign center_ref
@@ -3952,7 +3946,7 @@ FrameWidgetClass EditorFrame {
             TextWidgetClass CameraSpeed {
              clipchildren 0
              ignorepointer 1
-             color 0.1569 0.1569 0.1569 1
+             color 0.157 0.157 0.157 1
              position -3 0
              size 20 12
              halign center_ref
@@ -3981,7 +3975,7 @@ FrameWidgetClass EditorFrame {
         }
         ButtonWidgetClass CinematicCameraButton {
          visible 0
-         color 1 1 1 0.1569
+         color 1 1 1 0.157
          size 22 22
          hexactpos 1
          vexactpos 1
@@ -3992,7 +3986,7 @@ FrameWidgetClass EditorFrame {
          {
           ImageWidgetClass CinematicCameraIcon {
            ignorepointer 1
-           color 0.5647 0.5647 0.5647 1
+           color 0.565 0.565 0.565 1
            size 0.6 0.6
            halign center_ref
            valign center_ref
@@ -4245,7 +4239,7 @@ FrameWidgetClass EditorFrame {
          {
           PanelWidgetClass InfoBarCam_X_Main {
            ignorepointer 1
-           color 1 1 1 0.9412
+           color 1 1 1 0.941
            size 0.32 1
            valign center_ref
            hexactpos 0
@@ -4257,7 +4251,7 @@ FrameWidgetClass EditorFrame {
             PanelWidgetClass InfoBar_X_Background {
              clipchildren 1
              ignorepointer 1
-             color 0.7647 0.1804 0.102 1
+             color 0.765 0.18 0.102 1
              position 0 0
              size 0.2 22
              valign center_ref
@@ -4319,7 +4313,7 @@ FrameWidgetClass EditorFrame {
           }
           PanelWidgetClass InfoBarCam_Y_Main {
            ignorepointer 1
-           color 1 1 1 0.9412
+           color 1 1 1 0.941
            position 0 0
            size 0.32 1
            valign center_ref
@@ -4332,7 +4326,7 @@ FrameWidgetClass EditorFrame {
             PanelWidgetClass InfoBar_Y_Background {
              clipchildren 1
              ignorepointer 1
-             color 0.6157 0.8157 0.2196 1
+             color 0.616 0.816 0.22 1
              position 0 0
              size 0.2 22
              valign center_ref
@@ -4393,7 +4387,7 @@ FrameWidgetClass EditorFrame {
           }
           PanelWidgetClass InfoBarCam_Z_Main {
            ignorepointer 1
-           color 1 1 1 0.9412
+           color 1 1 1 0.941
            position 0 0
            size 0.32 1
            valign center_ref
@@ -4406,7 +4400,7 @@ FrameWidgetClass EditorFrame {
             PanelWidgetClass InfoBar_Z_Background {
              clipchildren 1
              ignorepointer 1
-             color 0.2588 0.4824 0.9176 1
+             color 0.259 0.482 0.918 1
              position 0 0
              size 0.2 22
              valign center_ref
@@ -4468,7 +4462,7 @@ FrameWidgetClass EditorFrame {
     WrapSpacerWidgetClass CameraTrackWrapper {
      visible 0
      ignorepointer 1
-     color 0.1412 0.1569 0.1804 0.9216
+     color 0.141 0.157 0.18 0.922
      position 480 52
      size 0.235 512
      halign right_ref
@@ -4486,7 +4480,7 @@ FrameWidgetClass EditorFrame {
      {
       PanelWidgetClass CameraTrackButtonPanel {
        ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
+       color 0.078 0.078 0.078 1
        position 0 0
        size 1 24
        halign center_ref
@@ -4731,7 +4725,7 @@ FrameWidgetClass EditorFrame {
       }
       PanelWidgetClass CameraTrackSpeedPanel {
        ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
+       color 0.078 0.078 0.078 1
        position 0 0
        size 1 24
        hexactpos 1
@@ -4757,7 +4751,7 @@ FrameWidgetClass EditorFrame {
          "text valign" center
         }
         SliderWidgetClass CameraTrackSmoothingSlider0 {
-         color 0.5882 0.5882 0.5882 0.7451
+         color 0.588 0.588 0.588 0.745
          position 0.02 0
          size 0.65 20
          halign right_ref
@@ -4807,7 +4801,7 @@ FrameWidgetClass EditorFrame {
       }
       PanelWidgetClass CameraTrackSliderPanel {
        ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
+       color 0.078 0.078 0.078 1
        position 0 0
        size 1 24
        hexactpos 1
@@ -4833,7 +4827,7 @@ FrameWidgetClass EditorFrame {
          "text valign" center
         }
         SliderWidgetClass CameraTrackSmoothingSlider {
-         color 0.5882 0.5882 0.5882 0.7451
+         color 0.588 0.588 0.588 0.745
          position 0.02 0
          size 0.65 20
          halign right_ref
@@ -4916,7 +4910,7 @@ FrameWidgetClass EditorFrame {
       }
       PanelWidgetClass CameraTrackPanel {
        ignorepointer 1
-       color 0.0784 0.0784 0.0784 1
+       color 0.078 0.078 0.078 1
        position 0 0
        size 1 24
        halign center_ref
@@ -4944,7 +4938,7 @@ FrameWidgetClass EditorFrame {
         }
         PanelWidgetClass CameraTrackMinimizePanel {
          ignorepointer 1
-         color 0.7843 0.2941 0.2745 1
+         color 0.784 0.294 0.275 1
          position 2 2
          size 25 21
          hexactpos 1
@@ -4967,7 +4961,7 @@ FrameWidgetClass EditorFrame {
            "text halign" center
           }
           ButtonWidgetClass CameraTrackMinimizeButton {
-           color 1 1 1 0.1961
+           color 1 1 1 0.196
            size 1 1
            halign center_ref
            valign center_ref
@@ -4991,7 +4985,7 @@ FrameWidgetClass EditorFrame {
     PanelWidgetClass ChatBox {
      visible 1
      clipchildren 0
-     color 0.1569 0.1569 0.1569 0.7843
+     color 0.157 0.157 0.157 0.784
      position 0 0.15
      size 0.4 28
      halign center_ref

@@ -55,6 +55,16 @@ class EditorObject: EditorWorldObject
 		return m_Data.Flags;
 	}
 	
+	void SetWorldObject(notnull Object world_object)
+	{
+		m_WorldObject = world_object;
+		if (m_Data) {
+			m_Data.WorldObject = world_object;
+		}
+		
+		EnableBoundingBox(IsBoundingBoxEnabled());
+	}
+	
 	override Object GetWorldObject() 
 	{		
 		return m_WorldObject;

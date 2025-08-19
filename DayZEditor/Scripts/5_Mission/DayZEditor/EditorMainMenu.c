@@ -186,6 +186,8 @@ class EditorMainMenu: ScriptViewMenu
 					RestContext image_ctx = GetRestApi().GetRestContext(showcase.ImageUrl);
 					image_ctx.SetHeader("application/octet-stream");
 					image_ctx.FILE(new EditorGenericCallback(null, ScriptCaller.Create(OnShowcaseLoaded), new Param2<int, string>(j, dst_file)), "", file_name);
+				} else {
+					m_ValidShowcaseSlots[j] = ServerShowcaseImage.LoadImageFile(j, dst_file);
 				}
 			}
 		}
@@ -653,9 +655,18 @@ class EditorMainMenu: ScriptViewMenu
 
 	override bool OnModalResult(Widget w, int x, int y, int code, int result)
 	{
-		switch (code)
-		{
+		switch (code) {
 			case IDC_MAIN_QUIT: {
+				
+				if (result != 2) {
+					break;
+				}
+				
+				if (GetGame().GetHostData()) {
+					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.DisconnectSessionEx, DisconnectSessionFlags.ALWAYS_FORCE);
+					return true;
+				}
+				
 				if (result == 2) {
 					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.RequestExit, IDC_MAIN_QUIT);
 				}

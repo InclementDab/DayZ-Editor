@@ -1693,6 +1693,8 @@ class Editor: Managed
 				return null;
 			}
 			
+			// Dont create the undo on multiplayer because its going to be immediately deleted when receiving the info from the server
+			// you will create a null action and boomy
 			EditorObject editor_object = CreateObject(editor_object_data);
 			if (!editor_object) { 
 				EditorLog.Warning("Invalid Editor Object from %1", entity.GetType());
@@ -2000,7 +2002,7 @@ class Editor: Managed
 				
 		return CreateObjectsByUuid(data_map, create_undo);
 	}
-	
+		
 	EditorObjectMap CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
 	{
 		EditorObjectMap object_set = new EditorObjectMap();
@@ -2010,6 +2012,16 @@ class Editor: Managed
 			
 			// Cache Data (for undo / redo)
 			if (!editor_object_data) continue;
+			
+			// In the event the object already exists. The data for the existing object will get packed into the EditorObjectData struct
+			if (m_EditorObjectsByUuid[uuid]) {
+				Object existing_world_object = m_EditorObjectsByUuid[uuid].GetWorldObject();
+				existing_world_object.Delete();
+				m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
+				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
+				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
+				continue;
+			}
 			
 			// Create a copy to avoid reference loss
 			// todo:

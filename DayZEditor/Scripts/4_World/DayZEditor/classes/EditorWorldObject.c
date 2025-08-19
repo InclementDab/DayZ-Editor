@@ -1,4 +1,4 @@
-class EditorWorldObject
+class EditorWorldObject: Managed
 {
 	protected Object m_WorldObject;
 	Object GetWorldObject()

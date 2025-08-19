@@ -262,14 +262,23 @@ modded class MissionGameplay
 				map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
 				
 				for (i = 0; i < count; i++) {
-					EditorObjectData dta = new EditorObjectData();
-
 					ctx.Read(uuid);
-               		dta.Read(ctx, int.MAX);
+					Object object;
+					ctx.Read(object);
+               		int flags;
+					ctx.Read(flags);
+					
+					if (!object) {
+						Error("Object failed to deserialize");
+						continue;
+					}
+					
+					EditorObjectData dta = EditorObjectData.Create(object, flags);
+					
 					data_map[uuid] = dta;
 				}
 				
-				GetEditor().CreateObjectsByUuid(data_map, true);
+				GetEditor().CreateObjectsByUuid(data_map, false);
                 break;
             }
 			
@@ -279,7 +288,6 @@ modded class MissionGameplay
 				array<string> deleted_data = {};
 				for (i = 0; i < count; i++) {
 					ctx.Read(uuid);
-					
 					deleted_data.Insert(uuid);
 				}
 				
