@@ -75,6 +75,7 @@ class EditorHud: ScriptView
 	protected vector m_DragOffset, m_MapPosition;
 	protected float m_MapScale = 1.0, m_ScaleActual = 1.0;
 	protected float m_ScaleVelocity[1];
+	protected bool m_IsVisible = true;
 	
 	Widget Menubar, ToolsWrapper, InfobarFrame, ToolbarFrame;
 	Widget LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
@@ -152,7 +153,6 @@ class EditorHud: ScriptView
 		int item_size = m_EditorSettings.ListItemSize;
 		array<ref EditorPlaceableItem> placeable_items = m_Editor.GetPlaceableObjects();
 			
-		int jjjj;
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {		
 			
 			//PrintFormat("%3] %1: %2", placeable_item.Type, model_name, placeable_item.ConsoleFriendly);
@@ -210,12 +210,8 @@ class EditorHud: ScriptView
 								parent_node.InsertChild(folder_node);
 							}
 						}
-					}
-										
-				} else {
-					
-				}
-				
+					}				
+				}				
 			}
 			
 			string model_directory = model_name.Substring(0, model_name.LastIndexOf(SystemPath.SEPERATOR));
@@ -228,53 +224,6 @@ class EditorHud: ScriptView
 			}	
 			
 			m_FolderNodesByDepth[depth].Insert(placeable_node);
-			
-			//jjjj++;
-			//if (jjjj > 100) {
-				//break;
-			//}
-			
-			continue;
-					
-			ObservableCollection<ref EditorPlaceableListItem> TargetList;
-			// Makes stuff look good when first loading
-			switch (placeable_item.Category) {
-				case EditorPlaceableItemCategory.CONFIG: {
-					TargetList = m_TemplateController.LeftbarSpacerConfig;
-					break;
-				}
-				case EditorPlaceableItemCategory.STATIC: {
-					TargetList = m_TemplateController.LeftbarSpacerStatic;
-					break;
-				}
-				//? fall-through removed 
-				case EditorPlaceableItemCategory.SCRIPTED: {
-					TargetList = m_TemplateController.LeftbarSpacerStatic;
-					break;
-				}
-			}
-			
-			EditorPlaceableListItem list_item;
-			switch (item_size) {
-				case 2: {
-					list_item = new EditorPlaceableListItemLarge(placeable_item);
-					break;
-				}
-				
-				case 1:
-				default: {
-					list_item = new EditorPlaceableListItem(placeable_item);
-					break;
-				}	
-			}
-			if (placeable_item.IsFavorite()) {
-				TargetList.InsertAt(list_item, 0);
-			} else {
-				TargetList.Insert(list_item);
-			}
-			
-			bool gay = (placeable_item.Scope > 0 || m_TemplateController.ShowPrivate);
-			list_item.Show(gay);
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
@@ -373,6 +322,11 @@ class EditorHud: ScriptView
 			return;
 		}
 		
+		if (GetGame().GetUIManager().GetMenu()) {
+			m_LayoutRoot.Show(false);
+			return;
+		}
+		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 
@@ -400,7 +354,7 @@ class EditorHud: ScriptView
 		bool any_mouse_press = (left_mouse_input.LocalPress() || right_mouse_input.LocalPress());
 
 		if (m_Editor.IsInventoryEditorActive()) {
-			Show(false);
+			m_LayoutRoot.Show(false);
 			return;
 		}
 		
@@ -451,9 +405,11 @@ class EditorHud: ScriptView
 		}
 		
 		if (toggle_hud_input.LocalPress() && input_unlocked && !GetDayZGame().IsLeftCtrlDown()) {		
-			Show(!IsVisible());
+			m_IsVisible = !m_IsVisible;
 			m_Editor.ClearSelection();
 		}
+		
+		m_LayoutRoot.Show(m_IsVisible);
 		
 		// Dont want to toggle cursor on map 
 		if (toggle_cursor.LocalPress() && input_unlocked) {
@@ -1245,6 +1201,7 @@ class EditorHud: ScriptView
 		return m_SelectionMode;
 	}
 
+	/*
 	override void Show(bool show) 
 	{
 		if (m_LayoutRoot.IsVisible() == show) {
@@ -1262,7 +1219,7 @@ class EditorHud: ScriptView
 		}
 		
 		GetGame().GetUIManager().ShowCursor(show);
-	}
+	}*/
 		
 	void SetEditorMode(eEditorMode editor_mode)
 	{
