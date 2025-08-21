@@ -305,11 +305,12 @@ class EditorObject: EditorWorldObject
 		
 		// handle grid snapping
 		if (GetEditor().GridMode) {
+			float grid_size = GetEditor().GetGridSize();
 			vector t = m_Data.Position.InvMultiply3(rot3);			
 			t = Vector(
-				Math.Round(t[0] / 1) * 1, 
-				Math.Round(t[1] / 1) * 1, 
-				Math.Round(t[2] / 1) * 1);
+				Math.Round(t[0] / grid_size) * grid_size, 
+				Math.Round(t[1] / grid_size) * grid_size, 
+				Math.Round(t[2] / grid_size) * grid_size);
 			m_Data.Position = t.Multiply3(rot3);
 		}
 		
@@ -334,14 +335,15 @@ class EditorObject: EditorWorldObject
 
 		// handle grid snapping
 		if (GetEditor().GridMode) {
+			float grid_size = GetEditor().GetGridSize();
 			vector rot3[3];
 		    Math3D.YawPitchRollMatrix(m_Data.Orientation, rot3);
 			
 			vector t = pos.InvMultiply3(rot3);			
 			t = Vector(
-				Math.Round(t[0] / 1) * 1, 
-				Math.Round(t[1] / 1) * 1, 
-				Math.Round(t[2] / 1) * 1);
+				Math.Round(t[0] / grid_size) * grid_size, 
+				Math.Round(t[1] / grid_size) * grid_size, 
+				Math.Round(t[2] / grid_size) * grid_size);
 			pos = t.Multiply3(rot3);
 		}
 		

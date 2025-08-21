@@ -70,7 +70,7 @@ class EditorMainMenu: ScriptViewMenu
 	ScrollWidget MapScroller, ServerScroller;
 	ImageWidget SoundButton, MusicButton, GlobeButton;
 	Widget ModeOfflinePanel, ModeOnlinePanel;
-	TextWidget ModeOfflineText, ModeOnlineText;
+	TextWidget ModeOfflineText, ModeOnlineText, AvailableMaps;
 	
 	void EditorMainMenu()
 	{
@@ -96,7 +96,9 @@ class EditorMainMenu: ScriptViewMenu
 			}
 		}
 		
-		m_TemplateController.ServerEntries.Insert(new EditorServerView("Editor Online Beta v1", "73.250.152.69", 2350));
+		m_TemplateController.ServerEntries.Insert(new EditorServerView("DayZ Editor Public #1", "73.250.152.69", 2350));
+		m_TemplateController.ServerEntries.Insert(new EditorServerView("DayZ Editor Public #2", "73.250.152.69", 2350));
+		m_TemplateController.ServerEntries.Insert(new EditorServerView("DayZ Editor Public #3", "73.250.152.69", 2350));
 
 		float mg_s_w, mg_s_h;
 		MapGrid.GetScreenSize(mg_s_w, mg_s_h);
@@ -193,6 +195,11 @@ class EditorMainMenu: ScriptViewMenu
 		}
 		
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetStatisticsMode, 0, 0, m_GlobalStatsVisible);
+		
+		RestContext server_ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
+		server_ctx.SetHeader(string.Format("application/json\r\nAuthorization: Bearer %1", login_cache.Token));
+		string servers_list = server_ctx.GET_now("api/user/servers");
+		Print(servers_list);
 	}
 	
 	protected void OnShowcaseLoaded(string file_name, int data_size, Param data)
@@ -431,11 +438,13 @@ class EditorMainMenu: ScriptViewMenu
 			
 			case ModeOnline: {
 				WidgetAnimator.Animate(ModeOnlineText, WidgetAnimatorProperty.SIZE_H, 24, 90);
+				AvailableMaps.SetText("Available Servers");
 				break;
 			}
 			
 			case ModeOffline: {
 				WidgetAnimator.Animate(ModeOfflineText, WidgetAnimatorProperty.SIZE_H, 24, 90);
+				AvailableMaps.SetText("Available Maps");
 				break;
 			}
 		}

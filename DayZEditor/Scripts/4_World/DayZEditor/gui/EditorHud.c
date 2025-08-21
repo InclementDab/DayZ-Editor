@@ -101,6 +101,7 @@ class EditorHud: ScriptView
 	Widget ChatBox;
 	EditBoxWidget InputEditBoxWidget;
 	Widget ChatFrameWidget;
+	EditBoxWidget InfoBar_X_Value, InfoBar_Y_Value, InfoBar_Z_Value;
 	protected ref EditorChat m_Chat;
 	
 	protected int m_CurrentBrushIndex = 0, m_BrushState = 0;
@@ -782,6 +783,20 @@ class EditorHud: ScriptView
 		m_EditorCameraMarker.WorldPosition = GetEditor().GetCamera().GetPosition();
 		m_EditorCameraMarker.WorldOrientation = GetEditor().GetCamera().GetOrientation();
 		
+		EditorCamera camera = GetEditor().GetCamera();
+		vector position = camera.GetPosition();
+		if (focus_widget != InfoBar_X_Value) {
+			InfoBar_X_Value.SetText(position[0].ToString(false));
+		}
+		
+		if (focus_widget != InfoBar_Y_Value) {
+			InfoBar_Y_Value.SetText(position[1].ToString(false));
+		}
+		
+		if (focus_widget != InfoBar_Z_Value) {
+			InfoBar_Z_Value.SetText(position[2].ToString(false));
+		}
+		
 #ifdef DIAG_DEVELOPER
 		/*
 		float tbf_s_w, tbf_s_h;
@@ -1058,6 +1073,8 @@ class EditorHud: ScriptView
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		int i;
+		vector camera_position = GetEditor().GetCamera().GetPosition();
+		bool set_camera_position = false;
 		switch (w) {
 			case LeftSearchBar: {
 				
@@ -1149,6 +1166,53 @@ class EditorHud: ScriptView
 				SetFocus(null);				
 				break;
 			}
+			
+			case InfoBar_X_Value: {
+				string x_text = InfoBar_X_Value.GetText();
+				for (i = x_text.Length() - 1; i >= 0; --i) {
+					if (!CF_Encoding.IsNumeric(x_text[i]) && x_text[i] != ".") {
+						x_text = x_text.Substring(0, i);
+					}
+				}
+				
+				InfoBar_X_Value.SetText(x_text);	
+				camera_position[0] = x_text.ToFloat();		
+				set_camera_position = true;	
+				break;
+			}
+			
+			case InfoBar_Y_Value: {
+				string y_text = InfoBar_Y_Value.GetText();
+				for (i = y_text.Length() - 1; i >= 0; --i) {
+					if (!CF_Encoding.IsNumeric(y_text[i]) && y_text[i] != ".") {
+						y_text = y_text.Substring(0, i);
+					}
+				}
+				
+				InfoBar_Y_Value.SetText(y_text);
+				camera_position[1] = y_text.ToFloat();
+				set_camera_position = true;
+				break;
+			}
+			
+			case InfoBar_Z_Value: {
+				string z_text = InfoBar_Z_Value.GetText();
+				for (i = z_text.Length() - 1; i >= 0; --i) {
+					if (!CF_Encoding.IsNumeric(z_text[i]) && z_text[i] != ".") {
+						z_text = z_text.Substring(0, i);
+					}
+				}
+				
+				InfoBar_Z_Value.SetText(z_text);
+				
+				camera_position[2] = z_text.ToFloat();
+				set_camera_position = true;
+				break;
+			}
+		}
+		
+		if (set_camera_position) {
+			GetEditor().GetCamera().SetPosition(camera_position);
 		}
 		
 		return super.OnChange(w, x, y, finished);

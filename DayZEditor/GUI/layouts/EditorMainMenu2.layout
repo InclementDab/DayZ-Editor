@@ -2,7 +2,7 @@ PanelWidgetClass main_menu_root {
  visible 1
  ignorepointer 1
  color 0 0 0 0
- position 0 -0.99527
+ position 0 -0.995
  size 1 1
  halign center_ref
  valign center_ref
@@ -15,7 +15,7 @@ PanelWidgetClass main_menu_root {
   ImageWidgetClass editor_logo_back {
    visible 0
    inheritalpha 1
-   color 0.1176 0.1176 0.1176 0.7843
+   color 0.118 0.118 0.118 0.784
    position 138 75
    size 480 270
    hexactpos 1
@@ -34,7 +34,7 @@ PanelWidgetClass main_menu_root {
     ImageWidgetClass editor_logo {
      visible 1
      inheritalpha 1
-     color 1 1 1 0.8627
+     color 1 1 1 0.863
      position -2 -2
      size 480 270
      halign center_ref
@@ -270,7 +270,7 @@ PanelWidgetClass main_menu_root {
      {
       PanelWidgetClass StatHeader {
        ignorepointer 1
-       color 0.1412 0.1569 0.1804 0.7843
+       color 0.141 0.157 0.18 0.784
        size 1 36
        halign right_ref
        hexactpos 1
@@ -459,7 +459,7 @@ PanelWidgetClass main_menu_root {
     }
     GridSpacerWidgetClass ButtonSpacer {
      ignorepointer 1
-     color 0.1412 0.1569 0.1804 0.4902
+     color 0.141 0.157 0.18 0.49
      size 48 48
      hexactpos 1
      vexactpos 1
@@ -737,7 +737,7 @@ PanelWidgetClass main_menu_root {
      {
       PanelWidgetClass PanelWidget4 {
        ignorepointer 1
-       color 0 0.4784 0.8 1
+       color 0 0.478 0.8 1
        position 0 -24
        size 1 24
        hexactpos 1
@@ -746,7 +746,7 @@ PanelWidgetClass main_menu_root {
        vexactsize 1
        style rover_sim_colorable
        {
-        TextWidgetClass TextWidget0 {
+        TextWidgetClass AvailableMaps {
          ignorepointer 1
          position 24 0
          size 48 24
@@ -768,7 +768,7 @@ PanelWidgetClass main_menu_root {
        visible 1
        clipchildren 0
        ignorepointer 1
-       color 0.1725 0.1922 0.2118 1
+       color 0.172 0.192 0.212 1
        size 1 1
        halign center_ref
        valign center_ref
@@ -797,7 +797,7 @@ PanelWidgetClass main_menu_root {
          visible 1
          clipchildren 0
          ignorepointer 1
-         color 0.1725 0.1922 0.2118 1
+         color 0.172 0.192 0.212 1
          size 1 1
          valign center_ref
          hexactpos 1
@@ -849,7 +849,7 @@ PanelWidgetClass main_menu_root {
           PanelWidgetClass ServerRoot {
            visible 1
            ignorepointer 1
-           color 0.0588 0.0588 0.0588 0.7843
+           color 0.059 0.059 0.059 0.784
            size 1 36
            hexactpos 1
            vexactpos 1
@@ -858,7 +858,7 @@ PanelWidgetClass main_menu_root {
            style rover_sim_colorable
            {
             ButtonWidgetClass RentServerButton {
-             color 0.9373 0.9098 0.8196 1
+             color 0.937 0.91 0.82 1
              position 0.05 0
              size 280 28
              halign right_ref
@@ -879,7 +879,7 @@ PanelWidgetClass main_menu_root {
                vexactsize 1
                text "Rent a Server"
                font "gui/fonts/sdf_MetronBook24"
-               "text color" 0.0706 0.5608 0.1922 1
+               "text color" 0.071 0.561 0.192 1
                "italic text" 0
                "bold text" 1
                "size to text h" 1
@@ -888,7 +888,7 @@ PanelWidgetClass main_menu_root {
               }
               PanelWidgetClass PanelWidget5 {
                ignorepointer 1
-               color 0.9373 0.9098 0.8196 1
+               color 0.937 0.91 0.82 1
                position 0 0
                size 1 1
                halign center_ref
@@ -938,7 +938,7 @@ PanelWidgetClass main_menu_root {
          {
           ImageWidgetClass ModeOfflinePanel {
            ignorepointer 1
-           color 0 0.4118 0.6941 1
+           color 0 0.412 0.694 1
            size 1 1
            halign center_ref
            valign center_ref
@@ -978,7 +978,7 @@ PanelWidgetClass main_menu_root {
          {
           ImageWidgetClass ModeOnlinePanel {
            ignorepointer 1
-           color 0.1686 0.1882 0.2078 1
+           color 0.169 0.188 0.208 1
            size 1 1
            halign center_ref
            valign center_ref
@@ -1014,7 +1014,7 @@ PanelWidgetClass main_menu_root {
     }
     PanelWidgetClass ServerShowcase {
      ignorepointer 0
-     color 0.1412 0.1569 0.1804 0.7843
+     color 0.141 0.157 0.18 0.784
      size 432 144
      valign bottom_ref
      hexactpos 1
@@ -1060,7 +1060,7 @@ PanelWidgetClass main_menu_root {
        "stretch mode" fit_h_center
        {
         ButtonWidgetClass NextServerShowcase {
-         color 1 1 1 0.4902
+         color 1 1 1 0.49
          position 0.05 0.075
          size 22 22
          halign right_ref
@@ -1075,7 +1075,7 @@ PanelWidgetClass main_menu_root {
           ImageWidgetClass ImageWidget2 {
            visible 1
            ignorepointer 1
-           color 0.1412 0.1569 0.1804 1
+           color 0.141 0.157 0.18 1
            size 0.75 0.75
            halign center_ref
            valign center_ref
@@ -1111,7 +1111,7 @@ PanelWidgetClass main_menu_root {
          }
         }
         ButtonWidgetClass PrevServerShowcase {
-         color 1 1 1 0.4902
+         color 1 1 1 0.49
          position 0.05 0.075
          size 22 22
          valign bottom_ref
@@ -1125,7 +1125,7 @@ PanelWidgetClass main_menu_root {
           ImageWidgetClass ImageWidget3 {
            visible 1
            ignorepointer 1
-           color 0.1412 0.1569 0.1804 1
+           color 0.141 0.157 0.18 1
            size 0.75 0.75
            halign center_ref
            valign center_ref
@@ -1180,8 +1180,8 @@ PanelWidgetClass main_menu_root {
   ImageWidgetClass vignette {
    visible 1
    ignorepointer 1
-   color 0 0 0 0.7843
-   position 0 -0.74009
+   color 0 0 0 0.784
+   position 0 -0.74
    size 1 1
    halign center_ref
    valign center_ref

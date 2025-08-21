@@ -4263,6 +4263,7 @@ FrameWidgetClass EditorFrame {
              style rover_sim_colorable
              {
               TextWidgetClass InfoBar_X_Label {
+               visible 1
                ignorepointer 1
                size 1 1
                halign center_ref
@@ -4288,16 +4289,10 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 0
              vexactsize 1
-             scriptclass "ViewBinding"
+             scriptclass ""
              style ServerBrowser
              "limit visible" 0
              font "gui/fonts/Metron22"
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_x"
-               Two_Way_Binding 1
-              }
-             }
             }
            }
           }
@@ -4363,16 +4358,10 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 0
              vexactsize 1
-             scriptclass "ViewBinding"
+             scriptclass ""
              style ServerBrowser
              "limit visible" 0
              font "gui/fonts/Metron22"
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_y"
-               Two_Way_Binding 1
-              }
-             }
             }
            }
           }
@@ -4437,19 +4426,12 @@ FrameWidgetClass EditorFrame {
              vexactpos 1
              hexactsize 0
              vexactsize 1
-             scriptclass "ViewBinding"
+             scriptclass ""
              style ServerBrowser
-             text "Test"
              "limit visible" 0
              "Use default text" 0
              "exact text" 0
              font "gui/fonts/Metron22"
-             {
-              ScriptParamsClass {
-               Binding_Name "cam_z"
-               Two_Way_Binding 1
-              }
-             }
             }
            }
           }

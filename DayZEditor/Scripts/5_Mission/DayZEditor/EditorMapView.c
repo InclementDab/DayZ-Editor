@@ -11,6 +11,7 @@ class EditorServerView: ScriptView
 		m_ServerPort = server_port;
 		
 		ServerText.SetText(server_name);
+		ServerPop.SetText("0/25");
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)

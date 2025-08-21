@@ -51,6 +51,10 @@ class EditorWebApi: WebApiBase
 	}
 }
 
+ScriptedLightBase s_TestLight;
+ScriptedLightBase s_TestLight2;
+ScriptedLightBase s_TestLight3;
+
 class Editor: Managed
 {
 	/* Private Members */
@@ -735,6 +739,65 @@ class Editor: Managed
 			}
 		}
 #endif
+		
+		// for baba
+#ifdef DIAG_DEVELOPER
+		static bool lights_on = true;
+		if (KeyState(KeyCode.KC_BACKSLASH)) {
+			lights_on = !lights_on;
+			ClearKey(KeyCode.KC_BACKSLASH);
+		}
+
+		if (!s_TestLight) {
+			s_TestLight = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12147.931641, 146.479889, 12703.225586));
+		}
+		
+		if (!s_TestLight2) {
+			s_TestLight2 = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12153.590820, 146.434799, 12700.890625));
+		}
+		
+		if (!s_TestLight3) {
+			s_TestLight3 = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12142.406250, 146.169922, 12705.492188));
+		}
+		
+		s_TestLight.SetDirection(Vector(0.012897, -0.998630, 0.050722));
+		s_TestLight.SetAmbientColor(0.9, 0.7, 0.75);
+		s_TestLight.SetDiffuseColor(0.8, 0.7, 0.6);
+		s_TestLight.SetSpotLightAngle(120);
+		s_TestLight.SetBrightnessTo(4);
+		s_TestLight.SetRadiusTo(20);
+		s_TestLight.SetEnabled(lights_on);
+		s_TestLight.SetFlareVisible(false);
+		
+		
+		//[Camera Position]: <12146.780273, 156.325378, 12659.693359>, <-0.145621, -0.450125, 0.881012>
+		//[Camera Position]: <12138.481445, 146.337021, 12663.844727>, <0.260067, -0.066357, 0.963308>
+		
+		//[Camera Position]: <12175.502930, 157.805695, 12700.119141>, <-0.914375, -0.399910, 0.063171>
+		s_TestLight2.SetPosition(Vector(12138.481445, 146.337021, 12663.844727));
+		s_TestLight2.SetDirection(Vector(0.260067, -0.066357, 0.963308));
+		//s_TestLight2.SetPosition(Vector(12157.028320, 140.418762, 12701.905273));
+		//s_TestLight2.SetDirection(Vector(-0.954792, 0.194824, 0.224535));
+		s_TestLight2.SetSpotLightAngle(120);
+		s_TestLight2.SetBrightnessTo(0.4);
+		s_TestLight2.SetRadiusTo(120);
+		s_TestLight2.SetAmbientColor(0.9, 0.7, 0.75);
+		s_TestLight2.SetDiffuseColor(0.8, 0.7, 0.6);
+		s_TestLight2.SetEnabled(lights_on);
+		s_TestLight2.SetFlareVisible(false);
+		
+		
+		s_TestLight3.SetPosition(Vector(12140.124023, 140.758469, 12698.712891));
+		s_TestLight3.SetDirection(Vector(0.842742, 0.163829, 0.512783));
+		s_TestLight3.SetSpotLightAngle(120);
+		s_TestLight3.SetBrightnessTo(3);
+		s_TestLight3.SetRadiusTo(20);
+		s_TestLight3.SetAmbientColor(0.9, 0.7, 0.75);
+		s_TestLight3.SetDiffuseColor(0.8, 0.7, 0.6);
+		s_TestLight3.SetEnabled(lights_on);
+		s_TestLight3.SetFlareVisible(false);
+
+#endif
 
 		// Process input after gizmo update because gizmos will need to block input during an interaction
 		ProcessInput(timeslice, GetGame().GetInput());
@@ -1286,7 +1349,7 @@ class Editor: Managed
 			bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalPress() && GridMode);
 			bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalPress() && GridMode);
 			if (GridMode) {
-				step_size = 1;
+				step_size = GetGridSize();
 			}
 			
 			vector pos_offset = vector.Zero;
@@ -2014,9 +2077,11 @@ class Editor: Managed
 			if (!editor_object_data) continue;
 			
 			// In the event the object already exists. The data for the existing object will get packed into the EditorObjectData struct
+			Print(m_EditorObjectsByUuid[uuid]);
 			if (m_EditorObjectsByUuid[uuid]) {
 				Object existing_world_object = m_EditorObjectsByUuid[uuid].GetWorldObject();
 				existing_world_object.Delete();
+				Print(m_EditorObjectsByUuid[uuid]);
 				m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
 				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
@@ -3205,5 +3270,22 @@ class Editor: Managed
 	EditorGizmo GetGizmo()
 	{
 		return m_CurrentGizmo;
+	}
+	
+	float GetGridSize()
+	{
+		if (!GridMode) {
+			return 0;
+		}
+		
+		if (GetDayZGame().IsLeftCtrlDown()) {
+			return 1.0;
+		}
+		
+		if (KeyState(KeyCode.KC_LSHIFT)) {
+			return 0.01;
+		}
+		
+		return 0.1;
 	}
 }

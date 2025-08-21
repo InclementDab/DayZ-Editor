@@ -263,19 +263,14 @@ modded class MissionGameplay
 				
 				for (i = 0; i < count; i++) {
 					ctx.Read(uuid);
-					Object object;
-					ctx.Read(object);
                		int flags;
 					ctx.Read(flags);
-					
-					if (!object) {
+					if (!target) {
 						Error("Object failed to deserialize");
 						continue;
 					}
-					
-					EditorObjectData dta = EditorObjectData.Create(object, flags);
-					
-					data_map[uuid] = dta;
+										
+					data_map[uuid] = EditorObjectData.Create(target, flags);
 				}
 				
 				GetEditor().CreateObjectsByUuid(data_map, false);
