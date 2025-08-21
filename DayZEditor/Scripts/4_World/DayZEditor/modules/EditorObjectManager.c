@@ -50,6 +50,10 @@ class EditorObjectManagerModule : Managed
 				type_lower = type;
 				type_lower.ToLower();
 				int scope = GetGame().ConfigGetInt(path + " " + type + " scope");
+				if (scope == 0 && !GetEditor().GetSettings().ShowScopeZeroObjects) {
+					continue;
+				}
+				
 				string model = SystemPath.Format(GetGame().ConfigGetTextOut(string.Format("%1 %2 model", path, type)));
 				model.ToLower();
 				// DayZ has a difficult time supporting leading slashes
@@ -74,6 +78,11 @@ class EditorObjectManagerModule : Managed
 				// Yikes
 				if (GetGame().IsKindOf(type, "Inventory_Base") || GetGame().IsKindOf(type, "Weapon_Base") || GetGame().IsKindOf(type, "DZ_LightAI") || GetGame().IsKindOf(type, "Magazine_Base")) {
 					placeable_item.Scope = 1;
+				}
+				
+				// bldr_ check is a hack but I cannot easily check the folder a config is defined in. not sure the best way to go about this.
+				if (model.Contains("dz/") && !type.Contains("bldr_")) {
+					placeable_item.ConsoleFriendly = 1;
 				}
 
 				// Register as placeable
@@ -100,8 +109,8 @@ class EditorObjectManagerModule : Managed
 					
 					// Add static variant of all config items
 					EditorPlaceableItem placeable_item_static_variant = EditorPlaceableItem.Create(SystemPath.Format(model));
-					if (!ObjectSpawnerHandler.ValidatePath(model)) {
-						placeable_item_static_variant.Scope = 1;
+					if (ValidatePath(model)) {
+						placeable_item_static_variant.ConsoleFriendly = 1;
 					}
 					
 					m_PlaceableObjectsByP3dPath[model].Insert(placeable_item_static_variant);
@@ -131,8 +140,8 @@ class EditorObjectManagerModule : Managed
 					m_PlaceableObjectsByP3dFile[p3d_file_name] = {};
 				}
 				
-				if (!ObjectSpawnerHandler.ValidatePath(p3d_file_unformat)) {
-					placeable_item_p3d.Scope = 0;
+				if (ValidatePath(p3d_file_unformat)) {
+					placeable_item_p3d.ConsoleFriendly = 1;
 				}
 
 				m_PlaceableObjectsByP3dPath[p3d_file].Insert(placeable_item_p3d);
@@ -141,9 +150,9 @@ class EditorObjectManagerModule : Managed
 		}
 
 		// Statics that belong to Editor / DF
-		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight));
-		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkPointLight));
-		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase));
+		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight, false));
+		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkPointLight, false));
+		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase, false));
 
 		//	Experimental lights
 		if (GetEditor().GetSettings().UseExperimentalLights) {
@@ -195,6 +204,25 @@ class EditorObjectManagerModule : Managed
 			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(SpotlightLight));
 			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(UniversallightLight));
 		}
+	}
+
+	// For console
+	static const ref array<string> VALID_PATHS = {
+		"DZ\\plants","DZ\\plants_bliss", "DZ\\plants_sakhal",
+		"DZ\\rocks", "DZ\\rocks_bliss", "DZ\\rocks_sakhal",
+		"DZ/plants","DZ/plants_bliss", "DZ/plants_sakhal",
+		"DZ/rocks", "DZ/rocks_bliss", "DZ/rocks_sakhal",
+	};
+		
+	static bool ValidatePath(string path)
+	{		
+		foreach (string p: VALID_PATHS)
+		{
+			if (path.Contains(p))
+				return true;
+		}
+		
+		return false;
 	}
 
 	EditorCameraTrack CreateCameraTrack(notnull EditorCameraTrackData camera_track_data)

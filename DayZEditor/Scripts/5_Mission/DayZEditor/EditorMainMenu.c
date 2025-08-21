@@ -152,13 +152,20 @@ class EditorMainMenu: ScriptViewMenu
 			
 			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
-			ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
+			// race condition issue when launching striaght to mission
+			//ctx.POST(new EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)), "api\/user\/login", payload);
+			EditorLoginCallback(ScriptCaller.Create(OnLoginResponse)).OnSuccess(ctx.POST_now("api\/user\/login", payload), 0);
 		}
 				
 		if (!Editor.Experimental && !Editor.HasTestedVersion) {
 			RestContext version_ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			version_ctx.GET(new EditorVersionCallback(ScriptCaller.Create(OnVersionResponse)), "api\/changelog\/Version");
 			Editor.HasTestedVersion = true;
+		}
+		
+		EditorSettings settings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+		if (!settings.HasSelectedConsoleMode) {
+			ShowDialog("Enable Console Mode?", "Welcome to DayZ Editor. Are you planning to edit for Console? You can always change this later in the settings", 2401, DBT_YESNO, DBB_YES, DMT_QUESTION);
 		}
 	}
 
@@ -680,6 +687,17 @@ class EditorMainMenu: ScriptViewMenu
 					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.RequestExit, IDC_MAIN_QUIT);
 				}
 
+				break;
+			}
+			
+			case 2401: {
+				if (result == DBB_YES) {
+					EditorSettings settings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+					settings.ConsoleMode = 1;
+					settings.HasSelectedConsoleMode = 1;
+					settings.Save();
+				}
+				
 				break;
 			}
 		}

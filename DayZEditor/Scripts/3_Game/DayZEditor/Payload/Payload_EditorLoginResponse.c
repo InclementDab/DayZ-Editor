@@ -65,7 +65,7 @@ class EditorLoginCallback : RestCallbackBase
 			Error(error);
 			return;
 		}
-
+		
 		if (m_OnPayloadSuccess) {
 			m_OnPayloadSuccess.Invoke(response);
 		}

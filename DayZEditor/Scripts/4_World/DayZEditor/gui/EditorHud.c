@@ -155,7 +155,11 @@ class EditorHud: ScriptView
 		int jjjj;
 		foreach (EditorPlaceableItem placeable_item: placeable_items) {		
 			
-			//Print(placeable_item.Type);
+			//PrintFormat("%3] %1: %2", placeable_item.Type, model_name, placeable_item.ConsoleFriendly);
+
+			if (m_EditorSettings.ConsoleMode && !placeable_item.ConsoleFriendly) {
+				continue;
+			}
 			
 			string model_name = placeable_item.GetModelName();
 			model_name.Replace(SystemPath.SEPERATOR_ALT, SystemPath.SEPERATOR);
@@ -168,9 +172,7 @@ class EditorHud: ScriptView
 			if (model_name[0] == SystemPath.SEPERATOR) {
 				model_name = model_name.Substring(1, model_name.Length() - 1);
 			}
-			
-			//PrintFormat("%3] %1: %2", placeable_item.Type, model_name, placeable_item.Scope);
-			
+						
 			array<string> model_path_split = {};
 			model_name.Split(SystemPath.SEPERATOR, model_path_split);
 			int depth = model_path_split.Count() - 1;

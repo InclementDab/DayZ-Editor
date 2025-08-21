@@ -12,6 +12,9 @@ class EditorPlaceableItem : Managed
 	string Type; // Item Type
 	string Path; // config path CfgVehicles, CfgWeapons etc...
 	EditorPlaceableItemCategory Category;
+	
+	bool ScriptedType;
+	bool ConsoleFriendly;
 
 	private void EditorPlaceableItem()
 	{
@@ -69,13 +72,16 @@ class EditorPlaceableItem : Managed
 		return placeable_item;
 	}
 
-	static EditorPlaceableItem Create(typename scripted_type)
+	static EditorPlaceableItem Create(typename scripted_type, bool console_friendly = true)
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
 		placeable_item.Scope = 2;
 		placeable_item.Type = scripted_type.ToString();
 		placeable_item.Name = scripted_type.ToString();
+		placeable_item.Path = "Scripted/" + scripted_type.ToString();
 		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
+		placeable_item.ConsoleFriendly = console_friendly;
+		placeable_item.ScriptedType = 1;
 		return placeable_item;
 	}
 
@@ -107,7 +113,11 @@ class EditorPlaceableItem : Managed
 	}
 	
 	string GetModelName()
-	{
+	{		
+		if (Category == EditorPlaceableItemCategory.SCRIPTED) {
+			return Path;
+		}
+		
 		if (Type.Contains(".p3d")) {
 			return Type;
 		}

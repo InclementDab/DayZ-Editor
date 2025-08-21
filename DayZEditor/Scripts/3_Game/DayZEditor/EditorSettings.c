@@ -4,31 +4,24 @@ class EditorSettings: ProfileSettings
 	bool AutoSaveEnabled			= true;
 	float AutoSaveTimer 			= 240;
 	
-#ifndef COMPONENT_SYSTEM
+	[RegisterProfileSettingMultistate("ADVANCED", "ConsoleMode", "Console Mode", {"DISABLED", "ENABLED"}, true)]
+	int ConsoleMode = 0;
+	
 	[RegisterProfileSettingMultistate("ADVANCED", "HideCursorOnPlayerControl", "Hide Cursor When Controlling Player", {"NO", "YES"})]
-#endif
 	int HideCursorOnPlayerControl;
 
-#ifndef COMPONENT_SYSTEM
 	[RegisterProfileSettingMultistate("ADVANCED", "DrawCameraLightShadows", "Draw Camera Light Shadows", {"NO", "YES"})]
-#endif
 	int DrawCameraLightShadows = 0;
 
-#ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingMultistate("PLACEMENT", "QuickMoveMode", "Quick Move Mode", {"WORLD", "CAMERA FLAT", "CAMERA 3D"})]
-#endif
 	int QuickMoveMode = 1;
 		
-#ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingSlider("PLACEMENT", "QuickMoveRate", "Quick Move Speed (m/s)", 0.1, 15)]
-#endif
 	float QuickMoveRate = 2.5;
 		
-#ifndef COMPONENT_SYSTEM	
 	[RegisterProfileSettingMultistate("PLACEMENT", "SpawnItemsWithAttachments", "Item Spawns", {"EMPTY", "WITH ATTACHMENT"})]
-#endif
 	int SpawnItemsWithAttachments	= 0;
-
+	
 //#ifndef COMPONENT_SYSTEM	
 	//[RegisterProfileSettingMultistate("PLACEMENT", "AltMoveMode", "Vertical Placement Mode", {"WORLD", "LOCAL"})]
 //#endif
@@ -39,6 +32,9 @@ class EditorSettings: ProfileSettings
 	
 	[RegisterProfileSettingMultistate("ADVANCED", "BrushedObjectsRespectOtherObjects", "Brush On Objects", {"DISABLED", "ENABLED"})]
 	int BrushedObjectsRespectOtherObjects = 0;
+		
+	// Set once on launch
+	bool HasSelectedConsoleMode = 0;
 	
 	// todo: stub
 	////[RegisterProfileSettingMultistate("PLACEMENT", "AllowPlacementOfPersistentItems", "Place Persistent Items", {"NO", "YES"})]
