@@ -799,8 +799,9 @@ FrameWidgetClass EditorFrame {
          vexactsize 0
          Padding 0
          Margin 0
+         "Size To Content V" 1
          {
-          PanelWidgetClass TabPanel {
+          WrapSpacerWidgetClass TabPanel {
            visible 1
            ignorepointer 1
            color 0.141 0.157 0.18 1
@@ -810,9 +811,13 @@ FrameWidgetClass EditorFrame {
            vexactpos 1
            hexactsize 0
            vexactsize 1
-           style rover_sim_colorable
+           style Colorable
+           Padding 0
+           Margin 0
+           "Size To Content V" 1
            {
             ButtonWidgetClass DeletionsTabButton {
+             visible 1
              color 0.118 0.118 0.118 1
              position 0 0
              size 0.5 1
@@ -856,6 +861,7 @@ FrameWidgetClass EditorFrame {
              }
             }
             ButtonWidgetClass PlacementsTabButton {
+             visible 1
              color 0.753 0.369 0.326 1
              position 0 0
              size 0.5 1
@@ -890,6 +896,46 @@ FrameWidgetClass EditorFrame {
              {
               ScriptParamsClass {
                Binding_Name "CategoryPlacements"
+               Two_Way_Binding 1
+              }
+             }
+            }
+            ButtonWidgetClass PlayerTabButton {
+             visible 0
+             color 0.753 0.369 0.326 1
+             position 0 0
+             size 1 1
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 1
+             scriptclass "ViewBinding"
+             style Default
+             "disabled text color" 1 1 1 0.996
+             switch toggle
+             {
+              TextWidgetClass PayerText {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 1 14
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               text "Players"
+               font "gui/fonts/Metron16"
+               "text halign" center
+               "text valign" center
+              }
+             }
+             {
+              ScriptParamsClass {
+               Binding_Name "CategoryPlayers"
                Two_Way_Binding 1
               }
              }
@@ -1044,6 +1090,31 @@ FrameWidgetClass EditorFrame {
              {
               ScriptParamsClass {
                Binding_Name "RightbarDeletionData"
+               Two_Way_Binding 1
+              }
+             }
+            }
+            WrapSpacerWidgetClass RightbarPlayersList {
+             visible 0
+             ignorepointer 0
+             keepsafezone 0
+             size 1 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 0
+             vexactsize 0
+             priority 411
+             scriptclass "ViewBinding"
+             style Colorable
+             Padding 0
+             Margin 0
+             "Size To Content V" 1
+             content_halign right
+             {
+              ScriptParamsClass {
+               Binding_Name "RightbarPlayerData"
                Two_Way_Binding 1
               }
              }

@@ -4,6 +4,7 @@ class EditorHudController: EditorControllerBase
 		
 	bool CategoryPlacements = true;
 	bool CategoryDeletions;
+	bool CategoryPlayers;
 	bool CategoryConfig = true;
 	bool CategoryStatic;
 	bool FavoritesToggle;
@@ -21,6 +22,7 @@ class EditorHudController: EditorControllerBase
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
+	ref ObservableCollection<EditorListItem> RightbarPlayerData 		= new ObservableCollection<EditorListItem>(this);
 	
 	// Logger
 	static const int MAX_LOG_ENTRIES = 20;
@@ -48,6 +50,7 @@ class EditorHudController: EditorControllerBase
 	
 	protected WrapSpacerWidget RightbarPlacementsList;
 	protected WrapSpacerWidget RightbarDeletionsList;
+	protected WrapSpacerWidget RightbarPlayersList;
 	
 	protected WrapSpacerWidget LeftbarPlacementsConfig, LeftbarPlacementsStatic;
 	
@@ -59,7 +62,7 @@ class EditorHudController: EditorControllerBase
 	protected Widget CameraTrackWrapper;
 
 	protected ButtonWidget GizmoTranslateButton, FavoritesTabButton, ShowPrivateButton, LeftbarCategoryStatic, LeftbarCategoryConfig;
-	protected ButtonWidget LeftbarHide, DeletionsTabButton, PlacementsTabButton, RightbarHide;
+	protected ButtonWidget LeftbarHide, DeletionsTabButton, PlacementsTabButton, RightbarHide, PlayerTabButton;
 	protected ButtonWidget MenuBarFile, MenuBarEdit, MenuBarView, MenuBarEditor;
 	protected ButtonWidget BrushToggleButton, CinematicCameraButton, CameraTrackMinimizeButton, AddNodeButton, CameraTrackRunButton;
 	protected ButtonWidget ObjectSelectionButton, BoxSelectionButton, EllipseSelectionButton, LassoSelectionButton;
@@ -142,7 +145,10 @@ class EditorHudController: EditorControllerBase
 				GetEditor().GetSettings().ShowFavoriteObjects = FavoritesToggle;
 				GetEditor().GetSettings().ShowScopeZeroObjects = ShowPrivate;
 				GetEditor().GetSettings().Save();
-				GetEditor().GetEditorHud().RefreshSearchBar();
+				if (GetEditor().GetEditorHud()) {
+					GetEditor().GetEditorHud().RefreshSearchBar();
+				}
+				
 				break;
 			}
 
@@ -221,32 +227,61 @@ class EditorHudController: EditorControllerBase
 			
 			case "CategoryPlacements": {
 				CategoryDeletions = false;
+				CategoryPlayers = false;
 				NotifyPropertyChanged("CategoryDeletions", false);
+				NotifyPropertyChanged("CategoryPlayers", false);
 				// forcing to be true, otherwise it will just show nothing
 				CategoryPlacements = true;
 				
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
+				RightbarPlayersList.Show(CategoryDeletions);
 				
 				PlacementsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
+				PlayerTabButton.SetColor(ARGB(255, 60, 60, 60));
+				
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}
 			
 			case "CategoryDeletions": {				
 				CategoryPlacements = false;				
+				CategoryPlayers = false;				
 				NotifyPropertyChanged("CategoryPlacements", false);				
+				NotifyPropertyChanged("CategoryPlayers", false);				
 				// forcing to be true, otherwise it will just show nothing
 				CategoryDeletions = true;
+				
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
+				RightbarPlayersList.Show(CategoryDeletions);
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
+				PlayerTabButton.SetColor(ARGB(255, 60, 60, 60));
 				DeletionsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}			
+			
+			case "CategoryPlayers": {
+				CategoryPlacements = false;
+				CategoryDeletions = false;
+				NotifyPropertyChanged("CategoryPlacements", false);				
+				NotifyPropertyChanged("CategoryDeletions", false);
+				
+				CategoryPlayers = true;
+				
+				RightbarPlacementsList.Show(CategoryPlacements);
+				RightbarDeletionsList.Show(CategoryDeletions);
+				RightbarPlayersList.Show(CategoryDeletions);
+				
+				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
+				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
+				PlayerTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
+				RightbarScroll.VScrollToPos(0);
+				break;
+			}
 			
 			case "CategoryConfig": {
 				CategoryStatic = false;
@@ -371,6 +406,14 @@ class EditorHudController: EditorControllerBase
 		}
 		
 		switch (w) {
+			case PlayerTabButton: {
+				array<PlayerIdentity> identities = {};
+				GetGame().GetPlayerIndentities(identities);
+				
+				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + identities.Count() + " players", w, TooltipPositions.BOTTOM_LEFT));
+				break;
+			}
+			
 			case PlacementsTabButton: {
 				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
 				break;

@@ -14,7 +14,7 @@ class EditorMenuItem: ScriptView
 		if (m_Command) {
 			string symbol_icon = m_Command.GetIcon();
 			if (m_Command.GetSymbol()) {
-				symbol_icon = m_Command.GetSymbol().Regular();
+				symbol_icon = m_Command.GetSymbol().Solid();
 			}
 			
 			Icon.Show(symbol_icon != string.Empty);
@@ -34,7 +34,7 @@ class EditorMenuItem: ScriptView
 
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_LayoutRoot.SetColor(DEFAULT_COLOR);
+		m_LayoutRoot.SetColor(LinearColor.Create(255, 0, 0, 0));
 
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
@@ -58,7 +58,7 @@ class EditorMenuItem: ScriptView
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		if (m_Command) {
+		if (m_Command && button == MouseState.LEFT) {
 			m_Command.Execute(this, CommandArgs());
 		}
 

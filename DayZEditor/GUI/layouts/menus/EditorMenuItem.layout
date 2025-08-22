@@ -1,10 +1,10 @@
 GridSpacerWidgetClass Panel {
  visible 1
- clipchildren 1
+ clipchildren 0
  ignorepointer 0
- color 0.1412 0.1569 0.1804 1
+ color 0 0 0 1
  position 0 0
- size 1 36
+ size 1 32
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -27,7 +27,7 @@ GridSpacerWidgetClass Panel {
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
-   size 0.1 1
+   size 0.09 1
    halign right_ref
    valign center_ref
    hexactpos 1
@@ -76,7 +76,7 @@ GridSpacerWidgetClass Panel {
    scaled 0
    scriptclass ""
    text "This is a very long message"
-   font "gui/fonts/Metron22"
+   font "gui/fonts/sdf_MetronBook24"
    "exact text" 0
    "size to text h" 0
    "size to text v" 0
@@ -96,8 +96,11 @@ GridSpacerWidgetClass Panel {
    vexactsize 0
    scaled 0
    scriptclass ""
-   font "gui/fonts/MetronLight14"
+   font "gui/fonts/sdf_MetronLight24"
+   "bold text" 0
+   "text sharpness" 2
    "exact text" 0
+   "exact text size" 12
    "size to text h" 1
    "size to text v" 1
    "text halign" right

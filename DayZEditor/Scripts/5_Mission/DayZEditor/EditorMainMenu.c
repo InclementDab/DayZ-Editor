@@ -725,12 +725,15 @@ class EditorMainMenu: ScriptViewMenu
 			}
 			
 			case 2401: {
+				EditorSettings settings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
 				if (result == DBB_YES) {
-					EditorSettings settings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
 					settings.ConsoleMode = 1;
-					settings.HasSelectedConsoleMode = 1;
-					settings.Save();
+				} else {
+					settings.ConsoleMode = 0;
 				}
+				
+				settings.HasSelectedConsoleMode = 1;
+				settings.Save();
 				
 				break;
 			}

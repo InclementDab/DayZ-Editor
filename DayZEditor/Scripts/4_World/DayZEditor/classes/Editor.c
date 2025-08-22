@@ -260,9 +260,11 @@ class Editor: Managed
 		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
 		
 		m_RestApi = new EditorWebApi();
+#ifndef DIAG_DEVELOPER
 		if (GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ShowDonationDialog);
 		}
+#endif
 
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
 		GetSettings().TimesOpened++;

@@ -84,7 +84,7 @@ class EditorHud: ScriptView
 		
 	CanvasWidget EditorCanvas;
 	MapWidget Map;
-	ButtonWidget CameraPanelButton;
+	ButtonWidget CameraPanelButton, PlayerTabButton;
 	ButtonWidget CameraTrackPreviousButton, CameraTrackRunButton, CameraTrackNextButton, CameraTrackStopButton, CameraTrackRecordButton; 
 	ImageWidget CameraTrackPreviousButton_Icon, CameraTrackRunButton_Icon, CameraTrackNextButton_Icon, CameraTrackStopButton_Icon, CameraTrackRecordButton_Icon;
 
@@ -244,6 +244,8 @@ class EditorHud: ScriptView
 		if (GetGame().IsMultiplayer()) {
 			m_Chat = new EditorChat();
 			m_Chat.Init(ChatFrameWidget);
+			
+			PlayerTabButton.Show(true);
 		}
 	
 		m_TemplateController.ShowPrivate = m_EditorSettings.ShowScopeZeroObjects;

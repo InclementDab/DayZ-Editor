@@ -1,6 +1,6 @@
 GridSpacerWidgetClass EditorMenuContent {
  clipchildren 1
- color 0.1412 0.1569 0.1804 1
+ color 1 1 1 0.157
  size 360 0
  hexactpos 1
  vexactpos 1
@@ -11,7 +11,6 @@ GridSpacerWidgetClass EditorMenuContent {
  scriptclass "ViewBinding"
  style Colorable
  Padding 0
- Margin 0
  "Size To Content V" 1
  Columns 1
  Rows 12
