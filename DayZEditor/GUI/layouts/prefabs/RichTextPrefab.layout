@@ -1,7 +1,7 @@
 WrapSpacerWidgetClass ListBoxWra {
  visible 1
  ignorepointer 1
- color 0.1725 0.1922 0.2118 1
+ color 0.172 0.192 0.212 1
  size 1 595
  hexactpos 1
  vexactpos 1
@@ -17,7 +17,7 @@ WrapSpacerWidgetClass ListBoxWra {
    visible 1
    clipchildren 1
    ignorepointer 0
-   size 0.97 1920
+   size 0.97 850
    hexactpos 1
    vexactpos 1
    hexactsize 0

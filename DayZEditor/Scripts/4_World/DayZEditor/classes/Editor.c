@@ -123,7 +123,7 @@ class Editor: Managed
 	
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 1;
+	static const int Experimental = 0;
 	static const int MinorVersionNumber = 0;
 	static const int VersionNumber = 35;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
@@ -1023,8 +1023,8 @@ class Editor: Managed
 	void HandleHands()
 	{
 		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
-			if (!world_object) {
-				return;
+			if (!world_object || !world_object.GetWorldObject()) {
+				continue;
 			}
 			
 			Raycast cursor_raycast = GetCursorRaycastModeSafeEx({ world_object.GetWorldObject(), m_Player }, GroundMode);
@@ -2004,6 +2004,11 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
 	{
+		// Initial stopgap
+		if (GetGame().IsMultiplayer() && m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
+			return null;
+		}
+		
 		string uuid = UUID.Generate();
 		EditorObject created_object = CreateObjectByUuid(uuid, editor_object_data, create_undo);
 		if (GetGame().IsMultiplayer()) {

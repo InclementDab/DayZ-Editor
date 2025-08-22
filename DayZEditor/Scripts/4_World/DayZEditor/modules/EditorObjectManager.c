@@ -73,11 +73,13 @@ class EditorObjectManagerModule : Managed
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type, scope);
 				if (type_lower.Contains("land_") || type_lower.Contains("staticobj_")) {
 					placeable_item.Scope = 2;
+					placeable_item.ConsoleFriendly = 1;	
 				}
 
 				// Yikes
 				if (GetGame().IsKindOf(type, "Inventory_Base") || GetGame().IsKindOf(type, "Weapon_Base") || GetGame().IsKindOf(type, "DZ_LightAI") || GetGame().IsKindOf(type, "Magazine_Base")) {
 					placeable_item.Scope = 1;
+					placeable_item.ConsoleFriendly = 1;
 				}
 				
 				// bldr_ check is a hack but I cannot easily check the folder a config is defined in. not sure the best way to go about this.

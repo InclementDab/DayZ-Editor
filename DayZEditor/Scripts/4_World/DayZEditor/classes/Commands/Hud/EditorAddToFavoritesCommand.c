@@ -8,7 +8,8 @@ class EditorAddToFavoritesCommand: EditorCommand
 			return false;
 		}
 		
-		//data.param1.SetFavorite(true);		
+		GetEditor().GetSettings().FavoriteItems.Insert(data.param1.Type);
+		GetEditor().GetSettings().Save();
 		return true;
 	}
 	

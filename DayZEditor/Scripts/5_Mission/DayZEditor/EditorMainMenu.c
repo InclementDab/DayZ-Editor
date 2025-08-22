@@ -1,3 +1,14 @@
+class EditorServers_Payload: Managed
+{
+	string ServerName;
+	string MapName;
+	string ServerIP;
+	int ServerPort;
+	int Online;
+	int Total;
+	string ExpirationDate;
+}
+
 class EditorMainMenuController : ViewController
 {
 	ref ObservableCollection<ref ScriptView> MapViews = new ObservableCollection<ref ScriptView>(this);
@@ -64,7 +75,7 @@ class EditorMainMenu: ScriptViewMenu
 	
 	Widget ServerShowcase, ServerShowcaseOutline, MapGrid, MapSelectorFrame, GlobeFrame;
 	ImageWidget MapSelectorBackground, ServerShowcaseImage;
-	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase, ContinueButton, ModeOffline, ModeOnline;
+	ButtonWidget ExitButton, SettingButton, DiscordButton, WikiButton, TwitterButton, PrevServerShowcase, NextServerShowcase, ContinueButton, ModeOffline, ModeOnline, RentServerButton;
 	TextWidget VersionText, EditorText, StatHeaderText;
 	RichTextWidget ServerShowcaseBackupText;
 	ScrollWidget MapScroller, ServerScroller;
@@ -96,10 +107,6 @@ class EditorMainMenu: ScriptViewMenu
 			}
 		}
 		
-		m_TemplateController.ServerEntries.Insert(new EditorServerView("DayZ Editor Public #1", "73.250.152.69", 2350));
-		m_TemplateController.ServerEntries.Insert(new EditorServerView("DayZ Editor Public #2", "73.250.152.69", 2350));
-		m_TemplateController.ServerEntries.Insert(new EditorServerView("DayZ Editor Public #3", "73.250.152.69", 2350));
-
 		float mg_s_w, mg_s_h;
 		MapGrid.GetScreenSize(mg_s_w, mg_s_h);
 		//MapSelectorBackground.SetScreenSize(mg_s_h * m_TemplateController.MapViews.Count() / 2, mg_s_h);
@@ -165,7 +172,8 @@ class EditorMainMenu: ScriptViewMenu
 		
 		EditorSettings settings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
 		if (!settings.HasSelectedConsoleMode) {
-			ShowDialog("Enable Console Mode?", "Welcome to DayZ Editor. Are you planning to edit for Console? You can always change this later in the settings", 2401, DBT_YESNO, DBB_YES, DMT_QUESTION);
+			// keeps showing for some reason
+			//ShowDialog("Enable Console Mode?", "Welcome to DayZ Editor. Are you planning to edit for Console? You can always change this later in the settings", 2401, DBT_YESNO, DBB_YES, DMT_QUESTION);
 		}
 	}
 
@@ -204,9 +212,25 @@ class EditorMainMenu: ScriptViewMenu
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetStatisticsMode, 0, 0, m_GlobalStatsVisible);
 		
 		RestContext server_ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
-		server_ctx.SetHeader(string.Format("application/json\r\nAuthorization: Bearer %1", login_cache.Token));
-		string servers_list = server_ctx.GET_now("api/user/servers");
-		Print(servers_list);
+		server_ctx.SetHeader(string.Format("application/json\r\nAuthorization: Bearer %1\r\nUser-Agent:DayZ-Editor", login_cache.Token));
+		server_ctx.POST(new EditorGenericCallback(ScriptCaller.Create(OnServersResponse)), "api/user/servers", string.Format("{ \"SteamId\": \"%1\" }", GetGame().GetUserManager().GetTitleInitiator().GetUid()));
+	}
+	
+	protected void OnServersResponse(string data, int data_size)
+	{
+		string error;
+		array<ref EditorServers_Payload> server_list = {};
+		if (!JsonFileLoader<array<ref EditorServers_Payload>>.LoadData(data, server_list, error)) {
+			Print(error);
+			ErrorEx("Failed to load server data");
+			return;
+		}
+		
+		foreach (EditorServers_Payload server: server_list) {
+			if (server) {
+				m_TemplateController.ServerEntries.Insert(new EditorServerView(server));
+			}
+		}
 	}
 	
 	protected void OnShowcaseLoaded(string file_name, int data_size, Param data)
@@ -664,6 +688,11 @@ class EditorMainMenu: ScriptViewMenu
 				WidgetAnimator.AnimateColor(ModeOnlinePanel, 0xFF2b3035, 90);
 				break;
 			}
+			
+			case RentServerButton: {
+				GetGame().OpenURL("https:\/\/discord.gg/Zemmxu96vv");
+				break;
+			}
 		}
 
 		return super.OnClick(w, x, y, button);
@@ -678,14 +707,19 @@ class EditorMainMenu: ScriptViewMenu
 					break;
 				}
 				
+				GetGame().GetMission().AbortMission();
+				/*
+				break;
 				if (GetGame().GetHostData()) {
+									
+
 					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.DisconnectSessionEx, DisconnectSessionFlags.ALWAYS_FORCE);
 					return true;
 				}
 				
 				if (result == 2) {
 					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.RequestExit, IDC_MAIN_QUIT);
-				}
+				}*/
 
 				break;
 			}

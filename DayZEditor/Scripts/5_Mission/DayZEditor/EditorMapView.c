@@ -1,24 +1,23 @@
 class EditorServerView: ScriptView
 {
-	protected string m_ServerAddress;
-	protected int m_ServerPort;
+	protected ref EditorServers_Payload m_ServerPayload;
 	TextWidget ServerText, ServerPop;
 	ButtonWidget ServerConnect;
 	
-	void EditorServerView(string server_name, string server_address, int server_port)
+	void EditorServerView(EditorServers_Payload server_payload)
 	{
-		m_ServerAddress = server_address;
-		m_ServerPort = server_port;
+		m_ServerPayload = server_payload;
 		
-		ServerText.SetText(server_name);
-		ServerPop.SetText("0/25");
+		ServerText.SetText(m_ServerPayload.ServerName);
+		ServerPop.SetText(string.Format("(%1/%2)", m_ServerPayload.Online, m_ServerPayload.Total));
+		ServerPop.Show(m_ServerPayload.Total);
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
 	{		
 		switch (w) {
 			case ServerConnect: {
-				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(g_Game.ConnectFromJoin, 0, 0, m_ServerAddress, m_ServerPort);
+				GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(g_Game.ConnectFromJoin, 0, 0, m_ServerPayload.ServerIP, m_ServerPayload.ServerPort);
 				return true;
 			}
 		}

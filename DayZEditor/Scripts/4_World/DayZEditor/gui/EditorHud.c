@@ -317,15 +317,15 @@ class EditorHud: ScriptView
 			return;
 		}
 		
-		if (GetGame().GetMission().IsPaused()) {
-			ShowCursor(true);
-			return;
-		}
-		
 		if (GetGame().GetUIManager().GetMenu()) {
 			m_LayoutRoot.Show(false);
 			return;
 		}
+		
+		if (GetGame().GetMission().IsPaused()) {
+			ShowCursor(true);
+			return;
+		}		
 		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
@@ -1028,64 +1028,55 @@ class EditorHud: ScriptView
 		return super.OnFocus(w, x, y);
 	}	
 	
+	void RefreshSearchBar()
+	{
+		bool favorite_toggle = GetEditor().GetSettings().ShowFavoriteObjects;
+		string search_string = LeftSearchBar.GetText();
+		search_string.ToLower();
+		
+		if (search_string.Length() < 2) {
+			search_string = string.Empty;
+		}
+	
+		for (int i = 0; i < m_FolderNodesByDepth.Count(); i++) {
+			// See there should be folders at every depth. this will never happen unless some gap occurs. 
+			if (!m_FolderNodesByDepth[i]) {
+				Error(string.Format("GAP OCCURED AT INDEX %1", i));
+				continue;
+			}
+			
+			array<EditorListNode> list_nodes = m_FolderNodesByDepth[i];
+			foreach (EditorListNode list_node: list_nodes) {
+				if (list_node.FilterType(search_string, favorite_toggle)) {
+					if (search_string) {
+						list_node.SetCollapsed(false);
+					}
+					
+					list_node.Show(true);
+				} else {
+					if (!search_string) {
+						list_node.SetCollapsed(true);
+					}
+					list_node.Show(false);
+				}
+			}
+				
+		}
+		
+		LeftbarScroll.VScrollToPos(0);				
+		
+		Symbols left_search_bar_icon = Ternary<Symbols>.If(!search_string.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
+		left_search_bar_icon.Load(LeftSearchBarIconIcon);
+	}
+	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
 		int i;
 		vector camera_position = GetEditor().GetCamera().GetPosition();
 		bool set_camera_position = false;
 		switch (w) {
-			case LeftSearchBar: {
-				
-				/*
-				string left_search_bar_text = LeftSearchBar.GetText();
-				array<ObservableCollection<ref EditorPlaceableListItem>> collections = { m_TemplateController.LeftbarSpacerConfig, m_TemplateController.LeftbarSpacerStatic };
-				foreach (auto collection: collections) {
-					for (int j = 0; j < collection.Count(); j++) {
-						int hide = !collection[j].FilterType(left_search_bar_text);
-						if (m_TemplateController.FavoritesToggle) {
-							hide |= hide | (!collection[j].GetTemplateController().Favorite << 1);
-						}
-
-						if (!m_TemplateController.ShowPrivate) {
-							hide |= hide | (collection[j].GetPlaceableItem().Scope < 2) << 2;
-						}
-
-						collection[j].GetLayoutRoot().Show(!hide);
-					}
-				}*/
-				
-				string search_string = LeftSearchBar.GetText();
-				search_string.ToLower();
-				if (search_string.Length() >= 3 || !search_string) {
-					for (i = 0; i < m_FolderNodesByDepth.Count(); i++) {
-						// See there should be folders at every depth. this will never happen unless some gap occurs. 
-						if (!m_FolderNodesByDepth[i]) {
-							Error(string.Format("GAP OCCURED AT INDEX %1", i));
-							continue;
-						}
-						
-						array<EditorListNode> list_nodes = m_FolderNodesByDepth[i];
-						foreach (EditorListNode list_node: list_nodes) {
-							if (list_node.FilterType(search_string) || !search_string) {
-								if (search_string) {
-									list_node.SetCollapsed(false);
-								}
-								
-								list_node.Show(true);
-							} else {
-								//list_node.SetCollapsed(true);
-								list_node.Show(false);
-							}
-						}
-							
-					}
-					
-					LeftbarScroll.VScrollToPos(0);				
-				}
-										
-				
-				Symbols left_search_bar_icon = Ternary<Symbols>.If(!search_string.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
-				left_search_bar_icon.Load(LeftSearchBarIconIcon);
+			case LeftSearchBar: {				
+				RefreshSearchBar();
 				break;
 			}
 			
@@ -1109,7 +1100,10 @@ class EditorHud: ScriptView
 		
 				string text = InputEditBoxWidget.GetText();
 				if (text != "") {
-					GetGame().ChatPlayer(text);
+					ScriptRPC chat_rpc = new ScriptRPC();
+					chat_rpc.Write(text);
+					chat_rpc.Send(null, 39260, true, null);
+					
 					if (!GetGame().IsMultiplayer()) {
 						string name;
 						GetGame().GetPlayerName(name);

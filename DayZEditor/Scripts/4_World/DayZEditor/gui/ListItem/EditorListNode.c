@@ -11,9 +11,9 @@ class EditorListNode: ScriptView
 	
 	protected bool m_QueueRecalculateSize;
 	
-	Widget Collapse, IconFrame, Hide, Panel, BoundingBox, Lock, Marker, ChildrenHeight;
-	ButtonWidget CollapseButton, HideButton, BoundingBoxButton, LockButton, MarkerButton;
-	ImageWidget CollapseIcon, IconImage, HideIcon, BoundingBoxIcon, LockIcon, MarkerIcon;
+	Widget Collapse, IconFrame, Hide, Panel, BoundingBox, Lock, Marker, ChildrenHeight, Favorite;
+	ButtonWidget CollapseButton, HideButton, BoundingBoxButton, LockButton, MarkerButton, FavoriteButton;
+	ImageWidget CollapseIcon, IconImage, HideIcon, BoundingBoxIcon, LockIcon, MarkerIcon, FavoriteIcon;
 	TextWidget Text;
 	EditBoxWidget Edit;
 	WrapSpacerWidget Children;
@@ -40,7 +40,7 @@ class EditorListNode: ScriptView
 			m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
 					
 			ChildrenHeight.SetSize(2, h * Children.IsVisible());
-			
+						
 			m_QueueRecalculateSize = false;
 		}
 	}
@@ -55,15 +55,17 @@ class EditorListNode: ScriptView
 	{	
 		Children.Show(!collapsed);
 		CollapseIcon.SetImage(!collapsed);
-				
-		RecalculateSize();
-		
+						
 		EditorListNode node_parent = GetParentNode();
 		if (!collapsed) {
 			// Recursive
 			if (node_parent) {
 				node_parent.SetCollapsed(false);
 			}
+			
+			m_QueueRecalculateSize = true;
+		} else if (!m_QueueRecalculateSize) {
+			RecalculateSize();
 		}
 		
 		/*						
@@ -83,16 +85,19 @@ class EditorListNode: ScriptView
 			if (parent_node) {
 				parent_node.Show(show);
 			}
+			
+			m_QueueRecalculateSize = true;
+			
+		} else if (!m_QueueRecalculateSize) {
+			RecalculateSize();
 		}
-		
-		RecalculateSize();
 	}
 		
-	protected void RecalculateSize()
+	protected void RecalculateSize(bool recursive_up = true)
 	{
 		//PrintFormat("RecalculateSize: %1", m_TemplateController.ChildrenItems.Count());
 		m_QueueRecalculateSize = true;
-		
+
 		EditorListNode node_parent = GetParentNode();
 		if (node_parent) {
 			node_parent.RecalculateSize();
@@ -209,7 +214,7 @@ class EditorListNode: ScriptView
 		return false;
 	}
 	
-	bool FilterType(string filter)
+	bool FilterType(string filter, bool favorites)
 	{
 		return false;
 	}
@@ -235,7 +240,7 @@ class EditorFolderListNode: EditorListNode
 		return true;
 	}
 	
-	override bool FilterType(string filter)
+	override bool FilterType(string filter, bool favorites)
 	{
 		return m_Text.Contains(filter);
 	}

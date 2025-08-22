@@ -142,24 +142,7 @@ class EditorHudController: EditorControllerBase
 				GetEditor().GetSettings().ShowFavoriteObjects = FavoritesToggle;
 				GetEditor().GetSettings().ShowScopeZeroObjects = ShowPrivate;
 				GetEditor().GetSettings().Save();
-
-				//auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
-				array<ObservableCollection<ref EditorPlaceableListItem>> collections = { LeftbarSpacerConfig, LeftbarSpacerStatic };
-				foreach (auto collection: collections) {
-					for (int j = 0; j < collection.Count(); j++) {
-						int hide = !collection[j].FilterType(LeftSearchBar.GetText());
-						if (FavoritesToggle) {
-							hide |= hide | (!collection[j].GetTemplateController().Favorite << 1);
-						}
-
-						if (!ShowPrivate) {
-							hide |= hide | (collection[j].GetPlaceableItem().Scope < 2) << 2;
-						}
-
-						collection[j].GetLayoutRoot().Show(!hide);
-					}
-				}
-
+				GetEditor().GetEditorHud().RefreshSearchBar();
 				break;
 			}
 

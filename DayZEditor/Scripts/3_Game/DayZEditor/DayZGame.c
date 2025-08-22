@@ -131,11 +131,6 @@ modded class DayZGame
 		// For more of these to work, define CfgMissions Cutscenes ChernarusPlusIntro to the $saves dir
 		string random_map = maps.GetRandomElement();
 		
-		string mission_directory = SystemPath.Saves(string.Format("MainMenu.%1", random_map));
-		string mission_ce_folder = SystemPath.Combine(mission_directory, "db");
-		
-		MakeDirectory(mission_directory);
-		
 		SetMainMenuWorld(random_map);
 		StartRandomCutscene(random_map);
 		

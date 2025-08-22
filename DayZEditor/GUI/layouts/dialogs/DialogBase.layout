@@ -2,8 +2,8 @@ WrapSpacerWidgetClass EditorDialog {
  visible 1
  clipchildren 1
  ignorepointer 0
- color 0.1412 0.1569 0.1804 1
- position 0 -1.08936
+ color 0.059 0.059 0.059 0.992
+ position 0 -1.089
  size 0.35 0
  hexactpos 1
  vexactpos 1
@@ -13,7 +13,7 @@ WrapSpacerWidgetClass EditorDialog {
  scriptclass ""
  style Colorable
  "Ignore invisible" 0
- Padding 24
+ Padding 12
  Margin 0
  "Size To Content H" 1
  "Size To Content V" 1
@@ -22,7 +22,7 @@ WrapSpacerWidgetClass EditorDialog {
   FrameWidgetClass WindowDragWrapper {
    visible 1
    ignorepointer 0
-   color 1 1 1 0.3922
+   color 1 1 1 0.392
    size 1 26
    hexactpos 1
    vexactpos 1
@@ -33,7 +33,7 @@ WrapSpacerWidgetClass EditorDialog {
    {
     PanelWidgetClass TitleBar {
      ignorepointer 1
-     color 0 0.4784 0.8 1
+     color 0 0.478 0.8 1
      size 1 25
      halign center_ref
      hexactpos 1
@@ -47,7 +47,7 @@ WrapSpacerWidgetClass EditorDialog {
       ImageWidgetClass TitleIcon {
        visible 1
        ignorepointer 1
-       color 0.6824 0.7176 0.702 1
+       color 0.682 0.718 0.702 1
        position 5 0
        size 18 18
        valign center_ref
@@ -99,7 +99,7 @@ WrapSpacerWidgetClass EditorDialog {
       }
       PanelWidgetClass TitleClosePanel {
        ignorepointer 1
-       color 0.7843 0.2941 0.2745 1
+       color 0.784 0.294 0.275 1
        position 2 2
        size 21 21
        halign right_ref
@@ -112,7 +112,7 @@ WrapSpacerWidgetClass EditorDialog {
         ButtonWidgetClass TitleClose {
          visible 1
          ignorepointer 0
-         color 0.6667 0.6667 0.6667 1
+         color 0.667 0.667 0.667 1
          position 0 0
          size 1 1
          halign center_ref
@@ -163,9 +163,10 @@ WrapSpacerWidgetClass EditorDialog {
      vexactsize 1
      priority 2
      scriptclass "ViewBinding"
-     Padding 3
-     Margin 0
+     Padding 12
+     Margin 7
      "Size To Content V" 1
+     content_halign center
      {
       ScriptParamsClass {
        Binding_Name "DialogContentData"
@@ -178,7 +179,7 @@ WrapSpacerWidgetClass EditorDialog {
    visible 1
    disabled 1
    ignorepointer 0
-   color 0.7059 0.7059 0.7059 0.9412
+   color 0.706 0.706 0.706 0.941
    position 10 10
    size 1 1
    hexactpos 1
@@ -189,7 +190,7 @@ WrapSpacerWidgetClass EditorDialog {
   }
   WrapSpacerWidgetClass DialogButtons {
    ignorepointer 0
-   color 0.7059 0.7059 0.7059 1
+   color 0.706 0.706 0.706 1
    size 0.9 36
    halign center_ref
    valign bottom_ref

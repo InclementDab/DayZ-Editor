@@ -4065,7 +4065,6 @@ FrameWidgetClass EditorFrame {
          hexactsize 0
          vexactsize 1
          scriptclass ""
-         text "AAAAA"
          font "gui/fonts/Metron"
          "exact text" 0
          "size to text h" 1

@@ -101,17 +101,17 @@ class CfgMissions
     {
         class ChernarusPlusIntro
         {
-            directory="$saves:\MainMenu.ChernarusPlus";
+            directory="$CurrentDir:\MainMenu.ChernarusPlus";
         };
 
 		class EnochIntro
 		{
-			directory="$saves:\MainMenu.Enoch";
+			directory="$CurrentDir:\MainMenu.Enoch";
 		};
 
 		class SakhalIntro
 		{
-			directory="$saves:\MainMenu.Sakhal";
+			directory="$CurrentDir:\MainMenu.Sakhal";
 		};
     };
 };

@@ -217,8 +217,6 @@ modded class MissionGameplay
 		switch (eventTypeId)
 		{
 			case ChatMessageEventTypeID:
-				ChatMessageEventParams chat_params = ChatMessageEventParams.Cast(params);			
-				GetEditor().GetEditorHud().GetChat().Add(chat_params);				
 				break;
 		}
 	}
@@ -263,14 +261,14 @@ modded class MissionGameplay
 				
 				for (i = 0; i < count; i++) {
 					ctx.Read(uuid);
+					
+					Object object;
+					ctx.Read(object);
+					
                		int flags;
 					ctx.Read(flags);
-					if (!target) {
-						Error("Object failed to deserialize");
-						continue;
-					}
-										
-					data_map[uuid] = EditorObjectData.Create(target, flags);
+															
+					data_map[uuid] = EditorObjectData.Create(object, flags);
 				}
 				
 				GetEditor().CreateObjectsByUuid(data_map, false);
@@ -357,6 +355,18 @@ modded class MissionGameplay
 				Cameras.Remove(player_id2);
 				CameraMarkers.Remove(player_id2);
 				break;	
+			}
+			
+			case 39260: {				
+				string chat_text;
+				ctx.Read(chat_text);
+				
+				string chat_sender;
+				ctx.Read(chat_sender);
+				
+				ChatMessageEventParams chat_params = new ChatMessageEventParams(CCDirect, chat_sender, chat_text, "");
+				GetEditor().GetEditorHud().GetChat().Add(chat_params);
+				break;
 			}
         }
     } 
