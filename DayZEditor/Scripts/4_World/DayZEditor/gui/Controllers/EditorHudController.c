@@ -274,7 +274,7 @@ class EditorHudController: EditorControllerBase
 				
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
-				RightbarPlayersList.Show(CategoryDeletions);
+				RightbarPlayersList.Show(CategoryPlayers);
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
@@ -410,7 +410,7 @@ class EditorHudController: EditorControllerBase
 				array<PlayerIdentity> identities = {};
 				GetGame().GetPlayerIndentities(identities);
 				
-				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + identities.Count() + " players", w, TooltipPositions.BOTTOM_LEFT));
+				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + identities.Count() + " Players", w, TooltipPositions.BOTTOM_LEFT));
 				break;
 			}
 			

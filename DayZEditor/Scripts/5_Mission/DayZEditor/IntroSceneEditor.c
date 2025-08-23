@@ -130,9 +130,12 @@ class IntroSceneEditor: Managed
 			camera_position
 		};
 		
-		m_Camera.SetPosition(camera_position);
-		m_Camera.LookAt(look_at_pos);
-		m_Camera.SetFOV(EditorCamera.FOV_DEFAULT);
+		if (m_Camera) {
+			m_Camera.SetPosition(camera_position);
+			m_Camera.LookAt(look_at_pos);
+			m_Camera.SetFOV(EditorCamera.FOV_DEFAULT);
+		}
+		
 		copyarray(m_CameraMatrix, mat);
 	}
 }

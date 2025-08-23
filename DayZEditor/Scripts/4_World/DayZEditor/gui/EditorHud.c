@@ -246,6 +246,9 @@ class EditorHud: ScriptView
 			m_Chat.Init(ChatFrameWidget);
 			
 			PlayerTabButton.Show(true);
+			
+			PlayerIdentity identity = GetGame().GetPlayer().GetIdentity();
+			m_TemplateController.RightbarPlayerData.Insert(new EditorPlayerListItem(identity.GetId(), identity.GetName()));
 		}
 	
 		m_TemplateController.ShowPrivate = m_EditorSettings.ShowScopeZeroObjects;
