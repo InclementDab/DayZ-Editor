@@ -95,7 +95,6 @@ modded class MissionGameplay
 				float qout[4];
 				Math3D.QuatLerp(qout, last_camera_data.Quat, camera_data.Quat, time_passed);
 				
-				
 				vector mat[4];
 				Math3D.QuatToMatrix(qout, mat);
 				mat[3] = vector.Lerp(last_camera_data.Position, camera_data.Position, time_passed);
@@ -250,7 +249,7 @@ modded class MissionGameplay
 					Cameras[player_id3] = GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL);
 					CameraMarkers[player_id3] = new EditorCameraMarker(identity.GetName());
 					GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(CameraMarkers[player_id3]);
-					GetEditor().GetEditorHud().GetTemplateController().RightbarPlayerData.Insert(new EditorPlayerListItem(identity.GetId(), identity.GetName()));
+					GetEditor().GetEditorHud().GetTemplateController().RightbarPlayerData.Insert(new EditorPlayerListItem(player_id3, identity.GetName()));
 					PrintFormat("Created camera for %1", player_id3);
 				}
 				
@@ -353,9 +352,18 @@ modded class MissionGameplay
 			case 39251: {
 				int player_id2;
 				ctx.Read(player_id2);
+				
 				Cameras[player_id2].Delete();
 				Cameras.Remove(player_id2);
 				CameraMarkers.Remove(player_id2);
+				
+				for (i = GetEditor().GetEditorHud().GetTemplateController().RightbarPlayerData.Count() - 1; i >= 0; i--) {
+					if (GetEditor().GetEditorHud().GetTemplateController().RightbarPlayerData[i].Id == player_id2) {
+						GetEditor().GetEditorHud().GetTemplateController().RightbarPlayerData.Remove(i);
+						break;
+					}
+				}
+				
 				break;	
 			}
 			

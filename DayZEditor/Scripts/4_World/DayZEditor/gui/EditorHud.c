@@ -248,7 +248,7 @@ class EditorHud: ScriptView
 			PlayerTabButton.Show(true);
 			
 			PlayerIdentity identity = GetGame().GetPlayer().GetIdentity();
-			m_TemplateController.RightbarPlayerData.Insert(new EditorPlayerListItem(identity.GetId(), identity.GetName()));
+			m_TemplateController.RightbarPlayerData.Insert(new EditorPlayerListItem(identity.GetPlayerId(), identity.GetName()));
 		}
 	
 		m_TemplateController.ShowPrivate = m_EditorSettings.ShowScopeZeroObjects;

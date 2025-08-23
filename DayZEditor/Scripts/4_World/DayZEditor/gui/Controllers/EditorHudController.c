@@ -22,7 +22,7 @@ class EditorHudController: EditorControllerBase
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
-	ref ObservableCollection<EditorListItem> RightbarPlayerData 		= new ObservableCollection<EditorListItem>(this);
+	ref ObservableCollection<EditorPlayerListItem> RightbarPlayerData 		= new ObservableCollection<EditorPlayerListItem>(this);
 	
 	// Logger
 	static const int MAX_LOG_ENTRIES = 20;

@@ -1,10 +1,11 @@
 class EditorPlayerListItem: EditorListItem
 {
-	protected string m_Name, m_Id;
+	int Id;
+	protected string m_Name;
 	
-	void EditorPlayerListItem(string id, string name)
+	void EditorPlayerListItem(int id, string name)
 	{
-		m_Id = id;
+		Id = id;
 		m_Name = name;
 		
 		ListItemLabel.SetText(string.Format("%1", m_Name));
