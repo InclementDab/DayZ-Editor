@@ -61,8 +61,6 @@ class EditorObject: EditorWorldObject
 		if (m_Data) {
 			m_Data.WorldObject = world_object;
 		}
-		
-		EnableBoundingBox(IsBoundingBoxEnabled());
 	}
 	
 	override Object GetWorldObject() 
@@ -117,10 +115,13 @@ class EditorObject: EditorWorldObject
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
 		}
-				
+		
+		
 		vector clip_info[2];
-		ClippingInfo(clip_info);
-	
+		vector min, max;
+		m_WorldObject.GetActionComponentMinMax(m_WorldObject.GetViewGeometryLevel(), 0, min, max);
+		clip_info = { min, max };
+		
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
@@ -149,9 +150,6 @@ class EditorObject: EditorWorldObject
 		m_VectorBasePoint = base_point;
 		m_BoundingCenter = m_WorldObject.GetBoundingCenter();
 		
-		// Bounding Box
-		EnableBoundingBox(IsBoundingBoxEnabled());
-
 		// Map marker
 		EnableMapMarker(IsMapMarkerEnabled());
 
@@ -201,9 +199,7 @@ class EditorObject: EditorWorldObject
 		if (s_AllByObject && m_WorldObject) {
 			s_AllByObject.Remove(m_WorldObject);
 		}
-		
-		DestroyBoundingBox();
-	
+			
 		GetGame().ObjectDelete(m_WorldObject);
 
 		delete m_EditorObjectWorldMarker; 
@@ -326,6 +322,10 @@ class EditorObject: EditorWorldObject
 	
 	vector GetPosition() 
 	{ 
+		if (!m_WorldObject) {
+			return vector.Zero;
+		}
+		
 		return m_WorldObject.GetPosition(); 
 	}
 	
@@ -518,89 +518,7 @@ class EditorObject: EditorWorldObject
 		m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
 		GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 	}
-
-	private bool _boundingBoxesCreated;
-	void EnableBoundingBox(bool enable) 
-	{
-		EditorLog.Trace("EditorObject::EnableBoundingBox");
-		DestroyBoundingBox();
 		
-		// Global Settings Check		
-		if (!enable || !GetEditor().GetSettings().BoundingBoxSize) {
-			return;
-		}
-		
-		_boundingBoxesCreated = enable;
-		float bounding_box_thickness = 0;
-		switch (GetEditor().GetSettings().BoundingBoxSize) {
-			case 1: { // small
-				bounding_box_thickness = 0.008;
-				break;
-			}
-			
-			case 2: { // medium
-				bounding_box_thickness = 0.016;
-				break;
-			}
-			
-			case 3: { // large
-				bounding_box_thickness = 0.032;
-				break;
-			}
-			
-			case 4: { // gigantic
-				bounding_box_thickness = 0.064;
-				break;
-			}
-		}
-		
-		vector size = GetSize();
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		vector position = AverageVectors(clip_info[0], clip_info[1]);
-		
-		for (int i = 0; i < 12; i++) {
-			vector transform[4];			
-			transform[3] = m_LineCenters[i];
-			
-			for (int j = 0; j < 3; j++) {
-				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j]/2) + bounding_box_thickness;						
-			}
-			 
-			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_LOCAL));
-			m_BBoxLines[i].SetTransform(transform);
-			
-			AddChild(m_BBoxLines[i], -1);
-		}
-		
-		
-		vector y_axis_mat[4];
-		vector bottom_center = GetBottomCenter() - GetPosition();
-		y_axis_mat[0][0] = bounding_box_thickness;
-		y_axis_mat[1][1] = 1000;
-		y_axis_mat[2][2] = bounding_box_thickness;
-		y_axis_mat[3] = Vector(bottom_center[0], bottom_center[1] - y_axis_mat[1][1], bottom_center[2]);
-		
-		//m_CenterLine = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", bottom_center, ECE_NONE));
-		//m_CenterLine.SetTransform(y_axis_mat);
-		//AddChild(m_CenterLine, -1);
-		Update();
-		
-		HideBoundingBox();
-	}
-	
-	void DestroyBoundingBox()
-	{		
-		if (m_BBoxLines) {
-			for (int i = 0; i < 12; i++) {
-				GetGame().ObjectDelete(m_BBoxLines[i]);
-			}
-		}
-		
-		GetGame().ObjectDelete(m_BBoxBase);		
-		GetGame().ObjectDelete(m_CenterLine);	
-	}
-	
 	void Show(bool show) 
 	{
 		if (show) {
@@ -798,15 +716,61 @@ class EditorObject: EditorWorldObject
 		EditorLog.Trace("EditorObject::ShowBoundingBox");
 		
 		// Global Settings Check
-		if (!GetEditor().GetSettings().BoundingBoxSize) return;
-		
-		if (!(GetData().Flags & EditorObjectFlags.BBOX)) return;
-		
-		// quick and dirty bugfix
-		if (!_boundingBoxesCreated) {
-			EnableBoundingBox(true);
+		if (!GetEditor().GetSettings().BoundingBoxSize) {
+			return;
 		}
 		
+		if (!(GetData().Flags & EditorObjectFlags.BBOX)) return;
+				
+		vector min, max;
+		m_WorldObject.GetActionComponentMinMax(m_WorldObject.GetViewGeometryLevel(), 0, min, max);
+				
+		float bounding_box_thickness = 0;
+		switch (GetEditor().GetSettings().BoundingBoxSize) {
+			case 1: { // small
+				bounding_box_thickness = 0.008;
+				break;
+			}
+			
+			case 2: { // medium
+				bounding_box_thickness = 0.016;
+				break;
+			}
+			
+			case 3: { // large
+				bounding_box_thickness = 0.032;
+				break;
+			}
+			
+			case 4: { // gigantic
+				bounding_box_thickness = 0.064;
+				break;
+			}
+		}
+		
+		bounding_box_thickness /= 4;
+		
+		vector position = AverageVectors(min, max);
+		vector size = max - min;
+		
+		Debug.DestroyAllShapes();
+		for (int i = 0; i < 12; i++) {
+			vector transform[4];			
+			transform[3] = m_LineCenters[i];
+			
+			for (int j = 0; j < 3; j++) {
+				transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j] / 2) + bounding_box_thickness;
+			}
+			 
+			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_LOCAL));
+			m_BBoxLines[i].SetTransform(transform);
+			
+			AddChild(m_BBoxLines[i], -1);
+		}
+	
+		Update();
+		
+		/*
 		for (int i = 0; i < 12; i++) {
 			if (m_BBoxLines[i]) {
 				m_BBoxLines[i].SetFlags(EntityFlags.VISIBLE, false);
@@ -819,13 +783,20 @@ class EditorObject: EditorWorldObject
 		
 		if (m_CenterLine) {
 			m_CenterLine.SetFlags(EntityFlags.VISIBLE, false);
-		}
+		}*/
 	}
 	
 	void HideBoundingBox()
 	{
 		EditorLog.Trace("EditorObject::HideBoundingBox");
 		
+		for (int i = 0; i < 12; i++) {
+			if (m_BBoxLines[i]) {
+				m_BBoxLines[i].Delete();
+			}
+		}
+		
+		/*
 		for (int i = 0; i < 12; i++) {
 			if (m_BBoxLines[i]) {
 				m_BBoxLines[i].ClearFlags(EntityFlags.VISIBLE, false);
@@ -838,7 +809,7 @@ class EditorObject: EditorWorldObject
 		
 		if (m_CenterLine) {
 			m_CenterLine.ClearFlags(EntityFlags.VISIBLE, false);
-		}
+		}*/
 	}
 	
 	bool SetAnimation(string anim_name)
@@ -902,6 +873,7 @@ class EditorObject: EditorWorldObject
 			m_EditorPlacedListItem.LockedImage.Show(locked);
 		}
 	}
+	
 	bool IsBoundingBoxEnabled()
 	{
 		return ((m_Data.Flags & EditorObjectFlags.BBOX) == EditorObjectFlags.BBOX);
