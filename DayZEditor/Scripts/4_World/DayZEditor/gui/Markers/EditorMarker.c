@@ -117,7 +117,7 @@ class EditorMarker: ScriptView
 	}
 	
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
-	{		
+	{
 		if (PressedButton != this || PressedButtonButton != button) {
 			PressedButton = null;
 			PressedButtonButton = -1;

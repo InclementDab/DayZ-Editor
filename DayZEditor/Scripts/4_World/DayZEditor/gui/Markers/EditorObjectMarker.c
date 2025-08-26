@@ -42,27 +42,15 @@ class EditorObjectMarker: EditorMarker
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 
 		switch (button) {
-			case MouseState.LEFT: {				
-				// We want to Toggle selection if you are holding control
-				if (GetEditor().IsCtrlDown()) {
-					m_Editor.ToggleSelection(m_EditorObject);
-					return true;
-				} 
-				
+			case MouseState.LEFT: {
 				// allows multiple objects to be dragged
 				if (m_EditorObject.IsSelected()) {
 					CheckDragBounds(x, y);
-					return true;
+					break;
 				}
-				
-				if (!GetEditor().IsShiftDown()) {
-					m_Editor.ClearSelection();
-				}
-				
-				m_Editor.SelectObject(m_EditorObject);
 				
 				CheckDragBounds(x, y);
-				return super.OnMouseButtonDown(w, x, y, button);
+				break;
 			}
 		}
 
@@ -108,6 +96,27 @@ class EditorObjectMarker: EditorMarker
 				vector new_position = Vector(4.0, 4.0, 4.0).Multiply4(camera_transform);
 				camera.SetPosition(new_position);
 				camera.LookAt(m_EditorObject.GetPosition());
+				return true;
+			}
+			
+			case MouseState.LEFT: {				
+				Print(m_EditorObject);
+				if (GetEditor().IsDragging()) {
+					Print(1);
+					return true;
+				}
+				
+				// We want to Toggle selection if you are holding control
+				if (GetEditor().IsCtrlDown()) {
+					m_Editor.ToggleSelection(m_EditorObject);
+					return true;
+				} 
+								
+				if (!GetEditor().IsShiftDown()) {
+					m_Editor.ClearSelection();
+				}
+				
+				m_Editor.SelectObject(m_EditorObject);				
 				return true;
 			}
 		}
