@@ -57,6 +57,10 @@ class EditorObject: EditorWorldObject
 	
 	void SetWorldObject(notnull Object world_object)
 	{
+		// Bugfix for online receiving networked objects
+		HideBoundingBox();
+		
+		Print(world_object);
 		m_WorldObject = world_object;
 		if (m_Data) {
 			m_Data.WorldObject = world_object;
@@ -201,7 +205,8 @@ class EditorObject: EditorWorldObject
 		if (s_AllByObject && m_WorldObject) {
 			s_AllByObject.Remove(m_WorldObject);
 		}
-			
+		
+		HideBoundingBox();
 		GetGame().ObjectDelete(m_WorldObject);
 
 		delete m_EditorObjectWorldMarker; 
@@ -456,7 +461,6 @@ class EditorObject: EditorWorldObject
 	
 	void ClippingInfo(out vector clip_info[2]) 
 	{ 
-		vector clip_info[2];
 		vector min, max;
 		if (m_WorldObject.IsItemBase()) {
 			m_WorldObject.GetActionComponentMinMax(m_WorldObject.GetViewGeometryLevel(), 0, min, max);
@@ -727,7 +731,14 @@ class EditorObject: EditorWorldObject
 			return;
 		}
 		
-		if (!(GetData().Flags & EditorObjectFlags.BBOX)) return;
+		if (!(GetData().Flags & EditorObjectFlags.BBOX)) {
+			return;
+		}
+		
+		// Already showing
+		if (m_BBoxLines[0]) {
+			return;
+		}
 								
 		float bounding_box_thickness = 0;
 		switch (GetEditor().GetSettings().BoundingBoxSize) {
@@ -796,28 +807,11 @@ class EditorObject: EditorWorldObject
 	
 	void HideBoundingBox()
 	{
-		EditorLog.Trace("EditorObject::HideBoundingBox");
-		
 		for (int i = 0; i < 12; i++) {
 			if (m_BBoxLines[i]) {
 				m_BBoxLines[i].Delete();
 			}
 		}
-		
-		/*
-		for (int i = 0; i < 12; i++) {
-			if (m_BBoxLines[i]) {
-				m_BBoxLines[i].ClearFlags(EntityFlags.VISIBLE, false);
-			}
-		}
-		
-		if (m_BBoxBase) {
-			m_BBoxBase.ClearFlags(EntityFlags.VISIBLE, false);
-		}
-		
-		if (m_CenterLine) {
-			m_CenterLine.ClearFlags(EntityFlags.VISIBLE, false);
-		}*/
 	}
 	
 	bool SetAnimation(string anim_name)

@@ -2091,12 +2091,14 @@ class Editor: Managed
 			if (!editor_object_data) continue;
 			
 			// In the event the object already exists. The data for the existing object will get packed into the EditorObjectData struct
-			Print(m_EditorObjectsByUuid[uuid]);
 			if (m_EditorObjectsByUuid[uuid]) {
 				Object existing_world_object = m_EditorObjectsByUuid[uuid].GetWorldObject();
-				existing_world_object.Delete();
-				Print(m_EditorObjectsByUuid[uuid]);
 				m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
+				existing_world_object.Delete();
+				if (m_EditorObjectsByUuid[uuid].IsSelected()) {
+					m_EditorObjectsByUuid[uuid].ShowBoundingBox();
+				}
+				
 				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 				continue;

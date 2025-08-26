@@ -248,7 +248,6 @@ modded class MissionGameplay
 					}
 				} else {
 					int player_id3 = identity.GetPlayerId();
-					Print(player_id3);
 					Cameras[player_id3] = GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL);
 					CameraMarkers[player_id3] = new EditorCameraMarker(identity.GetName());
 					GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(CameraMarkers[player_id3]);
