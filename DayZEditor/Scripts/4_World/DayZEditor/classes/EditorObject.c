@@ -118,9 +118,9 @@ class EditorObject: EditorWorldObject
 		
 		
 		vector clip_info[2];
-		vector min, max;
-		m_WorldObject.GetActionComponentMinMax(m_WorldObject.GetViewGeometryLevel(), 0, min, max);
-		clip_info = { min, max };
+		
+		
+		ClippingInfo(clip_info);
 		
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
@@ -149,6 +149,8 @@ class EditorObject: EditorWorldObject
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_VectorBasePoint = base_point;
 		m_BoundingCenter = m_WorldObject.GetBoundingCenter();
+		
+		ShowBoundingBox();
 		
 		// Map marker
 		EnableMapMarker(IsMapMarkerEnabled());
@@ -454,7 +456,14 @@ class EditorObject: EditorWorldObject
 	
 	void ClippingInfo(out vector clip_info[2]) 
 	{ 
-		GetWorldObject().ClippingInfo(clip_info); 
+		vector clip_info[2];
+		vector min, max;
+		if (m_WorldObject.IsItemBase()) {
+			m_WorldObject.GetActionComponentMinMax(m_WorldObject.GetViewGeometryLevel(), 0, min, max);
+			clip_info = { min, max };
+		} else {
+			m_WorldObject.ClippingInfo(clip_info); 
+		}		
 	}
 	
 	void SetDirection(vector direction) 
@@ -712,19 +721,14 @@ class EditorObject: EditorWorldObject
 	}
 		
 	void ShowBoundingBox()
-	{
-		EditorLog.Trace("EditorObject::ShowBoundingBox");
-		
+	{		
 		// Global Settings Check
 		if (!GetEditor().GetSettings().BoundingBoxSize) {
 			return;
 		}
 		
 		if (!(GetData().Flags & EditorObjectFlags.BBOX)) return;
-				
-		vector min, max;
-		m_WorldObject.GetActionComponentMinMax(m_WorldObject.GetViewGeometryLevel(), 0, min, max);
-				
+								
 		float bounding_box_thickness = 0;
 		switch (GetEditor().GetSettings().BoundingBoxSize) {
 			case 1: { // small
@@ -748,12 +752,16 @@ class EditorObject: EditorWorldObject
 			}
 		}
 		
-		bounding_box_thickness /= 4;
+		bounding_box_thickness /= 2;
+		
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		vector min = clip_info[0];
+		vector max = clip_info[1];
 		
 		vector position = AverageVectors(min, max);
 		vector size = max - min;
 		
-		Debug.DestroyAllShapes();
 		for (int i = 0; i < 12; i++) {
 			vector transform[4];			
 			transform[3] = m_LineCenters[i];

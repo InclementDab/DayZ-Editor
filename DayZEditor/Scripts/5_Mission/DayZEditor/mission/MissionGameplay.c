@@ -80,6 +80,9 @@ modded class MissionGameplay
 		
 		if (GetGame().IsMultiplayer()) {
 			foreach (int player_id, Object camera: Cameras) {
+				if (!camera) {
+					continue;
+				}
 				
 				PlayerCameraData last_camera_data = LastCameraData[player_id];
 				PlayerCameraData camera_data = CameraData[player_id];
