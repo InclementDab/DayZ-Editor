@@ -135,6 +135,7 @@ class EditorHud: ScriptView
 	
 	protected ref map<string, EditorListNode> m_FolderNodes = new map<string, EditorListNode>();		
 	protected ref map<int, ref array<EditorListNode>> m_FolderNodesByDepth = new map<int, ref array<EditorListNode>>();		
+	protected ref array<EditorListNode> m_SearchableListNodes = {};
 	
 	void EditorHud(notnull Editor editor)
 	{	
@@ -224,6 +225,7 @@ class EditorHud: ScriptView
 			}	
 			
 			m_FolderNodesByDepth[depth].Insert(placeable_node);
+			m_SearchableListNodes.Insert(placeable_node);
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
@@ -1039,19 +1041,25 @@ class EditorHud: ScriptView
 		string search_string = LeftSearchBar.GetText();
 		search_string.ToLower();
 		
-		if (search_string.Length() < 2) {
-			search_string = string.Empty;
+		if (search_string.Length() < 3) {
+			foreach (EditorListNode list_node2: m_SearchableListNodes) {
+				if (!list_node2.GetListParent().IsCollapsed()) {
+					list_node2.Show(true);
+				}
+			}
+			
+			return;
 		}
 	
-		for (int i = 0; i < m_FolderNodesByDepth.Count(); i++) {
+		/*for (int i = 0; i < m_SearchableListNodes.Count(); i++) {
 			// See there should be folders at every depth. this will never happen unless some gap occurs. 
-			if (!m_FolderNodesByDepth[i]) {
+			if (!m_SearchableListNodes[i]) {
 				Error(string.Format("GAP OCCURED AT INDEX %1", i));
 				continue;
 			}
 			
-			array<EditorListNode> list_nodes = m_FolderNodesByDepth[i];
-			foreach (EditorListNode list_node: list_nodes) {
+			array<EditorListNode> list_nodes = m_SearchableListNodes[i];*/
+			foreach (EditorListNode list_node: m_SearchableListNodes) {
 				if (list_node.FilterType(search_string, favorite_toggle)) {
 					if (search_string) {
 						list_node.SetCollapsed(false);
@@ -1066,7 +1074,7 @@ class EditorHud: ScriptView
 				}
 			}
 				
-		}
+		//}
 		
 		LeftbarScroll.VScrollToPos(0);				
 		

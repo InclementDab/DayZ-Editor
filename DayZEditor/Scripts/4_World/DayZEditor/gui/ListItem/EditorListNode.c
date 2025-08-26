@@ -1,15 +1,11 @@
-class EditorListNodeController: ViewController
-{
-	ref ObservableCollection<ref EditorListNode> ChildrenItems = new ObservableCollection<ref EditorListNode>(this);
-}
-
 class EditorListNode: ScriptView
 {	
 	static EditorListNode s_SelectedNode;
-	
-	protected EditorListNodeController m_TemplateController;
+		
+	ref array<ref EditorListNode> ChildrenItems = {};
 	
 	protected bool m_QueueRecalculateSize;
+	protected EditorListNode m_Parent;
 	
 	Widget Collapse, IconFrame, Hide, Panel, BoundingBox, Lock, Marker, ChildrenHeight, Favorite;
 	ButtonWidget CollapseButton, HideButton, BoundingBoxButton, LockButton, MarkerButton, FavoriteButton;
@@ -20,7 +16,6 @@ class EditorListNode: ScriptView
 	
 	void EditorListNode()
 	{
-		m_TemplateController = EditorListNodeController.Cast(m_Controller);
 		Collapse.Show(false);
 		m_LayoutRoot.SetSort(1);
 		CollapseIcon.LoadImageFile(1, "set:solid image:square_minus");
@@ -47,20 +42,34 @@ class EditorListNode: ScriptView
 	
 	void InsertChild(notnull EditorListNode list_node)
 	{
-		m_TemplateController.ChildrenItems.Insert(list_node);
-		Collapse.Show(m_TemplateController.ChildrenItems.Count());
+		ChildrenItems.Insert(list_node);
+		Collapse.Show(ChildrenItems.Count());
+		Children.AddChild(list_node.GetLayoutRoot());
+		
+		list_node.m_Parent = this;
 	}
 	
 	void SetCollapsed(bool collapsed)
 	{	
+		if (IsCollapsed() == collapsed) {
+			m_QueueRecalculateSize = true;
+			return;
+		}
+		
 		Children.Show(!collapsed);
 		CollapseIcon.SetImage(!collapsed);
 						
-		EditorListNode node_parent = GetParentNode();
 		if (!collapsed) {
 			// Recursive
-			if (node_parent) {
-				node_parent.SetCollapsed(false);
+			if (m_Parent) {
+				m_Parent.SetCollapsed(false);
+			}
+			
+			bool favorite_toggle = GetEditor().GetSettings().ShowFavoriteObjects;
+			string search_string = GetEditor().GetEditorHud().LeftSearchBar.GetText();
+			
+			foreach (EditorListNode child: ChildrenItems) {
+				child.GetLayoutRoot().Show(child.FilterType(search_string, favorite_toggle));
 			}
 			
 			m_QueueRecalculateSize = true;
@@ -81,9 +90,8 @@ class EditorListNode: ScriptView
 		super.Show(show);
 				
 		if (show) {
-			EditorListNode parent_node = GetParentNode();
-			if (parent_node) {
-				parent_node.Show(show);
+			if (m_Parent) {
+				m_Parent.Show(show);
 			}
 			
 			m_QueueRecalculateSize = true;
@@ -93,14 +101,12 @@ class EditorListNode: ScriptView
 		}
 	}
 		
-	protected void RecalculateSize(bool recursive_up = true)
+	protected void RecalculateSize()
 	{
-		//PrintFormat("RecalculateSize: %1", m_TemplateController.ChildrenItems.Count());
 		m_QueueRecalculateSize = true;
 
-		EditorListNode node_parent = GetParentNode();
-		if (node_parent) {
-			node_parent.RecalculateSize();
+		if (m_Parent && !m_Parent.m_QueueRecalculateSize) {
+			m_Parent.RecalculateSize();
 		}
 	}
 	
@@ -191,32 +197,30 @@ class EditorListNode: ScriptView
 	{
 		return "DayZEditor\\GUI\\layouts\\items\\NodeTreeView.layout";
 	}
-	
-	override typename GetControllerType()
-	{
-		return EditorListNodeController;
-	}
-	
-	EditorListNode GetParentNode()
-	{
-		Widget parent = m_LayoutRoot.GetParent().GetParent();
-		if (parent && parent.GetName() == "NodeView") {
-			EditorListNode node;
-			parent.GetUserData(node);
-			return node;
-		}
-		
-		return null;
-	}
-	
+			
 	protected override bool UseUpdateLoop()
 	{
 		return false;
 	}
 	
+	EditorListNode GetListParent()
+	{
+		return m_Parent;
+	}
+		
 	bool FilterType(string filter, bool favorites)
 	{
 		return false;
+	}
+	
+	override bool OnUpdate(Widget w)
+	{
+		return true;
+	}
+	
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		return true;
 	}
 }
 
