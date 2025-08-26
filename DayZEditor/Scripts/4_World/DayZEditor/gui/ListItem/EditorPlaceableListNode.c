@@ -151,7 +151,7 @@ class EditorPlaceableListNode: EditorListNode
 		
 		bool matches_filter = (m_SearchString1.Contains(filter) || m_SearchString2.Contains(filter) || !filter);
 		if (favorites) {
-			return (matches_filter/* && GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1*/);
+			return (matches_filter && GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1);
 		}
 		
 		return matches_filter;

@@ -121,6 +121,7 @@ class Editor: Managed
 	bool 										LightningMode;
 	bool 										GridMode;
 	
+	ref EditorEnvironment UserEnvironment;
 	ref EditorDragHandler DragHandler;
 
 	static const int Experimental = 0;
@@ -243,6 +244,8 @@ class Editor: Managed
 		m_EditorHudController = m_EditorHud.GetTemplateController();
 		
 		m_Mission = GetGame().GetMission();
+		UserEnvironment = new EditorEnvironment();
+		UserEnvironment.Capture(GetGame().GetWeather(), GetGame().GetWorld());
 				
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(OnStatisticsSave, STATISTICS_SAVE_INTERVAL * 1000, true);
@@ -704,6 +707,10 @@ class Editor: Managed
 	{				
 		if (!GetGame().IsAppActive()) {
 			return;
+		}
+		
+		if (UserEnvironment) {
+			UserEnvironment.Apply(GetGame().GetWeather(), GetGame().GetWorld());
 		}
 		
 		float raycast_distance = GetCameraSettings().ViewDistance / 3;

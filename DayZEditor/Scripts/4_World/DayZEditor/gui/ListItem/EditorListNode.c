@@ -4,7 +4,7 @@ class EditorListNode: ScriptView
 		
 	ref array<ref EditorListNode> ChildrenItems = {};
 	
-	protected bool m_QueueRecalculateSize;
+	protected bool m_QueueRecalculateSize, m_IsCollapsed = true;
 	protected EditorListNode m_Parent;
 	
 	Widget Collapse, IconFrame, Hide, Panel, BoundingBox, Lock, Marker, ChildrenHeight, Favorite;
@@ -32,10 +32,11 @@ class EditorListNode: ScriptView
 			Children.GetScreenSize(w, h);	
 			
 			m_LayoutRoot.GetScreenSize(x, y);
-			m_LayoutRoot.SetScreenSize(x, h * Children.IsVisible() + 30);
+			float h_children = h * !m_IsCollapsed;
+			m_LayoutRoot.SetScreenSize(x, h_children + 30);
 					
-			ChildrenHeight.SetSize(2, h * Children.IsVisible());
-						
+			ChildrenHeight.SetSize(2, h_children);
+			
 			m_QueueRecalculateSize = false;
 		}
 	}
@@ -51,11 +52,12 @@ class EditorListNode: ScriptView
 	
 	void SetCollapsed(bool collapsed)
 	{	
-		if (IsCollapsed() == collapsed) {
-			m_QueueRecalculateSize = true;
+		if (m_IsCollapsed == collapsed) {
+			RecalculateSize();
 			return;
 		}
 		
+		m_IsCollapsed = collapsed;
 		Children.Show(!collapsed);
 		CollapseIcon.SetImage(!collapsed);
 						
@@ -67,9 +69,15 @@ class EditorListNode: ScriptView
 			
 			bool favorite_toggle = GetEditor().GetSettings().ShowFavoriteObjects;
 			string search_string = GetEditor().GetEditorHud().LeftSearchBar.GetText();
+			search_string.ToLower();
 			
 			foreach (EditorListNode child: ChildrenItems) {
-				child.GetLayoutRoot().Show(child.FilterType(search_string, favorite_toggle));
+				bool filter = true;
+				if (search_string.Length() > 3) {
+					filter = child.FilterType(search_string, favorite_toggle);
+				}
+				
+				child.Show(filter);
 			}
 			
 			m_QueueRecalculateSize = true;
@@ -84,21 +92,22 @@ class EditorListNode: ScriptView
 			IconImage.SetImage(2);
 		}*/
 	}
-	
+		
 	override void Show(bool show)
 	{
-		super.Show(show);
-				
-		if (show) {
-			if (m_Parent) {
-				m_Parent.Show(show);
+		// Will be updated next frame due to RecalculateSize()
+		m_LayoutRoot.Show(show, false);							
+		if (show && m_Parent) {
+			if (!m_Parent.IsVisible()) {
+				m_Parent.Show(true);
 			}
 			
-			m_QueueRecalculateSize = true;
-			
-		} else if (!m_QueueRecalculateSize) {
-			RecalculateSize();
+			if (m_Parent.m_IsCollapsed) {
+				m_Parent.SetCollapsed(false);
+			}
 		}
+		
+		RecalculateSize();
 	}
 		
 	protected void RecalculateSize()
@@ -112,7 +121,7 @@ class EditorListNode: ScriptView
 	
 	bool IsCollapsed()
 	{
-		return !Children.IsVisible();
+		return m_IsCollapsed;
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)
@@ -210,15 +219,21 @@ class EditorListNode: ScriptView
 		
 	bool FilterType(string filter, bool favorites)
 	{
-		return false;
+		return true;
 	}
 	
+	// All of these slow down the process
 	override bool OnUpdate(Widget w)
 	{
 		return true;
 	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		return true;
+	}
+	
+	override bool OnResize(Widget w, int x, int y)
 	{
 		return true;
 	}

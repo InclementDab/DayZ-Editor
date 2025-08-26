@@ -1035,6 +1035,8 @@ class EditorHud: ScriptView
 		return super.OnFocus(w, x, y);
 	}	
 	
+	protected string m_LastSearchString;
+	
 	void RefreshSearchBar()
 	{
 		bool favorite_toggle = GetEditor().GetSettings().ShowFavoriteObjects;
@@ -1042,44 +1044,48 @@ class EditorHud: ScriptView
 		search_string.ToLower();
 		
 		if (search_string.Length() < 3) {
-			foreach (EditorListNode list_node2: m_SearchableListNodes) {
-				if (!list_node2.GetListParent().IsCollapsed()) {
-					list_node2.Show(true);
-				}
+			// Smoother UX
+			if (m_LastSearchString.Length() < 3) {
+				return;
 			}
 			
+			for (int i = 0; i < m_SearchableListNodes.Count(); i++) {
+				m_SearchableListNodes[i].Show(true);
+			}
+			
+			foreach (string s, EditorListNode folder_node: m_FolderNodes) {
+				if (folder_node.GetListParent()) {
+					folder_node.SetCollapsed(true);
+				}
+			}
+						
 			return;
 		}
 	
-		/*for (int i = 0; i < m_SearchableListNodes.Count(); i++) {
-			// See there should be folders at every depth. this will never happen unless some gap occurs. 
-			if (!m_SearchableListNodes[i]) {
-				Error(string.Format("GAP OCCURED AT INDEX %1", i));
-				continue;
-			}
-			
-			array<EditorListNode> list_nodes = m_SearchableListNodes[i];*/
-			foreach (EditorListNode list_node: m_SearchableListNodes) {
-				if (list_node.FilterType(search_string, favorite_toggle)) {
-					if (search_string) {
-						list_node.SetCollapsed(false);
-					}
-					
-					list_node.Show(true);
-				} else {
-					if (!search_string) {
-						list_node.SetCollapsed(true);
-					}
-					list_node.Show(false);
-				}
-			}
-				
-		//}
+		foreach (EditorListNode list_node: m_SearchableListNodes) {
+			list_node.Show(list_node.FilterType(search_string, favorite_toggle));
+		}
 		
-		LeftbarScroll.VScrollToPos(0);				
+		LeftbarScroll.VScrollToPos(0);
+		
+		/*
+		EnProfiler.SortData();
+		Print("\n\n");
+		PrintFormat("RecalculateSize Count: %1", EnProfiler.GetCountOfFunc("RecalculateSize", EditorListNode, true));
+		Print(EnProfiler.GetTimeOfFunc("RecalculateSize", EditorListNode, true));
+		PrintFormat("Show Count: %1", EnProfiler.GetCountOfFunc("Show", EditorListNode, true));
+		Print(EnProfiler.GetTimeOfFunc("Show", EditorPlaceableListNode, true));
+		PrintFormat("SetCollapsed Count: %1", EnProfiler.GetCountOfFunc("SetCollapsed", EditorListNode, true));
+		Print(EnProfiler.GetTimeOfFunc("SetCollapsed", EditorListNode, true));
+		array<ref EnProfilerTimeFuncPair> times = {};
+		EnProfiler.GetTimePerFunc(times, 20);
+		foreach (auto time: times) {
+			PrintFormat("%1: %2", time.param1, time.param2);
+		}*/
 		
 		Symbols left_search_bar_icon = Ternary<Symbols>.If(!search_string.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 		left_search_bar_icon.Load(LeftSearchBarIconIcon);
+		m_LastSearchString = search_string;
 	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)

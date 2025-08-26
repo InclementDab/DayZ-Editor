@@ -3,6 +3,97 @@ class EditorEnvironmentDialogController: DialogBaseController
 
 }
 
+class EditorEnvironment: SerializableBase
+{
+	float RainValue, FogValue, OvercastValue, SnowValue, WindDirValue, WindSpeedValue;
+	float SnowScale;
+	vector Wind;
+	float DynamicFogDistanceDensity, DynamicFogHeightDensity, DynamicFogHeightBias;
+	
+	int Year, Month, Day, Hour, Minute;
+	
+	bool UseMissionWeather = false;
+	
+	void Capture(notnull Weather weather, notnull World world)
+	{
+		RainValue = weather.GetRain().GetActual();
+		FogValue = weather.GetFog().GetActual();
+		OvercastValue = weather.GetOvercast().GetActual();
+		SnowValue = weather.GetSnowfall().GetActual();
+		WindDirValue = weather.GetWindDirection().GetActual();
+		WindSpeedValue = weather.GetWindDirection().GetActual();
+		SnowScale = weather.GetSnowflakeScale();
+		Wind = weather.GetWind();
+		DynamicFogDistanceDensity = weather.GetDynVolFogDistanceDensity();
+		DynamicFogHeightBias = weather.GetDynVolFogHeightBias();
+		DynamicFogHeightDensity = weather.GetDynVolFogHeightDensity();
+		
+		world.GetDate(Year, Month, Day, Hour, Minute);
+	}
+	
+	void Apply(notnull Weather weather, notnull World world)
+	{
+		weather.GetRain().Set(RainValue);
+		weather.GetFog().Set(FogValue);
+		weather.GetOvercast().Set(OvercastValue);
+		weather.GetSnowfall().Set(SnowValue);
+		weather.GetWindDirection().Set(WindDirValue);
+		weather.GetWindDirection().Set(WindSpeedValue);
+		weather.SetSnowflakeScale(SnowScale);
+		weather.SetWind(Wind);
+		weather.SetDynVolFogDistanceDensity(DynamicFogDistanceDensity);
+		weather.SetDynVolFogHeightBias(DynamicFogHeightBias);
+		weather.SetDynVolFogHeightDensity(DynamicFogHeightDensity);
+		
+		world.SetDate(Year, Month, Day, Hour, Minute);
+	}
+
+	override void Write(Serializer serializer, int version)
+	{
+		serializer.Write(RainValue);
+		serializer.Write(FogValue);
+		serializer.Write(OvercastValue);
+		serializer.Write(SnowValue);
+		serializer.Write(WindDirValue);
+		serializer.Write(WindSpeedValue);
+		serializer.Write(SnowScale);
+		serializer.Write(Wind);
+		serializer.Write(DynamicFogDistanceDensity);
+		serializer.Write(DynamicFogHeightDensity);
+		serializer.Write(DynamicFogHeightBias);
+		serializer.Write(Year);
+		serializer.Write(Month);
+		serializer.Write(Day);
+		serializer.Write(Hour);
+		serializer.Write(Minute);
+		serializer.Write(UseMissionWeather);
+	}
+
+	override bool Read(Serializer serializer, int version)
+	{
+		serializer.Read(RainValue);
+		serializer.Read(FogValue);
+		serializer.Read(OvercastValue);
+		serializer.Read(SnowValue);
+		serializer.Read(WindDirValue);
+		serializer.Read(WindSpeedValue);
+		serializer.Read(SnowScale);
+		serializer.Read(Wind);
+		serializer.Read(DynamicFogDistanceDensity);
+		serializer.Read(DynamicFogHeightDensity);
+		serializer.Read(DynamicFogHeightBias);
+		serializer.Read(Year);
+		serializer.Read(Month);
+		serializer.Read(Day);
+		serializer.Read(Hour);
+		serializer.Read(Minute);
+		serializer.Read(UseMissionWeather);
+
+		return true;
+	}
+
+}
+
 class EditorEnvironmentDialog: EditorDialogBase
 {	
 	protected World m_World;
@@ -87,74 +178,21 @@ class EditorEnvironmentDialog: EditorDialogBase
 			
 	void PropertyChanged(string property_name)
 	{		
-		switch (property_name) {
-			case "m_Year":
-			case "m_Month":
-			case "m_Day":
-			case "m_Hour":
-			case "m_Minute": {
-				m_Year = Math.Round(m_Year);
-				m_Month = Math.Round(m_Month);
-				m_Day = Math.Round(m_Day);
-				m_Hour = Math.Round(m_Hour);
-				m_Minute = Math.Round(m_Minute);
-				m_World.SetDate(m_Year, m_Month, m_Day, m_Hour, m_Minute);
-				break;
-			}
-			
-			case "snow":
-			case "snowscale": {
-				m_Weather.GetSnowfall().Set(snow);
-				m_Weather.GetSnowfall().SetLimits(snow, snow);
-				m_Weather.SetSnowflakeScale(snowscale);
-				break;
-			}
-			
-			case "rain": {
-				m_Weather.GetRain().Set(rain);	
-				m_Weather.GetRain().SetLimits(rain, rain);			
-				break;
-			}
-			
-			case "fog": {
-				m_Weather.GetFog().Set(fog);
-				m_Weather.GetFog().SetLimits(fog, fog);
-				break;
-			}
-			
-			case "overcast": {
-				m_Weather.GetOvercast().Set(overcast);
-				m_Weather.GetOvercast().SetLimits(overcast, overcast);
-				break;
-			}
-			
-			case "wind":
-			case "winddir": {
-				float winddir_rad = winddir * Math.DEG2RAD;
-				m_Weather.GetWindDirection().Set(winddir_rad);
-				m_Weather.GetWindDirection().SetLimits(winddir_rad, winddir_rad);
-				m_Weather.GetWindDirection().SetForecastChangeLimits(winddir_rad, winddir_rad);
-				m_Weather.GetWindMagnitude().Set(wind);
-				m_Weather.GetWindMagnitude().SetLimits(wind, wind);
-				m_Weather.GetWindMagnitude().SetForecastChangeLimits(wind, wind);
-				break;
-			}
-			
-			case "m_DynFogDistanceDensity": {
-				m_Weather.SetDynVolFogDistanceDensity(m_DynFogDistanceDensity);
-				break;
-			}
-			
-			case "m_DynFogHeightBias": {
-				m_Weather.SetDynVolFogHeightBias(m_DynFogHeightBias);
-				break;
-			}			
-			
-			case "m_DynFogHeightDensity": {
-				m_Weather.SetDynVolFogHeightDensity(m_DynFogHeightDensity);
-				break;
-			}
-			
+		GetEditor().UserEnvironment.Year = m_Year;
+		GetEditor().UserEnvironment.Month = m_Month;
+		GetEditor().UserEnvironment.Day = m_Day;
+		GetEditor().UserEnvironment.Hour = m_Hour;
+		GetEditor().UserEnvironment.Minute = m_Minute;
+		
+		GetEditor().UserEnvironment.SnowValue = snow;
+		GetEditor().UserEnvironment.SnowScale = snowscale;
+		
+		GetEditor().UserEnvironment.RainValue = rain;
+		GetEditor().UserEnvironment.FogValue = fog;
+		GetEditor().UserEnvironment.OvercastValue = overcast;
+		GetEditor().UserEnvironment.WindSpeedValue = wind;
+		
+		switch (property_name) {			
 			case "m_LightingConfig": {
 				m_WorldLighting.SetGlobalLighting(m_LightingConfig);
 				break;
@@ -163,21 +201,7 @@ class EditorEnvironmentDialog: EditorDialogBase
 		
 		if (GetGame().IsMultiplayer()) {
 			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(m_Year);
-			rpc.Write(m_Month);
-			rpc.Write(m_Day);
-			rpc.Write(m_Hour);
-			rpc.Write(m_Minute);
-			rpc.Write(snow);
-			rpc.Write(snowscale);
-			rpc.Write(rain);
-			rpc.Write(fog);
-			rpc.Write(overcast);
-			rpc.Write(winddir);
-			rpc.Write(wind);
-			rpc.Write(m_DynFogHeightBias);
-			rpc.Write(m_DynFogHeightDensity);
-			rpc.Write(m_DynFogDistanceDensity);
+			GetEditor().UserEnvironment.Write(rpc, 0);
 			rpc.Send(null, 39259, true);
 		}
 	}
