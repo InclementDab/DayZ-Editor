@@ -56,11 +56,7 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void SetWorldObject(notnull Object world_object)
-	{
-		// Bugfix for online receiving networked objects
-		HideBoundingBox();
-		
-		Print(world_object);
+	{		
 		m_WorldObject = world_object;
 		if (m_Data) {
 			m_Data.WorldObject = world_object;
@@ -120,10 +116,7 @@ class EditorObject: EditorWorldObject
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
 		}
 		
-		
 		vector clip_info[2];
-		
-		
 		ClippingInfo(clip_info);
 		
 		m_LineVerticies[0] = clip_info[0];

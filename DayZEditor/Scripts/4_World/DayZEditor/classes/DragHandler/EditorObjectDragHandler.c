@@ -201,6 +201,12 @@ class EditorObjectDragHandler: EditorDragHandler
 			}
 		}
 		
+		// Plane placement
+		else if (GetEditor().IsCtrlDown()) {
+			Plane3D camera_plane = new Plane3D(camera_transform[2], transform[3]);
+			vector camera_plane_intersect = camera_plane.Intersect(cursor_ray);			
+			transform[3] = camera_plane_intersect;
+		}
 		// Handle regular motion
 		else {
 			vector transform_new[4];
@@ -239,8 +245,6 @@ class EditorObjectDragHandler: EditorDragHandler
 				dyn_vec_arry[3]
 			};
 			
-			Math3D.MatrixOrthogonalize4(local_additional_mat);
-
 			vector output_additional_mat[4];
 			Math3D.MatrixMultiply4(transform_from_object_center, local_additional_mat, output_additional_mat);
 			selected_object.GetWorldObject().SetTransform(output_additional_mat);

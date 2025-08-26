@@ -24,7 +24,6 @@ FrameWidgetClass NodeView {
    vexactsize 0
    scaled 0
    draggable 1
-   Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
@@ -39,7 +38,7 @@ FrameWidgetClass NodeView {
      inheritalpha 0
      ignorepointer 1
      position 7 0
-     size 22 30
+     size 16 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -69,7 +68,7 @@ FrameWidgetClass NodeView {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 14 16
+         size 12 14
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -91,7 +90,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 22 30
+     size 16 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -122,7 +121,7 @@ FrameWidgetClass NodeView {
          ignorepointer 1
          color 1 1 1 0.588
          position 0 0
-         size 14 16
+         size 12 14
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -150,7 +149,7 @@ FrameWidgetClass NodeView {
      visible 1
      ignorepointer 1
      position 37 0
-     size 22 30
+     size 16 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -162,7 +161,7 @@ FrameWidgetClass NodeView {
        disabled 0
        ignorepointer 1
        position 0 0
-       size 16 16
+       size 14 14
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -188,7 +187,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 22 30
+     size 16 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -219,7 +218,7 @@ FrameWidgetClass NodeView {
          ignorepointer 1
          color 1 1 1 0.588
          position 0 0
-         size 14 16
+         size 12 14
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -241,7 +240,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 22 30
+     size 16 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -272,7 +271,7 @@ FrameWidgetClass NodeView {
          ignorepointer 1
          color 1 1 1 0.588
          position 0 0
-         size 14 16
+         size 12 14
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -300,7 +299,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 18 30
+     size 16 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -331,7 +330,7 @@ FrameWidgetClass NodeView {
          ignorepointer 1
          color 1 1 1 0.588
          position 0 0
-         size 14 16
+         size 12 14
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -359,7 +358,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 22 30
+     size 16 30
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -390,7 +389,7 @@ FrameWidgetClass NodeView {
          ignorepointer 1
          color 1 1 1 0.588
          position 0 0
-         size 14 16
+         size 12 14
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -421,7 +420,7 @@ FrameWidgetClass NodeView {
      ignorepointer 1
      color 0.027 0.435 0.572 0
      position 67 0
-     size 0.41 22
+     size 16 22
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -528,7 +527,7 @@ FrameWidgetClass NodeView {
    disabled 0
    clipchildren 1
    ignorepointer 1
-   position 22 30
+   position 16 30
    size 1 1
    hexactpos 1
    vexactpos 1
@@ -549,8 +548,8 @@ FrameWidgetClass NodeView {
   ImageWidgetClass ChildrenHeight {
    ignorepointer 1
    color 0.784 0.784 0.784 1
-   position 10 0
-   size 2 0
+   position 8 0
+   size 1 0
    valign bottom_ref
    hexactpos 1
    vexactpos 1

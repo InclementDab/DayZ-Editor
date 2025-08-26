@@ -33,7 +33,7 @@ class EditorDragHandler: Managed
 					children = children.GetSibling();
 				}
 				
-				Math3D.MatrixOrthogonalize4(additional_drag_target_mat);
+				//Math3D.MatrixOrthogonalize4(additional_drag_target_mat);
 				vector inv_additional_drag_target_mat[4];
 				Math3D.MatrixInvMultiply4(transform_without_scale, additional_drag_target_mat, inv_additional_drag_target_mat);
 				m_LocalTransformsToTarget[selected_object] = {

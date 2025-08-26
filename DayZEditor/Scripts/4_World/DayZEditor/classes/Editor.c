@@ -2092,6 +2092,8 @@ class Editor: Managed
 			
 			// In the event the object already exists. The data for the existing object will get packed into the EditorObjectData struct
 			if (m_EditorObjectsByUuid[uuid]) {
+				m_EditorObjectsByUuid[uuid].HideBoundingBox();
+				
 				Object existing_world_object = m_EditorObjectsByUuid[uuid].GetWorldObject();
 				m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
 				existing_world_object.Delete();
@@ -2258,10 +2260,12 @@ class Editor: Managed
 			return;
 		}
 		
+		Print(data.Scale);
 		object.SetPosition(data.Position);
 		object.SetOrientation(data.Orientation);
 		object.SetScale(data.Scale);
 		object.Lock(data.Locked);
+		object.Update();
 	}
 
 	bool HideMapObject(string type, vector position, bool create_undo = true)

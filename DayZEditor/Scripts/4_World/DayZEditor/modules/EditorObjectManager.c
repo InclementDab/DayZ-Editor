@@ -105,7 +105,12 @@ class EditorObjectManagerModule : Managed
 					if (!m_PlaceableObjectsByP3dFile[model_file]) {
 						m_PlaceableObjectsByP3dFile[model_file] = {};
 					} else continue; // quite humorously this fixes duplication bugs. 
-										
+								
+					// dont add p3ds of AI models. crashes		
+					if (GetGame().IsKindOf(placeable_item.Type, "DZ_LightAI")) {
+						continue;
+					}
+					
 					m_PlaceableObjectsByP3dPath[model].Insert(placeable_item);
 					m_PlaceableObjectsByP3dFile[model_file].Insert(placeable_item);
 					
