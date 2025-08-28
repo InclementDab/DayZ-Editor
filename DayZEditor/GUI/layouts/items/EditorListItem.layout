@@ -2,7 +2,7 @@ WrapSpacerWidgetClass ListItem {
  visible 1
  clipchildren 1
  ignorepointer 1
- color 0.0196 0.0196 0.0196 0
+ color 0.02 0.02 0.02 0
  position 0 0
  size 1 24
  hexactpos 1
@@ -23,7 +23,7 @@ WrapSpacerWidgetClass ListItem {
    visible 1
    clipchildren 0
    ignorepointer 0
-   color 0.7529 0.3686 0.3255 1
+   color 0.753 0.369 0.326 1
    position 0 0
    size 1 1
    halign center_ref
@@ -42,19 +42,19 @@ WrapSpacerWidgetClass ListItem {
      clipchildren 1
      ignorepointer 1
      position 24 0
-     size 1 1
+     size 1 14
      valign center_ref
      hexactpos 1
      vexactpos 0
      hexactsize 0
-     vexactsize 0
+     vexactsize 1
      draggable 0
      scriptclass "ViewBinding"
      style Normal
      text "CATEGORY"
      font "gui/fonts/sdf_MetronBook24"
      "bold text" 0
-     "exact text" 1
+     "exact text" 0
      "exact text size" 12
      "size to text h" 1
      "size to text v" 1
@@ -69,7 +69,7 @@ WrapSpacerWidgetClass ListItem {
     CheckBoxWidgetClass ListItemFavorites {
      visible 0
      inheritalpha 0
-     color 1 0.8431 0 1
+     color 1 0.843 0 1
      position 3 0
      size 18 18
      valign center_ref
@@ -78,7 +78,7 @@ WrapSpacerWidgetClass ListItem {
      hexactsize 1
      vexactsize 1
      scriptclass "ViewBinding"
-     style Editor_Favorites_Checkbox
+     style Default
      {
       ScriptParamsClass {
        Binding_Name "Favorite"

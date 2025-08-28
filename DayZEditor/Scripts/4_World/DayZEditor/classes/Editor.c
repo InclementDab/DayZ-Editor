@@ -125,7 +125,7 @@ class Editor: Managed
 	ref EditorDragHandler DragHandler;
 
 	static const int Experimental = 0;
-	static const int MinorVersionNumber = 0;
+	static const int MinorVersionNumber = 1;
 	static const int VersionNumber = 35;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
 	static bool HasTestedVersion = false;
@@ -1214,6 +1214,10 @@ class Editor: Managed
 
 		if (IsPlacing()) {
 			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
+				if (!placing_object || !placing_object.GetWorldObject()) {
+					continue;
+				}
+				
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
 				
 				float factor = 9;

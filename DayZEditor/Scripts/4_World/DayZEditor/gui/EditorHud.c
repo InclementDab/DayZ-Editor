@@ -306,7 +306,8 @@ class EditorHud: ScriptView
 		RightbarScroll.GetScreenSize(rbs_s_w, rbs_s_h);
 		RightbarScroll.SetScreenSize(rbs_s_w, bar_height - tp_s_h - rpsbp_s_h);
 
-		CinematicCameraButton.Show(Editor.Experimental);
+		// Too many requests. It wont work fully but ill get the rest in later
+		CinematicCameraButton.Show(true);
 		
 		m_EditorCameraMarker = new EditorCameraMarker(GetGame().GetUserManager().GetSelectedUser().GetName());
 	}

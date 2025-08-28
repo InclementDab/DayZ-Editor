@@ -2,7 +2,7 @@ FrameWidgetClass NodeView {
  visible 1
  clipchildren 0
  position 0 0
- size 2000 28
+ size 2000 24
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -38,7 +38,7 @@ FrameWidgetClass NodeView {
      inheritalpha 0
      ignorepointer 1
      position 7 0
-     size 16 30
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -90,7 +90,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 16 30
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -149,7 +149,7 @@ FrameWidgetClass NodeView {
      visible 1
      ignorepointer 1
      position 37 0
-     size 16 30
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -187,7 +187,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 16 30
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -240,7 +240,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 16 30
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -299,7 +299,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 16 30
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -358,7 +358,7 @@ FrameWidgetClass NodeView {
      visible 0
      ignorepointer 1
      position 7 0
-     size 16 30
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -420,7 +420,7 @@ FrameWidgetClass NodeView {
      ignorepointer 1
      color 0.027 0.435 0.572 0
      position 67 0
-     size 16 22
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -430,6 +430,7 @@ FrameWidgetClass NodeView {
      scriptclass ""
      style Colorable
      Padding 0
+     Margin 1
      "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
@@ -470,7 +471,7 @@ FrameWidgetClass NodeView {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 451 18
+         size 451 14
          halign center_ref
          valign center_ref
          hexactpos 1
