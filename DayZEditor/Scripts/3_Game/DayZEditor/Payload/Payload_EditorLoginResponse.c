@@ -15,8 +15,8 @@ class EditorGenericCallback: RestCallbackBase
 	override void OnSuccess(string data, int dataSize)
 	{
 		super.OnSuccess(data, dataSize);
-		
-		if (SuccessCallback) {
+
+		if (SuccessCallback.IsValid()) {
 			if (Data) {
 				SuccessCallback.Invoke(data, dataSize, Data);
 			} else {
@@ -29,7 +29,7 @@ class EditorGenericCallback: RestCallbackBase
 	{
 		super.OnFileCreated(fileName, dataSize);
 		
-		if (FileCallback) {
+		if (FileCallback.IsValid()) {
 			if (Data) {
 				FileCallback.Invoke(fileName, dataSize, Data);
 			} else {
@@ -41,7 +41,7 @@ class EditorGenericCallback: RestCallbackBase
 
 class EditorLoginCallback : RestCallbackBase
 {
-	protected ref ScriptCaller m_OnPayloadSuccess;
+	protected ScriptCaller m_OnPayloadSuccess;
 
 	void EditorLoginCallback(ScriptCaller on_payload_success)
 	{

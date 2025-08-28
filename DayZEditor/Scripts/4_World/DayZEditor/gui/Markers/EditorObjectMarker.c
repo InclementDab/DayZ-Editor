@@ -43,10 +43,8 @@ class EditorObjectMarker: EditorMarker
 
 		switch (button) {
 			case MouseState.LEFT: {
-				// allows multiple objects to be dragged
-				if (m_EditorObject.IsSelected()) {
-					CheckDragBounds(x, y);
-					break;
+				if (!m_EditorObject.IsSelected() && !GetEditor().IsShiftDown() && !GetEditor().IsCtrlDown()) {
+					m_Editor.ClearSelection();
 				}
 				
 				CheckDragBounds(x, y);
@@ -99,8 +97,7 @@ class EditorObjectMarker: EditorMarker
 				return true;
 			}
 			
-			case MouseState.LEFT: {				
-				Print(m_EditorObject);
+			case MouseState.LEFT: {			
 				if (GetEditor().IsDragging()) {
 					Print(1);
 					return true;
@@ -111,10 +108,6 @@ class EditorObjectMarker: EditorMarker
 					m_Editor.ToggleSelection(m_EditorObject);
 					return true;
 				} 
-								
-				if (!GetEditor().IsShiftDown()) {
-					m_Editor.ClearSelection();
-				}
 				
 				m_Editor.SelectObject(m_EditorObject);				
 				return true;

@@ -44,7 +44,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	protected void Update(float dt)
 	{
 		m_TickAccumulated += dt;
-		if (m_TickAccumulated < 0.031) {
+		if (m_TickAccumulated < 0.062) {
 			return;
 		}
 		

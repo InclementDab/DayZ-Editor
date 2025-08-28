@@ -1,6 +1,6 @@
 class EditorVersionCallback: RestCallbackBase
 {
-	protected ref ScriptCaller m_OnPayloadSuccess;
+	protected ScriptCaller m_OnPayloadSuccess;
 
 	void EditorVersionCallback(ScriptCaller on_payload_success)
 	{
@@ -18,7 +18,7 @@ class EditorVersionCallback: RestCallbackBase
 			return;
 		}
 
-		if (m_OnPayloadSuccess) {
+		if (m_OnPayloadSuccess.IsValid()) {
 			m_OnPayloadSuccess.Invoke(response);
 		}
 	}

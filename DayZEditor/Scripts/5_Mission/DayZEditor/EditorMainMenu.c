@@ -707,19 +707,24 @@ class EditorMainMenu: ScriptViewMenu
 					break;
 				}
 				
-				GetGame().GetMission().AbortMission();
-				/*
-				break;
-				if (GetGame().GetHostData()) {
-									
-
-					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.DisconnectSessionEx, DisconnectSessionFlags.ALWAYS_FORCE);
-					return true;
+				if (GetGame().IsMultiplayer()) {
+					GetGame().LogoutRequestTime();
+					GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(GetGame().GetMission().CreateLogoutMenu, this);
+					g_Game.CancelLoginTimeCountdown();
+					break;
 				}
 				
-				if (result == 2) {
+				if (GetGame().GetMission() && GetGame().GetMission().IsInherited(EditorMainMenuMission)) {
 					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Call(g_Game.RequestExit, IDC_MAIN_QUIT);
-				}*/
+					Close();
+					break;
+				}
+				
+				if (GetGame().GetMission()) {
+					GetGame().GetMission().AbortMission();
+					Close();
+					break;
+				}
 
 				break;
 			}
