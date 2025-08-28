@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{619E8814D6CB3A19}DayZEditor/GUI/loadingscreens/rochie-1727883649.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate -887393976
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "rochie-1727883649.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

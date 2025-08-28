@@ -26,6 +26,7 @@ class EditorCommandManager
 	EditorCommand BrushToggleCommand;
 	EditorCommand BrushDensityCommand;
 	EditorCommand BrushRadiusCommand;
+	EditorCommand BrushWidthCommand;
 	EditorCommand CameraTrackAddNode;
 	EditorCommand CameraTrackRun;
 	EditorCommand CameraToggleLight;
@@ -69,6 +70,7 @@ class EditorCommandManager
 		RegisterCommand(EditorDumpSceneCommand);
 		RegisterCommand(EditorEnvironmentControlCommand);
 		RegisterCommand(EditorCameraControlsCommand);
+		RegisterCommand(EditorChangelogCommand);
 		
 		// All preferences
 		RegisterCommand(EditorPreferencesCommand);
@@ -84,8 +86,8 @@ class EditorCommandManager
 		BrushToggleCommand = RegisterCommand(EditorBrushToggleCommand);
 		BrushDensityCommand = RegisterCommand(EditorBrushDensityCommand);
 		BrushRadiusCommand = RegisterCommand(EditorBrushRadiusCommand);
+		BrushWidthCommand = RegisterCommand(EditorBrushWidthCommand);
 	
-		CameraToggleLight = RegisterCommand(EditorToggleLightCommand);
 		RegisterCommand(EditorResetAlignmentCommand);
 		RegisterCommand(EditorAlignToSurfaceCommand);
 		RegisterCommand(EditorSnapToSurfaceCommand);
@@ -131,6 +133,11 @@ class EditorCommandManager
 		// Camera Track
 		CameraTrackAddNode = RegisterCommand(EditorCameraTrackAddNode);
 		CameraTrackRun = RegisterCommand(EditorCameraTrackRun);
+		
+		// the future is now
+		foreach (typename cmd: RegisterEditorCommand.Instances) {
+			RegisterCommand(cmd);
+		}
 	}
 	
 	EditorCommand RegisterCommand(typename command_type)

@@ -91,12 +91,12 @@ class XMLEventsCallback: XMLCallback
 {
 	private ref array<ref EditorEventSpawn> m_Events;
 	
-	void XMLEventsCallback(ref array<ref EditorEventSpawn> events)
+	void XMLEventsCallback(array<ref EditorEventSpawn> events)
 	{
 		m_Events = events;
 	}
 	
-	bool SearchEventSpawns(out ref EditorEventSpawn event_spawn, string name)
+	bool SearchEventSpawns(out EditorEventSpawn event_spawn, string name)
 	{
 		name.ToLower();
 		foreach (EditorEventSpawn espawn: m_Events) {
@@ -237,7 +237,7 @@ class EditorEventManager
 	{
 		m_Events = new array<ref EditorEventSpawn>();
 		
-		string file = Editor.ROOT_DIRECTORY + "cfgeventspawns.xml";
+		string file = SystemPath.Combine(Editor.ROOT_DIRECTORY, "cfgeventspawns.xml");
 		if (!FileExist(file)) {
 			Print("File not found!"); // todo replace with the new fileopen dialog result type
 			return;
@@ -251,7 +251,7 @@ class EditorEventManager
 	
 	static void ImportEvents()
 	{
-		string file = Editor.ROOT_DIRECTORY + "db\\events.xml";
+		string file = SystemPath.Combine(Editor.ROOT_DIRECTORY, "db\\events.xml");
 		if (!FileExist(file)) {
 			Print("File not found!");
 			return;

@@ -1,6 +1,6 @@
 class EditorCOMFile: EditorFileType
 {
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		EditorLog.Trace("EditorCOMFile::Export");
 		
@@ -24,7 +24,7 @@ class EditorCOMFile: EditorFileType
 		
 		
 		foreach (Param3<string, vector, vector> scene_object: import_data.m_SceneObjects) {
-			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.param1, scene_object.param2, scene_object.param3, 1, EditorObjectFlags.ALL));
+			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.param1, scene_object.param2, scene_object.param3, 1, EFE_DEFAULT));
 		}
 		
 		return save_data;
@@ -33,6 +33,13 @@ class EditorCOMFile: EditorFileType
 	override string GetExtension() 
 	{
 		return ".json";
+	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("Text File", "*.txt"));
+		valid_extensions.Insert(new Param2<string, string>("Community Offline Json", "*.json"));
 	}
 }
 

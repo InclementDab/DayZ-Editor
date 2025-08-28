@@ -8,17 +8,24 @@ class EditorControlPlayerCommand: EditorCommand
 			return false;
 		}
 		
-		// Set the player as the current active
-		data.param1.Control = true;
-		data.param1.PropertyChanged("Control");
+		PlayerBase control_player = PlayerBase.Cast(data.param1.GetWorldObject());
+		if (!control_player) {
+			return false;
+		}
 		
+		m_Editor.ClearSelection();
 		// Enable Player
-		m_Editor.SetActive(false);
+		m_Editor.ControlPlayer(control_player);
 		return true;
 	}
 	
 	override string GetName()
 	{
 		return "#STR_EDITOR_CMD_CONTROL_PLAYER";
+	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.CHILD_REACHING;
 	}
 }

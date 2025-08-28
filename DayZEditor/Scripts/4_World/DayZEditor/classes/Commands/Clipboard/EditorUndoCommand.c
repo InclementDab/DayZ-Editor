@@ -21,4 +21,14 @@ class EditorUndoCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_Z };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.ROTATE_LEFT;
+	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().CanUndo();
+	}
 }

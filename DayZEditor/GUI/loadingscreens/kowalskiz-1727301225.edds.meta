@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{EF424504F5CAD2A2}DayZEditor/GUI/loadingscreens/kowalskiz-1727301225.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate -1457819320
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "kowalskiz-1727301225.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

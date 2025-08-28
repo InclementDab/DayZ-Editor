@@ -7,19 +7,22 @@ enum EditorPlaceableItemCategory
 
 class EditorPlaceableItem : Managed
 {
+	int Scope;
+	string Name;
 	string Type; // Item Type
-	string Path; // config path
+	string Path; // config path CfgVehicles, CfgWeapons etc...
 	EditorPlaceableItemCategory Category;
-
-	ref CF_File Model;
+	
+	bool ScriptedType;
+	bool ConsoleFriendly;
 
 	private void EditorPlaceableItem()
 	{
 	}
-
-	void ~EditorPlaceableItem()
+	
+	bool IsFavorite()
 	{
-		delete Model;
+		return GetEditor().GetSettings().FavoriteItems.Find(Type) != -1;
 	}
 
 	string GetName()
@@ -28,7 +31,7 @@ class EditorPlaceableItem : Managed
 		{
 			case EditorPlaceableItemCategory.SCRIPTED:
 			case EditorPlaceableItemCategory.CONFIG: return Type;
-			case EditorPlaceableItemCategory.STATIC: return Model.GetFileName();
+			case EditorPlaceableItemCategory.STATIC: return Path;
 		}
 
 		return string.Empty;
@@ -40,50 +43,45 @@ class EditorPlaceableItem : Managed
 		{
 			case EditorPlaceableItemCategory.SCRIPTED:
 			case EditorPlaceableItemCategory.CONFIG: return Type;
-			case EditorPlaceableItemCategory.STATIC: return Model.GetFullPath();
+			case EditorPlaceableItemCategory.STATIC: return Path;
 		}
 
 		return string.Empty;
 	}
 
-	static EditorPlaceableItem Create(CF_File p3d)
+	static EditorPlaceableItem Create(string p3d_file)
 	{
-
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
-		placeable_item.Model = p3d;
+		placeable_item.Scope = 2;
+		placeable_item.Type = SystemPath.Format(p3d_file);
+		placeable_item.Path = p3d_file;
+		placeable_item.Name = File.GetName(p3d_file);
 		placeable_item.Category = EditorPlaceableItemCategory.STATIC;
 		return placeable_item;
 	}
 
-	// CAN RETURN NULL
-	static EditorPlaceableItem Create(string config_path, string config_type)
+	static EditorPlaceableItem Create(string config_path, string config_type, int scope)
 	{
-		if (IsForbiddenItem(config_type))
-		{
-			return null;
-		}
-
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
+		placeable_item.Scope = scope;
 		placeable_item.Path = config_path;
 		placeable_item.Type = config_type;
+		placeable_item.Name = config_type;
 		placeable_item.Category = EditorPlaceableItemCategory.CONFIG;
-
-		string model;
-		GetGame().ConfigGetText(string.Format("%1 %2 model", config_path, config_type), model);
-		placeable_item.Model = new CF_File(model);
-		if (!placeable_item.Model.IsValid())
-		{
-			return null;
-		}
 
 		return placeable_item;
 	}
 
-	static EditorPlaceableItem Create(typename scripted_type)
+	static EditorPlaceableItem Create(typename scripted_type, bool console_friendly = true)
 	{
 		EditorPlaceableItem placeable_item = new EditorPlaceableItem();
+		placeable_item.Scope = 2;
 		placeable_item.Type = scripted_type.ToString();
+		placeable_item.Name = scripted_type.ToString();
+		placeable_item.Path = "Scripted/" + scripted_type.ToString();
 		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
+		placeable_item.ConsoleFriendly = console_friendly;
+		placeable_item.ScriptedType = 1;
 		return placeable_item;
 	}
 
@@ -165,5 +163,18 @@ class EditorPlaceableItem : Managed
 
 		//! Everything is fine... I hope... :pain:
 		return false;
+	}
+	
+	string GetModelName()
+	{		
+		if (Category == EditorPlaceableItemCategory.SCRIPTED) {
+			return Path;
+		}
+		
+		if (Type.Contains(".p3d")) {
+			return Type;
+		}
+		
+		return GetDayZGame().ConfigGetTextOut(string.Format("%1 %2 model", Path, Type));
 	}
 }

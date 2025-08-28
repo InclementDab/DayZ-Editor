@@ -1,16 +1,5 @@
-class EditorWorldObject
+class EditorWorldObject: Managed
 {
-	static const ref array<string> VALID_PATHS = {
-		"DZ\\plants",
-		"DZ\\plants_bliss",
-		"DZ\\rocks",
-		"DZ\\rocks_bliss",
-		"DZ/plants",
-		"DZ/plants_bliss",
-		"DZ/rocks",
-		"DZ/rocks_bliss",
-	};
-
 	protected Object m_WorldObject;
 	Object GetWorldObject()
 	{
@@ -24,24 +13,23 @@ class EditorWorldObject
 
 	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)
 	{
-		type = type.Trim();
-		type.Replace("\/", "\\");
-		Print(" Type:" + type + ":");
-		if (type == string.Empty)
-		{
+		if (type == string.Empty) {
 			return null;
 		}
 
-		//TODO Object returns model name, need to add a fallback to the path
 		Object object;
-		if (type.Contains("\\"))
-		{
-			object = GetGame().CreateStaticObjectUsingP3D(type, position, orientation, scale);
-			Print(" object:" + object.GetType() + ":");
+		if (type.Contains(".p3d")) {
+			string formatted_path = SystemPath.Format(type);
+			formatted_path.Replace("\\", "/"); // static object creation likes this
+			if (formatted_path[0] == "/") {
+				formatted_path = formatted_path.Substring(1, formatted_path.Length() - 1);
+			}
+			
+			object = GetGame().CreateStaticObjectUsingP3D(formatted_path, position, orientation, scale, true);
 		}
 		else
 		{
-			object = GetGame().CreateObjectEx(type, position, ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
+			object = GetGame().CreateObjectEx(type, position, ECE_LOCAL | ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
 		}
 
 		if (!object)
@@ -50,33 +38,26 @@ class EditorWorldObject
 			return null;
 		}
 
+		object.SetPosition(position);
+		object.SetOrientation(orientation);
+		object.SetFlags(EntityFlags.VISIBLE, true);
+		object.SetScale(scale);
+		object.Update();
+		
 		// Needed for AI Placement			
 		EntityAI entity_ai;
 		if (Class.CastTo(entity_ai, object))
 		{
-			entity_ai.DisableSimulation(true);
+			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 15, 0, true);
+			//entity_ai.DisableSimulation(true);
 
 			// weeeeeeee
-			if (GetEditor().Settings.SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0))
+			if (GetEditor().GetSettings().SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0))
 			{
 				entity_ai.OnDebugSpawn();
 			}
 		}
 
-		object.SetOrientation(orientation);
-		object.SetScale(scale);
-		object.Update();
 		return object;
-	}
-	static bool ValidateObjectPath(string path)
-	{
-		foreach (string p: VALID_PATHS) {
-			if (path.Contains(p))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

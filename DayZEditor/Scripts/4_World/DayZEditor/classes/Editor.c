@@ -1,35 +1,22 @@
-//Print(__LINE__);
-//Print(__FILE__); // useful shit // tools.pak?????
-//Print(__void);
-//local string test;
-//Print(FLT_MAX);
-//Print(FLT_MIN);
-//__NULL_FUNCT
-
-
-///
-///
-/// SYNC JUNCTURES?!?!?!?
-///
-///
-
 /*
-
-<rootclass name="DefaultWeapon" /> <!-- weapons -->
-<rootclass name="DefaultMagazine" /> <!-- magazines -->
-<rootclass name="Inventory_Base" /> <!-- inventory items -->
-<rootclass name="HouseNoDestruct" reportMemoryLOD="no" /> <!-- houses, wrecks -->
-<rootclass name="SurvivorBase" act="character" reportMemoryLOD="no" /> <!-- player characters -->
-<rootclass name="DZ_LightAI" act="character" reportMemoryLOD="no" /> <!-- infected, animals -->
-<rootclass name="CarScript" act="car" reportMemoryLOD="no" /> <!-- cars (sedan, hatchback, transitBus, V3S, ...) -->
-
+                    Euler sleeps here
+               __..--''``---....___   _..._    __
+     /// //_.-'    .-/";  `        ``<._  ``.''_ `. / // /
+    ///_.-' _..--.'_    \                    `( ) ) // //
+    / (_..-' // (< _     ;_..__               ; `' / ///
+     / // // //  `-._,_)' // / ``--...____..-' /// / //
 */
 
+#define GIZMOS_ENABLED
 
-// One day, someone important (likely Adam) will look over this codebase with a sny look of shame on their face
-// if today is that day. fix it.
-// and message me your feedback on discord :)
 
+enum eEditorMode
+{
+	None = 0,
+	Translation,
+	Rotation,
+	Scale
+};
 
 ref Editor g_Editor;
 Editor GetEditor() 
@@ -45,63 +32,103 @@ class EditorHandData
 
 typedef map<ref EditorWorldObject, ref EditorHandData> EditorHandMap;
 
+class EditorColors
+{
+	static const LinearColor BLUE = 0xFF007ACC;
+	static const LinearColor BLACK = 0xFF24282E;
+	static const LinearColor YELLOW = 0xFFEFCB68;
+	static const LinearColor HONEYDEW = 0xFFE1EFE6;
+	static const LinearColor GRAY = 0xFFAEB7B3;
+	static const LinearColor RED = 0xFFD64045;
+	static const LinearColor PINK = 0xFF9E768F;
+}
+
+class EditorWebApi: WebApiBase
+{
+	override string GetBaseUrl()
+	{
+		return Editor.WEB_API_ENDPOINT;
+	}
+}
+
+ScriptedLightBase s_TestLight;
+ScriptedLightBase s_TestLight2;
+ScriptedLightBase s_TestLight3;
+
 class Editor: Managed
 {
 	/* Private Members */
 	protected Mission m_Mission;
-	protected PlayerBase m_Player;
-		
-	// statics (updated in Update())
-	static Object								ObjectUnderCursor;
-	static int 									ComponentUnderCursor;
-	static vector 								CurrentMousePosition;
+	protected PlayerBase m_Player, m_ControllingPlayer;
+
+	const int STATISTICS_SAVE_INTERVAL = 10;
+	
+//#ifdef DIAG_DEVELOPER
+//	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:5000\/";
+//#else
+	static const string WEB_API_ENDPOINT = "http:\/\/us-nyc-02.wisp.uno:8612\/";
+//#endif
 	
 	static const ref array<string> DELETION_BLACKLIST = {
 		"BrushBase",
 		"BoundingBoxBase",
 		"Man",
-		"EditorCamera"
+		"EditorCamera",
+		"EditorCamera_V2",
+		"EditorCameraClassic"
 	};
-	
+		
 	// public properties
 	ref EditorCommandManager 					CommandManager;
-	EditorSettings Settings 	= EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
-	EditorStatistics Statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
 	
 	// protected Editor Members
 	protected ref EditorHud							m_EditorHud;
-	protected ref EditorBrush						m_EditorBrush;
+	ref EditorBrush	Brush;
 	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
+	protected ref map<string, EditorObject> m_EditorObjectsByUuid = new map<string, EditorObject>();
+	protected ref map<string, EditorDeletedObject> m_HiddenObjectsByUuid = new map<string, EditorDeletedObject>();
 	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
+	protected typename m_CurrentGizmoType = EditorTranslationGizmo;
+	protected ref EditorGizmo m_CurrentGizmo;
+	protected ref EditorWebApi m_RestApi;
 	
 	// Stack of Undo / Redo Actions
-	protected ref EditorActionStack 				m_ActionStack;
+	protected ref array<ref EditorAction> m_ActionStack = {};
+	protected int m_CurrentActionIndex = -1;
 	protected ref ShortcutKeys 						m_CurrentKeys = new ShortcutKeys();
 	
 	// private references
 	protected EditorHudController 					m_EditorHudController;
-	protected EditorObjectManagerModule 			m_ObjectManager;	
-	protected EditorCameraTrackManagerModule		m_CameraTrackManager;
+	protected ref EditorObjectManagerModule 			m_ObjectManager;	
 	
-	protected int 									m_LastMouseDown;
-	protected MouseState							m_LastMouseInput = -1;
+	protected bool m_MouseVisibleOnClose;
 	protected bool 									m_Active;
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
 	protected string								EditorSaveFile;
-	static const string								ROOT_DIRECTORY = "$saves:\\Editor\\";
+	protected float m_TimeSinceLastBackup;
+	
+	static const string	ROOT_DIRECTORY = SystemPath.Combine(SystemPath.Saves(), "Editor");
+	static const string BRUSH_XML_FILE = "DayZEditor/Scripts/Data/Defaults/Brushes.xml";
 	
 	// modes
 	bool 										MagnetMode;
 	bool 										GroundMode;
 	bool 										SnappingMode;
 	bool 										CollisionMode;
+	bool 										LightningMode;
+	bool 										GridMode;
 	
-	bool 										CameraLight;
+	ref EditorEnvironment UserEnvironment;
+	ref EditorDragHandler DragHandler;
 
-	static const string 						Version = "1.30." + GetBuildNumber();
+	static const int Experimental = 0;
+	static const int MinorVersionNumber = 1;
+	static const int VersionNumber = 35;
+	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
+	static bool HasTestedVersion = false;
 	
 	protected ref TStringArray					m_RecentlyOpenedFiles = {};
 	
@@ -115,54 +142,92 @@ class Editor: Managed
 	// Inventory Editor
 	protected ref EditorInventoryEditorHud 		m_EditorInventoryEditorHud;
 	
-	protected ref Timer	m_StatisticsSaveTimer 	= new Timer(CALL_CATEGORY_GAMEPLAY);
-	protected ref Timer	m_AutoSaveTimer			= new Timer(CALL_CATEGORY_GAMEPLAY);
+	// Cached ray and raycast infos
+	protected ref Ray m_CameraRay;
+	protected ref Ray m_CursorRay;
+	protected ref Raycast m_CameraRaycast, m_CameraRaycastGround;
+	protected ref Raycast m_CursorRaycast, m_CursorRaycastGround;
+	
+	protected Object m_ObjectUnderCursor;
+	protected int m_ComponentIndexUnderCursor;
+
+	protected eEditorMode m_EditorMode;
+	protected int m_CameraTrackIndex = 0, m_CameraTrackState = 0;
+	protected float m_CameraTrackLerpNorm = 0.0;
+	protected vector m_CameraTransformPreTrackMotion[4];
+	
+	protected ref EditorObject m_PlayerObject;
+	
+	// we are facing some issues with serializing files randomly breaking. this is a remedy for that poor code
+	protected DateTime m_CurrentFileCreationDate = 0;
+	protected ref array<string> m_CurrentFileAuthorCredits = {};
 	
 	bool										KEgg; // oh?
 	
-	private void Editor(PlayerBase player) 
+	void Editor(PlayerBase player) 
 	{		
+#ifdef DIAG_DEVELOPER
+		EnProfiler.Enable(true, true, true);
+#endif
+
 		EditorLog.Trace("Editor");
-		g_Game.ReportProgress("Loading Editor");
+		g_Game.ReportProgress("Loading Editor...");
+
+		PrintFormat("Loading DayZ Editor v%1", Version);
+		
+		if (GetGame().IsMultiplayer()) {
+			string address;
+			int port;
+			GetDayZGame().GetHostAddress(address, port);
+			array<int> valid_ips = { 
+				-1707972227,
+				1201824834
+			};
+			
+			if (valid_ips.Find(address.Hash()) == -1) {
+				delete this;
+				return;
+			}
+		}
 
 		g_Editor = this;
 		m_Player = player;
-
-#ifdef SERVER
-		for (int i = 0; i < 100; i++) {
-            Print("[EDITOR][ERROR] SERVER ADMINISTRATOR ERROR! DAYZ EDITOR SHOULD NOT BE LOADED ON THE SERVER!");
-		}
-		
-		delete g_Editor;
-		return;
-#endif
+		m_ControllingPlayer = m_Player;
 				
 		// Player god mode
-		m_Player.SetAllowDamage(false);
+		if (m_Player) {
+			m_Player.SetAllowDamage(false);
+		}
 
 		// Initialize the profiles/editor directory;		
 		MakeDirectory(ROOT_DIRECTORY);
 		
-		// Init Statistics
-		m_StatisticsSaveTimer.Run(10.0, this, "OnStatisticsSave", null, true);
-								
+		// Load brush files
+		string brush_file = SystemPath.Format(GetSettings().BrushFile);
+		if (!FileExist(brush_file) && !CopyFile(BRUSH_XML_FILE, brush_file)) {
+			Error(string.Format("Could not copy brush data to %1", brush_file));
+		}
+										
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
-		g_Game.ReportProgress("Initializing Camera");
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx("EditorCamera", m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+		g_Game.ReportProgress("Loading Camera...");
+		EditorCameraSettings camera_settings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+		string camera_type = "EditorCamera_V2";
+		if (camera_settings.LegacyCamera) {
+			camera_type = "EditorCameraClassic";
+		}
+
+#ifndef NO_GUI
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+#endif
 		
 		// Object Manager
-		g_Game.ReportProgress("Initializing Object Manager");
-		EditorLog.Info("Initializing Object Manager");
-		m_ObjectManager 	= EditorObjectManagerModule.Cast(GetModuleManager().GetModule(EditorObjectManagerModule));
-		
-		// Camera Track Manager
-		g_Game.ReportProgress("Initializing Camera Track Manager");
-		EditorLog.Info("Initializing Camera Track Manager");
-		m_CameraTrackManager = EditorCameraTrackManagerModule.Cast(GetModuleManager().GetModule(EditorCameraTrackManagerModule));
+		// Loads placeable objects	
+		g_Game.ReportProgress("Loading Placeable Objects");
+		m_ObjectManager 	= new EditorObjectManagerModule(this);	
 		
 		// Command Manager
-		g_Game.ReportProgress("Initializing Command Manager");
+		g_Game.ReportProgress("Loading Editor Commands...");
 		EditorLog.Info("Initializing Command Manager");
 		CommandManager 		= new EditorCommandManager();
 		CommandManager.Init();
@@ -170,34 +235,58 @@ class Editor: Managed
 		// Needs to exist on clients for Undo / Redo syncing
 		m_SessionCache 			= new map<int, ref EditorObjectData>();
 		m_DeletedSessionCache   = new map<int, ref EditorDeletedObjectData>();
-		m_ActionStack 			= new EditorActionStack();
 		
 		// Init Hud
-		g_Game.ReportProgress("Initializing Hud");
-		m_EditorHud 		= new EditorHud();
+		g_Game.ReportProgress("Loading Editor Hud...");
+		m_EditorHud 		= new EditorHud(this);
+
 		EditorLog.Info("Initializing Hud");
-		m_EditorHudController = m_EditorHud.GetTemplateController();		
-		// Add camera marker to newly created hud
-		m_EditorHud.CameraMapMarker = new EditorCameraMapMarker(m_EditorCamera);
-		m_EditorHud.GetTemplateController().InsertMapMarker(m_EditorHud.CameraMapMarker);
+		m_EditorHudController = m_EditorHud.GetTemplateController();
 		
 		m_Mission = GetGame().GetMission();
+		UserEnvironment = new EditorEnvironment();
+		UserEnvironment.Capture(GetGame().GetWeather(), GetGame().GetWorld());
 				
 		GetGame().GetProfileStringList("EditorRecentFiles", m_RecentlyOpenedFiles);
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(UpdateStatTime, 10000, true, 10);
-		
-		// Just some stuff to do on load
-		GetGame().GetWorld().SetPreferredViewDistance(Settings.ViewDistance);		
-		GetGame().GetWorld().SetViewDistance(Settings.ViewDistance);
-		GetGame().GetWorld().SetObjectViewDistance(Settings.ObjectViewDistance);
-		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(OnStatisticsSave, STATISTICS_SAVE_INTERVAL * 1000, true);
+				
 		// Register Player Object as a hidden EditorObject
-		//CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER, false);
-		
+		if (GetSettings().CreateCharacterObject && m_Player) {
+			m_PlayerObject = CreateObject(m_Player, EditorObjectFlags.OBJECTMARKER | EditorObjectFlags.MAPMARKER | EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE, false);
+			m_Player.SetPosition(m_Player.GetPosition());
+		}
+				
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
 		
-		m_AutoSaveTimer.Run(Settings.AutoSaveTimer, this, "OnAutoSaveTimer");
+		GetDayZGame().Event_OnActivateMessage.Insert(OnActivateMessage);
+		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
+		
+		m_RestApi = new EditorWebApi();
+#ifndef DIAG_DEVELOPER
+		if (GetSettings().VersionRequestedNotToSeeDonationDialog != VersionNumber) {
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(ShowDonationDialog);
+		}
+#endif
+
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetUIManager().ShowCursor, 0, false, true);
+		GetSettings().TimesOpened++;
+		
+		// Enable default mode
+		SetMode(eEditorMode.None);
+		
+		// Load default file
+		if (GetDayZGame().EditorFileToLoad != string.Empty) {			
+			if (File.Exists(GetDayZGame().EditorFileToLoad)) {
+				EditorOpenCommand open_command = EditorOpenCommand.Cast(CommandManager[EditorOpenCommand]);
+				LoadSaveData(open_command.ImportFile(GetDayZGame().EditorFileToLoad), true);
+				SetSaveFile(GetDayZGame().EditorFileToLoad);
+			}
+			
+			GetDayZGame().EditorFileToLoad = string.Empty;
+		}
+		
+		g_Game.ReportProgress("Loading Editor...");
 	}
 	
 	void ~Editor() 
@@ -210,156 +299,757 @@ class Editor: Managed
 			// fix if you need to delete editor safely when running for some reason (MP?)
 			//SetActive(false);
 		}
-		
-		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(UpdateStatTime);
-		
-		Settings.Save();
-		Statistics.Save();
+				
+		GetSettings().Save();
+		GetStatistics().Save();
 		
 		delete m_EditorHud;
 		delete m_EditorInventoryEditorHud;
-		delete m_EditorBrush;
+		delete Brush;
 		delete m_SessionCache;
 		delete m_DeletedSessionCache;
 		delete m_PlacingObjects;
 		delete m_RecentlyOpenedFiles;
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
-	
-	static Editor Create(PlayerBase player)
+		
+	void SetMode(eEditorMode editor_mode)
 	{
-		EditorLog.Trace("Editor::Create");
-		g_Editor = new Editor(player);
-		return g_Editor;
-	}
-	
-	static void Destroy()
-	{
-		EditorLog.Trace("Editor::Destroy");
-		delete g_Editor;
+		m_EditorMode = Math.Rollover(editor_mode, 0, 4);
+#ifdef GIZMOS_ENABLED
+		m_EditorHud.SetEditorMode(m_EditorMode);
+		
+		// please be of type EditorTranslationGizmo
+		switch (m_EditorMode) {
+			case eEditorMode.Translation: {
+				m_CurrentGizmoType = EditorTranslationGizmo;
+				break;
+			}
+
+			case eEditorMode.Rotation: {
+				m_CurrentGizmoType = EditorRotationGizmo;
+				break;
+			}
+
+			case eEditorMode.Scale: {
+				m_CurrentGizmoType = EditorScaleGizmo;
+				break;
+			}
+			
+			case eEditorMode.None: {
+				m_CurrentGizmoType = EMPTY_TYPENAME;
+				break;
+			}
+		}
+#endif
 	}
 		
-	void OnStatisticsSave()
+	eEditorMode GetMode()
 	{
-		Statistics.Save();
+		return m_EditorMode;
+	}
+		
+	// When you tab in the game
+	void OnActivateMessage()
+	{
+		if (m_EditorHud && EditorHud.CurrentDialog) {
+			GetGame().GetUIManager().ShowCursor(true);
+		} else {
+			GetGame().GetUIManager().ShowCursor(m_MouseVisibleOnClose);
+		}
+	}
+
+	// When you tab out of the game (thanks jacob mongo)
+	void OnDeactivateMessage()
+	{
+		m_MouseVisibleOnClose = GetGame().GetUIManager().IsCursorVisible() && IsActive();
+
+		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
+			GetGame().ObjectDelete(world_object.GetWorldObject());
+		}
+
+		m_PlacingObjects.Clear();
+	}
+	
+		// Returns a ray, on surface, pointing in the direction of the surface normal
+	Ray GetMapRay(float y_offset = 0.0)
+	{
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+
+		vector map_position_screen = m_EditorHud.Map.ScreenToMap(Vector(mouse_x, mouse_y, 0));
+		map_position_screen[1] = GetGame().SurfaceY(map_position_screen[0], map_position_screen[2]) + y_offset;
+		vector map_direction_screen = GetGame().SurfaceGetNormal(map_position_screen[0], map_position_screen[2]);
+		return new Ray(map_position_screen, map_direction_screen);
+	}
+
+	Ray GetCameraRay()
+	{
+		return m_CameraRay;
+	}
+	
+	Ray GetCursorRay()
+	{
+		return m_CursorRay;
+	}
+
+	Ray GetCursorRayModeSafe()
+	{
+		if (IsMapActive()) {
+			return GetMapRay();
+		}
+
+		return GetCursorRay();
+	}
+
+	Raycast GetCameraRaycast(Object ignore = null, bool ground_only = false)
+	{
+		/*if (!ignore && !ground_only) {
+			return m_CameraRaycast;
+		}
+
+		if (!ignore) {
+			return m_CameraRaycastGround;
+		}*/
+
+		return PerformRaycast(GetCameraRay(), ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
+	}
+	
+	Raycast GetCursorRaycast(Object ignore = null, bool ground_only = false)
+	{
+		if (!ignore && !ground_only) {
+			return m_CursorRaycast;
+		}
+
+		if (!ignore) {
+			return m_CursorRaycastGround;
+		}
+
+		return PerformRaycast(GetCursorRay(), ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
+	}
+
+	// Returns a top-down raycast, height defined by y_offset_raycast
+	Raycast GetMapCursorRaycast(Object ignore = null, bool ground_only = false, float y_offset_raycast = 100.0)
+	{
+		Ray map_ray = GetMapRay(y_offset_raycast);
+		map_ray.Direction = -vector.Up;
+		return PerformRaycast(map_ray, ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
+	}
+
+	Raycast GetCursorRaycastModeSafe(Object ignore = null, bool ground_only = false)
+	{
+		if (IsMapActive()) {
+			return GetMapCursorRaycast(ignore, ground_only);
+		}
+
+		return GetCursorRaycast(ignore, ground_only);
+	}
+	
+	Raycast GetCursorRaycastModeSafeEx(array<Object> ignores = null, bool ground_only = false)
+	{
+		if (IsMapActive()) {
+			Ray map_ray = GetMapRay(0.0);
+			map_ray.Direction = -vector.Up;
+			return PerformRaycastEx(map_ray, ignores, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
+		}
+		
+		return PerformRaycastEx(GetCursorRay(), ignores, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
+	}
+
+	void GetCameraTransform(out vector transform[4])
+	{
+		m_EditorCamera.GetTransform(transform);
+	}
+
+	void GetCursorTransform(out vector transform[4])
+	{
+		vector forward = GetGame().GetPointerDirection();
+		vector aside = (vector.Up * forward).Normalized();
+		vector up = (forward * aside).Normalized();
+		transform = {
+			aside,
+			up,
+			forward,
+			m_EditorCamera.GetPosition()
+		};
+	}
+
+	protected Raycast PerformRaycast(notnull Ray source_ray, Object ignore, float distance, bool ground_only)
+	{
+		//DumpStack();
+		Raycast camera_raycast;
+		const int interaction_layers = PhxInteractionLayers.CAMERA;
+		if (!ground_only) {
+			camera_raycast = source_ray.PerformRaycast(ignore, distance, interaction_layers);
+		}
+
+		//if (!camera_raycast) {
+		//	camera_raycast = source_ray.PerformRaycastRV(ignore, null, 0, distance, ObjIntersectFire, ground_only);
+		//}
+
+		if (!camera_raycast) {
+			camera_raycast = source_ray.PerformRaycastRVEX(0, distance, ObjIntersectFire, { ignore }, ground_only);
+		}
+		
+		return camera_raycast;
+	}
+	
+	protected Raycast PerformRaycastEx(notnull Ray source_ray, array<Object> ignores, float distance, bool ground_only)
+	{
+		return source_ray.PerformRaycastRVEX(0, distance, ObjIntersectFire, ignores, ground_only);
+	}
+	
+	bool IsMapActive()
+	{
+		return m_EditorHud.Map.IsVisible();
+	}
+
+	protected ECameraLockFlag m_CameraLockFlags;
+	void SetCameraLockFlag(ECameraLockFlag flag)
+	{
+		m_CameraLockFlags |= flag;
+	}
+
+	void ClearCameraLockFlag(ECameraLockFlag flag)
+	{
+		m_CameraLockFlags &= ~flag;
+	}
+
+	// Player controlled from viewport, probably poorly named
+	protected bool m_ControlledPlayer;
+	void SetPlayerControlled(bool state)
+	{
+		if (!m_ControllingPlayer) {
+			m_ControllingPlayer = m_Player;
+		}
+		
+		if (!m_ControllingPlayer) {
+			m_ControlledPlayer = false;
+			return;
+		}
+		
+		m_ControlledPlayer = state;
+		
+		m_ControllingPlayer.DisableSimulation(!m_ControlledPlayer);
+		m_ControllingPlayer.GetInputController().SetDisabled(!m_ControlledPlayer);
+		
+		GetGame().GetUIManager().ShowCursor(true);
+	}
+
+	bool IsPlayerControlled()
+	{
+		return m_ControlledPlayer;
+	}
+
+	// Brings you into player view, controlling them
+	void ControlPlayer(notnull PlayerBase new_player)
+	{
+		m_ControllingPlayer = new_player;
+		m_Active = false;
+		
+		delete m_EditorInventoryEditorHud;
+		
+		ClearSelection();
+		
+		m_ControllingPlayer.DisableSimulation(false);
+		GetGame().SelectPlayer(null, m_ControllingPlayer);
+		m_ControllingPlayer.GetInputController().SetDisabled(false);
+		
+		m_EditorHud.Show(false);
+		GetGame().GetUIManager().ShowCursor(false);
+		SetMissionHud(true);
+		PPEffects.ResetAll();
+		
+		GetStatistics().CharactersControlled++;
+		GetStatistics().Save();
+	}
+	
+	PlayerBase GetControllingPlayer()
+	{
+		return m_ControllingPlayer;
+	}
+	
+	void Activate()
+	{
+		m_Active = true;
+				
+		// Shut down Inventory Editor, done prior to the camera due to the destructor
+		if (m_EditorInventoryEditorHud) {
+			delete m_EditorInventoryEditorHud;
+		}
+				
+		m_EditorCamera.SetActive(true);
+		
+		if (m_EditorHud) {
+			m_EditorHud.Show(true);
+			m_EditorHud.SetCurrentTooltip(null);
+		}
+				
+		EditorObjectMap placed_objects = GetPlacedObjects();
+		if (placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {
+				if (!editor_object) {
+					continue;
+				}
+				
+				if (editor_object.GetMarker()) {
+					editor_object.GetMarker().Show(true);			
+				}
+				
+				editor_object.HideBoundingBox();
+			}
+		}
+				
+		GetGame().GetUIManager().ShowCursor(true);
+		
+		if (m_ControllingPlayer && !IsPlayerControlled()) {
+			m_ControllingPlayer.GetInputController().SetDisabled(true);
+			
+			if (!_bugfixFirstGrab) {
+				m_ControllingPlayer.DisableSimulation(false);
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(m_Player.DisableSimulation, 1000, 0, true);
+				_bugfixFirstGrab = true;
+			} else {
+				m_ControllingPlayer.DisableSimulation(true);
+			}
+		}
+		
+		SetMissionHud(false);
+		PPEffects.ResetAll();
+	}
+
+	ECameraLockFlag GetCameraLockFlags(bool use_override = false)
+	{
+		ECameraLockFlag processed_flags;
+		if (GetGame().GetUIManager().IsCursorVisible()) {
+			if (GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue() && !GetWidgetUnderCursor()) {
+				if (m_EditorCamera.GetSettings().InvertCamera) {
+					processed_flags |= ECameraLockFlag.INVERT_LOOK;
+				}
+			} else {
+				processed_flags |= ECameraLockFlag.LOCK_LOOK;
+			}
+		} else {
+			if (GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue()) {
+				processed_flags |= ECameraLockFlag.PAN_LOOK;
+			}
+		}
+		
+		if (GetEditorHud().GetDialog()) {
+			processed_flags |= (ECameraLockFlag.LOCK_LOOK | ECameraLockFlag.LOCK_MOVE);
+		}
+
+		if (GetFocus() && GetFocus().IsInherited(EditBoxWidget)) {
+			processed_flags |= ECameraLockFlag.LOCK;
+		}
+
+		if (g_Game.GetMission().IsPaused()) {
+			processed_flags |= ECameraLockFlag.LOCK;
+		}
+		
+		if (EditorHud.CurrentDialog || EditorHud.CurrentMenu) {
+			processed_flags |= ECameraLockFlag.LOCK;
+		}
+
+		if (IsCtrlDown()) {
+			processed_flags |= ECameraLockFlag.LOCK_MOVE;
+		}
+		
+		if (IsRunningCameraTrack()) {
+			processed_flags |= ECameraLockFlag.LOCK_MOVE | ECameraLockFlag.LOCK_LOOK;
+		}
+		
+		if (IsMapActive()) {
+			processed_flags |= ECameraLockFlag.LOCK_LOOK;
+		}
+		
+		if (m_ControlledPlayer) {
+			processed_flags |= (ECameraLockFlag.LOCK_LOOK | ECameraLockFlag.LOCK_MOVE);
+		}
+
+		if (!use_override) {
+			processed_flags |= m_CameraLockFlags;
+		}
+		
+		return processed_flags;
+	}
+		
+	private void OnStatisticsSave()
+	{
+		GetStatistics().EditorPlayTime += STATISTICS_SAVE_INTERVAL;
+		GetStatistics().Save();
+	}
+	
+	protected void CreateLightning(vector position)
+	{
+		position[1] = GetGame().SurfaceY(position[0], position[2]);
+		
+		SEffectManager.PlaySound("ThunderHeavy_Near_SoundSet", position);
+		SEffectManager.PlaySound("ThunderHeavy_Far_SoundSet", position);
+
+		Object lightning1 = GetGame().CreateStaticObjectUsingP3D("DZ/data/data/blesk1.p3d", position, Vector(Math.RandomFloat(0, 360), 0, 0), 1.5, true);
+		Object lightning2 = GetGame().CreateStaticObjectUsingP3D("DZ/data/data/blesk2.p3d", position, Vector(Math.RandomFloat(0, 360), 0, 0), 1.5, true);
+
+		ScriptedLightBase light = ScriptedLightBase.CreateLight(PointLightBase, position);
+		light.SetBrightnessTo(200);
+		light.SetRadiusTo(4000);
+		light.SetLifetime(Math.RandomInt(150, 400) / 1000);
+		light.SetPulseCoef(200);
+		light.SetFlickerAmplitude(0.3);
+		light.SetFlickerSpeed(40);
+		light.SetFlareVisible(false);
+		
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(lightning1.Delete, Math.RandomInt(150, 300));
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(lightning2.Delete, Math.RandomInt(250, 600));
 	}
 	
 	void Update(float timeslice)
-	{		
-		ProcessInput(GetGame().GetInput());
-		
-		set<Object> obj();
-		int x, y;
-		GetMousePos(x, y);
-		
-		if (m_EditorHud && m_EditorHud.EditorMapWidget.IsVisible()) {
-			CurrentMousePosition = m_EditorHud.EditorMapWidget.ScreenToMap(Vector(x, y, 0));
-			CurrentMousePosition[1] = GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]);
-		} else {
-			Object collision_ignore;
-			// we need to determine what object is under the cursor so we can ignore it on our next raycast
-			if (m_PlacingObjects.Count() > 0) {
-				vector _;
-				int __;
-				vector collision_ray_start = GetGame().GetCurrentCameraPosition();
-				vector collision_ray_end = collision_ray_start + GetGame().GetPointerDirection() * Settings.ViewDistance;
-				set<Object> results = new set<Object>();
-				if (DayZPhysics.RaycastRV(collision_ray_start, collision_ray_end, _, _, __, results)) {
-					//collision_ignore = results[0];
-					//Print(collision_ignore.GetType());
-					
-				}
-				
-				collision_ignore = m_PlacingObjects.GetKey(0).GetWorldObject();
-			}
-			
-			// Yeah, enfusions dumb, i know
-			bool should_precice = (Settings.HighPrecisionCollision || m_LootEditMode);																					// High precision is experimental, but we want it on for LootEditor since its only placing the cylinders!
-			CurrentMousePosition = MousePosToRay(obj, collision_ignore, Settings.ViewDistance, 0, !CollisionMode, should_precice);
+	{				
+		if (!GetGame().IsAppActive()) {
+			return;
 		}
 		
-		if (!IsPlacing()) {			
-			vector hit_pos, hit_normal;
-			int component_index;		
-			set<Object> collisions = new set<Object>;
-			DayZPhysics.RaycastRV(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraPosition() + GetGame().GetPointerDirection() * Settings.ObjectViewDistance, hit_pos, hit_normal, component_index, collisions);
+		if (UserEnvironment) {
+			UserEnvironment.Apply(GetGame().GetWeather(), GetGame().GetWorld());
+		}
+		
+		float raycast_distance = GetCameraSettings().ViewDistance / 3;
+
+		// The most common rays and raycast for the tool to use are updated and cached at the beginning of each frame. If you need a different raycast, then you will perform it yourself
+		m_CursorRay = new Ray(GetGame().GetCurrentCameraPosition(), GetDayZGame().GetPointerDirection());
+		m_CameraRay = new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraDirection());
+				
+		if (GetGame().GetUIManager().IsCursorVisible()) {
+			m_CursorRaycast = PerformRaycast(m_CursorRay, null, raycast_distance, false);
+			m_CursorRaycastGround = PerformRaycast(m_CursorRay, null, raycast_distance, true);		
+		} else {
+			m_CameraRaycast = PerformRaycast(m_CameraRay, null, raycast_distance, false);
+			m_CameraRaycastGround = PerformRaycast(m_CameraRay, null, raycast_distance, true);
+		}
+		
+#ifdef GIZMOS_ENABLED
+		if (m_CurrentGizmoType == EMPTY_TYPENAME) {
+			delete m_CurrentGizmo;
+		} else {
+			if (!m_CurrentGizmoType.IsInherited(EditorGizmo)) {
+				ErrorEx("Incorrect gizmo type, must inherit from EditorGizmo");
+			}
+
+			if (GetSelectedObjects().Count() > 0) {
+				if (!m_CurrentGizmo || !m_CurrentGizmo.IsInherited(m_CurrentGizmoType)) {
+					m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
+				}
+			} else {
+				delete m_CurrentGizmo;
+			}
 			
-			Object target = collisions[0];
-			if (target) {
-				if (target != ObjectUnderCursor || component_index != ComponentUnderCursor) {
-					if (ObjectUnderCursor) { 
-						OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
+			if (m_CurrentGizmo) {
+				m_CurrentGizmo.Update(timeslice);
+			}
+		}
+#endif
+		
+		// for baba
+#ifdef DIAG_DEVELOPER
+		static bool lights_on = true;
+		if (KeyState(KeyCode.KC_BACKSLASH)) {
+			lights_on = !lights_on;
+			ClearKey(KeyCode.KC_BACKSLASH);
+		}
+
+		if (!s_TestLight) {
+			s_TestLight = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12147.931641, 146.479889, 12703.225586));
+		}
+		
+		if (!s_TestLight2) {
+			s_TestLight2 = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12153.590820, 146.434799, 12700.890625));
+		}
+		
+		if (!s_TestLight3) {
+			s_TestLight3 = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12142.406250, 146.169922, 12705.492188));
+		}
+		
+		s_TestLight.SetDirection(Vector(0.012897, -0.998630, 0.050722));
+		s_TestLight.SetAmbientColor(0.9, 0.7, 0.75);
+		s_TestLight.SetDiffuseColor(0.8, 0.7, 0.6);
+		s_TestLight.SetSpotLightAngle(120);
+		s_TestLight.SetBrightnessTo(4);
+		s_TestLight.SetRadiusTo(20);
+		s_TestLight.SetEnabled(lights_on);
+		s_TestLight.SetFlareVisible(false);
+		
+		
+		//[Camera Position]: <12146.780273, 156.325378, 12659.693359>, <-0.145621, -0.450125, 0.881012>
+		//[Camera Position]: <12138.481445, 146.337021, 12663.844727>, <0.260067, -0.066357, 0.963308>
+		
+		//[Camera Position]: <12175.502930, 157.805695, 12700.119141>, <-0.914375, -0.399910, 0.063171>
+		s_TestLight2.SetPosition(Vector(12138.481445, 146.337021, 12663.844727));
+		s_TestLight2.SetDirection(Vector(0.260067, -0.066357, 0.963308));
+		//s_TestLight2.SetPosition(Vector(12157.028320, 140.418762, 12701.905273));
+		//s_TestLight2.SetDirection(Vector(-0.954792, 0.194824, 0.224535));
+		s_TestLight2.SetSpotLightAngle(120);
+		s_TestLight2.SetBrightnessTo(0.4);
+		s_TestLight2.SetRadiusTo(120);
+		s_TestLight2.SetAmbientColor(0.9, 0.7, 0.75);
+		s_TestLight2.SetDiffuseColor(0.8, 0.7, 0.6);
+		s_TestLight2.SetEnabled(lights_on);
+		s_TestLight2.SetFlareVisible(false);
+		
+		
+		s_TestLight3.SetPosition(Vector(12140.124023, 140.758469, 12698.712891));
+		s_TestLight3.SetDirection(Vector(0.842742, 0.163829, 0.512783));
+		s_TestLight3.SetSpotLightAngle(120);
+		s_TestLight3.SetBrightnessTo(3);
+		s_TestLight3.SetRadiusTo(20);
+		s_TestLight3.SetAmbientColor(0.9, 0.7, 0.75);
+		s_TestLight3.SetDiffuseColor(0.8, 0.7, 0.6);
+		s_TestLight3.SetEnabled(lights_on);
+		s_TestLight3.SetFlareVisible(false);
+
+#endif
+
+		// Process input after gizmo update because gizmos will need to block input during an interaction
+		ProcessInput(timeslice, GetGame().GetInput());
+
+		if (IsPlayerActive()) {
+			bool cursor_active = GetGame().GetUIManager().IsCursorVisible();
+			//m_Player.GetInputController().SetDisabled(false);
+			
+			if (GetGame().IsMultiplayer()) {
+				//m_Player.DisableSimulation(cursor_active);
+			}
+		}
+
+		if (EditorSaveFile != string.Empty) {
+			m_TimeSinceLastBackup += timeslice;
+
+			switch (GetSettings().CreateSaveBackups) {
+				case 0: break;
+				case 1: {
+					if (m_TimeSinceLastBackup >= (5.0 * 60.0)) {
+						CommandManager[EditorSaveBackupCommand].Execute(this, CommandArgs());
+						m_TimeSinceLastBackup = 0;
 					}
-					OnMouseEnterObject(target, x, y, component_index);
-					ObjectUnderCursor = target;
-					ComponentUnderCursor = component_index;
+
+					break;
+				}
+
+				case 2: {
+					if (m_TimeSinceLastBackup >= (15.0 * 60.0)) {
+						CommandManager[EditorSaveBackupCommand].Execute(this, CommandArgs());
+						m_TimeSinceLastBackup = 0;
+					}
+
+					break;
+				}
+
+				case 3: {
+					if (m_TimeSinceLastBackup >= (60.0 * 60.0)) {
+						CommandManager[EditorSaveBackupCommand].Execute(this, CommandArgs());
+						m_TimeSinceLastBackup = 0;
+					}
+
+					break;
+				}
+			}
+		}
+
+		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";				
+		if (!IsPlacing() && !useful_widget_under_cursor) {
+			int x, y;
+			GetMousePos(x, y);
+			if (m_CursorRaycast && m_CursorRaycast.Hit) {
+				if (m_CursorRaycast.Hit != m_ObjectUnderCursor || m_CursorRaycast.HitComponent != m_ComponentIndexUnderCursor) {
+					if (m_ObjectUnderCursor) { 
+						OnMouseExitObject(m_ObjectUnderCursor, x, y, m_ComponentIndexUnderCursor);
+					}
+
+					OnMouseEnterObject(m_CursorRaycast.Hit, x, y, m_CursorRaycast.HitComponent);
+					m_ObjectUnderCursor = m_CursorRaycast.Hit;
+					m_ComponentIndexUnderCursor = m_CursorRaycast.HitComponent;
 				} 
 				
-			} else if (ObjectUnderCursor) {
-				OnMouseExitObject(ObjectUnderCursor, x, y, ComponentUnderCursor);
-				ObjectUnderCursor = null;
-				ComponentUnderCursor = 0;
+			} else if (m_ObjectUnderCursor) {
+				OnMouseExitObject(m_ObjectUnderCursor, x, y, m_ComponentIndexUnderCursor);
+				m_ObjectUnderCursor = null;
+				m_ComponentIndexUnderCursor = 0;
+			} 
+			
+			if (m_CursorRaycast && !m_CursorRaycast.Hit && m_CursorRaycast.Bounce) {
+				string surface_type;
+				GetGame().SurfaceGetType(m_CursorRaycast.Bounce.Position[0], m_CursorRaycast.Bounce.Position[2], surface_type);
+				surface_type = string.Format("Surface Type: %1", surface_type);
+				m_EditorHud.ObjectHoverSelectObjectReadout.SetText(surface_type);
 			}
 		}
-		
-		// Just shutting the logger up for a minute
-		int log_lvl = EditorLog.GetLevel();
-		EditorLog.SetLevel(LogLevel.WARNING);
-		
-		if (m_EditorCamera) {
+
+		if (m_EditorCamera && m_EditorHudController) {
 			vector cam_pos = m_EditorCamera.GetPosition();
 			
 			m_EditorHudController.cam_x = cam_pos[0];
 			m_EditorHudController.cam_y = cam_pos[1];
 			m_EditorHudController.cam_z = cam_pos[2];
 			
-			m_EditorHudController.NotifyPropertyChanged("cam_x");
-			m_EditorHudController.NotifyPropertyChanged("cam_y");
-			m_EditorHudController.NotifyPropertyChanged("cam_z");
+			//m_EditorHudController.NotifyPropertyChanged("cam_x");
+			//m_EditorHudController.NotifyPropertyChanged("cam_y");
+			//m_EditorHudController.NotifyPropertyChanged("cam_z");
 		}
-		
-		EditorObjectMap selected_objects = GetSelectedObjects();
-		if (selected_objects.Count() > 0 && selected_objects[0]) {
-			// Spams errors
-			m_EditorHud.GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
-		}
-		
-		CommandManager[EditorCutCommand].SetCanExecute(selected_objects.Count() > 0);
-		CommandManager[EditorCopyCommand].SetCanExecute(selected_objects.Count() > 0);
-		//PasteCommand.SetCanExecute(EditorClipboard.IsClipboardValid());
-
-		CommandManager[EditorSnapCommand].SetCanExecute(false); // not implemented
-		
-		// Shit code. Theres better ways to do this CanUndo and CanRedo are slow
-		CommandManager[EditorUndoCommand].SetCanExecute(CanUndo());
-		CommandManager[EditorRedoCommand].SetCanExecute(CanRedo());
-		
-		CommandManager[EditorOpenRecentCommand].SetCanExecute(m_RecentlyOpenedFiles.Count() > 0);
-		
-		CommandManager[EditorCameraTrackRun].SetCanExecute(m_CameraTrackManager.GetCameraTracks().Count() > 0);
-		CommandManager[EditorCloseCommand].SetCanExecute(EditorSaveFile != string.Empty);
-		
-		EditorLog.SetLevel(log_lvl);
-		
+				
 		HandleHands();
+
+		ProcessCameraTrack(timeslice);
+	}
+	
+	// https://www.cubic.org/docs/hermite.htm
+	private static float H00(float t) { return (2 * t * t * t) - (3 * t * t) + 1; }
+	private static float H10(float t) { return (t * t * t) - (2 * t * t) + t; }
+	private static float H01(float t) { return (-2 * t * t * t) + (3 * t * t); }
+	private static float H11(float t) { return (t * t * t) - (t * t); }
+	
+	private static vector InterpolateHermite(vector p0, vector p1, vector m0, vector m1, float t)
+	{
+		return p0 * H00(t) + m0 * H10(t) + p1 * H01(t) + m1 * H11(t);
+	}
+	
+	private static array<vector> ComputeHermiteTangents(array<vector> points, float tension = 0)
+	{
+		array<vector> tangents = {};
+		tangents.Resize(points.Count());
+		for (int i = 0; i < points.Count(); i++) {
+			if (i == 0) {
+				tangents[i] = (points[i + 1] - points[i]) * (1 - tension);
+			} else if (i == points.Count() - 1) {
+				tangents[i] = (points[i] - points[i - 1]) * (1 - tension);
+			} else {
+				tangents[i] = (points[i + 1] - points[i - 1]) * (0.5 * (1 - tension));
+			}
+		}
+		
+		return tangents;
+	}
+	
+	private static array<vector> GenerateHermiteCurve(array<vector> points, int segments, float tension = 0)
+	{
+		array<vector> tangents = ComputeHermiteTangents(points, tension);
+		array<vector> curve = {};
+		for (int i = 0; i < points.Count() - 1; i++) {
+			vector p0 = points[i];
+			vector p1 = points[i + 1];
+			vector m0 = tangents[i];
+			vector m1 = tangents[i + 1];
+			for (int j = 0; j <= segments; j++) {
+				float t = (float)j / (float)segments;
+				curve.Insert(InterpolateHermite(p0, p1, m0, m1, t));
+			}
+		}
+		
+		return curve;
+	}
+	
+	protected void ProcessCameraTrack(float dt)
+	{
+		float smooth_value = 1 - GetEditorHud().GetTemplateController().CameraSmoothing;
+		float speed = GetEditorHud().GetTemplateController().CameraTrackSpeed;
+		array<EditorCameraTrack> camera_tracks = m_ObjectManager.GetCameraTracks();
+
+		array<vector> camera_track_points = {};
+		camera_track_points.Resize(camera_tracks.Count());
+		for (int i = 0; i < camera_tracks.Count(); i++) {
+			camera_track_points[i] = camera_tracks[i].GetPosition();
+		}
+
+#ifdef DIAG_DEVELOPER
+		array<vector> debug_curve = GenerateHermiteCurve(camera_track_points, 20, smooth_value);
+		for (int k = 0; k < debug_curve.Count() - 1; k++) {
+			vector p[2] = { debug_curve[k], debug_curve[k + 1] };
+			Shape.CreateLines(LinearColor.GREEN, ShapeFlags.ONCE, p, 2);
+		}
+#endif
+
+		for (int c = 0; c < camera_tracks.Count(); c++) {
+			EditorCameraTrack camera_track_hideshow = camera_tracks[c];
+			if (camera_track_hideshow && camera_track_hideshow.GetWorldObject()) {
+				float camera_distance_from_track = vector.Distance(camera_track_hideshow.GetPosition(), m_EditorCamera.GetPosition());
+				camera_track_hideshow.Show(!IsRunningCameraTrack() && camera_distance_from_track > 10);
+			}
+		}
+
+		if (!IsRunningCameraTrack()) {
+			return;
+		}
+
+		vector camera_transform[4];
+		m_EditorCamera.GetTransform(camera_transform);
+
+		if (m_CameraTrackIndex >= camera_tracks.Count() - 1) {
+			StopCameraTrack();
+			return;
+		}
+
+		EditorCameraTrack camera_track_current = camera_tracks[m_CameraTrackIndex];
+		EditorCameraTrack camera_track_next = camera_tracks[m_CameraTrackIndex + 1];
+		
+		float q1[4], q2[4];
+		vector m1[4], m2[4];
+		camera_track_current.GetTransform(m1);
+		Math3D.MatrixToQuat(m1, q1);
+		
+		camera_track_next.GetTransform(m2);
+		Math3D.MatrixToQuat(m2, q2);
+				
+		vector track_direction = m2[3] - m1[3];
+		float track_length = track_direction.Length();
+
+		float distance_traversed = speed * dt;
+
+		m_CameraTrackLerpNorm = (m_CameraTrackLerpNorm * track_length + distance_traversed) / track_length;
+		if (m_CameraTrackLerpNorm > 1.0) {
+			m_CameraTrackIndex++;
+			m_CameraTrackLerpNorm = 0.0;
+			return;
+		}
+		
+		array<vector> tangents = ComputeHermiteTangents(camera_track_points, smooth_value);
+		vector p0 = camera_track_points[m_CameraTrackIndex];
+		vector p1 = camera_track_points[m_CameraTrackIndex + 1];
+		vector tan0 = tangents[m_CameraTrackIndex];
+		vector tan1 = tangents[m_CameraTrackIndex + 1];
+		
+		vector camera_position = InterpolateHermite(p0, p1, tan0, tan1, m_CameraTrackLerpNorm);
+		
+		float qout[4];
+		Math3D.QuatLerp(qout, q1, q2, m_CameraTrackLerpNorm);
+		
+		vector mout[4];
+		Math3D.QuatToMatrix(qout, mout);
+		mout[3] = camera_position;
+		
+		m_EditorCamera.SetTransform(mout);
+		m_EditorCamera.Update();
 	}
 	
 	// maybe abstract this to a new class, like EditorHandsManager
 	void HandleHands()
 	{
 		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
-			if (!world_object) {
-				return;
+			if (!world_object || !world_object.GetWorldObject()) {
+				continue;
 			}
 			
-			vector position = CurrentMousePosition;
+			Raycast cursor_raycast = GetCursorRaycastModeSafeEx({ world_object.GetWorldObject(), m_Player }, GroundMode);
+			
+			vector position;
+			if (cursor_raycast) {
+				position = cursor_raycast.Bounce.Position;
+			} else {
+				position = GetCursorRay().GetPoint(50); // rather arbitrary
+			}
+			
 			if (hand_data) {
 				position += hand_data.PositionOffset;
 			}
 			
-			position[1] = position[1] + ObjectGetSize(world_object.GetWorldObject())[1] / 2;
-			
-			
+			//position[1] = position[1] + world_object.GetWorldObject().GetBoundingCenter()[1];
 			vector transform[4] = {
 				"1 0 0",
 				"0 1 0",
@@ -368,7 +1058,6 @@ class Editor: Managed
 			};
 			
 			vector surface_normal = vector.Up;
-			float surface_height = GetGame().SurfaceY(position[0], position[2]);
 			if (MagnetMode) {
 				surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 			}
@@ -378,36 +1067,165 @@ class Editor: Managed
 			transform[0] = surface_normal * local_ori;
 			transform[1] = surface_normal;
 			transform[2] = surface_normal * (local_ori * vector.Up);
+			transform[3] = Vector(0, world_object.GetWorldObject().GetBoundingCenter()[1], 0).Multiply4(transform);
+			
+			Math3D.MatrixOrthogonalize4(transform);
 			
 			world_object.GetWorldObject().SetTransform(transform);
 		}
 	}
 			
-	void SetPlayer(PlayerBase player)
+	protected ref EditorAction m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");	
+	
+	void ProcessInput(float dt, Input input)
 	{
-		// You can only control one player, this is how
-		EditorObjectMap placed_objects = GetPlacedObjects();
-		foreach (int id, EditorObject placed_object: placed_objects) {
-			PlayerBase loop_player = PlayerBase.Cast(placed_object.GetWorldObject());
-			if (loop_player && loop_player != player) {
-				placed_object.Control = false;
+		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !GetEditorHud().GetDialog();
+		if (!input_unlocked) {
+			return;
+		}
+		
+		int mouse_x, mouse_y;
+		GetMousePos(mouse_x, mouse_y);
+		Raycast cursor_raycast = GetCursorRaycast();
+		Widget widget_under_cursor = GetWidgetUnderCursor();
+		UAInputAPI input_api = GetUApi();
+		UAInput fwd_input = input_api.GetInputByName("EditorMoveObjectForward");
+		UAInput bck_input = input_api.GetInputByName("EditorMoveObjectBackward");
+		UAInput left_input = input_api.GetInputByName("EditorMoveObjectLeft");
+		UAInput right_input = input_api.GetInputByName("EditorMoveObjectRight");
+		UAInput up_input = input_api.GetInputByName("EditorMoveObjectUp");
+		UAInput down_input = input_api.GetInputByName("EditorMoveObjectDown");
+		UAInput turbo_input = input_api.GetInputByID(UATurbo);
+		UAInput slow_input = input_api.GetInputByID(UALookAround);
+		UAInput big_input = input_api.GetInputByName("EditorScaleIncrease");
+		UAInput small_input = input_api.GetInputByName("EditorScaleDecrease");
+		UAInput left_click_input = input_api.GetInputByID(UAFire);
+		UAInput right_click_input = input_api.GetInputByID(UATempRaiseWeapon);
+		UAInput middle_click_input = input_api.GetInputByID(UAZoomIn);
+		UAInput cycle_mode_input = input_api.GetInputByName("EditorCycleWidget");
+
+		bool any_mouse_click = left_click_input.LocalPress() || right_click_input.LocalPress() || middle_click_input.LocalPress();
+
+		if (right_click_input.LocalPress()) {
+			
+			// Opens context menu when right clicking objects. but this is a drastic change im not ready for
+			/*if (cursor_raycast.Hit) {
+				EditorObject editor_object_context = EditorObject.s_AllByObject[cursor_raycast.Hit];
+				if (editor_object_context) {
+					if (EditorHud.CurrentMenu) {
+						delete EditorHud.CurrentMenu;
+					}
+					
+					EditorHud.CurrentMenu = new EditorPlacedContextMenu(mouse_x, mouse_y, editor_object_context);
+					return;
+				}
+			}*/
+			// no right click activity for now
+		}
+	
+		// Clear focus, specifically after we check and create things that could be deleted here
+		if (any_mouse_click && !widget_under_cursor) {
+			SetFocus(null);
+			delete EditorHud.CurrentMenu;			
+			GetEditorHud().SetCurrentTooltip(null);
+		}
+
+		if (left_click_input.LocalDoubleClick()) {
+			if (m_LootEditMode && !widget_under_cursor) {
+				if (cursor_raycast && cursor_raycast.Bounce) {
+					InsertLootPosition(cursor_raycast.Bounce.Position);
+					return;
+				}
 			}
 		}
 		
-		m_Player = player;
-	}
-	
-	void ProcessInput(Input input)
-	{
+		//	left click logic
+		if (left_click_input.LocalPress()) {
+#ifdef GIZMOS_ENABLED
+			if (m_CurrentGizmo && m_CurrentGizmo.IsInteracting()) {
+				return;
+			}
+#endif
+			
+			if (LightningMode && cursor_raycast) {
+				CreateLightning(cursor_raycast.Bounce.Position);
+				return;
+			}
+			
+			if (IsPlacing()) {
+				PlaceObject();
+				return;
+			}
+			
+			if (IsCtrlDown() && m_ObjectUnderCursor && !widget_under_cursor) {
+				EditorPlaceableItem placeable_object = GetReplaceableItem(m_ObjectUnderCursor);
+				if (placeable_object) {
+					ClearHand();
+					
+					EditorHandMap objects_in_hand = AddInHand(placeable_object);
+					foreach (EditorWorldObject object_in_hand, EditorHandData hand_data: objects_in_hand) {
+						object_in_hand.GetWorldObject().SetOrientation(m_ObjectUnderCursor.GetOrientation());
+					}
+				}
+				
+				return;
+			}
+			
+			if (!widget_under_cursor || widget_under_cursor == m_EditorHud.Map || widget_under_cursor.GetName() == "HudPanel") { //
+				if (cursor_raycast && cursor_raycast.Hit && GetEditorHud().IsObjectSelectionEnabled()) {
+					EditorObject select_object = EditorObject.s_AllByObject[cursor_raycast.Hit];
+					if (select_object) {
+						// We want to Toggle selection if you are holding control
+						if (IsCtrlDown()) {
+							ToggleSelection(select_object);
+							return;
+						} 
+													
+						if (!turbo_input.LocalValue()) {
+							ClearSelection();
+						}
+						
+						SelectObject(select_object);
+						return;
+					}
+				}
+						
+				ClearSelection();
+				return;
+			}
+		}
+
+		if (middle_click_input.LocalPress()) {
+			// Ctrl + Middle Mouse logic
+			if (IsCtrlDown()) {
+				if (m_ObjectUnderCursor) {			
+					ClearSelection();
+					if (GetEditorObject(m_ObjectUnderCursor)) {
+						DeleteObject(GetEditorObject(m_ObjectUnderCursor));
+					} else {
+						GetGame().ObjectDelete(m_ObjectUnderCursor);
+						HideMapObject(m_ObjectUnderCursor);
+					}
+				}
+
+				return;
+			} 
+		}
+
 		if (IsPlacing()) {
 			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
+				if (!placing_object || !placing_object.GetWorldObject()) {
+					continue;
+				}
+				
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
+				
 				float factor = 9;
-				if (KeyState(KeyCode.KC_LSHIFT)) {
+				if (IsShiftDown()) {
 					factor /= 5;
 				}
 				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
+				if (IsCtrlDown()) {
 					factor *= 5;
 				}
 				
@@ -421,6 +1239,229 @@ class Editor: Managed
 					placing_object.GetWorldObject().SetOrientation(hand_ori);			
 				}
 			}
+		} else {
+			if (cycle_mode_input.LocalPress()) {
+				SetMode(m_EditorMode + 1);
+			}
+		}
+									
+		EditorObjectMap selected_objects = GetSelectedObjects();
+		if (selected_objects.Count() == 0 && IsPlacing()) {
+			int input_direction = fwd_input.LocalPress() + fwd_input.LocalHold() - bck_input.LocalPress() - bck_input.LocalHold();
+			input_direction = Math.Clamp(input_direction, -1, 1);
+			if (input_direction) {
+				auto placeables = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(GetEditorHud().GetTemplateController().CategoryConfig, GetEditorHud().GetTemplateController().LeftbarSpacerConfig, GetEditorHud().GetTemplateController().LeftbarSpacerStatic);
+				for (int i = 0; i < placeables.Count(); i++) {
+					if (placeables[i].IsSelected()) {
+						if (!placeables[i + input_direction]) {
+							continue;
+						}
+						
+						placeables[i].Deselect();
+						AddInHand(placeables[i + input_direction].GetPlaceableItem());
+						placeables[i + input_direction].Select();
+						
+						// Handle tooltip showing
+						placeables[i].OnMouseLeave(null, null, 0, 0);
+						placeables[i + input_direction].OnMouseEnter(null, 0, 0);
+						
+						GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
+						break;
+					}
+				}
+			}
+		} else if (selected_objects.Count()) {
+			m_ObjectManager.RecalculateCenterOfSelectedObjects();
+			vector average_position = GetAveragePositionOfSelection();
+			vector average_mat[4] = {
+				"1 0 0",
+				"0 1 0",
+				"0 0 1",
+				average_position
+			};
+			
+			float step_size = GetSettings().QuickMoveRate;
+			if (turbo_input.LocalValue()) {
+				step_size *= 6.685;
+			}
+			
+			if (slow_input.LocalValue()) {
+				step_size /= 6.685;
+			}
+			
+			step_size *= dt;
+			
+			vector camera_transform_mat[4];
+			GetCamera().GetTransform(camera_transform_mat);
+
+			switch (GetSettings().QuickMoveMode) {
+				case 0: { // World flat
+					camera_transform_mat[0] = vector.Aside;
+					camera_transform_mat[1] = vector.Up;
+					camera_transform_mat[2] = vector.Forward;
+					break;
+				}
+
+				case 1: { // Camera flat
+					camera_transform_mat[1] = vector.Up;
+					camera_transform_mat[2] = (camera_transform_mat[0] * vector.Up).Normalized();
+					Math3D.MatrixOrthogonalize4(camera_transform_mat);
+					break;
+				}
+
+				case 2: { // Camera 3d
+					break;
+				}
+			}
+			
+			array<UAInput> input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input, big_input, small_input };
+			
+			bool input_is_value = false;
+			bool input_is_press = false;
+			bool input_is_release = false;
+			foreach (UAInput input_in_list2: input_list) {
+				input_is_press = input_is_press || input_in_list2.LocalPress();
+			}
+			
+			if (input_is_press) {
+				m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");	
+			}
+			
+			foreach (UAInput input_in_list: input_list) {
+				if (!input_in_list) {
+					continue;
+				}
+
+				if (input_in_list.LocalPress()) {
+					foreach (int __, EditorObject eo_undo: selected_objects) {
+						m_QuickMoveUndoAction.InsertUndoParameter(eo_undo.GetTransformArray());
+					}
+				}
+
+				if (input_in_list.LocalRelease()) {
+					foreach (int ___, EditorObject eo_redo: selected_objects) {
+						m_QuickMoveUndoAction.InsertRedoParameter(eo_redo.GetTransformArray());
+					}
+					
+					input_is_release = true;
+				}
+				
+				if (input_in_list.LocalValue()) {
+					input_is_value = true;
+				}
+			}
+			
+			if (input_is_release) {
+				InsertAction(m_QuickMoveUndoAction);
+			}
+			
+			bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalPress() && GridMode);
+			bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalPress() && GridMode);
+			bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalPress() && GridMode);
+			bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalPress() && GridMode);
+			bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalPress() && GridMode);
+			bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalPress() && GridMode);
+			if (GridMode) {
+				step_size = GetGridSize();
+			}
+			
+			vector pos_offset = vector.Zero;
+			vector ori_offset = vector.Zero;
+			float scale_offset = 0;
+			if (GetDayZGame().IsLeftCtrlDown() && fwd_on) {
+				ori_offset = ori_offset + Vector(0, 0, step_size);
+			}
+			
+			else if (fwd_on) {
+				pos_offset = pos_offset + Vector(0, 0, step_size).Multiply3(camera_transform_mat);
+			}
+			
+			if (GetDayZGame().IsLeftCtrlDown() && bck_on) {
+				ori_offset = ori_offset + Vector(0, 0, -step_size);
+			}
+			
+			else if (bck_on) {
+				pos_offset = pos_offset + Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
+			}
+			
+			if (GetDayZGame().IsLeftCtrlDown() && left_on) {
+				ori_offset = ori_offset + Vector(-step_size, 0, 0);
+			}
+			
+			else if (left_on) {
+				pos_offset = pos_offset + Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
+			}
+			
+			if (GetDayZGame().IsLeftCtrlDown() && right_on) {
+				ori_offset = ori_offset + Vector(step_size, 0, 0);
+			}
+			
+			else if (right_on) {
+				pos_offset = pos_offset + Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
+			}
+			
+			if (GetDayZGame().IsLeftCtrlDown() && up_on) {
+				ori_offset = ori_offset + Vector(0, step_size, 0);
+			}	
+					
+			else if (up_on) {
+				pos_offset = pos_offset + Vector(0, step_size, 0).Multiply3(camera_transform_mat);
+			}
+			
+			if (GetDayZGame().IsLeftCtrlDown() && down_on) {
+				ori_offset = ori_offset + Vector(0, -step_size, 0);
+			}
+			else if (down_on) {
+				pos_offset = pos_offset + Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
+			}
+			
+			if (big_input.LocalValue()) {
+				scale_offset = step_size;
+			}
+			
+			if (small_input.LocalValue()) {
+				scale_offset = -step_size;
+			}
+			
+			ori_offset = ori_offset + ori_offset * Math.RAD2DEG;
+					
+			if (pos_offset != vector.Zero || ori_offset != vector.Zero || scale_offset != 0) {
+				foreach (int id, EditorObject selected_object: selected_objects) {
+					vector rel_mat[4];
+					selected_object.GetTransform(rel_mat);
+					vector inv_mat[4];
+					Math3D.MatrixInvMultiply4(average_mat, rel_mat, inv_mat);
+					inv_mat[3] = inv_mat[3] + pos_offset;
+					
+					vector avg_mat[4];
+					Math3D.YawPitchRollMatrix(ori_offset, avg_mat);
+					avg_mat[3] = average_position;
+					vector res_mat[4];
+					Math3D.MatrixMultiply4(avg_mat, inv_mat, res_mat);
+					
+					res_mat[0] = res_mat[0] + res_mat[0].Normalized() * scale_offset;
+					res_mat[1] = res_mat[1] + res_mat[1].Normalized() * scale_offset;
+					res_mat[2] = res_mat[2] + res_mat[2].Normalized() * scale_offset;
+										
+					selected_object.SetTransform(res_mat);
+					
+					selected_object.UpdateNet();
+				}
+			}
+		}
+		
+		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";
+		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !useful_widget_under_cursor && !IsPlacing()) {
+			float scale_change_value = 0.1 * GetCamera().GetSettings().Speed;
+			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
+				GetCamera().GetSettings().Speed += scale_change_value;
+			}
+			
+			if (input.LocalValue("EditorCameraToolSpeedDecrease")) {
+				GetCamera().GetSettings().Speed -= scale_change_value;
+			}
+			
+			GetCamera().GetSettings().Speed = Math.Clamp(GetCamera().GetSettings().Speed, EditorCamera.SPEED_MIN, EditorCamera.SPEED_MAX);
 		}
 		
 		// This is all the logic that controls inventory hud, not a fan but it works
@@ -445,155 +1486,18 @@ class Editor: Managed
 				if (m_EditorInventoryEditorHud) {
 					StopInventoryEditor();
 				}
-				
-				if (GetGame().GetMission().GetHud().InventoryShown) {
-					GetGame().GetMission().HideInventory();
-				} else {
-					GetGame().GetMission().ShowInventory();
-				}
 			}
 		}
 	}
-	
-	bool OnDoubleClick(int button)
-	{
-		EditorLog.Trace("Editor::OnDoubleClick");
-		Widget target = GetWidgetUnderCursor();
-		switch (button) {
-			
-			case MouseState.LEFT: {
-				if (m_LootEditMode && !target) {
-					InsertLootPosition(CurrentMousePosition);
-				}
-				
-				return true;
-			}
-		}
 		
-		return false;
+	bool IsShiftDown()
+	{
+		return KeyState(KeyCode.KC_LSHIFT) || KeyState(KeyCode.KC_RSHIFT);
 	}
 	
-	bool OnMouseDown(int button)
+	bool IsCtrlDown()
 	{
-		EditorLog.Trace("Editor::OnMouseDown " + button);
-
-		Widget target = GetWidgetUnderCursor();
-		if (!target) { //target.GetName() != "HudPanel"
-			SetFocus(null);
-			if (EditorHud.CurrentMenu) {
-				delete EditorHud.CurrentMenu;
-			}
-		}
-		
-		switch (button) {
-			
-			case MouseState.LEFT: {
-
-				if (IsPlacing()) {
-					PlaceObject();
-					return true;
-				}
-				
-				if (!target || target == m_EditorHud.EditorMapWidget) {
-					ClearSelection();
-					GetCameraTrackManager().ClearSelection();
-				}
-				
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					EditorPlaceableItem placeable_object = GetReplaceableItem(ObjectUnderCursor);
-					if (placeable_object) {
-						ClearHand();
-						EditorHandMap objects_in_hand = AddInHand(placeable_object);
-						foreach (EditorWorldObject object_in_hand, EditorHandData hand_data: objects_in_hand) {
-							object_in_hand.GetWorldObject().SetOrientation(ObjectUnderCursor.GetOrientation());
-						}
-					}
-					
-					return true;
-				}
-				
-				if (!GetBrush() && GetSelectedObjects().Count() == 0) {
-					
-					/*if (ObjectUnderCursor) {
-						EditorObject editor_object = m_ObjectManager.GetEditorObject(ObjectUnderCursor);
-						if (editor_object) {
-							
-							// Removed due to bug with inside selection being weird
-							// Allows multiple objects to be dragged with selection
-							/*if (editor_object.IsSelected()) {
-								return true;
-							}
-							
-							if (!KeyState(KeyCode.KC_LSHIFT)) {
-								ClearSelection();
-							}
-							
-							SelectObject(editor_object);
-							return true;
-						} 
-					} */
-					
-					if (!target) {
-						m_EditorHud.DelayedDragBoxCheck();
-					}
-				}
-
-				break;
-			}
-			
-			case MouseState.MIDDLE: {
-				
-				// Ctrl + Middle Mouse logic
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					if (ObjectUnderCursor) {			
-						ClearSelection();
-						if (GetEditorObject(ObjectUnderCursor)) {
-							DeleteObject(GetEditorObject(ObjectUnderCursor));
-						} else {
-							GetGame().ObjectDelete(ObjectUnderCursor);
-							HideMapObject(ObjectUnderCursor);
-						}
-					}
-					
-					return true;
-				} 
-				
-				if (IsPlayerActive()) {
-					return false;
-				}
-				
-				// teleportation logic
-				vector mouse_pos = Vector(CurrentMousePosition[0], GetGame().SurfaceY(CurrentMousePosition[0], CurrentMousePosition[2]), CurrentMousePosition[2]);
-				vector camera_current_pos = m_EditorCamera.GetPosition();
-				float camera_surface_y = GetGame().SurfaceY(camera_current_pos[0], camera_current_pos[2]);
-				
-				// check if water is under mouse, to stop from teleporting under water			
-				if (IsSurfaceWater(mouse_pos)) {
-					m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  camera_current_pos[1], mouse_pos[2]));
-					break;
-				} 
-					
-				m_EditorCamera.SendToPosition(Vector(mouse_pos[0],  mouse_pos[1] + camera_current_pos[1] - camera_surface_y, mouse_pos[2]));
-				return true;
-			}
-			
-			case MouseState.RIGHT: {				
-				break;	
-			}
-		}
-		
-		
-		if (GetWorldTime() - m_LastMouseDown < 500) {
-			m_LastMouseDown = 0;
-			if (OnDoubleClick(button) && m_LastMouseInput == button) {
-				m_LastMouseInput = -1;
-				return true; // return is so we dont call GetWorldTime again
-			}
-		}
-	
-		m_LastMouseInput = button;
-		m_LastMouseDown = GetWorldTime();
-		return false;
+		return KeyState(KeyCode.KC_LCONTROL) || KeyState(KeyCode.KC_RCONTROL);
 	}
 	
 	bool IsSurfaceWater( vector position )
@@ -612,11 +1516,15 @@ class Editor: Managed
 	{
 		// Dont process hotkeys if dialog is open
 												// HACK
-		if (m_EditorHud.CurrentDialog && key != KeyCode.KC_ESCAPE) {
+		if ((m_EditorHud.GetDialog() || m_EditorHud.CurrentDialog) && key != KeyCode.KC_ESCAPE) {
+			return false;
+		}
+				
+		if (!GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD)) {
 			return false;
 		}
 		
-		if (!GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD)) {
+		if (IsPlayerControlled()) {
 			return false;
 		}
 		
@@ -636,7 +1544,7 @@ class Editor: Managed
 		}
 		
 		if (!command.CanExecute()) {
-			return true;
+			return false;
 		}
 			
 		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
@@ -651,10 +1559,18 @@ class Editor: Managed
 		m_CurrentKeys.Remove(m_CurrentKeys.Find(key));
 		return false;
 	}
-	
+		
 	// Call to enable / disable editor
+	// this code is TERRIBLE 11/9
+	// update: im makin it worse 11/12
+	private bool _bugfixFirstGrab;
 	void SetActive(bool active)
 	{	
+		// just in case we get deleted first
+		if (!m_EditorCamera) {
+			return;
+		}
+		
 		EditorLog.Info("Set Active %1", active.ToString());		
 		m_Active = active;
 				
@@ -662,16 +1578,11 @@ class Editor: Managed
 		if (m_EditorInventoryEditorHud) {
 			delete m_EditorInventoryEditorHud;
 		}
-		
-		if (m_EditorCamera) {
-			m_EditorCamera.LookEnabled = m_Active;
-			m_EditorCamera.MoveEnabled = m_Active;			
-		}
-		
+				
 		if (m_Active) {
 			m_EditorCamera.SetActive(true);
 		} else {
-			GetGame().SelectPlayer(null, GetGame().GetPlayer());
+			GetGame().SelectPlayer(null, m_ControllingPlayer);
 		}
 		
 		if (m_EditorHud) {
@@ -679,26 +1590,33 @@ class Editor: Managed
 			m_EditorHud.SetCurrentTooltip(null);
 		}
 				
-		EditorObjectMap placed_objects = GetEditor().GetPlacedObjects();
+		EditorObjectMap placed_objects = GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
 				if (!editor_object) {
 					continue;
 				}
 				
-				editor_object.GetMarker().Show(m_Active);			
+				if (editor_object.GetMarker()) {
+					editor_object.GetMarker().Show(m_Active);			
+				}
+				
 				editor_object.HideBoundingBox();
 			}
-		}	
-				
-		if (!m_Active) {
-			GetGame().SelectPlayer(null, m_Player);
 		}
+				
+		GetGame().GetUIManager().ShowCursor(m_Active);
 		
-		// handles player death
-		if (m_Player) {			
-			m_Player.DisableSimulation(m_Active);
+		if (m_Player && !IsPlayerControlled()) {
 			m_Player.GetInputController().SetDisabled(m_Active);
+			
+			if (!_bugfixFirstGrab) {
+				m_Player.DisableSimulation(false);
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(m_Player.DisableSimulation, 1000, 0, m_Active);
+				_bugfixFirstGrab = true;
+			} else {
+				m_Player.DisableSimulation(m_Active);
+			}
 		}
 		
 		SetMissionHud(!m_Active);
@@ -708,10 +1626,50 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseEnterObject(Object target, int x, int y, int component_index)
 	{
-		m_EditorHudController.ObjectReadoutName = GetObjectName(target, component_index);
-		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
-		
-		if (m_EditorHudController.ObjectReadoutName.Contains(".p3d")) { // yeah its hacky but its cool!
+		string type = target.GetType();
+		EditorPlaceableItem replaceable_item = GetReplaceableItem(target);
+		string replaceable_type = m_ObjectManager.ConvertP3dFileToPotentialObjectType(SystemPath.Format(target.GetShapeName()));
+		if (!type) {
+			type = replaceable_type;
+		}
+
+		if (!IsPlacing() && !IsDragging() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !GetWidgetUnderCursor() && !GetSelectedObjects().Count()) {			
+			//GetEditorHud().CreateDelayedTooltip(null, type, TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", target.GetShapeName()));
+		}
+
+		Building building = Building.Cast(target);
+		string component_type = "Component";
+		if (building) {
+			if (building.GetDoorIndex(component_index) != -1) {
+				component_index = building.GetDoorIndex(component_index);
+				component_type = "Door";
+			}
+		}
+
+		int interaction_layer = dBodyGetInteractionLayer(target);
+		string interaction_layer_name;
+		string interaction_layer_single;
+		if (interaction_layer) {
+			if (interaction_layer & (interaction_layer - 1) == 0) {
+				interaction_layer_single = typename.EnumToString(PhxInteractionLayers, interaction_layer);
+				if (interaction_layer_single != "unknown") {
+					interaction_layer_name = string.Format(", %1", interaction_layer_single, interaction_layer);	
+				}
+			} else {
+				for (int i = 0; i < 32; i++) {
+					int j = (1 << i);
+					if (interaction_layer & j) {
+						interaction_layer_single = typename.EnumToString(PhxInteractionLayers, j);
+						if (interaction_layer_single != "unknown") {
+							interaction_layer_name += string.Format(", %1", interaction_layer_single, j);
+						}
+					}
+				}
+			}
+		}
+	
+		m_EditorHudController.ObjectHoverSelectObjectReadout.SetText(string.Format("%1 [%2: %3%4]", type, component_type, component_index, interaction_layer_name));
+		if (!replaceable_item) {
 			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_YELLOW);
 		} else {
 			m_EditorHudController.ObjectHoverSelectObjectReadout.SetColor(COLOR_WHITE);
@@ -723,8 +1681,12 @@ class Editor: Managed
 	// also called when component index changes
 	bool OnMouseExitObject(Object target, int x, int y, int component_index)
 	{
-		m_EditorHudController.ObjectReadoutName = "";
-		m_EditorHudController.NotifyPropertyChanged("ObjectReadoutName");
+		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";
+		if (!IsPlacing() && (!m_CurrentGizmo || !m_CurrentGizmo.IsInteracting()) && !useful_widget_under_cursor) {
+			GetEditorHud().SetCurrentTooltip(null);
+		}
+
+		m_EditorHudController.ObjectHoverSelectObjectReadout.SetText(string.Empty);
 		return true;
 	}	
 	
@@ -755,15 +1717,17 @@ class Editor: Managed
 	
 	EditorHandMap AddInHand(EditorWorldObject world_object, EditorHandData hand_data = null)
 	{		
-		EditorLog.Trace("Editor::AddInHand");
-		
 		// Turn Brush off when you start to place
-		if (m_EditorBrush) {
-			SetBrush(null);
+		if (m_EditorHud.GetBrushState()) {
+			m_EditorHud.SetBrushState(0);
 		}
 		
 		m_PlacingObjects[world_object] = hand_data;
 		EditorEvents.AddInHand(this, world_object, hand_data);
+		
+		if (!IsShiftDown()) {
+			ClearSelection();
+		}
 		
 		return m_PlacingObjects;
 	}
@@ -776,7 +1740,9 @@ class Editor: Managed
 	array<EditorObject> PlaceObject()
 	{
 		EditorLog.Trace("Editor::PlaceObject");
-		if (GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel") {
+		
+		// I hate all these exceptions but were dealing with vanilla UI bullshit
+		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().IsInherited(MapWidget) && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons") {
 			return null;
 		}
 		
@@ -797,12 +1763,14 @@ class Editor: Managed
 				return null;
 			}
 			
-			EditorObjectData editor_object_data = EditorObjectData.Create(editor_hologram.GetPlaceableItem().GetSpawnType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EditorObjectFlags.ALL);
+			EditorObjectData editor_object_data = EditorObjectData.Create(editor_hologram.GetPlaceableItem().GetSpawnType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EFE_DEFAULT);
 			if (!editor_object_data) {
 				EditorLog.Warning("Invalid Object data from %1", entity.GetType());
 				return null;
 			}
 			
+			// Dont create the undo on multiplayer because its going to be immediately deleted when receiving the info from the server
+			// you will create a null action and boomy
 			EditorObject editor_object = CreateObject(editor_object_data);
 			if (!editor_object) { 
 				EditorLog.Warning("Invalid Editor Object from %1", entity.GetType());
@@ -811,7 +1779,7 @@ class Editor: Managed
 						
 			EditorEvents.ObjectPlaced(this, editor_object);
 			
-			if (!KeyState(KeyCode.KC_LSHIFT)) { 
+			if (!IsShiftDown()) { 
 				RemoveFromHand(placing_object); 
 			}
 			
@@ -825,6 +1793,16 @@ class Editor: Managed
 		return placed_objects;
 	}
 	
+	void CancelPlacing()
+	{
+		// todo: stub
+		foreach (EditorWorldObject placing_object, EditorHandData hand_data: m_PlacingObjects) {
+			RemoveFromHand(placing_object); 
+		}
+		//delete m_PlacingObjects;
+		//m_PlacingObjects.Clear();
+	}
+	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)
 	{
 		EditorLog.Trace("Editor::EditLootSpawns %1", placeable_item.Type);
@@ -836,22 +1814,21 @@ class Editor: Managed
 		m_LootEditTarget.SetPosition(Vector(0, LootYOffset, 0));
 		m_LootEditTarget.SetOrientation(Vector(90, 0, 0));
 		
-		GetCamera().Speed = 10;
 		m_PositionBeforeLootEditMode = m_EditorCamera.GetPosition();
 		m_EditorCamera.SetPosition(Vector(10, LootYOffset, 10));
 		m_EditorCamera.LookAt(Vector(0, LootYOffset, 0));	
 		
-		if (!FileExist(Settings.EditorProtoFile)) {
+		if (!FileExist(GetSettings().ProtoFile)) {
 			EditorLog.Info("EditorProtoFile not found! Copying...");
-			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", Settings.EditorProtoFile);
+			CopyFile("DayZEditor/scripts/data/Defaults/MapGroupProto.xml", GetSettings().ProtoFile);
 		}
 		
 		m_EditorMapGroupProto = new EditorMapGroupProto(m_LootEditTarget); 
-		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, Settings.EditorProtoFile);
+		EditorXMLManager.LoadMapGroupProto(m_EditorMapGroupProto, GetSettings().ProtoFile);
 		
 		m_LootEditMode = true;
 		CollisionMode = true;
-		GetEditorHud().GetTemplateController().GetToolbarController().NotifyPropertyChanged("CollisionMode");
+		GetEditorHud().GetTemplateController().NotifyPropertyChanged("CollisionMode");
 		
 		thread EditLootSpawnsDialog();
 	}
@@ -867,29 +1844,34 @@ class Editor: Managed
 		loot_editor_dialog.ShowDialog();
 	}
 	
-	void StartInventoryEditor(EntityAI entity)
+	void StartInventoryEditor(EntityAI entity, EditorObjectData object_data = null)
 	{
-		delete m_EditorInventoryEditorHud;
-		
-		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity);
+		m_EditorInventoryEditorHud = new EditorInventoryEditorHud(entity, object_data);
 		
 		PlayerBase player;
 		if (Class.CastTo(player, entity)) {
-			player.OnInventoryMenuOpen();
 			player.GetInputController().SetDisabled(true);
 		}
 		
+		if (GetPlayer()) {
+			GetPlayer().GetInputController().SetDisabled(true);
+		}
+		
 		SetMissionHud(false);	
-		m_EditorHud.ShowCursor(true);
+		ClearSelection();
+		GetStatistics().CharactersEdited++;
 	}
 	
 	void StopInventoryEditor()
 	{
-		if (m_EditorInventoryEditorHud) {
-			m_EditorInventoryEditorHud.Close();
-		}
-		
-		SetActive(true);
+		Entity ent = m_EditorInventoryEditorHud.GetEntity();
+		EditorObject obj =GetEditorObject(ent);
+		if (obj) {
+			obj.Update();
+		}		
+
+		delete m_EditorInventoryEditorHud;
+		Activate();
 	}
 	
 	bool IsInventoryEditorActive()
@@ -914,7 +1896,6 @@ class Editor: Managed
 		hud.Show(state);
 		hud.ShowHud(state);
 		hud.ShowHudUI(state);
-		hud.SetPermanentCrossHair(state);
 		// we are in 4_world and this game is bad :)
 		Widget hud_root;
 		EnScript.GetClassVar(mission, "m_HudRootWidget", 0, hud_root);
@@ -964,7 +1945,6 @@ class Editor: Managed
 		delete m_EditorMapGroupProto;
 		
 		GetGame().ObjectDelete(m_LootEditTarget);
-		GetCamera().Speed = 60;
 		m_EditorCamera.SetPosition(m_PositionBeforeLootEditMode);
 
 		m_LootEditMode = false;
@@ -980,98 +1960,95 @@ class Editor: Managed
 
 	EditorHud ReloadHud() 
 	{
-		EditorLog.Trace("Editor::ReloadHud");
+#ifdef DIAG_DEVELOPER
 		delete m_EditorHud;
 		
-		m_EditorHud = new EditorHud();
+		m_EditorHud = new EditorHud(this);
 		m_EditorHudController = m_EditorHud.GetTemplateController();
 		return m_EditorHud;
+#else
+		return m_EditorHud;
+#endif
+	}
+
+	void InsertAction(EditorAction action) 
+	{
+		
+		for (int i = m_ActionStack.Count() - 1; i >= m_CurrentActionIndex + 1; i--) {
+			m_ActionStack.RemoveOrdered(i);
+		}
+		
+
+		m_ActionStack.Insert(action);
+		m_CurrentActionIndex = m_ActionStack.Count() - 1;
 	}
 	
 	void Undo()
 	{
-		EditorLog.Trace("EditorObjectManager::Undo");
-		foreach (EditorAction action: m_ActionStack) {
-			if (!action.IsUndone()) {
-				action.CallUndo();
-				EditorLog.Info("Undo complete");
-				return;
-			}
+		if (CanUndo()) {
+			m_ActionStack[m_CurrentActionIndex].CallUndo();
+			m_CurrentActionIndex--;
 		}
 	}
 	
 	void Redo()
 	{
-		EditorLog.Trace("EditorObjectManager::Redo");
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
-				m_ActionStack[i].CallRedo();
-				EditorLog.Info("Redo complete");
-				return;
-			}
+		if (CanRedo()) {
+			m_CurrentActionIndex++;
+			m_ActionStack[m_CurrentActionIndex].CallRedo();
 		}
 	}
 	
 	bool CanUndo() 
 	{
-		foreach (EditorAction action: m_ActionStack) {
-			if (action && !action.IsUndone()) {
-				return true;
-			}
-		}
-		
-		return false;
+		return m_CurrentActionIndex >= 0;
 	}
 	
 	bool CanRedo() 
 	{
-		for (int i = m_ActionStack.Count() - 1; i >= 0; i--) {
-			if (m_ActionStack[i] && m_ActionStack[i].IsUndone()) {
-				return true;
-			}
-		}
-		
-		return false;
+		return m_CurrentActionIndex < m_ActionStack.Count() - 1;
 	}
-	
-	void TeleportPlayerToCursor()
-	{
-		if (!m_Player) { 
-			return;
-		}
-		
-		set<Object> _();
-		m_Player.SetPosition(MousePosToRay(_, m_Player, 3000, 0, false, true));
-	}
-	
-	protected void OnAutoSaveTimer()
-	{		
-		if (EditorSaveFile != string.Empty && Settings.AutoSaveEnabled) {
-			CommandManager[EditorSaveCommand].Execute(this, null);
-		}
-		
-		m_AutoSaveTimer.Run(Math.Max(Settings.AutoSaveTimer, 60), this, "OnAutoSaveTimer");
-	}
-	
-	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EditorObjectFlags.ALL, bool create_undo = true) 
+			
+	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
 	{
 		EditorLog.Trace("Editor::CreateObject " + target);	
 		return CreateObject(EditorObjectData.Create(target, flags), create_undo);
 	}
 	
-	EditorObject CreateObject(EditorObjectData editor_object_data, bool create_undo = true) 
+	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
 	{
-		EditorLog.Trace("Editor::CreateObject " + editor_object_data);
+		// Initial stopgap
+		if (GetGame().IsMultiplayer() && m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
+			return null;
+		}
 		
+		string uuid = UUID.Generate();
+		EditorObject created_object = CreateObjectByUuid(uuid, editor_object_data, create_undo);
+		if (GetGame().IsMultiplayer()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(1);
+			rpc.Write(uuid);
+			editor_object_data.Write(rpc, int.MAX);
+			rpc.Send(null, 39252, true);
+		}
+		
+		// dont increment if someone else placed something for u
+		GetStatistics().EditorPlacedObjects--;
+				
+		return created_object;
+	}
+	
+	EditorObject CreateObjectByUuid(string uuid, notnull EditorObjectData editor_object_data, bool create_undo = true)
+	{		
 		// Cache Data (for undo / redo)
-		if (!editor_object_data) return null;
 		m_SessionCache[editor_object_data.GetID()] = editor_object_data;
-		
+						
 		// Create Object
-		
 		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data);
 		if (!editor_object) return null;
 		
+		editor_object.Uuid = uuid;
+		m_EditorObjectsByUuid[uuid] = editor_object;
 		EditorAction action = new EditorAction("Delete", "Create");
 		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
@@ -1080,69 +2057,219 @@ class Editor: Managed
 			InsertAction(action);
 		}
 		
+		GetStatistics().EditorPlacedObjects++;
+		
 		return editor_object;
 	}
-		
-	EditorObjectMap CreateObjects(array<ref EditorObjectData> data_list, bool create_undo = true) 
+	
+	EditorObjectMap CreateObjects(notnull array<ref EditorObjectData> data_list, bool create_undo = true, bool send_net_message = true) 
 	{
-		EditorLog.Trace("Editor::CreateObject");
+		map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
 		
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(data_list.Count());
+		for (int i = 0; i < data_list.Count(); i++) {
+			string uuid = UUID.Generate();
+			rpc.Write(uuid);
+			data_list[i].Write(rpc, int.MAX);
+			data_map[uuid] = data_list[i];
+		}
+		
+		GetStatistics().EditorPlacedObjects -= data_list.Count();
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39252, true);
+		}
+				
+		return CreateObjectsByUuid(data_map, create_undo);
+	}
+		
+	EditorObjectMap CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
+	{
 		EditorObjectMap object_set = new EditorObjectMap();
 		EditorAction action = new EditorAction("Delete", "Create");
 		
-		foreach (EditorObjectData editor_object_data: data_list) {
+		foreach (string uuid, EditorObjectData editor_object_data: data_list) {
 			
 			// Cache Data (for undo / redo)
 			if (!editor_object_data) continue;
+			
+			// In the event the object already exists. The data for the existing object will get packed into the EditorObjectData struct
+			if (m_EditorObjectsByUuid[uuid]) {
+				m_EditorObjectsByUuid[uuid].HideBoundingBox();
+				
+				Object existing_world_object = m_EditorObjectsByUuid[uuid].GetWorldObject();
+				m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
+				existing_world_object.Delete();
+				if (m_EditorObjectsByUuid[uuid].IsSelected()) {
+					m_EditorObjectsByUuid[uuid].ShowBoundingBox();
+				}
+				
+				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
+				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
+				continue;
+			}
+			
+			// Create a copy to avoid reference loss
+			// todo:
+			//EditorObjectData editor_object_data_copy = editor_object_data.CreateCopy();
 			m_SessionCache.Insert(editor_object_data.GetID(), editor_object_data);
 			
 			// Create Object
 			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 			if (!editor_object) continue;
-			
+						
 			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 			
 			object_set.Insert(editor_object.GetID(), editor_object);
 
+			editor_object.Uuid = uuid;
+			m_EditorObjectsByUuid[uuid] = editor_object;
+			
+			GetStatistics().EditorPlacedObjects++;
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
-
 		
 		return object_set;
 	}
-	
-	void DeleteObject(EditorObject editor_object, bool create_undo = true) 
+		
+	bool DeleteObject(notnull EditorObject editor_object, bool create_undo = true, bool send_net_message = true) 
 	{
-		EditorAction action = new EditorAction("Create", "Delete");
-		if (!editor_object.Locked && editor_object.Show) {
-			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-			m_ObjectManager.DeleteObject(editor_object);
+		if (editor_object.GetFlags() & EditorObjectFlags.NODELETE) {
+			return false;
 		}
+		
+		if (editor_object.IsLocked()) {
+			return false;
+		}
+		
+		if (!editor_object.IsVisible()) {
+			return false;
+		}
+		
+		EditorAction action = new EditorAction("Create", "Delete");
+		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+		m_ObjectManager.DeleteObject(editor_object);
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(1);
+			rpc.Write(editor_object.Uuid);
+			rpc.Send(null, 39253, true);
+			m_EditorObjectsByUuid.Remove(editor_object.Uuid);
+		}
+		
+		return true;
+	}
+
+	bool DeleteObjectByUuid(string uuid, bool create_undo = true) 
+	{
+		if (m_EditorObjectsByUuid[uuid]) {
+			return DeleteObject(m_EditorObjectsByUuid[uuid], create_undo, false);
+		}
+				
+		return false;
 	}
 	
-	void DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true)
+	int DeleteObjectsByUuid(notnull array<string> uuids, bool create_undo = true)
 	{
+		array<EditorObject> editor_objects = {};
+		foreach (string uuid: uuids) {
+			if (m_EditorObjectsByUuid[uuid]) {
+				editor_objects.Insert(m_EditorObjectsByUuid[uuid]);
+			}
+		}
+		
+		return DeleteObjects(editor_objects, create_undo, false);
+	}
+	
+	// If you want to directly delete without undo, get the object manager and do it there
+	int DeleteObjects(notnull array<EditorObject> editor_objects, bool create_undo = true, bool send_net_message = true)
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(editor_objects.Count());
+		
+		int count;
 		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (int id, EditorObject editor_object: editor_object_map) {
-			if (!editor_object.Locked && editor_object.Show) {
+		foreach (EditorObject editor_object: editor_objects) {
+			if (!editor_object.IsLocked()) {
 				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
+				count++;
+				
+				if (m_EditorObjectsByUuid.Contains(editor_object.Uuid)) {
+					rpc.Write(editor_object.Uuid);
+					m_EditorObjectsByUuid.Remove(editor_object.Uuid);
+				}
 			}
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39253, true);
+		}
+		
+		return count;
+	}
+		
+	int DeleteObjects(EditorObjectMap editor_object_map, bool create_undo = true, bool send_net_message = true)
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(editor_object_map.Count());
+		
+		int count;
+		EditorAction action = new EditorAction("Create", "Delete");
+		foreach (int id, EditorObject editor_object: editor_object_map) {
+			if (!editor_object.IsLocked() && editor_object.IsVisible()) {
+				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+				m_ObjectManager.DeleteObject(editor_object);
+				count++;
+				
+				if (m_EditorObjectsByUuid.Contains(editor_object.Uuid)) {
+					rpc.Write(editor_object.Uuid);
+					m_EditorObjectsByUuid.Remove(editor_object.Uuid);
+				}
+			}
+		}
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39253, true);
+		}
+		
+		return count;
+	}
+	
+	void UpdateObjectByUuid(string uuid, EditorObjectData data)
+	{
+		auto object = m_EditorObjectsByUuid[uuid];
+		if (!object) {
+			return;
+		}
+		
+		Print(data.Scale);
+		object.SetPosition(data.Position);
+		object.SetOrientation(data.Orientation);
+		object.SetScale(data.Scale);
+		object.Lock(data.Locked);
+		object.Update();
 	}
 
 	bool HideMapObject(string type, vector position, bool create_undo = true)
@@ -1150,17 +2277,33 @@ class Editor: Managed
 		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(type, position)), create_undo);
 	}
 	
-	bool HideMapObject(Object object, bool create_undo = true)
+	bool HideMapObject(notnull Object object, bool create_undo = true)
 	{
 		return HideMapObject(new EditorDeletedObject(EditorDeletedObjectData.Create(object)), create_undo);
 	}
 		
-	bool HideMapObject(EditorDeletedObjectData deleted_object_data, bool create_undo = true)
+	bool HideMapObject(notnull EditorDeletedObjectData deleted_object_data, bool create_undo = true)
 	{
 		return HideMapObject(new EditorDeletedObject(deleted_object_data), create_undo);
 	}
 	
-	bool HideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+	bool HideMapObject(notnull EditorDeletedObject map_object, bool create_undo = true, bool send_net_message = true)
+	{
+		string uuid = UUID.Generate();
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(1);
+			rpc.Write(uuid);
+			rpc.Write(map_object.GetWorldObject());
+			rpc.Send(null, 39255, true);
+		}
+		
+		GetStatistics().EditorRemovedObjects--;
+		
+		return HideMapObject(uuid, map_object, create_undo);
+	}
+	
+	bool HideMapObject(string uuid, notnull EditorDeletedObject map_object, bool create_undo = true)
 	{
 		if (!CanHideMapObject(map_object.GetType())) {
 			return false;
@@ -1183,18 +2326,39 @@ class Editor: Managed
 			InsertAction(action);
 		}
 		
-		Statistics.EditorRemovedObjects++;
+		GetStatistics().EditorRemovedObjects++;
 		
 		m_ObjectManager.HideMapObject(map_object);
-		
+		m_HiddenObjectsByUuid[uuid] = map_object;
 		return true;
 	}
+		
+	void HideMapObjects(array<Object> deleted_objects, bool create_undo = true, bool send_net_message = true)
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(deleted_objects.Count());
+		
+		map<string, Object> deleted_object_map = new map<string, Object>();
+		foreach (Object deleted_object: deleted_objects) {
+			string uuid = UUID.Generate();
+			rpc.Write(uuid);
+			rpc.Write(deleted_object);
+			
+			deleted_object_map[uuid] = deleted_object;
+		}
+		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39255, true);
+		}
+		
+		HideMapObjectsByUuid(deleted_object_map, create_undo);
+	}
 	
-	void HideMapObjects(array<Object> deleted_objects, bool create_undo = true)
+	void HideMapObjectsByUuid(notnull map<string, Object> deleted_object_map, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		
-		foreach (Object object: deleted_objects) {
+		foreach (string uuid, Object object: deleted_object_map) {
 			if (!object) {
 				continue;
 			}
@@ -1214,7 +2378,10 @@ class Editor: Managed
 				action.InsertRedoParameter(new Param1<int>(deleted_object_data.ID));
 			}
 			
-			m_ObjectManager.HideMapObject(new EditorDeletedObject(deleted_object_data));
+			EditorDeletedObject deleted_object = new EditorDeletedObject(deleted_object_data);
+			deleted_object.Uuid = uuid;
+			m_ObjectManager.HideMapObject(deleted_object);
+			m_HiddenObjectsByUuid[uuid] = deleted_object;
 		}
 		
 		if (create_undo) {
@@ -1242,8 +2409,8 @@ class Editor: Managed
 		m_ObjectManager.UnhideMapObject(data.ID);
 		return true;
 	}
-	
-	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true)
+		
+	bool UnhideMapObject(EditorDeletedObject map_object, bool create_undo = true, bool send_net_message = true)
 	{
 		if (!map_object) {  
 			return false;
@@ -1253,49 +2420,98 @@ class Editor: Managed
 			return false;
 		}
 		
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(1);
+		
 		EditorAction action = new EditorAction("Hide", "Unhide");
 		// todo refactor
 		action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
 		action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
 				
+		rpc.Write(map_object.Uuid);
+		m_HiddenObjectsByUuid.Remove(map_object.Uuid);
+		
 		m_ObjectManager.UnhideMapObject(map_object);
 
 		if (create_undo) {
 			InsertAction(action);
 		}
 		
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39255, true);
+		}
+		
 		return true;
 	}
 	
-	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true)
+	bool UnhideMapObjectByUuid(string uuid, bool create_undo = true)
 	{
-		if (create_undo) {
-			EditorAction action = new EditorAction("Hide", "Unhide");
+		GetStatistics().EditorRemovedObjects--;
+		if (m_HiddenObjectsByUuid.Contains(uuid)) {
+			return UnhideMapObject(m_HiddenObjectsByUuid[uuid], create_undo, false);
 		}
 		
+		return false;
+	}
+		
+	void UnhideMapObjects(EditorDeletedObjectMap deleted_objects, bool create_undo = true, bool send_net_message = true)
+	{
+		ScriptRPC rpc = new ScriptRPC();
+		rpc.Write(deleted_objects.Count());
+		
+		EditorAction action;
+		if (create_undo) {
+			action = new EditorAction("Hide", "Unhide");
+		}
+				
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
 			if (create_undo) {
 				action.InsertUndoParameter(new Param1<int>(id));
 				action.InsertRedoParameter(new Param1<int>(id));
 			}
 			
-			Statistics.EditorRemovedObjects++;
-			m_ObjectManager.UnhideMapObject(deleted_object);
+			GetStatistics().EditorRemovedObjects++;
+			m_ObjectManager.UnhideMapObject(id);
+
+			rpc.Write(deleted_object.Uuid);
+			
+			m_HiddenObjectsByUuid.Remove(deleted_object.Uuid);
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
+
+		if (GetGame().IsMultiplayer() && send_net_message) {
+			rpc.Send(null, 39255, true);
+		}
+	}
+
+	void UnhideMapObjectsByUuid(notnull array<string> deleted_object_uuids, bool create_undo = true)
+	{
+		EditorDeletedObjectMap deleted_objects = new EditorDeletedObjectMap();
+		foreach (string deleted_object_uuid: deleted_object_uuids) {
+			if (m_HiddenObjectsByUuid.Contains(deleted_object_uuid)) {
+				EditorDeletedObject hidden_object = m_HiddenObjectsByUuid[deleted_object_uuid];
+				deleted_objects[hidden_object.GetID()] = hidden_object;
+			}
+		}
+		
+		GetStatistics().EditorRemovedObjects -= deleted_object_uuids.Count();
+
+		UnhideMapObjects(deleted_objects, create_undo, false);
 	}
 		
 	void Clear()
 	{
-		Statistics.Save();
+		GetStatistics().Save();
 		EditorSaveFile = string.Empty;	
 		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
 		m_ActionStack.Clear();
 		m_SessionCache.Clear();
 		m_ObjectManager.Clear();
+		m_CurrentFileAuthorCredits.Clear();
+		m_CurrentFileCreationDate = 0;
 	}
 		
 	bool CanHideMapObject(string type)
@@ -1323,6 +2539,23 @@ class Editor: Managed
 		editor_object.Lock(true);
 		DeselectObject(editor_object);
 	}
+
+	void LockObjects(EditorObjectMap editor_object_map, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Unlock", "Lock");
+		foreach (int id, EditorObject editor_object: editor_object_map) {
+			if (editor_object && !editor_object.IsLocked()) {
+				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
+				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
+				editor_object.Lock(true);
+				DeselectObject(editor_object);
+			}
+		}
+
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
 	
 	void UnlockObject(EditorObject editor_object)
 	{
@@ -1333,26 +2566,31 @@ class Editor: Managed
 		
 		editor_object.Lock(false);
 	}
-	
-	vector GetCameraProjectPosition(bool ground_only = true, float raycast_distance = 3000)
+
+	void UnlockObjects(EditorObjectMap editor_object_map, bool create_undo = true)
 	{
-		vector ray_start = GetGame().GetCurrentCameraPosition();
-		vector ray_end = ray_start + GetGame().GetCurrentCameraDirection() * raycast_distance;
-		
-		vector pos, normal;
-		int component;	
-		DayZPhysics.RaycastRV(ray_start, ray_end, pos, normal, component, null, null, null, false, ground_only);
-		return pos;
+		EditorAction action = new EditorAction("Lock", "Unlock");
+		foreach (int id, EditorObject editor_object: editor_object_map) {
+			if (editor_object && editor_object.IsLocked()) {
+				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
+				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
+				editor_object.Lock(false);
+			}
+		}
+
+		if (create_undo) {
+			InsertAction(action);
+		}
 	}
-		
-	static PlayerBase CreateDefaultCharacter(string type, vector position)
+			
+	static PlayerBase CreateDefaultCharacter(string type, vector position, PlayerIdentity identity = null)
 	{
 		EditorLog.Trace("Editor::CreateDefaultCharacter");
 		if (GetGame().GetPlayer()) {
 			return PlayerBase.Cast(GetGame().GetPlayer());
 		} 
-
-		PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(null, type, position, 0, string.Empty));
+	
+		PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(identity, type, position, 0, string.Empty));
 		if (!player) {
 			EditorLog.Error("Failed to create new player, type %1", type);
 			return null;
@@ -1398,7 +2636,7 @@ class Editor: Managed
 		vector position;
 		position[0] = Math.RandomFloat(x - radius, x + radius);
 		position[2] = Math.RandomFloat(z - radius, z + radius);
-		position[1] = GetGame().SurfaceY(position[0], position[2]) + 1;
+		position[1] = GetGame().SurfaceY(position[0], position[2]);
 		
 		//if (GetGame().SurfaceIsSea(position[0], position[2])) {
 			// try again
@@ -1439,21 +2677,6 @@ class Editor: Managed
 		return build_number.ToInt();
 	}
 	
-	static Object GetObjectUnderCursor(float raycast_distance = 3000)
-	{
-		vector ray_start = GetGame().GetCurrentCameraPosition();
-		vector ray_end = ray_start + GetGame().GetPointerDirection() * raycast_distance;
-		
-		vector hitPos, hitNormal;
-		int hitComponentIndex;		
-		set<Object> collisions = new set<Object>;
-		
-	
-		DayZPhysics.RaycastRV(ray_start, ray_end, hitPos, hitNormal, hitComponentIndex, collisions);
-		
-		return collisions.Get(0);
-	}
-	
 	static EditorHoliday GetCurrentHoliday()
 	{		
 		int year, month, day;
@@ -1476,7 +2699,7 @@ class Editor: Managed
 		
 		return EditorHoliday.NONE;
 	}
-		
+			
 	void LoadSaveData(EditorSaveData save_data, bool clear_before = false)
 	{
 		if (!save_data) {
@@ -1485,7 +2708,7 @@ class Editor: Managed
 		}
 		
 		int created_objects, deleted_objects;
-		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {
+		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {			
 			EditorLog.Warning("Different map detected");
 			/*if (MessageBox.Show("Different Map Detected", string.Format("Switch map to %1?"), MessageBoxButtons.OKCancel) != DialogResult.OK) {
 				return null;
@@ -1494,14 +2717,26 @@ class Editor: Managed
 			EditorLog.Info("Loading Map %1", save_data.MapName);
 			g_Game.ReportProgress(string.Format("Loading Map %1", save_data.MapName));
 			
-			GetGame().PlayMission(CreateEditorMission(save_data.MapName));
+			GetGame().PlayMission(CreateEditorMissionFolder(save_data.MapName));
 			
 			m_Editor = GetEditor();
 			*/
 		}
 		
 		if (clear_before) {
-			GetEditor().Clear();
+			Clear();
+			
+			if (save_data.CameraPosition != vector.Zero) {
+				GetCamera().SetPosition(save_data.CameraPosition);
+			}
+			
+			m_CurrentFileCreationDate = save_data.CreationDate;
+			m_CurrentFileAuthorCredits.Copy(save_data.CreditIds);
+			
+			string uid = GetGame().GetUserManager().GetTitleInitiator().GetUid();
+			if (m_CurrentFileAuthorCredits.Find(uid) == -1) {
+				m_CurrentFileAuthorCredits.Insert(uid);
+			}
 		}
 				
 		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());		
@@ -1513,15 +2748,22 @@ class Editor: Managed
 		
 		EditorLog.Debug("Creating %1 Objects", save_data.EditorObjects.Count().ToString());
 		foreach (EditorObjectData data: save_data.EditorObjects) {
-			if (CreateObject(data, false)) {
+			// So here I am thinking... I used to do int.MAX coverage when placing stuff. i BET they are serialized this way. until we go through every editor file ever, this will have to do.
+			if (data.Flags == int.MAX) {
+				data.Flags = EFE_DEFAULT;
+			}
+
+			EditorObject created_object = CreateObject(data, false);
+			if (created_object) {
 				created_objects++;
+				created_object.HideBoundingBox(); // bugfix with new bounding boxes
 			}			
 		}
 		
-		if (save_data.CameraPosition != vector.Zero) {
-			GetCamera().SetPosition(save_data.CameraPosition);
+		foreach (EditorCameraTrackData track_data: save_data.CameraTracks) {
+			AddCameraTrack(track_data, false);
 		}
-		
+				
 		string error_message;
 		if (created_objects < save_data.EditorObjects.Count()) {
 			error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
@@ -1537,18 +2779,29 @@ class Editor: Managed
 		
 		if (error_message != string.Empty) {
 			EditorLog.Warning(error_message);
-			m_EditorHud.CreateNotification(error_message, COLOR_YELLOW);
+			m_EditorHud.CreateNotification(error_message);
 			
 			// Disable auto save since we loaded a shit file
-			Settings.AutoSaveTimer = -1;
+			GetSettings().AutoSaveTimer = -1;
 		} else {
-			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()), COLOR_GREEN);
+			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()));
 		}
 	}
 	
 	EditorSaveData CreateSaveData(bool selected_only = false)
-	{
+	{	
+		string uid = GetGame().GetUserManager().GetTitleInitiator().GetUid();
+		
 		EditorSaveData save_data = new EditorSaveData();
+		save_data.AuthorId = uid;
+		save_data.CreditIds.Copy(m_CurrentFileAuthorCredits);
+		save_data.LastModified = DateTime.Now();
+		
+		if (m_CurrentFileCreationDate == 0) {
+			m_CurrentFileCreationDate = DateTime.Now();	
+		}
+		
+		save_data.CreationDate = m_CurrentFileCreationDate;
 		
 		// Save world name
 		save_data.MapName = GetGame().GetWorldName();
@@ -1556,6 +2809,14 @@ class Editor: Managed
 		// Save Camera Position
 		save_data.CameraPosition = GetCamera().GetPosition();
 		
+		// add last modified
+		save_data.LastModified = DateTime.Now();
+		
+		// add credits
+		if (save_data.CreditIds.Find(uid) == -1) {
+			save_data.CreditIds.Insert(uid);
+		}
+
 		// Save Objects
 		EditorObjectMap placed_objects = GetPlacedObjects();
 		if (selected_only) {
@@ -1564,7 +2825,7 @@ class Editor: Managed
 		
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
-				if (editor_object.GetType() != string.Empty) {
+				if (editor_object.GetType() != string.Empty && !(editor_object.GetFlags() & EditorObjectFlags.NOSAVE)) {
 					save_data.EditorObjects.Insert(editor_object.GetData());
 				}
 			}
@@ -1575,7 +2836,31 @@ class Editor: Managed
 			save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
 		}
 		
+		array<EditorCameraTrack> camera_tracks = GetObjectManager().GetCameraTracks();
+		foreach (EditorCameraTrack track: camera_tracks) {
+			save_data.CameraTracks.Insert(EditorCameraTrackData.Cast(track.GetData()));
+		}
+		
 		return save_data;
+	}
+	
+	static string GetModelName(notnull Object object)
+	{
+		string debug_name = object.GetDebugNameNative();
+		if (debug_name == string.Empty) {
+			// lost cause, unlikely
+			return string.Empty;
+		}
+		
+		array<string> split_string = {};
+		debug_name.Split(":", split_string);
+		
+		// also unlikely
+		if (split_string.Count() == 1) {
+			return string.Empty;
+		}
+		
+		return split_string[1].Trim();
 	}
 	
 	EditorPlaceableItem GetReplaceableItem(Object object)
@@ -1593,21 +2878,9 @@ class Editor: Managed
 		}
 		
 		// 1346854: tank_small_white.p3d
-		string debug_name = object.GetDebugNameNative();
-		if (debug_name == string.Empty) {
-			// lost cause, unlikely
-			return null;
-		}
+		string model_name = GetModelName(object);
 		
-		array<string> split_string = {};
-		debug_name.Split(":", split_string);
-		
-		// also unlikely
-		if (split_string.Count() == 1) {
-			return null;
-		}
-		
-		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(split_string[1].Trim());
+		array<EditorPlaceableItem> placeable_items = m_ObjectManager.GetReplaceableObjects(model_name);
 		// not ideal since we dont want to feed them the p3d, but doable
 		if (!placeable_items || placeable_items.Count() == 0) {			
 			return null;
@@ -1681,14 +2954,14 @@ class Editor: Managed
 		GetGame().SaveProfile();
 	}
 		
+	void ShowDonationDialog()
+	{		
+		GetEditorHud().CurrentDialog = new EditorOneTimeDonationDialog("Editor Changelog");
+	}
+		
 	string GetSaveFile()
 	{
 		return EditorSaveFile;
-	}
-	
-	void SetBrush(EditorBrush brush) 
-	{
-		m_EditorBrush = brush; 
 	}
 	
 	void DeleteSessionData(int id) 
@@ -1700,23 +2973,18 @@ class Editor: Managed
 	{
 		m_DeletedSessionCache.Remove(id);
 	}
-			
-	void UpdateStatTime(int passed_time)
-	{
-		Statistics.EditorPlayTime += passed_time;
-	}
 	
-	void SelectObject(EditorObject target) 
+	void SelectObject(notnull EditorObject target) 
 	{
 		m_ObjectManager.SelectObject(target);
 	}
 	
-	void DeselectObject(EditorObject target) 
+	void DeselectObject(notnull EditorObject target) 
 	{
 		m_ObjectManager.DeselectObject(target);
 	}
 	
-	void ToggleSelection(EditorObject target) 
+	void ToggleSelection(notnull EditorObject target) 
 	{
 		m_ObjectManager.ToggleSelection(target);
 	}
@@ -1740,12 +3008,125 @@ class Editor: Managed
 	{
 		m_ObjectManager.ToggleHiddenObjectSelection(target);
 	}
-		
-	void InsertAction(EditorAction action) 
+
+	bool IsRunningCameraTrack()
 	{
-		m_ActionStack.InsertAction(action);
+		return m_CameraTrackState;
+	}
+
+	void StopCameraTrack()
+	{
+		m_CameraTrackState = 0;
+		m_CameraTrackIndex = 0;
+		m_CameraTrackLerpNorm = 0;
+
+		m_EditorCamera.SetTransform(m_CameraTransformPreTrackMotion);
+	}
+
+	void StartCameraTrack()
+	{
+		m_CameraTrackState = 1;
+
+		vector mat[4];
+
+		m_EditorCamera.GetTransform(mat);
+		copyarray(m_CameraTransformPreTrackMotion, mat);
+		GetStatistics().EditorCameraTracksRidden++;
+	}
+
+	void PauseCameraTrack()
+	{
+		m_CameraTrackState = 0;
 	}
 	
+	void CameraTrackNext()
+	{
+		array<EditorCameraTrack> tracks = GetObjectManager().GetCameraTracks();
+		if (tracks.Count() == 0) {
+			return;
+		}
+
+		m_CameraTrackIndex = Math.Rollover(m_CameraTrackIndex + 1, 0, tracks.Count());
+		m_CameraTrackLerpNorm = 0;
+		
+		vector mat[4];
+		tracks[m_CameraTrackIndex].GetTransform(mat);
+		m_EditorCamera.SetTransform(mat);
+	}
+	
+	void CameraTrackPrevious()
+	{
+		array<EditorCameraTrack> tracks = GetObjectManager().GetCameraTracks();
+		if (tracks.Count() == 0) {
+			return;
+		}
+
+		m_CameraTrackIndex = Math.Rollover(m_CameraTrackIndex - 1, 0, tracks.Count());
+		m_CameraTrackLerpNorm = 0;
+		
+		vector mat[4];
+		tracks[m_CameraTrackIndex].GetTransform(mat);
+		m_EditorCamera.SetTransform(mat);
+	}
+	
+	void AddCameraTrack(notnull EditorCamera camera, float time, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true)
+	{
+		AddCameraTrack(EditorCameraTrackData.Create(camera, time, flags), create_undo);
+	}
+	
+	EditorCameraTrack AddCameraTrack(notnull EditorCameraTrackData camera_track_data, bool create_undo = true)
+	{
+		// Cache Data (for undo / redo)
+		m_SessionCache[camera_track_data.GetID()] = camera_track_data;
+		
+		// Create Object
+		EditorCameraTrack camera_track = m_ObjectManager.CreateCameraTrack(camera_track_data);		
+		EditorAction action = new EditorAction("Delete", "Create");
+		action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
+		action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
+		
+		if (create_undo) {
+			InsertAction(action);
+		}
+
+		return camera_track;
+	}
+		
+	void DeleteCameraTrack(EditorCameraTrack camera_track, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Create", "Delete");
+		action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
+		action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
+
+		if (!m_ObjectManager.DeleteCameraTrack(camera_track)) {
+			return;
+		}
+
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+	
+	void DeleteCameraTracks(array<EditorCameraTrack> camera_tracks, bool create_undo = true)
+	{
+		EditorAction action = new EditorAction("Create", "Delete");
+		foreach (auto camera_track: camera_tracks) {
+			action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
+			action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
+
+			m_ObjectManager.DeleteCameraTrack(camera_track);
+		}
+
+		if (create_undo) {
+			InsertAction(action);
+		}
+	}
+		
+	vector GetAveragePositionOfSelection()
+	{
+		return m_ObjectManager.GetAveragePositionOfSelection();
+	}
+			
 	array<string> GetRecentFiles()
 	{
 		return m_RecentlyOpenedFiles;
@@ -1775,15 +3156,15 @@ class Editor: Managed
 	{
 		return m_ObjectManager;
 	}
-	
-	EditorCameraTrackManagerModule GetCameraTrackManager() 
-	{
-		return m_CameraTrackManager;
-	}
-	
+		
 	EditorObjectMap GetSelectedObjects() 
 	{
 		return m_ObjectManager.GetSelectedObjects(); 
+	}
+	
+	array<EditorObject> GetSelectedObjectsOrdered()
+	{
+		return m_ObjectManager.GetSelectedObjectsOrdered();
 	}
 	
 	EditorDeletedObjectMap GetSelectedHiddenObjects()  
@@ -1836,16 +3217,6 @@ class Editor: Managed
 		return m_DeletedSessionCache[id];
 	}
 	
-	EditorBrush GetBrush() 
-	{
-		return m_EditorBrush;
-	}
-	
-	EditorActionStack GetActionStack() 
-	{
-		return m_ActionStack;
-	}
-	
 	EditorPlaceableItem GetPlaceableObject(string type)
 	{
 		return m_ObjectManager.GetPlaceableObject(type);
@@ -1876,10 +3247,71 @@ class Editor: Managed
 	{
 		return (m_Player && m_Player.IsControlledPlayer() && !m_Active);
 	}
+	
+	bool IsDragging()
+	{
+		if (m_CurrentGizmo && m_CurrentGizmo.IsInteracting()) {
+			return true;
+		}
+		
+		return DragHandler != null && DragHandler.IsDragging();
+	}
 		
 	// Get Selected player in Editor
 	PlayerBase GetPlayer()
 	{
 		return m_Player;
+	}
+	
+	EditorSettings GetSettings()
+	{
+		return EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+	}
+	
+	EditorStatistics GetStatistics()
+	{
+		return EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
+	}
+
+	EditorCameraSettings GetCameraSettings()
+	{
+		return EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+	}
+	
+	EditorWebApi GetWebApi()
+	{
+		return m_RestApi;
+	}
+	
+	Object GetObjectUnderCursor()
+	{
+		return m_ObjectUnderCursor;
+	}
+
+	int GetComponentIndexUnderCursor()
+	{
+		return m_ComponentIndexUnderCursor;
+	}
+	
+	EditorGizmo GetGizmo()
+	{
+		return m_CurrentGizmo;
+	}
+	
+	float GetGridSize()
+	{
+		if (!GridMode) {
+			return 0;
+		}
+		
+		if (GetDayZGame().IsLeftCtrlDown()) {
+			return 1.0;
+		}
+		
+		if (KeyState(KeyCode.KC_LSHIFT)) {
+			return 0.01;
+		}
+		
+		return 0.1;
 	}
 }

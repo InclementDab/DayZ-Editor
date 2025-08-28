@@ -1,6 +1,7 @@
+// Depreciated.
 modded class MainMenu 
 {
-	protected ref EditorMainMenuStats m_EditorMainMenuStats;
+	//protected ref EditorMainMenuStats m_EditorMainMenuStats;
 	protected Widget m_JoinDiscord;
 	protected Widget m_OpenWiki;
 	
@@ -35,7 +36,7 @@ modded class MainMenu
 		
 		m_LastPlayedTooltipTimer	= new WidgetFadeTimer();
 		
-		m_EditorMainMenuStats		= new EditorMainMenuStats( layoutRoot.FindAnyWidget( "character_stats_root" ) );
+		//m_EditorMainMenuStats		= new EditorMainMenuStats( layoutRoot.FindAnyWidget( "character_stats_root" ) );
 		
 		m_Mission					= MissionMainMenu.Cast( GetGame().GetMission() );
 		
@@ -60,13 +61,24 @@ modded class MainMenu
 		
 		GetDayZGame().GetBacklit().MainMenu_OnShow();
 	
-		g_Game.SetLoadState( DayZLoadState.MAIN_MENU_CONTROLLER_SELECT );
+		g_Game.SetLoadState(DayZLoadState.MAIN_MENU_CONTROLLER_SELECT);
 		
 		string version;
 		GetGame().GetVersion(version);
 		m_Version.SetText(string.Format("#main_menu_version %1 - #STR_EDITOR_MAIN_MENU_VERSION %2", version, GetEditor().Version));
-		
 		return layoutRoot;
+	}
+	
+	override void OnShow()
+	{		
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(GetGame().GetUIManager().ShowCursor, 0, 0, true);
+		
+		string uid = GetGame().GetUserManager().GetSelectedUser().GetUid();
+		RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
+		ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
+		ctx.POST(new RestCallbackBase(),"api\/update-login-counter", string.Format("{\"id\":%1}", uid));
+		
+		super.OnShow();
 	}
 	
     override void Play()
@@ -83,7 +95,7 @@ modded class MainMenu
 		DialogResult result = select_dialog.ShowDialog(selected_map);
 		
 		if (selected_map != string.Empty && result == DialogResult.OK) {
-			GetGame().PlayMission(CreateEditorMission(selected_map));
+			GetGame().PlayMission(CreateEditorMissionFolder(selected_map));
 		}
 	}
 
@@ -101,17 +113,17 @@ modded class MainMenu
 	{
 		if ( w )
 		{
-			if ( w == m_Play || w == m_ChooseServer || w == m_CustomizeCharacter || w == m_TutorialButton || w == m_MessageButton || w == m_SettingsButton );
+			if ( w == m_Play || w == m_ChooseServer || w == m_CustomizeCharacter || w == m_TutorialButton || w == m_MessageButton || w == m_SettingsButton )
 			{
 				return true;
 			}
 			
-			if ( w == m_Exit || w == m_PlayVideo );
+			if ( w == m_Exit || w == m_PlayVideo )
 			{
 				return true;
 			}
 			
-			if ( w == m_NewsMain || w == m_NewsSec1 || w == m_NewsSec2 || w == m_PrevCharacter || w == m_NextCharacter || w == m_JoinDiscord);
+			if ( w == m_NewsMain || w == m_NewsSec1 || w == m_NewsSec2 || w == m_PrevCharacter || w == m_NextCharacter || w == m_JoinDiscord)
 			{
 				return true;
 			}

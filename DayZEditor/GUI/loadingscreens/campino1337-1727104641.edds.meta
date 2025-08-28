@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{BF924DD3E191F68D}DayZEditor/GUI/loadingscreens/campino1337-1727104641.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate -216829624
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "campino1337-1727104641.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

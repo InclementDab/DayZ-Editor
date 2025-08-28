@@ -2,11 +2,11 @@
 //Coded by FarTooBaked
 //Shout to Dab and team for making DayZ Editor awesome!
 
-class Matrix3
+class EditorMatrix3
 {
     float elements[9];
 
-    void Matrix3()
+    void EditorMatrix3()
     {
         IdentityMatrix();
     }
@@ -23,9 +23,9 @@ class Matrix3
         return row * 3 + col;
     }
 
-    Matrix3 Multiply(Matrix3 other)
+    EditorMatrix3 Multiply(EditorMatrix3 other)
     {
-        Matrix3 result = new Matrix3();
+        EditorMatrix3 result = new EditorMatrix3();
         for (int i = 0; i < 3; i++)
         {
             for (int j = 0; j < 3; j++)
@@ -63,52 +63,69 @@ class EditorTerrainBuilderFile: EditorFileType
     override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
     {
         EditorLog.Trace("EditorTerrainBuilderFile::Export");
-        FileHandle handle = OpenFile(file, FileMode.WRITE);
-        if (!handle)
-        {
-            EditorLog.Error("File in use %1", file);
-            return;
-        }
+		FileHandle handle = OpenFile(file, FileMode.WRITE);
+		if (!handle)
+		{
+			EditorLog.Error("File in use %1", file);
+			return;
+		}
 
-        foreach (EditorObjectData editor_object: data.EditorObjects)
-        {
-            vector object_POS = editor_object.WorldObject.GetPosition();
-            vector object_ROT = editor_object.WorldObject.GetOrientation();
-            vector object_BC = editor_object.WorldObject.GetBoundingCenter();
-            vector object_mat[4];
-            editor_object.WorldObject.GetTransform(object_mat);
-            object_BC = object_BC.Multiply3(object_mat);
-            string type = editor_object.Type;
-            string model_name;
+		foreach (EditorObjectData editor_object: data.EditorObjects)
+		{
+			vector object_POS = editor_object.Position; //weird value when calling WorldObject instead
+			vector object_ROT = editor_object.Orientation; //weird value when calling WorldObject instead
+			vector object_BC = editor_object.WorldObject.GetBoundingCenter();
+			vector object_mat[4];
+			editor_object.WorldObject.GetTransform(object_mat);
+			object_BC = object_BC.Multiply3(object_mat);
 
-            if (type.Contains("Land_"))
-            {
-                type.Replace("Land_", "");
-                model_name = type;
-            }
-            else
-            {
-                model_name = GetGame().GetModelName(type);
-            }
+			string type = editor_object.Type;
+			float scale = editor_object.WorldObject.GetScale();
 
-            if (model_name == "UNKNOWN_P3D_FILE")
-            {
-                continue;
-            }
+			//Wonky way to export Statics and Brushed Objects to Terrain Builder that works for 99% of objects 
+			string model_name = GetGame().GetModelName(type);
+			if (model_name == "UNKNOWN_P3D_FILE")
+			{
+				model_name = editor_object.Type;
+			}
 
-            object_POS[0] = object_POS[0] + 200000;
-            object_POS[1] = object_POS[1] - object_BC[1];
+			if (model_name != "")
+			{
+				array<string> split_path = {};
+				model_name.Replace("/", "\\");
+				model_name.Split("\\", split_path);
+				if (split_path.Count() > 0)
+				{
+					model_name = split_path[split_path.Count() - 1];
+				}
+				if (model_name.Contains(".p3d"))
+				{
+					model_name.Replace(".p3d", "");
+				}
+				if (model_name.Contains("Land_"))
+				{
+					model_name.Replace("Land_", "");
+				}
+			}
+			if (model_name == "")
+			{
+				model_name = "UNKNOWN_OBJECT";
+			}
 
+			string position_x_string = object_POS[0].ToString();
+			array<string> split = {};
+			position_x_string.Split(".", split);
+			int cnt = split[0].Length();
+			position_x_string = String("200000").Substring(0, 6 - cnt) + position_x_string;
 
-            Matrix3 matExtrinsic = BuildRotationMatrix(object_ROT[0], object_ROT[1], object_ROT[2]);
+			object_POS[1] = object_POS[1] - object_BC[1];
 
-            vector oriExtrinsic = matExtrinsic.ToYawPitchRoll();
-
-            string extrinsic_line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8", model_name, object_POS[0], object_POS[2], oriExtrinsic[0], oriExtrinsic[1], oriExtrinsic[2], 1.0, object_POS[1]);
-            FPrintln(handle, extrinsic_line);
-
-        }
-        CloseFile(handle);
+			EditorMatrix3 matExtrinsic = BuildRotationMatrix(object_ROT[0], object_ROT[1], object_ROT[2]);
+			vector oriExtrinsic = matExtrinsic.ToYawPitchRoll();
+            string extrinsic_line = string.Format("\"%1\";%2;%3;%4;%5;%6;%7;%8", model_name, position_x_string, object_POS[2], oriExtrinsic[0], oriExtrinsic[1], oriExtrinsic[2], scale, object_POS[1]);
+			FPrintln(handle, extrinsic_line);
+		}
+		CloseFile(handle);
     }
 
     override string GetExtension()
@@ -122,22 +139,22 @@ class EditorTerrainBuilderFile: EditorFileType
         valid_extensions.Insert(new Param2<string, string>("Text File", "*.txt"));
     }
 
-    static Matrix3 BuildRotationMatrix(float yawDeg, float pitchDeg, float rollDeg)
+    static EditorMatrix3 BuildRotationMatrix(float yawDeg, float pitchDeg, float rollDeg)
     {
-        Matrix3 R_xYaw = RotationX(yawDeg);
-        Matrix3 R_yPitch = RotationY(pitchDeg);
-        Matrix3 R_zRoll = RotationZ(rollDeg);
-        Matrix3 A, B, C;
+        EditorMatrix3 R_xYaw = RotationX(yawDeg);
+        EditorMatrix3 R_yPitch = RotationY(pitchDeg);
+        EditorMatrix3 R_zRoll = RotationZ(rollDeg);
+        EditorMatrix3 A, B, C;
         
         A = R_zRoll; B = R_yPitch; C = R_xYaw;
 
-        Matrix3 tmp = A.Multiply(B);
+        EditorMatrix3 tmp = A.Multiply(B);
         return tmp.Multiply(C);
     }
 
-    static Matrix3 RotationX(float angleDeg)
+    static EditorMatrix3 RotationX(float angleDeg)
     {
-        Matrix3 result = new Matrix3();
+        EditorMatrix3 result = new EditorMatrix3();
         float rad = Math.DEG2RAD * angleDeg;
         float c = Math.Cos(rad);
         float s = Math.Sin(rad);
@@ -149,9 +166,9 @@ class EditorTerrainBuilderFile: EditorFileType
         return result;
     }
 
-    static Matrix3 RotationY(float angleDeg)
+    static EditorMatrix3 RotationY(float angleDeg)
     {
-        Matrix3 result = new Matrix3();
+        EditorMatrix3 result = new EditorMatrix3();
         float rad = Math.DEG2RAD * angleDeg;
         float c = Math.Cos(rad);
         float s = Math.Sin(rad);
@@ -163,9 +180,9 @@ class EditorTerrainBuilderFile: EditorFileType
         return result;
     }
 
-    static Matrix3 RotationZ(float angleDeg)
+    static EditorMatrix3 RotationZ(float angleDeg)
     {
-        Matrix3 result = new Matrix3();
+        EditorMatrix3 result = new EditorMatrix3();
         float rad = Math.DEG2RAD * angleDeg;
         float c = Math.Cos(rad);
         float s = Math.Sin(rad);

@@ -31,4 +31,14 @@ class EditorDuplicateCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_J };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.CLONE;
+	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().GetSelectedObjects().Count() > 0;
+	}
 }

@@ -25,7 +25,7 @@ WrapSpacerWidgetClass InventoryButtonCategories {
     ImageWidgetClass InventoryFilterIcon {
      ignorepointer 1
      position 0 0
-     size 40 40
+     size 36 36
      halign center_ref
      valign center_ref
      hexactpos 1
@@ -37,9 +37,9 @@ WrapSpacerWidgetClass InventoryButtonCategories {
      image0 "set:dayz_inventory image:hands"
      mode blend
      "src alpha" 1
-     "no wrap" 1
-     stretch 1
-     filter 0
+     "clamp mode" clamp
+     "stretch mode" stretch_w_h
+     filter 1
      {
       ScriptParamsClass {
        Binding_Name "Icon"

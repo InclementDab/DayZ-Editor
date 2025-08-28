@@ -1,0 +1,29 @@
+class ExportSettings: FileSettingsBase
+{
+	bool Binarized = true;
+	ExportHeightType HeightType;
+	vector ExportOffset;
+	string ExportSetName;
+	
+	override void GetFileSettings(out array<ref ScriptView> settings)
+	{
+		switch (m_FileType.Type()) {
+			/*case EditorDZEFile: {
+				settings.Insert(new CheckBoxPrefab("Binarized", this, "Binarized"));
+				break;
+			}
+			
+			case EditorMapGroupPosFile: {
+				settings.Insert(new CheckBoxPrefab("Export Entire Map", this, "ExportEntireMap"));
+				break;
+			}*/
+		}
+		
+		settings.Insert(new CheckBoxPrefab("Export Selected Only", this, "ExportSelectedOnly"));
+	}
+	
+	override string GetSettingsName()
+	{
+		return "Export Settings";
+	}
+}

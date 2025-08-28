@@ -39,6 +39,8 @@ class EditorDZEFile: EditorFileType
 			}
 			
 			EditorObjectData dta = EditorObjectData.Create(object_data.Type, object_data.Position, object_data.Orientation, object_data.Scale, object_data.Flags);
+			
+			
 			bug_fix_save_data.EditorObjects.Insert(dta);
 		}
 			
@@ -51,6 +53,32 @@ class EditorDZEFile: EditorFileType
 		bug_fix_save_data.MapName = save_data.MapName;
 		bug_fix_save_data.CameraPosition = save_data.CameraPosition;
 		return bug_fix_save_data;
+	}
+	
+	static string LoadMapName(string file)
+	{
+		if (FileExist(file)) {
+			string bincheck;
+			FileSerializer serializer = new FileSerializer();
+			serializer.Open(file);
+			
+			serializer.Read(bincheck);
+			if (bincheck != EditorSaveData.BIN_CHECK) {
+				return string.Empty;
+			}
+			
+			int read_version;
+			serializer.Read(read_version);
+			
+			string map_name;
+			serializer.Read(map_name);
+
+			serializer.Close();
+			
+			return map_name;
+		}
+		
+		return string.Empty;
 	}
 	
 	override EditorSaveData Import(string file, ImportSettings settings)
@@ -67,34 +95,60 @@ class EditorDZEFile: EditorFileType
 		} else {
 			save_data = LoadJsonFile(file);
 		}
+		
+		foreach (EditorObjectData object_data: save_data.EditorObjects) {
+			if (object_data.Type.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(object_data.Type);
+				object_data.Position = object_data.Position + center;
+				object_data.Orientation = object_data.Orientation * Math.RAD2DEG;
+			}
+		}
 				
 		return save_data;
 	}
 	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{		
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
 		}
 		
-		if (settings.Binarized) {
-			FileSerializer file_serializer = new FileSerializer();
-			if (!file_serializer.Open(file, FileMode.WRITE)) {
-				EditorLog.Error("Failed to open file %1", file);
-				return;
+		FileSerializer file_serializer = new FileSerializer();
+		if (!file_serializer.Open(file, FileMode.WRITE)) {
+			EditorLog.Error("Failed to open file %1", file);
+			return;
+		}
+		
+		// sigh
+		foreach (EditorObjectData object_data: data.EditorObjects) {
+			if (object_data.Type.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(object_data.Type);
+				object_data.Position = object_data.Position - center;
+				object_data.Orientation = object_data.Orientation * Math.DEG2RAD;
 			}
-			
-			data.Write(file_serializer, EditorSaveData.Version);
-			file_serializer.Close();
-			
-		} else {
-			EditorJsonLoader<EditorSaveData>.SaveToFile(file, data);
+		}	
+		
+		data.Write(file_serializer, EditorSaveData.Version);
+		file_serializer.Close();
+		
+		// Undo the crap you just had to do
+		foreach (EditorObjectData object_data2: data.EditorObjects) {
+			if (object_data2.Type.Contains(".p3d")) {
+				object_data2.Position = object_data2.Position + GetP3dBoundingCenter(object_data2.Type);
+				object_data2.Orientation = object_data2.Orientation * Math.RAD2DEG;
+			}
 		}
 	}
 	
 	override string GetExtension() 
 	{
 		return ".dze";
+	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("DayZ Editor", "*.dze"));
 	}
 
 	override bool CanDoDeletion()

@@ -25,4 +25,9 @@ class EditorPreferencesCommand: EditorAsyncCommand
 	{
 		return "set:dayz_gui image:settings";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.GEAR;
+	}
 }

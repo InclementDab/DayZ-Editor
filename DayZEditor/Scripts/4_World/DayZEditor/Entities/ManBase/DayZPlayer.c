@@ -1,5 +1,5 @@
 modded class PlayerBase
-{	
+{		
 	static map<string, int> GetEmoteList()
 	{
 		map<string, int> emotes();
@@ -18,9 +18,16 @@ modded class PlayerBase
 		//super.EEKilled(killer);
 		
 		// Quick! Before he stops breathing
-		if (this == PlayerBase.Cast(GetGame().GetPlayer())) {
+		if (this == PlayerBase.Cast(GetEditor().GetPlayer())) {
 			GetEditor().SetActive(true);
 		}
+	}
+	
+	override void OnSelectPlayer()
+	{
+		super.OnSelectPlayer();
+		
+		GetInputController().SetDisabled(false);
 	}
 	
 	// Yeet

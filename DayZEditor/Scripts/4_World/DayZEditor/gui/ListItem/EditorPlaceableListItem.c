@@ -1,3 +1,37 @@
+class EditorPlaceableListItemLarge: EditorPlaceableListItem
+{
+	protected EntityAI m_PreviewItem;
+
+	ItemPreviewWidget ItemPreview;
+	
+	void EditorPlaceableListItemLarge(EditorPlaceableItem placeable_item)
+	{
+		Object preview_object = GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_LOCAL);
+		if (preview_object) {
+			m_PreviewItem = EntityAI.Cast(preview_object);
+			if (!m_PreviewItem) {
+				preview_object.Delete();
+			} else {
+				ItemPreview.SetItem(m_PreviewItem);
+				ItemPreview.SetView(0);
+				ItemPreview.Update();
+			}
+		}
+	}
+
+	void ~EditorPlaceableListItemLarge()
+	{
+		if (m_PreviewItem) {
+			m_PreviewItem.Delete();
+		}
+	}
+	
+	override string GetLayoutFile() 
+	{
+		return "DayZEditor/gui/Layouts/items/EditorListItemLarge.layout";
+	}
+}
+
 class EditorPlaceableListItem: EditorListItem
 {
 	//! Animals and Zombies / Players "survivors"
@@ -20,6 +54,12 @@ class EditorPlaceableListItem: EditorListItem
 		EditorEvents.OnAddInHand.Insert(OnStartPlacing);
 		EditorEvents.OnRemoveFromHand.Insert(OnStopPlacing);
 #endif
+		
+		if (GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1) {
+			m_TemplateController.Favorite = true;
+			ListItemFavorites.Show(true);
+			m_TemplateController.NotifyPropertyChanged("Favorite");
+		}
 		
 		GetLayoutRoot().ClearFlags(WidgetFlags.DRAGGABLE);
 	}
@@ -53,7 +93,6 @@ class EditorPlaceableListItem: EditorListItem
 	bool ListItemExecute(ButtonCommandArgs args)
 	{
 		switch (args.GetMouseButton()) {
-
 			case 0: {
 				GetEditor().ClearHand();
 				GetEditor().AddInHand(m_PlaceableItem);
@@ -65,7 +104,7 @@ class EditorPlaceableListItem: EditorListItem
 				Select();
 				int x, y;
 				GetMousePos(x, y);
-				EditorHud.CurrentMenu = new EditorPlaceableContextMenu(x, y, this);
+				EditorHud.CurrentMenu = new EditorPlaceableContextMenu(x, y, m_PlaceableItem);
 				break;
 			}
 		}
@@ -113,14 +152,36 @@ class EditorPlaceableListItem: EditorListItem
 		m_LayoutRoot.GetScreenPos(pos_x, pos_y);
 		m_LayoutRoot.GetScreenSize(size_x, size_y);
 		
-		tooltip.SetTitle(m_PlaceableItem.Type);	
-		tooltip.SetPosition(pos_x + size_x, pos_y);
+		tooltip.SetPosition(pos_x + size_x + 7, pos_y);
 		
 		//! bugfix
 		GetEditor().GetObjectManager().CurrentSelectedItem = m_PlaceableItem;
 		
-		if (m_PlaceableItem && !IsBlacklistedItem(m_PlaceableItem.Type)) {
-			tooltip.SetContent(GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_NONE));
+		bool preview_disabled = GetGame().IsKindOf(m_PlaceableItem.Type, "Man") || GetGame().IsKindOf(m_PlaceableItem.Type, "DZ_LightAI");
+		if (m_PlaceableItem && !preview_disabled) {
+			Object preview = GetGame().CreateObjectEx(m_PlaceableItem.Type, Vector(0, -1000, 0), ECE_LOCAL);
+			if (!preview) {
+				// DOESNT WORK @JACOB
+				string new_type = GetEditor().GetObjectManager().ConvertP3dFileToPotentialObjectType(m_PlaceableItem.Type);
+				if (new_type) {
+					preview = GetGame().CreateObjectEx(new_type, Vector(0, -1000, 0), ECE_LOCAL);
+				}
+			}
+
+			string display_name = string.Empty;
+			if (preview) {
+				display_name = preview.GetDisplayName();
+			}
+				
+			if (!display_name) {
+				display_name = m_PlaceableItem.Type;
+			}
+
+			tooltip.SetTitle(display_name);	
+
+			if (preview) {
+				tooltip.SetContent(preview);
+			}
 		}		
 		
 		GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
@@ -143,10 +204,10 @@ class EditorPlaceableListItem: EditorListItem
 			w.Show(false);
 		}
 		
-		return true;
+		return super.OnDrag(w, x, y);
 	}
 	
-	override bool OnDrop(Widget w, int x, int y, Widget receiver)
+	override bool OnDrop(Widget w, int x, int y, Widget reciever)
 	{
 		EditorLog.Trace("EditorPlaceableListItem::OnDrop");
 		if (GetEditor().IsPlacing()) {
@@ -154,7 +215,7 @@ class EditorPlaceableListItem: EditorListItem
 			w.Show(true);
 		}
 		
-		return true;
+		return super.OnDrop(w, x, y, reciever);
 	}
 		
 	override bool FilterType(string filter)
@@ -186,21 +247,22 @@ class EditorPlaceableListItem: EditorListItem
 	
 	override bool OnFavoriteToggle(CheckBoxCommandArgs args)
 	{
-		array<string> favorite_items = {};
-		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
 		EditorLog.Debug("Toggling Favorite Favorite %1", m_PlaceableItem.Type);
-		if (!m_TemplateController.Favorite) {
-			favorite_items.Insert(m_PlaceableItem.Type);
+
+		EditorSettings settings = GetEditor().GetSettings();
+		if (!args.GetCheckBoxState()) {
+			int index = settings.FavoriteItems.Find(m_PlaceableItem.Type);
+			if (index != -1) {
+				settings.FavoriteItems.Remove(index);
+				settings.Save();
+			}
 		} else {
-			// fixes a bug where several versions of an item were being placed in
-			while (favorite_items.Find(m_PlaceableItem.Type) != -1) {
-				favorite_items.Remove(favorite_items.Find(m_PlaceableItem.Type));					
+			if (settings.FavoriteItems.Find(m_PlaceableItem.Type) == -1) {
+				settings.FavoriteItems.Insert(m_PlaceableItem.Type);
+				settings.Save();
 			}
 		}
-		
-		Print(favorite_items.Count());
-		GetGame().SetProfileStringList("EditorFavoriteItems", favorite_items);
-		GetGame().SaveProfile();
+
 		return true;
 	}
 }

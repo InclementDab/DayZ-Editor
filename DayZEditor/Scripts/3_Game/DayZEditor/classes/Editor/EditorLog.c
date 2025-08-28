@@ -4,6 +4,10 @@ modded class RelayCommand
 	
 	void SetCanExecute(bool state)
 	{
+		if (m_CanExecute == state) {
+			return;
+		}
+		
 		m_CanExecute = state;
 		CanExecuteChanged(m_CanExecute);
 	}
@@ -13,8 +17,9 @@ modded class RelayCommand
 	}
 }
 
-
+#ifndef COMPONENT_SYSTEM
 [RegisterLogger(EditorLog)]
+#endif
 class EditorLog: LoggerBase
 {
 	static ref ScriptInvoker OnLog;

@@ -8,12 +8,12 @@ class EditorCopyPositionCommand: EditorCommand
 		EditorObjectMap selected_objects = GetEditor().GetSelectedObjects();
 		if (selected_objects.Count() > 0) {
 			foreach (int id, EditorObject editor_object: selected_objects) {
-				copy_string += string.Format("[%1]: pos=%2, ori=%3, dir=%4 scl=%5", editor_object.Name, editor_object.Position.ToString(true), editor_object.Orientation.ToString(true), editor_object.GetWorldObject().GetDirection().ToString(true), editor_object.Scale);
+				copy_string += string.Format("[%1]: pos=%2, ori=%3, dir=%4 scl=%5", editor_object.GetDisplayName(), editor_object.GetPosition().ToString(true), editor_object.GetOrientation().ToString(true), editor_object.GetWorldObject().GetDirection().ToString(true), editor_object.GetScale());
 				copy_string += "\n";
 			}
 		}
 		
-		GetEditor().GetEditorHud().CreateNotification(string.Format("Copied position data to clipboard!", GetEditor().GetSelectedObjects().Count()), COLOR_GREEN);
+		GetEditor().GetEditorHud().CreateNotification(string.Format("Copied position data to clipboard!", GetEditor().GetSelectedObjects().Count()));
 		GetGame().CopyToClipboard(copy_string);
 		return true;
 	}
@@ -26,5 +26,10 @@ class EditorCopyPositionCommand: EditorCommand
 	override ShortcutKeys GetShortcut() 
 	{
 		return { KeyCode.KC_P };
+	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.WALKIE_TALKIE;
 	}
 }

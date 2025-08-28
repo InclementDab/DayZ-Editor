@@ -1,26 +1,12 @@
 class EditorCameraTrackListItemController: ViewController
-{	
-	protected Object m_WorldObject;
-	
-	string Name;
+{		
 	StringEvaluater pX, pY, pZ;
 	StringEvaluater oX, oY, oZ;
-	float Time;
-	bool FlipOrientation;
-	
 	bool CollapseTab = false;
 	Widget CollapsePanel;
-	
-	void EditorCameraTrackListItemController()
-	{
-		m_WorldObject = GetGame().CreateObject("CinematicCamera", vector.Zero, true);
-	}
-	
-	void ~EditorCameraTrackListItemController()
-	{
-		GetGame().ObjectDelete(m_WorldObject);
-	}
-	
+	ButtonWidget CollapseButton;
+	ImageWidget CollapseButton_Icon;
+			
 	vector GetPosition()
 	{
 		return Vector(pX.Parse(), pY.Parse(), pZ.Parse());
@@ -36,87 +22,134 @@ class EditorCameraTrackListItemController: ViewController
 		switch (property_name) {
 			case "CollapseTab": {
 				CollapsePanel.Show(CollapseTab);
-				break;
-			}
-			
-			case "pX":
-			case "pY":
-			case "pZ": {
-				if (m_WorldObject) {
-					m_WorldObject.SetPosition(GetPosition());
-					m_WorldObject.Update();
+				int size = 1 + (GetWidgetUnderCursor() == CollapseButton) * 2;
+				if (CollapseTab) {
+					Symbols.MINUS.Load(CollapseButton_Icon, size);
+				} else {
+					Symbols.PLUS.Load(CollapseButton_Icon, size);
 				}
-				break;
-			}
-			
-			case "oX": 
-			case "oY":
-			case "oZ": {
-				if (m_WorldObject) {
-					m_WorldObject.SetOrientation(GetOrientation());
-					m_WorldObject.Update();
-				}
+				
 				break;
 			}
 		}
 	}
-	
-	SerializedCameraTrack GetSerializedData()
-	{
-		return new SerializedCameraTrack(GetPosition(), GetOrientation(), Time, FlipOrientation, Name);
-	}
 }
 
-class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemController>
+class EditorCameraTrackListItem: ScriptView
 {
+	protected Editor m_Editor = GetEditor();
+	protected EditorCameraTrack m_CameraTrack;
+	protected EditorCameraTrackListItemController m_TemplateController;
+
 	//PanelColor
 	Widget CameraTrackGroupWrapper;
 	//OutlineColor
 	Widget MainContainerWrapper;
 	//CameraIconColor
-	Widget CameraTrackOptionButton;
-	// Abstract
-	bool IsSelected;
+	ButtonWidget DeleteButton, CollapseButton, ReorderUpButton, ReorderDownButton;
+	ImageWidget CollapseButton_Icon;
 	
-	protected Editor m_Editor = GetEditor();
+	TextWidget CameraTrackNodeTitle;
 	
-	void EditorCameraTrackListItem(vector position, vector orientation, float time, string name, bool flip = false)
+	void EditorCameraTrackListItem(notnull EditorCameraTrack camera_track)
 	{
-		GetTemplateController().Name = name;
-		SetData(position, orientation, time, flip);
+		m_CameraTrack = camera_track;
+		m_TemplateController = EditorCameraTrackListItemController.Cast(m_Controller);
+
+		CameraTrackNodeTitle.SetText(string.Format("Node \#%1", m_CameraTrack.GetData().GetID()));
+
+		m_CameraTrack.OnObjectSelected.Insert(OnSelected);
+		m_CameraTrack.OnObjectDeselected.Insert(OnDeselected);
+		m_CameraTrack.OnUpdated.Insert(OnObjectUpdate);
+
+		OnObjectUpdate();
+	}
+
+	protected void OnObjectUpdate()
+	{
+		vector position = m_CameraTrack.GetPosition();
+		vector orientation = m_CameraTrack.GetOrientation();
+		m_TemplateController.pX = position[0].ToString();
+		m_TemplateController.pY = position[1].ToString();
+		m_TemplateController.pZ = position[2].ToString();
+		m_TemplateController.oX = orientation[0].ToString();
+		m_TemplateController.oY = orientation[1].ToString();
+		m_TemplateController.oZ = orientation[2].ToString();
+		//m_TemplateController.Time = EditorCameraTrackData.Cast(m_CameraTrack.GetData()).Time;
+		m_TemplateController.NotifyPropertyChanged();
 	}
 	
-	void OnSelected() 
+	protected void OnSelected(EditorObject editor_object) 
 	{
-		IsSelected = true;
-		CameraTrackGroupWrapper.SetColor(m_Editor.Settings.SelectionColor);
-		MainContainerWrapper.SetColor(m_Editor.Settings.HighlightColor);
-		CameraTrackOptionButton.SetColor(m_Editor.Settings.MarkerPrimaryColor);
+		//CameraTrackGroupWrapper.SetColor(m_Editor.GetSettings().SelectionColor);
+		//MainContainerWrapper.SetColor(m_Editor.GetSettings().HighlightColor);
+		//CameraTrackOptionButton.SetColor(m_Editor.GetSettings().MarkerPrimaryColor);
+		
+		CameraTrackGroupWrapper.SetColor(GetEditor().GetSettings().SelectionColor);
 	}
 		
-	void OnDeselected() 
+	protected void OnDeselected(EditorObject editor_object) 
 	{	
-		IsSelected = false;
-		CameraTrackGroupWrapper.SetColor(COLOR_DEFAULT_PANEL);
-		MainContainerWrapper.SetColor(COLOR_DEFAULT_OUTLINE);
-		CameraTrackOptionButton.SetColor(COLOR_DEFAULT_ICON);
+		
+		//MainContainerWrapper.SetAlpha(0);
+		//CameraTrackOptionButton.SetColor(-1);
+		
+		WidgetAnimator.AnimateColor(CameraTrackGroupWrapper, 0xff191919, 60);
+		//WidgetAnimator.AnimateColor(MainContainerWrapper, 0xff191919, 60);
 	}
 	
+	override bool OnClick(Widget w, int x, int y, int button)
+	{
+		int old_index = GetEditor().GetObjectManager().GetCameraTrackIndex(m_CameraTrack);
+		switch (w) {
+			case ReorderUpButton: {
+				if (old_index > 0) {
+					GetEditor().GetObjectManager().SetCameraTrackIndex(m_CameraTrack, old_index--);
+				}
+
+				return true;
+			}
+
+			case ReorderDownButton: {
+				if (old_index < GetEditor().GetObjectManager().GetCameraTracks().Count() - 1) {
+					GetEditor().GetObjectManager().SetCameraTrackIndex(m_CameraTrack, old_index++);
+				}
+
+				return true;
+			}
+			
+			case DeleteButton: {
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetEditor().DeleteObject, 0, false, m_CameraTrack, true);
+				return true;
+			}
+		}
+
+		return super.OnClick(w, x, y, button);
+	}
+
 	override bool OnMouseButtonUp(Widget w, int x, int y, int button)
 	{
+		if (button != 0) {
+			return super.OnMouseButtonUp(w, x, y, button);
+		}
+
 		if (w.IsInherited(ButtonWidget) || w.IsInherited(EditBoxWidget)) {
 			return super.OnMouseButtonUp(w, x, y, button);
 		}
 		
 		if (!m_TemplateController.CollapseTab) {
-			m_TemplateController.CollapseTab = true;
-			m_TemplateController.NotifyPropertyChanged("CollapseTab");
+			//m_TemplateController.CollapseTab = true;
+			//m_TemplateController.NotifyPropertyChanged("CollapseTab");
 		}
 		
-		if (!IsSelected && button == 0) {
-			GetEditor().GetCameraTrackManager().SelectCameraTrack(this);
+		if (!m_CameraTrack.IsSelected()) {
+			if (!GetEditor().IsShiftDown()) {
+				GetEditor().ClearSelection();
+			}
+			
+			GetEditor().SelectObject(m_CameraTrack);
 		} else {
-			GetEditor().GetCameraTrackManager().DeselectCameraTrack(this);
+			GetEditor().DeselectObject(m_CameraTrack);
 		}
 		
 		return true;
@@ -124,8 +157,15 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		if (!IsSelected) {
-			MainContainerWrapper.SetColor(COLOR_BLUE_HIGHLIGHT_OUTLINE);
+		switch (w) {
+			case CollapseButton: {
+				CollapseButton_Icon.SetImage(SymbolSize.IDX_SOLID);
+				break;
+			}
+		}
+		
+		if (!m_CameraTrack.IsSelected()) {
+			MainContainerWrapper.SetColor(GetEditor().GetSettings().HighlightColor);
 		}
 		
 		return true;
@@ -133,21 +173,40 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (!IsSelected) {
-			MainContainerWrapper.SetColor(COLOR_DEFAULT_OUTLINE);
+		switch (w) {
+			case CollapseButton: {
+				CollapseButton_Icon.SetImage(SymbolSize.IDX_LIGHT);
+				break;
+			}
+		}
+		
+		if (!m_CameraTrack.IsSelected()) {
+			WidgetAnimator.AnimateColor(MainContainerWrapper, 0xff191919, 60);
 		}
 		
 		return true;
 	}
+
+	override bool OnChange(Widget w, int x, int y, bool finished)
+	{
+		switch (w) {
+
+			
+		}
+
+		return super.OnChange(w, x, y, finished);
+	}
 	
 	void OnSetExecute(ButtonCommandArgs args)
 	{
-		SetData(GetEditor().GetCamera().GetPosition(), GetEditor().GetCamera().GetOrientation(), GetTemplateController().Time, false);
+		vector transform[4];
+		GetEditor().GetCamera().GetTransform(transform);
+		m_CameraTrack.SetTransform(transform);
 	}
 	
 	void OnDeleteExecute(ButtonCommandArgs args)
 	{
-		GetEditor().GetCameraTrackManager().DeleteCameraTrack(this);
+		GetEditor().DeleteCameraTrack(m_CameraTrack);
 	}
 	
 	void OnFlyToExecute(ButtonCommandArgs args)
@@ -156,27 +215,14 @@ class EditorCameraTrackListItem: ScriptViewTemplate<EditorCameraTrackListItemCon
 		GetEditor().GetCamera().SetOrientation(m_TemplateController.GetOrientation());
 	}
 	
-	void SetData(vector position, vector orientation, float time, bool flip)
+	EditorCameraTrackListItemController GetTemplateController()
 	{
-		m_TemplateController.pX = position[0].ToString();
-		m_TemplateController.pY = position[1].ToString();
-		m_TemplateController.pZ = position[2].ToString();
-		m_TemplateController.oX = orientation[0].ToString();
-		m_TemplateController.oY = orientation[1].ToString();
-		m_TemplateController.oZ = orientation[2].ToString();
-		m_TemplateController.Time = time;
-		m_TemplateController.FlipOrientation = flip;
-		m_TemplateController.NotifyPropertyChanged();
+		return m_TemplateController;
 	}
-		
-	SerializedCameraTrack GetSerializedData()
+
+	override typename GetControllerType()
 	{
-		return m_TemplateController.GetSerializedData();
-	}
-		
-	EditorCameraTrackListItemController GetData()
-	{
-		return GetTemplateController();
+		return EditorCameraTrackListItemController;
 	}
 	
 	override string GetLayoutFile()

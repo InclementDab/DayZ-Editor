@@ -14,6 +14,11 @@ class CfgVehicles
 {
 	class Static;
 	class HouseNoDestruct;
+	class BigCamera : HouseNoDestruct
+	{
+		scope = 2;
+		model = "\DayZEditor\Editor\BigCamera.p3d";
+	};
 
 	class DSLRCamera : HouseNoDestruct
 	{
@@ -64,37 +69,76 @@ class CfgVehicles
 		model = "\DayZEditor\Editor\xmas_gift_blue2.p3d";
 	};
 
-	class Inventory_Base;
-	class GizmoBase : Inventory_Base
+	class GizmoBase : HouseNoDestruct
 	{
 		scope = 0;
-		hiddenSelections[] = {"main"};
-		shadow = 0;
-	};
-	class GizmoArrow : GizmoBase
-	{
-		scope = 0;
-		model = "\DayZEditor\Editor\TranslationWidget.p3d";
-		shadow = 0;
 	};
 
-	class GizmoCenter : GizmoBase
-	{
-		scope = 0;
-		model = "\DayZEditor\Editor\TranslationCenter.p3d";
-		shadow = 0;
-	};
-
-	class RotationWidget : Inventory_Base
+	class GizmoTranslation : GizmoBase
 	{
 		scope = 1;
-		itemSize[]={16,16};
-		model = "\DayZEditor\Editor\RotationWidget.p3d";
-		hiddenSelections[] = {"RotationX", "RotationY", "RotationZ"};
-		shadow = 0;
+		model = "\DayZEditor\Editor\MoveGizmo.p3d";
+		hiddenSelections[] = {
+			"origin_ball",
+			"x_arrow", 
+			"y_arrow", 
+			"z_arrow",
+			"x_square", 
+			"y_square", 
+			"z_square"
+		};
+
+		hiddenSelectionsTextures[] = {
+			"#(argb,8,8,3)color(1.0,1.0,1.0,1.000,co)", 
+			"#(argb,8,8,3)color(1.0,0.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,1.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,0.0,1.0,1.000,co)",
+			"#(argb,8,8,3)color(1.0,0.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,1.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,0.0,1.0,1.000,co)"
+		};
+
+		hiddenSelectionsMaterials[] = {
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat",
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat"
+		};
 	};
 
-	class BrushBase : Inventory_Base
+	class GizmoRotation: GizmoBase
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\RotateGizmo.p3d";
+		hiddenSelections[] = {
+			"x",
+			"y",
+			"z"
+		};
+
+		hiddenSelectionsTextures[] = {
+			"#(argb,8,8,3)color(1.0,0.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,1.0,0.0,1.000,co)", 
+			"#(argb,8,8,3)color(0.0,0.0,1.0,1.000,co)"
+		};
+
+		hiddenSelectionsMaterials[] = {
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat", 
+			"DayZEditor\\Editor\\data\\no_sort.rvmat"
+		};
+	};
+
+	class GizmoScale: GizmoBase
+	{
+		scope = 1;
+		model = "\DayZEditor\Editor\ScaleGizmo.p3d";
+	};
+
+	class BrushBase : HouseNoDestruct
 	{
 		scope = 1;
 		model = "\DayZEditor\Editor\BrushBase.p3d";

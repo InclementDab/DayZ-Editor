@@ -6,7 +6,7 @@ WrapSpacerWidgetClass EditorTooltipRoot {
  ignorepointer 1
  color 0.1529 0.1529 0.1529 0.7059
  position 0 0
- size 150 0
+ size 256 0
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -18,14 +18,11 @@ WrapSpacerWidgetClass EditorTooltipRoot {
  Margin 0
  "Size To Content H" 1
  "Size To Content V" 1
- content_halign center
  {
   WrapSpacerWidgetClass Header {
    ignorepointer 1
    color 0 0 0 0.9412
-   position 0 0
-   size 1 0
-   halign center_ref
+   size 1 12
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -39,28 +36,25 @@ WrapSpacerWidgetClass EditorTooltipRoot {
      visible 1
      ignorepointer 1
      position 0 0
-     size 95 0
+     size 1 0
      halign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 1
+     hexactsize 0
      vexactsize 1
-     scriptclass "ViewBinding"
-     font "gui/fonts/Metron28"
+     scriptclass ""
+     text "TestTestTestTestTestTestTestTestTestTestTest"
+     font "gui/fonts/Metron22"
      "exact text" 1
      "size to text h" 1
      "size to text v" 1
      "text halign" center
      "text valign" center
-     {
-      ScriptParamsClass {
-       Binding_Name "ContentTitle"
-      }
-     }
     }
    }
   }
   GridSpacerWidgetClass Content {
+   visible 0
    ignorepointer 1
    position 0 0
    size 1 0
@@ -69,6 +63,7 @@ WrapSpacerWidgetClass EditorTooltipRoot {
    vexactpos 1
    hexactsize 0
    vexactsize 1
+   "Size To Content H" 1
    "Size To Content V" 1
    content_halign center
    content_valign center
@@ -85,31 +80,55 @@ WrapSpacerWidgetClass EditorTooltipRoot {
      vexactpos 1
      hexactsize 0
      vexactsize 0
-     scriptclass "ViewBinding"
+     scriptclass ""
      font "gui/fonts/Metron16"
      "exact text" 1
      "size to text v" 1
      wrap 1
-     {
-      ScriptParamsClass {
-       Binding_Name "ContentText"
-      }
-     }
     }
+   }
+  }
+  FrameWidgetClass FrameWidget0 {
+   ignorepointer 1
+   position 0 0
+   size 256 256
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 1
+   {
     ItemPreviewWidgetClass ContentItem {
      visible 1
      ignorepointer 1
-     position 0 0
-     size 1 200
+     size 1 1
      halign center_ref
+     valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 0
+     vexactsize 0
+     scriptclass ""
+     "force flip" 0
+    }
+    ImageWidgetClass BackupImage {
+     ignorepointer 1
+     color 1 1 1 0.1569
+     size 192 192
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
      vexactsize 1
-     scriptclass "ViewBinding"
+     scriptclass "SymbolHandler"
+     mode additive
+     "src alpha" 1
+     filter 0
      {
       ScriptParamsClass {
-       Binding_Name "ContentItemData"
+       Symbol_Name "tree_deciduous"
+       Symbol_Size 3
       }
      }
     }

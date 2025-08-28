@@ -3,22 +3,25 @@ class EditorCommand: RelayCommand
 	protected Editor m_Editor;	
 	protected ref Param m_Param;
 	string Text;
+	
+	void EditorCommand()
+	{
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
+	}
+	
+	protected void Update(float dt)
+	{
+	}
 
 	override bool Execute(Class sender, CommandArgs args) 
 	{
-		EditorLog.Trace("EditorCommand::Execute");
 		super.Execute(sender, args);
-		if (EditorHud.CurrentMenu) {
-			delete EditorHud.CurrentMenu;		
-		}
 		
 		if (!m_Editor) {
 			m_Editor = GetEditor();
 		}
 		
-		// Needs to be since we do ShowDialog alot
 		if (!m_Editor) {
-			EditorLog.Error("EditorCommand::Editor was null!");
 			return true;
 		} 
 	
@@ -49,6 +52,21 @@ class EditorCommand: RelayCommand
 	string GetIcon() 
 	{
 		return string.Empty;
+	}
+	
+	Symbols GetSymbol()
+	{
+		return string.Empty;
+	}
+	
+	LinearColor GetColor()
+	{
+		return GetEditor().GetSettings().SelectionColor;
+	}
+	
+	bool IsToggled()
+	{
+		return false;
 	}
 		
 	string GetShortcutString() 

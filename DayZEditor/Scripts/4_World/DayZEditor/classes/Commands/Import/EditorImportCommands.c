@@ -1,4 +1,4 @@
-class EditorImportCommandBase: EditorAsyncCommand
+class EditorImportCommandBase: EditorCommand
 {
 	protected ref ImportSettings m_ImportSettings = new ImportSettings();
 	
@@ -7,25 +7,24 @@ class EditorImportCommandBase: EditorAsyncCommand
 		m_ImportSettings.SetFileType(GetFileType());
 	}
 	
-	protected override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		string extension = "*" + EditorFileType.Cast(GetFileType().Spawn()).GetExtension();
-		EditorLog.Debug("Using filter %1", extension);
-		EditorFileDialog file_dialog(GetName(), extension, "", GetDialogButtonName(), m_ImportSettings);
+		super.Execute(sender, args);
+		GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnFileSelected), eDialogMode.IMPORT, eDialogFlags.ALLOW_DOUBLE_CLICK, GetEditor().GetSaveFile());
 		
-		string file_name;
-		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
-			return;
-		}
-		
-		if (file_name == string.Empty) {
-			MessageBox.Show("Error", "No file name specified!", MessageBoxButtons.OK);
+		return true;
+	}
+	
+	protected void OnFileSelected(string file_name, eDialogExtraSetting extra_settings)
+	{
+		if (!file_name) {
+			GetEditor().GetEditorHud().CreateNotification("No file name specified");
 			return;
 		}
 		
 		GetEditor().LoadSaveData(ImportFile(file_name));
 	}
-		
+			
 	EditorSaveData ImportFile(string file_name)
 	{
 		EditorFileType file_type = EditorFileType.Cast(GetFileType().Spawn());
@@ -34,7 +33,6 @@ class EditorImportCommandBase: EditorAsyncCommand
 			return null;
 		}
 		
-		file_name = Editor.ROOT_DIRECTORY + file_name;
 		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
 		if (!FileExist(file_name)) {
 			EditorLog.Error("Could not find file %1", file_name);
@@ -54,5 +52,10 @@ class EditorImportCommandBase: EditorAsyncCommand
 	ImportSettings GetImportSettings()
 	{
 		return m_ImportSettings;
+	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.FILE_IMPORT;
 	}
 }

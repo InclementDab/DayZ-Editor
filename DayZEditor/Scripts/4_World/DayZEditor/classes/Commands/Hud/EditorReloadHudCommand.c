@@ -21,4 +21,9 @@ class EditorReloadHudCommand: EditorCommand
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_LSHIFT, KeyCode.KC_U };
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.RETWEET; // this isnt a brand?
+	}
 }

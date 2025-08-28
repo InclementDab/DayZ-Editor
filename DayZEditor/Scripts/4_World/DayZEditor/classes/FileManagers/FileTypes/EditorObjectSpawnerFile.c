@@ -1,76 +1,54 @@
+static vector GetP3dBoundingCenter(string p3d)
+{
+	Object object = GetGame().CreateStaticObjectUsingP3D(p3d, vector.Zero, vector.Zero, 1.0, true);
+	if (!object) {
+		return vector.Zero;
+	}
+
+	vector center = object.GetBoundingCenter();
+	GetGame().ObjectDelete(object);
+	return center;
+}
+
 class EditorObjectSpawnerFile : EditorFileType
 {
-
-	static string ToRoundString(float value, int decimals)
-	{
-		int multiplier = Math.Pow(10, decimals);
-		int integerPart = value;
-		int decimalPart = (Math.Floor(Math.AbsFloat((value - integerPart)) * multiplier)); // Abs needed, normalize close to 0 might still return a small negative which floors to -1
-		string decimalString
-
-
-		if (decimalPart != 0)
-		{
-			decimalString = ".";
-			for (int i = 0; i < decimals - decimalPart.ToString().Length(); i++)
-			{
-				decimalString += "0";
-			}
-			decimalString += decimalPart.ToString();
-		}
-		if (value < 0 && value > -1)
-		{
-			string sign = "-";
-		}
-		return sign + integerPart.ToString() + decimalString;
-	}
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		EditorLog.Trace("EditorObjectSpawnerFile::Export");
-
-		FileHandle handle = OpenFile(file, FileMode.WRITE);
-		if (!handle)
-		{
-			EditorLog.Error("File in use %1", file);
-			return;
-		}
-		string json = "{\n    \"Objects\": [\n"
-
-		int i = 0;
+		ObjectSpawnerJson export_data = new ObjectSpawnerJson();
+		export_data.Objects = { };
 		foreach (EditorObjectData object_data: data.EditorObjects) {
-			i++;
-			vector pos = object_data.Position;
-			string dpos[3] = { ToRoundString(pos[0], 3), ToRoundString(pos[1], 3), ToRoundString(pos[2], 3) }
-
-			vector ypr = object_data.Orientation;
-			string dypr[3] = { ToRoundString(Math.NormalizeAngle(ypr[0]), 3), ToRoundString(Math.NormalizeAngle(ypr[1]), 3), ToRoundString(Math.NormalizeAngle(ypr[2]), 3) }
-
-			float scale = Math.Round(object_data.Scale * 1000) / 1000;
-			json += string.Format("        {\n            \"name\": \"%1\",\n", object_data.Type);
-			json += string.Format("            \"pos\": [%1, %2, %3],\n", dpos[0], dpos[1], dpos[2]);
-			json += string.Format("            \"ypr\": [%1, %2, %3]", dypr[0], dypr[1], dypr[2]);
-			// Scale defaults to 1 when not specified 
-			if (scale != 1)
-			{
-				json += string.Format(",\n            \"scale\": %1", scale);
+			ITEM_SpawnerObject spawn_object = new ITEM_SpawnerObject();			
+			string name = object_data.Type;
+			// sheesh, DayZ is a lil crazy @ObjectSpawner.c:70
+			if (name.Contains("dz")) {				
+				name.Replace("dz", "DZ");
 			}
-			// enableCEPersistency default to false, needs to be true only for loot items 
-			if (GetGame().IsKindOf(object_data.Type, "Inventory_Base") || GetGame().IsKindOf(object_data.Type, "Weapon_Base"))
-			{
-				json += string.Format(",\n            \"enableCEPersistency\": 1");
+			
+			spawn_object.name = name;
+			spawn_object.pos[0] = object_data.Position[0];
+			spawn_object.pos[1] = object_data.Position[1];
+			spawn_object.pos[2] = object_data.Position[2];
+			spawn_object.ypr[0] = object_data.Orientation[0];
+			spawn_object.ypr[1] = object_data.Orientation[1];
+			spawn_object.ypr[2] = object_data.Orientation[2];
+			spawn_object.scale = object_data.Scale;
+			spawn_object.enableCEPersistency = false;
+
+			if (spawn_object.name.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(spawn_object.name);
+				spawn_object.pos[0] = object_data.Position[0] - center[0];
+				spawn_object.pos[1] = object_data.Position[1] - center[1];
+				spawn_object.pos[2] = object_data.Position[2] - center[2];
+				spawn_object.ypr[0] = object_data.Orientation[0] * Math.DEG2RAD;
+				spawn_object.ypr[1] = object_data.Orientation[1] * Math.DEG2RAD;
+				spawn_object.ypr[2] = object_data.Orientation[2] * Math.DEG2RAD;
 			}
 
-			json += string.Format("\n        }");
-			if (i != data.EditorObjects.Count())
-			{
-				json += ",\n";
-			}
+			export_data.Objects.Insert(spawn_object);
 		}
-		json += "\n    ]\n}"
 
-
-		FPrintln(handle, json);
-		CloseFile(handle);
+		JsonFileLoader<ObjectSpawnerJson>.JsonSaveFile(file, export_data);
 	}
 
 	override EditorSaveData Import(string file, ImportSettings settings)
@@ -83,10 +61,18 @@ class EditorObjectSpawnerFile : EditorFileType
 		foreach (ITEM_SpawnerObject scene_object: import_data.Objects) {
 			if (!scene_object.scale)
 			{
-				scene_object.scale = 1
-
+				scene_object.scale = 1;
 			}
-			save_data.EditorObjects.Insert(EditorObjectData.Create(scene_object.name, Vector(scene_object.pos[0], scene_object.pos[1], scene_object.pos[2]), Vector(scene_object.ypr[0], scene_object.ypr[1], scene_object.ypr[2]), scene_object.scale, EditorObjectFlags.ALL));
+			
+			EditorObjectData dta = EditorObjectData.Create(scene_object.name, Vector(scene_object.pos[0], scene_object.pos[1], scene_object.pos[2]), Vector(scene_object.ypr[0], scene_object.ypr[1], scene_object.ypr[2]), scene_object.scale, EFE_DEFAULT);
+			
+			if (dta.Type.Contains(".p3d")) {
+				vector center = GetP3dBoundingCenter(dta.Type);
+				dta.Position = dta.Position + center;
+				dta.Orientation = dta.Orientation * Math.RAD2DEG;
+			}
+			
+			save_data.EditorObjects.Insert(dta);
 		}
 
 		return save_data;
@@ -94,5 +80,12 @@ class EditorObjectSpawnerFile : EditorFileType
 	override string GetExtension()
 	{
 		return ".json";
+	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("Text File", "*.txt"));
+		valid_extensions.Insert(new Param2<string, string>("Object Spawner", "*.json"));
 	}
 }

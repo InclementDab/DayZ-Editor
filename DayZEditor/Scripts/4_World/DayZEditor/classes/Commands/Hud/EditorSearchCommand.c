@@ -5,7 +5,7 @@ class EditorSearchCommand: EditorCommand
 		super.Execute(sender, args);
 		
 		m_Editor.GetEditorHud().ShowCursor(true);
-		SetFocus(m_Editor.GetEditorHud().LeftbarSearchBar);
+		SetFocus(m_Editor.GetEditorHud().LeftSearchBar);
 		return true;
 	}
 	
@@ -17,5 +17,10 @@ class EditorSearchCommand: EditorCommand
 	override ShortcutKeys GetShortcut() 
 	{
 		return { KeyCode.KC_LCONTROL, KeyCode.KC_F };
+	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.MAGNIFYING_GLASS;
 	}
 }

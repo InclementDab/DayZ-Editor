@@ -37,7 +37,7 @@ class EditorExpansionFile: EditorFileType
 					EditorDeletedObjectData deldata = EditorDeletedObjectData.Create(type, tokens[1].ToVector());
 					save_data.EditorHiddenObjects.Insert(deldata);
 				} else {
-					EditorObjectData objdata = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EditorObjectFlags.ALL);
+					EditorObjectData objdata = EditorObjectData.Create(type, tokens[1].ToVector(), tokens[2].ToVector(), 1, EFE_DEFAULT);
 					
 					if (trader_type != string.Empty) {
 						objdata.Parameters["ExpansionTraderType"] = SerializableParam1<string>.Create(trader_type);
@@ -58,7 +58,7 @@ class EditorExpansionFile: EditorFileType
 		return save_data;
 	}
 	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		EditorLog.Trace("EditorExpansionFile::Export");
 		
@@ -127,6 +127,13 @@ class EditorExpansionFile: EditorFileType
 	override string GetExtension() 
 	{
 		return ".map";
+	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("Text File", "*.txt"));
+		valid_extensions.Insert(new Param2<string, string>("Expansion Map", "*.map"));
 	}
 	
 	override bool CanDoDeletion()

@@ -1,5 +1,7 @@
 class EditorDeletedObject: EditorWorldObject
 {
+	string Uuid;
+	
 	protected bool m_IsSelected;
 	
 	protected string m_Type;
@@ -23,7 +25,7 @@ class EditorDeletedObject: EditorWorldObject
 		if (!m_WorldObject) {
 			m_WorldObject = m_Data.FindObject();
 			if (!m_WorldObject) {
-				EditorLog.Error("Failed to find object with name %1 at position %2", m_Data.Type, m_Data.Position.ToString());
+				EditorLog.Error("Failed to find object with name %1:%3 at position %2", m_Data.Type, m_Data.Position.ToString(), m_Data.ModelName);
 				return;
 			}
 		}
@@ -45,8 +47,10 @@ class EditorDeletedObject: EditorWorldObject
 		m_EditorDeletedListItem = new EditorDeletedListItem(this);		
 		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
 		
+		GetDayZGame().GetSuppressedObjectManager().Suppress(m_WorldObject);
 		
-		CF.ObjectManager.HideMapObject(m_WorldObject);
+		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+		m_EditorDeletedObjectWorldMarker.Show(false);
 	}
 	
 	void ~EditorDeletedObject()
@@ -56,9 +60,11 @@ class EditorDeletedObject: EditorWorldObject
 			OnDeselected();
 		}
 		
-		CF.ObjectManager.UnhideMapObject(m_WorldObject);
+		if (GetDayZGame() && GetDayZGame().GetSuppressedObjectManager()) {
+			GetDayZGame().GetSuppressedObjectManager().Unsupress(m_WorldObject);
+		}
+		
 		delete m_EditorDeletedListItem;
-		delete m_EditorDeletedObjectWorldMarker;
 	}
 	
 	EditorDeletedObjectData GetData()
@@ -79,23 +85,24 @@ class EditorDeletedObject: EditorWorldObject
 	void OnSelected()
 	{
 		m_IsSelected = true;
-		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+		
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Select();
 		}
 		
-		CF.ObjectManager.UnhideMapObject(m_WorldObject, false);
+		// Temporarily unsuppress
+		GetDayZGame().GetSuppressedObjectManager().Unsupress(m_WorldObject);
 	}
 	
 	void OnDeselected()
 	{
 		m_IsSelected = false;
-		delete m_EditorDeletedObjectWorldMarker;
+		
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Deselect();
 		}
 		
-		CF.ObjectManager.HideMapObject(m_WorldObject, false);
+		GetDayZGame().GetSuppressedObjectManager().Suppress(m_WorldObject);
 	}
 	
 	bool IsSelected()

@@ -9,20 +9,10 @@ class EditorWearableListItem: EditorListItem
 	
 	void EditorWearableListItem(EditorWearableItem wearable_item, int inventory_slot)
 	{
-		//EditorLog.Trace("EditorWearableListItem");
 		m_WearableItem = wearable_item;
 		m_InventorySlot = inventory_slot;
 		m_TemplateController.Label = m_WearableItem.Type;
 		m_TemplateController.NotifyPropertyChanged("Label");
-		
-		//m_TemplateController.DisplayName = wearable_item.DisplayName;
-		//m_TemplateController.NotifyPropertyChanged("DisplayName");
-	}
-	
-	void ~EditorWearableListItem()
-	{
-		//EditorLog.Trace("~EditorWearableListItem");
-		delete OnItemSelected;
 	}
 	
 	void SetSelected(bool state)

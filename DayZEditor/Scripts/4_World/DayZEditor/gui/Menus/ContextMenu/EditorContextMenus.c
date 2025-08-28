@@ -6,18 +6,10 @@ class EditorContextMenu: EditorMenu
 	{
 		m_X = x; m_Y = y;
 		
-		m_Editor.GetCamera().MoveEnabled = false;
-		m_Editor.GetCamera().LookEnabled = false;
 		m_EditorHud.ShowCursor(true);
+		EditorHud.CurrentMenu = this;
 	}
-	
-	void ~EditorContextMenu()
-	{
-		m_Editor.GetCamera().MoveEnabled = true;
-		m_Editor.GetCamera().LookEnabled = true;
-		m_EditorHud.ShowCursor(true);
-	}
-	
+		
 	void UpdatePosition()
 	{		
 		float x = m_X;

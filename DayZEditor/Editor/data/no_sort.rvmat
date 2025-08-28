@@ -1,0 +1,4 @@
+renderFlags[] = { NoReceiveShadow }; 
+specularPower = 0;
+PixelShaderID="Normal";
+VertexShaderID="Basic";

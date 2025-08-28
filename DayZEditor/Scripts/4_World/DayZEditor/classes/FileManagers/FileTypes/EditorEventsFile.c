@@ -3,7 +3,7 @@ typedef array<ref EventDataPair> EventDataArray;
 
 class EditorEventsFile: EditorFileType
 {	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
@@ -47,5 +47,11 @@ class EditorEventsFile: EditorFileType
 	override string GetExtension() 
 	{
 		return ".xml";
+	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("DayZ Events", "*.xml"));
 	}
 }

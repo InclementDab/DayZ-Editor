@@ -1,25 +1,28 @@
 class EditorSaveAsCommand: EditorExportCommandBase
-{		
-	override void Call(Class sender, CommandArgs args)
+{
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		EditorLog.Trace("EditorSaveAsCommand");
-		
-		string file_name = m_Editor.GetSaveFile();
-		EditorLog.Info("Using filter %1", "*.dze");
-		m_ExportSettings.SetFileType(GetFileType());
-		EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ExportSettings);
-		if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
-			return;
-		}
-			
-		if (ExportFile(file_name, m_ExportSettings, true)) {
-			m_Editor.SetSaveFile(file_name);
+		//super.Execute(sender, args);
+		GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnSaveAsFileSelected), eDialogMode.SAVE, eDialogFlags.WARN_ON_OVERWRITE, GetEditor().GetSaveFile());
+		return true;
+	}
+	
+	protected void OnSaveAsFileSelected(string file_name, eDialogExtraSetting extra_settings)
+	{
+		if (ExportFile(file_name, m_ExportSettings, extra_settings & eDialogExtraSetting.EXPORT_SELECTED_ONLY)) {
+			EditorFileManager.GetSafeFileName(file_name, ".dze");
+			GetEditor().SetSaveFile(file_name);
 		}
 	}
 	
 	override string GetName() 
 	{
 		return "#STR_EDITOR_SAVEAS";
+	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.FLOPPY_DISK_PEN;
 	}
 	
 	override ShortcutKeys GetShortcut() 
