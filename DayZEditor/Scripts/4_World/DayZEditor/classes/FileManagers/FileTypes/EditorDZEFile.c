@@ -103,8 +103,7 @@ class EditorDZEFile: EditorFileType
 				object_data.Orientation = object_data.Orientation * Math.RAD2DEG;
 			}
 		}
-		
-						
+				
 		return save_data;
 	}
 	

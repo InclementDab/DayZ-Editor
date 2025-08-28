@@ -3124,7 +3124,7 @@ FrameWidgetClass EditorFrame {
              }
             }
             FrameWidgetClass BrushRadiusFrame {
-             visible 0
+             visible 1
              disabled 0
              clipchildren 0
              ignorepointer 1
@@ -3189,6 +3189,7 @@ FrameWidgetClass EditorFrame {
                {
                 ScriptParamsClass {
                  Binding_Name "BrushRadius"
+                 Two_Way_Binding 0
                 }
                }
               }

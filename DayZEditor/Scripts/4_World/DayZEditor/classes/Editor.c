@@ -2749,8 +2749,10 @@ class Editor: Managed
 				data.Flags = EFE_DEFAULT;
 			}
 
-			if (CreateObject(data, false)) {
+			EditorObject created_object = CreateObject(data, false);
+			if (created_object) {
 				created_objects++;
+				created_object.HideBoundingBox(); // bugfix with new bounding boxes
 			}			
 		}
 		

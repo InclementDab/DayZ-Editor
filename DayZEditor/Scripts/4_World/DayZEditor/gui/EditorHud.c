@@ -97,7 +97,7 @@ class EditorHud: ScriptView
 	ButtonWidget BrushLeft, BrushRight;
 	ImageWidget BrushLeft_Icon, BrushRight_Icon;
 	Widget BrushToggle, BrushRadiusFrame, BrushDensityFrame, BrushWidthFrame, CinematicCameraButton;
-	TextWidget BrushText;
+	TextWidget BrushText, BrushRadiusText, BrushDensityText, BrushWidthText;
 	
 	Widget ChatBox;
 	EditBoxWidget InputEditBoxWidget;
@@ -762,6 +762,10 @@ class EditorHud: ScriptView
 			InfoBar_Z_Value.SetText(position[2].ToString(false));
 		}
 		
+		BrushRadiusText.SetText(m_TemplateController.BrushRadius.ToString());
+		BrushDensityText.SetText(m_TemplateController.BrushDensity.ToString());
+		BrushWidthText.SetText(m_TemplateController.BrushWidth.ToString());
+				
 #ifdef DIAG_DEVELOPER
 		/*
 		float tbf_s_w, tbf_s_h;
@@ -1375,6 +1379,10 @@ class EditorHud: ScriptView
 		BrushRadiusFrame.Show(m_BrushState);
 		BrushDensityFrame.Show(m_BrushState);
 		BrushWidthFrame.Show(m_BrushState);
+		
+		m_Editor.CommandManager[EditorBrushRadiusCommand].SetCanExecute(m_BrushState);
+		m_Editor.CommandManager[EditorBrushDensityCommand].SetCanExecute(m_BrushState);
+		m_Editor.CommandManager[EditorBrushWidthCommand].SetCanExecute(m_BrushState);
 	}
 
 	int GetBrushState()
@@ -1395,7 +1403,13 @@ class EditorHud: ScriptView
 		
 		if (m_BrushState) {
 			m_Editor.Brush = EditorBrush.Create(brush_data);
+		} else {
+			delete m_Editor.Brush;
 		}
+		
+		m_Editor.CommandManager[EditorBrushRadiusCommand].SetCanExecute(m_BrushState);
+		m_Editor.CommandManager[EditorBrushDensityCommand].SetCanExecute(m_BrushState);
+		m_Editor.CommandManager[EditorBrushWidthCommand].SetCanExecute(m_BrushState);
 	}
 
 	int GetBrushIndex()
