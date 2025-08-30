@@ -1042,29 +1042,38 @@ class EditorHud: ScriptView
 	}	
 	
 	protected string m_LastSearchString;
+	protected bool m_LastFavoritesState;
 	
 	void RefreshSearchBar()
 	{
 		bool favorite_toggle = GetEditor().GetSettings().ShowFavoriteObjects;
 		string search_string = LeftSearchBar.GetText();
 		search_string.ToLower();
-		
+				
 		if (search_string.Length() < 3 || favorite_toggle) {
 			// Smoother UX
-			if (m_LastSearchString.Length() < 3) {
+			if (m_LastSearchString.Length() < 3 && m_LastFavoritesState == favorite_toggle) {
 				return;
 			}
 						
 			for (int i = 0; i < m_SearchableListNodes.Count(); i++) {
-				m_SearchableListNodes[i].Show(m_SearchableListNodes[i].FilterType("", favorite_toggle));
+				bool filter_state = m_SearchableListNodes[i].FilterType("", favorite_toggle);
+				m_SearchableListNodes[i].Show(filter_state);
+				if (filter_state) {
+					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(m_SearchableListNodes[i].GetListParent().SetCollapsed, 0, 0, false);
+				}
 			}
 			
-			foreach (string s, EditorListNode folder_node: m_FolderNodes) {
-				if (folder_node.GetListParent()) {
-					folder_node.SetCollapsed(true);
+			if (!favorite_toggle) {
+				foreach (string s, EditorListNode folder_node: m_FolderNodes) {
+					if (folder_node.GetListParent()) {
+						GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(folder_node.SetCollapsed, 0, 0, true);
+					}
 				}
 			}
 						
+			m_LastSearchString = search_string;
+			m_LastFavoritesState = favorite_toggle;
 			return;
 		}
 	
@@ -1092,6 +1101,7 @@ class EditorHud: ScriptView
 		Symbols left_search_bar_icon = Ternary<Symbols>.If(!search_string.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 		left_search_bar_icon.Load(LeftSearchBarIconIcon);
 		m_LastSearchString = search_string;
+		m_LastFavoritesState = favorite_toggle;
 	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)

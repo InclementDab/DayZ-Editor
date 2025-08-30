@@ -160,6 +160,10 @@ class EditorObjectManagerModule : Managed
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkSpotLight, false));
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkPointLight, false));
 		m_PlaceableObjects.Insert(EditorPlaceableItem.Create(NetworkParticleBase, false));
+		
+		foreach (auto instance: RegisterScriptedEntity.Instances) {
+			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(instance.param1, false));
+		}
 
 		//	Experimental lights
 		if (GetEditor().GetSettings().UseExperimentalLights) {

@@ -534,16 +534,11 @@ FrameWidgetClass NodeView {
    hexactsize 0
    vexactsize 0
    scaled 1
-   scriptclass "ViewBinding"
+   scriptclass ""
    Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
-   {
-    ScriptParamsClass {
-     Binding_Name "ChildrenItems"
-    }
-   }
   }
   ImageWidgetClass ChildrenHeight {
    ignorepointer 0

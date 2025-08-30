@@ -1,6 +1,7 @@
 class EditorListNode: ScriptView
 {	
 	static EditorListNode s_SelectedNode;
+	static ref EditorListNodeContextMenu s_ContextMenu;
 		
 	ref array<ref EditorListNode> ChildrenItems = {};
 	
@@ -72,7 +73,7 @@ class EditorListNode: ScriptView
 		m_IsCollapsed = collapsed;
 		Children.Show(!collapsed);
 		CollapseIcon.SetImage(!collapsed);
-						
+		
 		if (!collapsed) {
 			// Recursive
 			if (m_Parent) {
@@ -140,11 +141,14 @@ class EditorListNode: ScriptView
 	{
 		switch (w) {
 			case CollapseButton: {
-				SetCollapsed(!IsCollapsed());					
+				if (button == MouseState.LEFT) {
+					SetCollapsed(!IsCollapsed());	
+				}	
+							
 				break;
 			}
 		}
-				
+						
 		return true;
 	}		
 	
@@ -187,7 +191,7 @@ class EditorListNode: ScriptView
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{		
+	{				
 		if (s_SelectedNode) {
 			s_SelectedNode.Panel.SetColor(0);
 		}
@@ -196,6 +200,7 @@ class EditorListNode: ScriptView
 		Panel.SetColor(g_Editor.GetSettings().SelectionColor);
 		
 		SetFocus(null);
+
 		return true;
 	}
 	
@@ -284,6 +289,15 @@ class EditorFolderListNode: EditorListNode
 		
 		SetCollapsed(!IsCollapsed());
 		return true;
+	}
+	
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		if (button == MouseState.RIGHT) {
+			s_ContextMenu = new EditorListNodeContextMenu(x, y, this);
+		}
+		
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	
 	override bool FilterType(string filter, bool favorites)

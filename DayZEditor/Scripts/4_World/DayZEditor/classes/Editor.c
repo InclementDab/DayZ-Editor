@@ -61,7 +61,7 @@ class Editor: Managed
 	protected Mission m_Mission;
 	protected PlayerBase m_Player, m_ControllingPlayer;
 
-	const int STATISTICS_SAVE_INTERVAL = 10;
+	const int STATISTICS_SAVE_INTERVAL = 40;
 	
 //#ifdef DIAG_DEVELOPER
 //	static const string WEB_API_ENDPOINT = "http:\/\/127.0.0.1:5000\/";
