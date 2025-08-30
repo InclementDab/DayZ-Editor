@@ -139,7 +139,7 @@ class EditorPlaceableListNode: EditorListNode
 				break;
 			}
 		}
-		
+			
 		return super.OnClick(w, x, y, button);
 	}
 	

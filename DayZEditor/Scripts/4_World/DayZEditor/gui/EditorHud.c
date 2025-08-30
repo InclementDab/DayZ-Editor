@@ -76,6 +76,7 @@ class EditorHud: ScriptView
 	protected float m_MapScale = 1.0, m_ScaleActual = 1.0;
 	protected float m_ScaleVelocity[1];
 	protected bool m_IsVisible = true;
+	protected bool m_SearchBarDirty;
 	
 	Widget Menubar, ToolsWrapper, InfobarFrame, ToolbarFrame;
 	Widget LeftbarCategoryConfig, LeftbarCategoryStatic, SearchFavoriteTabPanel;
@@ -745,7 +746,7 @@ class EditorHud: ScriptView
 				}
 			}
 		}
-				
+					
 		m_EditorCameraMarker.WorldPosition = GetEditor().GetCamera().GetPosition();
 		m_EditorCameraMarker.WorldOrientation = GetEditor().GetCamera().GetOrientation();
 		
@@ -1048,14 +1049,14 @@ class EditorHud: ScriptView
 		string search_string = LeftSearchBar.GetText();
 		search_string.ToLower();
 		
-		if (search_string.Length() < 3) {
+		if (search_string.Length() < 3 || favorite_toggle) {
 			// Smoother UX
 			if (m_LastSearchString.Length() < 3) {
 				return;
 			}
-			
+						
 			for (int i = 0; i < m_SearchableListNodes.Count(); i++) {
-				m_SearchableListNodes[i].Show(true);
+				m_SearchableListNodes[i].Show(m_SearchableListNodes[i].FilterType("", favorite_toggle));
 			}
 			
 			foreach (string s, EditorListNode folder_node: m_FolderNodes) {
@@ -1070,7 +1071,7 @@ class EditorHud: ScriptView
 		foreach (EditorListNode list_node: m_SearchableListNodes) {
 			list_node.Show(list_node.FilterType(search_string, favorite_toggle));
 		}
-		
+						
 		LeftbarScroll.VScrollToPos(0);
 		
 		/*

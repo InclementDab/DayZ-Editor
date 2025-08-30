@@ -37,6 +37,18 @@ class EditorListNode: ScriptView
 					
 			ChildrenHeight.SetSize(2, h_children);
 			
+			if (IsInherited(EditorFolderListNode)) {
+				bool are_children_visible = false;
+				foreach (EditorListNode child_node: ChildrenItems) {
+					if (child_node && child_node.IsVisible()) {
+						are_children_visible = true;
+						break;
+					}
+				}
+				
+				Show(are_children_visible);
+			}
+			
 			m_QueueRecalculateSize = false;
 		}
 	}
@@ -73,7 +85,7 @@ class EditorListNode: ScriptView
 			
 			foreach (EditorListNode child: ChildrenItems) {
 				bool filter = true;
-				if (search_string.Length() > 3) {
+				if (search_string.Length() > 3 || favorite_toggle) {
 					filter = child.FilterType(search_string, favorite_toggle);
 				}
 				
@@ -194,11 +206,26 @@ class EditorListNode: ScriptView
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
+		switch (w) {
+			case ChildrenHeight: {
+				WidgetAnimator.CancelAnimate(ChildrenHeight);
+				ChildrenHeight.SetColor(LinearColor.LIGHT_BLUE);
+				break;
+			}
+		}
+		
 		return true;
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
+		switch (w) {
+			case ChildrenHeight: {
+				WidgetAnimator.AnimateColor(ChildrenHeight, 0xffc8c8c8, 100);
+				break;
+			}
+		}
+		
 		return true;
 	}
 	

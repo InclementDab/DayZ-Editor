@@ -192,6 +192,10 @@ class EditorEnvironmentDialog: EditorDialogBase
 		GetEditor().UserEnvironment.OvercastValue = overcast;
 		GetEditor().UserEnvironment.WindSpeedValue = wind;
 		
+		GetEditor().UserEnvironment.DynamicFogDistanceDensity = m_DynFogDistanceDensity;
+		GetEditor().UserEnvironment.DynamicFogHeightBias = m_DynFogHeightBias;
+		GetEditor().UserEnvironment.DynamicFogHeightDensity = m_DynFogHeightDensity;
+		
 		switch (property_name) {			
 			case "m_LightingConfig": {
 				m_WorldLighting.SetGlobalLighting(m_LightingConfig);
