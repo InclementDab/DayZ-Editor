@@ -295,7 +295,7 @@ class EditorObject: EditorWorldObject
 		if (GetEditor().GridMode) {
 			//m_Data.Orientation = Vector(Math.Round(m_Data.Orientation[0] / 10) * 10, Math.Round(m_Data.Orientation[1] / 10) * 10, Math.Round(m_Data.Orientation[2] / 10) * 10);
 		}
-		
+				
 	    vector rot3[3];
 	    Math3D.YawPitchRollMatrix(m_Data.Orientation, rot3);
 		
@@ -411,7 +411,7 @@ class EditorObject: EditorWorldObject
 		normMat[3] = mat[3];
 		m_Data.Orientation = Math3D.MatrixToAngles(normMat);
 	    m_Data.BottomCenter = GetBottomCenter();
-
+		
 	    ApplyTransform();
 	}
 
@@ -421,11 +421,7 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void Update() 
-	{ 
-		m_Data.Position = m_WorldObject.GetPosition();
-		m_Data.Orientation = m_WorldObject.GetOrientation();
-		m_Data.Scale = m_WorldObject.GetScale();
-		
+	{ 			
 		if (m_WorldObject) {
 			m_WorldObject.Update(); 
 		}
