@@ -7,7 +7,7 @@ FrameWidgetClass NodeView {
  vexactpos 1
  hexactsize 1
  vexactsize 1
- scaled 0
+ scaled 1
  draggable 1
  scriptclass ""
  {
