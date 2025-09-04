@@ -7,6 +7,9 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingMultistate("ADVANCED", "ConsoleMode", "Console Mode", {"DISABLED", "ENABLED"}, true)]
 	int ConsoleMode = 0;
 	
+	[RegisterProfileSettingMultistate("ADVANCED", "ClearSelectionOnHudHide", "Clear Selection When Hiding UI", {"DISABLED", "ENABLED"})]
+	int ClearSelectionOnHudHide = 1;
+	
 	[RegisterProfileSettingMultistate("ADVANCED", "HideCursorOnPlayerControl", "Hide Cursor When Controlling Player", {"NO", "YES"})]
 	int HideCursorOnPlayerControl;
 

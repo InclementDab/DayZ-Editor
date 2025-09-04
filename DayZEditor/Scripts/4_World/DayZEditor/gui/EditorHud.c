@@ -415,7 +415,10 @@ class EditorHud: ScriptView
 		
 		if (toggle_hud_input.LocalPress() && input_unlocked && !GetDayZGame().IsLeftCtrlDown()) {		
 			m_IsVisible = !m_IsVisible;
-			m_Editor.ClearSelection();
+			
+			if (m_Editor.GetSettings().ClearSelectionOnHudHide) {
+				m_Editor.ClearSelection();
+			}
 		}
 		
 		m_LayoutRoot.Show(m_IsVisible);
