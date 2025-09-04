@@ -318,17 +318,22 @@ class EditorMainMenu: ScriptViewMenu
 		}
 				
 		if (m_DeletionPending) {
+			Delete();
 			return;
 		}
-							
+		
 		if (GetEditor()) {
+			if (GetEditor().GetEditorHud()) {
+				GetEditor().GetEditorHud().Show(false);
+			}
+			
 			UAInput input = GetUApi().GetInputByName("UAUIBack");
 			if (input.LocalPress()) {
 				m_DeletionPending = true;
 				return;
 			}
 		}
-		
+				
 		float mg_s_w, mg_s_h;
 		MapGrid.GetScreenSize(mg_s_w, mg_s_h);
 
@@ -756,7 +761,7 @@ class EditorMainMenu: ScriptViewMenu
 	{
 		return EditorMainMenuController;
 	}
-
+	
 	override string GetLayoutFile()
 	{
 		return "DayZEditor\\GUI\\layouts\\EditorMainMenu2.layout";
