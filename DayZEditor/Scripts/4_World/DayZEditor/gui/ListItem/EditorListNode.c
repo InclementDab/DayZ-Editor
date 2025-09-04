@@ -22,6 +22,11 @@ class EditorListNode: ScriptView
 		CollapseIcon.LoadImageFile(1, "set:solid image:square_minus");
 		CollapseIcon.LoadImageFile(0, "set:regular image:square_plus");
 	}
+	
+	void ~EditorListNode()
+	{
+		ChildrenItems.Clear();
+	}
 		
 	override void Update(float dt)
 	{
@@ -85,6 +90,10 @@ class EditorListNode: ScriptView
 			search_string.ToLower();
 			
 			foreach (EditorListNode child: ChildrenItems) {
+				if (!child) {
+					continue;
+				}
+				
 				bool filter = true;
 				if (search_string.Length() > 3 || favorite_toggle) {
 					filter = child.FilterType(search_string, favorite_toggle);

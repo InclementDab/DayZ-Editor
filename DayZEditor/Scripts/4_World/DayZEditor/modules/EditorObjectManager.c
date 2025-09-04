@@ -50,7 +50,8 @@ class EditorObjectManagerModule : Managed
 				type_lower = type;
 				type_lower.ToLower();
 				int scope = GetGame().ConfigGetInt(path + " " + type + " scope");
-				if (scope == 0 && !GetEditor().GetSettings().ShowScopeZeroObjects) {
+				// I dont think ShowScopeZeroObjects is really useful anymore. 
+				if (scope == 0/* && !GetEditor().GetSettings().ShowScopeZeroObjects*/) {
 					continue;
 				}
 				
@@ -85,7 +86,7 @@ class EditorObjectManagerModule : Managed
 					placeable_item.Scope = 1;
 					placeable_item.ConsoleFriendly = 1;
 				}
-				
+					
 				// bldr_ check is a hack but I cannot easily check the folder a config is defined in. not sure the best way to go about this.
 				if (model.Contains("dz/") && !type.Contains("bldr_")) {
 					placeable_item.ConsoleFriendly = 1;

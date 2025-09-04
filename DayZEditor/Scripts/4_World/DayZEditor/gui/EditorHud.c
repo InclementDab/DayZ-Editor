@@ -134,9 +134,9 @@ class EditorHud: ScriptView
 		"CameraTrackRunButton"
 	};
 	
-	protected ref map<string, EditorListNode> m_FolderNodes = new map<string, EditorListNode>();		
-	protected ref map<int, ref array<EditorListNode>> m_FolderNodesByDepth = new map<int, ref array<EditorListNode>>();		
-	protected ref array<EditorListNode> m_SearchableListNodes = {};
+	ref map<string, EditorListNode> m_FolderNodes = new map<string, EditorListNode>();		
+	ref map<int, ref array<EditorListNode>> m_FolderNodesByDepth = new map<int, ref array<EditorListNode>>();		
+	ref array<EditorListNode> m_SearchableListNodes = {};
 	
 	void EditorHud(notnull Editor editor)
 	{	
@@ -323,6 +323,7 @@ class EditorHud: ScriptView
 			m_DragBoxStartX = -1;
 			m_DragBoxStartY = -1;
 			Map.ClearFlags(WidgetFlags.IGNOREPOINTER);
+			SetFocus(null);
 			return;
 		}
 		

@@ -124,8 +124,8 @@ class Editor: Managed
 	ref EditorEnvironment UserEnvironment;
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 0;
-	static const int MinorVersionNumber = 1;
+	static const int Experimental = 1;
+	static const int MinorVersionNumber = 2;
 	static const int VersionNumber = 35;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
 	static bool HasTestedVersion = false;
@@ -1961,23 +1961,32 @@ class Editor: Managed
 	EditorHud ReloadHud() 
 	{
 #ifdef DIAG_DEVELOPER
+		Print(m_EditorHud.GetTemplateController().LeftContent.Count());
+				
+		Print(m_EditorHud.m_FolderNodesByDepth.Count());
+		for (int j = m_EditorHud.m_FolderNodesByDepth.Count() - 1; j >= 0; j--) {
+			for (int i = m_EditorHud.m_FolderNodesByDepth[j].Count() - 1; i >= 0; i--) {
+				auto x = m_EditorHud.m_FolderNodesByDepth[j];
+				delete x[i];
+			}
+		}
+		
+		EnProfiler.Dump();
+		/*		
 		delete m_EditorHud;
 		
 		m_EditorHud = new EditorHud(this);
 		m_EditorHudController = m_EditorHud.GetTemplateController();
-		return m_EditorHud;
-#else
-		return m_EditorHud;
+		return m_EditorHud;*/
 #endif
+		return m_EditorHud;
 	}
 
 	void InsertAction(EditorAction action) 
 	{
-		
 		for (int i = m_ActionStack.Count() - 1; i >= m_CurrentActionIndex + 1; i--) {
 			m_ActionStack.RemoveOrdered(i);
-		}
-		
+		}		
 
 		m_ActionStack.Insert(action);
 		m_CurrentActionIndex = m_ActionStack.Count() - 1;
