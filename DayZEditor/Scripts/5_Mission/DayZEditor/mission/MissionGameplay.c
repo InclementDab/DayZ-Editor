@@ -207,7 +207,7 @@ modded class MissionGameplay
 		RemoveActiveInputRestriction(EInputRestrictors.INVENTORY);
 		delete m_PauseMenu;
 			
-		if (GetEditor().IsActive())	{
+		if (GetEditor() && GetEditor().IsActive())	{
 			GetEditor().GetEditorHud().Show(true);
 		}
 	}

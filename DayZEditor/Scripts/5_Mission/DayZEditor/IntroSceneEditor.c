@@ -99,7 +99,9 @@ class IntroSceneEditor: Managed
 		m_UnvisitedLocations.RemoveItem(location);
 		GetGame().GetSoundScene().SetSoundVolume(0, 0);
 		GetGame().GetSoundScene().SetSoundVolume(1.0, 2.4);
-		WidgetAnimator.Animate(MainMenuView.GetLayoutRoot(), WidgetAnimatorProperty.COLOR_A, 1.0, 0.0, 2400);
+		if (MainMenuView) {
+			WidgetAnimator.Animate(MainMenuView.GetLayoutRoot(), WidgetAnimatorProperty.COLOR_A, 1.0, 0.0, 2400);
+		}
 
 		vector camera_position = location.Position + vector.RandomDir2D() * (location.GetImportance() / 2) * (location.GetImportance() / 2) * 140;
 		camera_position[1] = GetGame().SurfaceY(camera_position[0], camera_position[2]) + 40;
