@@ -124,7 +124,7 @@ class EditorDZEFile: EditorFileType
 			if (object_data.Type.Contains(".p3d")) {
 				vector center = GetP3dBoundingCenter(object_data.Type);
 				object_data.Position = object_data.Position - center;
-				object_data.Orientation = object_data.Orientation.GetRelAngles() * Math.DEG2RAD;
+				object_data.Orientation = object_data.Orientation * Math.DEG2RAD;
 			}
 		}	
 		
