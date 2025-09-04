@@ -2,7 +2,7 @@ FrameWidgetClass NodeView {
  visible 1
  clipchildren 0
  position 0 0
- size 2000 30
+ size 2000 24
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -470,7 +470,7 @@ FrameWidgetClass NodeView {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 451 14
+         size 451 12
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -527,7 +527,7 @@ FrameWidgetClass NodeView {
    disabled 0
    clipchildren 1
    ignorepointer 1
-   position 16 30
+   position 16 24
    size 1 1
    hexactpos 1
    vexactpos 1
