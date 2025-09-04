@@ -69,6 +69,10 @@ class EditorObjectManagerModule : Managed
 				if (IsForbiddenItem(type)) {
 					continue;
 				}
+				
+				if (IsForbiddenModel(model)) {
+					continue;
+				}
 
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type, scope);
 				if (type_lower.Contains("land_") || type_lower.Contains("staticobj_")) {
@@ -616,6 +620,13 @@ class EditorObjectManagerModule : Managed
 		//TODO add the abstract models 
 
 		//! Everything is fine... I hope... :pain:
+		return false;
+	}
+	
+	static bool IsForbiddenModel(string model)
+	{
+		if (model.Contains("bodyparts_above0")) return true;
+		
 		return false;
 	}
 	
