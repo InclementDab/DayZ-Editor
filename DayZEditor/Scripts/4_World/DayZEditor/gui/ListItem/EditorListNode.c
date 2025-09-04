@@ -174,19 +174,7 @@ class EditorListNode: ScriptView
 	}	
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
-	{
-		PrintFormat("DoubleClick %1", w);
-		//if (w == m_LayoutRoot) {
-		/*	Edit.Show(!Edit.IsVisible());
-			Text.Show(!Text.IsVisible());
-			
-			if (Edit.IsVisible()) {
-				SetFocus(Edit);
-			} else {
-				SetFocus(null);
-			}*/
-	//	}
-		
+	{		
 		return true;
 	}
 	

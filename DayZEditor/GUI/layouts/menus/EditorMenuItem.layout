@@ -1,56 +1,50 @@
-GridSpacerWidgetClass Panel {
+PanelWidgetClass Panel {
  visible 1
  clipchildren 0
  ignorepointer 0
- color 0 0 0 1
+ color 0.129 0.137 0.149 1
  position 0 0
- size 1 32
+ size 1 24
  hexactpos 1
  vexactpos 1
  hexactsize 0
  vexactsize 1
- scaled 0
+ scaled 1
  priority 251
  draggable 0
  scriptclass ""
- "Ignore invisible" 0
- Padding 0
- Margin 7
- "Size To Content H" 1
- "Size To Content V" 1
- content_valign center
- Columns 4
- Rows 1
+ style rover_sim_colorable
  {
   FrameWidgetClass Icon01 {
    visible 1
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
-   size 0.09 1
+   position 12 0
+   size 24 24
    halign right_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   scaled 0
+   hexactsize 1
+   vexactsize 1
+   scaled 1
    scriptclass ""
    {
     ImageWidgetClass Icon {
      visible 1
-     clipchildren 0
+     clipchildren 1
      inheritalpha 0
      ignorepointer 1
      position 8 0
-     size 18 18
+     size 14 14
      halign right_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 0
+     scaled 1
      scriptclass ""
      image0 ""
      imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
@@ -67,18 +61,19 @@ GridSpacerWidgetClass Panel {
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
-   position 0 0
-   size 0.65 1
+   position 12 0
+   size 0.55 14
+   valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 0
-   scaled 0
+   vexactsize 1
+   scaled 1
    scriptclass ""
    text "This is a very long message"
    font "gui/fonts/sdf_MetronBook24"
    "exact text" 0
-   "size to text h" 0
+   "size to text h" 1
    "size to text v" 0
    "text valign" center
   }
@@ -87,22 +82,24 @@ GridSpacerWidgetClass Panel {
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
-   position 0 0
-   size 0.2 1
+   color 1 1 1 0.706
+   position 48 0
+   size 0.3 12
    halign right_ref
+   valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 0
-   scaled 0
+   vexactsize 1
+   scaled 1
    scriptclass ""
    font "gui/fonts/sdf_MetronLight24"
-   "bold text" 0
+   "bold text" 1
    "text sharpness" 2
    "exact text" 0
    "exact text size" 12
    "size to text h" 1
-   "size to text v" 1
+   "size to text v" 0
    "text halign" right
    "text valign" center
   }
@@ -111,42 +108,43 @@ GridSpacerWidgetClass Panel {
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
-   size 0.05 1
+   position 12 0
+   size 24 24
    halign right_ref
    valign center_ref
    hexactpos 1
    vexactpos 1
-   hexactsize 0
-   vexactsize 0
-   scaled 0
+   hexactsize 1
+   vexactsize 1
+   scaled 1
    scriptclass ""
    {
     ImageWidgetClass Icon2 {
      visible 1
-     clipchildren 0
+     clipchildren 1
      inheritalpha 0
      ignorepointer 1
      position 0 0
-     size 18 18
+     size 14 18
      halign right_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
-     scaled 0
+     scaled 1
      scriptclass "SymbolHandler"
      image0 ""
      imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
      mode blend
      "src alpha" 1
-     filter 0
+     filter 1
      nocache 0
      pivot 0.5 0.5
      {
       ScriptParamsClass {
        Symbol_Name "arrow_right"
-       Symbol_Size 3
+       Symbol_Size 1
       }
      }
     }

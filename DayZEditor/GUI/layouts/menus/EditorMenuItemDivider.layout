@@ -2,7 +2,7 @@ PanelWidgetClass EditorMenuDivider {
  visible 1
  clipchildren 1
  ignorepointer 1
- color 0 0 0 1
+ color 0.129 0.137 0.149 1
  size 48 8
  hexactpos 1
  vexactpos 1

@@ -34,7 +34,7 @@ class EditorMenuItem: ScriptView
 
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		m_LayoutRoot.SetColor(LinearColor.Create(255, 0, 0, 0));
+		m_LayoutRoot.SetColor(0xff212326);
 
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
