@@ -33,7 +33,7 @@ class EditorEnvironment: SerializableBase
 	
 	void Apply(notnull Weather weather, notnull World world)
 	{
-		weather.GetRain().Set(RainValue);
+		weather.GetRain().Set(RainValue);		
 		weather.GetFog().Set(FogValue);
 		weather.GetOvercast().Set(OvercastValue);
 		weather.GetSnowfall().Set(SnowValue);
