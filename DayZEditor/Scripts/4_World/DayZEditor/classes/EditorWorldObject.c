@@ -1,14 +1,22 @@
 class EditorWorldObject: Managed
 {
-	protected Object m_WorldObject;
+	protected ref OLinkT m_WorldObject;
 	Object GetWorldObject()
 	{
-		return m_WorldObject;
+		return m_WorldObject.Ptr();
 	}
 
 	void ~EditorWorldObject()
 	{
-		GetGame().ObjectDelete(m_WorldObject);
+		GetGame().ObjectDelete(m_WorldObject.Ptr());
+		delete m_WorldObject;
+	}
+	
+	void SetWorldObject(Object object)
+	{
+		if (object) {
+			m_WorldObject = new OLinkT(object);
+		}
 	}
 
 	static Object CreateObject(string type, vector position = "0 0 0", vector orientation = "0 0 0", float scale = 1)

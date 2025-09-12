@@ -88,7 +88,7 @@ class Editor: Managed
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected ref map<string, EditorObject> m_EditorObjectsByUuid = new map<string, EditorObject>();
 	protected ref map<string, EditorDeletedObject> m_HiddenObjectsByUuid = new map<string, EditorDeletedObject>();
-	protected EditorCamera 												m_EditorCamera;
+	EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
 	protected typename m_CurrentGizmoType = EditorTranslationGizmo;
 	protected ref EditorGizmo m_CurrentGizmo;
@@ -218,7 +218,9 @@ class Editor: Managed
 		}
 
 #ifndef NO_GUI
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+		if (!GetGame().IsMultiplayer()) {
+			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+		}
 #endif
 		
 		// Object Manager
@@ -310,7 +312,10 @@ class Editor: Managed
 		delete m_DeletedSessionCache;
 		delete m_PlacingObjects;
 		delete m_RecentlyOpenedFiles;
-		GetGame().ObjectDelete(m_EditorCamera);
+		
+		if (!GetGame().IsMultiplayer()) {
+			GetGame().ObjectDelete(m_EditorCamera);
+		}
 	}
 		
 	void SetMode(eEditorMode editor_mode)
@@ -411,7 +416,7 @@ class Editor: Managed
 		if (!ignore) {
 			return m_CameraRaycastGround;
 		}*/
-
+		
 		return PerformRaycast(GetCameraRay(), ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
 	}
 	
@@ -546,7 +551,7 @@ class Editor: Managed
 	{
 		m_ControllingPlayer = new_player;
 		m_Active = false;
-		
+				
 		delete m_EditorInventoryEditorHud;
 		
 		ClearSelection();
@@ -562,6 +567,13 @@ class Editor: Managed
 		
 		GetStatistics().CharactersControlled++;
 		GetStatistics().Save();
+		
+		if (GetGame().IsMultiplayer()) {
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(m_Active);
+			rpc.Write(vector.Zero); // unused
+			rpc.Send(null, 39261, true);
+		}
 	}
 	
 	PlayerBase GetControllingPlayer()
@@ -578,8 +590,10 @@ class Editor: Managed
 			delete m_EditorInventoryEditorHud;
 		}
 				
-		m_EditorCamera.SetActive(true);
-		
+		if (m_EditorCamera && !GetGame().IsMultiplayer()) {
+			m_EditorCamera.SetActive(true);
+		}
+			
 		if (m_EditorHud) {
 			m_EditorHud.Show(true);
 			m_EditorHud.SetCurrentTooltip(null);
@@ -616,6 +630,19 @@ class Editor: Managed
 		
 		SetMissionHud(false);
 		PPEffects.ResetAll();
+				
+		if (GetGame().IsMultiplayer()) {
+			vector camera_position = GetGame().GetPlayer().GetPosition();
+			// The last camera we selected already exists so just run it back
+			if (m_EditorCamera) {
+				camera_position = m_EditorCamera.GetPosition();
+			}
+			
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(m_Active);
+			rpc.Write(camera_position);
+			rpc.Send(null, 39261, true);
+		}
 	}
 
 	ECameraLockFlag GetCameraLockFlags(bool use_override = false)
@@ -1565,12 +1592,7 @@ class Editor: Managed
 	// update: im makin it worse 11/12
 	private bool _bugfixFirstGrab;
 	void SetActive(bool active)
-	{	
-		// just in case we get deleted first
-		if (!m_EditorCamera) {
-			return;
-		}
-		
+	{			
 		EditorLog.Info("Set Active %1", active.ToString());		
 		m_Active = active;
 				
@@ -1579,10 +1601,18 @@ class Editor: Managed
 			delete m_EditorInventoryEditorHud;
 		}
 				
-		if (m_Active) {
-			m_EditorCamera.SetActive(true);
+		if (!GetGame().IsMultiplayer()) {
+			if (m_Active) {
+				if (m_EditorCamera) {
+					m_EditorCamera.SetActive(true);
+				}
+			} else {
+				GetGame().SelectPlayer(null, m_ControllingPlayer);
+			}
 		} else {
-			GetGame().SelectPlayer(null, m_ControllingPlayer);
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(m_Active);
+			rpc.Send(null, 39261, true);
 		}
 		
 		if (m_EditorHud) {

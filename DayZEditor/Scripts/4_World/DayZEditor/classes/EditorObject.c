@@ -27,57 +27,18 @@ class EditorObject: EditorWorldObject
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	ref ScriptInvoker OnUpdated = new ScriptInvoker();
 	ref ScriptInvoker OnChanged = new ScriptInvoker();
-
-	void SetDisplayName(string display_name) 
-	{
-		m_Data.DisplayName = display_name;
-		m_EditorPlacedListItem.GetTemplateController().Label = m_Data.DisplayName;
-		m_EditorPlacedListItem.GetTemplateController().NotifyPropertyChanged("Label");
-	}
-	
-	string GetDisplayName() 
-	{
-		return m_Data.DisplayName; 
-	}
-	
-	string GetType() 
-	{
-		return m_Data.Type; 
-	}
-	
-	int GetID() 
-	{
-		return m_Data.GetID(); 
-	}
-
-	EditorObjectFlags GetFlags() 
-	{
-		return m_Data.Flags;
-	}
-	
-	void SetWorldObject(notnull Object world_object)
-	{		
-		m_WorldObject = world_object;
-		if (m_Data) {
-			m_Data.WorldObject = world_object;
-		}
-	}
-	
-	override Object GetWorldObject() 
-	{		
-		return m_WorldObject;
-	}
-	
+		
 	void EditorObject(notnull EditorObjectData data)
 	{
 		EditorLog.Trace("EditorObject " + data);
 		m_Data = data;
 		
-		if (!m_Data.WorldObject) {
-			m_WorldObject = CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale);
-			m_Data.WorldObject = m_WorldObject;
+		if (m_Data.WorldObject) {
+			SetWorldObject(m_Data.WorldObject);
+		} else {
+			SetWorldObject(CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale));
 
-			EntityAI entity = EntityAI.Cast(m_WorldObject);
+			EntityAI entity = EntityAI.Cast(GetWorldObject());
 			if (entity) {
 				foreach (int slot_id, EditorObjectData attachment: m_Data.AttachmentMap) {
 					entity.GetInventory().CreateAttachmentEx(attachment.Type, slot_id);
@@ -97,11 +58,9 @@ class EditorObject: EditorWorldObject
 				}
 			}
 		}
-		
-		m_WorldObject = m_Data.WorldObject;
-				
+						
 		// Trash the object because its uncreatable
-		if (!m_WorldObject) { 
+		if (!GetWorldObject()) { 
 			EditorLog.Warning("Object failed to create: %1", m_Data.Type);
 			return;
 		}
@@ -110,7 +69,8 @@ class EditorObject: EditorWorldObject
 			s_AllByObject = new map<Object, EditorObject>();
 		}
 
-		s_AllByObject[m_WorldObject] = this;
+		Object world_object = GetWorldObject();
+		s_AllByObject[world_object] = this;
 		
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
@@ -145,7 +105,7 @@ class EditorObject: EditorWorldObject
 		
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_VectorBasePoint = base_point;
-		m_BoundingCenter = m_WorldObject.GetBoundingCenter();
+		m_BoundingCenter = GetWorldObject().GetBoundingCenter();
 		
 		ShowBoundingBox();
 		
@@ -191,16 +151,15 @@ class EditorObject: EditorWorldObject
 	void ~EditorObject()
 	{
 		EditorLog.Trace("~EditorObject");
-		if (m_Data && m_WorldObject) {
+		if (m_Data && GetWorldObject()) {
 			Update();
 		}
 
-		if (s_AllByObject && m_WorldObject) {
-			s_AllByObject.Remove(m_WorldObject);
+		if (s_AllByObject && GetWorldObject()) {
+			s_AllByObject.Remove(GetWorldObject());
 		}
 		
 		HideBoundingBox();
-		GetGame().ObjectDelete(m_WorldObject);
 
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;
@@ -208,6 +167,42 @@ class EditorObject: EditorWorldObject
 		
 		delete OnObjectSelected;
 		delete OnObjectDeselected;
+	}
+	
+	void SetDisplayName(string display_name) 
+	{
+		m_Data.DisplayName = display_name;
+		m_EditorPlacedListItem.GetTemplateController().Label = m_Data.DisplayName;
+		m_EditorPlacedListItem.GetTemplateController().NotifyPropertyChanged("Label");
+	}
+	
+	string GetDisplayName() 
+	{
+		return m_Data.DisplayName; 
+	}
+	
+	string GetType() 
+	{
+		return m_Data.Type; 
+	}
+	
+	int GetID() 
+	{
+		return m_Data.GetID(); 
+	}
+
+	EditorObjectFlags GetFlags() 
+	{
+		return m_Data.Flags;
+	}
+	
+	override void SetWorldObject(Object object)
+	{		
+		super.SetWorldObject(object);
+		
+		if (m_Data) {
+			m_Data.WorldObject = GetWorldObject();
+		}
 	}
 	
 	protected void OnFrame(float dt)
@@ -316,17 +311,17 @@ class EditorObject: EditorWorldObject
 	    mat[2] = rot3[2] * m_Data.Scale;		
 	    mat[3] = m_Data.Position;
 
-	    m_WorldObject.SetTransform(mat);
-	    m_WorldObject.Update();
+	    GetWorldObject().SetTransform(mat);
+	    GetWorldObject().Update();
 	}
 	
 	vector GetPosition() 
 	{ 
-		if (!m_WorldObject) {
+		if (!GetWorldObject()) {
 			return vector.Zero;
 		}
 		
-		return m_WorldObject.GetPosition(); 
+		return GetWorldObject().GetPosition(); 
 	}
 	
 	void SetPosition(vector pos)
@@ -350,7 +345,7 @@ class EditorObject: EditorWorldObject
 	    m_Data.Position     = pos;
 	    m_Data.BottomCenter = GetBottomCenter();
 
-	    m_WorldObject.SetPosition(pos);
+	    GetWorldObject().SetPosition(pos);
 	    Update();
 	}
 	
@@ -386,7 +381,7 @@ class EditorObject: EditorWorldObject
 
 	void GetTransform(out vector mat[4]) 
 	{ 
-		m_WorldObject.GetTransform(mat); 
+		GetWorldObject().GetTransform(mat); 
 	}
 	
 	void SetTransform(vector mat[4])
@@ -421,12 +416,25 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void Update() 
-	{ 			
-		if (m_WorldObject) {
-			m_WorldObject.Update(); 
+	{ 		
+		if (GetWorldObject()) {
+			GetWorldObject().Update(); 
 		}
 		
 		OnUpdated.Invoke();
+		
+		vector mat[4];
+		GetTransform(mat);
+		
+		m_Data.Position = mat[3];
+		m_Data.Orientation = Math3D.MatrixToAngles(mat);
+		m_Data.BottomCenter = GetBottomCenter();
+		
+		float len0 = mat[0].Length();
+	    float len1 = mat[1].Length();
+	    float len2 = mat[2].Length();
+	    m_Data.Scale = (len0 + len1 + len2) / 3.0;
+		
 	}
 	
 	void UpdateNet()
@@ -451,11 +459,11 @@ class EditorObject: EditorWorldObject
 	void ClippingInfo(out vector clip_info[2]) 
 	{ 
 		vector min, max;
-		if (m_WorldObject.IsItemBase()) {
-			m_WorldObject.GetActionComponentMinMax(m_WorldObject.GetViewGeometryLevel(), 0, min, max);
+		if (GetWorldObject().IsItemBase()) {
+			GetWorldObject().GetActionComponentMinMax(GetWorldObject().GetViewGeometryLevel(), 0, min, max);
 			clip_info = { min, max };
 		} else {
-			m_WorldObject.ClippingInfo(clip_info); 
+			GetWorldObject().ClippingInfo(clip_info); 
 		}		
 	}
 	
@@ -555,7 +563,7 @@ class EditorObject: EditorWorldObject
 
 	void SetAllowDamage(bool damage)
 	{
-		m_WorldObject.SetAllowDamage(damage);
+		GetWorldObject().SetAllowDamage(damage);
 		m_Data.AllowDamage = damage;
 		OnChanged.Invoke();
 	}
@@ -572,14 +580,14 @@ class EditorObject: EditorWorldObject
 
 	void SetPhysicsEnabled(bool physics)
 	{
-		if (!PlayerBase.Cast(m_WorldObject)) {
-			if (m_WorldObject) {
+		if (!PlayerBase.Cast(GetWorldObject())) {
+			if (GetWorldObject()) {
 				if (physics) {
-					m_WorldObject.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
-					m_WorldObject.SetDynamicPhysicsLifeTime(-1);
-					dBodySetMass(m_WorldObject, 100);
+					GetWorldObject().CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+					GetWorldObject().SetDynamicPhysicsLifeTime(-1);
+					dBodySetMass(GetWorldObject(), 100);
 				} else {
-					m_WorldObject.SetDynamicPhysicsLifeTime(0.001);
+					GetWorldObject().SetDynamicPhysicsLifeTime(0.001);
 				}
 			}
 
@@ -590,7 +598,7 @@ class EditorObject: EditorWorldObject
 	
 	void SetHealth(float health)
 	{
-		m_WorldObject.SetHealth("GlobalHealth", "Health", health);
+		GetWorldObject().SetHealth("GlobalHealth", "Health", health);
 	}
 
 	bool IsLocked()
@@ -616,14 +624,14 @@ class EditorObject: EditorWorldObject
 	vector GetBottomCenter()
 	{		
 		vector transform[4];
-		m_WorldObject.GetTransform(transform);
+		GetWorldObject().GetTransform(transform);
 		return (Vector(0, -m_BoundingCenter[1], 0)).Multiply4(transform);
 	}
 	
 	void GetBottomTransform(out vector transform[4])
 	{
 		vector mat[4];
-		m_WorldObject.GetTransform(mat);
+		GetWorldObject().GetTransform(mat);
 		copyarray(transform, mat);
 		transform[3] = (Vector(0, -m_BoundingCenter[1],	 0)).Multiply4(mat);
 	}	
@@ -806,8 +814,8 @@ class EditorObject: EditorWorldObject
 	bool SetAnimation(string anim_name)
 	{
 		EditorLog.Trace("EditorObject::SetAnimation");
-		if (m_WorldObject.IsMan()) {
-			//DayZPlayerImplement.Cast(m_WorldObject).EditorAnimationStart(anim_name);
+		if (GetWorldObject().IsMan()) {
+			//DayZPlayerImplement.Cast(GetWorldObject()).EditorAnimationStart(anim_name);
 			return true;
 		}
 		
@@ -817,7 +825,7 @@ class EditorObject: EditorWorldObject
 	void ResetAnimation()
 	{
 		EditorLog.Trace("EditorObject::SetAnimation");
-		if (m_WorldObject.IsMan()) {
+		if (GetWorldObject().IsMan()) {
 			//DayZPlayerImplement.Cast(GetWorldObject()).EditorAnimationReset();
 		}
 	}
@@ -887,11 +895,11 @@ class EditorObject: EditorWorldObject
 	
 	EditorObject GetAttachmentParent()
 	{
-		if (!ItemBase.Cast(m_WorldObject) || !ItemBase.Cast(m_WorldObject).GetHierarchyParent()) { // adding this because of the notnull check in GetEditorObject
+		if (!ItemBase.Cast(GetWorldObject()) || !ItemBase.Cast(GetWorldObject()).GetHierarchyParent()) { // adding this because of the notnull check in GetEditorObject
 			return null;
 		}
 		
-		return GetEditor().GetEditorObject(ItemBase.Cast(m_WorldObject).GetHierarchyParent());
+		return GetEditor().GetEditorObject(ItemBase.Cast(GetWorldObject()).GetHierarchyParent());
 	}
 	
 	bool IsAttachedToObject()
@@ -901,7 +909,7 @@ class EditorObject: EditorWorldObject
 	
 	bool HasObjectAttachments()
 	{
-		return (ItemBase.Cast(m_WorldObject) && ItemBase.Cast(m_WorldObject).GetInventory().AttachmentCount() > 0);
+		return (ItemBase.Cast(GetWorldObject()) && ItemBase.Cast(GetWorldObject()).GetInventory().AttachmentCount() > 0);
 	}
 	
 	map<string, ref EditorObjectAnimationSource> GetObjectAnimations()
@@ -916,7 +924,7 @@ class EditorObject: EditorWorldObject
 	
 	EditorObjectMap GetObjectAttachments()
 	{
-		ItemBase item = ItemBase.Cast(m_WorldObject);
+		ItemBase item = ItemBase.Cast(GetWorldObject());
 		EditorObjectMap editor_objects();
 		for (int i = 0; i < item.GetInventory().AttachmentCount(); i++) {
 			EntityAI attachment = item.GetInventory().GetAttachmentFromIndex(i);

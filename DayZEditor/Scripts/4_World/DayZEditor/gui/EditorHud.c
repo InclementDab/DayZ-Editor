@@ -716,8 +716,10 @@ class EditorHud: ScriptView
 			BrushToggle.SetColor(color);
 		}
 		
-		string speed_s = Math.Round(GetEditor().GetCamera().GetSettings().Speed).ToString();
-		CameraSpeed.SetText(speed_s);
+		if (GetEditor().GetCamera()) {
+			string speed_s = Math.Round(GetEditor().GetCamera().GetSettings().Speed).ToString();
+			CameraSpeed.SetText(speed_s);
+		}
 		
 		LoggerFrame.Show(m_EditorSettings.ShowScreenLogs);
 
@@ -750,22 +752,26 @@ class EditorHud: ScriptView
 				}
 			}
 		}
-					
-		m_EditorCameraMarker.WorldPosition = GetEditor().GetCamera().GetPosition();
-		m_EditorCameraMarker.WorldOrientation = GetEditor().GetCamera().GetOrientation();
+		
+		if (GetEditor().GetCamera()) {
+			m_EditorCameraMarker.WorldPosition = GetEditor().GetCamera().GetPosition();
+			m_EditorCameraMarker.WorldOrientation = GetEditor().GetCamera().GetOrientation();
+		}		
 		
 		EditorCamera camera = GetEditor().GetCamera();
-		vector position = camera.GetPosition();
-		if (focus_widget != InfoBar_X_Value) {
-			InfoBar_X_Value.SetText(position[0].ToString(false));
-		}
-		
-		if (focus_widget != InfoBar_Y_Value) {
-			InfoBar_Y_Value.SetText(position[1].ToString(false));
-		}
-		
-		if (focus_widget != InfoBar_Z_Value) {
-			InfoBar_Z_Value.SetText(position[2].ToString(false));
+		if (camera) {
+			vector position = camera.GetPosition();
+			if (focus_widget != InfoBar_X_Value) {
+				InfoBar_X_Value.SetText(position[0].ToString(false));
+			}
+			
+			if (focus_widget != InfoBar_Y_Value) {
+				InfoBar_Y_Value.SetText(position[1].ToString(false));
+			}
+			
+			if (focus_widget != InfoBar_Z_Value) {
+				InfoBar_Z_Value.SetText(position[2].ToString(false));
+			}
 		}
 		
 		BrushRadiusText.SetText(m_TemplateController.BrushRadius.ToString());

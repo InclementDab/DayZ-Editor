@@ -99,7 +99,6 @@ class EditorObjectMarker: EditorMarker
 			
 			case MouseState.LEFT: {			
 				if (GetEditor().IsDragging()) {
-					Print(1);
 					return true;
 				}
 				

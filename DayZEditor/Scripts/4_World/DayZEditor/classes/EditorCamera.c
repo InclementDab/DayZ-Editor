@@ -218,14 +218,10 @@ class EditorCameraSettings: ProfileSettings
 
 // make option Q and E go up and down no matter orientation
 class EditorCamera_V2: EditorCamera
-{	
+{		
 	protected float m_CameraFovVelocity[1];
 		
 	float Speed;
-	float Boost_Multiplier = 6.5;
-	float Drag = 0.05;
-	const float Mouse_Sens = 35.0;
-	
 	float SendUpdateAccumalator = 0.0;
 	
 	protected vector m_LinearVelocity, m_AngularVelocity;
@@ -234,6 +230,11 @@ class EditorCamera_V2: EditorCamera
 	void EditorCamera_V2()
 	{		
 		Speed = m_EditorCameraSettings.Speed;
+		
+		// Assign on MP mode for spectator positioning
+		if (GetGame().IsMultiplayer()) {
+			GetEditor().m_EditorCamera = this;
+		}
 	}
 	
 	override void EOnFrame(IEntity other, float timeSlice)
@@ -368,6 +369,12 @@ class EditorCamera_V2: EditorCamera
 		
 		if (GetEditor()) {
 			GetEditor().GetStatistics().DistanceFlown += timeSlice * speed;
+		}
+		
+		SendUpdateAccumalator += timeSlice;
+		if (SendUpdateAccumalator > 0.5) {
+			GetGame().UpdateSpectatorPosition(GetPosition());
+			SendUpdateAccumalator = 0;
 		}
 	}
 

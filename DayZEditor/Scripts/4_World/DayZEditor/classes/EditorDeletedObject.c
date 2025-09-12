@@ -20,34 +20,34 @@ class EditorDeletedObject: EditorWorldObject
 	void EditorDeletedObject(EditorDeletedObjectData data)
 	{
 		m_Data = data;
-				
-		m_WorldObject = m_Data.WorldObject;
+		
+		SetWorldObject(m_Data.WorldObject);
 		if (!m_WorldObject) {
-			m_WorldObject = m_Data.FindObject();
+			SetWorldObject(m_Data.FindObject());
 			if (!m_WorldObject) {
 				EditorLog.Error("Failed to find object with name %1:%3 at position %2", m_Data.Type, m_Data.Position.ToString(), m_Data.ModelName);
 				return;
 			}
 		}
 		
-		m_Position = m_WorldObject.GetPosition();
-		m_Orientation = m_WorldObject.GetOrientation();
+		m_Position = GetWorldObject().GetPosition();
+		m_Orientation = GetWorldObject().GetOrientation();
 		
 		vector clip_info[2];
-		m_WorldObject.ClippingInfo(clip_info);
+		GetWorldObject().ClippingInfo(clip_info);
 		
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
 		
-		m_BottomCenter = m_WorldObject.GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
+		m_BottomCenter = GetWorldObject().GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
 		
 		// todo: probably use the events system to insert this stuff into the UI
 		m_EditorDeletedListItem = new EditorDeletedListItem(this);		
 		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
 		
-		GetDayZGame().GetSuppressedObjectManager().Suppress(m_WorldObject);
+		GetDayZGame().GetSuppressedObjectManager().Suppress(GetWorldObject());
 		
 		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
 		m_EditorDeletedObjectWorldMarker.Show(false);
@@ -61,7 +61,7 @@ class EditorDeletedObject: EditorWorldObject
 		}
 		
 		if (GetDayZGame() && GetDayZGame().GetSuppressedObjectManager()) {
-			GetDayZGame().GetSuppressedObjectManager().Unsupress(m_WorldObject);
+			GetDayZGame().GetSuppressedObjectManager().Unsupress(GetWorldObject());
 		}
 		
 		delete m_EditorDeletedListItem;
@@ -91,7 +91,7 @@ class EditorDeletedObject: EditorWorldObject
 		}
 		
 		// Temporarily unsuppress
-		GetDayZGame().GetSuppressedObjectManager().Unsupress(m_WorldObject);
+		GetDayZGame().GetSuppressedObjectManager().Unsupress(GetWorldObject());
 	}
 	
 	void OnDeselected()
@@ -102,7 +102,7 @@ class EditorDeletedObject: EditorWorldObject
 			m_EditorDeletedListItem.Deselect();
 		}
 		
-		GetDayZGame().GetSuppressedObjectManager().Suppress(m_WorldObject);
+		GetDayZGame().GetSuppressedObjectManager().Suppress(GetWorldObject());
 	}
 	
 	bool IsSelected()

@@ -284,7 +284,7 @@ class EditorFolderListNode: EditorListNode
 	{
 		super.OnDoubleClick(w, x, y, button);
 		
-		SetCollapsed(!IsCollapsed());
+		SetCollapsed(!IsCollapsed());		
 		return true;
 	}
 	
