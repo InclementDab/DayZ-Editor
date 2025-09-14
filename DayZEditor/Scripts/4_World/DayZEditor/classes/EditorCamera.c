@@ -95,6 +95,8 @@ class EditorCamera: Camera
 			rpc.Write(camera_quat);
 			rpc.Send(null, 39257, false);
 			
+			GetGame().UpdateSpectatorPosition(GetPosition());
+			
 			m_UpdateDtAccumulated = 0.0;
 		}
 	}
@@ -230,7 +232,7 @@ class EditorCamera_V2: EditorCamera
 	void EditorCamera_V2()
 	{		
 		Speed = m_EditorCameraSettings.Speed;
-		
+
 		// Assign on MP mode for spectator positioning
 		if (GetGame().IsMultiplayer()) {
 			GetEditor().m_EditorCamera = this;
@@ -369,12 +371,6 @@ class EditorCamera_V2: EditorCamera
 		
 		if (GetEditor()) {
 			GetEditor().GetStatistics().DistanceFlown += timeSlice * speed;
-		}
-		
-		SendUpdateAccumalator += timeSlice;
-		if (SendUpdateAccumalator > 0.5) {
-			GetGame().UpdateSpectatorPosition(GetPosition());
-			SendUpdateAccumalator = 0;
 		}
 	}
 

@@ -35,13 +35,13 @@ class EditorListNode: ScriptView
 		if (m_QueueRecalculateSize) {
 			float w, h, x, y;
 			Children.Update();
-			Children.GetSize(w, h);	
+			Children.GetScreenSize(w, h);	
 			
 			m_LayoutRoot.GetScreenSize(x, y);
 			float h_children = h * !m_IsCollapsed;
 			m_LayoutRoot.SetScreenSize(x, h_children + 24);
 					
-			ChildrenHeight.SetSize(2, h_children + 24);
+			ChildrenHeight.SetSize(2, h_children);
 			
 			if (IsInherited(EditorFolderListNode)) {
 				bool are_children_visible = false;

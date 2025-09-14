@@ -180,7 +180,7 @@ class EditorMapView: ScriptView
 	{		
 		switch (w) {
 			case StartButton: {
-				GetGame().PlayMission(CreateEditorMissionFolder(m_MapConfig));
+				GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().PlayMission, 0, 0, CreateEditorMissionFolder(m_MapConfig));
 				break;
 			}
 

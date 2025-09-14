@@ -124,8 +124,8 @@ class Editor: Managed
 	ref EditorEnvironment UserEnvironment;
 	ref EditorDragHandler DragHandler;
 
-	static const int Experimental = 0;
-	static const int MinorVersionNumber = 2;
+	static const int Experimental = 1;
+	static const int MinorVersionNumber = 3;
 	static const int VersionNumber = 35;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
 	static bool HasTestedVersion = false;
@@ -632,7 +632,12 @@ class Editor: Managed
 		PPEffects.ResetAll();
 				
 		if (GetGame().IsMultiplayer()) {
-			vector camera_position = GetGame().GetPlayer().GetPosition();
+			vector map_center = GetMapCenterPosition();
+			vector camera_position = GetSafeStartPosition(map_center[0], map_center[2], 1000);
+			if (GetGame().GetPlayer()) {
+				camera_position = GetGame().GetPlayer().GetPosition();
+			}
+			
 			// The last camera we selected already exists so just run it back
 			if (m_EditorCamera) {
 				camera_position = m_EditorCamera.GetPosition();

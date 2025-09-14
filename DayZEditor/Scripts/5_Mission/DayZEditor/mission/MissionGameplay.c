@@ -258,7 +258,9 @@ modded class MissionGameplay
                		int flags;
 					ctx.Read(flags);
 															
-					data_map[uuid] = EditorObjectData.Create(object, flags);
+					if (object) {
+						data_map[uuid] = EditorObjectData.Create(object, flags);
+					}
 				}
 				
 				GetEditor().CreateObjectsByUuid(data_map, false);

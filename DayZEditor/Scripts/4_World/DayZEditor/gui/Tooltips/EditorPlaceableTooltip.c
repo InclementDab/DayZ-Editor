@@ -10,6 +10,8 @@ class EditorPlaceableTooltip: ScriptView
 		if (m_MyObject) {
 			m_MyObject.Delete();
 		}
+		
+		HeaderLabel.SetText("Empty");
 	}
 	
 	void SetTitle(string title)
