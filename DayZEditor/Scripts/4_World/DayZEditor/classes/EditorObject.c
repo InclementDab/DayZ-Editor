@@ -394,12 +394,18 @@ class EditorObject: EditorWorldObject
 
 	float GetScale()
 	{
-		return m_Data.Scale;
+		if (GetWorldObject()) {
+			return GetWorldObject().GetScale();
+		}
+		
+		return 0;
 	}
 
 	void GetTransform(out vector mat[4]) 
 	{ 
-		GetWorldObject().GetTransform(mat); 
+		if (GetWorldObject()) {
+			GetWorldObject().GetTransform(mat); 
+		}
 	}
 	
 	void SetTransform(vector mat[4])

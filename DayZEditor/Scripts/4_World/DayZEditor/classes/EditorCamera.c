@@ -232,11 +232,6 @@ class EditorCamera_V2: EditorCamera
 	void EditorCamera_V2()
 	{		
 		Speed = m_EditorCameraSettings.Speed;
-
-		// Assign on MP mode for spectator positioning
-		if (GetGame().IsMultiplayer()) {
-			GetEditor().m_EditorCamera = this;
-		}
 	}
 	
 	override void EOnFrame(IEntity other, float timeSlice)

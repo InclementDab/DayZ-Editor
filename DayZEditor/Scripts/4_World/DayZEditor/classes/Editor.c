@@ -88,7 +88,7 @@ class Editor: Managed
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected ref map<string, EditorObject> m_EditorObjectsByUuid = new map<string, EditorObject>();
 	protected ref map<string, EditorDeletedObject> m_HiddenObjectsByUuid = new map<string, EditorDeletedObject>();
-	EditorCamera 												m_EditorCamera;
+	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
 	protected typename m_CurrentGizmoType = EditorTranslationGizmo;
 	protected ref EditorGizmo m_CurrentGizmo;
@@ -218,9 +218,7 @@ class Editor: Managed
 		}
 
 #ifndef NO_GUI
-		if (!GetGame().IsMultiplayer()) {
-			m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
-		}
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
 #endif
 		
 		// Object Manager
@@ -313,9 +311,7 @@ class Editor: Managed
 		delete m_PlacingObjects;
 		delete m_RecentlyOpenedFiles;
 		
-		if (!GetGame().IsMultiplayer()) {
-			GetGame().ObjectDelete(m_EditorCamera);
-		}
+		GetGame().ObjectDelete(m_EditorCamera);
 	}
 		
 	void SetMode(eEditorMode editor_mode)
@@ -590,7 +586,7 @@ class Editor: Managed
 			delete m_EditorInventoryEditorHud;
 		}
 				
-		if (m_EditorCamera && !GetGame().IsMultiplayer()) {
+		if (m_EditorCamera) {
 			m_EditorCamera.SetActive(true);
 		}
 			
@@ -630,24 +626,6 @@ class Editor: Managed
 		
 		SetMissionHud(false);
 		PPEffects.ResetAll();
-				
-		if (GetGame().IsMultiplayer()) {
-			vector map_center = GetMapCenterPosition();
-			vector camera_position = GetSafeStartPosition(map_center[0], map_center[2], 1000);
-			if (GetGame().GetPlayer()) {
-				camera_position = GetGame().GetPlayer().GetPosition();
-			}
-			
-			// The last camera we selected already exists so just run it back
-			if (m_EditorCamera) {
-				camera_position = m_EditorCamera.GetPosition();
-			}
-			
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(m_Active);
-			rpc.Write(camera_position);
-			rpc.Send(null, 39261, true);
-		}
 	}
 
 	ECameraLockFlag GetCameraLockFlags(bool use_override = false)
@@ -2309,7 +2287,6 @@ class Editor: Managed
 			return;
 		}
 		
-		Print(data.Scale);
 		object.SetPosition(data.Position);
 		object.SetOrientation(data.Orientation);
 		object.SetScale(data.Scale);
