@@ -444,6 +444,7 @@ class EditorHud: ScriptView
 					teleport_player.SetPosition(teleport_player_raycast.Bounce.Position);
 					
 					if (GetGame().IsMultiplayer()) {
+						Print(teleport_player);
 						ScriptRPC rpc_teleport = new ScriptRPC();
 						rpc_teleport.Write(teleport_player);
 						rpc_teleport.Write(teleport_player_raycast.Bounce.Position);

@@ -36,8 +36,9 @@ class EditorObject: EditorWorldObject
 		if (m_Data.WorldObject) {
 			SetWorldObject(m_Data.WorldObject);
 		} else {
+			/*
 			SetWorldObject(CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale));
-
+			
 			EntityAI entity = EntityAI.Cast(GetWorldObject());
 			if (entity) {
 				foreach (int slot_id, EditorObjectData attachment: m_Data.AttachmentMap) {
@@ -56,14 +57,15 @@ class EditorObject: EditorWorldObject
 						m_Data.AttachmentMap[slot_id2] = EditorObjectData.Create(existing_entity);
 					}
 				}
-			}
+			}*/
 		}
 						
 		// Trash the object because its uncreatable
+		/*
 		if (!GetWorldObject()) { 
 			EditorLog.Warning("Object failed to create: %1", m_Data.Type);
 			return;
-		}
+		}*/
 
 		if (!s_AllByObject) {
 			s_AllByObject = new map<Object, EditorObject>();
@@ -130,6 +132,7 @@ class EditorObject: EditorWorldObject
 			CFG_WEAPONSPATH
 		};
 		
+		EntityAI entity = EntityAI.Cast(m_WorldObject);
 		foreach (string path: paths) {
 			string config_path = path + " " + GetType() + " AnimationSources";
 			if (GetGame().ConfigIsExisting(config_path) && entity) {
@@ -143,9 +146,10 @@ class EditorObject: EditorWorldObject
 		
 		Update();
 		
-#ifdef DIAG_DEVELOPER
-		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
-#endif
+		
+		if (GetGame().IsMultiplayer()) {
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
+		}
 	}
 		
 	void ~EditorObject()
@@ -207,6 +211,15 @@ class EditorObject: EditorWorldObject
 	
 	protected void OnFrame(float dt)
 	{
+		if (!m_Data.WorldObject || !m_WorldObject) {
+			// Trolly for the world object every frame to see if we've gotten into its network bubble
+			Object world_object_found = GetGame().GetObjectByNetworkId(m_Data.m_LowBits, m_Data.m_HighBits);
+			
+			if (world_object_found) {
+				SetWorldObject(world_object_found);
+			}
+		}
+		
 		//vector mat[4];
 		//GetTransform(mat);
 		

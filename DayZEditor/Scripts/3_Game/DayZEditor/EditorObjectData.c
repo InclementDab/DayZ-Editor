@@ -4,6 +4,8 @@ modded class EditorObjectData
 	[NonSerialized()]
 	protected int m_Id = EditorObjectDataId++;
 	
+	int m_LowBits, m_HighBits;
+	
 	override int GetID()
 	{
 		return m_Id;
