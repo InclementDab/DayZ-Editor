@@ -71,10 +71,6 @@ class EditorObjectManagerModule : Managed
 					continue;
 				}
 				
-				if (IsForbiddenModel(model)) {
-					continue;
-				}
-
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type, scope);
 				if (type_lower.Contains("land_") || type_lower.Contains("staticobj_")) {
 					placeable_item.Scope = 2;
@@ -99,7 +95,7 @@ class EditorObjectManagerModule : Managed
 				m_PlaceableObjectsByType[placeable_item.Type] = placeable_item;
 				
 				// If our model exists we need to dig a little deeper
-				if (model && model != "bmp") {
+				if (model && model != "bmp" && !IsForbiddenModel(model)) {
 					string model_file = File.GetName(model);
 
 					// register into placeable p3d models
