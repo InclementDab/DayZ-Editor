@@ -23,6 +23,7 @@ FrameWidgetClass NodeView {
    vexactsize 0
    scaled 1
    draggable 1
+   Padding 0
    Margin 0
    "Size To Content H" 1
    "Size To Content V" 1
@@ -83,64 +84,16 @@ FrameWidgetClass NodeView {
         }
        }
       }
-     }
-    }
-    FrameWidgetClass Favorite {
-     visible 0
-     ignorepointer 1
-     position 7 0
-     size 16 24
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     {
-      ButtonWidgetClass FavoriteButton {
-       visible 1
-       clipchildren 1
-       color 1 1 1 0.392
-       position 0 0
-       size 1 1
-       halign center_ref
+      ImageWidgetClass ChildrenWidth {
+       ignorepointer 0
+       color 0.784 0.784 0.784 1
+       size -8 1
        valign center_ref
        hexactpos 1
        vexactpos 1
-       hexactsize 0
-       vexactsize 0
+       hexactsize 1
+       vexactsize 1
        scaled 1
-       scriptclass ""
-       style Empty
-       font "gui/fonts/etelkatextpro14"
-       switch toggle
-       {
-        ImageWidgetClass FavoriteIcon {
-         visible 1
-         clipchildren 0
-         ignorepointer 1
-         color 1 1 1 0.588
-         position 0 0
-         size 12 14
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 1
-         scriptclass "SymbolHandler"
-         image0 ""
-         mode additive
-         "src alpha" 1
-         filter 1
-         {
-          ScriptParamsClass {
-           Symbol_Name "star"
-           Symbol_Size 2
-          }
-         }
-        }
-       }
       }
      }
     }
@@ -182,236 +135,6 @@ FrameWidgetClass NodeView {
       }
      }
     }
-    FrameWidgetClass Hide {
-     visible 0
-     ignorepointer 1
-     position 7 0
-     size 16 24
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     {
-      ButtonWidgetClass HideButton {
-       visible 1
-       clipchildren 1
-       color 1 1 1 0.392
-       position 0 0
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 1
-       scriptclass ""
-       style Empty
-       font "gui/fonts/etelkatextpro14"
-       switch toggle
-       {
-        ImageWidgetClass HideIcon {
-         visible 1
-         clipchildren 0
-         ignorepointer 1
-         color 1 1 1 0.588
-         position 0 0
-         size 12 14
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 1
-         scriptclass ""
-         image0 "set:regular image:eye"
-         mode additive
-         "src alpha" 1
-         filter 1
-        }
-       }
-      }
-     }
-    }
-    FrameWidgetClass BoundingBox {
-     visible 0
-     ignorepointer 1
-     position 7 0
-     size 16 24
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     {
-      ButtonWidgetClass BoundingBoxButton {
-       visible 1
-       clipchildren 1
-       color 1 1 1 0.392
-       position 0 0
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 1
-       scriptclass ""
-       style Empty
-       font "gui/fonts/etelkatextpro14"
-       switch toggle
-       {
-        ImageWidgetClass BoundingBoxIcon {
-         visible 1
-         clipchildren 0
-         ignorepointer 1
-         color 1 1 1 0.588
-         position 0 0
-         size 12 14
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 1
-         scriptclass "SymbolHandler"
-         image0 ""
-         mode additive
-         "src alpha" 1
-         filter 1
-         {
-          ScriptParamsClass {
-           Symbol_Name "cube"
-           Symbol_Size 2
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-    FrameWidgetClass Lock {
-     visible 0
-     ignorepointer 1
-     position 7 0
-     size 16 24
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     {
-      ButtonWidgetClass LockButton {
-       visible 1
-       clipchildren 1
-       color 1 1 1 0.392
-       position 0 0
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 1
-       scriptclass ""
-       style Empty
-       font "gui/fonts/etelkatextpro14"
-       switch toggle
-       {
-        ImageWidgetClass LockIcon {
-         visible 1
-         clipchildren 0
-         ignorepointer 1
-         color 1 1 1 0.588
-         position 0 0
-         size 12 14
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 1
-         scriptclass "SymbolHandler"
-         image0 ""
-         mode additive
-         "src alpha" 1
-         filter 1
-         {
-          ScriptParamsClass {
-           Symbol_Name "lock"
-           Symbol_Size 2
-          }
-         }
-        }
-       }
-      }
-     }
-    }
-    FrameWidgetClass Marker {
-     visible 0
-     ignorepointer 1
-     position 7 0
-     size 16 24
-     hexactpos 1
-     vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     scaled 1
-     {
-      ButtonWidgetClass MarkerButton {
-       visible 1
-       clipchildren 1
-       color 1 1 1 0.392
-       position 0 0
-       size 1 1
-       halign center_ref
-       valign center_ref
-       hexactpos 1
-       vexactpos 1
-       hexactsize 0
-       vexactsize 0
-       scaled 1
-       scriptclass ""
-       style Empty
-       font "gui/fonts/etelkatextpro14"
-       switch toggle
-       {
-        ImageWidgetClass MarkerIcon {
-         visible 1
-         clipchildren 0
-         ignorepointer 1
-         color 1 1 1 0.588
-         position 0 0
-         size 12 14
-         halign center_ref
-         valign center_ref
-         hexactpos 1
-         vexactpos 1
-         hexactsize 1
-         vexactsize 1
-         scaled 1
-         scriptclass "SymbolHandler"
-         image0 ""
-         mode additive
-         "src alpha" 1
-         filter 1
-         {
-          ScriptParamsClass {
-           Symbol_Name "globe_pointer"
-           Symbol_Size 2
-          }
-         }
-        }
-       }
-      }
-     }
-    }
     GridSpacerWidgetClass Panel {
      visible 1
      disabled 0
@@ -429,7 +152,7 @@ FrameWidgetClass NodeView {
      scriptclass ""
      style Colorable
      Padding 0
-     Margin 1
+     Margin 0
      "Size To Content H" 1
      "Size To Content V" 1
      content_halign center
@@ -520,6 +243,65 @@ FrameWidgetClass NodeView {
       }
      }
     }
+    FrameWidgetClass Favorite {
+     visible 0
+     ignorepointer 1
+     position 7 0
+     size 16 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 1
+     {
+      ButtonWidgetClass FavoriteButton {
+       visible 1
+       clipchildren 1
+       color 1 1 1 0.392
+       position 0 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       scriptclass ""
+       style Empty
+       font "gui/fonts/etelkatextpro14"
+       switch toggle
+       {
+        ImageWidgetClass FavoriteIcon {
+         visible 1
+         clipchildren 0
+         ignorepointer 1
+         color 1 1 1 0.588
+         position 0 0
+         size 12 14
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         scaled 1
+         scriptclass "SymbolHandler"
+         image0 ""
+         mode additive
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "star"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+     }
+    }
    }
   }
   WrapSpacerWidgetClass Children {
@@ -528,11 +310,11 @@ FrameWidgetClass NodeView {
    clipchildren 1
    ignorepointer 1
    position 16 24
-   size 1 1
+   size 1 48
    hexactpos 1
    vexactpos 1
    hexactsize 0
-   vexactsize 0
+   vexactsize 1
    scaled 1
    scriptclass ""
    Padding 0

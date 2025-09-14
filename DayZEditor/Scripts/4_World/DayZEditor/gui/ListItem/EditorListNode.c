@@ -8,9 +8,9 @@ class EditorListNode: ScriptView
 	protected bool m_QueueRecalculateSize, m_IsCollapsed = true;
 	protected EditorListNode m_Parent;
 	
-	Widget Collapse, IconFrame, Hide, Panel, BoundingBox, Lock, Marker, ChildrenHeight, Favorite;
-	ButtonWidget CollapseButton, HideButton, BoundingBoxButton, LockButton, MarkerButton, FavoriteButton;
-	ImageWidget CollapseIcon, IconImage, HideIcon, BoundingBoxIcon, LockIcon, MarkerIcon, FavoriteIcon;
+	Widget Collapse, IconFrame, Hide, Panel, ChildrenHeight, Favorite;
+	ButtonWidget CollapseButton, HideButton, FavoriteButton;
+	ImageWidget CollapseIcon, IconImage, HideIcon, FavoriteIcon;
 	TextWidget Text;
 	EditBoxWidget Edit;
 	WrapSpacerWidget Children;
@@ -35,13 +35,13 @@ class EditorListNode: ScriptView
 		if (m_QueueRecalculateSize) {
 			float w, h, x, y;
 			Children.Update();
-			Children.GetScreenSize(w, h);	
+			Children.GetSize(w, h);	
 			
 			m_LayoutRoot.GetScreenSize(x, y);
 			float h_children = h * !m_IsCollapsed;
-			m_LayoutRoot.SetScreenSize(x, h_children + 30);
+			m_LayoutRoot.SetScreenSize(x, h_children + 24);
 					
-			ChildrenHeight.SetSize(2, h_children);
+			ChildrenHeight.SetSize(2, h_children + 24);
 			
 			if (IsInherited(EditorFolderListNode)) {
 				bool are_children_visible = false;

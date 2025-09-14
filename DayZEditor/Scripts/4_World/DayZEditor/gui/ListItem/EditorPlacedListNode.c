@@ -6,10 +6,10 @@ class EditorPlacedListNode: EditorListNode
 	{
 		m_EditorObject = editor_object;
 		Text.SetText(editor_object.GetDisplayName());
-		Hide.Show(true);
-		BoundingBox.Show(true);
-		Lock.Show(true);
-		Marker.Show(true);
+		//Hide.Show(true);
+		//BoundingBox.Show(true);
+		//Lock.Show(true);
+		//Marker.Show(true);
 	}
 	
 	override bool OnClick(Widget w, int x, int y, int button)

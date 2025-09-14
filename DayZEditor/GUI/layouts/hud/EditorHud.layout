@@ -817,6 +817,46 @@ FrameWidgetClass EditorFrame {
            Margin 0
            "Size To Content V" 1
            {
+            ButtonWidgetClass PlacementsTabButton {
+             visible 1
+             color 0.753 0.369 0.326 1
+             position 0 0
+             size 0.5 1
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scaled 1
+             scriptclass "ViewBinding"
+             style Default
+             "disabled text color" 1 1 1 0.996
+             switch toggle
+             {
+              TextWidgetClass PlacementsText {
+               visible 1
+               ignorepointer 1
+               position 0 0
+               size 1 14
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 1
+               text "#STR_EDITOR_PLACEMENTS"
+               font "gui/fonts/Metron16"
+               "text halign" center
+               "text valign" center
+              }
+             }
+             {
+              ScriptParamsClass {
+               Binding_Name "CategoryPlacements"
+               Two_Way_Binding 1
+              }
+             }
+            }
             ButtonWidgetClass DeletionsTabButton {
              visible 1
              color 0.118 0.118 0.118 1
@@ -857,46 +897,6 @@ FrameWidgetClass EditorFrame {
              {
               ScriptParamsClass {
                Binding_Name "CategoryDeletions"
-               Two_Way_Binding 1
-              }
-             }
-            }
-            ButtonWidgetClass PlacementsTabButton {
-             visible 1
-             color 0.753 0.369 0.326 1
-             position 0 0
-             size 0.5 1
-             valign center_ref
-             hexactpos 1
-             vexactpos 1
-             hexactsize 0
-             vexactsize 0
-             scaled 1
-             scriptclass "ViewBinding"
-             style Default
-             "disabled text color" 1 1 1 0.996
-             switch toggle
-             {
-              TextWidgetClass PlacementsText {
-               visible 1
-               ignorepointer 1
-               position 0 0
-               size 1 14
-               halign center_ref
-               valign center_ref
-               hexactpos 1
-               vexactpos 1
-               hexactsize 0
-               vexactsize 1
-               text "#STR_EDITOR_PLACEMENTS"
-               font "gui/fonts/Metron16"
-               "text halign" center
-               "text valign" center
-              }
-             }
-             {
-              ScriptParamsClass {
-               Binding_Name "CategoryPlacements"
                Two_Way_Binding 1
               }
              }
