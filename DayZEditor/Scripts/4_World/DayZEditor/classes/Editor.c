@@ -2144,7 +2144,8 @@ class Editor: Managed
 				
 				Object existing_world_object = m_EditorObjectsByUuid[uuid].GetWorldObject();
 				m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
-				existing_world_object.Delete();
+				GetGame().ObjectDelete(existing_world_object);
+				
 				if (m_EditorObjectsByUuid[uuid].IsSelected()) {
 					m_EditorObjectsByUuid[uuid].ShowBoundingBox();
 				}
@@ -2153,7 +2154,7 @@ class Editor: Managed
 				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 				continue;
 			}
-			
+						
 			// Create a copy to avoid reference loss
 			// todo:
 			//EditorObjectData editor_object_data_copy = editor_object_data.CreateCopy();

@@ -206,6 +206,8 @@ class EditorObject: EditorWorldObject
 		EnableObjectMarker(IsWorldMarkerEnabled());
 		
 		Update();
+		
+		GetEditor().GetObjectManager().m_WorldObjectIndex.Insert(GetWorldObject().GetID(), this);
 	}
 	
 	protected void OnFrame(float dt)

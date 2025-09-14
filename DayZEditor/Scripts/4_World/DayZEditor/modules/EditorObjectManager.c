@@ -17,7 +17,7 @@ class EditorObjectManagerModule : Managed
 	protected ref EditorObjectMap m_SelectedObjects = new EditorObjectMap();
 
 	// Stored list of all Placed Objects, indexed by their WorldObject ID
-	protected ref EditorObjectMap m_WorldObjectIndex = new EditorObjectMap();
+	ref EditorObjectMap m_WorldObjectIndex = new EditorObjectMap();
 
 	// Stored list of all Hidden Objects, indexed by their WorldObject ID
 	protected ref EditorDeletedObjectMap m_DeletedObjects = new EditorDeletedObjectMap();
@@ -303,8 +303,7 @@ class EditorObjectManagerModule : Managed
 		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
 
 		m_PlacedObjects.InsertEditorObject(editor_object);
-		m_WorldObjectIndex.Insert(editor_object.GetWorldObject().GetID(), editor_object);
-
+		
 		EditorEvents.ObjectCreated(this, editor_object);		
 		return editor_object;
 	}

@@ -224,21 +224,26 @@ modded class MissionGameplay
 				// Initialize editor
 				PlayerBase player;
 				ctx.Read(player);
-				
+														
 				PlayerIdentity identity;
 				ctx.Read(identity);
-				
-				if (identity.GetId() == GetGame().GetPlayer().GetIdentity().GetId()) {				
+					
+				Print(player);
+				Print(identity);
+				Print(identity.GetId());
+				Print(GetGame().GetPlayer());
+				if (GetGame().GetPlayer().GetIdentity().GetId() == identity.GetId()) {
 					g_Editor = new Editor(player);
 					if (g_Editor) {
 						g_Editor.SetActive(true);
 					}
-				} else {
+				} else {			
 					int player_id3 = identity.GetPlayerId();
+					string name = identity.GetName();		
 					Cameras[player_id3] = GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL);
-					CameraMarkers[player_id3] = new EditorCameraMarker(identity.GetName());
+					CameraMarkers[player_id3] = new EditorCameraMarker(name);
 					GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(CameraMarkers[player_id3]);
-					GetEditor().GetEditorHud().GetTemplateController().RightbarPlayerData.Insert(new EditorPlayerListItem(player_id3, identity.GetName()));
+					GetEditor().GetEditorHud().GetTemplateController().RightbarPlayerData.Insert(new EditorPlayerListItem(player_id3, name));
 					PrintFormat("Created camera for %1", player_id3);
 				}
 				
