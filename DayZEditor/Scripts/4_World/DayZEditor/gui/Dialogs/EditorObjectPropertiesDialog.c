@@ -111,6 +111,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			ExpansionTraderType = SerializableParam1<string>.Cast(m_EditorObject.GetData().Parameters["ExpansionTraderType"]).param1;
 		}
 
+		m_EditorObject.Update();
+		
 		ObjectID = m_EditorObject.GetWorldObject().GetID();
 		Name = m_EditorObject.GetDisplayName();
 		Position = m_EditorObject.GetPosition();

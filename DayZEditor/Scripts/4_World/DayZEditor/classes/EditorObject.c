@@ -365,7 +365,11 @@ class EditorObject: EditorWorldObject
 	
 	vector GetOrientation()
 	{
-	    return m_Data.Orientation;
+	    if (GetWorldObject()) {
+			return GetWorldObject().GetOrientation();
+		}
+		
+		return vector.Zero;
 	}
 
 	void SetOrientation(vector orientation)
@@ -448,7 +452,6 @@ class EditorObject: EditorWorldObject
 	    float len1 = mat[1].Length();
 	    float len2 = mat[2].Length();
 	    m_Data.Scale = (len0 + len1 + len2) / 3.0;
-		
 	}
 	
 	void UpdateNet()
