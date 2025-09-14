@@ -77,40 +77,7 @@ class EditorObject: EditorWorldObject
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
 		}
-		
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		
-		m_LineVerticies[0] = clip_info[0];
-		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
-		m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		m_LineVerticies[5] = clip_info[1];
-		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
-		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
 				
-		m_LineCenters[0] = AverageVectors(m_LineVerticies[0], m_LineVerticies[1]);
-		m_LineCenters[1] = AverageVectors(m_LineVerticies[0], m_LineVerticies[3]);
-		m_LineCenters[2] = AverageVectors(m_LineVerticies[0], m_LineVerticies[7]);
-		m_LineCenters[3] = AverageVectors(m_LineVerticies[4], m_LineVerticies[7]);
-		m_LineCenters[4] = AverageVectors(m_LineVerticies[6], m_LineVerticies[7]);
-		
-		m_LineCenters[5] = AverageVectors(m_LineVerticies[1], m_LineVerticies[2]);
-		m_LineCenters[6] = AverageVectors(m_LineVerticies[1], m_LineVerticies[6]);
-		m_LineCenters[7] = AverageVectors(m_LineVerticies[3], m_LineVerticies[2]);
-		m_LineCenters[8] = AverageVectors(m_LineVerticies[3], m_LineVerticies[4]);
-		
-		m_LineCenters[9] = AverageVectors(m_LineVerticies[5], m_LineVerticies[2]);
-		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
-		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
-		
-		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
-		m_VectorBasePoint = base_point;
-		m_BoundingCenter = GetWorldObject().GetBoundingCenter();
-		
-		ShowBoundingBox();
-		
 		// Map marker
 		EnableMapMarker(IsMapMarkerEnabled());
 
@@ -142,10 +109,7 @@ class EditorObject: EditorWorldObject
 					m_ObjectAnimations[child_name] = new EditorObjectAnimationSource(entity, child_name, path);
 				}
 			}	
-		}			
-		
-		Update();
-		
+		}		
 		
 		if (GetGame().IsMultiplayer()) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
@@ -207,6 +171,40 @@ class EditorObject: EditorWorldObject
 		if (m_Data) {
 			m_Data.WorldObject = GetWorldObject();
 		}
+		
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		
+		m_LineVerticies[0] = clip_info[0];
+		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
+		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
+		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
+		m_LineVerticies[5] = clip_info[1];
+		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
+		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+				
+		m_LineCenters[0] = AverageVectors(m_LineVerticies[0], m_LineVerticies[1]);
+		m_LineCenters[1] = AverageVectors(m_LineVerticies[0], m_LineVerticies[3]);
+		m_LineCenters[2] = AverageVectors(m_LineVerticies[0], m_LineVerticies[7]);
+		m_LineCenters[3] = AverageVectors(m_LineVerticies[4], m_LineVerticies[7]);
+		m_LineCenters[4] = AverageVectors(m_LineVerticies[6], m_LineVerticies[7]);
+		
+		m_LineCenters[5] = AverageVectors(m_LineVerticies[1], m_LineVerticies[2]);
+		m_LineCenters[6] = AverageVectors(m_LineVerticies[1], m_LineVerticies[6]);
+		m_LineCenters[7] = AverageVectors(m_LineVerticies[3], m_LineVerticies[2]);
+		m_LineCenters[8] = AverageVectors(m_LineVerticies[3], m_LineVerticies[4]);
+		
+		m_LineCenters[9] = AverageVectors(m_LineVerticies[5], m_LineVerticies[2]);
+		m_LineCenters[10] = AverageVectors(m_LineVerticies[5], m_LineVerticies[4]);		
+		m_LineCenters[11] = AverageVectors(m_LineVerticies[5], m_LineVerticies[6]);
+		
+		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
+		m_VectorBasePoint = base_point;
+		m_BoundingCenter = GetWorldObject().GetBoundingCenter();
+		
+		ShowBoundingBox();
+		Update();
 	}
 	
 	protected void OnFrame(float dt)
@@ -747,6 +745,10 @@ class EditorObject: EditorWorldObject
 		
 		// Already showing
 		if (m_BBoxLines[0]) {
+			return;
+		}
+		
+		if (!GetWorldObject()) {
 			return;
 		}
 								

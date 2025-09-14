@@ -298,10 +298,7 @@ class EditorObjectManagerModule : Managed
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{
 		EditorObject editor_object = new EditorObject(editor_object_data);
-		if (!editor_object.GetWorldObject()) {
-			return null;
-		}
-		
+				
 		// strong ref
 		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
 
