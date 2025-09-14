@@ -52,6 +52,10 @@ class IntroSceneEditor: Managed
 	    GetMousePos(mouse_x, mouse_y);
 	    GetScreenSize(screen_x, screen_y);
 				
+		if (!m_Camera) {
+			return;
+		}
+		
 		vector camera_matrix[4];
 		m_Camera.GetTransform(camera_matrix);
 		
