@@ -77,13 +77,7 @@ class EditorObject: EditorWorldObject
 		if (GetEditor()) {
 			GetEditor().GetSessionCache().Insert(m_Data.GetID(), m_Data);
 		}
-				
-		// Map marker
-		EnableMapMarker(IsMapMarkerEnabled());
-
-		// World marker
-		EnableObjectMarker(IsWorldMarkerEnabled());
-
+		
 		// Browser item
 		EnableListItem(IsListItemEnabled());
 		
@@ -204,6 +198,13 @@ class EditorObject: EditorWorldObject
 		m_BoundingCenter = GetWorldObject().GetBoundingCenter();
 		
 		ShowBoundingBox();
+		
+		// Map marker
+		EnableMapMarker(IsMapMarkerEnabled());
+
+		// World marker
+		EnableObjectMarker(IsWorldMarkerEnabled());
+		
 		Update();
 	}
 	

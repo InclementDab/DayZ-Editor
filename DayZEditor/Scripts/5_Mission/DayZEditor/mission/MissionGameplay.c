@@ -221,7 +221,6 @@ modded class MissionGameplay
 		
 		switch (rpc_type) {
 			case 39250: {
-				Print("Editor Create");
 				// Initialize editor
 				PlayerBase player;
 				ctx.Read(player);
@@ -248,7 +247,6 @@ modded class MissionGameplay
 			
             case 39252: {
                	ctx.Read(count);
-				Print("Create objects " + count);
 				map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
 				
 				for (i = 0; i < count; i++) {
@@ -263,7 +261,9 @@ modded class MissionGameplay
 					
 					dta.m_LowBits = low;
 					dta.m_HighBits = high;
-									
+					
+					dta.WorldObject = GetGame().GetObjectByNetworkId(low, high);
+					
 					data_map[uuid] = dta;
 				}
 				
