@@ -22,9 +22,9 @@ class EditorDeletedObject: EditorWorldObject
 		m_Data = data;
 		
 		SetWorldObject(m_Data.WorldObject);
-		if (!m_WorldObject) {
+		if (!GetWorldObject()) {
 			SetWorldObject(m_Data.FindObject());
-			if (!m_WorldObject) {
+			if (!GetWorldObject()) {
 				EditorLog.Error("Failed to find object with name %1:%3 at position %2", m_Data.Type, m_Data.Position.ToString(), m_Data.ModelName);
 				return;
 			}
