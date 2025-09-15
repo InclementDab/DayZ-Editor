@@ -85,17 +85,24 @@ class EditorGizmo: Managed
 	protected ref map<int, ref GizmoInteractionSource> m_InteractionCollisions = new map<int, ref GizmoInteractionSource>();
 	protected ref array<int> m_VisibleSortedInteractions = new array<int>();
 	
+	protected static ref map<string, EntityAI> s_Gizmos = new map<string, EntityAI>();
+	
 	void EditorGizmo()
 	{
 		m_Editor = GetEditor();
-		m_Gizmo = EntityAI.Cast(GetGame().CreateObjectEx(GetGizmoMesh(), vector.Zero, ECE_LOCAL));
+		string gizmo_mesh = GetGizmoMesh();
+		if (!s_Gizmos[gizmo_mesh]) {
+			s_Gizmos[gizmo_mesh] = EntityAI.Cast(GetGame().CreateObjectEx(gizmo_mesh, vector.Zero, ECE_LOCAL));
+		}
+		
+		m_Gizmo = s_Gizmos[GetGizmoMesh()];
 		RegisterInteractionClips(m_InteractionCollisions);
 	}
 		
 	void ~EditorGizmo()
 	{	
 		if (m_Gizmo) {	
-			m_Gizmo.Delete();
+			m_Gizmo.SetPosition(vector.Zero);
 		}
 	}	
 
@@ -209,7 +216,7 @@ class EditorGizmo: Managed
 		gizmo_transform[2] = -gizmo_transform[2];
 		
 		float gizmo_distance = vector.Distance(top_transform[3], camera_transform[3]);
-		float gizmo_scale = gizmo_distance * m_CameraFieldOfView * 0.05;
+		float gizmo_scale = gizmo_distance * m_CameraFieldOfView * 0.1;
 		GizmoInteractionSource.Scale = gizmo_scale; // update collision scaling
 		vector gizmo_scale_mat[4];
 		Math3D.ScaleMatrix(gizmo_scale, gizmo_scale_mat);
