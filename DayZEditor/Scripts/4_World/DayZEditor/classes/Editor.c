@@ -1558,6 +1558,17 @@ class Editor: Managed
 		}
 			
 		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
+		
+		// Flush all inputs when a command is pressed. To avoid things like the camera moving constantly after a lag on save
+		array<int> inputs = {};
+		GetUApi().GetActiveInputs(inputs);
+		foreach (int input: inputs) {
+			UAInput input_value = GetUApi().GetInputByID(input);
+			if (input_value) {
+				input_value.Supress();
+			}
+		}
+		
 		CommandArgs args = new CommandArgs();
 		args.Context = m_EditorHud;
 		command.Execute(this, args);
@@ -2056,7 +2067,7 @@ class Editor: Managed
 		
 		// dont increment if someone else placed something for u
 		GetStatistics().EditorPlacedObjects--;
-				
+						
 		return created_object;
 	}
 	
@@ -2080,6 +2091,8 @@ class Editor: Managed
 		}
 		
 		GetStatistics().EditorPlacedObjects++;
+		
+		SelectObject(editor_object);
 		
 		return editor_object;
 	}
@@ -2151,6 +2164,8 @@ class Editor: Managed
 			m_EditorObjectsByUuid[uuid] = editor_object;
 			
 			GetStatistics().EditorPlacedObjects++;
+			
+			SelectObject(editor_object);
 		}
 		
 		if (create_undo) {
