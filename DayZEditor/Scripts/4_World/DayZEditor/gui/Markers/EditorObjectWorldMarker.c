@@ -48,6 +48,9 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;
 		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
 		bool in_distance = m_MarkerDistSq > distancesq;
+		EditorMarkerColor.SetAlpha(1 - (Math.Clamp(distancesq, 0, m_MarkerDistSq) / m_MarkerDistSq));
+		EditorMarkerOutline.SetAlpha(1 - (Math.Clamp(distancesq, 0, m_MarkerDistSq) / m_MarkerDistSq));
+		
 		if ((off_screen || !in_distance) && !m_MapWidget.IsVisible()) {
 			if (m_LayoutRoot.IsVisible()) {
 				m_LayoutRoot.Show(false);

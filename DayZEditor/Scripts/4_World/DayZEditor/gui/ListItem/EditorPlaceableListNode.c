@@ -14,10 +14,17 @@ class EditorPlaceableListNode: EditorListNode
 		
 		Text.SetText(m_PlaceableItem.Name);		
 		if (placeable_item.Type.Contains(".p3d")) {
-			Symbols.TREE_DECIDUOUS.Load(IconImage, 3);
+			Symbols.TREE_DECIDUOUS.Load(IconImage, 2);
+			IconImage.SetColor(LinearColor.LIGHT_YELLOW);
 			m_LayoutRoot.SetSort(100);
 		} else {
-			Symbols.HOUSE_BLANK.Load(IconImage, 3);
+			if (GetGame().IsKindOf(placeable_item.Type, "Inventory_Base")) {
+				Symbols.SHOVEL.Load(IconImage, 2);
+				IconImage.SetColor(LinearColor.LIGHT_BLUE);
+			} else {
+				Symbols.HOUSE_BLANK.Load(IconImage, 2);
+				IconImage.SetColor(LinearColor.LIGHT_BLUE);
+			}
 		}
 		
 		Favorite.Show(true);
