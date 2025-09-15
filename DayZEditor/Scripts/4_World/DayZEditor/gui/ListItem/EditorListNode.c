@@ -33,13 +33,19 @@ class EditorListNode: ScriptView
 		super.Update(dt);
 		
 		if (m_QueueRecalculateSize) {
+			
+			int screen_x, screen_y;
+			GetScreenSize(screen_x, screen_y);
+						
 			float w, h, x, y;
 			Children.Update();
 			Children.GetScreenSize(w, h);	
 			
 			m_LayoutRoot.GetScreenSize(x, y);
 			float h_children = h * !m_IsCollapsed;
-			m_LayoutRoot.SetScreenSize(x, h_children + 24);
+			
+			// Idk why I have to do screen_y / 1080 because it is already set to scaled. wtf is going on??
+			m_LayoutRoot.SetScreenSize(x, h_children + 24 * screen_y / 1080.10);
 					
 			ChildrenHeight.SetSize(2, h_children);
 			
@@ -195,7 +201,7 @@ class EditorListNode: ScriptView
 		
 		s_SelectedNode = this;		
 		Panel.SetColor(g_Editor.GetSettings().SelectionColor);
-		
+				
 		SetFocus(null);
 
 		return true;
@@ -293,6 +299,8 @@ class EditorFolderListNode: EditorListNode
 		if (button == MouseState.RIGHT) {
 			s_ContextMenu = new EditorListNodeContextMenu(x, y, this);
 		}
+		
+		GetEditor().ClearHand();
 		
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
