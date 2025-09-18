@@ -109,6 +109,11 @@ class EditorObject: EditorWorldObject
 		if (GetGame().IsMultiplayer()) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
 		}
+		
+		SerializedBuilding serialized_building = SerializedBuilding.Cast(m_WorldObject);
+		if (serialized_building) {
+			serialized_building.Read(m_Data.Parameters);
+		}
 	}
 		
 	void ~EditorObject()
@@ -287,6 +292,29 @@ class EditorObject: EditorWorldObject
 	
 	EditorObjectData GetData() 
 	{
+		EditorObjectData object_data = new EditorObjectData();
+		object_data.Type = m_WorldObject.GetType();
+		object_data.Position = m_WorldObject.GetPosition();
+		object_data.Orientation = m_WorldObject.GetOrientation();
+		object_data.Scale = m_WorldObject.GetScale();
+		object_data.AllowDamage = m_WorldObject.GetAllowDamage();
+		object_data.Model= m_WorldObject.GetShapeName();
+		
+		// Deprecate this
+		object_data.BottomCenter = GetBottomCenter();
+		
+		// Anything in here needs to either be stored on EditorObject, or found from m_WorldObject itself
+		object_data.DisplayName = m_Data.DisplayName;
+		object_data.EditorOnly = m_Data.EditorOnly;
+		object_data.Locked = m_Data.Locked;
+		object_data.Simulate = m_Data.Simulate;
+		object_data.Flags = m_Data.Flags;
+		
+		// Copy parameters
+		foreach (string parameter_name, SerializableParam parameter: m_Data.Parameters) {
+			object_data.Parameters[parameter_name] = parameter;
+		}
+		
 		return m_Data;
 	}
 	
