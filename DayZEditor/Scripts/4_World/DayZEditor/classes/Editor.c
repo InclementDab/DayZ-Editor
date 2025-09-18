@@ -2481,7 +2481,7 @@ class Editor: Managed
 		}
 		
 		if (GetGame().IsMultiplayer() && send_net_message) {
-			rpc.Send(null, 39255, true);
+			rpc.Send(null, 39256, true);
 		}
 		
 		return true;
@@ -2526,7 +2526,7 @@ class Editor: Managed
 		}
 
 		if (GetGame().IsMultiplayer() && send_net_message) {
-			rpc.Send(null, 39255, true);
+			rpc.Send(null, 39256, true);
 		}
 	}
 
