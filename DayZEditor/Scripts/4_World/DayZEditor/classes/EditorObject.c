@@ -439,7 +439,7 @@ class EditorObject: EditorWorldObject
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Write(1);
 			rpc.Write(Uuid);
-			m_Data.Write(rpc, int.MAX);
+			GetData().Write(rpc, int.MAX);
 			rpc.Send(null, 39254, true);
 		}
 	}
