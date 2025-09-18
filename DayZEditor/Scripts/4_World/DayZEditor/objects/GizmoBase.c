@@ -112,26 +112,8 @@ class EditorGizmo: Managed
 	}
 	
 	protected void PreUpdateGizmo(float dt)
-	{		
-		m_LocalTransformsToTarget = new map<EditorObject, ref array<vector>>();
-		foreach (EditorObject additional_drag_target: m_AllSelectedObjects) {
-			if (additional_drag_target == m_TopSelectedObject) {
-				continue;
-			}
-			
-			vector additional_drag_target_mat[4];
-			additional_drag_target.GetTopTransform(additional_drag_target_mat);
-			vector inv_additional_drag_target_mat[4];
-			vector top_transform_ortho[4];
-			copyarray(top_transform_ortho, m_TopTransformOrthogonal);
-			Math3D.MatrixInvMultiply4(top_transform_ortho, additional_drag_target_mat, inv_additional_drag_target_mat);
-			m_LocalTransformsToTarget[additional_drag_target] = {
-				inv_additional_drag_target_mat[0],
-				inv_additional_drag_target_mat[1],
-				inv_additional_drag_target_mat[2],
-				inv_additional_drag_target_mat[3]
-			};
-		}
+	{
+
 	}
 
 	protected void UpdateGizmo(float dt, inout vector gizmo_transform[4])
@@ -141,6 +123,10 @@ class EditorGizmo: Managed
 	protected void PostUpdateGizmo(float dt)
 	{		
 		// Handle all child objects
+		if (m_InteractionIndex == -1) {
+			return;
+		}
+		
 		foreach (EditorObject selected_object: m_AllSelectedObjects) {
 			if (selected_object == m_TopSelectedObject) {
 				continue;
@@ -156,7 +142,7 @@ class EditorGizmo: Managed
 			
 			vector output_additional_mat[4];
 			Math3D.MatrixMultiply4(m_TopTransformOrthogonal, local_additional_mat, output_additional_mat);
-						
+				
 			selected_object.SetTopTransform(output_additional_mat);
 		}
 	}
@@ -190,7 +176,7 @@ class EditorGizmo: Managed
 			//m_DragOffset = vector.Zero;
 			return;
 		}
-		
+				
 		// Cursor raycasts
 		m_CursorRay = GetEditor().GetCursorRay();
 		m_CameraFieldOfView = GetEditor().GetCamera().GetCurrentFOV();
@@ -286,8 +272,33 @@ class EditorGizmo: Managed
 
 			// Register rewinds
 			m_RewindAction = new EditorAction("SetTransform", "SetTransform");
+			m_LocalTransformsToTarget = new map<EditorObject, ref array<vector>>();
 			foreach (EditorObject selected_rewind_object: m_AllSelectedObjects) {
 				m_RewindAction.InsertUndoParameter(selected_rewind_object.GetTransformArray());
+				
+				if (selected_rewind_object != m_TopSelectedObject) {
+					vector additional_drag_target_mat[4];
+					selected_rewind_object.GetTopTransform(additional_drag_target_mat);
+					vector inv_additional_drag_target_mat[4];
+					vector top_transform_ortho[4];
+					copyarray(top_transform_ortho, m_TopTransformOrthogonal);
+					Math3D.MatrixInvMultiply4(top_transform_ortho, additional_drag_target_mat, inv_additional_drag_target_mat);
+					m_LocalTransformsToTarget[selected_rewind_object] = {
+						inv_additional_drag_target_mat[0],
+						inv_additional_drag_target_mat[1],
+						inv_additional_drag_target_mat[2],
+						inv_additional_drag_target_mat[3]
+					};
+				}
+				
+				// Show bounding boxes
+				IEntity children = selected_rewind_object.GetWorldObject().GetChildren();
+				while (children) {
+					children.ClearFlags(EntityFlags.VISIBLE, false);
+					children = children.GetSibling();
+				}
+				
+				selected_rewind_object.IsBeingDragged = true;
 			}
 		}
 
@@ -297,13 +308,24 @@ class EditorGizmo: Managed
 			m_DragRotationOffset = vector.Zero;
 						
 			foreach (EditorObject selected_rewind_object2: m_AllSelectedObjects) {
+				selected_rewind_object2.Update();
 				m_RewindAction.InsertRedoParameter(selected_rewind_object2.GetTransformArray());
+				
+				if (selected_rewind_object2 != m_TopSelectedObject) {
+					// Hide bounding boxes
+					IEntity children2 = selected_rewind_object2.GetWorldObject().GetChildren();
+					while (children2) {
+						children2.SetFlags(EntityFlags.VISIBLE, false);
+						children2 = children2.GetSibling();
+					}
+				}
+				
+				selected_rewind_object2.IsBeingDragged = false;
 			}
-
+			
 			GetEditor().InsertAction(m_RewindAction);
 		}
 		
-
 		m_VisibleSortedInteractions.Clear();
 
 		PreUpdateGizmo(dt);

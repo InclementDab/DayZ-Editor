@@ -410,29 +410,10 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void SetTransform(vector mat[4])
-	{
-	    if (IsLocked()) return;
-
-	    m_Data.Position = mat[3];
-
-	    float len0 = mat[0].Length();
-	    float len1 = mat[1].Length();
-	    float len2 = mat[2].Length();
-	    m_Data.Scale = (len0 + len1 + len2) / 3.0;
-
-		float inv0 = 1.0 / len0;
-		float inv1 = 1.0 / len1;
-		float inv2 = 1.0 / len2;
-
-		vector normMat[4];
-		normMat[0] = mat[0] * inv0;
-		normMat[1] = mat[1] * inv1;
-		normMat[2] = mat[2] * inv2;
-		normMat[3] = mat[3];
-		m_Data.Orientation = Math3D.MatrixToAngles(normMat);
-	    m_Data.BottomCenter = GetBottomCenter();
-		
-	    ApplyTransform();
+	{		
+		if (m_WorldObject) {
+			m_WorldObject.SetTransform(mat);
+		}
 	}
 
 	bool IsStatic()
@@ -440,25 +421,24 @@ class EditorObject: EditorWorldObject
 		return m_Data.Type.Contains(".p3d");
 	}
 	
-	void Update() 
-	{ 		
-		if (GetWorldObject()) {
-			GetWorldObject().Update(); 
-		}
-		
-		OnUpdated.Invoke();
-		
+	void Update(bool update_world_object = true) 
+	{ 
 		vector mat[4];
 		GetTransform(mat);
 		
 		m_Data.Position = mat[3];
 		m_Data.Orientation = Math3D.MatrixToAngles(mat);
-		m_Data.BottomCenter = GetBottomCenter();
 		
 		float len0 = mat[0].Length();
 	    float len1 = mat[1].Length();
 	    float len2 = mat[2].Length();
 	    m_Data.Scale = (len0 + len1 + len2) / 3.0;
+		
+		if (update_world_object && m_WorldObject) {
+			m_WorldObject.Update(); 
+		}
+		
+		OnUpdated.Invoke();
 	}
 	
 	void UpdateNet()

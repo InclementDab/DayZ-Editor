@@ -10,14 +10,8 @@ class EditorDuplicateCommand: EditorCommand
 			created_data.Insert(EditorObjectData.Create(editor_object.GetType(), editor_object.GetPosition(), editor_object.GetOrientation(), editor_object.GetScale(), editor_object.GetFlags()));
 		}
 		
-		EditorObjectMap created_objects = GetEditor().CreateObjects(created_data);
-		
 		GetEditor().ClearSelection();
-		foreach (int id, EditorObject created_object: created_objects) {
-			if (created_object) {
-				GetEditor().SelectObject(created_object);
-			}
-		}
+		EditorObjectMap created_objects = GetEditor().CreateObjects(created_data);
 		
 		return true;
 	}

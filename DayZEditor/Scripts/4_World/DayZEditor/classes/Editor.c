@@ -2861,8 +2861,11 @@ class Editor: Managed
 		}
 		
 		if (placed_objects) {
-			foreach (EditorObject editor_object: placed_objects) {
+			foreach (EditorObject editor_object: placed_objects) {				
 				if (editor_object.GetType() != string.Empty && !(editor_object.GetFlags() & EditorObjectFlags.NOSAVE)) {
+					// Force update every editor object to ensure the latest data is in the data struct
+					// todo: this should really be changed into editor_object.CreateData() and just do it each and every time.
+					editor_object.Update(false);
 					save_data.EditorObjects.Insert(editor_object.GetData());
 				}
 			}

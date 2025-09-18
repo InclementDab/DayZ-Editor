@@ -248,7 +248,6 @@ class EditorObjectDragHandler: EditorDragHandler
 			vector output_additional_mat[4];
 			Math3D.MatrixMultiply4(transform_from_object_center, local_additional_mat, output_additional_mat);
 			selected_object.SetTransform(output_additional_mat);
-			selected_object.Update(); // the slowest part is updating all those damn bounding boxes
 		}
 		
 		target.SetBottomTransform(transform);
