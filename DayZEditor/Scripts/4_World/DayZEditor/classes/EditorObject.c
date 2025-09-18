@@ -29,10 +29,15 @@ class EditorObject: EditorWorldObject
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	ref ScriptInvoker OnUpdated = new ScriptInvoker();
 	ref ScriptInvoker OnChanged = new ScriptInvoker();
+	
+	protected int m_LowBits, m_HighBits;
 		
 	void EditorObject(notnull EditorObjectData data)
 	{
 		m_Data = data;
+		
+		m_LowBits = m_Data.m_LowBits;
+		m_HighBits = m_Data.m_HighBits;
 		
 		if (m_Data.WorldObject) {
 			SetWorldObject(m_Data.WorldObject);
@@ -154,6 +159,12 @@ class EditorObject: EditorWorldObject
 		return m_Data.Flags;
 	}
 	
+	void SetWorldObjectNetworkId(int low, int high)
+	{
+		m_LowBits = low;
+		m_HighBits = high;
+	}
+	
 	override void SetWorldObject(Object object)
 	{		
 		super.SetWorldObject(object);
@@ -217,7 +228,7 @@ class EditorObject: EditorWorldObject
 	{
 		if (!m_Data.WorldObject || !m_WorldObject) {
 			// Trolly for the world object every frame to see if we've gotten into its network bubble
-			Object world_object_found = GetGame().GetObjectByNetworkId(m_Data.m_LowBits, m_Data.m_HighBits);
+			Object world_object_found = GetGame().GetObjectByNetworkId(m_LowBits, m_HighBits);
 			
 			if (world_object_found) {
 				SetWorldObject(world_object_found);
@@ -298,6 +309,8 @@ class EditorObject: EditorWorldObject
 			object_data.Position = object_data.Position + bounding_center;
 			object_data.Orientation = object_data.Orientation * Math.RAD2DEG;*/
 		}
+		
+		m_WorldObject.GetNetworkID(object_data.m_LowBits, object_data.m_HighBits);
 		
 		object_data.Scale = m_WorldObject.GetScale();
 		object_data.AllowDamage = m_WorldObject.GetAllowDamage();

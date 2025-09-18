@@ -2140,7 +2140,12 @@ class Editor: Managed
 				m_EditorObjectsByUuid[uuid].HideBoundingBox();
 				
 				Object existing_world_object = m_EditorObjectsByUuid[uuid].GetWorldObject();
-				m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
+				if (editor_object_data.WorldObject) {
+					m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
+				}
+				
+				m_EditorObjectsByUuid[uuid].SetWorldObjectNetworkId(editor_object_data.m_LowBits, editor_object_data.m_HighBits);
+				
 				GetGame().ObjectDelete(existing_world_object);
 				
 				if (m_EditorObjectsByUuid[uuid].IsSelected()) {
