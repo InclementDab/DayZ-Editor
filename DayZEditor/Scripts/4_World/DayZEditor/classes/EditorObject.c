@@ -1049,13 +1049,13 @@ class EditorObjectController: Managed
 			
 			case "Orientation": {
 				m_EditorObject.SetOrientation(Orientation);
-				m_EditorObject.SetScale(Scale);
+				m_EditorObject.SetScale(Math.Clamp(Scale, 0.0001, float.MAX));
 				m_EditorObject.Update();
 				break;
 			}
 			
 			case "Scale": {
-				m_EditorObject.SetScale(Scale);
+				m_EditorObject.SetScale(Math.Clamp(Scale, 0.0001, float.MAX));
 				m_EditorObject.Update();
 				break;
 			}
