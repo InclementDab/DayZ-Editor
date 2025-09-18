@@ -83,7 +83,7 @@ class EditorTerrainBuilderFile: EditorFileType
 			float scale = editor_object.WorldObject.GetScale();
 
 			//Wonky way to export Statics and Brushed Objects to Terrain Builder that works for 99% of objects 
-			string model_name = GetGame().GetModelName(type);
+			string model_name = editor_object.WorldObject.GetShapeName();
 			if (model_name == "UNKNOWN_P3D_FILE")
 			{
 				model_name = editor_object.Type;
