@@ -17,14 +17,14 @@ class EditorClipboard
 			return 0;
 		}
 		
-		array<EditorObjectData> world_objects = {};
+		array<ref EditorObjectData> world_objects = {};
 		foreach (int idx, EditorObject selected_object: editor_objects) {
-			if (selected_object && selected_object.GetData()) {
+			if (selected_object) {
 				world_objects.Insert(selected_object.GetData());
 			}
 		}
 	
-		string clipboard_data = JsonFileLoader<array<EditorObjectData>>.JsonMakeData(world_objects);
+		string clipboard_data = JsonFileLoader<array<ref EditorObjectData>>.JsonMakeData(world_objects);
 		if (GetEditor().GetSettings().MinifyCopyData) {
 			clipboard_data.Replace("\r", "");
 			clipboard_data.Replace("\t", "");

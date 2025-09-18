@@ -278,11 +278,27 @@ class EditorObject: EditorWorldObject
 	}
 	
 	EditorObjectData GetData() 
-	{
-		EditorObjectData object_data = new EditorObjectData();
-		object_data.Type = m_WorldObject.GetType();
+	{		
+		EditorObjectData object_data = new EditorObjectData();		
+		if (!m_WorldObject) {
+			EditorLog.Warning(string.Format("World Object is null!"));
+			return object_data;
+		}
+		
+		object_data.Type = m_WorldObject.GetType();		
 		object_data.Position = m_WorldObject.GetPosition();
 		object_data.Orientation = m_WorldObject.GetOrientation();
+		
+		if (object_data.Type == string.Empty || GetGame().ConfigIsExisting(string.Format("CfgNonAIVehicles %1", object_data.Type))) {
+			object_data.Type = m_WorldObject.GetShapeName();
+
+			/*
+			// Todo: this isnt modifying anything. this is where the offset should really occur.
+			vector bounding_center = GetP3dBoundingCenter(object_data.Type);
+			object_data.Position = object_data.Position + bounding_center;
+			object_data.Orientation = object_data.Orientation * Math.RAD2DEG;*/
+		}
+		
 		object_data.Scale = m_WorldObject.GetScale();
 		object_data.AllowDamage = m_WorldObject.GetAllowDamage();
 		object_data.Model = m_WorldObject.GetShapeName();
