@@ -141,7 +141,8 @@ class EditorObjectMarker: EditorMarker
 		}
 		
 		if (m_Editor.GetSettings().MarkerTooltips && !m_Editor.IsPlacing()) {
-			GetEditor().GetEditorHud().CreateDelayedTooltip(w, File.GetName(m_EditorObject.GetDisplayName()), TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetModelPath()), Symbols.HOUSE);
+			string description = string.Format("(%1)", m_EditorObject.GetModelPath());
+			GetEditor().GetEditorHud().CreateDelayedTooltip(w, m_EditorObject.GetDisplayName(), TooltipPosition.INSIDE, "", Symbols.HOUSE);
 		}
 		
 		return super.OnMouseEnter(w, x, y);

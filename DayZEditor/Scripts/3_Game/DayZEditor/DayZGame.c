@@ -61,9 +61,9 @@ modded class DayZGame
 		}
 		
 		if (GetMouseState(MouseState.LEFT) || GetMouseState(MouseState.RIGHT)) {
-			return;
+			//return;
 		}
-
+		
 		if (m_CurrentTooltip && m_CurrentTooltip.GetLayoutRoot()) {
 			m_CurrentTooltip.GetLayoutRoot().Show(true);
 		}

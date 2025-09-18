@@ -2,6 +2,8 @@ class EditorObject: EditorWorldObject
 {
 	static ref map<Object, EditorObject> s_AllByObject = new map<Object, EditorObject>();
 
+	protected EntityAI m_WorldEntity;
+	
 	protected ref EditorObjectData 			m_Data;
 	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
@@ -30,7 +32,6 @@ class EditorObject: EditorWorldObject
 		
 	void EditorObject(notnull EditorObjectData data)
 	{
-		EditorLog.Trace("EditorObject " + data);
 		m_Data = data;
 		
 		if (m_Data.WorldObject) {
@@ -81,13 +82,7 @@ class EditorObject: EditorWorldObject
 		
 		// Browser item
 		EnableListItem(IsListItemEnabled());
-		
-		// This is deliberately split due to issues with null errors, but i have to assign
-		// Locked higher up or it gets set to 0 always. this is a mess, please fix
-		//PropertyChanged("Locked");
-		//PropertyChanged("EditorOnly");
-		//PropertyChanged("AllowDamage");
-		
+				
 		// Load animations
 		array<string> paths = {
 			CFG_VEHICLESPATH,
@@ -108,11 +103,6 @@ class EditorObject: EditorWorldObject
 		
 		if (GetGame().IsMultiplayer()) {
 			GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
-		}
-		
-		SerializedBuilding serialized_building = SerializedBuilding.Cast(m_WorldObject);
-		if (serialized_building) {
-			serialized_building.Read(m_Data.Parameters);
 		}
 	}
 		
@@ -169,8 +159,10 @@ class EditorObject: EditorWorldObject
 		super.SetWorldObject(object);
 		
 		if (m_Data) {
-			m_Data.WorldObject = GetWorldObject();
+			m_Data.WorldObject = m_WorldObject;
 		}
+		
+		m_WorldEntity = EntityAI.Cast(object);
 		
 		vector clip_info[2];
 		ClippingInfo(clip_info);
@@ -201,7 +193,7 @@ class EditorObject: EditorWorldObject
 		
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_VectorBasePoint = base_point;
-		m_BoundingCenter = GetWorldObject().GetBoundingCenter();
+		m_BoundingCenter = m_WorldObject.GetBoundingCenter();
 		
 		ShowBoundingBox();
 		
@@ -213,7 +205,12 @@ class EditorObject: EditorWorldObject
 		
 		Update();
 		
-		GetEditor().GetObjectManager().m_WorldObjectIndex.Insert(GetWorldObject().GetID(), this);
+		SerializedBuilding serialized_building = SerializedBuilding.Cast(m_WorldObject);
+		if (serialized_building) {
+			serialized_building.Read(m_Data.Parameters);
+		}
+		
+		GetEditor().GetObjectManager().m_WorldObjectIndex.Insert(m_WorldObject.GetID(), this);
 	}
 	
 	protected void OnFrame(float dt)
@@ -226,39 +223,31 @@ class EditorObject: EditorWorldObject
 				SetWorldObject(world_object_found);
 			}
 		}
-		
-		//vector mat[4];
-		//GetTransform(mat);
-		
-		
-		//vector min_max[2];
-		//m_WorldObject.ClippingInfo(min_max);
-		//Print(min_max);
-		//Shape.CreateSphere(-1, ShapeFlags.ONCE | ShapeFlags.NOZWRITE, m_WorldObject.GetBoundingCenter().Multiply4(mat), min_max[1][1]);
-		
-		
 	}
-	
+		
 	// Gets full model path, starting with DZ// etc..
 	string GetModelPath()
 	{
-		if (m_Data.Type.Contains("p3d")) {
-			return m_Data.Type;
+		if (!m_WorldObject) {
+			return string.Empty;
 		}
 		
-		string model_path = GetWorldObject().ConfigGetStringRaw("model");
-		if (model_path) {
-			return model_path;
+		string model_name = m_WorldObject.GetShapeName();
+		return Directory.GetDirectory(model_name);
+	}
+	
+	string GetModelName()
+	{
+		if (!m_WorldObject) {
+			return string.Empty;
 		}
 		
-		if (m_Data.Type.Contains(".p3d")) {
-			/*auto placeable_replacement = GetEditor().GetObjectManager().GetReplaceableObjects(string.Format("%1.p3d", model_name));
-			if (placeable_replacement[0]) {
-				return placeable_replacement[0].Type;
-			}*/
-		}
-				
-		return string.Empty;
+		return File.GetName(m_WorldObject.GetShapeName());
+	}
+	
+	string GetModel()
+	{
+		return m_WorldObject.GetShapeName();
 	}
 	
 	bool IsSelected() 
@@ -271,8 +260,7 @@ class EditorObject: EditorWorldObject
 		if (IsLocked() || IsSelected()) {
 			return;
 		}
-
-		EditorLog.Trace("EditorObject::OnSelected");
+		
 		m_IsSelected = true;
 		ShowBoundingBox();
 		OnObjectSelected.Invoke(this);
@@ -284,7 +272,6 @@ class EditorObject: EditorWorldObject
 			return;
 		}
 		
-		EditorLog.Trace("EditorObject::OnDeselected");
 		m_IsSelected = false;
 		HideBoundingBox();
 		OnObjectDeselected.Invoke(this);
@@ -298,16 +285,20 @@ class EditorObject: EditorWorldObject
 		object_data.Orientation = m_WorldObject.GetOrientation();
 		object_data.Scale = m_WorldObject.GetScale();
 		object_data.AllowDamage = m_WorldObject.GetAllowDamage();
-		object_data.Model= m_WorldObject.GetShapeName();
+		object_data.Model = m_WorldObject.GetShapeName();
 		
 		// Deprecate this
 		object_data.BottomCenter = GetBottomCenter();
+		
+		object_data.Simulate = false;
+		if (m_WorldEntity) {
+			object_data.Simulate = !m_WorldEntity.GetIsSimulationDisabled();
+		}
 		
 		// Anything in here needs to either be stored on EditorObject, or found from m_WorldObject itself
 		object_data.DisplayName = m_Data.DisplayName;
 		object_data.EditorOnly = m_Data.EditorOnly;
 		object_data.Locked = m_Data.Locked;
-		object_data.Simulate = m_Data.Simulate;
 		object_data.Flags = m_Data.Flags;
 		
 		// Copy parameters
@@ -315,7 +306,7 @@ class EditorObject: EditorWorldObject
 			object_data.Parameters[parameter_name] = parameter;
 		}
 		
-		return m_Data;
+		return object_data;
 	}
 	
 	bool OnMouseEnter(int x, int y)	
@@ -327,75 +318,45 @@ class EditorObject: EditorWorldObject
 	{
 		return true;
 	}
-				
-	private void ApplyTransform()
-	{
-		if (GetEditor().GridMode) {
-			//m_Data.Orientation = Vector(Math.Round(m_Data.Orientation[0] / 10) * 10, Math.Round(m_Data.Orientation[1] / 10) * 10, Math.Round(m_Data.Orientation[2] / 10) * 10);
-		}
-				
-	    vector rot3[3];
-	    Math3D.YawPitchRollMatrix(m_Data.Orientation, rot3);
-		
-		// handle grid snapping
-		if (GetEditor().GridMode) {
-			float grid_size = GetEditor().GetGridSize();
-			vector t = m_Data.Position.InvMultiply3(rot3);			
-			t = Vector(
-				Math.Round(t[0] / grid_size) * grid_size, 
-				Math.Round(t[1] / grid_size) * grid_size, 
-				Math.Round(t[2] / grid_size) * grid_size);
-			m_Data.Position = t.Multiply3(rot3);
-		}
-		
-	    vector mat[4];
-	    mat[0] = rot3[0] * m_Data.Scale;
-	    mat[1] = rot3[1] * m_Data.Scale;
-	    mat[2] = rot3[2] * m_Data.Scale;		
-	    mat[3] = m_Data.Position;
-
-	    GetWorldObject().SetTransform(mat);
-	    GetWorldObject().Update();
-	}
 	
 	vector GetPosition() 
 	{ 
-		if (!GetWorldObject()) {
+		if (!m_WorldObject) {
 			return vector.Zero;
 		}
 		
-		return GetWorldObject().GetPosition(); 
+		return m_WorldObject.GetPosition(); 
 	}
 	
 	void SetPosition(vector pos)
 	{
-	    if (IsLocked()) return;
-
-		// handle grid snapping
-		if (GetEditor().GridMode) {
-			float grid_size = GetEditor().GetGridSize();
-			vector rot3[3];
-		    Math3D.YawPitchRollMatrix(m_Data.Orientation, rot3);
-			
-			vector t = pos.InvMultiply3(rot3);			
-			t = Vector(
-				Math.Round(t[0] / grid_size) * grid_size, 
-				Math.Round(t[1] / grid_size) * grid_size, 
-				Math.Round(t[2] / grid_size) * grid_size);
-			pos = t.Multiply3(rot3);
+	    if (IsLocked()) {
+			return;
 		}
-		
-	    m_Data.Position     = pos;
-	    m_Data.BottomCenter = GetBottomCenter();
-
-	    GetWorldObject().SetPosition(pos);
-	    Update();
+				
+		if (m_WorldObject) {
+			// handle grid snapping
+			if (GetEditor().GridMode) {
+				float grid_size = GetEditor().GetGridSize();
+				vector rot3[3];
+			    Math3D.YawPitchRollMatrix(GetOrientation(), rot3);
+				
+				vector t = pos.InvMultiply3(rot3);			
+				t = Vector(
+					Math.Round(t[0] / grid_size) * grid_size, 
+					Math.Round(t[1] / grid_size) * grid_size, 
+					Math.Round(t[2] / grid_size) * grid_size);
+				pos = t.Multiply3(rot3);
+			}
+			
+			m_WorldObject.SetPosition(pos);
+		}
 	}
 	
 	vector GetOrientation()
 	{
-	    if (GetWorldObject()) {
-			return GetWorldObject().GetOrientation();
+	    if (m_WorldObject) {
+			return m_WorldObject.GetOrientation();
 		}
 		
 		return vector.Zero;
@@ -403,28 +364,26 @@ class EditorObject: EditorWorldObject
 
 	void SetOrientation(vector orientation)
 	{
-	    if (IsLocked()) return;
+	    if (IsLocked()) {
+			return;
+		}
 
-	    m_Data.Orientation = orientation;
-		
-	    ApplyTransform(); 
-	    Update();
+		SetOrientation(orientation);
 	}
 	    
 	void SetScale(float scale)
 	{
-	    if (IsLocked()) return;
+	    if (IsLocked()) {
+			return;
+		}
 
-	    m_Data.Scale = scale;
-	    ApplyTransform();
-
-	    Update();
+	    SetScale(scale);
 	}
 
 	float GetScale()
 	{
-		if (GetWorldObject()) {
-			return GetWorldObject().GetScale();
+		if (m_WorldObject) {
+			return m_WorldObject.GetScale();
 		}
 		
 		return 0;
@@ -432,8 +391,8 @@ class EditorObject: EditorWorldObject
 
 	void GetTransform(out vector mat[4]) 
 	{ 
-		if (GetWorldObject()) {
-			GetWorldObject().GetTransform(mat); 
+		if (m_WorldObject) {
+			m_WorldObject.GetTransform(mat); 
 		}
 	}
 	
@@ -450,18 +409,7 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void Update(bool update_world_object = true) 
-	{ 
-		vector mat[4];
-		GetTransform(mat);
-		
-		m_Data.Position = mat[3];
-		m_Data.Orientation = Math3D.MatrixToAngles(mat);
-		
-		float len0 = mat[0].Length();
-	    float len1 = mat[1].Length();
-	    float len2 = mat[2].Length();
-	    m_Data.Scale = (len0 + len1 + len2) / 3.0;
-		
+	{ 				
 		if (update_world_object && m_WorldObject) {
 			m_WorldObject.Update(); 
 		}
@@ -491,38 +439,30 @@ class EditorObject: EditorWorldObject
 	void ClippingInfo(out vector clip_info[2]) 
 	{ 
 		vector min, max;
-		if (GetWorldObject().IsItemBase()) {
-			GetWorldObject().GetActionComponentMinMax(GetWorldObject().GetViewGeometryLevel(), 0, min, max);
+		if (m_WorldObject.IsItemBase()) {
+			m_WorldObject.GetActionComponentMinMax(m_WorldObject.GetViewGeometryLevel(), 0, min, max);
 			clip_info = { min, max };
 		} else {
-			GetWorldObject().ClippingInfo(clip_info); 
+			m_WorldObject.ClippingInfo(clip_info); 
 		}		
 	}
 	
 	void SetDirection(vector direction) 
 	{ 
-		GetWorldObject().SetDirection(direction); 
+		if (IsLocked()) {
+			return;
+		}
+		
+		m_WorldObject.SetDirection(direction); 
 	}
-	
-	void AddChild(notnull IEntity child, int pivot, bool position_only = false) 
-	{ 
-		GetWorldObject().AddChild(child, pivot, position_only); 
-	}
-	
+		
 	vector GetTransformAxis(int axis) 
 	{ 
-		return GetWorldObject().GetTransformAxis(axis); 
+		return m_WorldObject.GetTransformAxis(axis); 
 	}
-	
-	string GetModelName() 
-	{
-		return GetWorldObject().GetModelName(); 
-	}
-	
-	void EnableListItem(bool enable) 
-	{
-		EditorLog.Trace("EditorObject::EnableListItem");
 		
+	void EnableListItem(bool enable) 
+	{		
 		delete m_EditorPlacedListItem;
 		
 		if (!enable) {
@@ -534,9 +474,7 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void EnableObjectMarker(bool enable) 
-	{
-		EditorLog.Trace("EditorObject::EnableObjectMarker");
-		
+	{		
 		if (m_EditorObjectWorldMarker)
 			delete m_EditorObjectWorldMarker;
 		
@@ -587,25 +525,26 @@ class EditorObject: EditorWorldObject
 	void ShowWorldObject(bool show) 
 	{
 		if (show) {
-			GetWorldObject().SetFlags(EntityFlags.VISIBLE, false);
+			m_WorldObject.SetFlags(EntityFlags.VISIBLE, false);
 		} else {
-			GetWorldObject().ClearFlags(EntityFlags.VISIBLE, false);
+			m_WorldObject.ClearFlags(EntityFlags.VISIBLE, false);
 		}
 	}
 
 	void SetAllowDamage(bool damage)
 	{
-		GetWorldObject().SetAllowDamage(damage);
-		m_Data.AllowDamage = damage;
+		if (IsLocked()) {
+			return;
+		}
+		
+		m_WorldObject.SetAllowDamage(damage);
 		OnChanged.Invoke();
 	}
 
 	void SetSimulate(bool simulate)
 	{
-		EntityAI entity_world_object = EntityAI.Cast(GetWorldObject());
-		if (entity_world_object) {
-			entity_world_object.DisableSimulation(!simulate);
-			m_Data.Simulate = simulate;
+		if (m_WorldEntity) {
+			m_WorldEntity.DisableSimulation(!simulate);
 			OnChanged.Invoke();
 		}
 	}
@@ -710,15 +649,7 @@ class EditorObject: EditorWorldObject
 		
 		return a;
 	}
-	
-	// Depreciated
-	vector GetTopCenter()
-	{		
-		vector top_transform[4];
-		GetTopTransform(top_transform);
-		return top_transform[3];
-	}
-		
+			
 	Param4<int, vector, vector, float> GetTransformArray() 
 	{
 		return new Param4<int, vector, vector, float>(GetID(), GetPosition(), GetOrientation(), GetScale());
@@ -817,7 +748,7 @@ class EditorObject: EditorWorldObject
 			m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_LOCAL));
 			m_BBoxLines[i].SetTransform(transform);
 			
-			AddChild(m_BBoxLines[i], -1);
+			m_WorldObject.AddChild(m_BBoxLines[i], -1);
 		}
 	
 		Update();
@@ -849,9 +780,8 @@ class EditorObject: EditorWorldObject
 	
 	bool SetAnimation(string anim_name)
 	{
-		EditorLog.Trace("EditorObject::SetAnimation");
-		if (GetWorldObject().IsMan()) {
-			//DayZPlayerImplement.Cast(GetWorldObject()).EditorAnimationStart(anim_name);
+		if (m_WorldObject.IsMan()) {
+			//DayZPlayerImplement.Cast(m_WorldObject).EditorAnimationStart(anim_name);
 			return true;
 		}
 		
@@ -860,18 +790,15 @@ class EditorObject: EditorWorldObject
 	
 	void ResetAnimation()
 	{
-		EditorLog.Trace("EditorObject::SetAnimation");
-		if (GetWorldObject().IsMan()) {
-			//DayZPlayerImplement.Cast(GetWorldObject()).EditorAnimationReset();
+		if (m_WorldObject.IsMan()) {
+			//DayZPlayerImplement.Cast(m_WorldObject).EditorAnimationReset();
 		}
 	}
 	
 	void PauseSimulation(bool pause)
-	{
-		EditorLog.Trace("EditorObject::PauseSimulation");
-		
+	{		
 		EntityAI ent;
-		if (Class.CastTo(ent, GetWorldObject())) {
+		if (Class.CastTo(ent, m_WorldObject)) {
 			ent.DisableSimulation(pause);
 		}		
 	}
