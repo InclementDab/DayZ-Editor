@@ -1022,6 +1022,7 @@ class EditorObjectController: Managed
 			
 			case "Position": {
 				m_EditorObject.SetPosition(Position);
+				m_EditorObject.Update();
 				break;
 			}
 			
@@ -1032,11 +1033,14 @@ class EditorObjectController: Managed
 			
 			case "Orientation": {
 				m_EditorObject.SetOrientation(Orientation);
+				m_EditorObject.SetScale(Scale);
+				m_EditorObject.Update();
 				break;
 			}
 			
 			case "Scale": {
 				m_EditorObject.SetScale(Scale);
+				m_EditorObject.Update();
 				break;
 			}
 			

@@ -1035,10 +1035,7 @@ class EditorHud: ScriptView
 
 		return super.OnFocus(w, x, y);
 	}	
-	
-	protected string m_LastSearchString;
-	protected bool m_LastFavoritesState;
-	
+		
 	void RefreshSearchBar()
 	{
 #ifdef DIAG_DEVELOPER
@@ -1049,6 +1046,8 @@ class EditorHud: ScriptView
 		bool favorite_toggle = GetEditor().GetSettings().ShowFavoriteObjects;
 		string search_string = LeftSearchBar.GetText();
 		search_string.ToLower();		
+		
+		float static_visual_addition = 24 * screen_y / 1080.0;
 
 		bool has_requirements_for_search = search_string.Length() > 2 || favorite_toggle;
 		
@@ -1088,11 +1087,11 @@ class EditorHud: ScriptView
 					ch_s_y *= temporary_reveal;
 							
 					// Idk why I have to do screen_y / 1080 because it is already set to scaled. wtf is going on??
-					layout.SetScreenSize(screen_x, ch_s_y + 24 * screen_y / 1080.0, true);
-					node.ChildrenHeight.SetScreenSize(2, ch_s_y);
+					layout.SetScreenSize(screen_x, ch_s_y + static_visual_addition, true);
+					node.ChildrenHeight.SetScreenSize(2, ch_s_y, false);
 				}
 				
-				layout.Show(search_succeed || ch_s_y > 0 || temporary_reveal);
+				layout.Show(search_succeed || ch_s_y > 0 || temporary_reveal, false);
 				
 #ifdef DIAG_DEVELOPER
 				t.IncrementAction();
@@ -1100,24 +1099,8 @@ class EditorHud: ScriptView
 			}
 		}
 				
-		/*
-		Print("\n\n");
-		PrintFormat("RecalculateSize Count: %1", EnProfiler.GetCountOfFunc("RecalculateSize", EditorListNode, true));
-		Print(EnProfiler.GetTimeOfFunc("RecalculateSize", EditorListNode, true));
-		PrintFormat("Show Count: %1", EnProfiler.GetCountOfFunc("Show", EditorListNode, true));
-		Print(EnProfiler.GetTimeOfFunc("Show", EditorPlaceableListNode, true));
-		PrintFormat("SetCollapsed Count: %1", EnProfiler.GetCountOfFunc("SetCollapsed", EditorListNode, true));
-		Print(EnProfiler.GetTimeOfFunc("SetCollapsed", EditorListNode, true));
-		array<ref EnProfilerTimeFuncPair> times = {};
-		EnProfiler.GetTimePerFunc(times, 20);
-		foreach (auto time: times) {
-			PrintFormat("%1: %2", time.param1, time.param2);
-		}*/
-		
 		Symbols left_search_bar_icon = Ternary<Symbols>.If(!search_string.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 		left_search_bar_icon.Load(LeftSearchBarIconIcon);
-		m_LastSearchString = search_string;
-		m_LastFavoritesState = favorite_toggle;
 	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)

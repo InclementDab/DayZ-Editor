@@ -1456,6 +1456,7 @@ class Editor: Managed
 					selected_object.SetTransform(res_mat);
 					
 					selected_object.UpdateNet();
+					selected_object.Update();
 				}
 			}
 		}
@@ -1982,26 +1983,31 @@ class Editor: Managed
 		return m_LootEditMode; 
 	}
 
+	// Call me first to safely and quickly clean up the editor. otherwise you're going to have a bad time
+	void DestroyHud()
+	{
+		for (int i = 0; i < m_EditorHud.GetTemplateController().LeftContent.Count(); i++) {
+			if (m_EditorHud.GetTemplateController().LeftContent[i].GetLayoutRoot()) {
+				m_EditorHud.GetTemplateController().LeftContent[i].GetLayoutRoot().Unlink();
+			}
+			
+			delete m_EditorHud.GetTemplateController().LeftContent[i];
+		}
+		
+		m_EditorHud.GetTemplateController().LeftContent.Clear();				
+		
+		delete m_EditorHud;
+	}
+	
 	EditorHud ReloadHud() 
 	{
 #ifdef DIAG_DEVELOPER
-		Print(m_EditorHud.GetTemplateController().LeftContent.Count());
-				
-		Print(m_EditorHud.m_FolderNodesByDepth.Count());
-		for (int j = m_EditorHud.m_FolderNodesByDepth.Count() - 1; j >= 0; j--) {
-			for (int i = m_EditorHud.m_FolderNodesByDepth[j].Count() - 1; i >= 0; i--) {
-				auto x = m_EditorHud.m_FolderNodesByDepth[j];
-				delete x[i];
-			}
-		}
-		
-		EnProfiler.Dump();
-		/*		
-		delete m_EditorHud;
+		DestroyHud();
 		
 		m_EditorHud = new EditorHud(this);
 		m_EditorHudController = m_EditorHud.GetTemplateController();
-		return m_EditorHud;*/
+		return m_EditorHud;
+		
 #endif
 		return m_EditorHud;
 	}
