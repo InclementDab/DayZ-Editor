@@ -42,7 +42,7 @@ class EditorObject: EditorWorldObject
 		if (m_Data.WorldObject) {
 			SetWorldObject(m_Data.WorldObject);
 		} else {
-			if (m_Data.m_LowBits == 0 && m_Data.m_HighBits == 0) {
+			if (m_LowBits == 0 && m_HighBits == 0) {
 				SetWorldObject(CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale));
 				
 				EntityAI entity2 = EntityAI.Cast(GetWorldObject());
@@ -229,7 +229,6 @@ class EditorObject: EditorWorldObject
 		if (!m_Data.WorldObject || !m_WorldObject) {
 			// Trolly for the world object every frame to see if we've gotten into its network bubble
 			Object world_object_found = GetGame().GetObjectByNetworkId(m_LowBits, m_HighBits);
-			
 			if (world_object_found) {
 				SetWorldObject(world_object_found);
 			}
@@ -310,7 +309,7 @@ class EditorObject: EditorWorldObject
 			object_data.Orientation = object_data.Orientation * Math.RAD2DEG;*/
 		}
 		
-		m_WorldObject.GetNetworkID(object_data.m_LowBits, object_data.m_HighBits);
+		m_WorldObject.GetNetworkID(m_LowBits, m_HighBits);
 		
 		object_data.Scale = m_WorldObject.GetScale();
 		object_data.AllowDamage = m_WorldObject.GetAllowDamage();
