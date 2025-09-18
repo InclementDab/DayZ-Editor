@@ -16,13 +16,7 @@ class EditorExpandAllCommand: EditorCommand
 	
 	protected void ExpandAll(notnull EditorListNode list_node)
 	{
-		list_node.SetCollapsed(false);
-		
-		foreach (EditorListNode node_child: list_node.ChildrenItems) {
-			if (node_child) {
-				ExpandAll(node_child);
-			}
-		}
+		list_node.ExpandAll();
 	}
 	
 	override string GetName() 
@@ -54,12 +48,7 @@ class EditorCollapseAllCommand: EditorCommand
 	
 	protected void CollapseAll(notnull EditorListNode list_node)
 	{		
-		list_node.SetCollapsed(true);		
-		foreach (EditorListNode node_child: list_node.ChildrenItems) {
-			if (node_child) {
-				//GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CollapseAll, 0, 0, node_child);
-			}
-		}
+		list_node.CollapseAll();
 	}
 	
 	override string GetName() 

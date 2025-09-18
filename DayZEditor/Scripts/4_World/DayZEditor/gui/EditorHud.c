@@ -737,23 +737,7 @@ class EditorHud: ScriptView
 			// Spams errors
 			GetTemplateController().SetInfoObjectPosition(selected_objects[0].GetPosition());
 		}
-		
-		// Update loop runs from inside out to deterministically resize nodes correctly
-		for (int i = m_FolderNodesByDepth.Count() - 1; i >= 0; --i) {
-			// See there should be folders at every depth. this will never happen unless some gap occurs. 
-			if (!m_FolderNodesByDepth[i]) {
-				Error(string.Format("GAP OCCURED AT INDEX %1", i));
-				continue;
-			}
-			
-			array<EditorListNode> list_nodes = m_FolderNodesByDepth[i];
-			foreach (EditorListNode list_node: list_nodes) {
-				if (list_node) {
-					list_node.Update(dt);
-				}
-			}
-		}
-		
+				
 		if (GetEditor().GetCamera()) {
 			m_EditorCameraMarker.WorldPosition = GetEditor().GetCamera().GetPosition();
 			m_EditorCameraMarker.WorldOrientation = GetEditor().GetCamera().GetOrientation();
@@ -1057,45 +1041,66 @@ class EditorHud: ScriptView
 	
 	void RefreshSearchBar()
 	{
+#ifdef DIAG_DEVELOPER
+		ScopedFunctionTimer t("RefreshSearchBar");
+#endif
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);
 		bool favorite_toggle = GetEditor().GetSettings().ShowFavoriteObjects;
 		string search_string = LeftSearchBar.GetText();
-		search_string.ToLower();
-				
-		if (search_string.Length() < 3 || favorite_toggle) {
-			// Smoother UX
-			if (m_LastSearchString.Length() < 3 && m_LastFavoritesState == favorite_toggle) {
-				return;
-			}
-						
-			for (int i = 0; i < m_SearchableListNodes.Count(); i++) {
-				bool filter_state = m_SearchableListNodes[i].FilterType("", favorite_toggle);
-				m_SearchableListNodes[i].Show(filter_state);
-				if (filter_state) {
-					GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(m_SearchableListNodes[i].GetListParent().SetCollapsed, 0, 0, false);
-				}
-			}
-			
-			if (!favorite_toggle) {
-				foreach (string s, EditorListNode folder_node: m_FolderNodes) {
-					if (folder_node.GetListParent()) {
-						GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(folder_node.SetCollapsed, 0, 0, true);
-					}
-				}
-			}
-						
-			m_LastSearchString = search_string;
-			m_LastFavoritesState = favorite_toggle;
-			return;
-		}
-	
-		foreach (EditorListNode list_node: m_SearchableListNodes) {
-			list_node.Show(list_node.FilterType(search_string, favorite_toggle));
-		}
-						
-		LeftbarScroll.VScrollToPos(0);
+		search_string.ToLower();		
+
+		bool has_requirements_for_search = search_string.Length() > 2 || favorite_toggle;
 		
+		int depth = m_FolderNodesByDepth.Count() - 1;
+		for (int i = depth; i >= 0; --i) {
+			array<EditorListNode> nodes = m_FolderNodesByDepth[i];			
+			for (int j = 0; j < nodes.Count(); j++) {				
+				EditorListNode node = nodes[j];
+				Widget layout = node.GetLayoutRoot();
+				bool search_succeed = !has_requirements_for_search;
+				if (has_requirements_for_search) {
+					search_succeed = node.FilterType(search_string, favorite_toggle);
+				}
+				
+				// Check if we should do a temporary reveal due to children nodes being searched for
+				bool temporary_reveal = false;
+				if (has_requirements_for_search) {
+					for (int k = 0; k < node.ChildrenItems.Count(); k++) {
+						if (node.ChildrenItems[k].GetLayoutRoot().IsVisible()) {
+							temporary_reveal = true;
+							break;
+						}
+					}
+				} else {
+					temporary_reveal = !node.IsCollapsed();
+				}
+																
+				float ch_s_x = 0, ch_s_y = 0;
+				if (node.ChildrenItems.Count()) {
+					node.Children.Show(temporary_reveal, false);
+					// Temporarily change the icon
+					node.CollapseIcon.SetImage(temporary_reveal);
+					
+					node.Children.Update();
+					node.Children.GetScreenSize(ch_s_x, ch_s_y);
+					
+					ch_s_y *= temporary_reveal;
+							
+					// Idk why I have to do screen_y / 1080 because it is already set to scaled. wtf is going on??
+					layout.SetScreenSize(screen_x, ch_s_y + 24 * screen_y / 1080.0, true);
+					node.ChildrenHeight.SetScreenSize(2, ch_s_y);
+				}
+				
+				layout.Show(search_succeed || ch_s_y > 0 || temporary_reveal);
+				
+#ifdef DIAG_DEVELOPER
+				t.IncrementAction();
+#endif
+			}
+		}
+				
 		/*
-		EnProfiler.SortData();
 		Print("\n\n");
 		PrintFormat("RecalculateSize Count: %1", EnProfiler.GetCountOfFunc("RecalculateSize", EditorListNode, true));
 		Print(EnProfiler.GetTimeOfFunc("RecalculateSize", EditorListNode, true));

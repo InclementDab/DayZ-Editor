@@ -17,6 +17,9 @@ class EditorPlaceableListNode: EditorListNode
 			Symbols.TREE_DECIDUOUS.Load(IconImage, 2);
 			IconImage.SetColor(LinearColor.LIGHT_YELLOW);
 			m_LayoutRoot.SetSort(100);
+		} else if (placeable_item.Type.Contains("_DE")) {
+			Symbols.MONEY_BILL.Load(IconImage, 2);
+			IconImage.SetColor(LinearColor.LIGHT_BLUE);
 		} else {
 			if (GetGame().IsKindOf(placeable_item.Type, "Inventory_Base")) {
 				Symbols.SHOVEL.Load(IconImage, 2);
@@ -36,8 +39,17 @@ class EditorPlaceableListNode: EditorListNode
 			FavoriteIcon.SetImage(2);
 			FavoriteIcon.SetColor(LinearColor.WHITE);
 		}
+		
+		EditorEvents.OnObjectPlaced.Insert(OnObjectPlaced);
 	}
-				
+	
+	protected void OnObjectPlaced(Class context, EditorObject target)
+	{
+		if (target && target.GetType() == m_PlaceableItem.Type) {
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(OnMouseLeave, 0, 0, m_LayoutRoot, null, 0, 0);
+		}
+	}
+					
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
 		EditorPlaceableTooltip tooltip = new EditorPlaceableTooltip();
@@ -84,7 +96,7 @@ class EditorPlaceableListNode: EditorListNode
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		GetEditor().GetEditorHud().ClearCurrentTooltip();
-		return true;
+		return super.OnMouseLeave(w, enterW, x, y);
 	}
 	
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -162,5 +174,19 @@ class EditorPlaceableListNode: EditorListNode
 		}
 		
 		return matches_filter;
+	}
+	
+	override bool IsSelected()
+	{
+		auto placing_objects = GetEditor().GetPlacingObjects();
+		foreach (auto placing_object: placing_objects) {
+			
+			EditorHologram hologram = EditorHologram.Cast(placing_object);
+			if (hologram && hologram.GetPlaceableItem() == m_PlaceableItem) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

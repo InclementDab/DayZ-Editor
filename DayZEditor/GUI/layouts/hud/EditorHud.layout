@@ -195,7 +195,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 1
      position 0 102
-     size 400 512
+     size 600 512
      hexactpos 1
      vexactpos 1
      hexactsize 1
@@ -594,7 +594,6 @@ FrameWidgetClass EditorFrame {
              Margin 0
              "Size To Content H" 1
              "Size To Content V" 1
-             content_halign center
              content_valign center
              Columns 1
              Rows 1
@@ -762,7 +761,7 @@ FrameWidgetClass EditorFrame {
      clipchildren 0
      ignorepointer 1
      position 0 102
-     size 388 256
+     size 600 256
      halign right_ref
      hexactpos 0
      vexactpos 1

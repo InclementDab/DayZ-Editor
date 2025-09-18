@@ -5,8 +5,10 @@ class EditorListNode: ScriptView
 		
 	ref array<ref EditorListNode> ChildrenItems = {};
 	
-	protected bool m_QueueRecalculateSize, m_IsCollapsed = true;
+	protected bool m_IsCollapsed = true;
 	protected EditorListNode m_Parent;
+	
+	bool m_TemporaryReveal;
 	
 	Widget Collapse, IconFrame, Hide, Panel, ChildrenHeight, Favorite;
 	ButtonWidget CollapseButton, HideButton, FavoriteButton;
@@ -27,43 +29,6 @@ class EditorListNode: ScriptView
 	{
 		ChildrenItems.Clear();
 	}
-		
-	override void Update(float dt)
-	{
-		super.Update(dt);
-		
-		if (m_QueueRecalculateSize) {
-			
-			int screen_x, screen_y;
-			GetScreenSize(screen_x, screen_y);
-						
-			float w, h, x, y;
-			Children.Update();
-			Children.GetScreenSize(w, h);	
-			
-			m_LayoutRoot.GetScreenSize(x, y);
-			float h_children = h * !m_IsCollapsed;
-			
-			// Idk why I have to do screen_y / 1080 because it is already set to scaled. wtf is going on??
-			m_LayoutRoot.SetScreenSize(x, h_children + 24 * screen_y / 1080.10);
-					
-			ChildrenHeight.SetSize(2, h_children);
-			
-			if (IsInherited(EditorFolderListNode)) {
-				bool are_children_visible = false;
-				foreach (EditorListNode child_node: ChildrenItems) {
-					if (child_node && child_node.IsVisible()) {
-						are_children_visible = true;
-						break;
-					}
-				}
-				
-				Show(are_children_visible);
-			}
-			
-			m_QueueRecalculateSize = false;
-		}
-	}
 	
 	void InsertChild(notnull EditorListNode list_node)
 	{
@@ -75,9 +40,8 @@ class EditorListNode: ScriptView
 	}
 	
 	void SetCollapsed(bool collapsed)
-	{	
-		if (m_IsCollapsed == collapsed) {
-			RecalculateSize();
+	{			
+		if (!ChildrenItems.Count()) {
 			return;
 		}
 		
@@ -85,68 +49,42 @@ class EditorListNode: ScriptView
 		Children.Show(!collapsed);
 		CollapseIcon.SetImage(!collapsed);
 		
-		if (!collapsed) {
-			// Recursive
-			if (m_Parent) {
-				m_Parent.SetCollapsed(false);
-			}
-			
-			bool favorite_toggle = GetEditor().GetSettings().ShowFavoriteObjects;
-			string search_string = GetEditor().GetEditorHud().LeftSearchBar.GetText();
-			search_string.ToLower();
-			
-			foreach (EditorListNode child: ChildrenItems) {
-				if (!child) {
-					continue;
-				}
-				
-				bool filter = true;
-				if (search_string.Length() > 3 || favorite_toggle) {
-					filter = child.FilterType(search_string, favorite_toggle);
-				}
-				
-				child.Show(filter);
-			}
-			
-			m_QueueRecalculateSize = true;
-		} else if (!m_QueueRecalculateSize) {
-			RecalculateSize();
-		}
+		float w, h, x, y;
+		Children.Update();
+		Children.GetScreenSize(w, h);
 		
-		/*						
-		if (collapsed) {
-			IconImage.SetImage(3);
-		} else {
-			IconImage.SetImage(2);
-		}*/
+		h *= !collapsed;
+		
+		ChildrenHeight.SetScreenSize(2, h);
+		
+		int screen_x, screen_y;
+		GetScreenSize(screen_x, screen_y);		
+		m_LayoutRoot.SetScreenSize(screen_x, h + 24 * screen_y / 1080.0);
+		
+		// If you are setting this as collapsed, the parents must be uncollapsed because you can access it. we are using this to update the collapse state
+		if (GetListParent()) {
+			GetListParent().SetCollapsed(false);
+		}
 	}
-		
-	override void Show(bool show)
-	{
-		// Will be updated next frame due to RecalculateSize()
-		m_LayoutRoot.Show(show, false);							
-		if (show && m_Parent) {
-			if (!m_Parent.IsVisible()) {
-				m_Parent.Show(true);
-			}
 			
-			if (m_Parent.m_IsCollapsed) {
-				m_Parent.SetCollapsed(false);
-			}
+	void CollapseAll()
+	{		
+		for (int i = 0; i < ChildrenItems.Count(); i++) {
+			ChildrenItems[i].SetCollapsed(true);
 		}
 		
-		RecalculateSize();
-	}
-		
-	protected void RecalculateSize()
-	{
-		m_QueueRecalculateSize = true;
-
-		if (m_Parent && !m_Parent.m_QueueRecalculateSize) {
-			m_Parent.RecalculateSize();
-		}
+		SetCollapsed(true);
 	}
 	
+	void ExpandAll()
+	{		
+		for (int i = 0; i < ChildrenItems.Count(); i++) {
+			ChildrenItems[i].SetCollapsed(false);
+		}
+		
+		SetCollapsed(false);
+	}
+					
 	bool IsCollapsed()
 	{
 		return m_IsCollapsed;
@@ -217,7 +155,16 @@ class EditorListNode: ScriptView
 		switch (w) {
 			case ChildrenHeight: {
 				WidgetAnimator.CancelAnimate(ChildrenHeight);
-				ChildrenHeight.SetColor(LinearColor.LIGHT_BLUE);
+				ChildrenHeight.SetColor(GetEditor().GetSettings().HighlightColor);
+				break;
+			}
+			
+			case m_LayoutRoot: {
+				if (!IsSelected()) {
+					WidgetAnimator.CancelAnimate(Panel);
+					Panel.SetColor(GetEditor().GetSettings().HighlightColor);
+				}
+				
 				break;
 			}
 		}
@@ -230,6 +177,13 @@ class EditorListNode: ScriptView
 		switch (w) {
 			case ChildrenHeight: {
 				WidgetAnimator.AnimateColor(ChildrenHeight, 0xffc8c8c8, 100);
+				break;
+			}
+			
+			case m_LayoutRoot: {
+				if (!IsSelected()) {
+					WidgetAnimator.Animate(Panel, WidgetAnimatorProperty.COLOR_A, 0, 100);
+				}
 				break;
 			}
 		}
@@ -254,7 +208,7 @@ class EditorListNode: ScriptView
 		
 	bool FilterType(string filter, bool favorites)
 	{
-		return true;
+		return false;
 	}
 	
 	// All of these slow down the process
@@ -290,7 +244,7 @@ class EditorFolderListNode: EditorListNode
 	{
 		super.OnDoubleClick(w, x, y, button);
 		
-		SetCollapsed(!IsCollapsed());		
+		SetCollapsed(!IsCollapsed());	
 		return true;
 	}
 	
