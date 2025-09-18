@@ -368,7 +368,7 @@ class EditorObject: EditorWorldObject
 			return;
 		}
 
-		SetOrientation(orientation);
+		m_WorldObject.SetOrientation(orientation);
 	}
 	    
 	void SetScale(float scale)
@@ -377,7 +377,7 @@ class EditorObject: EditorWorldObject
 			return;
 		}
 
-	    SetScale(scale);
+	    m_WorldObject.SetScale(scale);
 	}
 
 	float GetScale()
@@ -570,6 +570,20 @@ class EditorObject: EditorWorldObject
 	void SetHealth(float health)
 	{
 		GetWorldObject().SetHealth("GlobalHealth", "Health", health);
+	}
+	
+	float GetHealth()
+	{
+		if (GetWorldObject().HasDamageSystem()) {
+			return GetWorldObject().GetHealth("GlobalHealth", "Health");
+		}
+		
+		return 0;
+	}
+	
+	void SetIsEditorOnly(bool editor_only)
+	{
+		m_Data.EditorOnly = editor_only;
 	}
 
 	bool IsLocked()
@@ -942,5 +956,109 @@ class EditorObject: EditorWorldObject
 		script_module.CallFunction(null, "main", null, m_WorldObject);
 		
 		DeleteFile(file_name);	
+	}
+	
+	protected ref EditorObjectController m_Controller;
+	
+	EditorObjectController GetController()
+	{
+		if (!m_Controller) {
+			m_Controller = new EditorObjectController();
+		}
+		
+		m_Controller.Update(this);
+		return m_Controller;
+	}
+}
+
+class EditorObjectController: Managed
+{
+	protected EditorObject m_EditorObject;
+	
+	bool Show = true;
+	string Name;
+	vector Position, DeltaPosition;
+	vector Orientation, DeltaOrientation;
+	protected ref map<Object, vector> OriginalPositions = new map<Object, vector>();
+	protected ref map<Object, vector> OriginalOrientations = new map<Object, vector>();
+	float Scale = 1.0;
+	
+	float Health = 100;
+	bool Locked;
+	bool UsePhysics;
+	bool AllowDamage = false;
+	bool Collision = true;
+	bool EditorOnly = false;
+	
+	string ExpansionTraderType;
+	
+	void Update(notnull EditorObject editor_object)
+	{
+		m_EditorObject = editor_object;
+		
+		Show = m_EditorObject.IsVisible();
+		Name = m_EditorObject.GetDisplayName();
+		Position = m_EditorObject.GetPosition();
+		Orientation = m_EditorObject.GetOrientation();
+		Scale = m_EditorObject.GetScale();
+		AllowDamage = m_EditorObject.IsAllowDamage();
+		Locked = m_EditorObject.IsLocked();
+		EditorOnly = m_EditorObject.IsEditorOnly();
+		Health = m_EditorObject.GetHealth();
+		
+		// Yikes
+		if (m_EditorObject.GetData().Parameters["ExpansionTraderType"]) {
+			ExpansionTraderType = SerializableParam1<string>.Cast(m_EditorObject.GetData().Parameters["ExpansionTraderType"]).param1;
+		}
+	}
+	
+	void PropertyChanged(string property_name)
+	{
+		switch (property_name) {
+			case "Show": {
+				m_EditorObject.Show(Show);
+				break;
+			}
+			
+			case "Position": {
+				m_EditorObject.SetPosition(Position);
+				break;
+			}
+			
+			case "Name": {
+				m_EditorObject.SetDisplayName(Name);
+				break;
+			}
+			
+			case "Orientation": {
+				m_EditorObject.SetOrientation(Orientation);
+				break;
+			}
+			
+			case "Scale": {
+				m_EditorObject.SetScale(Scale);
+				break;
+			}
+			
+			case "Locked": {
+				m_EditorObject.Lock(Locked);
+				break;
+			}
+			
+			case "AllowDamage": {
+				m_EditorObject.SetAllowDamage(AllowDamage);
+				break;
+			}
+			
+			case "EditorOnly": {
+				m_EditorObject.SetIsEditorOnly(EditorOnly);
+				break;
+			}
+			
+			case "Health": {
+				m_EditorObject.SetHealth(Health);
+				break;
+			}
+		}
 	}
 }

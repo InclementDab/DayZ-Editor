@@ -264,7 +264,7 @@ class EditorGizmo: Managed
 		}
 #endif
 		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";
-		if (m_InteractionIndex == -1 && interact_input.LocalPress() && !useful_widget_under_cursor) {
+		if (m_InteractionIndex == -1 && interact_input.LocalPress() && !useful_widget_under_cursor && collide_index != -1) {
 			m_DragOffset = collision_hit.InvMultiply4(m_TopTransformOrthogonal);
 			m_InteractionIndex = collide_index;
 			m_DragRotationOffset = m_DragOffset.InvMultiply4(m_TopTransformOrthogonal).VectorToAngles();			
