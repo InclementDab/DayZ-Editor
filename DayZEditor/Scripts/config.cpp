@@ -71,21 +71,9 @@ class MapDefaults;
 class RscMapControl: MapDefaults
 {
 	font = "gui\fonts\metron22";
-	scaleMin = 0.125;
-	scaleMax = 4.0;
+	scaleMin = 0.0625;
+	scaleMax = 8.0;
 	scaleDefault = 0.32;
-	ptsPerSquareSea=8;
-	ptsPerSquareTxt=10;
-	ptsPerSquareCLn=10;
-	ptsPerSquareExp=10;
-	ptsPerSquareCost=10;
-	ptsPerSquareFor=9;
-	ptsPerSquareForEdge=4;
-	ptsPerSquareRoad=2;
-	ptsPerSquareObj=13;
-	maxSatelliteAlpha=1;
-	alphaFadeStartScale=10;
-	alphaFadeEndScale=10;
 
 	fontLabel = "gui\fonts\metron22";
 	fontGrid = "gui\fonts\metron22";

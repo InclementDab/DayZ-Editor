@@ -44,29 +44,49 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	protected void Update(float dt)
 	{
 		m_TickAccumulated += dt;
-		if (m_TickAccumulated < 0.062) {
+		if (m_TickAccumulated < 0.124) {
 			return;
 		}
 		
-		if (m_Command && Icon) {
-			if (m_Command.IsToggled()) {
-				Icon.SetColor(m_Command.GetColor());
+		if (!Icon) {
+			GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+			return;
+		}
+		
+		if (!m_Command) {
+			return;
+		}
+		
+		bool hovering = GetWidgetUnderCursor() == m_LayoutRoot;
+		bool can_execute = m_Command.CanExecute();
+		bool mouse_state = GetUApi().GetInputByID(UAMenuSelect).LocalValue();
+		if (m_Command.IsToggled()) {
+			if (hovering && mouse_state) {
+				Icon.SetImage(1);
+			} else {
 				Icon.SetImage(ICON_SIZE_ENABLE);
-			} else {
-				if (GetWidgetUnderCursor() == m_LayoutRoot && m_Command.CanExecute()) {
-					Icon.SetImage(ICON_SIZE_HOVER);
+			}
+			
+			Icon.SetColor(m_Command.GetColor());
+			
+		} else {
+			if (hovering && can_execute) {
+				if (mouse_state) {
+					Icon.SetImage(3);
 				} else {
-					Icon.SetImage(ICON_SIZE_NORMAL);
+					Icon.SetImage(1);
 				}
-
-				Icon.SetColor(m_DefaultIconColor);
-			}
-
-			if (!m_Command.CanExecute()) {
-				Icon.SetAlpha(0.3);
+				Icon.SetColor(m_Command.GetColor());
 			} else {
-				Icon.SetAlpha(1.0);
+				Icon.SetImage(2);
+				Icon.SetColor(-1);
 			}
+		}
+
+		if (!can_execute) {
+			Icon.SetAlpha(0.3);
+		} else {
+			Icon.SetAlpha(1.0);
 		}
 	}
 
@@ -74,6 +94,9 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 	{
 		PressedButton = this;
 		PressedButtonButton = button;
+		
+		//WidgetAnimator.AnimateColor(Icon, m_Command.GetColor(), 100);
+		Icon.SetImage(3);
 		return super.OnMouseButtonDown(w, x, y, button);
 	}
 	

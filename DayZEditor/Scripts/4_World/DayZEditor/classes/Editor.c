@@ -364,12 +364,6 @@ class Editor: Managed
 	void OnDeactivateMessage()
 	{
 		m_MouseVisibleOnClose = GetGame().GetUIManager().IsCursorVisible() && IsActive();
-
-		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
-			GetGame().ObjectDelete(world_object.GetWorldObject());
-		}
-
-		m_PlacingObjects.Clear();
 	}
 	
 		// Returns a ray, on surface, pointing in the direction of the surface normal
@@ -723,8 +717,8 @@ class Editor: Managed
 			UserEnvironment.Apply(GetGame().GetWeather(), GetGame().GetWorld());
 		}
 		
-		float raycast_distance = GetCameraSettings().ViewDistance / 3;
-
+		float raycast_distance = GetCameraSettings().ViewDistance / 5;
+		
 		// The most common rays and raycast for the tool to use are updated and cached at the beginning of each frame. If you need a different raycast, then you will perform it yourself
 		m_CursorRay = new Ray(GetGame().GetCurrentCameraPosition(), GetDayZGame().GetPointerDirection());
 		m_CameraRay = new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraDirection());
@@ -759,65 +753,6 @@ class Editor: Managed
 		}
 #endif
 		
-		// for baba
-#ifdef DIAG_DEVELOPER
-		static bool lights_on = true;
-		if (KeyState(KeyCode.KC_BACKSLASH)) {
-			lights_on = !lights_on;
-			ClearKey(KeyCode.KC_BACKSLASH);
-		}
-
-		if (!s_TestLight) {
-			s_TestLight = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12147.931641, 146.479889, 12703.225586));
-		}
-		
-		if (!s_TestLight2) {
-			s_TestLight2 = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12153.590820, 146.434799, 12700.890625));
-		}
-		
-		if (!s_TestLight3) {
-			s_TestLight3 = ScriptedLightBase.CreateLight(SpotLightBase, Vector(12142.406250, 146.169922, 12705.492188));
-		}
-		
-		s_TestLight.SetDirection(Vector(0.012897, -0.998630, 0.050722));
-		s_TestLight.SetAmbientColor(0.9, 0.7, 0.75);
-		s_TestLight.SetDiffuseColor(0.8, 0.7, 0.6);
-		s_TestLight.SetSpotLightAngle(120);
-		s_TestLight.SetBrightnessTo(4);
-		s_TestLight.SetRadiusTo(20);
-		s_TestLight.SetEnabled(lights_on);
-		s_TestLight.SetFlareVisible(false);
-		
-		
-		//[Camera Position]: <12146.780273, 156.325378, 12659.693359>, <-0.145621, -0.450125, 0.881012>
-		//[Camera Position]: <12138.481445, 146.337021, 12663.844727>, <0.260067, -0.066357, 0.963308>
-		
-		//[Camera Position]: <12175.502930, 157.805695, 12700.119141>, <-0.914375, -0.399910, 0.063171>
-		s_TestLight2.SetPosition(Vector(12138.481445, 146.337021, 12663.844727));
-		s_TestLight2.SetDirection(Vector(0.260067, -0.066357, 0.963308));
-		//s_TestLight2.SetPosition(Vector(12157.028320, 140.418762, 12701.905273));
-		//s_TestLight2.SetDirection(Vector(-0.954792, 0.194824, 0.224535));
-		s_TestLight2.SetSpotLightAngle(120);
-		s_TestLight2.SetBrightnessTo(0.4);
-		s_TestLight2.SetRadiusTo(120);
-		s_TestLight2.SetAmbientColor(0.9, 0.7, 0.75);
-		s_TestLight2.SetDiffuseColor(0.8, 0.7, 0.6);
-		s_TestLight2.SetEnabled(lights_on);
-		s_TestLight2.SetFlareVisible(false);
-		
-		
-		s_TestLight3.SetPosition(Vector(12140.124023, 140.758469, 12698.712891));
-		s_TestLight3.SetDirection(Vector(0.842742, 0.163829, 0.512783));
-		s_TestLight3.SetSpotLightAngle(120);
-		s_TestLight3.SetBrightnessTo(3);
-		s_TestLight3.SetRadiusTo(20);
-		s_TestLight3.SetAmbientColor(0.9, 0.7, 0.75);
-		s_TestLight3.SetDiffuseColor(0.8, 0.7, 0.6);
-		s_TestLight3.SetEnabled(lights_on);
-		s_TestLight3.SetFlareVisible(false);
-
-#endif
-
 		// Process input after gizmo update because gizmos will need to block input during an interaction
 		ProcessInput(timeslice, GetGame().GetInput());
 
@@ -905,9 +840,11 @@ class Editor: Managed
 			//m_EditorHudController.NotifyPropertyChanged("cam_z");
 		}
 				
-		HandleHands();
+		HandleHands(timeslice);
 
-		ProcessCameraTrack(timeslice);
+		if (IsRunningCameraTrack()) {
+			ProcessCameraTrack(timeslice);
+		}
 	}
 	
 	// https://www.cubic.org/docs/hermite.htm
@@ -984,10 +921,6 @@ class Editor: Managed
 			}
 		}
 
-		if (!IsRunningCameraTrack()) {
-			return;
-		}
-
 		vector camera_transform[4];
 		m_EditorCamera.GetTransform(camera_transform);
 
@@ -1039,7 +972,7 @@ class Editor: Managed
 	}
 	
 	// maybe abstract this to a new class, like EditorHandsManager
-	void HandleHands()
+	void HandleHands(float dt)
 	{
 		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
 			if (!world_object || !world_object.GetWorldObject()) {
@@ -1082,6 +1015,8 @@ class Editor: Managed
 			Math3D.MatrixOrthogonalize4(transform);
 			
 			world_object.GetWorldObject().SetTransform(transform);
+			
+			//SnapToNearbyObjects(world_object, dt);
 		}
 	}
 			
@@ -1107,6 +1042,7 @@ class Editor: Managed
 		UAInput down_input = input_api.GetInputByName("EditorMoveObjectDown");
 		UAInput turbo_input = input_api.GetInputByID(UATurbo);
 		UAInput slow_input = input_api.GetInputByID(UALookAround);
+		UAInput r_input = input_api.GetInputByID(UAReloadMagazine);
 		UAInput big_input = input_api.GetInputByName("EditorScaleIncrease");
 		UAInput small_input = input_api.GetInputByName("EditorScaleDecrease");
 		UAInput left_click_input = input_api.GetInputByID(UAFire);
@@ -1221,7 +1157,7 @@ class Editor: Managed
 				return;
 			} 
 		}
-
+		
 		if (IsPlacing()) {
 			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
 				if (!placing_object || !placing_object.GetWorldObject()) {
@@ -1229,6 +1165,10 @@ class Editor: Managed
 				}
 				
 				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
+				if (r_input.LocalPress()) {
+					hand_ori = hand_ori + Vector(90, 0, 0);
+					placing_object.GetWorldObject().SetOrientation(hand_ori);
+				}
 				
 				float factor = 9;
 				if (IsShiftDown()) {
@@ -1745,6 +1685,178 @@ class Editor: Managed
 	EditorHandData GetObjectInHandData(EditorWorldObject world_object)
 	{
 		return m_PlacingObjects[world_object];
+	}
+	
+	int SnapToNearbyObjects(notnull EditorWorldObject target_to_snap, float dt = 0.031)
+	{			
+		return 0;
+		array<EditorSnapPoint> anchor_snap_points = EditorSnapPoint.GetSnapPointsInRange(target_to_snap.GetWorldObject(), 60);	
+		
+		vector min_max[2];
+		target_to_snap.ClippingInfo(min_max);
+		vector preview_extents = {
+			Math.AbsFloat(min_max[1][0] - min_max[0][0]),
+			Math.AbsFloat(min_max[1][1] - min_max[0][1]),
+			Math.AbsFloat(min_max[1][2] - min_max[0][2])
+		};
+				
+		vector preview_center = {
+			min_max[1][0] - ((min_max[1][0] - min_max[0][0]) / 2),
+			min_max[1][1] - ((min_max[1][1] - min_max[0][1]) / 2),
+			min_max[1][2] - ((min_max[1][2] - min_max[0][2]) / 2)
+		};	
+		
+		float preview_radius = Math.Max(preview_extents[0], preview_extents[2]);
+				
+		auto snap_points_and_distances = new PriorityQueue<ref Param5<EditorWorldObject, vector, vector, vector, vector>, float>();
+		array<ref EditorSnapPoint> preview_snap_points = target_to_snap.GetSnapPoints();
+		
+		// Create the queue of snapping points, ranked by distance
+		foreach (EditorSnapPoint snap_point_1: preview_snap_points) {
+			if (!snap_point_1) {
+				continue;		
+			}
+			
+			foreach (EditorSnapPoint snap_point_2: anchor_snap_points) {					
+				if (!snap_point_2) {
+					continue;
+				}
+				
+				float cam_dist = vector.Distance(m_EditorCamera.GetPosition(), snap_point_2.GetWorldPosition());
+				
+				vector snap_forward = snap_point_2.GetDirectionAside() * snap_point_2.GetDirectionUp();
+				if (vector.Dot(snap_forward, m_CursorRay.Direction) < 0) {
+					snap_forward = -snap_forward;
+				}
+				
+				// are you too far?
+				if (cam_dist > 500) {
+					continue;
+				}
+
+				//snap_point_1 is the hologram
+				//snap_point_2 is the receiver
+
+				//if hologram base has the same acceptedSnapPoints as the receiver
+				
+				if (!snap_point_2.IsValidSnap(snap_point_1)) {
+					continue;
+				}
+
+				//if hologram base has the same acceptedTypes as the receiver
+				
+				/*if (!snap_point_2.IsValidType(snap_point_1.GetSource().GetType())) {
+#ifdef DIAG_DEVELOPER
+#ifdef SNAPPING_DIAG_VERBOSE
+					//DbgUI.Text(string.Format("    anc:%1:%2 denied %3:%4", snap_point_2.GetSource().GetType(), snap_point_2.GetName(), snap_point_1.GetSource().GetType(), snap_point_1.GetName()));
+#endif
+#endif
+					continue;
+				}
+				
+				if (snap_point_1.GetSource().IsOccupancyExclusive() && snap_point_2.IsOccupied()) {
+#ifdef DIAG_DEVELOPER
+#ifdef SNAPPING_DIAG_VERBOSE
+					//DbgUI.Text(string.Format("    anc:%1 denied %2 (exclusive snap only)", snap_point_2.GetSource().GetType(), snap_point_1.GetSource().GetType()));
+#endif
+#endif
+					continue;
+				}
+				*/
+				
+				vector snap_target_transformation[4];
+				snap_point_1.SnapTo(snap_point_2, snap_target_transformation, false);
+				
+				//if (Math.AbsFloat(vector.Dot(snap_target_transformation[1], target_transform[1])) > 0.5) {
+					//continue;
+				//}
+				
+				// -1 is because the vectors will face away from each other
+				float weight = 0;					
+				float intersect_denom = vector.Dot(snap_forward, m_CursorRay.Direction);
+				// check if anything is even real
+				if (intersect_denom <= Math.EPSILON) {
+					continue;
+				}
+								
+				// center in world space
+				vector preview_center_world = preview_center.Multiply4(snap_target_transformation);
+				float t = vector.Dot(preview_center_world - m_CursorRay.Position, snap_forward) / intersect_denom;
+				// check if we even intersect
+				if (t <= 0) {
+					continue;
+				}
+				
+				float distance_from_center = vector.Distance(m_CursorRay.Position + m_CursorRay.Direction * t, preview_center_world);
+				// check if your cursor projection is within the bounds of the rect
+				if (distance_from_center > preview_radius) {
+					//continue;
+				}
+
+				/*if (camera_raycast && camera_raycast.Hit && camera_raycast.Hit.IsInherited(BaseBuildingBase)) {
+					continue;
+				}*/
+
+				// dot product of the camera dir and the direction between yourself and the center of the preview object
+				float dot_1 = vector.Dot(m_CursorRay.Direction, vector.Direction(m_CursorRay.Position, preview_center_world).Normalized());
+				
+				float MAX_SNAP_DISTANCE = 10;
+				weight = -MAX_SNAP_DISTANCE + Math.Sqrt(t) - 5 * dot_1 + Math.Sqrt(distance_from_center);
+				
+#ifdef DIAG_DEVELOPER					
+#ifdef SNAPPING_DIAG_VERBOSE					
+				Shape.CreateSphere(LinearColor.LIGHT_BLUE, ShapeFlags.ONCE, preview_center_world, 0.15);
+				Shape.CreateArrow(preview_center_world, preview_center_world + snap_forward * 4, 1.0, LinearColor.LIGHT_BLUE, ShapeFlags.ONCE);
+				
+				vector dbg_p[2] = { snap_point_1.GetWorldPosition().Multiply4(snap_target_transformation), snap_point_2.GetWorldPosition() };
+				Shape.CreateLines(LinearColor.BLACK, ShapeFlags.NOZBUFFER | ShapeFlags.ONCE, dbg_p, 2);
+				
+				//DayZPlayerUtils.DrawDebugText(string.Format("%3\ndot:%1 dst:%2 dot2: %4\nweight: %5 t:%6 dist_ctr: %7", dot_1, cam_dist, snap_point_2.GetName(), 0, weight, t, distance_from_center), preview_center_world, 1.0);
+#endif
+#endif
+				//if (cam_dist < MAX_SNAP_DISTANCE * 3) {
+					snap_points_and_distances.Enqueue(new Param5<EditorWorldObject, vector, vector, vector, vector>(snap_point_2.GetEditorObject(), snap_target_transformation[0], snap_target_transformation[1], snap_target_transformation[2], snap_target_transformation[3]), weight);
+				//}
+				
+				// Try the reverse aswell, anchor point only!
+				if (snap_point_2.AllowReverse) {						
+					Math3D.MatrixIdentity4(snap_target_transformation);
+					snap_point_1.SnapTo(snap_point_2, snap_target_transformation, true);
+					if (cam_dist < MAX_SNAP_DISTANCE * 3) {
+						snap_points_and_distances.Enqueue(new Param5<EditorWorldObject, vector, vector, vector, vector>(snap_point_2.GetEditorObject(), snap_target_transformation[0], snap_target_transformation[1], snap_target_transformation[2], snap_target_transformation[3]), weight);
+					}
+				}
+			}
+		}
+	
+		// empty that queue and acquire the beans
+		if (snap_points_and_distances.Count() == 0) {
+			return 0;
+		}
+		
+		Param5<EditorWorldObject, vector, vector, vector, vector> closest_points = snap_points_and_distances.Dequeue();
+		vector target_transform[4] = {
+			closest_points.param2,
+			closest_points.param3,
+			closest_points.param4,
+			closest_points.param5
+		};		
+		
+		//@ Lerp motion if setting is enabled
+		vector current_transform[3];
+		target_to_snap.GetWorldEntity().GetTransform(current_transform);
+		
+		float q0[4], q1[4], q2[4];
+		Math3D.MatrixToQuat(target_transform, q0);
+		Math3D.MatrixToQuat(current_transform, q1);
+		Math3D.QuatLerp(q2, q1, q0, dt * 5);
+		
+		vector frame_transform[4];
+		Math3D.QuatToMatrix(q2, frame_transform);
+		frame_transform[3] = target_transform[3];
+		target_to_snap.GetWorldEntity().MoveInTime(target_transform, dt);
+		
+		return 1;
 	}
 	
 	EditorHandMap AddInHand(EditorWorldObject world_object, EditorHandData hand_data = null)

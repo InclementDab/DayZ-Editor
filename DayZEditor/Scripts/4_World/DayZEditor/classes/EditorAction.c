@@ -122,7 +122,7 @@ class EditorAction
 		editor_object.SetPosition(params.param2);
 		editor_object.SetOrientation(params.param3);
 		editor_object.SetScale(params.param4);
-		
+		editor_object.Update();
 		editor_object.UpdateNet();
 	}
 	

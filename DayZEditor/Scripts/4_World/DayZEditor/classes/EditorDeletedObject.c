@@ -8,9 +8,7 @@ class EditorDeletedObject: EditorWorldObject
 	protected vector m_Position;
 	protected vector m_Orientation;
 	protected vector m_BottomCenter;
-		
-	private vector m_LineVerticies[4];
-	
+			
 	protected ref EditorDeletedListItem m_EditorDeletedListItem;
 	
 	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;

@@ -1677,7 +1677,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -1688,7 +1688,7 @@ FrameWidgetClass EditorFrame {
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:file"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -1731,7 +1731,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -1742,7 +1742,7 @@ FrameWidgetClass EditorFrame {
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 ""
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -1785,7 +1785,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -1796,7 +1796,7 @@ FrameWidgetClass EditorFrame {
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:floppy_disk"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -1839,7 +1839,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -1850,7 +1850,7 @@ FrameWidgetClass EditorFrame {
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:floppy_disk_pen"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -1936,7 +1936,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -1947,7 +1947,7 @@ FrameWidgetClass EditorFrame {
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:arrow_rotate_left"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -1987,7 +1987,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -1996,7 +1996,7 @@ FrameWidgetClass EditorFrame {
                  vexactsize 1
                  scaled 1
                  scriptclass "SymbolHandler"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2083,7 +2083,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2092,7 +2092,7 @@ FrameWidgetClass EditorFrame {
                  vexactsize 1
                  scaled 1
                  scriptclass "SymbolHandler"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2136,7 +2136,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2146,7 +2146,7 @@ FrameWidgetClass EditorFrame {
                  scaled 1
                  scriptclass "SymbolHandler"
                  image0 "set:solid image:copy"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2191,7 +2191,7 @@ FrameWidgetClass EditorFrame {
                  ignorepointer 1
                  color 1 1 1 0.784
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2201,7 +2201,7 @@ FrameWidgetClass EditorFrame {
                  scaled 1
                  scriptclass "SymbolHandler"
                  image0 ""
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2286,7 +2286,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 22 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2296,7 +2296,7 @@ FrameWidgetClass EditorFrame {
                  scaled 1
                  priority 1
                  image0 "set:dayz_editor_gui image:magnet"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2330,7 +2330,7 @@ FrameWidgetClass EditorFrame {
                 ImageWidgetClass GroundButton_Icon {
                  inheritalpha 0
                  ignorepointer 1
-                 size 22 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2339,7 +2339,7 @@ FrameWidgetClass EditorFrame {
                  vexactsize 1
                  scaled 1
                  image0 "set:dayz_editor_gui image:ground"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2373,7 +2373,7 @@ FrameWidgetClass EditorFrame {
                 ImageWidgetClass SnapButton_Icon {
                  inheritalpha 0
                  ignorepointer 1
-                 size 22 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2383,7 +2383,7 @@ FrameWidgetClass EditorFrame {
                  scaled 1
                  draggable 0
                  image0 "set:dayz_editor_gui image:snapping"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2418,7 +2418,7 @@ FrameWidgetClass EditorFrame {
                 ImageWidgetClass CollisionButton_Icon {
                  inheritalpha 0
                  ignorepointer 1
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2429,7 +2429,7 @@ FrameWidgetClass EditorFrame {
                  draggable 0
                  scriptclass ""
                  image0 "set:dayz_editor_gui image:collision"
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2463,7 +2463,7 @@ FrameWidgetClass EditorFrame {
                 ImageWidgetClass GridButton_Icon {
                  inheritalpha 0
                  ignorepointer 1
-                 size 22 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2474,7 +2474,7 @@ FrameWidgetClass EditorFrame {
                  draggable 0
                  scriptclass "SymbolHandler"
                  image0 ""
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
                  "stretch mode" invalid
@@ -2567,7 +2567,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2578,10 +2578,10 @@ FrameWidgetClass EditorFrame {
                  priority 1
                  scriptclass "SymbolHandler"
                  image0 ""
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
-                 filter 0
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "flashlight"
@@ -2615,7 +2615,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2626,10 +2626,10 @@ FrameWidgetClass EditorFrame {
                  priority 1
                  scriptclass "SymbolHandler"
                  image0 ""
-                 mode additive
+                 mode blend
                  "src alpha" 1
                  "clamp mode" clamp
-                 filter 0
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "person_walking"
@@ -2709,7 +2709,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2757,7 +2757,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2805,7 +2805,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2853,7 +2853,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2937,7 +2937,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass BrushLeft_Icon {
                  ignorepointer 1
-                 size 14 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -2947,6 +2947,7 @@ FrameWidgetClass EditorFrame {
                  scriptclass "SymbolHandler"
                  mode blend
                  "src alpha" 1
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "angle_left"
@@ -3023,7 +3024,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass BrushRight_Icon {
                  ignorepointer 1
-                 size 14 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3033,6 +3034,7 @@ FrameWidgetClass EditorFrame {
                  scriptclass "SymbolHandler"
                  mode blend
                  "src alpha" 1
+                 filter 1
                  {
                   ScriptParamsClass {
                    Symbol_Name "angle_right"
@@ -3440,7 +3442,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3488,7 +3490,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3536,7 +3538,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3584,7 +3586,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3678,7 +3680,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3726,7 +3728,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3774,7 +3776,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3868,7 +3870,7 @@ FrameWidgetClass EditorFrame {
                  inheritalpha 0
                  ignorepointer 1
                  position 0 0
-                 size 24 24
+                 size 20 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1

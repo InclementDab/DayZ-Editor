@@ -17,7 +17,7 @@ class EditorObjectSelectionCommand: EditorCommand
 	
 	override LinearColor GetColor()
 	{
-		return LinearColor.BEIGE;
+		return GetEditor().GetSettings().SelectionColor;
 	}
 	
 	override Symbols GetSymbol()
