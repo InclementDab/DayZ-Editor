@@ -12,6 +12,7 @@ class EditorDuplicateCommand: EditorCommand
 		
 		GetEditor().ClearSelection();
 		EditorObjectMap created_objects = GetEditor().CreateObjects(created_data);
+		GetEditor().SelectObjects(created_objects);
 		
 		return true;
 	}

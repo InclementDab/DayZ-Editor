@@ -2990,10 +2990,7 @@ class Editor: Managed
 		
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {				
-				if (editor_object.GetType() != string.Empty && !(editor_object.GetFlags() & EditorObjectFlags.NOSAVE)) {
-					// Force update every editor object to ensure the latest data is in the data struct
-					// todo: this should really be changed into editor_object.CreateData() and just do it each and every time.
-					editor_object.Update(false);
+				if (editor_object.GetType() != string.Empty && !(editor_object.GetFlags() & EditorObjectFlags.NOSAVE) && editor_object.GetWorldObject()) {					
 					save_data.EditorObjects.Insert(editor_object.GetData());
 				}
 			}
@@ -3001,7 +2998,9 @@ class Editor: Managed
 		
 		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
 		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
-			save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
+			if (deleted_object.GetWorldObject()) {
+				save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
+			}
 		}
 		
 		array<EditorCameraTrack> camera_tracks = GetObjectManager().GetCameraTracks();
@@ -3145,6 +3144,13 @@ class Editor: Managed
 	void SelectObject(notnull EditorObject target) 
 	{
 		m_ObjectManager.SelectObject(target);
+	}
+	
+	void SelectObjects(notnull EditorObjectMap editor_objects)
+	{
+		foreach (int id, EditorObject editor_object: editor_objects) {
+			SelectObject(editor_object);
+		}
 	}
 	
 	void DeselectObject(notnull EditorObject target) 
