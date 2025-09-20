@@ -27,6 +27,11 @@ class EditorWorldObject: Managed
 		m_WorldObject = object;
 		m_WorldEntity = EntityAI.Cast(m_WorldObject);
 		
+		if (!m_WorldObject) {
+			EditorLog.Warning("SetWorldObject was null!");
+			return;
+		}
+		
 		vector clip_info[2];
 		ClippingInfo(clip_info);
 		m_LineVerticies[0] = clip_info[0];

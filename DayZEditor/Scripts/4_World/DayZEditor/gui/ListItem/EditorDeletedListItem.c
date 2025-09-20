@@ -19,8 +19,23 @@ class EditorDeletedListItem: EditorListItem
 	{
 		EditorLog.Trace("EditorDeletedListItem::ListItemExecute");
 		switch (args.GetMouseButton()) {
-
+			case MouseState.MIDDLE:
 			case MouseState.LEFT: {
+				if (args.GetMouseButton() == MouseState.MIDDLE) {
+					vector clip_info[2];
+					m_EditorDeletedObject.ClippingInfo(clip_info);
+					
+					vector transform[4];
+					m_EditorDeletedObject.GetTransform(transform);
+					
+					vector high_point = 2 * Vector(Math.Max(clip_info[0][0], clip_info[1][0]), Math.Max(clip_info[0][1], clip_info[1][1]), Math.Max(clip_info[0][2], clip_info[1][2]));
+					high_point[1] = (high_point[0] + high_point[2]) * 0.5;					
+					vector new_position = high_point.Multiply4(transform);
+					
+					EditorCamera camera = GetEditor().GetCamera();
+					camera.SetPosition(new_position);
+					camera.LookAt(m_EditorDeletedObject.GetOriginalPosition());
+				}			
 
 				if (GetEditor().IsCtrlDown()) {
 					GetEditor().ToggleHiddenObjectSelection(m_EditorDeletedObject);
@@ -54,15 +69,7 @@ class EditorDeletedListItem: EditorListItem
 				}
 				
 				return true;
-			}
-			
-			case MouseState.MIDDLE: {
-				EditorCamera camera = GetEditor().GetCamera();
-				vector pos = m_EditorDeletedObject.GetOriginalPosition();
-				pos[1] = camera.GetPosition()[1];
-				camera.SetPosition(pos);
-				return true;
-			}			
+			}		
 		}
 		
 		return true;

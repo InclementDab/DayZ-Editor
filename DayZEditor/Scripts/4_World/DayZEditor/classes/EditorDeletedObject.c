@@ -8,9 +8,10 @@ class EditorDeletedObject: EditorWorldObject
 	protected vector m_Position;
 	protected vector m_Orientation;
 	protected vector m_BottomCenter;
+	
+	protected vector m_Transform[4];
 			
 	protected ref EditorDeletedListItem m_EditorDeletedListItem;
-	
 	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;
 	
 	protected EditorDeletedObjectData m_Data;
@@ -18,6 +19,9 @@ class EditorDeletedObject: EditorWorldObject
 	void EditorDeletedObject(EditorDeletedObjectData data)
 	{
 		m_Data = data;
+		
+		// Bugfix for not having the world object info loaded yet
+		m_Data.WorldObject = m_Data.FindObject();
 		
 		SetWorldObject(m_Data.WorldObject);
 		if (!GetWorldObject()) {
@@ -31,13 +35,19 @@ class EditorDeletedObject: EditorWorldObject
 		m_Position = GetWorldObject().GetPosition();
 		m_Orientation = GetWorldObject().GetOrientation();
 		
+		// Store original transform
+		vector transform[4];
+		m_WorldObject.GetTransform(transform);
+		copyarray(m_Transform, transform);
+		
+		/*
 		vector clip_info[2];
 		GetWorldObject().ClippingInfo(clip_info);
 		
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);*/
 		
 		m_BottomCenter = GetWorldObject().GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
 		
@@ -65,6 +75,11 @@ class EditorDeletedObject: EditorWorldObject
 		delete m_EditorDeletedListItem;
 	}
 	
+	override void GetTransform(out vector mat[4]) 
+	{ 
+		copyarray(mat, m_Transform);
+	}
+	
 	EditorDeletedObjectData GetData()
 	{
 		return m_Data;
@@ -88,6 +103,10 @@ class EditorDeletedObject: EditorWorldObject
 			m_EditorDeletedListItem.Select();
 		}
 		
+		if (m_EditorDeletedObjectWorldMarker) {
+			m_EditorDeletedObjectWorldMarker.Show(true);
+		}
+		
 		// Temporarily unsuppress
 		GetDayZGame().GetSuppressedObjectManager().Unsupress(GetWorldObject());
 	}
@@ -98,6 +117,10 @@ class EditorDeletedObject: EditorWorldObject
 		
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Deselect();
+		}
+		
+		if (m_EditorDeletedObjectWorldMarker) {
+			m_EditorDeletedObjectWorldMarker.Show(false);
 		}
 		
 		GetDayZGame().GetSuppressedObjectManager().Suppress(GetWorldObject());

@@ -1071,7 +1071,6 @@ FrameWidgetClass EditorFrame {
              visible 0
              ignorepointer 0
              keepsafezone 0
-             color 0.141 0.157 0.18 1
              position 0 0
              size 1 1
              halign center_ref
@@ -2937,7 +2936,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass BrushLeft_Icon {
                  ignorepointer 1
-                 size 20 22
+                 size 16 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1
@@ -3024,7 +3023,7 @@ FrameWidgetClass EditorFrame {
                {
                 ImageWidgetClass BrushRight_Icon {
                  ignorepointer 1
-                 size 20 22
+                 size 16 22
                  halign center_ref
                  valign center_ref
                  hexactpos 1

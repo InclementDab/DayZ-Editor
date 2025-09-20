@@ -141,6 +141,7 @@ class EditorObject: EditorWorldObject
 		}
 				
 #ifdef DIAG_DEVELOPER
+		return;
 		// Local space
 		vector mat[4];
 		GetTransform(mat);
