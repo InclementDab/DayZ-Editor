@@ -1561,12 +1561,19 @@ class Editor: Managed
 		EditorLog.Debug("Hotkeys Pressed for %1", command.ToString());
 		
 		// Flush all inputs when a command is pressed. To avoid things like the camera moving constantly after a lag on save
-		array<int> inputs = {};
-		GetUApi().GetActiveInputs(inputs);
-		foreach (int input: inputs) {
-			UAInput input_value = GetUApi().GetInputByID(input);
-			if (input_value) {
-				input_value.Supress();
+		UAInputAPI input_api = GetUApi();
+		array<UAInput> inputs = {
+			input_api.GetInputByID(UAMoveForward),
+			input_api.GetInputByID(UAMoveBack),
+			input_api.GetInputByID(UAMoveRight),
+			input_api.GetInputByID(UAMoveLeft),
+			input_api.GetInputByID(UAMoveUp),
+			input_api.GetInputByID(UAMoveDown),
+		};
+		
+		foreach (UAInput input: inputs) {
+			if (input) {
+				input.Supress();
 			}
 		}
 		
@@ -2175,8 +2182,6 @@ class Editor: Managed
 			m_EditorObjectsByUuid[uuid] = editor_object;
 			
 			GetStatistics().EditorPlacedObjects++;
-			
-			SelectObject(editor_object);
 		}
 		
 		if (create_undo) {

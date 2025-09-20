@@ -296,8 +296,12 @@ class EditorObject: EditorWorldObject
 		}
 		
 		object_data.Type = m_WorldObject.GetType();		
-		object_data.Position = m_WorldObject.GetPosition();
-		object_data.Orientation = m_WorldObject.GetOrientation();
+		vector transform[4];
+		m_WorldObject.GetTransform(transform);
+		
+		object_data.Position = transform[3];
+		object_data.Orientation = Math3D.MatrixToAngles(transform);
+		object_data.Scale = transform[0].Length();
 		
 		if (object_data.Type == string.Empty || GetGame().ConfigIsExisting(string.Format("CfgNonAIVehicles %1", object_data.Type))) {
 			object_data.Type = m_WorldObject.GetShapeName();
@@ -311,7 +315,6 @@ class EditorObject: EditorWorldObject
 		
 		m_WorldObject.GetNetworkID(m_LowBits, m_HighBits);
 		
-		object_data.Scale = m_WorldObject.GetScale();
 		object_data.AllowDamage = m_WorldObject.GetAllowDamage();
 		object_data.Model = m_WorldObject.GetShapeName();
 		

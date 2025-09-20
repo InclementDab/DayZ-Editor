@@ -103,7 +103,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		array<EditorObject> all_objects = {};
 		all_objects.Insert(target);
 		all_objects.InsertAll(additional_drag_targets);
-		
+						
 		array<Object> all_object_instances = {};
 		foreach (EditorObject editor_object_get_object: all_objects) {
 			all_object_instances.Insert(editor_object_get_object.GetWorldObject());

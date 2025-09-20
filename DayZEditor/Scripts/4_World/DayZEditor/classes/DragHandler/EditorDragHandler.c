@@ -115,28 +115,28 @@ class EditorDragHandler: Managed
 
 	// Raycast ground below object, (UNTESTED)
 	static bool ProjectToGround4(vector transform[4], out vector result[4])
-	{
-		vector pos, up; 
-		int component;
-		if (!DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, pos, up, component, null, null, null, false, true)) {
+	{		
+		Ray ground_project_ray = new Ray(transform[3], -transform[1]);
+		Raycast ground_project_raycast = ground_project_ray.PerformRaycastRV(null, null, 0, 1000, ObjIntersect.View, true);
+		if (!ground_project_raycast) {
 			return false;
 		}
 
-		vector aside;
-		if (up == vector.Up) {
-			aside = vector.Aside;
-		} else {
-			aside = (up * vector.Up).Normalized();
+		vector ground_normal = GetGame().SurfaceGetNormal(ground_project_raycast.Bounce.Position[0], ground_project_raycast.Bounce.Position[2]);
+		vector ground_aside = vector.Aside;
+		if (Math.AbsFloat(vector.Dot(ground_normal, ground_aside)) >= 1 - Math.EPSILON) {
+			ground_aside = vector.Forward;
 		}
-
-		vector forward = (up * aside).Normalized();
+		
 		result = {
-			aside,
-			up,
-			forward,
-			pos
+			ground_aside, 
+			ground_normal,
+			ground_normal * ground_aside,
+			ground_project_raycast.Bounce.Position
 		};
-
+							
+		Math3D.MatrixOrthogonalize4(result);
+	
 		return true;
 	}
 }

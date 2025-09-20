@@ -72,7 +72,7 @@ class EditorClipboard
 
 		array<ref EditorObjectData> write_data = {};
 		for (int j = 0; j < read_data.Count(); j++) {
-			if (read_data[j] && read_data[j].Type) {								
+			if (read_data[j] && read_data[j].Type) {
 				vector write_data_position = read_data[j].Position - average_position_table + cursor_pos;
 				write_data.Insert(EditorObjectData.Create(read_data[j].Type, write_data_position, read_data[j].Orientation, read_data[j].Scale, read_data[j].Flags));
 			}	
@@ -86,7 +86,7 @@ class EditorClipboard
 				
 				vector ground_transform[4];
 				EditorObjectDragHandler.ProjectToGround4(transform, ground_transform);
-				editor_object.SetTransform(ground_transform);				
+				editor_object.SetBottomTransform(ground_transform);				
 			}
 			
 			GetEditor().SelectObject(editor_object);
