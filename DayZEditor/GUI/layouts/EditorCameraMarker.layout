@@ -2,7 +2,7 @@ FrameWidgetClass Root {
  visible 1
  clipchildren 0
  ignorepointer 1
- color 0.502 0 0.3765 1
+ color 0.502 0 0.377 1
  position 0 0
  size 110 110
  hexactpos 1
@@ -14,6 +14,7 @@ FrameWidgetClass Root {
  {
   TextWidgetClass Text {
    ignorepointer 1
+   color 0.314 0.314 0.314 1
    position 11 34
    size 48 24
    hexactpos 1
@@ -63,6 +64,7 @@ FrameWidgetClass Root {
      visible 1
      clipchildren 0
      ignorepointer 1
+     color 0.314 0.314 0.314 1
      size 1 1
      halign center_ref
      valign center_ref

@@ -314,13 +314,18 @@ class EditorFileDialog: EditorModal
 			 m_TemplateController.Files[i].GetLayoutRoot().SetColor(0xff24282e);
 		}
 		
-		m_CurrentFile = file;
+		if (File.GetExtension(file) != string.Empty) {
+			m_CurrentFile = file;
+			FileNameBox.SetText(File.GetName(m_CurrentFile));
+		}
+				
 		view.GetLayoutRoot().SetColor(0xff007acc);
-		FileNameBox.SetText(File.GetName(m_CurrentFile));
 	}
 
 	protected void OnFileDoublePressed(EditorFileView view, string file)
 	{
+		Print(2);
+		Print(file);
 		bool is_directory = view.IsDirectory();
 		if (is_directory) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetDirectory, 0, 0, file, true);

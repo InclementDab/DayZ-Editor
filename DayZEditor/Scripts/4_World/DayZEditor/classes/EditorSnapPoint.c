@@ -3,7 +3,7 @@ class EditorSnapPoint: Managed
 	protected EditorWorldObject m_EditorObject;
 	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
 	
-	vector Transform[4];
+	vector m_Transform[4];
 	bool AllowReverse = false;
 	
 	void EditorSnapPoint(notnull EditorWorldObject editor_object)
@@ -13,14 +13,14 @@ class EditorSnapPoint: Managed
 	
 	void GetTransformLS(out vector mat[4])
 	{
-		copyarray(mat, Transform);
+		copyarray(mat, m_Transform);
 	}
 	
 	void GetTransformWS(out vector mat[4])
 	{
 		vector editor_object_mat[4];
 		m_EditorObject.GetTransform(editor_object_mat);
-		Math3D.MatrixMultiply4(editor_object_mat, Transform, mat);
+		Math3D.MatrixMultiply4(editor_object_mat, m_Transform, mat);
 	}
 	
 	EditorWorldObject GetEditorObject()
@@ -32,28 +32,28 @@ class EditorSnapPoint: Managed
 	{
 		vector editor_object_mat[4];
 		m_EditorObject.GetTransform(editor_object_mat);
-		return Transform[3].Multiply4(editor_object_mat);
+		return m_Transform[3].Multiply4(editor_object_mat);
 	}
 	
 	vector GetDirectionAside()
 	{
 		vector editor_object_mat[4];
 		m_EditorObject.GetTransform(editor_object_mat);
-		return Transform[0].Multiply3(editor_object_mat);
+		return m_Transform[0].Multiply3(editor_object_mat);
 	}
 	
 	vector GetDirectionUp()
 	{
 		vector editor_object_mat[4];
 		m_EditorObject.GetTransform(editor_object_mat);
-		return Transform[1].Multiply3(editor_object_mat);
+		return m_Transform[1].Multiply3(editor_object_mat);
 	}
 	
 	vector GetDirectionForward()
 	{
 		vector editor_object_mat[4];
 		m_EditorObject.GetTransform(editor_object_mat);
-		return Transform[2].Multiply3(editor_object_mat);
+		return m_Transform[2].Multiply3(editor_object_mat);
 	}
 	
 	bool IsValidSnap(notnull EditorSnapPoint rhs)
@@ -81,7 +81,7 @@ class EditorSnapPoint: Managed
 		Math3D.MatrixMultiply4(anchor_world_transform, matrix_reverser, coupling_matrix);
 		
 		vector source_inverse[4];	
-		Math3D.MatrixInvMultiply4(Transform, ident, source_inverse);
+		Math3D.MatrixInvMultiply4(m_Transform, ident, source_inverse);
 		Math3D.MatrixMultiply4(coupling_matrix, source_inverse, mat);
 	}
 	
@@ -122,7 +122,7 @@ class EditorSnapPlane: Managed
 		copyarray(m_Clipping, clipping);
 		m_SnapPoint = new EditorSnapPoint(world_object);
 				
-		m_SnapPoint.Transform[3] = plane.Position;
+		m_SnapPoint.m_Transform[3] = plane.Position;
 	}
 	
 	vector GetWorldPosition()
