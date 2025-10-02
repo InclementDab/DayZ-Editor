@@ -17,7 +17,7 @@ PanelWidgetClass EditorMarkerInteract {
    visible 1
    clipchildren 1
    ignorepointer 1
-   color 0.6588 0.6588 0.6588 1
+   color 0.659 0.659 0.659 1
    position 0 0
    size 0.33 0.33
    halign center_ref
@@ -29,7 +29,7 @@ PanelWidgetClass EditorMarkerInteract {
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"
-   mode blend
+   mode additive
    "src alpha" 1
    filter 0
    {
@@ -54,7 +54,7 @@ PanelWidgetClass EditorMarkerInteract {
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"
-   mode blend
+   mode additive
    "src alpha" 1
    filter 0
    {
@@ -68,7 +68,7 @@ PanelWidgetClass EditorMarkerInteract {
    visible 1
    clipchildren 1
    ignorepointer 1
-   color 0.2627 0.3216 0.502 1
+   color 0.263 0.322 0.502 1
    position 0 0
    size 0.75 0.75
    halign center_ref
@@ -80,7 +80,7 @@ PanelWidgetClass EditorMarkerInteract {
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"
-   mode blend
+   mode additive
    "src alpha" 1
    "stretch mode" stretch_w_h
    filter 1
