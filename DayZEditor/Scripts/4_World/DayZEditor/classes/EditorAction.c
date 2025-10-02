@@ -105,7 +105,7 @@ class EditorAction
 	}
 	
 	void SetTransform(Param4<int, vector, vector, float> params)
-	{
+	{		
 		//EditorLog.Trace("EditorAction::SetTransform");
 		EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
 		if (!editor_object_data) {
@@ -119,9 +119,16 @@ class EditorAction
 			return;
 		}
 
-		editor_object.SetPosition(params.param2);
-		editor_object.SetOrientation(params.param3);
-		editor_object.SetScale(params.param4);
+		float scale = params.param4;
+		
+		vector matrix[4];
+		Math3D.YawPitchRollMatrix(params.param3, matrix);
+		matrix[0] = matrix[0] * scale;
+		matrix[1] = matrix[1] * scale;
+		matrix[2] = matrix[2] * scale;
+		matrix[3] = params.param2;
+						
+		editor_object.SetTransform(matrix);
 		editor_object.Update();
 		editor_object.UpdateNet();
 	}

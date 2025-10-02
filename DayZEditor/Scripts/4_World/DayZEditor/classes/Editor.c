@@ -547,7 +547,10 @@ class Editor: Managed
 		ClearSelection();
 		
 		m_ControllingPlayer.DisableSimulation(false);
+		
+		m_EditorCamera.SetActive(false);
 		GetGame().SelectPlayer(null, m_ControllingPlayer);
+		
 		m_ControllingPlayer.GetInputController().SetDisabled(false);
 		
 		m_EditorHud.Show(false);
@@ -1305,12 +1308,12 @@ class Editor: Managed
 				InsertAction(m_QuickMoveUndoAction);
 			}
 			
-			bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalPress() && GridMode);
-			bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalPress() && GridMode);
-			bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalPress() && GridMode);
-			bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalPress() && GridMode);
-			bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalPress() && GridMode);
-			bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalPress() && GridMode);
+			bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalHold() && GridMode) || (fwd_input.LocalPress() && GridMode);
+			bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalHold() && GridMode) || (bck_input.LocalPress() && GridMode);
+			bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalHold() && GridMode) || (left_input.LocalPress() && GridMode);
+			bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalHold() && GridMode) || (right_input.LocalPress() && GridMode);
+			bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalHold() && GridMode) || (up_input.LocalPress() && GridMode);
+			bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalHold() && GridMode) || (down_input.LocalPress() && GridMode);
 			if (GridMode) {
 				step_size = GetGridSize();
 			}
@@ -3478,14 +3481,14 @@ class Editor: Managed
 			return 0;
 		}
 		
-		if (GetDayZGame().IsLeftCtrlDown()) {
-			return 1.0;
+		if (KeyState(KeyCode.KC_LMENU)) {
+			return 3.0;
 		}
 		
 		if (KeyState(KeyCode.KC_LSHIFT)) {
-			return 0.01;
+			return 0.1;
 		}
 		
-		return 0.1;
+		return 1;
 	}
 }

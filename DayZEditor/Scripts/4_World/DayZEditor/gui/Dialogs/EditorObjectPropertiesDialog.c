@@ -108,6 +108,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		// All of these bindings are directly on the world object
 		if (editor_object.GetWorldObject().IsInherited(NetworkLightBase)) {			
 			GroupPrefab light_group = new GroupPrefab("Light Controls", editor_object.GetWorldObject(), string.Empty);
+			light_group.Insert(new SliderPrefab("Brightness", editor_object.GetWorldObject(), "Brightness", 0, 40));
 			light_group.Insert(new SliderPrefab("Radius", editor_object.GetWorldObject(), "Radius", 0, 1000));
 			light_group.Insert(new CheckBoxPrefab("Cast Shadow", editor_object.GetWorldObject(), "CastShadow"));
 			light_group.Insert(new CheckBoxPrefab("Enable Specular", editor_object.GetWorldObject(), "EnableSpecular"));
@@ -121,7 +122,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			
 			light_group.Insert(new ColorPickerPrefab("Diffuse Color", editor_object.GetWorldObject(), "DiffuseColor"));
 			light_group.Insert(new ColorPickerPrefab("Ambient Color", editor_object.GetWorldObject(), "AmbientColor"));
-			light_group.Insert(new SliderPrefab("Brightness", editor_object.GetWorldObject(), "Brightness"));
 			
 			light_group.Insert(new CheckBoxPrefab("Enable Flare", editor_object.GetWorldObject(), "FlareVisible"));
 			light_group.Insert(new VectorPrefab("Flare Position", editor_object.GetWorldObject(), "FlareRelativePosition"));
