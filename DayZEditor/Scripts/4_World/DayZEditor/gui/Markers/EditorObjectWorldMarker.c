@@ -41,7 +41,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 
 			return;
 		}
-
+		
 		// first get a crude position to see if we are off screen. this check is very very fast
 		vector position = m_EditorObject.GetPosition();
 		vector screen_pos = GetGame().GetScreenPos(position);

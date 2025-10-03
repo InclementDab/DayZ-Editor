@@ -194,11 +194,7 @@ class EditorObject: EditorWorldObject
 	override void SetWorldObject(Object object)
 	{		
 		super.SetWorldObject(object);
-		
-		if (m_Data) {
-			m_Data.WorldObject = m_WorldObject;
-		}
-										
+												
 		ShowBoundingBox();
 		
 		// Map marker
@@ -297,6 +293,7 @@ class EditorObject: EditorWorldObject
 		
 		object_data.AllowDamage = m_WorldObject.GetAllowDamage();
 		object_data.Model = m_WorldObject.GetShapeName();
+		object_data.WorldObject = m_WorldObject;
 		
 		// Deprecate this
 		object_data.BottomCenter = GetBottomCenter();

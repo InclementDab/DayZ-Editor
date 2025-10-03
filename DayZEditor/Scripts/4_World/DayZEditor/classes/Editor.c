@@ -155,6 +155,7 @@ class Editor: Managed
 	protected int m_CameraTrackIndex = 0, m_CameraTrackState = 0;
 	protected float m_CameraTrackLerpNorm = 0.0;
 	protected vector m_CameraTransformPreTrackMotion[4];
+	protected bool m_CameraMoveActive;
 	
 	protected ref EditorObject m_PlayerObject;
 	
@@ -629,7 +630,7 @@ class Editor: Managed
 	{
 		ECameraLockFlag processed_flags;
 		if (GetGame().GetUIManager().IsCursorVisible()) {
-			if (GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue() && !GetWidgetUnderCursor()) {
+			if (m_CameraMoveActive) {
 				if (m_EditorCamera.GetSettings().InvertCamera) {
 					processed_flags |= ECameraLockFlag.INVERT_LOOK;
 				}
@@ -1052,6 +1053,14 @@ class Editor: Managed
 		UAInput right_click_input = input_api.GetInputByID(UATempRaiseWeapon);
 		UAInput middle_click_input = input_api.GetInputByID(UAZoomIn);
 		UAInput cycle_mode_input = input_api.GetInputByName("EditorCycleWidget");
+		
+		if (m_CameraMoveActive) {
+			m_CameraMoveActive = GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue();
+		}
+		
+		if (GetUApi().GetInputByID(UATempRaiseWeapon).LocalPress() && !GetWidgetUnderCursor()) {
+			m_CameraMoveActive = true;
+		}
 
 		bool any_mouse_click = left_click_input.LocalPress() || right_click_input.LocalPress() || middle_click_input.LocalPress();
 

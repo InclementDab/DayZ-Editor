@@ -29,7 +29,7 @@ PanelWidgetClass EditorMarkerInteract {
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"
-   mode additive
+   mode blend
    "src alpha" 1
    filter 0
    {
@@ -54,7 +54,7 @@ PanelWidgetClass EditorMarkerInteract {
    scaled 0
    draggable 0
    scriptclass "SymbolHandler"
-   mode additive
+   mode blend
    "src alpha" 1
    filter 0
    {
