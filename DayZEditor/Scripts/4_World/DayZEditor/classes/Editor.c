@@ -51,10 +51,6 @@ class EditorWebApi: WebApiBase
 	}
 }
 
-ScriptedLightBase s_TestLight;
-ScriptedLightBase s_TestLight2;
-ScriptedLightBase s_TestLight3;
-
 class Editor: Managed
 {
 	/* Private Members */
@@ -90,6 +86,7 @@ class Editor: Managed
 	protected ref map<string, EditorDeletedObject> m_HiddenObjectsByUuid = new map<string, EditorDeletedObject>();
 	protected EditorCamera 												m_EditorCamera;
 	protected ref EditorHandMap						m_PlacingObjects = new EditorHandMap();
+	protected EditorWorldObject m_MainHandObject; // Always the first object added in hand
 	protected typename m_CurrentGizmoType = EditorTranslationGizmo;
 	protected ref EditorGizmo m_CurrentGizmo;
 	protected ref EditorWebApi m_RestApi;
@@ -844,7 +841,9 @@ class Editor: Managed
 			//m_EditorHudController.NotifyPropertyChanged("cam_z");
 		}
 				
-		HandleHands(timeslice);
+		if (IsPlacing()) {
+			HandleHands(timeslice);
+		}
 
 		if (IsRunningCameraTrack()) {
 			ProcessCameraTrack(timeslice);
@@ -975,50 +974,67 @@ class Editor: Managed
 		m_EditorCamera.Update();
 	}
 	
+	protected vector m_HandsInputOrientation;
+	
 	// maybe abstract this to a new class, like EditorHandsManager
 	void HandleHands(float dt)
 	{
+		Input input = GetGame().GetInput();
+		array<Object> objects_to_ignore = { m_Player };
+		foreach (EditorWorldObject world_object_0, EditorHandData hand_data_0: m_PlacingObjects) {
+			if (world_object_0 && world_object_0.GetWorldObject()) {
+				objects_to_ignore.Insert(world_object_0.GetWorldObject());
+			}
+		}
+		
+		Raycast cursor_raycast = GetCursorRaycastModeSafeEx(objects_to_ignore, GroundMode);
+		vector position;
+		if (cursor_raycast) {
+			position = cursor_raycast.Bounce.Position;
+		} else {
+			position = GetCursorRay().GetPoint(50); // rather arbitrary
+		}
+					
+		vector transform[4];
+		Math3D.MatrixIdentity4(transform);
+		
+		vector surface_normal = vector.Up;
+		if (MagnetMode) {
+			surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
+		}
+		
+		vector local_aside = m_MainHandObject.GetWorldObject().GetDirection();
+		if (false) {
+			vector camera_transform[4];
+			m_EditorCamera.GetTransform(camera_transform);
+			local_aside = camera_transform[0];
+		}
+		
+		transform[0] = surface_normal * local_aside;
+		transform[1] = surface_normal;
+		transform[2] = surface_normal * (local_aside * vector.Up);
+		transform[3] = position + Vector(0, m_MainHandObject.GetWorldObject().GetBoundingCenter()[1], 0).Multiply3(transform);
+		
+		vector userinput_matrix[3];
+		Math3D.YawPitchRollMatrix(m_HandsInputOrientation, userinput_matrix);
+		Math3D.MatrixMultiply3(transform, userinput_matrix, transform);
+		m_HandsInputOrientation = vector.Zero;
+						
 		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
 			if (!world_object || !world_object.GetWorldObject()) {
 				continue;
 			}
 			
-			Raycast cursor_raycast = GetCursorRaycastModeSafeEx({ world_object.GetWorldObject(), m_Player }, GroundMode);
-			
-			vector position;
-			if (cursor_raycast) {
-				position = cursor_raycast.Bounce.Position;
-			} else {
-				position = GetCursorRay().GetPoint(50); // rather arbitrary
-			}
-			
+			vector local_transform[4];
+			copyarray(local_transform, transform);
 			if (hand_data) {
-				position += hand_data.PositionOffset;
+				vector hand_matrix[4];
+				Math3D.YawPitchRollMatrix(hand_data.OrientationOffset, hand_matrix);
+				hand_matrix[3] = hand_data.PositionOffset;
+				Math3D.MatrixMultiply4(transform, hand_matrix, local_transform);
 			}
-			
-			//position[1] = position[1] + world_object.GetWorldObject().GetBoundingCenter()[1];
-			vector transform[4] = {
-				"1 0 0",
-				"0 1 0",
-				"0 0 1",
-				position
-			};
-			
-			vector surface_normal = vector.Up;
-			if (MagnetMode) {
-				surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
-			}
-			
-			vector local_ori = world_object.GetWorldObject().GetDirection();
-			local_ori.Normalize();
-			transform[0] = surface_normal * local_ori;
-			transform[1] = surface_normal;
-			transform[2] = surface_normal * (local_ori * vector.Up);
-			transform[3] = Vector(0, world_object.GetWorldObject().GetBoundingCenter()[1], 0).Multiply4(transform);
-			
-			Math3D.MatrixOrthogonalize4(transform);
-			
-			world_object.GetWorldObject().SetTransform(transform);
+						
+			world_object.SetTransform(local_transform);
 			
 			//SnapToNearbyObjects(world_object, dt);
 		}
@@ -1170,40 +1186,30 @@ class Editor: Managed
 			} 
 		}
 		
-		if (IsPlacing()) {
-			foreach (EditorWorldObject placing_object, EditorHandData placing_hand_data: m_PlacingObjects) {
-				if (!placing_object || !placing_object.GetWorldObject()) {
-					continue;
-				}
-				
-				vector hand_ori = placing_object.GetWorldObject().GetOrientation();
-				if (r_input.LocalPress()) {
-					hand_ori = hand_ori + Vector(90, 0, 0);
-					placing_object.GetWorldObject().SetOrientation(hand_ori);
-				}
-				
-				float factor = 9;
-				if (IsShiftDown()) {
-					factor /= 5;
-				}
-				
-				if (IsCtrlDown()) {
-					factor *= 5;
-				}
-				
-				if (input.LocalValue("UAZoomInOptics")) {				
-					hand_ori[0] = hand_ori[0] - factor;
-					placing_object.GetWorldObject().SetOrientation(hand_ori);			
-				}
-				
-				if (input.LocalValue("UAZoomOutOptics")) {
-					hand_ori[0] = hand_ori[0] + factor;
-					placing_object.GetWorldObject().SetOrientation(hand_ori);			
-				}
-			}
-		} else {
+		if (!IsPlacing()) {
 			if (cycle_mode_input.LocalPress()) {
 				SetMode(m_EditorMode + 1);
+			}
+		} else {
+			if (r_input.LocalPress()) {
+				m_HandsInputOrientation = m_HandsInputOrientation + Vector(90, 0, 0);
+			}
+			
+			float factor = 9;
+			if (IsShiftDown()) {
+				factor /= 5;
+			}
+			
+			if (IsCtrlDown()) {
+				factor *= 5;
+			}
+			
+			if (input.LocalValue("UAZoomInOptics")) {				
+				m_HandsInputOrientation[0] = m_HandsInputOrientation[0] - factor;
+			}
+			
+			if (input.LocalValue("UAZoomOutOptics")) {
+				m_HandsInputOrientation[0] = m_HandsInputOrientation[0] + factor;
 			}
 		}
 									
@@ -1878,6 +1884,10 @@ class Editor: Managed
 			m_EditorHud.SetBrushState(0);
 		}
 		
+		if (m_PlacingObjects.Count() == 0) {
+			m_MainHandObject = world_object;
+		}
+		
 		m_PlacingObjects[world_object] = hand_data;
 		EditorEvents.AddInHand(this, world_object, hand_data);
 		
@@ -1907,45 +1917,46 @@ class Editor: Managed
 		}
 		
 		array<EditorObject> placed_objects = {};
-		foreach (EditorWorldObject placing_object, EditorHandData hand_data: m_PlacingObjects) {
-			EditorHologram editor_hologram;
-			if (!Class.CastTo(editor_hologram, placing_object)) {
-				return null;
-			}
-			
-			Object entity = editor_hologram.GetWorldObject();
+		array<ref EditorObjectData> data_list = {};
+		foreach (EditorWorldObject placing_object, EditorHandData hand_data: m_PlacingObjects) {			
+			Object entity = placing_object.GetWorldObject();
 			if (!entity) {
-				EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().Type);
+				EditorLog.Warning("Invalid Entity");
 				return null;
 			}
 			
-			EditorObjectData editor_object_data = EditorObjectData.Create(editor_hologram.GetPlaceableItem().GetSpawnType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EFE_DEFAULT);
+			string type = entity.GetType();
+			if (type == string.Empty) {
+				type = entity.GetShapeName();
+			}
+			
+			EditorObjectData editor_object_data = EditorObjectData.Create(type, entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EFE_DEFAULT);
 			if (!editor_object_data) {
 				EditorLog.Warning("Invalid Object data from %1", entity.GetType());
 				return null;
 			}
 			
-			// Dont create the undo on multiplayer because its going to be immediately deleted when receiving the info from the server
-			// you will create a null action and boomy
-			EditorObject editor_object = CreateObject(editor_object_data);
-			if (!editor_object) { 
-				EditorLog.Warning("Invalid Editor Object from %1", entity.GetType());
-				return null;
-			}
+			data_list.Insert(editor_object_data);
 						
-			EditorEvents.ObjectPlaced(this, editor_object);
-			
 			if (!IsShiftDown()) { 
 				RemoveFromHand(placing_object); 
 			}
+		}
+						
+		// Dont create the undo on multiplayer because its going to be immediately deleted when receiving the info from the server
+		// you will create a null action and boomy
+		// update: stumbled upon this and we are creating undo in mp. is this why item placement is bug?
+		auto created_objects = CreateObjects(data_list);
+		foreach (int id, EditorObject editor_object_created: created_objects) {
 			
-			if (editor_object) {
-				SelectObject(editor_object);
+			EditorEvents.ObjectPlaced(this, editor_object_created);
+			if (editor_object_created) {
+				SelectObject(editor_object_created);
 			}
 			
-			placed_objects.Insert(editor_object);
+			placed_objects.Insert(editor_object_created);
 		}
-			
+					
 		return placed_objects;
 	}
 	

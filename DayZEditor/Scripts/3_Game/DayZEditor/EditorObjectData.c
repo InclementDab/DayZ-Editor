@@ -5,6 +5,7 @@ modded class EditorObjectData
 	protected int m_Id = EditorObjectDataId++;
 	
 	// Storing the data of networked objects. MP only
+	[NonSerialized()]
 	int m_LowBits, m_HighBits;
 	
 	override int GetID()

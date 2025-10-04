@@ -16,13 +16,19 @@ class EditorImportCommandBase: EditorCommand
 	}
 	
 	protected void OnFileSelected(string file_name, eDialogExtraSetting extra_settings)
-	{
-		if (!file_name) {
-			GetEditor().GetEditorHud().CreateNotification("No file name specified");
+	{		
+		if (!File.Exists(file_name)) {
+			GetEditor().GetEditorHud().CreateNotification(string.Format("File not found (%1)", file_name), 4.0, LinearColor.YELLOW);
+			return;
+		}
+				
+		EditorSaveData save_data = ImportFile(file_name);
+		if (!save_data) {
+			GetEditor().GetEditorHud().CreateNotification(string.Format("Invalid save data (%1)", file_name), 4.0, LinearColor.YELLOW);
 			return;
 		}
 		
-		GetEditor().LoadSaveData(ImportFile(file_name));
+		GetEditor().LoadSaveData(save_data);
 	}
 			
 	EditorSaveData ImportFile(string file_name)
