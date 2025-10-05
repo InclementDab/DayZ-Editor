@@ -2,8 +2,11 @@ modded class ActionManagerClient
 {
 	protected override void FindContextualUserActions(int pCurrentCommandID)
 	{
-		// TODO: NEEDS OPTIMIZATION (focus on UpdatePossibleActions > CraftingManager::OnUpdate)
-		
+		if (GetEditor() && GetEditor().IsActive()) {
+			return;
+		}
+
+		// TODO: NEEDS OPTIMIZATION (focus on UpdatePossibleActions > CraftingManager::OnUpdate)		
 		m_ActionsAvaibale = false;
 		if (!m_ActionPossible || HasHandInventoryReservation() || GetGame().IsInventoryOpen()) {
 			ResetInputsActions();
