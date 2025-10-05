@@ -3,11 +3,7 @@
 Mission CreateEditorMission(string path)
 {
 	Print("Creating Mission: "+ path);
-	
-#ifdef DabsLabs
-	return CreateDabsLabs(path);
-#endif
-	
+		
 	// g_Game.SetMissionPath(path); Done from C++ now
 
 	if (g_Game.IsMultiplayer() && g_Game.IsServer())
@@ -33,6 +29,10 @@ Mission CreateEditorMission(string path)
 	}
 	else
 	{
+#ifdef DabsLabs
+	return CreateDabsLabs(path);
+#endif
+		
 		if( path == "" )
 		{
 			return new MissionDummy;

@@ -5,7 +5,7 @@ class CfgPatches
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = 0.1;
-		requiredAddons[] = { "DZ_Scripts" };
+		requiredAddons[] = { "DZ_Scripts", "JM_CF_Scripts","DF_Scripts", "DZ_Gear_Navigation", "DZ_Worlds_Enoch"};
 	};
 };
 class CfgMods
