@@ -13,11 +13,14 @@ modded class DayZGame
 	
 	void DayZGame()
 	{	
-		#ifndef NO_GUI
-		delete m_loading;
-		m_loading = new EditorLoadingScreen(this);		
-		m_loading.Show();
-		#endif
+#ifndef NO_GUI
+		// Checking if someone hasnt deleted this to see if we should make our own or not
+		if (m_loading) {
+			delete m_loading;
+			m_loading = new EditorLoadingScreen(this);		
+			m_loading.Show();
+		}
+#endif
 		
 		ReportProgress("Loading Game");
 	}
@@ -127,6 +130,8 @@ modded class DayZGame
 				}
 			}
 		}
+		
+		m_CharClassNames = { "SurvivorM_Mirek", "SurvivorM_Boris", "SurvivorM_Cyril", "SurvivorM_Denis", "SurvivorM_Elias", "SurvivorM_Francis", "SurvivorM_Guo", "SurvivorM_Hassan", "SurvivorM_Indar", "SurvivorM_Jose", "SurvivorM_Kaito", "SurvivorM_Lewis", "SurvivorM_Manua", "SurvivorM_Niki", "SurvivorM_Oliver", "SurvivorM_Peter", "SurvivorM_Quinn", "SurvivorM_Rolf", "SurvivorM_Seth", "SurvivorM_Taiki", "SurvivorF_Eva", "SurvivorF_Frida", "SurvivorF_Gabi", "SurvivorF_Helga", "SurvivorF_Irena", "SurvivorF_Judy", "SurvivorF_Keiko", "SurvivorF_Linda", "SurvivorF_Maria", "SurvivorF_Naomi", "SurvivorF_Baty" };
 		
 		// For more of these to work, define CfgMissions Cutscenes ChernarusPlusIntro to the $saves dir
 		string random_map = maps.GetRandomElement();

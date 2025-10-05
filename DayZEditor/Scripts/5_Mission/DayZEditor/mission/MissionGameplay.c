@@ -14,21 +14,29 @@ modded class MissionGameplay
 	ref map<int, ref PlayerCameraData> CameraData = new map<int, ref PlayerCameraData>();
 	
 	ref map<int, ref EditorCameraMarker> CameraMarkers = new map<int, ref EditorCameraMarker>();
+	protected bool m_AutoInitializeEditor;
+		
+	void MissionGameplay()
+	{
+		m_AutoInitializeEditor = CreateEditorOnStart();
+	}
 	
 	override void OnInit()
 	{
 		super.OnInit();
-				
-		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTToggleCamera").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTToggleESP").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
-		GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
-		GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
-		GetUApi().UpdateControls();
-				
+		
+		if (m_AutoInitializeEditor) {
+			GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
+			GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
+			GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);
+			GetUApi().GetInputByName("UACOTToggleCamera").ForceDisable(true);
+			GetUApi().GetInputByName("UACOTToggleESP").ForceDisable(true);
+			GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
+			GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
+			GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
+			GetUApi().UpdateControls();
+		}
+
 		DayZGame.Event_OnRPC.Insert(OnERPC);
 	}
 	
@@ -65,7 +73,7 @@ modded class MissionGameplay
 			super.OnUpdate(timeslice);
 		}
 		
-		if (GetGame().IsMultiplayer()) {
+		if (GetEditor() && GetGame().IsMultiplayer()) {
 			foreach (int player_id, Object camera: Cameras) {
 				if (!camera) {
 					continue;
@@ -98,6 +106,7 @@ modded class MissionGameplay
 		}
 	}
 	
+	/*
 	override void ShowInventory()
 	{
 		GetGame().GetPlayer().GetHumanInventory().UnlockInventory(LOCK_FROM_SCRIPT);
@@ -109,7 +118,7 @@ modded class MissionGameplay
 	{
 		super.HideInventory();
 		m_Hud.InventoryShown = false;
-	}
+	}*/
 	
 	override void OnMissionFinish()
 	{
@@ -127,38 +136,45 @@ modded class MissionGameplay
 			return;
 		}
 
-		vector center_pos = Editor.GetMapCenterPosition();
-		vector start_pos = Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 3500);
-		PlayerBase player = Editor.CreateDefaultCharacter(GetGame().CreateRandomPlayer(), start_pos);
-		if (!player) {
-			Error("Player was not created, exiting");
-			return;
-		}
-
-		// Make sure to select player immediately so they can be controlled
-		GetGame().SelectPlayer(null, player);
-
-		g_Editor = new Editor(player);
-		g_Editor.SetActive(true);
-	}
-		
-	/*
-	override void Continue()
-	{
-		super.Continue();
-		
-		if (GetEditor().IsActive())	{
-			GetEditor().GetEditorHud().Show(true);
-		}
-	}*/
+		// In the event we handle the creation on our own
+		if (m_AutoInitializeEditor) {
+			vector center_pos = Editor.GetMapCenterPosition();
+			vector start_pos = Editor.GetSafeStartPosition(center_pos[0], center_pos[2], 3500);
+			PlayerBase player = Editor.CreateDefaultCharacter(GetGame().CreateRandomPlayer(), start_pos);
+			if (!player) {
+				Error("Player was not created, exiting");
+				return;
+			}
 	
+			// Make sure to select player immediately so they can be controlled
+			GetGame().SelectPlayer(null, player);
+	
+			g_Editor = new Editor(player);
+			g_Editor.SetActive(true);
+		}
+	}
+	
+	bool CreateEditorOnStart()
+	{
+		return true;
+	}
+			
 	override bool IsPaused()
 	{
+		if (!m_AutoInitializeEditor) {
+			return super.IsPaused();
+		}
+		
 		return m_PauseMenu != null;
 	}
 	
 	override void Pause()
 	{
+		if (!m_AutoInitializeEditor) {
+			super.Pause();
+			return;
+		}
+		
 		if (IsPaused() || m_PauseMenu)
 		{
 			return;
@@ -188,6 +204,11 @@ modded class MissionGameplay
 	
 	override void Continue()
 	{
+		if (!m_AutoInitializeEditor) {
+			super.Continue();
+			return;
+		}
+		
 		//GetGame().GetUIManager().Back();
 		
 		RemoveActiveInputExcludes({"menu"},true);
@@ -198,18 +219,7 @@ modded class MissionGameplay
 			GetEditor().GetEditorHud().Show(true);
 		}
 	}
-	
-	override void OnEvent(EventType eventTypeId, Param params)
-	{
-		super.OnEvent(eventTypeId, params);
 		
-		switch (eventTypeId)
-		{
-			case ChatMessageEventTypeID:
-				break;
-		}
-	}
-	
 	void OnERPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
 	{
 		int count, i;

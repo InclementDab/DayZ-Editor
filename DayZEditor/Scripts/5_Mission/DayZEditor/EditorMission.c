@@ -1,7 +1,12 @@
 // Mission creation framework when?
+#ifndef DF_MISSION_FRAMEWORK
 Mission CreateEditorMission(string path)
 {
 	Print("Creating Mission: "+ path);
+	
+#ifdef DabsLabs
+	return CreateDabsLabs(path);
+#endif
 	
 	// g_Game.SetMissionPath(path); Done from C++ now
 
@@ -39,6 +44,25 @@ Mission CreateEditorMission(string path)
 #endif
 	}
 }
+
+#else
+
+// MISSION FRAMEWORK NOW!!!
+[RegisterMissionType(EditorMainMenuMissionWrapper, 105)]
+class EditorMainMenuMissionWrapper: MissionWrapper
+{
+	override bool MissionLaunchCondition(string path)
+	{
+		return (path.Contains("MainMenu"));
+	}
+	
+	override Mission CreateMission(string path)
+	{
+		return new EditorMainMenuMission(path);
+	}
+}
+
+#endif
 
 class EditorMainMenuMission: MissionBase
 {

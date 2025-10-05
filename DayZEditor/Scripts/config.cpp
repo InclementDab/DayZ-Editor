@@ -5,7 +5,7 @@ class CfgPatches
 		units[] = {};
 		weapons[] = {};
 		requiredVersion = 0.1;
-		requiredAddons[] = {"DZ_Scripts","JM_CF_Scripts","DF_Scripts", "DZ_Gear_Navigation", "DZ_Worlds_Enoch"};
+		requiredAddons[] = { "DZ_Scripts" };
 	};
 };
 class CfgMods
@@ -45,17 +45,14 @@ class CfgMods
 			};
 			class engineScriptModule
 			{
-				value = "";
 				files[] = {"DayZEditor/scripts/common","DayZEditor/scripts/1_core"};
 			};
 			class gameScriptModule
 			{
-				value = "";
 				files[] = {"DayZEditor/scripts/common","DayZEditor/scripts/3_Game"};
 			};
 			class worldScriptModule
 			{
-				value = "";
 				files[] = {"DayZEditor/scripts/common","DayZEditor/scripts/4_World"};
 			};
 			class missionScriptModule
