@@ -25,17 +25,16 @@ modded class MissionGameplay
 	{
 		super.OnInit();
 		
-		if (m_AutoInitializeEditor) {
-			GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
-			GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
-			GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);
-			GetUApi().GetInputByName("UACOTToggleCamera").ForceDisable(true);
-			GetUApi().GetInputByName("UACOTToggleESP").ForceDisable(true);
-			GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
-			GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
-			GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
-			GetUApi().UpdateControls();
-		}
+/*
+		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTToggleCamera").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTToggleESP").ForceDisable(true);
+		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
+		GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
+		GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
+		GetUApi().UpdateControls();*/
 
 		DayZGame.Event_OnRPC.Insert(OnERPC);
 	}
