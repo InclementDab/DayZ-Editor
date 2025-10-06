@@ -35,27 +35,33 @@ class EditorObject: EditorWorldObject
 		
 		if (m_Data.WorldObject) {
 			SetWorldObject(m_Data.WorldObject);
-		} else {
-			if (m_LowBits == 0 && m_HighBits == 0) {
-				SetWorldObject(CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale));
-				
-				EntityAI entity2 = EntityAI.Cast(GetWorldObject());
-				if (entity2) {
-					foreach (int slot_id, EditorObjectData attachment: m_Data.AttachmentMap) {
-						entity2.GetInventory().CreateAttachmentEx(attachment.Type, slot_id);
-					}
-	
+		} 
+		// Instead of letting this object fall through and poll every frame, we register it with the manager.
+		// The manager will handle it in a single, periodic loop.
+		else if (GetGame().IsMultiplayer() && (m_LowBits != 0 || m_HighBits != 0)) 
+		{
+			GetEditor().GetObjectManager().RegisterUnresolvedObject(this);
+		} 
+		else 
+		{
+			SetWorldObject(CreateObject(m_Data.Type, m_Data.Position, m_Data.Orientation, m_Data.Scale));
+			
+			EntityAI entity2 = EntityAI.Cast(GetWorldObject());
+			if (entity2) {
+				foreach (int slot_id, EditorObjectData attachment: m_Data.AttachmentMap) {
+					entity2.GetInventory().CreateAttachmentEx(attachment.Type, slot_id);
+				}
+
 					// After we've spawned everything in teh dze file, go back and grab stuff that mightve been spawned by OnDebugSpawn
-	
-					array<EntityAI> entities = {};
-					entity2.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, entities);
-					foreach (EntityAI existing_entity: entities) {
-						InventoryLocation il_loc = new InventoryLocation();
-						existing_entity.GetInventory().GetCurrentInventoryLocation(il_loc);
-						int slot_id2 = il_loc.GetSlot();
-						if (!m_Data.AttachmentMap[slot_id2]) {
-							m_Data.AttachmentMap[slot_id2] = EditorObjectData.Create(existing_entity);
-						}
+
+				array<EntityAI> entities = {};
+				entity2.GetInventory().EnumerateInventory(InventoryTraversalType.PREORDER, entities);
+				foreach (EntityAI existing_entity: entities) {
+					InventoryLocation il_loc = new InventoryLocation();
+					existing_entity.GetInventory().GetCurrentInventoryLocation(il_loc);
+					int slot_id2 = il_loc.GetSlot();
+					if (!m_Data.AttachmentMap[slot_id2]) {
+						m_Data.AttachmentMap[slot_id2] = EditorObjectData.Create(existing_entity);
 					}
 				}
 			}
@@ -100,15 +106,14 @@ class EditorObject: EditorWorldObject
 			}	
 		}		
 		
-#ifndef DIAG_DEVELOPER
-		if (GetGame().IsMultiplayer()) {
-#endif
-			GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
-#ifndef DIAG_DEVELOPER
-		}
-#endif
-	}
-		
+// #ifndef DIAG_DEVELOPER
+// 		if (GetGame().IsMultiplayer()) {
+// #endif
+// 			GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
+// #ifndef DIAG_DEVELOPER
+// 		}
+// #endif
+	}		
 	void ~EditorObject()
 	{
 		EditorLog.Trace("~EditorObject");
@@ -185,6 +190,9 @@ class EditorObject: EditorWorldObject
 		return m_Data.Flags;
 	}
 	
+	int GetNetIdLow() { return m_LowBits; }
+	int GetNetIdHigh() { return m_HighBits; }
+
 	void SetWorldObjectNetworkId(int low, int high)
 	{
 		m_LowBits = low;

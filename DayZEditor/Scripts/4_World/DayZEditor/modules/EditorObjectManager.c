@@ -32,6 +32,9 @@ class EditorObjectManagerModule : Managed
 
 	protected ref array<EditorObject> m_SelectedObjectsOrdered = {};
 
+	// unresolved objects from savegames
+    protected ref map<string, EditorObject> m_UnresolvedObjects = new map<string, EditorObject>();
+
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dFile = new map<string, ref array<EditorPlaceableItem>>();
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dPath = new map<string, ref array<EditorPlaceableItem>>();
@@ -42,6 +45,12 @@ class EditorObjectManagerModule : Managed
 
 	void EditorObjectManagerModule(Editor editor)
 	{
+
+		// This background task will run independently of the synchronous asset loading below.
+		if (GetGame().IsMultiplayer()) {
+			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ProcessUnresolvedObjects, 250, true); // Check every 250ms
+		}
+
 		// handle config objects
 		foreach (string path: VALID_CONFIG_PATHS) {
 			for (int i = 0; i < GetGame().ConfigGetChildrenCount(path); i++) {
@@ -217,6 +226,39 @@ class EditorObjectManagerModule : Managed
 			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(UniversallightLight));
 		}
 	}
+
+    void RegisterUnresolvedObject(EditorObject obj)
+    {
+        string netIdKey = obj.GetNetIdLow().ToString() + ":" + obj.GetNetIdHigh().ToString();
+        m_UnresolvedObjects.Insert(netIdKey, obj);
+    }
+
+	void ProcessUnresolvedObjects()
+    {
+        if (m_UnresolvedObjects.Count() == 0) {
+            return; // No work to do, exit early.
+        }
+
+        // Create a temporary list of keys to remove to avoid modifying the map while iterating.
+        array<string> resolvedKeys = new array<string>();
+
+        foreach (string netIdKey, EditorObject obj : m_UnresolvedObjects)
+        {
+            Object worldObject = GetGame().GetObjectByNetworkId(obj.GetNetIdLow(), obj.GetNetIdHigh());
+            if (worldObject)
+            {
+                // The object has been replicated.
+                obj.SetWorldObject(worldObject);
+                resolvedKeys.Insert(netIdKey);
+            }
+        }
+
+        // Clean up the resolved objects from the pending map.
+        foreach (string resolvedKey : resolvedKeys)
+        {
+            m_UnresolvedObjects.Remove(resolvedKey);
+        }
+    }
 
 	// For console
 	static const ref array<string> VALID_PATHS = {
