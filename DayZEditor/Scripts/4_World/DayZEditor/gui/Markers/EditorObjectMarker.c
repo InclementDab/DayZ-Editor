@@ -48,6 +48,7 @@ class EditorObjectMarker: EditorMarker
 				}
 				
 				CheckDragBounds(x, y);
+				SetHighlighted(2);
 				break;
 			}
 		}

@@ -101,10 +101,12 @@ modded class DayZGame
 		GetPlayerName(name);
 		name.ToLower();
 
+#ifndef DIAG_DEVELOPER
 		// change name if default
 		if (name == "survivor") {
 			SetPlayerName(GetUniqueEditorName());
 		}
+#endif
 
 		// vanilla
 		ParticleList.PreloadParticles();
