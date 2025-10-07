@@ -202,7 +202,7 @@ class EditorObject: EditorWorldObject
 	override void SetWorldObject(Object object)
 	{		
 		super.SetWorldObject(object);
-												
+									
 		ShowBoundingBox();
 		
 		// Map marker
@@ -441,14 +441,23 @@ class EditorObject: EditorWorldObject
 		OnUpdated.Invoke();
 	}
 	
-	void UpdateNet()
+	void UpdateNet(bool transformOnly = true)
 	{
 		if (GetGame().IsMultiplayer()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Write(1);
 			rpc.Write(Uuid);
-			GetData().Write(rpc, int.MAX);
-			rpc.Send(null, 39254, true);
+			
+			if (transformOnly)
+			{
+				rpc.Write(GetPosition());
+				rpc.Write(GetOrientation());
+				rpc.Write(GetScale());
+				rpc.Send(null, 39263, true);
+			} else {
+				GetData().Write(rpc, int.MAX);
+				rpc.Send(null, 39254, true);
+			}
 		}
 	}
 	
