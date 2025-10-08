@@ -218,6 +218,7 @@ modded class MissionGameplay
 			g_Editor.SetActive(true);
 			m_IsEditorInitialized = true;
 			m_IsEditorActivated = true;
+			m_CachedEditor = g_Editor;
 		}
 	}
 	
