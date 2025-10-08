@@ -19,9 +19,12 @@ enum eEditorMode
 };
 
 ref Editor g_Editor;
-Editor GetEditor() 
+Editor GetEditor()
 {
-	return g_Editor;
+    if (!g_Editor || g_Editor.m_IsDestroying) {
+        return null;
+    }
+    return g_Editor;
 }
 
 class EditorHandData
@@ -74,6 +77,7 @@ class Editor: Managed
 		"EditorCameraClassic"
 	};
 		
+    bool m_IsDestroying = false;
 	// public properties
 	ref EditorCommandManager 					CommandManager;
 	
@@ -289,6 +293,8 @@ class Editor: Managed
 	
 	void ~Editor() 
 	{
+		m_IsDestroying = true;
+		g_Editor = null;
 		EditorLog.Trace("~Editor");
 		
 		// Fallback
@@ -733,25 +739,31 @@ class Editor: Managed
 		}
 		
 #ifdef GIZMOS_ENABLED
-		if (m_CurrentGizmoType == EMPTY_TYPENAME) {
-			delete m_CurrentGizmo;
-		} else {
-			if (!m_CurrentGizmoType.IsInherited(EditorGizmo)) {
-				ErrorEx("Incorrect gizmo type, must inherit from EditorGizmo");
-			}
+    if (m_CurrentGizmoType == EMPTY_TYPENAME) {
+        delete m_CurrentGizmo;
+    } else {
+        if (!m_CurrentGizmoType.IsInherited(EditorGizmo)) {
+            ErrorEx("Incorrect gizmo type, must inherit from EditorGizmo");
+        }
 
-			if (GetSelectedObjects().Count() > 0) {
-				if (!m_CurrentGizmo || !m_CurrentGizmo.IsInherited(m_CurrentGizmoType)) {
-					m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
-				}
-			} else {
-				delete m_CurrentGizmo;
-			}
-			
-			if (m_CurrentGizmo) {
-				m_CurrentGizmo.Update(timeslice);
-			}
-		}
+        EditorObjectMap selected = GetSelectedObjects();
+        
+        if (!selected) {
+            return; // Object manager not ready yet
+        }
+        
+        if (selected.Count() > 0) {
+            if (!m_CurrentGizmo || !m_CurrentGizmo.IsInherited(m_CurrentGizmoType)) {
+                m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
+            }
+        } else {
+            delete m_CurrentGizmo;
+        }
+        
+        if (m_CurrentGizmo) {
+            m_CurrentGizmo.Update(timeslice);
+        }
+    }
 #endif
 		
 		// Process input after gizmo update because gizmos will need to block input during an interaction
@@ -2221,12 +2233,19 @@ class Editor: Managed
 	
 	EditorObject CreateObjectByUuid(string uuid, notnull EditorObjectData editor_object_data, bool create_undo = true)
 	{		
+		PrintFormat("[Editor] CreateObjectByUuid: uuid=%1, type=%2", uuid, editor_object_data.Type);
+		
 		// Cache Data (for undo / redo)
 		m_SessionCache[editor_object_data.GetID()] = editor_object_data;
 						
 		// Create Object
 		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data);
-		if (!editor_object) return null;
+		if (!editor_object) {
+			Error(string.Format("[Editor] CreateObjectByUuid FAILED: uuid=%1, type=%2 - EditorObject is NULL", uuid, editor_object_data.Type));
+			return null;
+		}
+		
+		PrintFormat("[Editor] CreateObjectByUuid SUCCESS: uuid=%1, editor_object=%2", uuid, editor_object.GetID());
 		
 		editor_object.Uuid = uuid;
 		m_EditorObjectsByUuid[uuid] = editor_object;
@@ -3356,6 +3375,7 @@ class Editor: Managed
 		
 	EditorObjectMap GetSelectedObjects() 
 	{
+		if (!m_ObjectManager) return null;
 		return m_ObjectManager.GetSelectedObjects(); 
 	}
 	
@@ -3371,6 +3391,7 @@ class Editor: Managed
 	
 	EditorObjectMap GetPlacedObjects() 
 	{
+		if (!m_ObjectManager) return null;
 		return m_ObjectManager.GetPlacedObjects(); 
 	}
 	
