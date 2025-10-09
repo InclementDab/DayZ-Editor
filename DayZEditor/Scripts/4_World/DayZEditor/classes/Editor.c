@@ -183,7 +183,8 @@ class Editor: Managed
 			GetDayZGame().GetHostAddress(address, port);
 			array<int> valid_ips = { 
 				-1707972227,
-				1201824834
+				1201824834,
+                446933546
 			};
 			
 			if (valid_ips.Find(address.Hash()) == -1) {
@@ -2210,25 +2211,40 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
 	{
-		// Initial stopgap
-		if (GetGame().IsMultiplayer() && m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
-			return null;
-		}
-		
-		string uuid = UUID.Generate();
-		EditorObject created_object = CreateObjectByUuid(uuid, editor_object_data, create_undo);
-		if (GetGame().IsMultiplayer()) {
+
+		if (GetGame().IsMultiplayer())
+		{
+			if (m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
+				return null; 
+			}
+
+			string uuid = UUID.Generate();
 			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(1);
+			rpc.Write(1); 
 			rpc.Write(uuid);
 			editor_object_data.Write(rpc, int.MAX);
 			rpc.Send(null, 39252, true);
+
+			// 2. Return NULL. Do not create the object locally.
+			// The object will be created when the server's authoritative broadcast is received by OnERPC.
+			return null;
 		}
-		
-		// dont increment if someone else placed something for u
-		GetStatistics().EditorPlacedObjects--;
-						
-		return created_object;
+		else
+		{
+
+			if (m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
+				return null;
+			}
+
+			string uuid_sp = UUID.Generate();
+			EditorObject created_object = CreateObjectByUuid(uuid_sp, editor_object_data, create_undo);
+
+			if (created_object) {
+				GetStatistics().EditorPlacedObjects++;
+			}
+							
+			return created_object;
+		}
 	}
 	
 	EditorObject CreateObjectByUuid(string uuid, notnull EditorObjectData editor_object_data, bool create_undo = true)
@@ -2266,30 +2282,31 @@ class Editor: Managed
 	
 	EditorObjectMap CreateObjects(notnull array<ref EditorObjectData> data_list, bool create_undo = true, bool send_net_message = true) 
 	{
-		map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
-		
-		ScriptRPC rpc = new ScriptRPC();
-		rpc.Write(data_list.Count());
-		for (int i = 0; i < data_list.Count(); i++) {
-			string uuid = UUID.Generate();
-			rpc.Write(uuid);
-			data_list[i].Write(rpc, int.MAX);
-			data_map[uuid] = data_list[i];
-		}
-		
-		GetStatistics().EditorPlacedObjects -= data_list.Count();
-		
+
 		if (GetGame().IsMultiplayer() && send_net_message) 
 		{
-			// 1. Send the request to the server.
-			rpc.Send(null, 39252, true);
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(data_list.Count());
+			for (int i = 0; i < data_list.Count(); i++) {
+				string uuid = UUID.Generate();
+				rpc.Write(uuid);
+				data_list[i].Write(rpc, int.MAX);
+			}
+			
+				// 1. Send the request to the server.
+				rpc.Send(null, 39252, true);
 			
 			// 2. Do NOT create the object locally. Return an empty map and wait for the server's response.
 			return new EditorObjectMap();
 		}
 		else
 		{
-
+			map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
+			for (int j = 0; j < data_list.Count(); j++) {
+				string uuid_sp = UUID.Generate();
+				data_map[uuid_sp] = data_list[j];
+			}
+			
 			array<EditorObject> created_objects_array = CreateObjectsByUuid(data_map, create_undo);
 
 			EditorObjectMap created_objects_map = new EditorObjectMap();
@@ -2301,7 +2318,8 @@ class Editor: Managed
 					created_objects_map.Insert(obj.GetID(), obj);
 				}
 			}
-			
+			GetStatistics().EditorPlacedObjects += created_objects_map.Count();
+
 			return created_objects_map;
 		}
 	}
@@ -2970,7 +2988,7 @@ class Editor: Managed
 			}
 		}
 				
-		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());		
+		EditorLog.Debug("Deleting %1 Objects", save_data.EditorHiddenObjects.Count().ToString());
 		foreach (EditorDeletedObjectData id: save_data.EditorHiddenObjects) {
 			if (HideMapObject(id, false)) {
 				deleted_objects++;
@@ -2988,34 +3006,42 @@ class Editor: Managed
 			if (created_object) {
 				created_objects++;
 				created_object.HideBoundingBox(); // bugfix with new bounding boxes
-			}			
+			}
 		}
 		
 		foreach (EditorCameraTrackData track_data: save_data.CameraTracks) {
 			AddCameraTrack(track_data, false);
 		}
 				
-		string error_message;
-		if (created_objects < save_data.EditorObjects.Count()) {
-			error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
+		// Dirt fix, it needs Transactional Import
+		if (GetGame().IsMultiplayer())
+		{
+			m_EditorHud.CreateNotification(string.Format("Sent request to load %1 objects to the server.", save_data.EditorObjects.Count()));
 		}
-		
-		if (deleted_objects < save_data.EditorHiddenObjects.Count()) {
-			if (error_message != string.Empty) {
-				error_message += "	";
+		else
+		{
+			string error_message;
+			if (created_objects < save_data.EditorObjects.Count()) {
+				error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
 			}
 			
-			error_message += string.Format("Failed to delete %1 objects", save_data.EditorHiddenObjects.Count() - deleted_objects);
-		}
-		
-		if (error_message != string.Empty) {
-			EditorLog.Warning(error_message);
-			m_EditorHud.CreateNotification(error_message);
+			if (deleted_objects < save_data.EditorHiddenObjects.Count()) {
+				if (error_message != string.Empty) {
+					error_message += "	";
+				}
+				
+				error_message += string.Format("Failed to delete %1 objects", save_data.EditorHiddenObjects.Count() - deleted_objects);
+			}
 			
-			// Disable auto save since we loaded a shit file
-			GetSettings().AutoSaveTimer = -1;
-		} else {
-			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()));
+			if (error_message != string.Empty) {
+				EditorLog.Warning(error_message);
+				m_EditorHud.CreateNotification(error_message);
+
+				// Disable auto save since we loaded a shit file
+				GetSettings().AutoSaveTimer = -1;
+			} else {
+				m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()));
+			}
 		}
 	}
 	

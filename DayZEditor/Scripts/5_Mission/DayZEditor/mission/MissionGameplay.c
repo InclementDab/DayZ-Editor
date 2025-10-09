@@ -396,7 +396,7 @@ modded class MissionGameplay
 			}
 
 	case 39252: { // OBJECT_CREATE
-		if (sender) 
+		if (sender && sender.GetId() == GetGame().GetPlayer().GetIdentity().GetId())
 		{
 			return; 
 		}
