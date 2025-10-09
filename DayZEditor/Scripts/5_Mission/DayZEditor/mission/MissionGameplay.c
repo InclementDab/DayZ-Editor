@@ -47,7 +47,7 @@ modded class MissionGameplay
 	void SendSyncComplete()
 	{
 		ScriptRPC sync_complete_rpc = new ScriptRPC();
-		sync_complete_rpc.Send(null, 39264, true); // 39264 is CLIENT_SYNC_COMPLETE
+		sync_complete_rpc.Send(null, EditorRPC.CLIENT_SYNC_COMPLETE, true);
 		Print("[Editor Client] Initial synchronization appears complete. Notifying server.");
 	}
 	
@@ -319,22 +319,36 @@ modded class MissionGameplay
 			return;
 		}
 
-		// Guard: Only EDITOR_CREATE can proceed before initialization
-		switch (rpc_type) {
-			case 39262: // PLAYER_JOINED
-			case 39251: // EDITOR_DESTROY  
-			case 39260: // SERVER_CHAT
-				if (!m_IsEditorActivated) {
-	PrintFormat("[EDITOR DEBUG] >>> RPC %1 BLOCKED - EditorHud not ready", rpc_type);
-					return;
-				}
-				break;
+		bool isInitialized = m_IsEditorInitialized;
+		bool isActivated = m_IsEditorActivated;
+
+		if (rpc_type != EditorRPC.EDITOR_CREATE)
+		{
+			if (!isInitialized)
+			{
+	PrintFormat("[EDITOR DEBUG] >>> RPC %1 BLOCKED - Editor not initialized", rpc_type);
+				return;
+			}
+
+			// Defer UI-related RPCs until the HUD is fully active
+			switch (rpc_type)
+			{
+				case EditorRPC.PLAYER_JOINED:
+				case EditorRPC.EDITOR_DESTROY:
+				case EditorRPC.SERVER_CHAT:
+					if (!isActivated)
+					{
+		PrintFormat("[EDITOR DEBUG] >>> UI RPC %1 BLOCKED - Editor not activated", rpc_type);
+						return;
+					}
+					break;
+			}
 		}
 
 	PrintFormat("[EDITOR DEBUG] >>> Processing RPC %1...", rpc_type);
 
 		switch (rpc_type) {
-			case 39250: { // EDITOR_CREATE
+			case EditorRPC.EDITOR_CREATE: {
 	PrintFormat("[EDITOR DEBUG] ========== EDITOR_CREATE RPC ==========");
 				
 				PlayerBase player;
@@ -367,7 +381,7 @@ modded class MissionGameplay
 				break;
 			}
 
-			case 39262: { // PLAYER_JOINED
+			case EditorRPC.PLAYER_JOINED: {
 	PrintFormat("[EDITOR DEBUG] === PLAYER_JOINED RPC ===");
 				
 				if (!GetEditor() || !GetEditor().GetEditorHud()) {
@@ -395,61 +409,61 @@ modded class MissionGameplay
 				break;
 			}
 
-	case 39252: { // OBJECT_CREATE
-		if (sender && sender.GetId() == GetGame().GetPlayer().GetIdentity().GetId())
-		{
-			return; 
-		}
-		PrintFormat("[EDITOR DEBUG] === OBJECT_CREATE RPC (from SERVER) ===");
-		ctx.Read(count);
-		PrintFormat("[EDITOR DEBUG] Creating %1 objects", count);
-		
-		map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
-		
-		for (i = 0; i < count; i++) {
-			ctx.Read(uuid);
+			case EditorRPC.OBJECT_CREATE: {
+				if (sender && sender.GetId() == GetGame().GetPlayer().GetIdentity().GetId())
+				{
+					return; 
+				}
+	PrintFormat("[EDITOR DEBUG] === OBJECT_CREATE RPC (from SERVER) ===");
+				ctx.Read(count);
+	PrintFormat("[EDITOR DEBUG] Creating %1 objects", count);
+				
+				map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
+				
+				for (i = 0; i < count; i++) {
+					ctx.Read(uuid);
 
-			int low, high;
-			ctx.Read(low);
-			ctx.Read(high);
-			
-			EditorObjectData dta = new EditorObjectData();
-			dta.Read(ctx, int.MAX);
+					int low, high;
+					ctx.Read(low);
+					ctx.Read(high);
+					
+					EditorObjectData dta = new EditorObjectData();
+					dta.Read(ctx, int.MAX);
 
-			dta.m_LowBits = low;
-			dta.m_HighBits = high;
+					dta.m_LowBits = low;
+					dta.m_HighBits = high;
 
-			dta.WorldObject = GetGame().GetObjectByNetworkId(low, high);
+					dta.WorldObject = GetGame().GetObjectByNetworkId(low, high);
 
-			data_map[uuid] = dta;
-		}
-		
-		if (!GetEditor()) {
-		PrintFormat("[EDITOR DEBUG] >>> BLOCKED - Editor not ready");
-			return;
-		}
-		
+					data_map[uuid] = dta;
+				}
+				
+				if (!GetEditor()) {
+	PrintFormat("[EDITOR DEBUG] >>> BLOCKED - Editor not ready");
+					return;
+				}
 
-		array<EditorObject> created_objects = GetEditor().CreateObjectsByUuid(data_map, false);
+				
+				array<EditorObject> created_objects = GetEditor().CreateObjectsByUuid(data_map, false);
 
-		foreach(EditorObject created_obj : created_objects)
-		{
-			if (created_obj && !created_obj.GetWorldObject())
-			{
-				GetEditor().GetObjectManager().RegisterUnresolvedObject(created_obj);
-				Print("[Editor Client] RC detected for UUID " + created_obj.Uuid + ". Handed off to unresolved manager.");
+				foreach(EditorObject created_obj : created_objects)
+				{
+					if (created_obj && !created_obj.GetWorldObject())
+					{
+						GetEditor().GetObjectManager().RegisterUnresolvedObject(created_obj);
+						Print("[Editor Client] RC detected for UUID " + created_obj.Uuid + ". Handed off to unresolved manager.");
+					}
+				}
+				
+				if (m_IsEditorInitialized) {
+					m_syncDebounceTimer = SYNC_COMPLETE_DEBOUNCE_TIME;
+				}
+				
+	PrintFormat("[EDITOR DEBUG] Objects created successfully");
+				break;
 			}
-		}
-		
-		if (m_IsEditorInitialized) {
-			m_syncDebounceTimer = SYNC_COMPLETE_DEBOUNCE_TIME;
-		}
-		
-		PrintFormat("[EDITOR DEBUG] Objects created successfully");
-		break;
-	}
 
-			case 39253: { // OBJECT_DELETE
+			case EditorRPC.OBJECT_DELETE: {
 	PrintFormat("[EDITOR DEBUG] === OBJECT_DELETE RPC ===");
 				ctx.Read(count);
 	PrintFormat("[EDITOR DEBUG] Deleting %1 objects", count);
@@ -470,7 +484,7 @@ modded class MissionGameplay
 				break;
 			}
 
-			case 39254: { // OBJECT_UPDATE
+			case EditorRPC.OBJECT_UPDATE: {
 	PrintFormat("[EDITOR DEBUG] === OBJECT_UPDATE RPC ===");
 				ctx.Read(count);
 	PrintFormat("[EDITOR DEBUG] Updating %1 objects", count);
@@ -481,7 +495,7 @@ modded class MissionGameplay
 					dta2.Read(ctx, int.MAX);
 					
 					if (!GetEditor()) {
-	PrintFormat("[EDITOR DEBUG] >>> BLOCKED - Editor not ready (iteration %1)", i);
+		PrintFormat("[EDITOR DEBUG] >>> BLOCKED - Editor not ready (iteration %1)", i);
 						continue;
 					}
 					
@@ -491,8 +505,48 @@ modded class MissionGameplay
 	PrintFormat("[EDITOR DEBUG] Objects updated successfully");
 				break;
 			}
+			
+			case EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED: {
+				auto stream = new CF_SerializerReadStream(ctx);
+				auto reader = new CF_BinaryReader(stream);
+	
+				int objectCount = reader.ReadInt();
+				
+				if (!GetEditor())
+				{
+					reader.Close();
+					return;
+				}
+				
+				int packedData[4];
+				vector pos, ori;
+				float scale;
+	
+				for (i = 0; i < objectCount; ++i)
+				{
+					if (reader.Position() + 20 > reader.Length()) break; // Safety check for malformed packet
 
-			case 39255: { // OBJECT_HIDE
+					int id = reader.ReadInt();
+					packedData[0] = reader.ReadInt();
+					packedData[1] = reader.ReadInt();
+					packedData[2] = reader.ReadInt();
+					packedData[3] = reader.ReadInt();
+	
+					EditorObject obj = GetEditor().GetEditorObject(id);
+					if (obj)
+					{
+						EditorNetUtils.UnpackTransform(packedData, pos, ori, scale);
+						obj.SetPosition(pos);
+						obj.SetOrientation(ori);
+						obj.SetScale(scale);
+					}
+				}
+	
+				reader.Close();
+				break;
+			}
+
+			case EditorRPC.OBJECT_HIDE: {
 	PrintFormat("[EDITOR DEBUG] === OBJECT_HIDE RPC ===");
 				ctx.Read(count);
 	PrintFormat("[EDITOR DEBUG] Hiding %1 objects", count);
@@ -522,7 +576,7 @@ modded class MissionGameplay
 				break;
 			}
 
-			case 39256: { // OBJECT_UNHIDE
+			case EditorRPC.OBJECT_UNHIDE: {
 	PrintFormat("[EDITOR DEBUG] === OBJECT_UNHIDE RPC ===");
 				ctx.Read(count);
 	PrintFormat("[EDITOR DEBUG] Unhiding %1 objects", count);
@@ -543,7 +597,7 @@ modded class MissionGameplay
 				break;
 			}
 
-			case 39257: { // CAMERA_UPDATE
+			case EditorRPC.CAMERA_UPDATE: {
 				int player_id;
 				float camera_quat[4];
 				vector camera_pos;
@@ -562,7 +616,7 @@ modded class MissionGameplay
 				break;
 			}
 
-			case 39251: { // EDITOR_DESTROY
+			case EditorRPC.EDITOR_DESTROY: {
 	PrintFormat("[EDITOR DEBUG] === EDITOR_DESTROY RPC ===");
 				
 				if (!GetEditor() || !GetEditor().GetEditorHud()) {
@@ -575,7 +629,7 @@ modded class MissionGameplay
 	PrintFormat("[EDITOR DEBUG] Destroying editor for player %1", player_id2);
 				
 				if (Cameras[player_id2]) {
-					Cameras[player_id2].Delete();
+					GetGame().ObjectDelete(Cameras[player_id2]);
 					Cameras.Remove(player_id2);
 				}
 				
@@ -597,7 +651,7 @@ modded class MissionGameplay
 				break;
 			}
 
-			case 39260: { // SERVER_CHAT
+			case EditorRPC.SERVER_CHAT: {
 	PrintFormat("[EDITOR DEBUG] === SERVER_CHAT RPC ===");
 				
 				if (!GetEditor() || !GetEditor().GetEditorHud()) {

@@ -170,6 +170,8 @@ class EditorGizmo: Managed
 #endif
 		
 		m_AllSelectedObjects = GetEditor().GetSelectedObjectsOrdered();
+		if (m_AllSelectedObjects.Count() == 0) return;
+
 		m_TopSelectedObject = m_AllSelectedObjects[m_AllSelectedObjects.Count() - 1];
 		if (!m_TopSelectedObject || m_AllSelectedObjects.Count() == 0) {
 			//m_InteractionIndex = -1;
@@ -324,6 +326,35 @@ class EditorGizmo: Managed
 			}
 			
 			GetEditor().InsertAction(m_RewindAction);
+
+			// NETWORKING LOGIC 
+			if (GetGame().IsMultiplayer())
+			{
+				ScriptRPC rpc = new ScriptRPC();
+				auto stream = new CF_SerializerWriteStream(rpc);
+				auto writer = new CF_BinaryWriter(stream);
+
+				int objectCount = m_AllSelectedObjects.Count();
+				writer.WriteInt(objectCount);
+
+				int packedData[4];
+				for (int i = 0; i < objectCount; ++i)
+				{
+					EditorObject obj = m_AllSelectedObjects[i];
+					if (!obj) continue;
+					
+					EditorNetUtils.PackTransform(obj.GetPosition(), obj.GetOrientation(), obj.GetScale(), packedData);
+					
+					writer.WriteInt(obj.GetID());
+					writer.WriteInt(packedData[0]);
+					writer.WriteInt(packedData[1]);
+					writer.WriteInt(packedData[2]);
+					writer.WriteInt(packedData[3]);
+				}
+
+				writer.Close();
+				rpc.Send(null, EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED, true);
+			}
 		}
 		
 		m_VisibleSortedInteractions.Clear();
