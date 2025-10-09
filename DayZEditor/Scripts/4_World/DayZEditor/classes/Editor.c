@@ -2279,16 +2279,36 @@ class Editor: Managed
 		
 		GetStatistics().EditorPlacedObjects -= data_list.Count();
 		
-		if (GetGame().IsMultiplayer() && send_net_message) {
+		if (GetGame().IsMultiplayer() && send_net_message) 
+		{
+			// 1. Send the request to the server.
 			rpc.Send(null, 39252, true);
+			
+			// 2. Do NOT create the object locally. Return an empty map and wait for the server's response.
+			return new EditorObjectMap();
 		}
-				
-		return CreateObjectsByUuid(data_map, create_undo);
+		else
+		{
+
+			array<EditorObject> created_objects_array = CreateObjectsByUuid(data_map, create_undo);
+
+			EditorObjectMap created_objects_map = new EditorObjectMap();
+
+			foreach (EditorObject obj : created_objects_array)
+			{
+				if (obj)
+				{
+					created_objects_map.Insert(obj.GetID(), obj);
+				}
+			}
+			
+			return created_objects_map;
+		}
 	}
 		
-	EditorObjectMap CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
+	array<EditorObject> CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
 	{
-		EditorObjectMap object_set = new EditorObjectMap();
+		array<EditorObject> processed_objects = new array<EditorObject>();
 		EditorAction action = new EditorAction("Delete", "Create");
 		
 		foreach (string uuid, EditorObjectData editor_object_data: data_list) {
@@ -2315,9 +2335,12 @@ class Editor: Managed
 				
 				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
+
+				processed_objects.Insert(m_EditorObjectsByUuid[uuid]);
+
 				continue;
 			}
-						
+												
 			// Create a copy to avoid reference loss
 			// todo:
 			//EditorObjectData editor_object_data_copy = editor_object_data.CreateCopy();
@@ -2330,21 +2353,22 @@ class Editor: Managed
 			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 			
-			object_set.Insert(editor_object.GetID(), editor_object);
-
 			editor_object.Uuid = uuid;
 			m_EditorObjectsByUuid[uuid] = editor_object;
 			
 			GetStatistics().EditorPlacedObjects++;
+
+			processed_objects.Insert(editor_object);
+
 		}
 		
 		if (create_undo) {
 			InsertAction(action);
 		}
 		
-		return object_set;
-	}
-		
+		return processed_objects;
+	}	
+
 	bool DeleteObject(notnull EditorObject editor_object, bool create_undo = true, bool send_net_message = true) 
 	{
 		if (editor_object.GetFlags() & EditorObjectFlags.NODELETE) {

@@ -395,45 +395,59 @@ modded class MissionGameplay
 				break;
 			}
 
-			case 39252: { // OBJECT_CREATE
-	PrintFormat("[EDITOR DEBUG] === OBJECT_CREATE RPC ===");
-				ctx.Read(count);
-	PrintFormat("[EDITOR DEBUG] Creating %1 objects", count);
-				
-				map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
-				
-				for (i = 0; i < count; i++) {
-					ctx.Read(uuid);
+	case 39252: { // OBJECT_CREATE
+		if (sender) 
+		{
+			return; 
+		}
+		PrintFormat("[EDITOR DEBUG] === OBJECT_CREATE RPC (from SERVER) ===");
+		ctx.Read(count);
+		PrintFormat("[EDITOR DEBUG] Creating %1 objects", count);
+		
+		map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
+		
+		for (i = 0; i < count; i++) {
+			ctx.Read(uuid);
 
-					int low, high;
-					ctx.Read(low);
-					ctx.Read(high);
-					
-					EditorObjectData dta = new EditorObjectData();
-					dta.Read(ctx, int.MAX);
+			int low, high;
+			ctx.Read(low);
+			ctx.Read(high);
+			
+			EditorObjectData dta = new EditorObjectData();
+			dta.Read(ctx, int.MAX);
 
-					dta.m_LowBits = low;
-					dta.m_HighBits = high;
+			dta.m_LowBits = low;
+			dta.m_HighBits = high;
 
-					dta.WorldObject = GetGame().GetObjectByNetworkId(low, high);
+			dta.WorldObject = GetGame().GetObjectByNetworkId(low, high);
 
-					data_map[uuid] = dta;
-				}
-				
-				if (!GetEditor()) {
-	PrintFormat("[EDITOR DEBUG] >>> BLOCKED - Editor not ready");
-					return;
-				}
-				
-				GetEditor().CreateObjectsByUuid(data_map, false);
-				
-				if (m_IsEditorInitialized) {
-					m_syncDebounceTimer = SYNC_COMPLETE_DEBOUNCE_TIME;
-				}
-				
-	PrintFormat("[EDITOR DEBUG] Objects created successfully");
-				break;
+			data_map[uuid] = dta;
+		}
+		
+		if (!GetEditor()) {
+		PrintFormat("[EDITOR DEBUG] >>> BLOCKED - Editor not ready");
+			return;
+		}
+		
+
+		array<EditorObject> created_objects = GetEditor().CreateObjectsByUuid(data_map, false);
+
+		foreach(EditorObject created_obj : created_objects)
+		{
+			if (created_obj && !created_obj.GetWorldObject())
+			{
+				GetEditor().GetObjectManager().RegisterUnresolvedObject(created_obj);
+				Print("[Editor Client] RC detected for UUID " + created_obj.Uuid + ". Handed off to unresolved manager.");
 			}
+		}
+		
+		if (m_IsEditorInitialized) {
+			m_syncDebounceTimer = SYNC_COMPLETE_DEBOUNCE_TIME;
+		}
+		
+		PrintFormat("[EDITOR DEBUG] Objects created successfully");
+		break;
+	}
 
 			case 39253: { // OBJECT_DELETE
 	PrintFormat("[EDITOR DEBUG] === OBJECT_DELETE RPC ===");
