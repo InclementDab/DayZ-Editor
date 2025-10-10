@@ -3,16 +3,15 @@
 Mission CreateEditorMission(string path)
 {
 	Print("Creating Mission: "+ path);
-		
-	if (path.Contains("MainMenu"))
-	{
-		//EditorMainMenuMission mm = new EditorMainMenuMission(path);
-		//return mm;
-	}
-	
+			
 #ifdef DabsLabs
 	return CreateDabsLabs(path);
 #endif
+	
+	if (path.Contains("MainMenu"))
+	{
+		return new EditorMainMenuMission(path);
+	}
 
 	if (g_Game.IsMultiplayer() && g_Game.IsServer())
 	{
@@ -29,10 +28,7 @@ Mission CreateEditorMission(string path)
 		m.m_NoCutscene = true;
 		return m;
 	}
-	
-
-	
-	
+		
 	if( path == "" )
 	{
 		return new MissionDummy;
