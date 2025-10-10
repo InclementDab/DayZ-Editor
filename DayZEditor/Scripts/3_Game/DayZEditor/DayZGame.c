@@ -89,6 +89,7 @@ modded class DayZGame
 		return GetProfileName();
 	}
 	
+#ifndef DabsLabs
 	override bool OnInitialize()
 	{
 		// this will never happen, maybe requestexit -1 
@@ -181,6 +182,7 @@ modded class DayZGame
 		
 		return true;
 	}
+#endif
 			
 	void ReportProgress(string report)
 	{
