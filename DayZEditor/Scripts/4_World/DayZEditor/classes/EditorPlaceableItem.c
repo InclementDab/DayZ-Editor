@@ -5,7 +5,7 @@ enum EditorPlaceableItemCategory
 	SCRIPTED = 2
 }
 
-class EditorPlaceableItem : Managed
+class EditorPlaceableItem : EditorLeafNode
 {
 	int Scope;
 	string Name;
@@ -15,10 +15,8 @@ class EditorPlaceableItem : Managed
 	
 	bool ScriptedType;
 	bool ConsoleFriendly;
-
-	private void EditorPlaceableItem()
-	{
-	}
+	
+	protected string m_SearchString1, m_SearchString2;
 	
 	bool IsFavorite()
 	{
@@ -57,6 +55,12 @@ class EditorPlaceableItem : Managed
 		placeable_item.Path = p3d_file;
 		placeable_item.Name = File.GetName(p3d_file);
 		placeable_item.Category = EditorPlaceableItemCategory.STATIC;
+		
+		placeable_item.m_SearchString1 = placeable_item.Type;
+		placeable_item.m_SearchString2 = placeable_item.Name;
+		placeable_item.m_SearchString1.ToLower();
+		placeable_item.m_SearchString2.ToLower();
+		
 		return placeable_item;
 	}
 
@@ -67,6 +71,12 @@ class EditorPlaceableItem : Managed
 		placeable_item.Path = config_path;
 		placeable_item.Type = config_type;
 		placeable_item.Name = config_type;
+		
+		placeable_item.m_SearchString1 = placeable_item.Type;
+		placeable_item.m_SearchString2 = placeable_item.Name;
+		placeable_item.m_SearchString1.ToLower();
+		placeable_item.m_SearchString2.ToLower();
+		
 		placeable_item.Category = EditorPlaceableItemCategory.CONFIG;
 
 		return placeable_item;
@@ -82,6 +92,12 @@ class EditorPlaceableItem : Managed
 		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
 		placeable_item.ConsoleFriendly = console_friendly;
 		placeable_item.ScriptedType = 1;
+		
+		placeable_item.m_SearchString1 = placeable_item.Type;
+		placeable_item.m_SearchString2 = placeable_item.Name;
+		placeable_item.m_SearchString1.ToLower();
+		placeable_item.m_SearchString2.ToLower();
+		
 		return placeable_item;
 	}
 
@@ -176,5 +192,24 @@ class EditorPlaceableItem : Managed
 		}
 		
 		return GetDayZGame().ConfigGetTextOut(string.Format("%1 %2 model", Path, Type));
+	}
+	
+	override bool FilterType(string filter, bool favorites)
+	{
+		if (!filter && !favorites) {
+			return true;
+		}
+		
+		bool matches_filter = (m_SearchString1.Contains(filter) || m_SearchString2.Contains(filter) || !filter);
+		if (favorites) {
+			return (matches_filter && GetEditor().GetSettings().FavoriteItems.Find(Type) != -1);
+		}
+		
+		return matches_filter;
+	}
+	
+	override EditorListNode CreateTreeItem()
+	{
+		return new EditorPlaceableListNode(this);
 	}
 }

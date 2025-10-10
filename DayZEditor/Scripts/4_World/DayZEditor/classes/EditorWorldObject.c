@@ -1,4 +1,4 @@
-class EditorWorldObject: Managed
+class EditorWorldObject: EditorNode
 {
 	protected vector m_LineCenters[12]; 
 	protected vector m_LineVerticies[8];

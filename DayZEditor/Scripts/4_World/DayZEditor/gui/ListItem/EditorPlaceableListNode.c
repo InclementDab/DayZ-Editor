@@ -1,27 +1,87 @@
+class EditorNode: Managed
+{
+	ref ScriptInvoker Event_OnChildAdded = new ScriptInvoker();
+	
+	EditorNode Parent;
+	EditorListNode NodeView;
+	Widget RootWidget;
+	ref array<ref EditorNode> Nodes = {};
+	
+	void AddNode(notnull EditorNode node)
+	{
+		Nodes.Insert(node);
+		node.Parent = this;
+		Event_OnChildAdded.Invoke(node);
+	}
+	
+	bool FilterType(string filter, bool favorites)
+	{
+	}
+		
+	EditorListNode CreateTreeItem()
+	{
+		return null;
+	}
+}
+
+class EditorDirectoryNode: EditorNode
+{
+	protected string m_Name;
+	protected string m_SearchString;
+	
+	void EditorDirectoryNode(string name)
+	{
+		m_Name = name;
+		m_SearchString = m_Name;
+		m_SearchString.ToLower();
+	}
+	
+	string GetName()
+	{
+		return m_Name;
+	}
+	
+	override bool FilterType(string filter, bool favorites)
+	{
+		return m_SearchString.Contains(filter);
+	}
+	
+	override EditorListNode CreateTreeItem()
+	{
+		return new EditorFolderListNode(this);
+	}
+}
+
+class EditorLeafNode: EditorNode
+{
+	override void AddNode(notnull EditorNode node)
+	{
+	}
+}
+
+
 class EditorPlaceableListNode: EditorListNode
 {
 	protected EditorPlaceableItem m_PlaceableItem;
-	protected string m_SearchString1, m_SearchString2;
 	
-	void EditorPlaceableListNode(notnull EditorPlaceableItem placeable_item)
+	void EditorPlaceableListNode(notnull EditorNode node)
 	{
-		m_PlaceableItem = placeable_item;
-		m_SearchString1 = m_PlaceableItem.Type;
-		m_SearchString2 = m_PlaceableItem.Name;
-		
-		m_SearchString1.ToLower();
-		m_SearchString2.ToLower();
-		
+		m_PlaceableItem = EditorPlaceableItem.Cast(node);
+		if (!m_PlaceableItem) {
+			ErrorEx("" + m_PlaceableItem + " was null");
+			return;
+		}
+				
 		Text.SetText(m_PlaceableItem.Name);		
-		if (placeable_item.Type.Contains(".p3d")) {
+		if (m_PlaceableItem.Type.Contains(".p3d")) {
 			Symbols.TREE_DECIDUOUS.Load(IconImage, 2);
 			IconImage.SetColor(LinearColor.LIGHT_YELLOW);
 			m_LayoutRoot.SetSort(100);
-		} else if (placeable_item.Type.Contains("_DE")) {
+		} else if (m_PlaceableItem.Type.Contains("_DE")) {
 			Symbols.MONEY_BILL.Load(IconImage, 2);
 			IconImage.SetColor(LinearColor.LIGHT_BLUE);
 		} else {
-			if (GetGame().IsKindOf(placeable_item.Type, "Inventory_Base")) {
+			if (GetGame().IsKindOf(m_PlaceableItem.Type, "Inventory_Base")) {
 				Symbols.SHOVEL.Load(IconImage, 2);
 				IconImage.SetColor(LinearColor.LIGHT_BLUE);
 			} else {
@@ -32,7 +92,7 @@ class EditorPlaceableListNode: EditorListNode
 		
 		Favorite.Show(true);
 		
-		if (GetEditor().GetSettings().FavoriteItems.Find(placeable_item.Type) != -1) {
+		if (GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1) {
 			FavoriteIcon.SetImage(3);
 			FavoriteIcon.SetColor(LinearColor.GOLD);
 		} else {
@@ -42,7 +102,7 @@ class EditorPlaceableListNode: EditorListNode
 		
 		EditorEvents.OnObjectPlaced.Insert(OnObjectPlaced);
 	}
-	
+		
 	protected void OnObjectPlaced(Class context, EditorObject target)
 	{
 		if (target && target.GetType() == m_PlaceableItem.Type) {
@@ -161,21 +221,7 @@ class EditorPlaceableListNode: EditorListNode
 			
 		return super.OnClick(w, x, y, button);
 	}
-	
-	override bool FilterType(string filter, bool favorites)
-	{
-		if (!filter && !favorites) {
-			return true;
-		}
 		
-		bool matches_filter = (m_SearchString1.Contains(filter) || m_SearchString2.Contains(filter) || !filter);
-		if (favorites) {
-			return (matches_filter && GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1);
-		}
-		
-		return matches_filter;
-	}
-	
 	override bool IsSelected()
 	{
 		auto placing_objects = GetEditor().GetPlacingObjects();

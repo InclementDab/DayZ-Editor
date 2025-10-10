@@ -133,10 +133,10 @@ class EditorHud: ScriptView
 		"AddNodeButton",
 		"CameraTrackRunButton"
 	};
-	
-	ref map<string, EditorListNode> m_FolderNodes = new map<string, EditorListNode>();		
-	ref map<int, ref array<EditorListNode>> m_FolderNodesByDepth = new map<int, ref array<EditorListNode>>();		
-	ref array<EditorListNode> m_SearchableListNodes = {};
+
+	ref map<string, ref EditorNode> m_FolderNodes = new map<string, ref EditorNode>();		
+	ref map<int, ref array<EditorNode>> m_FolderNodesByDepth = new map<int, ref array<EditorNode>>();		
+	ref array<EditorNode> m_SearchableListNodes = {};
 	
 	void EditorHud(notnull Editor editor)
 	{	
@@ -189,11 +189,11 @@ class EditorHud: ScriptView
 				}
 												
 				if (i < model_path_split.Count() - 1) {
-					EditorFolderListNode folder_node;
+					EditorDirectoryNode folder_node;
 					if (m_FolderNodes.Contains(full_path)) {
 						folder_node = m_FolderNodes[full_path];
 					} else {
-						folder_node = new EditorFolderListNode(folder_name);
+						folder_node = new EditorDirectoryNode(folder_name);
 						m_FolderNodes[full_path] = folder_node;
 						
 						if (!m_FolderNodesByDepth[i]) {
@@ -204,12 +204,12 @@ class EditorHud: ScriptView
 						m_FolderNodesByDepth[i].Insert(folder_node);
 							
 						if (i == 0) {
-							m_TemplateController.LeftContent.Insert(folder_node);
+							m_TemplateController.LeftContent.Insert(new EditorFolderListNode(folder_node));
 						} else {
 							string directory_parent = full_path.Substring(0, full_path.LastIndexOf(SystemPath.SEPERATOR));
-							EditorFolderListNode parent_node = m_FolderNodes[directory_parent];
+							EditorDirectoryNode parent_node = m_FolderNodes[directory_parent];
 							if (parent_node) {
-								parent_node.InsertChild(folder_node);
+								parent_node.AddNode(folder_node);
 							}
 						}
 					}				
@@ -217,16 +217,15 @@ class EditorHud: ScriptView
 			}
 			
 			string model_directory = model_name.Substring(0, model_name.LastIndexOf(SystemPath.SEPERATOR));
-			EditorPlaceableListNode placeable_node = new EditorPlaceableListNode(placeable_item);
-			m_FolderNodes[model_name] = placeable_node;
-			m_FolderNodes[model_directory].InsertChild(placeable_node);		
+			m_FolderNodes[model_name] = placeable_item;			
+			m_FolderNodes[model_directory].AddNode(placeable_item);		
 			
 			if (!m_FolderNodesByDepth[depth]) {
 				m_FolderNodesByDepth[depth] = {};
 			}	
 			
-			m_FolderNodesByDepth[depth].Insert(placeable_node);
-			m_SearchableListNodes.Insert(placeable_node);
+			m_FolderNodesByDepth[depth].Insert(placeable_item);
+			m_SearchableListNodes.Insert(placeable_item);
 		}
 		
 		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
@@ -311,6 +310,17 @@ class EditorHud: ScriptView
 		CinematicCameraButton.Show(true);
 		
 		m_EditorCameraMarker = new EditorCameraMarker(GetGame().GetUserManager().GetSelectedUser().GetName());
+	}
+	
+	protected int m_CurrentLoadIndex = -1;
+	protected void AsyncLoadItems()
+	{		
+		for (int i = 0; i < m_TemplateController.LeftContent.Count(); i++) {
+			EditorListNode left_content_element = m_TemplateController.LeftContent[i];
+			if (left_content_element) {
+				
+			}
+		}
 	}
 	
 	override void Update(float dt)
@@ -1053,10 +1063,10 @@ class EditorHud: ScriptView
 		
 		int depth = m_FolderNodesByDepth.Count() - 1;
 		for (int i = depth; i >= 0; --i) {
-			array<EditorListNode> nodes = m_FolderNodesByDepth[i];			
+			array<EditorNode> nodes = m_FolderNodesByDepth[i];			
 			for (int j = 0; j < nodes.Count(); j++) {				
-				EditorListNode node = nodes[j];
-				Widget layout = node.GetLayoutRoot();
+				EditorNode node = nodes[j];
+				EditorListNode node_view = node.NodeView;
 				bool search_succeed = !has_requirements_for_search;
 				if (has_requirements_for_search) {
 					search_succeed = node.FilterType(search_string, favorite_toggle);
@@ -1065,30 +1075,41 @@ class EditorHud: ScriptView
 				// Check if we should do a temporary reveal due to children nodes being searched for
 				bool temporary_reveal = false;
 				if (has_requirements_for_search) {
-					for (int k = 0; k < node.ChildrenItems.Count(); k++) {
-						if (node.ChildrenItems[k].GetLayoutRoot().IsVisible()) {
+					for (int k = 0; k < node.Nodes.Count(); k++) {
+						if (node.Nodes[k].RootWidget && node.Nodes[k].RootWidget.IsVisible()) {
 							temporary_reveal = true;
 							break;
 						}
 					}
 				} else {
-					temporary_reveal = !node.IsCollapsed();
+					temporary_reveal = node_view && !node_view.IsCollapsed();
 				}
 																
-				float ch_s_x = 0, ch_s_y = 0;
-				if (node.ChildrenItems.Count()) {
-					node.Children.Show(temporary_reveal, false);
-					// Temporarily change the icon
-					node.CollapseIcon.SetImage(temporary_reveal);
+				Widget layout = node.RootWidget;
+				
+				if (search_succeed && !layout) {
+					if (!node.Parent) {
+						ErrorEx("Node had no parent!");
+						continue;
+					}
 					
-					node.Children.Update();
-					node.Children.GetScreenSize(ch_s_x, ch_s_y);
+					node.Parent.NodeView.InsertChild(node.CreateTreeItem());
+				}
+				
+				float ch_s_x = 0, ch_s_y = 0;
+				if (node_view.ChildrenItems.Count()) {
+					node_view.Children.Show(temporary_reveal, false);
+					// Temporarily change the icon
+					node_view.CollapseIcon.SetImage(temporary_reveal);
+					
+					node_view.Children.Update();
+					node_view.Children.GetScreenSize(ch_s_x, ch_s_y);
 					
 					ch_s_y *= temporary_reveal;
 							
 					// Idk why I have to do screen_y / 1080 because it is already set to scaled. wtf is going on??
 					layout.SetScreenSize(screen_x, ch_s_y + static_visual_addition, true);
-					node.ChildrenHeight.SetScreenSize(2, ch_s_y, false);
+					node_view.ChildrenHeight.SetScreenSize(2, ch_s_y, false);
 				}
 				
 				layout.Show(search_succeed || ch_s_y > 0 || temporary_reveal, false);

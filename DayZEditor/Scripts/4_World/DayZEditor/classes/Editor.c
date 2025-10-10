@@ -640,7 +640,7 @@ class Editor: Managed
 			}
 		}
 		
-		if (GetEditorHud().GetDialog()) {
+		if (m_EditorHud && GetEditorHud().GetDialog()) {
 			processed_flags |= (ECameraLockFlag.LOCK_LOOK | ECameraLockFlag.LOCK_MOVE);
 		}
 
@@ -1215,6 +1215,7 @@ class Editor: Managed
 									
 		EditorObjectMap selected_objects = GetSelectedObjects();
 		if (selected_objects.Count() == 0 && IsPlacing()) {
+			/*
 			int input_direction = fwd_input.LocalPress() + fwd_input.LocalHold() - bck_input.LocalPress() - bck_input.LocalHold();
 			input_direction = Math.Clamp(input_direction, -1, 1);
 			if (input_direction) {
@@ -1237,7 +1238,7 @@ class Editor: Managed
 						break;
 					}
 				}
-			}
+			}*/
 		} else if (selected_objects.Count()) {
 			m_ObjectManager.RecalculateCenterOfSelectedObjects();
 			vector average_position = GetAveragePositionOfSelection();
@@ -2133,10 +2134,10 @@ class Editor: Managed
 				m_EditorHud.GetTemplateController().LeftContent[i].GetLayoutRoot().Unlink();
 			}
 			
-			delete m_EditorHud.GetTemplateController().LeftContent[i];
+			//delete m_EditorHud.GetTemplateController().LeftContent[i];
 		}
 		
-		m_EditorHud.GetTemplateController().LeftContent.Clear();				
+		//m_EditorHud.GetTemplateController().LeftContent.Clear();				
 		
 		delete m_EditorHud;
 	}
@@ -2146,8 +2147,8 @@ class Editor: Managed
 #ifdef DIAG_DEVELOPER
 		DestroyHud();
 		
-		m_EditorHud = new EditorHud(this);
-		m_EditorHudController = m_EditorHud.GetTemplateController();
+		//m_EditorHud = new EditorHud(this);
+		//m_EditorHudController = m_EditorHud.GetTemplateController();
 		return m_EditorHud;
 		
 #endif
@@ -2340,6 +2341,10 @@ class Editor: Managed
 			return false;
 		}
 		
+		if (editor_object.IsSelected()) {
+			DeselectObject(editor_object);
+		}
+		
 		EditorAction action = new EditorAction("Create", "Delete");
 		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
@@ -2391,6 +2396,10 @@ class Editor: Managed
 		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (EditorObject editor_object: editor_objects) {
 			if (!editor_object.IsLocked()) {
+				if (editor_object.IsSelected()) {
+					DeselectObject(editor_object);
+				}
+			
 				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
@@ -2421,8 +2430,12 @@ class Editor: Managed
 		
 		int count;
 		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (int id, EditorObject editor_object: editor_object_map) {
+		foreach (int id, EditorObject editor_object: editor_object_map) {			
 			if (!editor_object.IsLocked() && editor_object.IsVisible()) {
+				if (editor_object.IsSelected()) {
+					DeselectObject(editor_object);
+				}
+				
 				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);

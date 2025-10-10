@@ -45,7 +45,7 @@ class EditorObjectManagerModule : Managed
 
 	void EditorObjectManagerModule(Editor editor)
 	{
-
+		ScopedFunctionTimer t();
 		// This background task will run independently of the synchronous asset loading below.
 		if (GetGame().IsMultiplayer()) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ProcessUnresolvedObjects, 250, true); // Check every 250ms

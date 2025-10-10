@@ -2,10 +2,10 @@ class EditorPlacedListNode: EditorListNode
 {
 	protected EditorObject m_EditorObject;
 	
-	void EditorPlacedListNode(notnull EditorObject editor_object)
+	void EditorPlacedListNode(notnull EditorNode node)
 	{
-		m_EditorObject = editor_object;
-		Text.SetText(editor_object.GetDisplayName());
+		m_EditorObject = EditorObject.Cast(node);
+		Text.SetText(m_EditorObject.GetDisplayName());
 		//Hide.Show(true);
 		//BoundingBox.Show(true);
 		//Lock.Show(true);
