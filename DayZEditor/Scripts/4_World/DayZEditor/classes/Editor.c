@@ -1050,6 +1050,18 @@ class Editor: Managed
 			return;
 		}
 		
+		if (GetUApi().GetInputByName("UACOTModuleToggleCOT")) {
+			GetUApi().GetInputByName("UACOTModuleToggleCOT").Supress();
+			GetUApi().GetInputByName("UACOTToggleButtons").Supress();
+			GetUApi().GetInputByName("UACOTTogglePlayer").Supress();
+			GetUApi().GetInputByName("UACOTToggleCamera").Supress();
+			GetUApi().GetInputByName("UACOTToggleESP").Supress();
+			GetUApi().GetInputByName("UACOTToggleMap").Supress();
+			GetUApi().GetInputByName("UACameraToolSpeedIncrease").Supress();
+			GetUApi().GetInputByName("UACameraToolSpeedDecrease").Supress();
+			GetUApi().UpdateControls();
+		}
+		
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 		Raycast cursor_raycast = GetCursorRaycast();
