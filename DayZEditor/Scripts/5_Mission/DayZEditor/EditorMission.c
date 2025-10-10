@@ -4,7 +4,15 @@ Mission CreateEditorMission(string path)
 {
 	Print("Creating Mission: "+ path);
 		
-	// g_Game.SetMissionPath(path); Done from C++ now
+	if (path.Contains("MainMenu"))
+	{
+		//EditorMainMenuMission mm = new EditorMainMenuMission(path);
+		//return mm;
+	}
+	
+#ifdef DabsLabs
+	return CreateDabsLabs(path);
+#endif
 
 	if (g_Game.IsMultiplayer() && g_Game.IsServer())
 	{
@@ -22,27 +30,19 @@ Mission CreateEditorMission(string path)
 		return m;
 	}
 	
-	if (path.Contains("MainMenu"))
+
+	
+	
+	if( path == "" )
 	{
-		EditorMainMenuMission mm = new EditorMainMenuMission(path);
-		return mm;
-	}
-	else
-	{
-#ifdef DabsLabs
-	return CreateDabsLabs(path);
-#endif
-		
-		if( path == "" )
-		{
-			return new MissionDummy;
-		}
-#ifndef NO_GUI_INGAME
-		return new MissionGameplay;
-#else
 		return new MissionDummy;
-#endif
 	}
+#ifndef NO_GUI_INGAME
+	return new MissionGameplay;
+#else
+	return new MissionDummy;
+#endif
+	
 }
 
 #else
