@@ -87,6 +87,9 @@ class EditorGizmo: Managed
 	
 	protected static ref map<string, EntityAI> s_Gizmos = new map<string, EntityAI>();
 	
+	protected int m_UpdateFrameCounter = 0;
+	protected const int UPDATE_FRAME_RATE = 3;
+	
 	void EditorGizmo()
 	{
 		m_Editor = GetEditor();
@@ -106,9 +109,18 @@ class EditorGizmo: Managed
 		}
 	}	
 
+	private bool m_WasInteracting = false;
+
+	bool WasInteracting()
+	{
+		return m_WasInteracting;
+	}
+
 	bool IsInteracting()
 	{
-		return m_InteractionIndex != -1;
+		bool interacting = (m_InteractionIndex != -1);
+		m_WasInteracting = interacting;
+		return interacting;
 	}
 	
 	protected void PreUpdateGizmo(float dt)
@@ -305,10 +317,13 @@ class EditorGizmo: Managed
 		}
 
 		if (interact_input.LocalRelease() && m_InteractionIndex != -1) {
+    		PrintFormat("[GIZMO] ===== RELEASE CONDITION MET =====");
 			m_InteractionIndex = -1;
 			m_DragOffset = vector.Zero;
 			m_DragRotationOffset = vector.Zero;
 						
+			array<ref EditorObject> dragged_final = new array<ref EditorObject>(); // Collect objects for final send
+			
 			foreach (EditorObject selected_rewind_object2: m_AllSelectedObjects) {
 				selected_rewind_object2.Update();
 				m_RewindAction.InsertRedoParameter(selected_rewind_object2.GetTransformArray());
@@ -323,38 +338,13 @@ class EditorGizmo: Managed
 				}
 				
 				selected_rewind_object2.IsBeingDragged = false;
+				// CRITICAL FIX: On release, explicitly call the persistence path.
+				if (GetGame().IsMultiplayer()) selected_rewind_object2.UpdateNet(false);
 			}
 			
 			GetEditor().InsertAction(m_RewindAction);
 
-			// NETWORKING LOGIC 
-			if (GetGame().IsMultiplayer())
-			{
-				ScriptRPC rpc = new ScriptRPC();
-				auto stream = new CF_SerializerWriteStream(rpc);
-				auto writer = new CF_BinaryWriter(stream);
-
-				int objectCount = m_AllSelectedObjects.Count();
-				writer.WriteInt(objectCount);
-
-				int packedData[4];
-				for (int i = 0; i < objectCount; ++i)
-				{
-					EditorObject obj = m_AllSelectedObjects[i];
-					if (!obj) continue;
-					
-					EditorNetUtils.PackTransform(obj.GetPosition(), obj.GetOrientation(), obj.GetScale(), packedData);
-					
-					writer.WriteInt(obj.GetID());
-					writer.WriteInt(packedData[0]);
-					writer.WriteInt(packedData[1]);
-					writer.WriteInt(packedData[2]);
-					writer.WriteInt(packedData[3]);
-				}
-
-				writer.Close();
-				rpc.Send(null, EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED, true);
-			}
+			PrintFormat("[GIZMO] ===== GIZMO RELEASE DETECTED =====");
 		}
 		
 		m_VisibleSortedInteractions.Clear();

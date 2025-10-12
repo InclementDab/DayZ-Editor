@@ -10,6 +10,7 @@ modded class MissionGameplay
 	protected ref EditorMainMenu m_PauseMenu;
 	private const float SYNC_COMPLETE_DEBOUNCE_TIME = 1.5;
 	private float m_syncDebounceTimer = -1.0;
+    protected bool m_SyncCompleteAlreadySent = false; 
 
 	ref map<int, Object> Cameras = new map<int, Object>();
 	ref map<int, ref PlayerCameraData> LastCameraData = new map<int, ref PlayerCameraData>();
@@ -20,7 +21,13 @@ modded class MissionGameplay
     private Editor m_CachedEditor;
 	private bool m_IsEditorActivated = false;
 	private bool m_IsEditorInitialized = false;
-	
+
+    // State tracking for OnUpdate logging
+    private bool m_LastEditorExisted = false;
+    private bool m_LastCachedEditorExisted = false;
+    private bool m_LastControllingPlayerExisted = false;
+    private bool m_LastEditorWasActive = false;
+
 	void MissionGameplay()
 	{
 		m_AutoInitializeEditor = CreateEditorOnStart();
@@ -44,12 +51,18 @@ modded class MissionGameplay
 
 	}
 	
-	void SendSyncComplete()
+	void SendSyncComplete() 
 	{
-		ScriptRPC sync_complete_rpc = new ScriptRPC();
-		sync_complete_rpc.Send(null, EditorRPC.CLIENT_SYNC_COMPLETE, true);
-		Print("[Editor Client] Initial synchronization appears complete. Notifying server.");
-	}
+        if (m_SyncCompleteAlreadySent) {
+            return;
+        }
+        
+        ScriptRPC sync_complete_rpc = new ScriptRPC();
+        sync_complete_rpc.Send(null, EditorRPC.CLIENT_SYNC_COMPLETE, true);
+        Print("[Editor Client] Initial synchronization appears complete. Notifying server.");
+        
+        m_SyncCompleteAlreadySent = true;
+    }
 	
 	override void OnKeyPress(int key)
 	{
@@ -82,6 +95,7 @@ modded class MissionGameplay
 	
 	override void OnUpdate(float timeslice)
 	{
+		// Sync debounce timer for CLIENT_SYNC_COMPLETE
 		if (m_syncDebounceTimer > 0)
 		{
 			m_syncDebounceTimer -= timeslice;
@@ -91,50 +105,93 @@ modded class MissionGameplay
 			}
 		}
 		
-		if (g_Editor) 
+		// Only log g_Editor state changes
+		bool editorExists = (g_Editor != null);
+		if (editorExists != m_LastEditorExisted)
 		{
-	PrintFormat("[EDITOR DEBUG] OnUpdate - g_Editor exists");
-		} 
-		else 
-		{
-	PrintFormat("[EDITOR DEBUG] OnUpdate - g_Editor is NULL");
+			if (editorExists)
+			{
+				PrintFormat("[EDITOR DEBUG] OnUpdate - g_Editor created");
+			}
+			else
+			{
+				PrintFormat("[EDITOR DEBUG] OnUpdate - g_Editor destroyed");
+			}
+			m_LastEditorExisted = editorExists;
 		}
 		
-		if (m_CachedEditor) 
+		// Only log m_CachedEditor state changes
+		bool cachedExists = (m_CachedEditor != null);
+		if (cachedExists != m_LastCachedEditorExisted)
 		{
-	PrintFormat("[EDITOR DEBUG] OnUpdate - m_CachedEditor exists");
-			
-			PlayerBase controlling_player = m_CachedEditor.GetControllingPlayer();
-			if (controlling_player) 
+			if (cachedExists)
 			{
-	PrintFormat("[EDITOR DEBUG] OnUpdate - Controlling player exists: %1", controlling_player);
-				
-				if (!m_CachedEditor.IsActive()) 
+				PrintFormat("[EDITOR DEBUG] OnUpdate - m_CachedEditor now exists");
+			}
+			else
+			{
+				PrintFormat("[EDITOR DEBUG] OnUpdate - m_CachedEditor is NULL, calling super.OnUpdate");
+			}
+			m_LastCachedEditorExisted = cachedExists;
+		}
+		
+		if (m_CachedEditor)
+		{
+			PlayerBase controlling_player = m_CachedEditor.GetControllingPlayer();
+			
+			// Only log controlling player state changes
+			bool playerExists = (controlling_player != null);
+			if (playerExists != m_LastControllingPlayerExisted)
+			{
+				if (playerExists)
 				{
-	PrintFormat("[EDITOR DEBUG] OnUpdate - Editor not active, calling super.OnUpdate");
-					super.OnUpdate(timeslice);
+					PrintFormat("[EDITOR DEBUG] OnUpdate - Controlling player assigned: %1", controlling_player);
 				}
 				else
 				{
-	PrintFormat("[EDITOR DEBUG] OnUpdate - Editor is active");
+					PrintFormat("[EDITOR DEBUG] OnUpdate - No controlling player");
+				}
+				m_LastControllingPlayerExisted = playerExists;
+			}
+			
+			if (controlling_player)
+			{
+				// Only log editor active state changes
+				bool isActive = m_CachedEditor.IsActive();
+				if (isActive != m_LastEditorWasActive)
+				{
+					if (isActive)
+					{
+						PrintFormat("[EDITOR DEBUG] OnUpdate - Editor is active");
+					}
+					else
+					{
+						PrintFormat("[EDITOR DEBUG] OnUpdate - Editor not active, calling super.OnUpdate");
+					}
+					m_LastEditorWasActive = isActive;
+				}
+				
+				if (!isActive)
+				{
+					super.OnUpdate(timeslice);
 				}
 			}
 			else
 			{
-	PrintFormat("[EDITOR DEBUG] OnUpdate - No controlling player");
 				super.OnUpdate(timeslice);
 			}
 			
 			m_CachedEditor.Update(timeslice);
-		} 
-		else 
+		}
+		else
 		{
-	PrintFormat("[EDITOR DEBUG] OnUpdate - m_CachedEditor is NULL, calling super.OnUpdate");
 			super.OnUpdate(timeslice);
 		}
 
+		// Multiplayer camera interpolation
 		if (GetGame().IsMultiplayer()) {
-			foreach (int player_id, Object camera: Cameras) {
+			foreach (int player_id, Object camera: Cameras)
+			{
 				if (!camera) {
 					continue;
 				}
@@ -376,7 +433,7 @@ modded class MissionGameplay
 					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(this.ActivateEditor, 100, false);
 	PrintFormat("[EDITOR DEBUG] ========== EDITOR_CREATE COMPLETE ==========");
 				} else {
-	PrintFormat("[EDITOR DEBUG] ✗✗✗ FATAL: Failed to create Editor instance! ✗✗✗");
+	PrintFormat("[EDITOR DEBUG]  FATAL: Failed to create Editor instance! ");
 				}
 				break;
 			}
@@ -455,7 +512,7 @@ modded class MissionGameplay
 					}
 				}
 				
-				if (m_IsEditorInitialized) {
+				if (m_IsEditorInitialized && !m_SyncCompleteAlreadySent) {
 					m_syncDebounceTimer = SYNC_COMPLETE_DEBOUNCE_TIME;
 				}
 				
@@ -506,45 +563,45 @@ modded class MissionGameplay
 				break;
 			}
 			
-			case EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED: {
-				auto stream = new CF_SerializerReadStream(ctx);
-				auto reader = new CF_BinaryReader(stream);
-	
-				int objectCount = reader.ReadInt();
-				
-				if (!GetEditor())
-				{
-					reader.Close();
-					return;
-				}
-				
-				int packedData[4];
-				vector pos, ori;
-				float scale;
-	
-				for (i = 0; i < objectCount; ++i)
-				{
-					if (reader.Position() + 20 > reader.Length()) break; // Safety check for malformed packet
+case EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED: {
+    PrintFormat("[CLIENT RECEIVE] BATCH_UPDATE_TRANSFORM_PACKED received");
+    
+    int objectCount;
+    if (!ctx.Read(objectCount)) return;
+    
+    if (!GetEditor()) return;
+    
+    PrintFormat("[CLIENT RECEIVE] Processing %1 objects", objectCount);
 
-					int id = reader.ReadInt();
-					packedData[0] = reader.ReadInt();
-					packedData[1] = reader.ReadInt();
-					packedData[2] = reader.ReadInt();
-					packedData[3] = reader.ReadInt();
-	
-					EditorObject obj = GetEditor().GetEditorObject(id);
-					if (obj)
-					{
-						EditorNetUtils.UnpackTransform(packedData, pos, ori, scale);
-						obj.SetPosition(pos);
-						obj.SetOrientation(ori);
-						obj.SetScale(scale);
-					}
-				}
-	
-				reader.Close();
-				break;
-			}
+    int packedData[4];
+    vector pos, ori;
+    float scale;
+    
+    for (i = 0; i < objectCount; i++) {
+        if (!ctx.Read(uuid)) break;
+        if (uuid == string.Empty) continue;
+
+        if (!ctx.Read(packedData[0])) break;
+        if (!ctx.Read(packedData[1])) break;
+        if (!ctx.Read(packedData[2])) break;
+        if (!ctx.Read(packedData[3])) break;
+
+        PrintFormat("[CLIENT RECEIVE | PRE-UNPACK] Received Packed Data for UUID %1: [%2, %3, %4, %5]", uuid, packedData[0], packedData[1], packedData[2], packedData[3]);
+
+        EditorObject obj = GetEditor().GetEditorObjectByUuid(uuid); 
+        if (obj) {
+            EditorNetUtils.UnpackTransform(packedData, pos, ori, scale);
+            obj.SetPosition(pos);
+            obj.SetOrientation(ori);
+            obj.SetScale(scale);
+            
+            PrintFormat("    [CLIENT RECEIVE] SUCCESS: Updated UUID %1 to Pos %2 | Ori %3 | Scale %4", uuid, pos.ToString(), ori.ToString(), scale);
+        } else {
+            PrintFormat("    [CLIENT RECEIVE] WARNING: Object with UUID %1 not found locally.", uuid);
+        }
+    }
+    break;
+}
 
 			case EditorRPC.OBJECT_HIDE: {
 	PrintFormat("[EDITOR DEBUG] === OBJECT_HIDE RPC ===");
@@ -568,7 +625,7 @@ modded class MissionGameplay
 				
 				GetEditor().HideMapObjectsByUuid(hidden_objects, true);
 				
-				if (m_IsEditorInitialized) {
+				if (m_IsEditorInitialized && !m_SyncCompleteAlreadySent) {
 					m_syncDebounceTimer = SYNC_COMPLETE_DEBOUNCE_TIME;
 				}
 				

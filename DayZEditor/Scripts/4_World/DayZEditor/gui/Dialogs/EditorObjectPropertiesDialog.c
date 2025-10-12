@@ -19,11 +19,21 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	void ~EditorObjectPropertiesDialog()
 	{
-		foreach (EditorObject editor_object: m_EditorObjects) {
-			editor_object.UpdateNet();
+		// foreach (EditorObject editor_object: m_EditorObjects) {
+		// 	editor_object.UpdateNet();
+		
+		// Ensures full persistence update when closing the properties dialog
+		if (m_EditorObjects.Count() > 0) 
+		{
+			foreach (EditorObject obj : m_EditorObjects){
+				if (obj) 
+				{
+					obj.UpdateNet(false); // Send full OBJECT_UPDATE (39254) for persistence
+				}
+			}
 		}
 	}
-			
+
 	protected void OnObjectSelected(Class context, EditorObject editor_object)
 	{		
 		m_EditorObjects.Insert(editor_object);

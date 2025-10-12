@@ -54,26 +54,22 @@ class EditorDragHandler: Managed
 	void OnDragFinish()
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_OnDragging);
-
+	
 		m_RewindAction.InsertRedoParameter(m_Target.GetTransformArray());
+			
+		Print(string.Format("[CLIENT | DRAG-RELEASE] Drag finished for target. Sending persistence update."));
+		if (m_Target) m_Target.UpdateNet();
+
 		foreach (EditorObject selected_object: m_AdditionalDragTargets) {
 			if (selected_object != m_Target) {
 				m_RewindAction.InsertRedoParameter(selected_object.GetTransformArray());
-			}
-			
-			IEntity children = selected_object.GetWorldObject().GetChildren();
-			while (children) {
-				children.SetFlags(EntityFlags.VISIBLE, false);
-				children = children.GetSibling();
+				Print(string.Format("[CLIENT | DRAG-RELEASE] Drag finished for child object. Sending persistence update."));
+				selected_object.UpdateNet();
 			}
 			
 			selected_object.Update();
-			selected_object.UpdateNet();
 			selected_object.IsBeingDragged = false;
 		}
-		
-		m_Target.UpdateNet();
-		
 		GetEditor().InsertAction(m_RewindAction);
 		
 		m_Target = null;

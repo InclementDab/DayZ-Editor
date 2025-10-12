@@ -47,13 +47,13 @@ class EditorNetUtils
 		packedData[0] = (posX & 0xFFFFFF) | ((posY & 0xFF) << 24);
 		
 		//    pack2 (32 bits): Position Y (upper 12 bits) | Position Z (lower 20 bits)
-		packedData[1] = ((posY >> 8) & 0xFFF) | ((posZ & 0xFFFFF) << 12);
+		packedData[1] = (posY.ShiftRight(8) & 0xFFF) | ((posZ & 0xFFFFF) << 12);
 		
 		//    pack3 (32 bits): Position Z (upper 4 bits) | Yaw (11 bits) | Pitch (11 bits) | Roll (lower 6 bits)
-		packedData[2] = ((posZ >> 20) & 0xF) | ((rotYaw & 0x7FF) << 4) | ((rotPitch & 0x7FF) << 15) | ((rotRoll & 0x3F) << 26);
+		packedData[2] = (posZ.ShiftRight(20) & 0xF) | ((rotYaw & 0x7FF) << 4) | ((rotPitch & 0x7FF) << 15) | ((rotRoll & 0x3F) << 26);
 		
 		//    pack4 (32 bits): Roll (upper 5 bits) | Scale (15 bits)
-		packedData[3] = ((rotRoll >> 6) & 0x1F) | ((scl & 0x7FFF) << 5);
+		packedData[3] = (rotRoll.ShiftRight(6) & 0x1F) | ((scl & 0x7FFF) << 5);
 	}
 
 	/**
