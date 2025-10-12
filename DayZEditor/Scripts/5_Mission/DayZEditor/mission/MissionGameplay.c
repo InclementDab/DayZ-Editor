@@ -573,7 +573,6 @@ case EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED: {
     
     PrintFormat("[CLIENT RECEIVE] Processing %1 objects", objectCount);
 
-    int packedData[4];
     vector pos, ori;
     float scale;
     
@@ -581,12 +580,22 @@ case EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED: {
         if (!ctx.Read(uuid)) break;
         if (uuid == string.Empty) continue;
 
-        if (!ctx.Read(packedData[0])) break;
-        if (!ctx.Read(packedData[1])) break;
-        if (!ctx.Read(packedData[2])) break;
-        if (!ctx.Read(packedData[3])) break;
+        // Read each integer individually to avoid the array element bug
+        int pack0, pack1, pack2, pack3;
+        
+        if (!ctx.Read(pack0)) break;
+        if (!ctx.Read(pack1)) break;
+        if (!ctx.Read(pack2)) break;
+        if (!ctx.Read(pack3)) break;
 
-        PrintFormat("[CLIENT RECEIVE | PRE-UNPACK] Received Packed Data for UUID %1: [%2, %3, %4, %5]", uuid, packedData[0], packedData[1], packedData[2], packedData[3]);
+        PrintFormat("[CLIENT RECEIVE | PRE-UNPACK] Received Packed Data for UUID %1: [%2, %3, %4, %5]", uuid, pack0, pack1, pack2, pack3);
+
+        // Now create the array for UnpackTransform
+        int packedData[4];
+        packedData[0] = pack0;
+        packedData[1] = pack1;
+        packedData[2] = pack2;
+        packedData[3] = pack3;
 
         EditorObject obj = GetEditor().GetEditorObjectByUuid(uuid); 
         if (obj) {
