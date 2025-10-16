@@ -61,6 +61,35 @@ class EditorObjectDragHandler: EditorDragHandler
 {
 	protected float m_LastAngle;
 
+	override void OnDragStart(notnull EditorObject target, array<EditorObject> additional_targets = null)
+	{
+		super.OnDragStart(target, additional_targets);
+    // LOG INITIAL STATE
+    Print("[CLIENT-DRAGSTART] === DRAG SESSION START ===");
+
+		if (GetGame().IsMultiplayer())
+		{
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(eDragPhase.START);
+
+			rpc.Write(target.Uuid);
+
+			int childCount = 0;
+			if (additional_targets)
+			{
+				childCount = additional_targets.Count();
+			}
+			rpc.Write(childCount);
+
+			for (int i = 0; i < childCount; i++)
+			{
+				rpc.Write(additional_targets[i].Uuid);
+			}
+
+			rpc.Send(null, EditorRPC.DRAG_SESSION, true); // Reliable
+		}
+	}
+
 	protected EDragFlags GetDragFlags()
 	{
 		EDragFlags flags;
@@ -252,6 +281,23 @@ class EditorObjectDragHandler: EditorDragHandler
 		
 		target.SetBottomTransform(transform);
 		target.Update();
+
+		if (GetGame().IsMultiplayer())
+		{
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(eDragPhase.UPDATE);
+			rpc.Write(target.Uuid);
+
+			int packedData[4];
+			EditorNetUtils.PackTransform(target.GetPosition(), target.GetOrientation(), target.GetScale(), packedData);
+
+			rpc.Write(packedData[0]);
+			rpc.Write(packedData[1]);
+			rpc.Write(packedData[2]);
+			rpc.Write(packedData[3]);
+
+			rpc.Send(null, EditorRPC.DRAG_SESSION, false); // Unreliable - Can be dropped
+		}
 	}
 	
 	static vector GetAveragePosition(EditorObjectMap objects)
@@ -268,5 +314,65 @@ class EditorObjectDragHandler: EditorDragHandler
 		avg_position[1] = GetGame().SurfaceY(avg_position[0], avg_position[2]);
 		
 		return avg_position;
+	}
+
+	override void OnDragFinish()
+	{
+		// First, send the new reliable END RPC for the session.
+		if (GetGame().IsMultiplayer() && m_Target)
+		{
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(eDragPhase.END);
+			rpc.Write(m_Target.Uuid);
+
+			int packedData[4];
+			EditorNetUtils.PackTransform(m_Target.GetPosition(), m_Target.GetOrientation(), m_Target.GetScale(), packedData);
+
+			rpc.Write(packedData[0]);
+			rpc.Write(packedData[1]);
+			rpc.Write(packedData[2]);
+			rpc.Write(packedData[3]);
+
+			rpc.Send(null, EditorRPC.DRAG_SESSION, true); // Reliable - Needs server ack
+		}
+
+		// Manually replicate the cleanup logic from EditorDragHandler 
+		if (m_RewindAction)
+		{
+			// Finalize undo/redo action with the 'after' state.
+			array<EditorObject> all_dragged_objects = { m_Target };
+			if (m_AdditionalDragTargets)
+				all_dragged_objects.InsertAll(m_AdditionalDragTargets);
+
+			foreach(EditorObject dragged_obj : all_dragged_objects)
+			{
+				if (dragged_obj)
+					m_RewindAction.InsertRedoParameter(dragged_obj.GetTransformArray());
+			}
+
+			GetEditor().InsertAction(m_RewindAction);
+		}
+
+		// This manually performs the cleanup from the base class's OnDragFinish,
+		// because we are intentionally not calling super.OnDragFinish() to prevent old RPCs.
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_OnDragging);
+
+		if (m_Target)
+			m_Target.IsBeingDragged = false;
+
+		if (m_AdditionalDragTargets)
+		{
+			foreach(EditorObject child_obj : m_AdditionalDragTargets)
+			{
+				if (child_obj)
+					child_obj.IsBeingDragged = false;
+			}
+		}
+
+		m_IsDragging = false;
+		m_Target = null;
+		m_AdditionalDragTargets = null;
+		m_LocalTransformsToTarget = null;
+		m_RewindAction = null;
 	}
 }

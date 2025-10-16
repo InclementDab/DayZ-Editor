@@ -28,7 +28,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			foreach (EditorObject obj : m_EditorObjects){
 				if (obj) 
 				{
-					obj.UpdateNet(false); // Send full OBJECT_UPDATE (39254) for persistence
+					obj.UpdateNet(); // Send full OBJECT_UPDATE (39254) for persistence
 				}
 			}
 		}

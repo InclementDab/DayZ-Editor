@@ -339,7 +339,7 @@ class EditorGizmo: Managed
 				
 				selected_rewind_object2.IsBeingDragged = false;
 				// CRITICAL FIX: On release, explicitly call the persistence path.
-				if (GetGame().IsMultiplayer()) selected_rewind_object2.UpdateNet(false);
+				if (GetGame().IsMultiplayer()) selected_rewind_object2.UpdateNet();
 			}
 			
 			GetEditor().InsertAction(m_RewindAction);

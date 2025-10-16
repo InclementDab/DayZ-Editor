@@ -433,35 +433,25 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void Update(bool update_world_object = true) 
-	{ 				
+	{ 
 		if (update_world_object && m_WorldObject) {
 			m_WorldObject.Update(); 
 		}
-		// During frequent updates (like keyboard nudging), send the fast, visual-only RPC.
-		if (GetGame().IsMultiplayer() && !IsBeingDragged) {
-			UpdateNet(true);
-		}
-    
+	    
 		OnUpdated.Invoke();
 	}
 	
-	void UpdateNet(bool transformOnly = true)
+	void UpdateNet()
 	{
-		if (GetGame().IsMultiplayer() && Uuid != string.Empty) {
-			if (transformOnly) {
-				// This is for high-frequency VISUAL-ONLY updates.
-				Print(string.Format("[CLIENT | VISUAL-SYNC] Sending BATCH_UPDATE (39265) for UUID %1", Uuid));
-				array<ref EditorObject> objects = { this };
-				GetEditor().SendBatchTransformUpdate(objects);
-			} else {
-				// This is the robust, full-data update for guaranteeing PERSISTENCE on drag release.
-				Print(string.Format("[CLIENT | PERSISTENCE-SEND] Sending full OBJECT_UPDATE (39254) for UUID %1 at final position %2", Uuid, GetPosition().ToString()));
-				ScriptRPC rpc = new ScriptRPC();
-				rpc.Write(1);
-				rpc.Write(Uuid);
-				GetData().Write(rpc, int.MAX);
-				rpc.Send(null, 39254, true);
-			}
+		if (GetGame().IsMultiplayer() && Uuid != string.Empty) 
+		{
+			// This is the full data update for PERSISTENCE.
+			Print(string.Format("[CLIENT | PERSISTENCE-SEND] Sending full OBJECT_UPDATE (39254) for UUID %1 at final position %2", Uuid, GetPosition().ToString()));
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(1);
+			rpc.Write(Uuid);
+			GetData().Write(rpc, int.MAX);
+			rpc.Send(null, EditorRPC.OBJECT_UPDATE, true);
 		}
 	}
 	

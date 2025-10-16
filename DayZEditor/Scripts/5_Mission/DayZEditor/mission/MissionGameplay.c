@@ -28,6 +28,9 @@ modded class MissionGameplay
     private bool m_LastControllingPlayerExisted = false;
     private bool m_LastEditorWasActive = false;
 
+	// Holds the active drag session context for a drag operation initiated by another player.
+	protected ref LocalDragSession m_ActiveDragSession;
+
 	void MissionGameplay()
 	{
 		m_AutoInitializeEditor = CreateEditorOnStart();
@@ -611,6 +614,11 @@ case EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED: {
     }
     break;
 }
+case EditorRPC.DRAG_SESSION:
+{
+	HandleDragSession(sender, ctx);
+	break;
+}
 
 			case EditorRPC.OBJECT_HIDE: {
 	PrintFormat("[EDITOR DEBUG] === OBJECT_HIDE RPC ===");
@@ -747,5 +755,174 @@ case EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED: {
 			}
 		}	
 	PrintFormat("[EDITOR DEBUG] OnERPC complete for RPC %1", rpc_type);
+	}
+
+	// DRAG SESSION RECEIVER HANDLERS
+
+	/**
+	 * @brief Client-side RPC router for all drag session operations broadcast from the server.
+	 */
+	private void HandleDragSession(PlayerIdentity sender, ParamsReadContext ctx)
+	{
+		eDragPhase phase;
+		if (!ctx.Read(phase)) return;
+
+		switch (phase)
+		{
+			case eDragPhase.START:
+				HandleDragSession_Start(ctx);
+				break;
+			case eDragPhase.UPDATE:
+				HandleDragSession_Update(ctx);
+				break;
+			case eDragPhase.END:
+				HandleDragSession_End(ctx);
+				break;
+		}
+	}
+
+	/**
+	 * @brief Creates a local session context to prepare for receiving high-frequency updates.
+	 */
+	private void HandleDragSession_Start(ParamsReadContext ctx)
+	{
+		Print("[CLIENT-DRAGSTART] HANDLING START RPC");
+		
+		if (m_ActiveDragSession)
+		{
+			Print("[CLIENT-DRAGSTART] WARNING: Active session exists, cleaning up");
+			delete m_ActiveDragSession;
+		}
+
+		m_ActiveDragSession = new LocalDragSession();
+
+		string parentUUID;
+		if (!ctx.Read(parentUUID))
+		{
+			Print("[CLIENT-DRAGSTART] ERROR: Failed to read parentUUID");
+			return;
+		}
+
+		m_ActiveDragSession.m_ParentObject = GetEditor().GetEditorObjectByUuid(parentUUID);
+		if (!m_ActiveDragSession.m_ParentObject)
+		{
+			Print(string.Format("[CLIENT-DRAGSTART] ERROR: Parent object not found for UUID: %1", parentUUID));
+			return;
+		}
+
+		int childCount;
+		if (!ctx.Read(childCount))
+		{
+			Print("[CLIENT-DRAGSTART] ERROR: Failed to read childCount");
+			return;
+		}
+
+		for (int i = 0; i < childCount; i++)
+		{
+			
+			string childUUID;
+			if (!ctx.Read(childUUID))
+			{
+				Print(string.Format("[CLIENT-DRAGSTART] ERROR: Failed to read childUUID at index %1", i));
+				continue;
+			}
+
+			vector relativePos;
+			if (!ctx.Read(relativePos))
+			{
+				Print(string.Format("[CLIENT-DRAGSTART] ERROR: Failed to read relativePos for child %1", childUUID));
+				continue;
+			}
+
+			vector relativeOri;
+			if (!ctx.Read(relativeOri))
+			{
+				Print(string.Format("[CLIENT-DRAGSTART] ERROR: Failed to read relativeOri for child %1", childUUID));
+				continue;
+			}
+
+			EditorObject childObject = GetEditor().GetEditorObjectByUuid(childUUID);
+			if (childObject)
+			{
+				auto childData = new LocalDragChildData(childObject, relativePos, relativeOri);
+				m_ActiveDragSession.m_ChildData.Insert(childData);
+			}
+			else
+			{
+				Print(string.Format("[CLIENT-DRAGSTART] WARNING: Child object not found for UUID: %1", childUUID));
+			}
+		}
+	}
+
+
+	/**
+	 * @brief Applies high-frequency transform updates to the object group for smooth visual movement.
+	 */
+	private void HandleDragSession_Update(ParamsReadContext ctx)
+	{
+		if (!m_ActiveDragSession || !m_ActiveDragSession.m_ParentObject) return;
+
+		string parentUUID;
+		if (!ctx.Read(parentUUID)) return;
+
+		// Ensure the update is for the object we are tracking
+		if (m_ActiveDragSession.m_ParentObject.Uuid != parentUUID) return;
+
+		int pack0, pack1, pack2, pack3;
+		if (!ctx.Read(pack0) || !ctx.Read(pack1) || !ctx.Read(pack2) || !ctx.Read(pack3)) return;
+
+		int packedData[4] = {pack0, pack1, pack2, pack3};
+		vector newParentPos, newParentOri;
+		float newParentScale;
+		EditorNetUtils.UnpackTransform(packedData, newParentPos, newParentOri, newParentScale);
+
+		// Apply transform to parent
+		m_ActiveDragSession.m_ParentObject.SetPosition(newParentPos);
+		m_ActiveDragSession.m_ParentObject.SetOrientation(newParentOri);
+		m_ActiveDragSession.m_ParentObject.SetScale(newParentScale);
+		m_ActiveDragSession.m_ParentObject.Update(false); // Visual update only
+
+		Print("[CLIENT-RECEIVE-UPDATE] RECEIVED UPDATE");
+
+		// Calculate and apply transforms for all children
+		vector newParentTransform[4];
+		Math3D.YawPitchRollMatrix(newParentOri, newParentTransform);
+		newParentTransform[3] = newParentPos;
+
+	foreach (LocalDragChildData childData : m_ActiveDragSession.m_ChildData)
+		{
+			EditorObject childObject = childData.m_ChildObject;
+			if (!childObject) continue;
+
+			// 1. Reconstruct the relative transform matrix from stored offsets
+			vector relativeMatrix[4];
+			Math3D.YawPitchRollMatrix(childData.m_RelativeOri, relativeMatrix);
+			relativeMatrix[3] = childData.m_RelativePos;
+
+			// 2. [FIX] Create a scale matrix and apply it to the relative matrix to preserve scale
+			vector scaleMatrix[3];
+			Math3D.ScaleMatrix(childObject.GetScale(), scaleMatrix);
+			Math3D.MatrixMultiply3(scaleMatrix, relativeMatrix, relativeMatrix);
+
+			// 3. Calculate the final absolute transform by multiplying with the new parent transform
+			vector finalChildTransform[4];
+			Math3D.MatrixMultiply4(newParentTransform, relativeMatrix, finalChildTransform);
+
+			// 4. Apply the final, complete transform to the object for visual update
+			childObject.SetTransform(finalChildTransform);
+			childObject.Update(false); // Visual update only
+		}
+	}
+
+	/**
+	 * @brief Applies the final transform and cleans up the local session context.
+	 */
+	private void HandleDragSession_End(ParamsReadContext ctx)
+	{
+		if (!m_ActiveDragSession) return;
+		HandleDragSession_Update(ctx);
+
+		// Clean up and destroy the session object.
+		delete m_ActiveDragSession;
 	}
 }
