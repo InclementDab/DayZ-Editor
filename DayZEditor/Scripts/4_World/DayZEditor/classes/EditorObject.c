@@ -202,7 +202,7 @@ class EditorObject: EditorWorldObject
 	override void SetWorldObject(Object object)
 	{		
 		super.SetWorldObject(object);
-									
+												
 		ShowBoundingBox();
 		
 		// Map marker
@@ -434,25 +434,22 @@ class EditorObject: EditorWorldObject
 	}
 	
 	void Update(bool update_world_object = true) 
-	{ 
+	{ 				
 		if (update_world_object && m_WorldObject) {
 			m_WorldObject.Update(); 
 		}
-	    
+		
 		OnUpdated.Invoke();
 	}
 	
 	void UpdateNet()
 	{
-		if (GetGame().IsMultiplayer() && Uuid != string.Empty) 
-		{
-			// This is the full data update for PERSISTENCE.
-			Print(string.Format("[CLIENT | PERSISTENCE-SEND] Sending full OBJECT_UPDATE (39254) for UUID %1 at final position %2", Uuid, GetPosition().ToString()));
+		if (GetGame().IsMultiplayer()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Write(1);
 			rpc.Write(Uuid);
 			GetData().Write(rpc, int.MAX);
-			rpc.Send(null, EditorRPC.OBJECT_UPDATE, true);
+			rpc.Send(null, 39254, true);
 		}
 	}
 	
