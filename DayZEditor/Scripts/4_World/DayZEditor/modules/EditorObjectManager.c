@@ -336,17 +336,47 @@ class EditorObjectManagerModule : Managed
 	{
 		return m_CameraTracks;
 	}
-		
+
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{
+		if (!editor_object_data)
+		{
+			Error("[EditorObjectManager] CreateObject: editor_object_data is NULL!");
+			return null;
+		}
+
+		if (!editor_object_data.Type || editor_object_data.Type == string.Empty)
+		{
+			Error(string.Format("[EditorObjectManager] CreateObject: Type is empty! ID=%1", editor_object_data.GetID()));
+			return null;
+		}
+
+		PrintFormat("[EditorObjectManager] CreateObject: Attempting to create type=%1", editor_object_data.Type);
+
 		EditorObject editor_object = new EditorObject(editor_object_data);
-				
+
+		if (!editor_object)
+		{
+			Error(string.Format("[EditorObjectManager] CreateObject: EditorObject instantiation FAILED for type=%1", editor_object_data.Type));
+			return null;
+		}
+
+		// Check if world object was created
+		if (!editor_object.GetWorldObject())
+		{
+			Error(string.Format("[EditorObjectManager] CreateObject: WorldObject is NULL for type=%1 - Object failed to spawn!", editor_object_data.Type));
+			// Still return the editor_object but log the error - it will be handled upstream
+			return null;
+		}
+
+		PrintFormat("[EditorObjectManager] CreateObject SUCCESS: type=%1, world_object_id=%2", editor_object_data.Type, editor_object.GetWorldObject().GetID());
+
 		// strong ref
 		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
 
 		m_PlacedObjects.InsertEditorObject(editor_object);
-		
-		EditorEvents.ObjectCreated(this, editor_object);		
+
+		EditorEvents.ObjectCreated(this, editor_object);
 		return editor_object;
 	}
 
