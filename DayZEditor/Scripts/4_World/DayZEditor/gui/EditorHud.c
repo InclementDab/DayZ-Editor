@@ -335,8 +335,8 @@ class EditorHud: ScriptView
 		if (GetGame().GetMission().IsPaused()) {
 			ShowCursor(true);
 			return;
-		}		
-		
+		}
+				
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 

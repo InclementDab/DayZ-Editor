@@ -148,9 +148,8 @@ class EditorMarker: ScriptView
 			alpha = 40;
 		}
 
-		LinearColor innercolor = GetEditor().GetSettings().HighlightColor;
 		LinearColor outercolor = GetEditor().GetSettings().SelectionColor;
-		LinearColor regularcolor = GetEditor().GetSettings().MarkerColor;
+		LinearColor regularcolor = GetMarkerColor();
 		//WidgetAnimator.CancelAnimate(EditorMarkerColor);
 		//WidgetAnimator.CancelAnimate(EditorMarkerOutline);
 
@@ -158,15 +157,19 @@ class EditorMarker: ScriptView
 		//EditorMarkerColor.SetImage(highlighted + 1);
 		if (highlighted) {
 			if (highlighted > 1) {
+				if (EditorMarkerOutline) {
+					EditorMarkerOutline.SetColor(outercolor.With(3, 255));
+				}
 				if (EditorMarkerColor) {
 					EditorMarkerColor.SetColor(outercolor.With(3, 255));
 				}
-				if (EditorMarkerOutline) {
-					EditorMarkerOutline.SetColor(LinearColor.REDDIT.With(3, 255));
-				}
 			} else {
+				if (EditorMarkerColor) {
+					EditorMarkerColor.SetColor(outercolor.With(3, alpha));
+				}
+				
 				if (EditorMarkerOutline) {
-					EditorMarkerOutline.SetColor(outercolor.With(3, alpha));
+					EditorMarkerOutline.SetColor(regularcolor.With(3, alpha));
 				}
 			}
 		} else {
@@ -180,6 +183,11 @@ class EditorMarker: ScriptView
 			//WidgetAnimator.AnimateColor(EditorMarkerColor, LinearColor.WHITE.With(3, alpha), 20);
 			//WidgetAnimator.AnimateColor(EditorMarkerOutline, LinearColor.BLACK.With(3, 220), 20);
 		}
+	}
+	
+	int GetMarkerColor()
+	{
+		return GetEditor().GetSettings().MarkerColor;
 	}
 	
 	protected bool IsMouseInside(int c_x, int c_y)

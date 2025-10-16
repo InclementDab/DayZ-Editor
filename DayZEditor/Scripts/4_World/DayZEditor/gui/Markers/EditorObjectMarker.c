@@ -48,6 +48,7 @@ class EditorObjectMarker: EditorMarker
 				}
 				
 				CheckDragBounds(x, y);
+				//SetHighlighted(2);
 				break;
 			}
 		}
@@ -100,10 +101,14 @@ class EditorObjectMarker: EditorMarker
 					camera.LookAt(m_EditorObject.GetBottomCenter());
 				}
 				
+				if (GetEditor().IsDragging()) {
+					return true;
+				}
+				
 				if (GetEditor().IsCtrlDown()) {
 					GetEditor().ToggleSelection(m_EditorObject);
 					return true;
-				} 
+				}
 				
 				if (!GetEditor().IsShiftDown()) {
 					GetEditor().ClearSelection();

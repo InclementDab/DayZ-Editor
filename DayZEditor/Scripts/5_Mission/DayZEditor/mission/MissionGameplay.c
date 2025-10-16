@@ -52,6 +52,7 @@ modded class MissionGameplay
 		GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
 		GetUApi().UpdateControls();*/
 
+
 	}
 	
 	void SendSyncComplete() 

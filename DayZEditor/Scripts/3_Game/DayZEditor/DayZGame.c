@@ -89,6 +89,7 @@ modded class DayZGame
 		return GetProfileName();
 	}
 	
+#ifndef DabsLabs
 	override bool OnInitialize()
 	{
 		// this will never happen, maybe requestexit -1 
@@ -101,10 +102,12 @@ modded class DayZGame
 		GetPlayerName(name);
 		name.ToLower();
 
+#ifndef DIAG_DEVELOPER
 		// change name if default
 		if (name == "survivor") {
 			SetPlayerName(GetUniqueEditorName());
 		}
+#endif
 
 		// vanilla
 		ParticleList.PreloadParticles();
@@ -179,6 +182,7 @@ modded class DayZGame
 		
 		return true;
 	}
+#endif
 			
 	void ReportProgress(string report)
 	{

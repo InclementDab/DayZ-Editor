@@ -37,6 +37,9 @@ class EditorPlacedContextMenu: EditorContextMenu
 			AddMenuButton(m_Editor.CommandManager[EditorLockCommand]);
 		}
 		
+		AddMenuButton(m_Editor.CommandManager[EditorMakeStaticCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorMakeConfigCommand]);
+		
 		AddMenuDivider();		
 		AddMenuButton(m_Editor.CommandManager[EditorDuplicateCommand]);
 		

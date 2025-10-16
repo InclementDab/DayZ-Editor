@@ -264,12 +264,13 @@ class EditorObject: EditorWorldObject
 	
 	void OnDeselected()
 	{
+		HideBoundingBox();
+		
 		if (!IsSelected()) {
 			return;
 		}
 		
 		m_IsSelected = false;
-		HideBoundingBox();
 		OnObjectDeselected.Invoke(this);
 	}
 	
@@ -429,7 +430,7 @@ class EditorObject: EditorWorldObject
 	
 	bool IsStatic()
 	{
-		return m_Data.Type.Contains(".p3d");
+		return GetData().Type.Contains(".p3d");
 	}
 	
 	void Update(bool update_world_object = true) 
