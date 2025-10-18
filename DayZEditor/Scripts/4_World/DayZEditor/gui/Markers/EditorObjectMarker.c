@@ -1,90 +1,75 @@
 class EditorObjectMarker: EditorMarker
-{	
+{		
 	protected EditorObject m_EditorObject;
-
-	protected ref EditorDragHandler m_DragHandler;
 	
 	void EditorObjectMarker(EditorObject editor_object)
 	{
 		EditorLog.Trace("EditorObjectMarker");
 		m_EditorObject = editor_object;
-		
+				
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
 	
-	void ~EditorObjectMarker()
-	{
-		delete m_DragHandler;
-	}
-	
 	void EditorObjectSelected(EditorObject data) 
 	{		
-		Select();
+		SetHighlighted(2);
 	}
 	
 	void EditorObjectDeselected(EditorObject data) 
 	{
-		Deselect();
+		SetHighlighted(0);
 	}
 		
 	override void Show(bool show)
 	{
 		// dont show if locked
-		if (show && m_EditorObject && m_EditorObject.Locked) {
+		if (show && m_EditorObject && m_EditorObject.IsLocked()) {
 			return;
 		}
 		
 		super.Show(show);
 	}
-	
+
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{	
+		// ignores the object if you are placing
+		if (m_Editor.IsPlacing() || m_Editor.Brush) { 
+			return false;
+		}
+
+		// Delete the current tooltip to clean the UI a bit
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
+
+		switch (button) {
+			case MouseState.LEFT: {
+				if (!m_EditorObject.IsSelected() && !GetEditor().IsShiftDown() && !GetEditor().IsCtrlDown()) {
+					m_Editor.ClearSelection();
+				}
+				
+				CheckDragBounds(x, y);
+				//SetHighlighted(2);
+				break;
+			}
+		}
+
+		return super.OnMouseButtonDown(w, x, y, button);
+	}
+		
+	override bool OnPress(Widget w, int x, int y, int button)
 	{		
 		// ignores the object if you are placing
-		if (m_Editor.IsPlacing()) { 
+		if (m_Editor.IsPlacing() || m_Editor.Brush) { 
 			return false;
 		}
 		
 		// Delete the current tooltip to clean the UI a bit
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		
-		switch (button) {
-			
-			case MouseState.LEFT: {
-				
-				// We want to Toggle selection if you are holding control
-				if (KeyState(KeyCode.KC_LCONTROL)) {
-					m_Editor.ToggleSelection(m_EditorObject);
-					return true;
-				} 
-				
-				// allows multiple objects to be dragged
-				if (m_EditorObject.IsSelected()) {
-					thread CheckDragBounds(x, y);
-					return true;
-				}
-				
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
-					m_Editor.ClearSelection();
-				}
-				
-				m_Editor.SelectObject(m_EditorObject);
-				
-				thread CheckDragBounds(x, y);
-				return false;
-			}
-			
-			case MouseState.MIDDLE: {
-				EditorCamera camera = GetEditor().GetCamera();
-				vector pos = m_EditorObject.GetPosition();
-				pos[1] = camera.GetPosition()[1];
-				camera.SendToPosition(pos);
-				return true;
-			}
-			
+		switch (button) {			
 			case MouseState.RIGHT: {
 				
-				if (!m_EditorObject.IsSelected() && !KeyState(KeyCode.KC_LSHIFT)) {
+				if (!m_EditorObject.IsSelected() && !GetEditor().IsShiftDown()) {
 					m_Editor.ClearSelection();
 				}
 				
@@ -95,33 +80,51 @@ class EditorObjectMarker: EditorMarker
 				}
 				
 				EditorHud.CurrentMenu = new EditorPlacedContextMenu(x, y, m_EditorObject);
+				return true;
+			}
+						
+			case MouseState.MIDDLE:
+			case MouseState.LEFT: {			
+				if (button == MouseState.MIDDLE) {
+					vector clip_info[2];
+					m_EditorObject.ClippingInfo(clip_info);
+					
+					vector transform[4];
+					m_EditorObject.GetTransform(transform);
+					
+					vector high_point = 2 * Vector(Math.Max(clip_info[0][0], clip_info[1][0]), Math.Max(clip_info[0][1], clip_info[1][1]), Math.Max(clip_info[0][2], clip_info[1][2]));
+					high_point[1] = (high_point[0] + high_point[2]) * 0.5;					
+					vector new_position = high_point.Multiply4(transform);
+					
+					EditorCamera camera = GetEditor().GetCamera();
+					camera.SetPosition(new_position);
+					camera.LookAt(m_EditorObject.GetBottomCenter());
+				}
 				
+				if (GetEditor().IsDragging()) {
+					return true;
+				}
+				
+				if (GetEditor().IsCtrlDown()) {
+					GetEditor().ToggleSelection(m_EditorObject);
+					return true;
+				}
+				
+				if (!GetEditor().IsShiftDown()) {
+					GetEditor().ClearSelection();
+				}
+				
+				GetEditor().SelectObject(m_EditorObject);		
 				return true;
 			}
 		}
 		
-		return super.OnMouseButtonDown(w, x, y, button);
+		return super.OnPress(w, x, y, button);
 	}
-
-	void Select() 
+				
+	override bool IsDisabled()
 	{
-		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
-		SetColor(m_Editor.Settings.SelectionColor);
-		SetOutlineColor(m_Editor.Settings.MarkerPrimaryColor);
-	}
-	
-	void Highlight()
-	{
-		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_SHOW);
-		SetColor(m_Editor.Settings.MarkerPrimaryColor);
-		SetOutlineColor(m_Editor.Settings.HighlightColor);
-	}
-	
-	void Deselect() 
-	{
-		m_LayoutRoot.SetAlpha(MARKER_ALPHA_ON_HIDE);
-		SetColor(m_Editor.Settings.MarkerPrimaryColor);
-		SetOutlineColor(m_Editor.Settings.MarkerPrimaryColor);
+		return m_EditorObject && (m_EditorObject.GetFlags() & (EditorObjectFlags.NOSAVE | EditorObjectFlags.NODELETE));		
 	}
 	
 	bool IsSelected() 
@@ -131,65 +134,61 @@ class EditorObjectMarker: EditorMarker
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
+		// ignores the object if you are placing
+		if (m_Editor.IsPlacing() || m_Editor.Brush) { 
+			return false;
+		}
+				
 		if (!IsSelected()) {
-			Highlight();
+			SetHighlighted(1);
 			if (m_EditorObject.GetListItem()) {
 				m_EditorObject.GetListItem().Highlight();
 			}
 		}
 		
-		if (m_Editor.Settings.MarkerTooltips && !m_Editor.IsPlacing()) {
-			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(DoTooltipCheck, 500);
+		if (m_Editor.GetSettings().MarkerTooltips && !m_Editor.IsPlacing()) {
+			string description = string.Format("(%1)", m_EditorObject.GetModelPath());
+			GetEditor().GetEditorHud().CreateDelayedTooltip(w, m_EditorObject.GetDisplayName(), TooltipPosition.INSIDE, "", Symbols.HOUSE);
 		}
+		
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
 		if (!IsSelected()) {
-			Deselect();
+			SetHighlighted(0);
 			if (m_EditorObject.GetListItem()) {
 				m_EditorObject.GetListItem().Deselect();
 			}
 		}
 		
-		if (m_Editor.Settings.MarkerTooltips) {
-			GetEditor().GetEditorHud().SetCurrentTooltip(null);
-		}
+		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
-	
-	private void DoTooltipCheck()
-	{
-		int x, y;
-		GetMousePos(x, y);
-		if (!IsMouseInside(x, y)) {
-			return;
-		}
 		
-		if (!EditorHud.CurrentMenu) {
-			GetEditor().GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton(m_EditorObject.GetType(), GetLayoutRoot(), TooltipPositions.BOTTOM_LEFT, string.Format("(%1)", m_EditorObject.GetID())));
-		}
-	}
-	
-	private const int DRAG_THRESHOLD = 5;
+	private const int DRAG_THRESHOLD_SQ = 25;
 	private void CheckDragBounds(int x, int y)
 	{
-		while (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
+		if (GetMouseState(MouseState.LEFT) & MB_PRESSED_MASK) {
 			int c_x, c_y;
 			GetMousePos(c_x, c_y);
 			
 			int dist_x = Math.AbsInt(x - c_x);
 			int dist_y = Math.AbsInt(y - c_y);
 			
-			if (dist_x + dist_y > DRAG_THRESHOLD) {
+			if (dist_x * dist_x + dist_y * dist_y > DRAG_THRESHOLD_SQ) {
 				m_Editor.SelectObject(m_EditorObject);
-				m_DragHandler.OnDragStart();
+				
+				array<EditorObject> additional_drag_targets = m_Editor.GetSelectedObjects().GetValueArray();
+				additional_drag_targets.RemoveItem(m_EditorObject);
+				GetEditor().DragHandler = EditorDragHandler.Cast(GetDragHandlerType().Spawn());
+				GetEditor().DragHandler.OnDragStart(m_EditorObject, additional_drag_targets);
 				return;
 			}
 			
-			Sleep(10);
+			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(CheckDragBounds, 10, false, x, y);
 		}
 	}
 	
@@ -203,9 +202,9 @@ class EditorObjectMarker: EditorMarker
 	{ 
 		return m_EditorObject; 
 	}
-	
-	EditorDragHandler GetDragHandler() 
+
+	typename GetDragHandlerType()
 	{
-		return m_DragHandler; 
+		return EditorDragHandler;
 	}
 }

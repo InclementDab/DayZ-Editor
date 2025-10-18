@@ -4,9 +4,11 @@ modded class NetworkLightBase
 	{
 		super.PropertyChanged(source, property_name);
 		
-		// Forcing the parameters to save when i change something.... MIGHT LAG :)
-		if (GetEditor().GetEditorObject(this)) {
-			Write(GetEditor().GetEditorObject(this).GetData().Parameters);
+		EditorObject editor_object = GetEditor().GetEditorObject(this);
+		if (editor_object) {
+			EditorObjectData data = editor_object.GetData();
+			Write(data.Parameters);
+			Read(data.Parameters);
 		}
 	}
 }

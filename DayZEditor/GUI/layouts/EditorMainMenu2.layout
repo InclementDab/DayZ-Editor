@@ -1,0 +1,1202 @@
+PanelWidgetClass main_menu_root {
+ visible 1
+ ignorepointer 1
+ color 0 0 0 0
+ position 0 -0.995
+ size 1 1
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 0
+ style rover_sim_colorable
+ {
+  ImageWidgetClass editor_logo_back {
+   visible 0
+   inheritalpha 1
+   color 0.118 0.118 0.118 0.784
+   position 138 75
+   size 480 270
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   fixaspect outside
+   image0 "DayZEditor/gui/images/logo_editor_big.edds"
+   mode blend
+   "src alpha" 1
+   "clamp mode" clamp
+   "stretch mode" stretch_w_h
+   filter 1
+   nocache 0
+   {
+    ImageWidgetClass editor_logo {
+     visible 1
+     inheritalpha 1
+     color 1 1 1 0.863
+     position -2 -2
+     size 480 270
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     fixaspect outside
+     image0 "DayZEditor/gui/images/logo_editor_big.edds"
+     mode blend
+     "src alpha" 1
+     "clamp mode" clamp
+     "stretch mode" stretch_w_h
+     filter 1
+     nocache 0
+    }
+   }
+  }
+  MultilineTextWidgetClass ModdedWarning {
+   visible 0
+   inheritalpha 1
+   position 100 350
+   size 540 30
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   fixaspect outside
+   priority 5
+   text "Welcome to the DayZ Editor - Please report all bugs you find to our Discord"
+   font "gui/fonts/sdf_MetronLight24"
+   "exact text" 1
+   "exact text size" 20
+   "size to text h" 1
+   "size to text v" 1
+   wrap 1
+  }
+  FrameWidgetClass ModsDetailed {
+   visible 0
+   clipchildren 0
+   ignorepointer 1
+   position 100 340
+   size 540 620
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   priority 5
+  }
+  PanelWidgetClass last_server_info {
+   visible 0
+   ignorepointer 0
+   color 0 0 0 0.549
+   position 500 130
+   size 250 120
+   halign right_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   priority 3
+   style rover_sim_colorable
+   "no focus" 1
+   {
+    PanelWidgetClass PanelWidget0 {
+     inheritalpha 1
+     ignorepointer 0
+     position 0 0
+     size 1 30
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     {
+      TextWidgetClass last_server_info_label {
+       visible 1
+       clipchildren 1
+       inheritalpha 1
+       size 1 0.7
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "#layout_main_menu_last_server"
+       font "gui/fonts/sdf_MetronLight24"
+       "text offset" 10 0
+       "exact text" 0
+       "exact text size" 16
+       "size to text h" 0
+       "size to text v" 1
+       "text valign" center
+      }
+     }
+    }
+    PanelWidgetClass PanelWidget1 {
+     inheritalpha 1
+     ignorepointer 0
+     position 0 60
+     size 1 30
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     {
+      TextWidgetClass last_server_info_ip {
+       visible 1
+       clipchildren 1
+       inheritalpha 1
+       size 1 0.55
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       font "gui/fonts/sdf_MetronLight24"
+       "text offset" 10 0
+       "exact text" 0
+       "exact text size" 22
+       "size to text h" 0
+       "size to text v" 1
+       "text valign" center
+      }
+     }
+    }
+    PanelWidgetClass PanelWidget2 {
+     inheritalpha 1
+     ignorepointer 0
+     position 0 90
+     size 1 30
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     {
+      TextWidgetClass last_server_info_port {
+       visible 1
+       clipchildren 1
+       inheritalpha 1
+       position 0 0
+       size 1 0.55
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       font "gui/fonts/sdf_MetronLight24"
+       "text offset" 10 0
+       "exact text" 0
+       "exact text size" 22
+       "size to text h" 0
+       "size to text v" 1
+       "text valign" center
+      }
+     }
+    }
+    PanelWidgetClass PanelWidget3 {
+     inheritalpha 1
+     ignorepointer 0
+     position 0 30
+     size 1 30
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     {
+      TextWidgetClass last_server_info_name {
+       visible 1
+       clipchildren 1
+       inheritalpha 1
+       position 0 0
+       size 1 0.55
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "#players_name"
+       font "gui/fonts/sdf_MetronLight24"
+       "text offset" 10 0
+       "exact text" 0
+       "exact text size" 22
+       "size to text h" 0
+       "size to text v" 1
+       "text valign" center
+      }
+     }
+    }
+   }
+  }
+  FrameWidgetClass ModsSimple {
+   visible 0
+   clipchildren 1
+   ignorepointer 1
+   position 80 10
+   size 392 112
+   halign right_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   priority 5
+  }
+  PanelWidgetClass SafeZone {
+   clipchildren 1
+   ignorepointer 1
+   size 0.9 0.77
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   {
+    GridSpacerWidgetClass GridSpacerWidget0 {
+     ignorepointer 1
+     size 316 48
+     halign right_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass ""
+     Padding 0
+     Margin 0
+     "Size To Content V" 1
+     content_halign right
+     Columns 1
+     Rows 1
+     {
+      PanelWidgetClass StatHeader {
+       ignorepointer 1
+       color 0.141 0.157 0.18 0.784
+       size 1 36
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass StatHeaderText {
+         ignorepointer 1
+         position 0 0
+         size 48 22
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Hello, Dab!"
+         font "gui/fonts/Metron"
+         "size to text h" 1
+         "text halign" center
+         "text valign" center
+        }
+        GridSpacerWidgetClass StatSpacer {
+         ignorepointer 1
+         position 12 0
+         size 24 24
+         halign right_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         "Size To Content H" 1
+         "Size To Content V" 1
+         content_halign center
+         content_valign center
+         Columns 2
+         Rows 1
+         {
+          FrameWidgetClass GlobeFrame {
+           visible 0
+           ignorepointer 1
+           position 12 0
+           size 24 24
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass GlobeButton {
+             visible 1
+             ignorepointer 0
+             position 0 0
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "chart_simple"
+               Symbol_Size 2
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+        GridSpacerWidgetClass SoundSpacer {
+         ignorepointer 1
+         position 6 0
+         size 48 48
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         "Size To Content H" 1
+         "Size To Content V" 1
+         Rows 1
+         {
+          FrameWidgetClass FrameWidget0 {
+           visible 1
+           ignorepointer 1
+           position 12 0
+           size 24 24
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass SoundButton {
+             ignorepointer 0
+             position 0 0
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "volume"
+               Symbol_Size 2
+              }
+             }
+            }
+           }
+          }
+          FrameWidgetClass FrameWidget2 {
+           visible 0
+           ignorepointer 1
+           position 12 0
+           size 24 24
+           halign right_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 1
+           vexactsize 1
+           {
+            ImageWidgetClass MusicButton {
+             ignorepointer 0
+             position 0 0
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "music"
+               Symbol_Size 2
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass GridSpacerWidget1 {
+       ignorepointer 1
+       size 316 48
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "ViewBinding"
+       Padding 0
+       Margin 0
+       "Size To Content V" 1
+       content_halign right
+       Columns 1
+       Rows 1
+       {
+        ScriptParamsClass {
+         Binding_Name "StatisticsEntries"
+        }
+       }
+      }
+     }
+    }
+    GridSpacerWidgetClass ButtonSpacer {
+     ignorepointer 1
+     color 0.141 0.157 0.18 0.49
+     size 48 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     Padding 14
+     Margin 7
+     "Size To Content H" 1
+     "Size To Content V" 1
+     Columns 6
+     Rows 1
+     {
+      ButtonWidgetClass ExitButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass ExitButton_Icon {
+         ignorepointer 1
+         position 0 0
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "person_to_door"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+      ButtonWidgetClass SettingButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass SettingButton_Icon {
+         ignorepointer 1
+         position 0 0
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "SymbolHandler"
+         mode blend
+         "src alpha" 1
+         filter 1
+         {
+          ScriptParamsClass {
+           Symbol_Name "gear"
+           Symbol_Size 2
+          }
+         }
+        }
+       }
+      }
+      ButtonWidgetClass DiscordButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass DiscordButton_Icon {
+         ignorepointer 1
+         position 0 0
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass ""
+         image0 "set:brands image:discord"
+         mode blend
+         "src alpha" 1
+         filter 1
+        }
+       }
+      }
+      ButtonWidgetClass WikiButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass WikiButton_Icon {
+         ignorepointer 1
+         position 0 0
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass ""
+         image0 "set:brands image:github"
+         mode blend
+         "src alpha" 1
+         filter 1
+        }
+       }
+      }
+      ButtonWidgetClass TwitterButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass TwitterButton_Icon {
+         ignorepointer 1
+         position 0 0
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass ""
+         image0 "set:brands image:twitter"
+         mode blend
+         "src alpha" 1
+         filter 1
+        }
+       }
+      }
+      ButtonWidgetClass ContinueButton {
+       position 0 0
+       size 48 48
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Empty
+       {
+        ImageWidgetClass ContinueButton_Icon {
+         ignorepointer 1
+         position 0 0
+         size 0.75 0.75
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass ""
+         image0 "set:solid image:forward_step"
+         mode blend
+         "src alpha" 1
+         filter 1
+        }
+       }
+      }
+     }
+    }
+    GridSpacerWidgetClass Licensing {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     position 0 0
+     size 0.45 42
+     halign right_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     priority 5
+     Padding 8
+     Margin 0
+     "Size To Content V" 1
+     content_halign right
+     content_valign bottom
+     Columns 1
+     {
+      TextWidgetClass VersionText {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       position 80 60
+       size 1 0.5
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       text "#main_menu_version"
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 0
+       "text halign" right
+       "text valign" center
+      }
+      TextWidgetClass copyright {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       position 80 40
+       size 1 0.5
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       text "#copyright_disclamer"
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 0
+       "text halign" right
+       "text valign" center
+      }
+      TextWidgetClass EditorText {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       position 80 60
+       size 1 0.5
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       text "DayZ Editor created by InclementDab"
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 0
+       "text halign" right
+       "text valign" center
+      }
+     }
+    }
+    PanelWidgetClass MapSelectorFrame {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     position 0 0
+     size 1116 384
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     {
+      PanelWidgetClass PanelWidget4 {
+       ignorepointer 1
+       color 0 0.478 0.8 1
+       position 0 -24
+       size 1 24
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        TextWidgetClass AvailableMaps {
+         ignorepointer 1
+         position 24 0
+         size 48 24
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         text "Available Maps"
+         font "gui/fonts/Metron14"
+         "size to text h" 1
+         "size to text v" 1
+         "text halign" center
+         "text valign" center
+        }
+       }
+      }
+      ImageWidgetClass MapSelectorBackground {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       color 0.172 0.192 0.212 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       mode opaque
+       "src alpha" 0
+       "clamp mode" wrap
+       "stretch mode" stretch_h_center
+      }
+      ScrollWidgetClass MapScroller {
+       ignorepointer 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style blank
+       "Scrollbar H" 1
+       {
+        GridSpacerWidgetClass MapGrid {
+         visible 1
+         clipchildren 0
+         ignorepointer 1
+         color 0.172 0.192 0.212 1
+         size 1 1
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         scriptclass "ViewBinding"
+         Padding 0
+         Margin 12
+         "Size To Content H" 1
+         content_valign center
+         Columns 99
+         Rows 1
+         {
+          ScriptParamsClass {
+           Binding_Name "MapViews"
+          }
+         }
+        }
+       }
+      }
+      ScrollWidgetClass ServerScroller {
+       visible 0
+       ignorepointer 0
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       {
+        GridSpacerWidgetClass ServerListItems {
+         ignorepointer 1
+         size 1 48
+         halign right_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scriptclass "ViewBinding"
+         Padding 0
+         Margin 7
+         "Size To Content V" 1
+         content_halign right
+         Columns 1
+         Rows 1
+         {
+          PanelWidgetClass ServerRoot {
+           visible 1
+           ignorepointer 1
+           color 0.059 0.059 0.059 0.784
+           size 1 36
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 1
+           style rover_sim_colorable
+           {
+            ButtonWidgetClass RentServerButton {
+             color 0.937 0.91 0.82 1
+             position 0.05 0
+             size 280 28
+             halign right_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             {
+              TextWidgetClass ServerConnectText {
+               ignorepointer 1
+               size 48 18
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 1
+               text "Rent a Server"
+               font "gui/fonts/sdf_MetronBook24"
+               "text color" 0.071 0.561 0.192 1
+               "italic text" 0
+               "bold text" 1
+               "size to text h" 1
+               "text halign" center
+               "text valign" center
+              }
+              PanelWidgetClass PanelWidget5 {
+               ignorepointer 1
+               color 0.937 0.91 0.82 1
+               position 0 0
+               size 1 1
+               halign center_ref
+               valign center_ref
+               hexactpos 1
+               vexactpos 1
+               hexactsize 0
+               vexactsize 0
+               style Outline
+              }
+             }
+            }
+           }
+          }
+         }
+         {
+          ScriptParamsClass {
+           Binding_Name "ServerEntries"
+          }
+         }
+        }
+       }
+      }
+      GridSpacerWidgetClass ModeSelector {
+       ignorepointer 1
+       position 0 -36
+       size 152 36
+       valign bottom_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       Padding 7
+       Margin 0
+       "Size To Content H" 1
+       Columns 2
+       Rows 1
+       {
+        ButtonWidgetClass ModeOffline {
+         position 10 10
+         size 114 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass ModeOfflinePanel {
+           ignorepointer 1
+           color 0 0.412 0.694 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           {
+            TextWidgetClass ModeOfflineText {
+             ignorepointer 1
+             size 48 20
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             text "OFFLINE"
+             font "gui/fonts/sdf_MetronBook24"
+             "bold text" 1
+             "size to text h" 1
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+         }
+        }
+        ButtonWidgetClass ModeOnline {
+         position 10 10
+         size 114 48
+         hexactpos 1
+         vexactpos 1
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         {
+          ImageWidgetClass ModeOnlinePanel {
+           ignorepointer 1
+           color 0.169 0.188 0.208 1
+           size 1 1
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           {
+            TextWidgetClass ModeOnlineText {
+             ignorepointer 1
+             position 0 0
+             size 48 20
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             text "ONLINE"
+             font "gui/fonts/sdf_MetronBook24"
+             "bold text" 1
+             "size to text h" 1
+             "text halign" center
+             "text valign" center
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass ServerShowcase {
+     ignorepointer 0
+     color 0.141 0.157 0.18 0.784
+     size 432 144
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 1
+     style rover_sim_colorable
+     {
+      RichTextWidgetClass ServerShowcaseBackupText {
+       visible 1
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Want to see your server here?"
+       font "gui/fonts/Metron22"
+       "exact text" 1
+       "size to text h" 0
+       "size to text v" 0
+       "text halign" center
+       "text valign" center
+       wrap 1
+      }
+      ImageWidgetClass ServerShowcaseImage {
+       visible 0
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       image0 ""
+       mode blend
+       "src alpha" 1
+       "clamp mode" border
+       "stretch mode" fit_h_center
+       {
+        ButtonWidgetClass NextServerShowcase {
+         color 1 1 1 0.49
+         position 0.05 0.075
+         size 22 22
+         halign right_ref
+         valign bottom_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         "no focus" 1
+         {
+          ImageWidgetClass ImageWidget2 {
+           visible 1
+           ignorepointer 1
+           color 0.141 0.157 0.18 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass ""
+           mode blend
+           "src alpha" 1
+           {
+            ImageWidgetClass NextServerShowcase_Icon {
+             ignorepointer 1
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "right"
+               Symbol_Size 2
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+        ButtonWidgetClass PrevServerShowcase {
+         color 1 1 1 0.49
+         position 0.05 0.075
+         size 22 22
+         valign bottom_ref
+         hexactpos 0
+         vexactpos 0
+         hexactsize 1
+         vexactsize 1
+         style Empty
+         "no focus" 1
+         {
+          ImageWidgetClass ImageWidget3 {
+           visible 1
+           ignorepointer 1
+           color 0.141 0.157 0.18 1
+           size 0.75 0.75
+           halign center_ref
+           valign center_ref
+           hexactpos 1
+           vexactpos 1
+           hexactsize 0
+           vexactsize 0
+           scriptclass ""
+           mode blend
+           "src alpha" 1
+           {
+            ImageWidgetClass PrevServerShowcase_Icon {
+             ignorepointer 1
+             size 0.75 0.75
+             halign center_ref
+             valign center_ref
+             hexactpos 1
+             vexactpos 1
+             hexactsize 0
+             vexactsize 0
+             scriptclass "SymbolHandler"
+             mode blend
+             "src alpha" 1
+             {
+              ScriptParamsClass {
+               Symbol_Name "left"
+               Symbol_Size 2
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       }
+      }
+      PanelWidgetClass ServerShowcaseOutline {
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       style Outline
+      }
+     }
+    }
+   }
+  }
+  ImageWidgetClass vignette {
+   visible 1
+   ignorepointer 1
+   color 0 0 0 0.784
+   position 0 -0.74
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   priority 1
+   imageTexture "{E6B3EF816E067499}Gui/textures/inventory_bgvignette.edds"
+   mode blend
+   "src alpha" 1
+   "clamp mode" clamp
+   "stretch mode" stretch_w_h
+   filter 0
+   nocache 1
+  }
+ }
+}

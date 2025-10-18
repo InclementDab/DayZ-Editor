@@ -1,16 +1,17 @@
 class EditorDeletedObject: EditorWorldObject
 {
+	string Uuid;
+	
 	protected bool m_IsSelected;
 	
 	protected string m_Type;
 	protected vector m_Position;
 	protected vector m_Orientation;
 	protected vector m_BottomCenter;
-		
-	private vector m_LineVerticies[4];
 	
+	protected vector m_Transform[4];
+			
 	protected ref EditorDeletedListItem m_EditorDeletedListItem;
-	
 	protected ref EditorDeletedObjectWorldMarker m_EditorDeletedObjectWorldMarker;
 	
 	protected EditorDeletedObjectData m_Data;
@@ -18,35 +19,46 @@ class EditorDeletedObject: EditorWorldObject
 	void EditorDeletedObject(EditorDeletedObjectData data)
 	{
 		m_Data = data;
-				
-		m_WorldObject = m_Data.WorldObject;
-		if (!m_WorldObject) {
-			m_WorldObject = m_Data.FindObject();
-			if (!m_WorldObject) {
-				EditorLog.Error("Failed to find object with name %1 at position %2", m_Data.Type, m_Data.Position.ToString());
+		
+		// Bugfix for not having the world object info loaded yet
+		m_Data.WorldObject = m_Data.FindObject();
+		
+		SetWorldObject(m_Data.WorldObject);
+		if (!GetWorldObject()) {
+			SetWorldObject(m_Data.FindObject());
+			if (!GetWorldObject()) {
+				EditorLog.Error("Failed to find object with name %1:%3 at position %2", m_Data.Type, m_Data.Position.ToString(), m_Data.ModelName);
 				return;
 			}
 		}
 		
-		m_Position = m_WorldObject.GetPosition();
-		m_Orientation = m_WorldObject.GetOrientation();
+		m_Position = GetWorldObject().GetPosition();
+		m_Orientation = GetWorldObject().GetOrientation();
 		
+		// Store original transform
+		vector transform[4];
+		m_WorldObject.GetTransform(transform);
+		copyarray(m_Transform, transform);
+		
+		/*
 		vector clip_info[2];
-		m_WorldObject.ClippingInfo(clip_info);
+		GetWorldObject().ClippingInfo(clip_info);
 		
 		m_LineVerticies[0] = clip_info[0];
 		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
 		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
+		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);*/
 		
-		m_BottomCenter = m_WorldObject.GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
+		m_BottomCenter = GetWorldObject().GetGlobalPos(AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3])));
 		
 		// todo: probably use the events system to insert this stuff into the UI
 		m_EditorDeletedListItem = new EditorDeletedListItem(this);		
 		GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData.Insert(m_EditorDeletedListItem);
 		
+		GetDayZGame().GetSuppressedObjectManager().Suppress(GetWorldObject());
 		
-		CF.ObjectManager.HideMapObject(m_WorldObject);
+		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+		m_EditorDeletedObjectWorldMarker.Show(false);
 	}
 	
 	void ~EditorDeletedObject()
@@ -56,9 +68,16 @@ class EditorDeletedObject: EditorWorldObject
 			OnDeselected();
 		}
 		
-		CF.ObjectManager.UnhideMapObject(m_WorldObject);
+		if (GetDayZGame() && GetDayZGame().GetSuppressedObjectManager()) {
+			GetDayZGame().GetSuppressedObjectManager().Unsupress(GetWorldObject());
+		}
+		
 		delete m_EditorDeletedListItem;
-		delete m_EditorDeletedObjectWorldMarker;
+	}
+	
+	override void GetTransform(out vector mat[4]) 
+	{ 
+		copyarray(mat, m_Transform);
 	}
 	
 	EditorDeletedObjectData GetData()
@@ -79,23 +98,32 @@ class EditorDeletedObject: EditorWorldObject
 	void OnSelected()
 	{
 		m_IsSelected = true;
-		m_EditorDeletedObjectWorldMarker = new EditorDeletedObjectWorldMarker(this);
+		
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Select();
 		}
 		
-		CF.ObjectManager.UnhideMapObject(m_WorldObject, false);
+		if (m_EditorDeletedObjectWorldMarker) {
+			m_EditorDeletedObjectWorldMarker.Show(true);
+		}
+		
+		// Temporarily unsuppress
+		GetDayZGame().GetSuppressedObjectManager().Unsupress(GetWorldObject());
 	}
 	
 	void OnDeselected()
 	{
 		m_IsSelected = false;
-		delete m_EditorDeletedObjectWorldMarker;
+		
 		if (m_EditorDeletedListItem) {
 			m_EditorDeletedListItem.Deselect();
 		}
 		
-		CF.ObjectManager.HideMapObject(m_WorldObject, false);
+		if (m_EditorDeletedObjectWorldMarker) {
+			m_EditorDeletedObjectWorldMarker.Show(false);
+		}
+		
+		GetDayZGame().GetSuppressedObjectManager().Suppress(GetWorldObject());
 	}
 	
 	bool IsSelected()

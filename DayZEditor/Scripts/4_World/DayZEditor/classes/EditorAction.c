@@ -104,8 +104,8 @@ class EditorAction
 		GetEditor().DeleteObject(object, false);
 	}
 	
-	void SetTransform(Param3<int, vector, vector> params)
-	{
+	void SetTransform(Param4<int, vector, vector, float> params)
+	{		
 		//EditorLog.Trace("EditorAction::SetTransform");
 		EditorObjectData editor_object_data = GetEditor().GetSessionDataById(params.param1);
 		if (!editor_object_data) {
@@ -119,8 +119,18 @@ class EditorAction
 			return;
 		}
 
-		editor_object.SetPosition(params.param2);
-		editor_object.SetOrientation(params.param3);
+		float scale = params.param4;
+		
+		vector matrix[4];
+		Math3D.YawPitchRollMatrix(params.param3, matrix);
+		matrix[0] = matrix[0] * scale;
+		matrix[1] = matrix[1] * scale;
+		matrix[2] = matrix[2] * scale;
+		matrix[3] = params.param2;
+						
+		editor_object.SetTransform(matrix);
+		editor_object.Update();
+		editor_object.UpdateNet();
 	}
 	
 	void Hide(Param1<int> params)
@@ -152,6 +162,28 @@ class EditorAction
 		}
 	}
 	
+	void Unshow(Param1<int> params)
+	{
+		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
+		if (!object) {
+			EditorLog.Error("EditorAction::Delete Object was null!");
+			return;
+		}
+
+		object.Show(false);
+	}
+
+	void Show(Param1<int> params)
+	{
+		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
+		if (!object) {
+			EditorLog.Error("EditorAction::Delete Object was null!");
+			return;
+		}
+
+		object.Show(true);
+	}
+	
 	void Lock(Param1<EditorObject> param)
 	{
 		param.param1.Lock(true);
@@ -160,23 +192,5 @@ class EditorAction
 	void Unlock(Param1<EditorObject> param)
 	{
 		param.param1.Lock(false);
-	}
-	
-	void CreateCameraTrack(SerializedCameraTrack params)
-	{
-		EditorLog.Trace("EditorAction::CreateCameraTrack %1", params.param5);
-		EditorCameraTrackListItem list_item(params.param1, params.param2, params.param3, params.param5, params.param4);
-		GetEditor().GetCameraTrackManager().InsertCameraTrack(list_item);
-	}
-	
-	void DeleteCameraTrack(SerializedCameraTrack params)
-	{
-		EditorLog.Trace("EditorAction::DeleteCameraTrack %1", params.param1.ToString());
-		
-		/*foreach (EditorCameraTrackListItem list_item: GetEditor().GetEditorHud().GetTemplateController().CameraTrackItems) {
-			
-		}*/
-		
-		//GetEditor().GetEditorHud().GetTemplateController().RemoveCameraTrack(params.param1);	
 	}
 }

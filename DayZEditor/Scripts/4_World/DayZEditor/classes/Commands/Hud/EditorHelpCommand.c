@@ -10,4 +10,9 @@ class EditorHelpCommand: EditorAsyncCommand
 	{
 		return "#STR_EDITOR_HELP";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.CIRCLE_QUESTION;
+	}
 }

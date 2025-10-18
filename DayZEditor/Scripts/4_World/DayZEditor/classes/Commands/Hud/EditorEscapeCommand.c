@@ -2,9 +2,14 @@ class EditorEscapeCommand: EditorCommand
 {
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		super.Execute(sender, args);
+		super.Execute(sender, args);		
 		if (EditorHud.CurrentDialog) {	
 			EditorHud.CurrentDialog.CloseDialog();
+			return true;
+		}
+		
+		if (m_Editor.GetEditorHud().GetDialog()) {
+			m_Editor.GetEditorHud().GetDialog().Delete();
 			return true;
 		}
 		
@@ -18,34 +23,23 @@ class EditorEscapeCommand: EditorCommand
 			return true;
 		} 
 		
-		if (m_Editor.GetBrush()) {
-			m_Editor.GetEditorHud().GetTemplateController().GetToolbarController().BrushToggleButton.SetState(false);
-			m_Editor.SetBrush(null);
-			return true;
-		}
-		
 		if (m_Editor.IsPlacing()) {
 			m_Editor.ClearHand();
 			return true;
 		}
 		
-		if (m_Editor.IsPromptedForObjectSelection()) {
-			m_Editor.PromptForObjectSelection(null);
-			return true;
-		}
-		
-		if (m_Editor.GetSelectedObjects().Count() > 0) {
+		if (m_Editor.GetSelectedObjects().Count() > 0 || m_Editor.GetSelectedHiddenObjects().Count() > 0) {
 			m_Editor.ClearSelection();
 			return true;
 		}
-		
-		if (m_Editor.GetCameraTrackManager().GetSelectedTracks().Count() > 0) {
-			m_Editor.GetCameraTrackManager().ClearSelection();
+				
+		if (m_Editor.GetEditorHud().IsMapVisible()) {
+			m_Editor.GetEditorHud().Map.Show(false);
 			return true;
 		}
 		
-		if (m_Editor.GetEditorHud().IsMapVisible()) {
-			m_Editor.GetEditorHud().EditorMapWidget.Show(false);
+		if (m_Editor.IsPlayerControlled()) {
+			m_Editor.SetPlayerControlled(false);
 			return true;
 		}
 		
@@ -53,16 +47,29 @@ class EditorEscapeCommand: EditorCommand
 			m_Editor.FinishEditLootSpawns();
 			return true;
 		} 
-
-		if (g_Game.GetMission().IsPaused()) {
-			m_Editor.GetEditorHud().Show(m_Editor.GetCurrentControl() == m_Editor.GetCamera());
-			g_Game.GetMission().Continue();
-			return true;
-		} 
 		
-		m_Editor.GetEditorHud().Show(false);
-		g_Game.GetMission().Pause();
+		if (GetGame().GetMission().IsPaused()) {
+			GetGame().GetUIManager().Back();
+			GetEditor().GetEditorHud().Show(true);
+			return true;
+		}
+		
+		//if (GetGame().GetUIManager().GetMenu() && GetGame().GetUIManager().GetMenu().GetID() == MENU_INGAME) {
+		//	GetGame().GetUIManager().Back();
+		//	return true;
+		//} 
+		
+		//GetEditor().GetEditorHud().EnterChildMenu(MENU_INGAME);
+		//GetGame().GetUIManager().EnterScriptedMenu(MENU_INGAME, null);
+		//GetUApi().SupressNextFrame(true);
+		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(GetGame().GetMission().Pause);
+		GetEditor().GetEditorHud().Show(false);
 		return true;
+	}
+	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_ESCAPE };
 	}
 	
 	override string GetName() 

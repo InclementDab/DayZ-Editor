@@ -1,8 +1,5 @@
-// position, orientation, time, flip orientation, name
-typedef Param5<vector, vector, float, bool, string> SerializedCameraTrack;
-
 class EditorObjectMap: map<int, EditorObject>
-{
+{	
 	int InsertEditorObject(EditorObject editor_object)
 	{
 		if (!editor_object) {

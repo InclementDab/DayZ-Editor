@@ -1,20 +1,19 @@
-WrapSpacerWidgetClass EditorMenuContent {
+GridSpacerWidgetClass EditorMenuContent {
  clipchildren 1
- color 1 1 1 0.3137
- size 300 0
+ color 0.067 0.071 0.078 1
+ size 240 0
  hexactpos 1
  vexactpos 1
  hexactsize 1
- vexactsize 0
+ vexactsize 1
  scaled 1
- priority 500
+ priority 451
  scriptclass "ViewBinding"
- style SlimOutline_WSW
+ style Colorable
  Padding 0
- Margin 1
- "Size To Content H" 1
  "Size To Content V" 1
- content_halign center
+ Columns 1
+ Rows 12
  {
   ScriptParamsClass {
    Binding_Name "MenuItems"

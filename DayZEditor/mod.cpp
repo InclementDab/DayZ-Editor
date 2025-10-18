@@ -1,0 +1,11 @@
+name = "DayZ Editor";
+picture = "DayZEditor\GUI\images\dayz_editor_logo.edds";
+logo = "DayZEditor\GUI\images\dayz_editor_logo.edds";
+logoSmall = "DayZEditor\GUI\images\dayz_editor_logo.edds";
+logoOver = "DayZEditor\GUI\images\dayz_editor_logo.edds";
+tooltip = "DayZ Editor";
+overview = "The DayZ Editor is an Open Source 3D Editing tool built to design new areas, create screenshots, and test game mechanics. Users can place any item available in the game, import and export files from all types of mods, and brush the landscape with your new ideas";
+action = "https://dab.dev";
+author = "InclementDab";
+authorID = "76561198247958888";
+version = "1.0";

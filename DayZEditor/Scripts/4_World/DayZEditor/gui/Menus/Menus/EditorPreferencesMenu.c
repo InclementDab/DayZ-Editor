@@ -5,7 +5,12 @@ class EditorPreferencesMenu: EditorMenu
 		EditorLog.Trace("EditorPreferencesMenu");
 		
 		foreach (string category: EditorPreferencesDialog.CATEGORIES) {
-			AddMenuItem(new EditorPreferencesListItem(category));
+			// lol, lmao even
+			if (category == "#STR_EDITOR_CAMERA" && !GetEditor().GetCamera().GetSettings().LegacyCamera) {
+				continue;
+			}
+			
+			AddMenuItem(new EditorPreferencesListItem(this, null, category));
 		}
 	}
 }

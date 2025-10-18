@@ -1,50 +1,84 @@
-FrameWidgetClass CameraMarkerRoot {
+FrameWidgetClass Root {
  visible 1
- color 0.502 0 0.3765 1
+ clipchildren 0
+ ignorepointer 1
+ color 0.502 0 0.377 1
  position 0 0
- size 50 50
+ size 110 110
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
- priority 98
+ scaled 0
+ priority 200
  {
-  ImageWidgetClass CameraMarkerImageBlackoutline {
-   visible 1
+  TextWidgetClass Text {
    ignorepointer 1
-   color 0.1176 0.1176 0.1176 1
-   position 0 0
-   size 60 60
-   halign center_ref
-   valign center_ref
+   color 0.314 0.314 0.314 1
+   position 11 34
+   size 48 24
    hexactpos 1
    vexactpos 1
    hexactsize 1
    vexactsize 1
-   priority 101
-   image0 "set:ccgui_enforce image:HudAttack"
-   mode blend
-   "src alpha" 1
-   "no wrap" 1
-   stretch 1
-   filter 1
+   scaled 0
+   priority 400
+   text "dab"
+   font "gui/fonts/sdf_MetronBook24"
+   "bold text" 1
+   "size to text h" 1
+  }
+  FrameWidgetClass IconFrame {
+   ignorepointer 1
+   position 0 0
+   size 24 24
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 0
+   priority 400
    {
-    ImageWidgetClass CameraMarkerImageMain {
+    ImageWidgetClass Icon0 {
      visible 1
+     clipchildren 0
      ignorepointer 1
-     size 50 50
+     color 0 0 0 1
+     size 1 1
      halign center_ref
      valign center_ref
      hexactpos 1
      vexactpos 1
-     hexactsize 1
-     vexactsize 1
-     priority 101
-     image0 "set:ccgui_enforce image:HudAttack"
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     priority 400
+     image0 "set:solid image:video"
      mode blend
      "src alpha" 1
-     "no wrap" 1
-     stretch 1
+     "clamp mode" clamp
+     "stretch mode" stretch_w_h
+     filter 1
+    }
+    ImageWidgetClass Icon {
+     visible 1
+     clipchildren 0
+     ignorepointer 1
+     color 0.314 0.314 0.314 1
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 0
+     priority 400
+     image0 "set:solid image:video"
+     mode blend
+     "src alpha" 1
+     "clamp mode" clamp
+     "stretch mode" stretch_w_h
      filter 1
     }
    }

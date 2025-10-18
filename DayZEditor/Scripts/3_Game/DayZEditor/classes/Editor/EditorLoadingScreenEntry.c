@@ -1,12 +1,12 @@
 class EditorLoadingScreenEntry
 {
-	string File;
+	string FileName;
 	string Creator;
 	bool HideLogo;
 	
 	void EditorLoadingScreenEntry(string file, string creator, bool hide_logo = false)
 	{
-		File = file; 
+		FileName = file; 
 		Creator = creator; 
 		HideLogo = hide_logo;
 	}

@@ -1,77 +1,72 @@
 class EditorHudController: EditorControllerBase
 {
-	string SearchBarData;
-	string SearchBarIcon = "set:dayz_editor_gui image:search";
 	string Version = Editor.Version;
-	
-	//
-	string PlacedSearchBarData;
-	string PlacedSearchBarIcon = "set:dayz_editor_gui image:search";
-	
-	string ObjectReadoutName;
-	
+		
 	bool CategoryPlacements = true;
 	bool CategoryDeletions;
+	bool CategoryPlayers;
 	bool CategoryConfig = true;
 	bool CategoryStatic;
 	bool FavoritesToggle;
-	
-	StringEvaluater PrecisionLevel = "0.5";
+	bool ShowPrivate;
 	
 	float cam_x, cam_y, cam_z;	
 	float obj_x, obj_y, obj_z;
 	
-	// Main data
-	ref EditorHudToolbar EditorHudToolbarView;
+	// Main data		
+	ref ObservableCollection<ref EditorListNode> LeftContent = new ObservableCollection<ref EditorListNode>(this);
+	ref ObservableCollection<ref EditorListNode> RightContent = new ObservableCollection<ref EditorListNode>(this);
 	
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerConfig = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	ref ObservableCollection<ref EditorPlaceableListItem> LeftbarSpacerStatic = new ObservableCollection<ref EditorPlaceableListItem>(this);
 	
 	ref ObservableCollection<EditorListItem> RightbarPlacedData 		= new ObservableCollection<EditorListItem>(this);
 	ref ObservableCollection<EditorListItem> RightbarDeletionData 		= new ObservableCollection<EditorListItem>(this);
+	ref ObservableCollection<EditorPlayerListItem> RightbarPlayerData 		= new ObservableCollection<EditorPlayerListItem>(this);
 	
 	// Logger
 	static const int MAX_LOG_ENTRIES = 20;
 	ref ObservableCollection<ref EditorLogEntry> EditorLogEntries 			= new ObservableCollection<ref EditorLogEntry>(this);
 	
 	// Camera bindings
-	float CameraSmoothing = 50.0;
-	ref ObservableCollection<EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<EditorCameraTrackListItem>(this);
+	float CameraSmoothing = 0.35;
+	float CameraTrackSpeed = 40;
+	string CameraTrackSpeedText = "40m/s";
+	ref ObservableCollection<ref EditorCameraTrackListItem> CameraTrackData = new ObservableCollection<ref EditorCameraTrackListItem>(this);
+	ref array<EditorCameraTrackListItem> SelectedCameraTracks;
+	
+	ref ObservableCollection<ref ScriptView> CameraControls = new ObservableCollection<ref ScriptView>(this);
 
 	// View Properties
-	protected Widget LeftbarFrame;
+	Widget LeftbarFrame;
 	protected ImageWidget LeftbarHideIcon;
 	
 	ScrollWidget LeftbarScroll;
 	ScrollWidget RightbarScroll;
+	EditBoxWidget LeftSearchBar, RightSearchBar;
 	
-	protected Widget RightbarFrame;
+	Widget RightbarFrame;
 	protected ImageWidget RightbarHideIcon;
 	
 	protected WrapSpacerWidget RightbarPlacementsList;
 	protected WrapSpacerWidget RightbarDeletionsList;
+	protected WrapSpacerWidget RightbarPlayersList;
 	
 	protected WrapSpacerWidget LeftbarPlacementsConfig, LeftbarPlacementsStatic;
-	protected ButtonWidget LeftbarCategoryConfig, LeftbarCategoryStatic;
 	
 	protected GridSpacerWidget InfobarObjPosFrame;
 		
 	protected WrapSpacerWidget LeftbarPanelSelectorWrapper;
-	protected EditBoxWidget LeftbarSearchBar;
-	
-	//
-	protected EditBoxWidget PlacedSearchEditbox;
-	
-	protected ButtonWidget CinematicCameraButton;
-	protected ButtonWidget BrushToggleButton;
-	protected ButtonWidget PlacementsTabButton;
-	protected ButtonWidget DeletionsTabButton;
-	protected ButtonWidget LeftbarPanelSearchBarIconButton;
-	protected ButtonWidget PlacedSearchIconButton;
-	
+			
 	// Camera Track
 	protected Widget CameraTrackWrapper;
-	protected ButtonWidget CameraTrackRunButton;
+
+	protected ButtonWidget GizmoTranslateButton, FavoritesTabButton, ShowPrivateButton, LeftbarCategoryStatic, LeftbarCategoryConfig;
+	protected ButtonWidget LeftbarHide, DeletionsTabButton, PlacementsTabButton, RightbarHide, PlayerTabButton;
+	protected ButtonWidget MenuBarFile, MenuBarEdit, MenuBarView, MenuBarEditor;
+	protected ButtonWidget BrushToggleButton, CinematicCameraButton, CameraTrackMinimizeButton, AddNodeButton, CameraTrackRunButton;
+	protected ButtonWidget ObjectSelectionButton, BoxSelectionButton, EllipseSelectionButton, LassoSelectionButton;
+	
 	protected Widget CameraTrackButtonOutline;
 	
 	// Preview for Object Readout
@@ -79,81 +74,29 @@ class EditorHudController: EditorControllerBase
 	
 	// Favorites
 	protected ref array<string> m_FavoriteItems = {};
+
+	Widget BrushRadiusText, BrushRadiusSlider, BrushDensityText, BrushDensitySlider, BrushWidthText, BrushWidthSlider;
 	
-	// Temp until sub ViewControllers can be properties of parent ViewController
-	EditorHudToolbarController GetToolbarController() 
-	{
-		return EditorHudToolbarController.Cast(EditorHudToolbarView.GetController());
-	}
-	
+	float BrushRadius = 65;
+	float BrushDensity = 0.25;
+	float BrushWidth = 2.0;
+					
 	void EditorHudController() 
-	{
-		EditorLog.Trace("EditorHudController");
-		
+	{		
+		m_Editor = GetEditor();
 #ifndef COMPONENT_SYSTEM	
 
 		EditorLog.OnLog.Insert(OnEditorLog);		
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(Update);
 #endif
-		
-		// more hacking
-		g_EditorPrecision = GetPrecisionLevel();
 	}
 	
 	void ~EditorHudController() 
-	{
-		EditorLog.Trace("~EditorHudController");
-		
+	{		
 #ifndef COMPONENT_SYSTEM		
 		EditorLog.OnLog.Remove(OnEditorLog);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 #endif
-	}
-	
-	override void OnWidgetScriptInit(Widget w)
-	{
-		super.OnWidgetScriptInit(w);
-		
-		// Reload Placeables
-#ifndef COMPONENT_SYSTEM
-		
-		array<string> favorite_items = {};
-		GetGame().GetProfileStringList("EditorFavoriteItems", favorite_items);
-		
-		array<ref EditorPlaceableItem> placeable_items = GetEditor().GetPlaceableObjects();
-		foreach (EditorPlaceableItem placeable_item: placeable_items) {				
-			// Makes stuff look good when first loading
-			switch (placeable_item.Category) {
-				case EditorPlaceableItemCategory.CONFIG: {
-					LeftbarSpacerConfig.Insert(new EditorPlaceableListItem(placeable_item));
-					break;
-				}
-				
-				case EditorPlaceableItemCategory.SCRIPTED:
-				case EditorPlaceableItemCategory.STATIC: {
-					LeftbarSpacerStatic.Insert(new EditorPlaceableListItem(placeable_item));
-					break;
-				}
-			}
-						
-			// update favorites from properties		, bbroooklkkeeenn	
-			if (favorite_items.Find(placeable_item.Type) != -1) {
-				//list_item.SetFavorite(true);
-			}
-		}
-		
-		EditorLog.Info("Loaded %1 Placeable Objects", placeable_items.Count().ToString());
-		
-		// Just a quickset on the color
-		PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
-		DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));		
-		
-		LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
-		LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
-#endif
-		
-		EditorHudToolbarView = new EditorHudToolbar();
-		NotifyPropertyChanged("EditorHudToolbarView");
 	}
 		
 	void Update()
@@ -180,15 +123,10 @@ class EditorHudController: EditorControllerBase
 		}*/
 	}
 			
-	void InsertMapMarker(EditorMarker map_marker)
+	void InsertMapMarker(ScriptView map_marker)
 	{
 		EditorLog.Trace("EditorHudController::InsertMapObject " + map_marker.GetLayoutRoot().GetName());
-		m_Editor.GetEditorHud().EditorMapWidget.AddChild(map_marker.GetLayoutRoot());
-	}
-	
-	float GetPrecisionLevel()
-	{
-		return PrecisionLevel.Parse();
+		m_Editor.GetEditorHud().Map.AddChild(map_marker.GetLayoutRoot());
 	}
 	
 	override void PropertyChanged(string property_name)
@@ -196,17 +134,51 @@ class EditorHudController: EditorControllerBase
 		EditorLog.Trace("EditorHudController::PropertyChanged: %1", property_name);
 		
 		switch (property_name) {
-					
-			case "SearchBarData": {
-				auto spacer_config = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
-				for (int j = 0; j < spacer_config.Count(); j++) {
-					if (FavoritesToggle) {
-						spacer_config[j].GetLayoutRoot().Show(spacer_config[j].GetTemplateController().Favorite && spacer_config[j].FilterType(SearchBarData)); 	
-					} else {
-						spacer_config[j].GetLayoutRoot().Show(spacer_config[j].FilterType(SearchBarData)); 	
-					}
+			case "CameraTrackSpeed": {
+				CameraTrackSpeedText = string.Format("%1 m/s", CameraTrackSpeed);
+				NotifyPropertyChanged("CameraTrackSpeedText");
+				break;
+			}
+			
+			case "FavoritesToggle":
+			case "ShowPrivate": {
+				GetEditor().GetSettings().ShowFavoriteObjects = FavoritesToggle;
+				GetEditor().GetSettings().ShowScopeZeroObjects = ShowPrivate;
+				GetEditor().GetSettings().Save();
+				if (GetEditor().GetEditorHud()) {
+					GetEditor().GetEditorHud().RefreshSearchBar();
 				}
 				
+				break;
+			}
+
+			case "BrushToggleButtonState":
+			case "BrushTypeSelection": {
+				/*
+				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
+					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
+					NotifyPropertyChanged("BrushToggleButtonText", false);
+				}
+								
+				m_Editor.CommandManager[EditorBrushToggleCommand].Execute(this, new ButtonCommandArgs(BrushToggleButton, 0));*/
+
+				break;
+			}
+			
+			case "BrushRadius":
+			case "BrushDensity":
+			case "BrushWidth": {
+				EditorBrush.BrushRadius = BrushRadius / 2;
+				EditorBrush.BrushDensity = BrushDensity;
+				EditorBrush.BrushWidth = BrushWidth;
+				break;
+			}
+		}
+
+		switch (property_name) {
+					
+			case "SearchBarData": {
+				/*
 				LeftbarScroll.VScrollToPos(0);
 				
 				if (SearchBarData.Length() > 0) {
@@ -216,12 +188,12 @@ class EditorHudController: EditorControllerBase
 				}
 				
 				NotifyPropertyChanged("SearchBarIcon");
-				
+				*/
 				break;
 			}	
 			
 			case "PlacedSearchBarData": {
-				
+				/*
 				ObservableCollection<EditorListItem> selected_list;
 				if (CategoryPlacements) {
 					selected_list = RightbarPlacedData;
@@ -242,25 +214,10 @@ class EditorHudController: EditorControllerBase
 				}
 				
 				NotifyPropertyChanged("PlacedSearchBarIcon");
-				
+				*/
 				break;
 			}
-			
-			case "FavoritesToggle": {
-				auto spacer_config_favorites = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(CategoryConfig, LeftbarSpacerConfig, LeftbarSpacerStatic);
-				for (int i = 0; i < spacer_config_favorites.Count(); i++) {
-					if (FavoritesToggle) {
-						spacer_config_favorites[i].GetLayoutRoot().Show(spacer_config_favorites[i].GetTemplateController().Favorite && spacer_config_favorites[i].FilterType(SearchBarData));
-					} else {
-						spacer_config_favorites[i].GetLayoutRoot().Show(spacer_config_favorites[i].FilterType(SearchBarData)); 	 // SearchBarData == string.Empty || LeftbarSpacerData[i].FilterType(SearchBarData)
-					}
-				}
-				
-				LeftbarScroll.VScrollToPos(0);
-				
-				break;
-			}		
-			
+						
 			case "cam_x":
 			case "cam_y":
 			case "cam_z": {				
@@ -270,32 +227,61 @@ class EditorHudController: EditorControllerBase
 			
 			case "CategoryPlacements": {
 				CategoryDeletions = false;
+				CategoryPlayers = false;
 				NotifyPropertyChanged("CategoryDeletions", false);
+				NotifyPropertyChanged("CategoryPlayers", false);
 				// forcing to be true, otherwise it will just show nothing
 				CategoryPlacements = true;
 				
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
+				RightbarPlayersList.Show(CategoryDeletions);
 				
-				PlacementsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+				PlacementsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
 				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
+				PlayerTabButton.SetColor(ARGB(255, 60, 60, 60));
+				
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}
 			
 			case "CategoryDeletions": {				
 				CategoryPlacements = false;				
+				CategoryPlayers = false;				
 				NotifyPropertyChanged("CategoryPlacements", false);				
+				NotifyPropertyChanged("CategoryPlayers", false);				
 				// forcing to be true, otherwise it will just show nothing
 				CategoryDeletions = true;
+				
 				RightbarPlacementsList.Show(CategoryPlacements);
 				RightbarDeletionsList.Show(CategoryDeletions);
+				RightbarPlayersList.Show(CategoryDeletions);
 				
 				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
-				DeletionsTabButton.SetColor(m_Editor.Settings.SelectionColor);
+				PlayerTabButton.SetColor(ARGB(255, 60, 60, 60));
+				DeletionsTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
 				RightbarScroll.VScrollToPos(0);
 				break;
 			}			
+			
+			case "CategoryPlayers": {
+				CategoryPlacements = false;
+				CategoryDeletions = false;
+				NotifyPropertyChanged("CategoryPlacements", false);				
+				NotifyPropertyChanged("CategoryDeletions", false);
+				
+				CategoryPlayers = true;
+				
+				RightbarPlacementsList.Show(CategoryPlacements);
+				RightbarDeletionsList.Show(CategoryDeletions);
+				RightbarPlayersList.Show(CategoryPlayers);
+				
+				PlacementsTabButton.SetColor(ARGB(255, 60, 60, 60));
+				DeletionsTabButton.SetColor(ARGB(255, 60, 60, 60));
+				PlayerTabButton.SetColor(m_Editor.GetSettings().SelectionColor);
+				RightbarScroll.VScrollToPos(0);
+				break;
+			}
 			
 			case "CategoryConfig": {
 				CategoryStatic = false;
@@ -306,7 +292,7 @@ class EditorHudController: EditorControllerBase
 				LeftbarPlacementsConfig.Show(CategoryConfig);
 				LeftbarPlacementsStatic.Show(CategoryStatic);
 				
-				LeftbarCategoryConfig.SetColor(m_Editor.Settings.SelectionColor);
+				LeftbarCategoryConfig.SetColor(m_Editor.GetSettings().SelectionColor);
 				LeftbarCategoryStatic.SetColor(ARGB(255, 60, 60, 60));
 				LeftbarScroll.VScrollToPos(0);
 				break;
@@ -316,30 +302,13 @@ class EditorHudController: EditorControllerBase
 				CategoryConfig = false;				
 				NotifyPropertyChanged("CategoryPlacements", false);				
 				// forcing to be true, otherwise it will just show nothing
-				CategoryDeletions = true;
+				CategoryStatic = true;
 				LeftbarPlacementsConfig.Show(CategoryConfig);
 				LeftbarPlacementsStatic.Show(CategoryStatic);
 				
 				LeftbarCategoryConfig.SetColor(ARGB(255, 60, 60, 60));
-				LeftbarCategoryStatic.SetColor(m_Editor.Settings.SelectionColor);
+				LeftbarCategoryStatic.SetColor(m_Editor.GetSettings().SelectionColor);
 				LeftbarScroll.VScrollToPos(0);
-				break;
-			}
-			
-			case "SearchBarIcon": {
-				// this could probably be a command with SetCanExecute but im not feeling it 
-				LeftbarPanelSearchBarIconButton.Enable(SearchBarData.Length() > 0);
-				break;	
-			}
-			
-			case "PlacedSearchBarIcon": {
-				PlacedSearchIconButton.Enable(PlacedSearchBarData.Length() > 0);
-				break;
-			}
-			
-			// I literally hate this
-			case "PrecisionLevel": {
-				g_EditorPrecision = GetPrecisionLevel();
 				break;
 			}
 		}
@@ -369,58 +338,20 @@ class EditorHudController: EditorControllerBase
 		
 	void ButtonCreateFolderExecute(ButtonCommandArgs args) 
 	{
-		EditorLog.Trace("EditorHudController::ButtonCreateFolderExecute");
 		EditorCollapsibleListItem category(null);
 		RightbarPlacedData.Insert(category);
 	}	
 	
 	void CameraTrackToggleExecute(ButtonCommandArgs args) 
 	{
-		EditorLog.Trace("EditorHudController::CameraTrackToggleExecute");
 		CameraTrackWrapper.Show(!CameraTrackWrapper.IsVisible());
 	}
 
 	void CameraTrackInsertNode(ButtonCommandArgs args)
 	{
-		EditorLog.Trace("EditorHudController::CameraTrackInsertNode");
-		string name = "CameraTrack" + CameraTrackData.Count();
-		GetEditor().GetCameraTrackManager().InsertCameraTrack(GetEditor().GetCamera(), 1.0, name);
+		GetEditor().AddCameraTrack(GetEditor().GetCamera(), 1.0 + m_Editor.GetObjectManager().GetCameraTracks().Count());
 	}
-
-	void OnSearchButtonPress(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::OnSearchButtonPress");
-		if (SearchBarData.Length() > 0) {
-			SearchBarData = string.Empty;
-			NotifyPropertyChanged("SearchBarData");
-		}
-	}
-	
-	void OnSearchPlacedButtonPress(ButtonCommandArgs args)
-	{
-		EditorLog.Trace("EditorHudController::OnSearchPlacedButtonPress");
-		if (PlacedSearchBarData.Length() > 0) {
-			PlacedSearchBarData = string.Empty;
-			NotifyPropertyChanged("PlacedSearchBarData");
-		}	
-	}
-	
-	
-	void OnCameraTrackStart()
-	{
-		CameraTrackRunButton.SetText("Stop");
-		CameraTrackRunButton.SetColor(COLOR_RED);
-		CameraTrackButtonOutline.SetColor(COLOR_RED);
-	}
-	
-	void OnCameraTrackStop()
-	{
-		CameraTrackRunButton.SetText("Start");
-		CameraTrackRunButton.SetColor(COLOR_WHITE_A);
-		CameraTrackButtonOutline.SetColor(COLOR_WHITE);
-		CameraTrackRunButton.SetState(1);
-	}
-		
+				
 	void DoMultiSelect(int index_0, int index_1, ObservableCollection<EditorListItem> list)
 	{
 		int bottom, top;
@@ -433,8 +364,12 @@ class EditorHudController: EditorControllerBase
 		}
 		
 		for (int i = bottom; i < top; i++) {
+			if (!list[i]) {
+				continue;
+			}
+			
 			// if this element is filtered out
-			if (!list[i].FilterType(PlacedSearchBarData)) {
+			if (!list[i].FilterType(RightSearchBar.GetText())) {
 				continue;
 			}
 			
@@ -454,7 +389,7 @@ class EditorHudController: EditorControllerBase
 	// im not adding a trace to this lol
 	void OnEditorLog(LogLevel level, string message)
 	{
-		if (!m_Editor || !m_Editor.Settings || level < m_Editor.Settings.SelectedLogLevel) {
+		if (!m_Editor || !m_Editor.GetSettings() || level < m_Editor.GetSettings().SelectedLogLevel) {
 			return;
 		}
 		
@@ -463,35 +398,22 @@ class EditorHudController: EditorControllerBase
 			EditorLogEntries.RemoveOrdered(0); // 0 = remove oldest, then since ordered next olded becomes 0. i think????
 		}
 	}
-	
-	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
-	{
-		EditorLog.Trace("EditorHudController::OnMouseButtonDown");
-		
-		if (button == MouseState.RIGHT) {
-		
-			switch (w) {
-				case LeftbarSearchBar: {
-					SearchBarData = string.Empty;
-					NotifyPropertyChanged("SearchBarData");
-					break;
-				}
-				case PlacedSearchEditbox: {
-					PlacedSearchBarData = string.Empty;
-					NotifyPropertyChanged("PlacedSearchBarData");
-					break;
-				}
-			}	
-		}
-	
-		return super.OnMouseButtonDown(w, x, y, button);
-	}
-		
+			
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::OnMouseEnter");
-
+		if (EditorHud.CurrentDialog && !EditorHud.IsDialogCommand(w)) {
+			return super.OnMouseEnter(w, x, y);
+		}
+		
 		switch (w) {
+			case PlayerTabButton: {
+				array<PlayerIdentity> identities = {};
+				GetGame().GetPlayerIndentities(identities);
+				
+				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + identities.Count() + " Players", w, TooltipPositions.BOTTOM_LEFT));
+				break;
+			}
+			
 			case PlacementsTabButton: {
 				m_Editor.GetEditorHud().SetCurrentTooltip(EditorTooltip.CreateOnButton("" + GetEditor().GetPlacedObjects().Count() + " #STR_EDITOR_PLACEMENTS", w, TooltipPositions.BOTTOM_LEFT));
 				break;
@@ -507,65 +429,109 @@ class EditorHudController: EditorControllerBase
 				break;
 			}
 		}
+		
+		switch (w.GetTypeName()) {
+			
+			case "SliderWidget": {
+				w.SetColor(GetEditor().GetSettings().SelectionColor);
+				break;
+			}
+		}
+		
+		ViewBinding view_binding = GetViewBinding(w);
+		if (view_binding && !EditorHud.CurrentMenu) {
+			EditorCommand editor_command;
+			if (Class.CastTo(editor_command, view_binding.GetRelayCommand())) {
+				
+				float pos_x, pos_y, size_x, size_y;
+				w.GetScreenPos(pos_x, pos_y);
+				w.GetScreenSize(size_x, size_y);
+								
+				EditorTooltip tooltip = EditorTooltip.CreateOnButton(editor_command, w, TooltipPositions.BOTTOM_LEFT);
+				if (!editor_command.CanExecute()) {
+					tooltip.GetLayoutRoot().SetAlpha(100);
+				}
+				
+				m_Editor.GetEditorHud().SetCurrentTooltip(tooltip);
+				
+			}
+		}
+		
+		switch (w) {
+			
+			case MenuBarFile:
+			case MenuBarEdit:
+			case MenuBarView:
+			case MenuBarEditor: {
+				
+				if (EditorHud.CurrentMenu) {
+					delete EditorHud.CurrentMenu;
+					EditorHud.CurrentMenu = CreateToolbarMenu(w);
+				}
+				
+				break;
+			}	
+			
+		}
 				
 		return super.OnMouseEnter(w, x, y);
 	}
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		//EditorLog.Trace("EditorHudController::OnMouseLeave");
 		m_Editor.GetEditorHud().SetCurrentTooltip(null);
+
+		SymbolHandler handler;
+
+		switch (w.GetTypeName()) {
+		
+			case "SliderWidget": {
+				w.SetColor(COLOR_WHITE_A);
+				break;
+			}
+		}
 		
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
-	
+		
 	override bool OnMouseWheel(Widget w, int x, int y, int wheel)
-	{
+	{		
 		if (RecursiveGetParent(w, ScrollWidget)) {
-			if (KeyState(KeyCode.KC_LCONTROL)) {
+			if (GetEditor().IsCtrlDown()) {
 				ScrollWidget.Cast(w).VScrollStep(wheel * 10);
+				return true;
+			}
+		}
+		
+		switch (w) {
+			case BrushRadiusText:
+			case BrushRadiusSlider: {
+				BrushRadius += wheel * 2;
+				BrushRadius = Math.Clamp(BrushRadius, 1, 100);
+				NotifyPropertyChanged("BrushRadius");
+				break;
+			}
+			
+			case BrushDensityText:
+			case BrushDensitySlider: {
+				BrushDensity += wheel * 0.05;
+				BrushDensity = Math.Clamp(BrushDensity, 0, 1);
+				NotifyPropertyChanged("BrushDensity");
+				break;
+			}			
+
+			case BrushWidthText: 
+			case BrushWidthSlider: {
+				BrushWidth += wheel;
+				BrushWidth = Math.Clamp(BrushWidth, 0, BrushRadius);
+				NotifyPropertyChanged("BrushWidth");
+				break;
 			}
 		}
 
 		return false;
 	}
-	
-	override bool OnFocus(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnFocus");
-		
-		switch (w) {
 			
-			case LeftbarSearchBar: {
-				m_Editor.GetCamera().MoveEnabled = false;
-				break;
-			}
-			case PlacedSearchEditbox:
-				m_Editor.GetCamera().MoveEnabled = false;
-				break;
-		}
-		
-		return false;
-	}
-	
-	override bool OnFocusLost(Widget w, int x, int y)
-	{
-		EditorLog.Trace("EditorHud::OnFocusLost");
-		
-		switch (w) {
-			
-			case LeftbarSearchBar: {
-				m_Editor.GetCamera().MoveEnabled = true;
-				break;
-			}
-			case PlacedSearchEditbox:
-				m_Editor.GetCamera().MoveEnabled = true;
-				break;
-		}
-		
-		return false;
-	}
-		
 	void SetInfoObjectPosition(vector position)
 	{
 		obj_x = position[0];
@@ -574,5 +540,77 @@ class EditorHudController: EditorControllerBase
 		NotifyPropertyChanged("obj_x");
 		NotifyPropertyChanged("obj_y");
 		NotifyPropertyChanged("obj_z");
+	}
+
+	// Relay Commands
+	void MenuBarExecute(ButtonCommandArgs args) 
+	{		
+		EditorLog.Trace("EditorHudToolbarController::MenuBarExecute");
+		if (!EditorHud.CurrentMenu) { //  GetMenu().Type() != GetBoundMenu(args.GetButtonWidget()) removed cause GetBoundMenu is gone
+			EditorHud.CurrentMenu = CreateToolbarMenu(args.Source);
+		} else {
+			delete EditorHud.CurrentMenu;
+		}
+	}	
+	
+	override void CollectionChanged(string collection_name, CollectionChangedEventArgs args)
+	{
+		EditorLog.Trace("EditorHudToolbarController::CollectionChanged: " + collection_name);
+		switch (collection_name) {
+			
+			case "BrushTypeBoxData": {
+				/*
+				m_Editor.CommandManager[EditorBrushToggleCommand].SetCanExecute(args.Source.Count() > 0);
+				
+				if (BrushTypeSelection < BrushTypeBoxData.Count()) {
+					BrushToggleButtonText = BrushTypeBoxData[BrushTypeSelection].Name;
+					NotifyPropertyChanged("BrushToggleButtonText", false);
+				}*/
+				break;
+			}
+			
+			case "RightbarDeletionData":
+			case "RightbarPlacedData": {
+				
+				break;
+			}
+		}
+	}
+
+	private EditorMenu CreateToolbarMenu(Widget toolbar_button)
+	{
+		EditorLog.Trace("EditorHudToolbarController::CreateToolbarMenu");	
+				
+		EditorMenu toolbar_menu;
+		switch (toolbar_button) {
+			
+			case MenuBarFile: {
+				toolbar_menu = new EditorFileMenu();
+				break;
+			}
+			
+			case MenuBarEdit: {
+				toolbar_menu = new EditorEditMenu();
+				break;
+			}
+			
+			case MenuBarView: {
+				toolbar_menu = new EditorViewMenu();
+				break;
+			}
+			
+			case MenuBarEditor: {
+				toolbar_menu = new EditorEditorMenu(); // lol
+				break;
+			}
+		}
+		
+		// Sets position to bottom of button
+		float x, y, w, h;
+		toolbar_button.GetScreenPos(x, y);
+		toolbar_button.GetScreenSize(w, h);
+		toolbar_menu.GetLayoutRoot().SetPos(x, y + h);
+		
+		return toolbar_menu;
 	}
 }

@@ -1,6 +1,7 @@
 class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmentSlotController>
 {
 	ref ScriptInvoker OnItemSelected = new ScriptInvoker();
+	Widget InventoryFilterButton;
 	
 	void EditorInventoryAttachmentSlot(int slot)
 	{
@@ -9,6 +10,8 @@ class EditorInventoryAttachmentSlot: ScriptViewTemplate<EditorInventoryAttachmen
 		
 		m_TemplateController.Icon = GetSlotImageFromSlotName(InventorySlots.GetSlotName(slot));
 		m_TemplateController.NotifyPropertyChanged("Icon");
+		
+		InventoryFilterButton.SetColor(GetEditor().GetSettings().SelectionColor);
 	}
 	
 	void OnStateChanged(bool state)

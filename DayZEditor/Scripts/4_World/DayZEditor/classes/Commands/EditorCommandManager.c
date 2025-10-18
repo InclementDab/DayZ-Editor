@@ -1,7 +1,7 @@
 class EditorCommandManager
 {
 	protected ref map<typename, ref EditorCommand> m_Commands = new map<typename, ref EditorCommand>();
-	protected ref map<string, EditorCommand> m_CommandShortcutMap = new map<string, EditorCommand>();
+	protected ref map<int, EditorCommand> m_CommandShortcutMap = new map<int, EditorCommand>();
 
 	// This is done specifically for the ViewBindings that bind to these on the toolbar
 	// if you adapt ViewBinding to call a function, to acquire a delegate. ill give you $30
@@ -26,6 +26,7 @@ class EditorCommandManager
 	EditorCommand BrushToggleCommand;
 	EditorCommand BrushDensityCommand;
 	EditorCommand BrushRadiusCommand;
+	EditorCommand BrushWidthCommand;
 	EditorCommand CameraTrackAddNode;
 	EditorCommand CameraTrackRun;
 	EditorCommand CameraToggleLight;
@@ -69,6 +70,7 @@ class EditorCommandManager
 		RegisterCommand(EditorDumpSceneCommand);
 		RegisterCommand(EditorEnvironmentControlCommand);
 		RegisterCommand(EditorCameraControlsCommand);
+		RegisterCommand(EditorChangelogCommand);
 		
 		// All preferences
 		RegisterCommand(EditorPreferencesCommand);
@@ -84,8 +86,8 @@ class EditorCommandManager
 		BrushToggleCommand = RegisterCommand(EditorBrushToggleCommand);
 		BrushDensityCommand = RegisterCommand(EditorBrushDensityCommand);
 		BrushRadiusCommand = RegisterCommand(EditorBrushRadiusCommand);
+		BrushWidthCommand = RegisterCommand(EditorBrushWidthCommand);
 	
-		CameraToggleLight = RegisterCommand(EditorToggleLightCommand);
 		RegisterCommand(EditorResetAlignmentCommand);
 		RegisterCommand(EditorAlignToSurfaceCommand);
 		RegisterCommand(EditorSnapToSurfaceCommand);
@@ -107,7 +109,6 @@ class EditorCommandManager
 		RegisterCommand(EditorExportToEvents);
 		RegisterCommand(EditorExportToMapGroupPos);
 		RegisterCommand(EditorExportToObjectSpawner);
-		RegisterCommand(EditorExportRelativeToObject);
 		
 		RegisterCommand(EditorSearchCommand);
 		RegisterCommand(EditorSearchObjectCommand);
@@ -129,20 +130,14 @@ class EditorCommandManager
 		RegisterCommand(EditorDonateCommand);
 		RegisterCommand(EditorHelpCommand);
 		
-		RegisterCommand(EditorMoveObjectForwardCommand);
-		RegisterCommand(EditorMoveObjectBackwardCommand);
-		RegisterCommand(EditorMoveObjectLeftCommand);
-		RegisterCommand(EditorMoveObjectRightCommand);
-		RegisterCommand(EditorMoveObjectUpCommand);
-		RegisterCommand(EditorMoveObjectDownCommand);
-		RegisterCommand(EditorRotateObjectClockwiseCommand);
-		RegisterCommand(EditorRotateObjectCounterClockwiseCommand);
-		RegisterCommand(EditorScaleUpCommand);
-		RegisterCommand(EditorScaleDownCommand);
-		
 		// Camera Track
 		CameraTrackAddNode = RegisterCommand(EditorCameraTrackAddNode);
 		CameraTrackRun = RegisterCommand(EditorCameraTrackRun);
+		
+		// the future is now
+		foreach (typename cmd: RegisterEditorCommand.Instances) {
+			RegisterCommand(cmd);
+		}
 	}
 	
 	EditorCommand RegisterCommand(typename command_type)
@@ -160,8 +155,8 @@ class EditorCommandManager
 		
 		this[command_type] = command;
 		
-		if (command.GetShortcut() != string.Empty) {
-			m_CommandShortcutMap[command.GetShortcut()] = command;
+		if (command.GetShortcut()) {
+			m_CommandShortcutMap.Insert(command.GetShortcut().GetMask(), command);
 		}	
 		
 		return command;	
@@ -182,8 +177,8 @@ class EditorCommandManager
 		return m_Commands.GetValueArray();
 	}
 	
-	map<string, EditorCommand> GetCommandShortcutMap()
+	EditorCommand GetCommandFromShortcut(int shortcut)
 	{
-		return m_CommandShortcutMap;
+		return m_CommandShortcutMap[shortcut];
 	}
 }

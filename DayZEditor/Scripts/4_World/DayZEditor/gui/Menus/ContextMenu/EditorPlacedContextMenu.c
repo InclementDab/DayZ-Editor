@@ -10,7 +10,7 @@ class EditorPlacedContextMenu: EditorContextMenu
 		EntityAI entity;
 		if (Class.CastTo(entity, context.GetWorldObject()) && entity.GetInventory() && entity.GetInventory().GetAttachmentSlotsCount() > 0) {
 			AddMenuDivider();
-			m_Editor.CommandManager[EditorEditInventoryCommand].SetData(new Param1<EntityAI>(entity));
+			m_Editor.CommandManager[EditorEditInventoryCommand].SetData(new Param2<EntityAI, EditorObject>(entity, context));
 			AddMenuButton(m_Editor.CommandManager[EditorEditInventoryCommand]);
 		}
 		
@@ -19,30 +19,36 @@ class EditorPlacedContextMenu: EditorContextMenu
 			m_Editor.CommandManager[EditorControlPlayerCommand].SetData(new Param1<EditorObject>(context));
 			AddMenuButton(m_Editor.CommandManager[EditorControlPlayerCommand]);
 		}
-		
+				
 		AddMenuButton(m_Editor.CommandManager[EditorAlignToSurfaceCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorSnapToSurfaceCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorResetAlignmentCommand]);
-		AddMenuButton(m_Editor.CommandManager[EditorExportRelativeToObject]);
 		
 		AddMenuDivider();
-		if (context.Show) {
+		if (context.IsVisible()) {
 			AddMenuButton(m_Editor.CommandManager[EditorHideCommand]);
 		} else {
 			AddMenuButton(m_Editor.CommandManager[EditorShowCommand]);
 		}
 		
-		if (context.Locked) {
+		if (context.IsLocked()) {
 			AddMenuButton(m_Editor.CommandManager[EditorUnlockCommand]);
 		} else {
 			AddMenuButton(m_Editor.CommandManager[EditorLockCommand]);
 		}
 		
+		AddMenuButton(m_Editor.CommandManager[EditorMakeStaticCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorMakeConfigCommand]);
+		
 		AddMenuDivider();		
 		AddMenuButton(m_Editor.CommandManager[EditorDuplicateCommand]);
 		
 		m_Editor.CommandManager[EditorExportEventPos].SetData(new Param1<EntityAI>(EntityAI.Cast(context.GetWorldObject())));
+		m_Editor.CommandManager[EditorExportSelectionAsEventGroup].SetData(new Param1<EditorObject>(context));
+		m_Editor.CommandManager[EditorExportSelectionRelativeToBuilding].SetData(new Param1<EditorObject>(context));
 		AddMenuButton(m_Editor.CommandManager[EditorExportEventPos]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportSelectionAsEventGroup]);
+		AddMenuButton(m_Editor.CommandManager[EditorExportSelectionRelativeToBuilding]);
 		AddMenuButton(m_Editor.CommandManager[EditorObjectPropertiesCommand]);
 	}
 }

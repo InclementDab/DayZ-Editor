@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{559F988C35F975B8}DayZEditor/GUI/loadingscreens/typiq-1727399203.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate -686067384
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "typiq-1727399203.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

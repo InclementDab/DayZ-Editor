@@ -1,24 +1,42 @@
-class EditorCameraTrack
+class EditorCameraTrack: EditorObject
 {
-	vector Position;
-	vector Orientation;
-	float Time;
-	bool Flip;
-	string Name;
-	
-	EditorCameraTrackListItem GetEditorCameraTrackListItem()
+	protected ref EditorCameraTrackListItem m_CameraListItem;
+
+	void ~EditorCameraTrack()
 	{
-		return new EditorCameraTrackListItem(Position, Orientation, Time, Name, Flip);
+		delete m_CameraListItem;
+	}
+	
+	void SetListIndex(int index)
+	{
+		if (m_CameraListItem) {
+			int old_index = GetEditor().GetEditorHud().GetTemplateController().CameraTrackData.Find(m_CameraListItem);
+			GetEditor().GetEditorHud().GetTemplateController().CameraTrackData.Remove(old_index);
+			//GetEditor().GetEditorHud().GetTemplateController().CameraTrackData.InsertAt(m_CameraListItem, index);
+		}
+	}
+
+	override void EnableListItem(bool enable) 
+	{		
+		delete m_CameraListItem;
+		
+		if (!enable) {
+			return;
+		}
+		
+		m_CameraListItem = new EditorCameraTrackListItem(this);
+		GetEditor().GetEditorHud().GetTemplateController().CameraTrackData.Insert(m_CameraListItem);
 	}
 }
+
+
+/*
 
 class EditorCameraTrackManagerModule: JMModuleBase
 {
 	ref ScriptInvoker OnTrackStart;
 	ref ScriptInvoker OnTrackStop;
 	
-	ref array<ref EditorCameraTrackListItem> CameraTracks;
-	ref array<EditorCameraTrackListItem> SelectedCameraTracks;
 	
 	protected bool m_CameraTrackRunning;
 	protected vector m_CameraTrackStartPosition;
@@ -31,71 +49,9 @@ class EditorCameraTrackManagerModule: JMModuleBase
 		
 		CameraTracks = {};
 		SelectedCameraTracks = {};
-	}
+	} 
 	
-	void InsertCameraTrack(EditorCamera camera, float time, string name)
-	{
-		EditorLog.Trace("EditorCameraTrackManager::InsertCameraTrack");
-		InsertCameraTrack(new EditorCameraTrackListItem(camera.GetPosition(), camera.GetOrientation(), time, name));
-	}
 	
-	void InsertCameraTrack(EditorCameraTrackListItem camera_track_item)
-	{
-		EditorLog.Trace("EditorCameraTrackManager::InsertCameraTrack");
-		CameraTracks.Insert(camera_track_item);
-		GetEditor().GetEditorHud().GetTemplateController().CameraTrackData.Insert(camera_track_item);
-		
-		EditorAction action = new EditorAction("DeleteCameraTrack", "CreateCameraTrack");
-		action.InsertUndoParameter(camera_track_item.GetSerializedData());
-		action.InsertRedoParameter(camera_track_item.GetSerializedData());
-		
-		GetEditor().InsertAction(action);
-	}
-		
-	void DeleteCameraTrack(EditorCameraTrackListItem camera_track_item)
-	{
-		EditorLog.Trace("EditorCameraTrackManager::RemoveCameraTrack");
-		
-		EditorAction action = new EditorAction("CreateCameraTrack", "DeleteCameraTrack");
-		action.InsertUndoParameter(camera_track_item.GetSerializedData());
-		action.InsertRedoParameter(camera_track_item.GetSerializedData());
-		
-		CameraTracks.RemoveItem(camera_track_item);
-		GetEditor().GetEditorHud().GetTemplateController().CameraTrackData.Remove(GetEditor().GetEditorHud().GetTemplateController().CameraTrackData.Find(camera_track_item));
-		
-		GetEditor().InsertAction(action);
-	}
-	
-	void DeleteCameraTracks(array<EditorCameraTrackListItem> camera_track_list, bool create_undo = true)
-	{
-		EditorLog.Trace("EditorCameraTrackManager::RemoveCameraTrack");
-		
-		EditorAction action = new EditorAction("CreateCameraTrack", "DeleteCameraTrack");
-		foreach (EditorCameraTrackListItem camera_track_item: camera_track_list) {
-			action.InsertUndoParameter(camera_track_item.GetSerializedData());
-			action.InsertRedoParameter(camera_track_item.GetSerializedData());
-			CameraTracks.Remove(CameraTracks.Find(camera_track_item));
-			delete camera_track_item;
-		}
-		
-		if (create_undo) {
-			GetEditor().InsertAction(action);
-		}
-	}
-	
-	void SelectCameraTrack(EditorCameraTrackListItem camera_track_item)
-	{
-		EditorLog.Trace("EditorCameraTrackManager::SelectedCameraTrack");
-		SelectedCameraTracks.Insert(camera_track_item);
-		camera_track_item.OnSelected();
-	}
-	
-	void DeselectCameraTrack(EditorCameraTrackListItem camera_track_item)
-	{
-		EditorLog.Trace("EditorCameraTrackManager::InsertCameraTrack");
-		camera_track_item.OnDeselected();
-		SelectedCameraTracks.RemoveOrdered(SelectedCameraTracks.Find(camera_track_item));
-	}
 	
 	void ClearSelection()
 	{
@@ -198,4 +154,4 @@ class EditorCameraTrackManagerModule: JMModuleBase
 	{
 		return false;
 	}
-}
+}*/

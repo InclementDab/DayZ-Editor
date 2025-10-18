@@ -1,4 +1,5 @@
 FrameWidgetClass InventoryFrame {
+ ignorepointer 1
  size 1 1
  halign center_ref
  valign center_ref
@@ -128,8 +129,7 @@ FrameWidgetClass InventoryFrame {
            image0 ""
            mode blend
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            filter 1
            {
             ScriptParamsClass {
@@ -319,8 +319,7 @@ FrameWidgetClass InventoryFrame {
            image0 ""
            mode blend
            "src alpha" 1
-           "no wrap" 1
-           stretch 0
+           "clamp mode" clamp
            filter 1
            {
             ScriptParamsClass {
@@ -626,7 +625,7 @@ FrameWidgetClass InventoryFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         text "#STR_EDITOR_EXIT"
+         text "#STR_EDITOR_CLOSE"
          "text halign" center
          "text valign" center
         }
@@ -670,7 +669,7 @@ FrameWidgetClass InventoryFrame {
          vexactpos 1
          hexactsize 0
          vexactsize 1
-         text "#STR_OPEN_INVENTORY"
+         text "#STR_EDITOR_CMD_CONTROL_PLAYER"
          "text halign" center
          "text valign" center
         }

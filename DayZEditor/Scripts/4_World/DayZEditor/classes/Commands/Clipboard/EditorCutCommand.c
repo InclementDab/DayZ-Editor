@@ -3,9 +3,19 @@ class EditorCutCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		GetEditor().GetEditorHud().CreateNotification(string.Format("Cut %1 items to clipboard!", GetEditor().GetSelectedObjects().Count()), COLOR_SALMON);
-		EditorClipboard.Cut();
+
+		auto selected_objects = GetEditor().GetSelectedObjects();
+		if (selected_objects.Count() > 0) {
+			int selected_object_count = EditorClipboard.Cut(selected_objects.GetValueArray());
+			GetEditor().GetEditorHud().CreateNotification(string.Format("%1 entities cut to clipboard", selected_object_count));
+		}
+
 		return true;
+	}
+	
+	override bool CanExecute()
+	{
+		return GetEditor().GetSelectedObjects().Count() > 0;
 	}
 	
 	override string GetName() 
@@ -16,5 +26,15 @@ class EditorCutCommand: EditorCommand
 	override string GetIcon() 
 	{
 		return "set:dayz_editor_gui image:cut";
+	}
+	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_X };
+	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.SCISSORS;
 	}
 }

@@ -1,4 +1,4 @@
-class EditorInventoryEditorCamera: ScriptedCamera
+class EditorInventoryEditorCamera: Camera
 {
 	protected ref Timer m_LerpTimer = new Timer(CALL_CATEGORY_GAMEPLAY);
 	protected Object m_Target;
@@ -15,10 +15,6 @@ class EditorInventoryEditorCamera: ScriptedCamera
 		
 	override void EOnFrame(IEntity other, float timeSlice)
 	{
-		if (GetEditor().GetCurrentControl() != this) {
-			return;
-		}
-		
 		if (!m_Target || (GetFocus() && GetFocus().IsInherited(EditBoxWidget))) {
 			return;
 		}
@@ -58,7 +54,7 @@ class EditorInventoryEditorCamera: ScriptedCamera
 		vector current_pos = GetGame().GetCurrentCameraPosition();
 		m_LerpTimer.Run(0.01, this, "RunPositionLerp", new Param4<vector, vector, float, int>(current_pos, target_position, animation_time, GetGame().GetTime()), true);
 	}	
-	
+		
 	private void RunPositionLerp(vector start, vector finish, float duration, int start_time)
 	{
 		float tfactor = (1 / duration) * (GetGame().GetTime() - start_time) / 1000;

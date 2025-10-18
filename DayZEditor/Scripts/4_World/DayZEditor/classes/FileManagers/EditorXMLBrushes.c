@@ -1,24 +1,19 @@
 // abstract to EditorXMLCallback
 class XMLEditorBrushes: XMLCallback
 {
-	private ObservableCollection<ref EditorBrushData> m_Data;
+	private array<ref EditorBrushData> m_Data;
 
-	void XMLEditorBrushes(ObservableCollection<ref EditorBrushData> data) 
+	void XMLEditorBrushes(array<ref EditorBrushData> data) 
 	{
-		EditorLog.Trace("XMLEditorBrushes");
 		m_Data = data;
 	}
 		
 	override void OnStart(XMLDocument document)
 	{
-		EditorLog.Trace("XMLEditorBrushes::OnStart");
-		EditorLog.Info("Loading Brushes...");
 	}
 	
 	override void OnSuccess(XMLDocument document)
-	{		
-		EditorLog.Trace("XMLEditorBrushes::OnSuccess");
-		
+	{				
 		set<string> object_type_list = new set<string>();
 		
 		// <BrushTypes>
@@ -86,7 +81,14 @@ class XMLEditorBrushes: XMLCallback
 			m_Data.Insert(brush_settings);
 		}
 		
-		EditorLog.Info("Loaded %1 Brushes!", m_Data.Count().ToString());
+		for (int k = 0; k < RegisterBrush.Instances.Count(); k++) {
+			if (RegisterBrush.Instances[k].param3) {
+				EditorBrushData brush_type_data = new EditorBrushData();
+				brush_type_data.BrushClassName = RegisterBrush.Instances[k].param1;
+				brush_type_data.Name = RegisterBrush.Instances[k].param2;
+				m_Data.Insert(brush_type_data);
+			}
+		}
 	}
 	
 	override void OnFailure(XMLDocument document)

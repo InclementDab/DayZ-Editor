@@ -1,33 +1,95 @@
-ButtonWidgetClass EditorMarkerColor {
+PanelWidgetClass EditorMarkerInteract {
  visible 1
- clipchildren 1
+ clipchildren 0
  ignorepointer 0
- color 1 1 1 0.9961
- position 0 0
- size 20 20
+ position -18 -18
+ size 36 36
  hexactpos 1
  vexactpos 1
  hexactsize 1
  vexactsize 1
+ scaled 0
  draggable 0
- scriptclass "ViewBinding"
- style Colorable
+ scriptclass ""
+ style blank
  {
-  PanelWidgetClass EditorMarkerOutlineColor {
+  ImageWidgetClass EditorMarkerColor {
+   visible 1
+   clipchildren 1
    ignorepointer 1
-   color 0.0588 0.0588 0.0588 1
+   color 0.659 0.659 0.659 1
    position 0 0
-   size 1 1
+   size 0.33 0.33
+   halign center_ref
+   valign center_ref
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 0
-   style Outline_1px
+   scaled 0
+   draggable 0
+   scriptclass "SymbolHandler"
+   mode blend
+   "src alpha" 1
+   filter 0
+   {
+    ScriptParamsClass {
+     Symbol_Name "circle"
+     Symbol_Size 3
+    }
+   }
   }
- }
- {
-  ScriptParamsClass {
-   Relay_Command "EditorMarkerExecute"
+  ImageWidgetClass EditorMarkerColor2 {
+   visible 0
+   clipchildren 1
+   ignorepointer 1
+   position 0 0
+   size 0.5 0.5
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
+   draggable 0
+   scriptclass "SymbolHandler"
+   mode blend
+   "src alpha" 1
+   filter 0
+   {
+    ScriptParamsClass {
+     Symbol_Name "vector_square"
+     Symbol_Size 3
+    }
+   }
+  }
+  ImageWidgetClass EditorMarkerOutline {
+   visible 1
+   clipchildren 1
+   ignorepointer 1
+   color 0.263 0.322 0.502 1
+   position 0 0
+   size 0.75 0.75
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 0
+   draggable 0
+   scriptclass "SymbolHandler"
+   mode additive
+   "src alpha" 1
+   "stretch mode" stretch_w_h
+   filter 1
+   {
+    ScriptParamsClass {
+     Symbol_Name "crosshairs_simple"
+     Symbol_Size 3
+    }
+   }
   }
  }
 }

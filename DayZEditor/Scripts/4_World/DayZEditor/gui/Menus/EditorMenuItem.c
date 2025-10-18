@@ -1,33 +1,82 @@
-class EditorMenuItem: ScriptViewTemplate<EditorMenuItemController>
+class EditorMenuItem: ScriptView
 {
-	protected ImageWidget EditorMenuItemIcon;
-	protected ButtonWidget EditorMenuItemButton;
+	static const LinearColor DEFAULT_COLOR = 0xff24282e;
+
+	protected EditorMenu m_ParentMenu;
+	protected EditorCommand m_Command;
+	protected ImageWidget Icon;
+	protected TextWidget Label, Shortcut;
+	
+	void EditorMenuItem(notnull EditorMenu editor_menu, EditorCommand editor_command = null)
+	{
+		m_ParentMenu = editor_menu;
+		m_Command = editor_command;
+		if (m_Command) {
+			string symbol_icon = m_Command.GetIcon();
+			if (m_Command.GetSymbol()) {
+				symbol_icon = m_Command.GetSymbol().Solid();
+			}
+			
+			Icon.Show(symbol_icon != string.Empty);
+			Label.SetText(m_Command.GetName());
+			Shortcut.SetText(string.Format("(%1)", editor_command.GetShortcutString()));
+			Shortcut.Show(editor_command.GetShortcutString() != string.Empty);
+			Icon.LoadImageFile(0, symbol_icon);
+			Icon.SetImage(0);
+		}
+	}
+
+	override bool OnMouseEnter(Widget w, int x, int y)
+	{
+		m_LayoutRoot.SetColor(GetEditor().GetSettings().HighlightColor);
+		return super.OnMouseEnter(w, x, y);
+	}
+
+	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
+	{
+		m_LayoutRoot.SetColor(0xff212326);
+
+		return super.OnMouseLeave(w, enterW, x, y);
+	}
+
+	protected void CloseMenu()
+	{
+		if (m_ParentMenu) {
+			m_ParentMenu.Delete();
+		}
+	}
+
+	EditorMenu GetParentMenu()
+	{
+		return m_ParentMenu;
+	}
+
+	EditorCommand GetCommand()
+	{
+		return m_Command;
+	}
+
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
+	{
+		if (m_Command && button == MouseState.LEFT) {
+			m_Command.Execute(this, CommandArgs());
+		}
+
+		if (ClosesAfterInteraction()) {
+			CloseMenu();
+		}
+
+		return true;
+	}
+
+	bool ClosesAfterInteraction()
+	{
+		return true;
+	}
 	
 	override string GetLayoutFile() 
 	{
 		return "DayZEditor/gui/Layouts/menus/EditorMenuItem.layout";
-	}
-}
-
-class EditorMenuItemCommand: EditorMenuItem
-{	
-	void EditorMenuItemCommand(EditorCommand editor_command)
-	{
-		EditorMenuItemIcon.Show(editor_command.GetIcon() != string.Empty);
-		
-		m_TemplateController.LabelText = editor_command.GetName();
-		m_TemplateController.NotifyPropertyChanged("LabelText");
-		
-		m_TemplateController.IconPath = editor_command.GetIcon();
-		m_TemplateController.NotifyPropertyChanged("IconPath");
-		
-		m_TemplateController.ShortcutText = editor_command.GetShortcutString();
-		m_TemplateController.NotifyPropertyChanged("ShortcutText");
-		
-		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
-		if (view_binding) {
-			view_binding.SetRelayCommand(editor_command);
-		}
 	}
 }
 
@@ -41,39 +90,25 @@ class EditorMenuItemDivider: EditorMenuItem
 
 class EditorMenuItemCategory: EditorMenuItem
 {
-	protected ImageWidget EditorMenuItemCategoryIcon;
+	protected ref EditorMenu m_ChildMenu;
+	protected typename m_ChildMenuType;
+	protected Widget Expand;
 	
-	void EditorMenuItemCategory(string label, EditorMenu child_menu, EditorCommand editor_command = null)
+	void EditorMenuItemCategory(notnull EditorMenu editor_menu, EditorCommand editor_command = null, string label = string.Empty, typename child_menu_type = EMPTY_TYPENAME, Symbols icon = string.Empty)
 	{
-		EditorMenuItemCategoryIcon.Show(true);
-		
-		// Icon
-		if (editor_command) {
-			EditorMenuItemIcon.Show(editor_command.GetIcon() != string.Empty);
-			m_TemplateController.IconPath = editor_command.GetIcon();
-			m_TemplateController.NotifyPropertyChanged("IconPath");
+		m_ChildMenuType = child_menu_type;
+		if (!m_ChildMenuType.IsInherited(EditorMenu)) {
+			ErrorEx("ChildMenuType must inherit from EditorMenu");
 		}
 		
-		m_TemplateController.LabelText = label;
-		m_TemplateController.NotifyPropertyChanged("LabelText");
-		
-		m_TemplateController.ChildMenu = child_menu;
-		m_TemplateController.NotifyPropertyChanged("ChildMenu");
-		
-		m_TemplateController.ChildMenu.GetLayoutRoot().Show(false);
-		
-		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
-		if (view_binding && editor_command) {
-			view_binding.SetRelayCommand(editor_command);
-		}
+		Expand.Show(m_ChildMenuType != EMPTY_TYPENAME);
+		Label.SetText(label);
 	}
 	
 	override bool OnMouseEnter(Widget w, int x, int y)
 	{
-		// Dont show the child menu when the command execute is false
-		EditorCommand editor_command = EditorCommand.Cast(m_TemplateController.GetViewBinding(EditorMenuItemButton).GetRelayCommand());
-		if (editor_command && !editor_command.CanExecute()) {
-			return super.OnMouseEnter(w, x, y);
+		if (m_Command && !m_Command.CanExecute()) {
+			return true;
 		}
 		
 		// Setting this here because menu root needs to be moved before we know where we are
@@ -81,17 +116,19 @@ class EditorMenuItemCategory: EditorMenuItem
 		float sx1, sy1;
 		m_LayoutRoot.GetScreenPos(x1, y1);
 		m_LayoutRoot.GetScreenSize(sx1, sy1);
-		m_TemplateController.ChildMenu.GetLayoutRoot().SetPos(x1 + sx1, y1);
-		m_TemplateController.ChildMenu.GetLayoutRoot().Show(true);
+		
+		m_ChildMenu = EditorMenu.Cast(m_ChildMenuType.Spawn());
+		m_ChildMenu.GetLayoutRoot().SetPos(x1 + sx1, y1);
+		m_ChildMenu.GetLayoutRoot().Show(true);
 		return super.OnMouseEnter(w, x, y);
 	}	
 	
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		if (enterW != m_TemplateController.ChildMenu.GetLayoutRoot().FindAnyWidget(enterW.GetName())) {
-			m_TemplateController.ChildMenu.GetLayoutRoot().Show(false);
+		if (enterW != m_ChildMenu.GetLayoutRoot().FindAnyWidget(enterW.GetName())) {
+			delete m_ChildMenu;
 		}
-		
+				
 		return super.OnMouseLeave(w, enterW, x, y);
 	}
 }
@@ -99,43 +136,40 @@ class EditorMenuItemCategory: EditorMenuItem
 class EditorOpenRecentListItem: EditorMenuItem
 {	
 	// todo: EditorFile struct like in EditorSaveFile
-	void EditorOpenRecentListItem(string file_path)
-	{		
-		m_TemplateController.LabelText = file_path;
-		m_TemplateController.NotifyPropertyChanged("LabelText");
-		
-		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
-		if (view_binding) {
-			view_binding.Relay_Command = "OnExecute";
-		}
+	protected string m_File;
+	void EditorOpenRecentListItem(notnull EditorMenu editor_menu, EditorCommand editor_command = null, string file_path = string.Empty)
+	{	
+		m_File = file_path;
+		Label.SetText(file_path);
 	}
 	
-	void OnExecute(ButtonCommandArgs args)
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		EditorOpenCommand open_command = EditorOpenCommand.Cast(GetEditor().CommandManager[EditorOpenCommand]);	
-		GetEditor().LoadSaveData(open_command.ImportFile(m_TemplateController.LabelText), true);
-		GetEditor().SetSaveFile(m_TemplateController.LabelText);
+
+		GetEditor().LoadSaveData(open_command.ImportFile(m_File), true);
+		GetEditor().SetSaveFile(m_File);
+		
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 }
 
 class EditorPreferencesListItem: EditorMenuItem
 {	
-	void EditorPreferencesListItem(string setting)
+	protected string m_Setting;
+	void EditorPreferencesListItem(notnull EditorMenu editor_menu, EditorCommand editor_command = null, string setting = string.Empty)
 	{		
-		m_TemplateController.LabelText = setting;
-		m_TemplateController.NotifyPropertyChanged("LabelText");
-		
-		ViewBinding view_binding = m_TemplateController.GetViewBinding(EditorMenuItemButton);
-		if (view_binding) {
-			view_binding.Relay_Command = "OnExecute";
-		}
+		m_Setting = setting;
+		Label.SetText(setting);
 	}
-	
-	void OnExecute(ButtonCommandArgs args)
+
+	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		delete EditorHud.CurrentMenu;
 		EditorPreferencesCommand preferences_command = EditorPreferencesCommand.Cast(GetEditor().CommandManager[EditorPreferencesCommand]);
-		preferences_command.OpenPreferences(m_TemplateController.LabelText);
+		preferences_command.OpenPreferences(m_Setting);
+		
+		return super.OnMouseButtonDown(w, x, y, button);
 	}
 }
 

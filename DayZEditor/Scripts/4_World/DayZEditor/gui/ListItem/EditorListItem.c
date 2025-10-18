@@ -1,25 +1,49 @@
-class EditorListItem: ScriptViewTemplate<EditorListItemController>
+class EditorListItem: ScriptView
 {
 	protected Editor m_Editor = GetEditor();
 	protected WrapSpacerWidget ListItem;
 	protected ButtonWidget ListItemShow;
 	
+	TextWidget ListItemLabel;
 	// Can be null!
-	protected ButtonWidget ListItemFavorites;
+	protected CheckBoxWidget ListItemFavorites;
+	
+	protected EditorListItemController m_TemplateController;
+	
+	override typename GetControllerType()
+	{
+		return EditorListItemController;
+	}
+	
+	EditorListItemController GetTemplateController()
+	{
+		return m_TemplateController;
+	}
+	
+	void EditorListItem()
+	{
+		m_TemplateController = EditorListItemController.Cast(m_Controller);
+	}
 	
 	void Select() 
 	{
-		ListItem.SetColor(m_Editor.Settings.SelectionColor);
+		if (ListItem) {
+			ListItem.SetColor(m_Editor.GetSettings().SelectionColor);
+		}
 	}
 	
 	void Highlight()
 	{
-		ListItem.SetColor(m_Editor.Settings.HighlightColor);
+		if (ListItem) {
+			ListItem.SetColor(m_Editor.GetSettings().HighlightColor);
+		}
 	}
 	
 	void Deselect() 
 	{	
-		ListItem.SetColor(COLOR_EMPTY);
+		if (ListItem) {
+			ListItem.SetColor(COLOR_EMPTY);
+		}
 	}
 	
 	// Abstract

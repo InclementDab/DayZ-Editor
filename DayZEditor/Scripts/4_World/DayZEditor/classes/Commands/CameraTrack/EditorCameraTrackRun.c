@@ -3,10 +3,10 @@ class EditorCameraTrackRun: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		if (GetEditor().GetCameraTrackManager().IsRunning()) {
-			GetEditor().GetCameraTrackManager().Stop();
+		if (GetEditor().IsRunningCameraTrack()) {
+			GetEditor().StopCameraTrack();
 		} else {
-			GetEditor().GetCameraTrackManager().Start();
+			GetEditor().StartCameraTrack();
 		}
 		
 		return true;
@@ -15,5 +15,10 @@ class EditorCameraTrackRun: EditorCommand
 	override string GetName() 
 	{
 		return "#STR_EDITOR_CINEMATIC_CAMERA_RUN";
+	}
+	
+	override ShortcutKeys GetShortcut() 
+	{
+		return { KeyCode.KC_PLAYPAUSE };
 	}
 }

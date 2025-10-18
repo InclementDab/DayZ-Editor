@@ -26,19 +26,19 @@ class EditorVPPFile: EditorFileType
 			string name = building.GetName();
 			TStringArray name_split = new TStringArray();
 			name.Split("-", name_split);
-			save_data.EditorObjects.Insert(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), 1, EditorObjectFlags.ALL));
+			save_data.EditorObjects.Insert(EditorObjectData.Create(name_split.Get(0), building.GetPosition(), building.GetOrientation(), 1, EFE_DEFAULT));
 		}
 		
 		return save_data;
 	}
 	
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
 		EditorLog.Trace("EditorVPPFile::Export");
 		
 		FileSerializer file_serializer = new FileSerializer();
 	
-		VPPToEditorBuildingSet building_set = new VPPToEditorBuildingSet(settings.ExportSetName);
+		VPPToEditorBuildingSet building_set = new VPPToEditorBuildingSet(File.GetName(file));
 		
 		foreach (EditorObjectData object_data: data.EditorObjects) {
 			building_set.AddBuilding(object_data.Type, object_data.Position, object_data.Orientation, true);
@@ -57,5 +57,11 @@ class EditorVPPFile: EditorFileType
 	override string GetExtension() 
 	{
 		return ".vpp";
+	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("Vanilla Plus Plus", "*.vpp"));
 	}
 }

@@ -8,9 +8,9 @@ class EditorHologram: EditorWorldObject
 	void EditorHologram(EditorPlaceableItem placeable_item) 
 	{
 		m_PlaceableItem = placeable_item;
-		
-		m_WorldObject = CreateObject(placeable_item.GetSpawnType(), Editor.CurrentMousePosition);
-		m_WorldObject.SetOrientation(vector.Zero); // some objects dont like to orient correctly
+				
+		SetWorldObject(CreateObject(placeable_item.GetSpawnType(), vector.Zero));
+		GetWorldObject().SetOrientation(vector.Zero); // some objects dont like to orient correctly
 	}
 	
 	void ~EditorHologram()

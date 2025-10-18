@@ -1,155 +1,194 @@
 class EditorBrush
 {
+	// todo: when next DF update these objects should be populated on file load. right now reloading the file will mess this up
+	static ref array<Object> s_AllBrushedObjects = {};
+	
 	protected EditorSettings m_EditorSettings;
 	protected EntityAI m_BrushDecal;
 	protected ref EditorBrushData m_BrushData;
-	
+
 	static float BrushRadius = 10;
 	static float BrushDensity = 0.5;
+	static float BrushWidth = 6;
 
 	// Private members
 	private vector m_LastMousePosition;
 
-	private void EditorBrush(EditorBrushData settings = null)
+	void EditorBrush(EditorBrushData settings = null)
 	{
 		m_BrushData = settings;
-		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_NONE));
-		m_EditorSettings = GetEditor().Settings;
+		m_BrushDecal = EntityAI.Cast(GetGame().CreateObjectEx("BrushBase", vector.Zero, ECE_LOCAL));
+		m_EditorSettings = GetEditor().GetSettings();
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(UpdateBrush);
 	}
 
 	void ~EditorBrush()
-	{	
+	{
 		GetGame().ObjectDelete(m_BrushDecal);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(UpdateBrush);
 	}
-	
-	static EditorBrush Create(EditorBrushData settings) 
+
+	static EditorBrush Create(EditorBrushData settings)
 	{
 		EditorLog.Trace("EditorBrush::Create " + settings.Name);
 
-		if (settings.BrushClassName) {
+		if (settings.BrushClassName)
+		{
 			return EditorBrush.Cast(settings.BrushClassName.Spawn());
 		}
-	
+
 		return new EditorBrush(settings);
-	}	
-	
+	}
+
 	void SetBrushTexture(string texture)
 	{
-		EditorLog.Trace("EditorBrush::SetBrushTexture " + texture);
 		m_BrushDecal.SetObjectTexture(0, texture);
 		m_BrushDecal.Update();
 	}
-	
+
 	void UpdateBrush()
 	{
-		if (GetEditor().IsPlacing()) {
+		if (GetEditor().IsPlacing() || GetWidgetUnderCursor()) {
 			return;
 		}
 		
-		set<Object> o;
-		vector CurrentMousePosition = MousePosToRay(o, null, GetEditor().Settings.ObjectViewDistance, 0, true);
-		
-		Input input = GetGame().GetInput();
+		Input input = GetGame().GetInput();		
+		Raycast ray_cast = GetEditor().GetCursorRaycast(null, !m_EditorSettings.BrushedObjectsRespectOtherObjects);
+		if (ray_cast && ray_cast.Bounce) {
+			vector transform[4] = {
+				Vector(BrushRadius / 5, 0, 0),
+				Vector(0, BrushRadius / 5, 0),
+				Vector(0, 0, BrushRadius / 5),
+				ray_cast.Bounce.Position
+			};
 
-		vector transform[4] = {
-			Vector(BrushRadius / 10, 0, 0),
-			Vector(0, BrushRadius / 10, 0),
-			Vector(0, 0, BrushRadius / 10),
-			CurrentMousePosition
-		};
-		
-		m_BrushDecal.SetTransform(transform);
-		
-		//if (GetEditor().GetUIManager().IsCursorOverUI()) return;
-		/*
-		if (input.LocalPress("UAFire")) {
+			m_BrushDecal.SetTransform(transform);
 			
-		}*/
-		
-		if (GetWidgetUnderCursor()) {
-			return;
-		}
-		
-		if (input.LocalPress("UAFire")) {
-			OnMouseDown(CurrentMousePosition);
-		}
-		
-		if (input.LocalValue("UAFire")) {
-			DuringMouseDown(CurrentMousePosition);
-		}
-		
-		if (input.LocalRelease("UAFire")) {
-			OnMouseUp(CurrentMousePosition);
+			if (GetWidgetUnderCursor()) {
+				return;
+			}
+	
+			if (input.LocalPress("UAFire"))
+			{
+				OnMouseDown(ray_cast.Bounce.Position);
+			}
+	
+			if (input.LocalValue("UAFire"))
+			{
+				DuringMouseDown(ray_cast.Bounce.Position);
+			}
+	
+			if (input.LocalRelease("UAFire"))
+			{
+				OnMouseUp(ray_cast.Bounce.Position);
+			}
 		}
 	}
 
-	void DuringMouseDown(vector position) 
-	{ 
+	void DuringMouseDown(vector position)
+	{
+		if (!m_BrushData) {
+			return;
+		}
 		
 		if (vector.Distance(m_LastMousePosition, position) < (BrushRadius * Math.RandomFloat(0.5, 1))) return;
 		m_LastMousePosition = position;
-		
-		array<ref EditorObjectData> created_data = {};
-		
+
+		array<ref EditorObjectData> created_data = { };
+
 		int flags;
-		if (m_EditorSettings.BrushedObjectMarkers) {
+		if (m_EditorSettings.BrushedObjectMarkers)
+		{
 			flags |= EditorObjectFlags.OBJECTMARKER;
 		}
-		
-		if (m_EditorSettings.BrushedListItems) {
+
+		if (m_EditorSettings.BrushedListItems)
+		{
 			flags |= EditorObjectFlags.LISTITEM;
 		}
-		
-		for (int i = 0; i < BrushDensity * 10; i++) {
+
+		map<int, ref Param2<vector, EditorBrushObject>> brushes_data = new map<int, ref Param2<vector, EditorBrushObject>>();
+		for (int i = 0; i < Math.Sqrt(BrushDensity) * 24; i++) {
+			float edge_length = BrushRadius; // whatever the size of your box is
+			float radius_random = Math.Sqrt(Math.RandomFloat01()) * edge_length;
+			float theta_random = Math.RandomFloat01() * Math.PI2;
+			float x_random = position[0] + radius_random * Math.Cos(theta_random);
+			float z_random = position[2] + radius_random * Math.Sin(theta_random);
+			vector point = { x_random, GetGame().SurfaceY(x_random, z_random), z_random };
 						
-			vector pos = position;
-			pos[0] = pos[0] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
-			pos[2] = pos[2] + Math.RandomFloat(-BrushRadius / Math.PI, BrushRadius / Math.PI);
-			
-			if (!m_BrushData) {
-				continue;
-			}
-			
 			EditorBrushObject object_name = m_BrushData.GetRandomObject();
 			if (!object_name) {
 				continue;
 			}
-			
-			vector ori = Math3D.GetRandomDir().VectorToAngles() + Vector(0, Math.RandomFloat(-0.02, 0.02), 0);
-			Object brushed_object = EditorWorldObject.CreateObject(object_name.Name, pos, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale));
-			if (!brushed_object) {
-				continue;
+		
+			//TODO config objects can have magnet. P3D need to stay zeroed 
+			vector ori = "0 0 0";
+			ori[0] = Math.RandomFloatInclusive(0, 360);
+			ori[1] = Math.RandomFloatInclusive(-4, 4);
+			ori[2] = Math.RandomFloatInclusive(-4, 4);
+
+			array<Object> objects = {};
+			GetGame().GetObjectsAtPosition3D(point, BrushWidth, objects, null);
+			if (objects.Count() > 0) {
+				//continue;
 			}
+
+			EditorObjectData brushed_object_data = EditorObjectData.Create(object_name.Name, point, ori, Math.RandomFloatInclusive(object_name.MinScale, object_name.MaxScale), EFE_BRUSHED);
 			
-			vector size = ObjectGetSize(brushed_object);
-			
-			
-			pos[1] = GetGame().SurfaceY(pos[0], pos[2]) + size[1] / 2 + object_name.ZOffset;
-			
+			// pass onto second pass
+			brushes_data[brushed_object_data.GetID()] = new Param2<vector, EditorBrushObject>(point, object_name);
+
 			// just for u boba
-			//brushed_object.SetPosition(pos);
-			//brushed_object.SetDirection(direction);
-			created_data.Insert(EditorObjectData.Create(brushed_object, flags));
+			created_data.Insert(brushed_object_data);
 		}
-	
-		GetEditor().CreateObjects(created_data, true);
+		
+		EditorObjectMap object_map = GetEditor().CreateObjects(created_data, true);
+		if (m_EditorSettings.BrushedObjectsRespectOtherObjects) {
+			foreach (int id2, EditorObject editor_object_brushed2: object_map) {
+				if (editor_object_brushed2) {
+					s_AllBrushedObjects.Insert(editor_object_brushed2.GetWorldObject());
+				}
+			}
+		}
+		
+		foreach (int id, EditorObject editor_object_brushed: object_map) {
+			if (editor_object_brushed) {
+				vector new_pos = brushes_data[id].param1;
+				vector size = editor_object_brushed.GetWorldObject().GetBoundingCenter();		
+				float y_offset = GetGame().SurfaceY(new_pos[0], new_pos[2]);		
+				
+				if (m_EditorSettings.BrushedObjectsRespectOtherObjects) {
+					vector surface_normal = GetGame().SurfaceGetNormal(new_pos[0], new_pos[2]);
+					Ray brush_object_ray = new Ray(new_pos + Vector(0, 500, 0), -vector.Up);
+					brush_object_ray.Debug(-1, ShapeFlags.TRANSP);
+					Raycast brush_object_raycast = brush_object_ray.PerformRaycastRVEX(0, 500, ObjIntersectView, s_AllBrushedObjects);
+					if (brush_object_raycast) {
+						new_pos = brush_object_raycast.Bounce.Position;
+						y_offset = brush_object_raycast.Bounce.Position[1];
+					}
+				}
+				
+				new_pos[1] = y_offset + size[1] + brushes_data[id].param2.ZOffset;
+				
+				editor_object_brushed.SetScale(Math.RandomFloat(brushes_data[id].param2.MinScale, brushes_data[id].param2.MaxScale));
+				editor_object_brushed.SetPosition(new_pos);
+			}
+		}
 	}
-	
+
 	void OnMouseUp(vector position)
 	{
 		// Reset mouse position when releasing mouse. 
 		m_LastMousePosition = vector.Zero;
 	}
-	
+
 	void OnMouseDown(vector position)
 	{
-		
+
 	}
-	
-	string GetName() 
-	{ 
-		return m_BrushData.Name; 
+
+	string GetName()
+	{
+		return m_BrushData.Name;
 	}
 }

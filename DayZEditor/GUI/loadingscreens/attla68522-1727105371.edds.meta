@@ -1,0 +1,16 @@
+MetaFileClass {
+ Name "{CB74F47177BF5D44}DayZEditor/GUI/loadingscreens/attla68522-1727105371.edds"
+ Author "desktop-ucqosjo"
+ ChangeDate -418156216
+ Configurations {
+  PNGResourceClass PC {
+   SourceFile "attla68522-1727105371.png"
+  }
+  PNGResourceClass XBOX_ONE : PC {
+  }
+  PNGResourceClass PS4 : PC {
+  }
+  PNGResourceClass LINUX : PC {
+  }
+ }
+}

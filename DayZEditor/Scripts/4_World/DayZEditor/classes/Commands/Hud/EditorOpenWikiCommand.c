@@ -11,4 +11,9 @@ class EditorOpenWikiCommand: EditorCommand
 	{
 		return "#STR_EDITOR_WIKI";
 	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.GLOBE;
+	}
 }

@@ -29,6 +29,11 @@ GameProjectClass {
 				"gui/imagesets/console_toolbar.imageset"
 				"DayZEditor/gui/imagesets/dayz_editor_gui.imageset"
 				"DabsFramework/gui/imagesets/prefabs.imageset"
+				"DabsFramework/gui/icons/brands.imageset"
+				"DabsFramework/gui/icons/light.imageset"
+				"DabsFramework/gui/icons/regular.imageset"
+				"DabsFramework/gui/icons/solid.imageset"
+				"DabsFramework/gui/icons/thin.imageset"
 			}
 			widgetStyles {
 				"gui/looknfeel/dayzwidgets.styles" 
@@ -43,6 +48,7 @@ GameProjectClass {
 						"DabsFramework/Scripts/1_Core"
 						"scripts/1_Core"
 						"DayZEditor/Scripts/1_Core"
+						"EditorLoader/Scripts/1_Core"
 						"JM/CF/defines"
 						"JM/CF/scripts/1_Core"
 					}
@@ -54,6 +60,7 @@ GameProjectClass {
 						"scripts/2_GameLib"
 						"JM/CF/defines"
 						"JM/CF/scripts/2_GameLib"
+						"DabsFramework/Scripts/2_GameLib"
 					}
 					EntryPoint ""
 				}
@@ -65,6 +72,7 @@ GameProjectClass {
 						"DayZEditor/Scripts/3_Game"
 						"JM/CF/defines"
 						"JM/CF/scripts/3_Game"
+						"EditorLoader/Scripts/3_Game"
 					}
 					EntryPoint "CreateGame"
 				}
@@ -76,6 +84,7 @@ GameProjectClass {
 						"DayZEditor/Scripts/4_World"
 						"JM/CF/defines"
 						"JM/CF/scripts/4_World"
+						"EditorLoader/Scripts/4_World"
 					}
 					EntryPoint ""
 				}
@@ -87,7 +96,7 @@ GameProjectClass {
 						"DayZEditor/Scripts/5_Mission"
 						"JM/CF/defines"
 						"JM/CF/scripts/5_Mission"
-						"DayZEditor/GUI"
+						"EditorLoader/Scripts/5_Mission"
 					}
 					EntryPoint "CreateMission"
 				}

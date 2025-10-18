@@ -4,8 +4,7 @@ class EditorObjectMapMarker: EditorObjectMarker
 	
 	void EditorObjectMapMarker(EditorObject editor_object)
 	{
-		m_DragHandler = new EditorMapDragHandler(m_EditorObject);
-		m_EditorMap = m_Editor.GetEditorHud().EditorMapWidget;
+		m_EditorMap = m_Editor.GetEditorHud().Map;
 		
 		GetLayoutRoot().SetSort(101);
 	}
@@ -13,11 +12,19 @@ class EditorObjectMapMarker: EditorObjectMarker
 	override void Update(float dt)
 	{
 		if (!m_EditorMap || !m_EditorMap.IsVisible()) { 
+			Show(false);
 			return;
 		}
 		
+		Show(true);
 		vector position = m_EditorMap.MapToScreen(m_EditorObject.GetPosition());
 		SetPos(position[0], position[1]);
+		SetSize(0.5);
 		super.Update(dt);
+	}
+
+	override typename GetDragHandlerType()
+	{
+		return EditorMapDragHandler;
 	}
 }

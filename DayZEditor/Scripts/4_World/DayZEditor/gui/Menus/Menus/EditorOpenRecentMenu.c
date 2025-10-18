@@ -8,7 +8,7 @@ class EditorOpenRecentMenu: EditorMenu
 				
 		// its backwards
 		for (int i = recent_files.Count() - 1; i >= 0; i--) {
-			AddMenuItem(new EditorOpenRecentListItem(String(recent_files[i])));
+			AddMenuItem(new EditorOpenRecentListItem(this, null, String(recent_files[i])));
 		}
 	}
 }

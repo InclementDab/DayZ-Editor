@@ -8,17 +8,24 @@ class EditorControlPlayerCommand: EditorCommand
 			return false;
 		}
 		
-		PlayerBase player = PlayerBase.Cast(data.param1.GetWorldObject());
-		if (!player) {
+		PlayerBase control_player = PlayerBase.Cast(data.param1.GetWorldObject());
+		if (!control_player) {
 			return false;
 		}
 		
-		m_Editor.ControlPlayer(player);		
+		m_Editor.ClearSelection();
+		// Enable Player
+		m_Editor.ControlPlayer(control_player);
 		return true;
 	}
 	
 	override string GetName()
 	{
 		return "#STR_EDITOR_CMD_CONTROL_PLAYER";
+	}
+
+	override Symbols GetSymbol()
+	{
+		return Symbols.CHILD_REACHING;
 	}
 }

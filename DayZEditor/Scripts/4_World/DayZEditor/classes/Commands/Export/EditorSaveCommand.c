@@ -1,40 +1,49 @@
 class EditorSaveCommand: EditorExportCommandBase
 {		
-	override void Call(Class sender, CommandArgs args)
+	protected override bool Execute(Class sender, CommandArgs args)
 	{
-		EditorLog.Trace("EditorSaveCommand");
-		
-		bool warn_on_overwrite = false;
-		string file_name = m_Editor.GetSaveFile();
-		if (file_name == string.Empty) {
-			EditorLog.Info("Using filter %1", "*.dze");
-			m_ExportSettings.SetFileType(GetFileType());
-			EditorFileDialog file_dialog(GetName(), "*.dze", "", GetDialogButtonName(), m_ExportSettings);
-			if (file_dialog.ShowDialog(file_name) != DialogResult.OK) {
-				return;
-			}
-			
-			warn_on_overwrite = true;
+		//super.Execute(sender, args);
+		string file_name = GetEditor().GetSaveFile();
+		if (file_name == string.Empty) {			
+			GetEditor().GetEditorHud().ShowFileDialog(GetName(), GetFileType(), ScriptCaller.Create(OnSaveFileSelected), eDialogMode.SAVE, eDialogFlags.WARN_ON_OVERWRITE, GetEditor().GetSaveFile());
+		} else {
+			OnSaveFileSelected(file_name, 0);
 		}
-		
-		if (ExportFile(file_name, m_ExportSettings, warn_on_overwrite)) {
-			m_Editor.SetSaveFile(file_name);
+				
+		return true;
+	}
+	
+	protected void OnSaveFileSelected(string file_name, eDialogExtraSetting extra_setting)
+	{
+		if (!file_name) {
+			GetEditor().GetEditorHud().CreateNotification("No file name specified");
+			return;
+		}
+
+		if (ExportFile(file_name, m_ExportSettings, extra_setting)) {
+			EditorFileManager.GetSafeFileName(file_name, ".dze");
+			GetEditor().SetSaveFile(file_name);
 		}
 	}
 	
-	override string GetName() 
+	override Symbols GetSymbol()
 	{
-		return "#STR_EDITOR_SAVE";
+		return Symbols.FLOPPY_DISK;
 	}
 	
-	override string GetIcon() 
+	override ShortcutKeys GetShortcut() 
 	{
-		return "set:dayz_editor_gui image:save";
+		return { KeyCode.KC_LCONTROL, KeyCode.KC_S };
 	}
 	
 	override typename GetFileType() 
 	{
 		return EditorDZEFile;
+	}
+	
+	override string GetName() 
+	{
+		return "#STR_EDITOR_SAVE";
 	}
 	
 	override string GetDialogButtonName() 

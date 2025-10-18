@@ -1,33 +1,32 @@
-class EditorPlaceableTooltip: ScriptViewTemplate<EditorPlaceableTooltipController>
+class EditorPlaceableTooltip: ScriptView
 {
-	protected TextWidget HeaderLabel;
+	TextWidget HeaderLabel;
+	ItemPreviewWidget ContentItem;
+	ImageWidget BackupImage;
+	protected Object m_MyObject;
+
+	void ~EditorPlaceableTooltip()
+	{
+		if (m_MyObject) {
+			m_MyObject.Delete();
+		}
+		
+		HeaderLabel.SetText("Empty");
+	}
 	
 	void SetTitle(string title)
 	{
-		//EditorLog.Trace("EditorTooltip::SetTitle %1", title);
-		m_TemplateController.ContentTitle = title;
-		m_TemplateController.NotifyPropertyChanged("ContentTitle");
-		
-		float w, h, lw, lh;
-		HeaderLabel.GetScreenSize(w, h);
-		m_LayoutRoot.GetScreenSize(lw, lh);
-		m_LayoutRoot.SetSize(w + 80, lh);
+		HeaderLabel.SetText(title);
 	}
-	
-	void SetContent(string text)
-	{
-		//EditorLog.Trace("EditorTooltip::SetContent %1", text);
 
-		m_TemplateController.ContentText = text;
-		m_TemplateController.NotifyPropertyChanged("ContentText");
-	}
-	
 	void SetContent(Object item)
 	{
-		//EditorLog.Trace("EditorTooltip::SetContent %1", item.ToString());
-
-		m_TemplateController.ContentItemData = item;
-		m_TemplateController.NotifyPropertyChanged("ContentItemData");
+		m_MyObject = item;
+		EntityAI entity = EntityAI.Cast(item);
+		if (entity) {			
+			ContentItem.SetItem(entity);
+			BackupImage.Show(false);
+		}
 	}
 	
 	void SetPosition(float x, float y)

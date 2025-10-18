@@ -1,4 +1,25 @@
+modded class RelayCommand
+{
+	protected bool m_CanExecute = true;
+	
+	void SetCanExecute(bool state)
+	{
+		if (m_CanExecute == state) {
+			return;
+		}
+		
+		m_CanExecute = state;
+		CanExecuteChanged(m_CanExecute);
+	}
+	
+	void CanExecuteChanged(bool state)
+	{
+	}
+}
+
+#ifndef COMPONENT_SYSTEM
 [RegisterLogger(EditorLog)]
+#endif
 class EditorLog: LoggerBase
 {
 	static ref ScriptInvoker OnLog;
@@ -28,7 +49,7 @@ class EditorLog: LoggerBase
 	
 		DoLog(EditorLog, string.Format("[%1][%3]		: %2", typename.EnumToString(LogLevel, level), msg, formatted_time));
 		
-#ifdef DIAG_DEVELOPER
+#ifdef DIAG_DDEVELOPER
 		Print(String(msg)); // maybe add some extra logic to avoid clogging
 #endif
 	}

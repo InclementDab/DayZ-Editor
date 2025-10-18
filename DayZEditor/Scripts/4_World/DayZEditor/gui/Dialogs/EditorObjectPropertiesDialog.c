@@ -3,7 +3,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	protected bool ExecuteCode;
 	protected ref array<EditorObject> m_EditorObjects = {};
 	protected ref EditorMultiObjectCommandController m_EditorMultiObjectCommandController;
-	
+	protected EditorObject m_EditorObject;
+			
 	void EditorObjectPropertiesDialog(string title, notnull array<EditorObject> editor_objects)
 	{
 		m_EditorObjects.InsertArray(editor_objects);
@@ -18,25 +19,11 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	void ~EditorObjectPropertiesDialog()
 	{
-		delete m_EditorObjects;
-		delete m_EditorMultiObjectCommandController;
-	}
-	
-	void PropertyChanged(string property_name)
-	{
-		switch (property_name) {
-			case "ExecuteCode": {
-				ExecuteCode = false;
-				if (!m_EditorObjects[0]) {
-					break;
-				}
-				
-				m_EditorObjects[0].ExecuteCode();
-				break;
-			}
+		foreach (EditorObject editor_object: m_EditorObjects) {
+			editor_object.UpdateNet();
 		}
 	}
-		
+			
 	protected void OnObjectSelected(Class context, EditorObject editor_object)
 	{		
 		m_EditorObjects.Insert(editor_object);
@@ -83,28 +70,37 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", m_EditorMultiObjectCommandController, "EditorOnly"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", m_EditorMultiObjectCommandController, "Simulate"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", m_EditorMultiObjectCommandController, "Locked"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_EditorMultiObjectCommandController, "Physics"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_EditorMultiObjectCommandController, "UsePhysics"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", m_EditorMultiObjectCommandController, "AllowDamage"));
 		
 		AddContent(general_group);
 		AddContent(object_group);
-		
-		AutoSize();
 	}
 	
 	// This function is a mess
 	void SetEditorObject(EditorObject editor_object)
 	{		
-		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", editor_object, string.Empty);
-		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", editor_object, "Show"));
-		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", editor_object, "Name"));
-		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", editor_object, "Position"));
-		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", editor_object, "Orientation"));
-		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", editor_object, "Scale", 0.01));
+		m_EditorObject = editor_object;
+		
+		EditorObjectController controller = m_EditorObject.GetController();
+						
+		// If network light
+		//if (NetworkLightBase.Cast(m_EditorObject.GetWorldObject())) {
+		//	NetworkLightBase.Cast(m_EditorObject.GetWorldObject()).Read(m_Data.Parameters);
+		//}
+		
+		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", this, string.Empty);
+		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", controller, "Show"));
+		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", controller, "Name"));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", controller, "Position"));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", controller, "Orientation"));
+		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", controller, "Scale", 0.01));
+
+		/*
 		if (editor_object.GetWorldObject().IsInherited(EditorLootPoint)) {
 			general_group.Insert(new EditBoxNumberPrefab("Height", editor_object.GetWorldObject(), "Height"));
 			general_group.Insert(new EditBoxNumberPrefab("Range", editor_object.GetWorldObject(), "Range"));
-		}
+		}*/
 		
 		//general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", editor_object, "EditorOnly", editor_object.EditorOnly));
 		AddContent(general_group);
@@ -112,6 +108,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		// All of these bindings are directly on the world object
 		if (editor_object.GetWorldObject().IsInherited(NetworkLightBase)) {			
 			GroupPrefab light_group = new GroupPrefab("Light Controls", editor_object.GetWorldObject(), string.Empty);
+			light_group.Insert(new SliderPrefab("Brightness", editor_object.GetWorldObject(), "Brightness", 0, 40));
 			light_group.Insert(new SliderPrefab("Radius", editor_object.GetWorldObject(), "Radius", 0, 1000));
 			light_group.Insert(new CheckBoxPrefab("Cast Shadow", editor_object.GetWorldObject(), "CastShadow"));
 			light_group.Insert(new CheckBoxPrefab("Enable Specular", editor_object.GetWorldObject(), "EnableSpecular"));
@@ -125,7 +122,6 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			
 			light_group.Insert(new ColorPickerPrefab("Diffuse Color", editor_object.GetWorldObject(), "DiffuseColor"));
 			light_group.Insert(new ColorPickerPrefab("Ambient Color", editor_object.GetWorldObject(), "AmbientColor"));
-			light_group.Insert(new SliderPrefab("Brightness", editor_object.GetWorldObject(), "Brightness"));
 			
 			light_group.Insert(new CheckBoxPrefab("Enable Flare", editor_object.GetWorldObject(), "FlareVisible"));
 			light_group.Insert(new VectorPrefab("Flare Position", editor_object.GetWorldObject(), "FlareRelativePosition"));
@@ -158,21 +154,22 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		}
 		
 		if (editor_object.GetWorldObject().IsMan()) {
-			GroupPrefab human_group = new GroupPrefab("#STR_EDITOR_HUMAN", editor_object, string.Empty);
-			DropdownListPrefab<int> animations = new DropdownListPrefab<int>("#STR_EDITOR_ANIMATION", editor_object, "CurrentAnimation");
+			GroupPrefab human_group = new GroupPrefab("#STR_EDITOR_HUMAN", this, string.Empty);
+			//human_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SELECTED_PLAYER", editor_object, "Control"));
+			DropdownListPrefab<int> animations = new DropdownListPrefab<int>("#STR_EDITOR_ANIMATION", this, "CurrentAnimation");
 			map<string, int> emote_list = PlayerBase.GetEmoteList();
 			foreach (string emote_name, int emote_id: emote_list) {
 				animations[emote_name] = emote_id;
 			}
 			
 			human_group.Insert(animations);
-			human_group.Insert(new ButtonPrefab("#STR_EDITOR_CINEMATIC_CAMERA_RUN", editor_object, "Animate"));
+			human_group.Insert(new ButtonPrefab("#STR_EDITOR_CINEMATIC_CAMERA_RUN", this, "Animate"));
 			
 			AddContent(human_group);
 		}
 		
 		if (editor_object.HasAnimations()) {
-			GroupPrefab animations_group = new GroupPrefab("Object Animations", editor_object, string.Empty);
+			GroupPrefab animations_group = new GroupPrefab("Object Animations", this, string.Empty);
 			
 			map<string, ref EditorObjectAnimationSource> object_animations = editor_object.GetObjectAnimations();
 			foreach (string name, EditorObjectAnimationSource anim: object_animations) {
@@ -183,16 +180,19 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		}
 		
 		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", editor_object, string.Empty);
-		object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", editor_object, "Health"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", editor_object, "EditorOnly"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", editor_object, "Simulate"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", editor_object, "Locked"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", editor_object, "Physics"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", editor_object, "AllowDamage"));
+		if (editor_object.GetWorldObject().HasDamageSystem()) {
+			object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", controller, "Health", 1, 0, editor_object.GetWorldObject().GetMaxHealth()));
+		}
+		
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", controller, "EditorOnly"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", controller, "Simulate"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", controller, "Locked"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", controller, "UsePhysics"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", controller, "AllowDamage"));
 		//object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_COLLISION", editor_object, "Collision"));
 		string expansion_check = "ExpansionMarketModule";
 		if (expansion_check.ToType() && editor_object.GetWorldObject().IsInherited(EntityAI)) {
-			object_group.Insert(new EditBoxPrefab("Trader Type", editor_object, "ExpansionTraderType"));
+			object_group.Insert(new EditBoxPrefab("Trader Type", this, "ExpansionTraderType"));
 		}
 		
 		AddContent(object_group);
@@ -200,17 +200,17 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		//AddContent(new MultilineEditBoxPrefab("Execute Code", editor_object, "TestingScript"));
 		//AddContent(new ButtonPrefab("Execute", this, "ExecuteCode"));
 		
-		if (GetEditor().Settings.DebugMode) {
-			GroupPrefab debug_group = new GroupPrefab("Debug", editor_object.GetData(), string.Empty);
-			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_TYPE", editor_object.GetData(), "Type"));
+		if (GetEditor().GetSettings().DebugMode) {
+			/*
+			GroupPrefab debug_group = new GroupPrefab("Debug", this, string.Empty);
+			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_TYPE", this, "Type"));
 			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_ID", editor_object, "ObjectID"));
-			debug_group.Insert(new TextBoxPrefab("Flags", editor_object.GetData(), "Flags"));
-			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_MODEL", editor_object.GetData(), "Model"));
-			AddContent(debug_group);
+			debug_group.Insert(new TextBoxPrefab("Flags", this, "Flags"));
+			debug_group.Insert(new TextBoxPrefab("#STR_EDITOR_MODEL", this, "Model"));
+			AddContent(debug_group);*/
 		}
 		
-		// Auto resize
-		AutoSize();
+		//SetupDialog();
 	}
 				
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
@@ -219,7 +219,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 			string text = TextBoxPrefabGetString(w);
 			
 			if (text != string.Empty) {
-				GetEditor().GetEditorHud().CreateNotification("Copied to clipboard!", COLOR_SALMON);
+				GetEditor().GetEditorHud().CreateNotification("Copied to clipboard!");
 				GetGame().CopyToClipboard(text);
 			}
 		}

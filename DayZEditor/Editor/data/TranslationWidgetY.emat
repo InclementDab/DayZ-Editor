@@ -1,0 +1,6 @@
+MatSuper {
+ Color 0 1 0 1
+ Diffuse 0 1 0 1
+ Ambient 0 1 0 1
+ ZEnable 0
+}

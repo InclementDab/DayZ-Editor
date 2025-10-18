@@ -1,7 +1,8 @@
 class EditorMapGroupPosFile: EditorFileType
 {
-	override void Export(EditorSaveData data, string file, ExportSettings settings)
+	override void Export(EditorSaveData data, string file, ExportSettings settings, eDialogExtraSetting dialog_setting)
 	{
+		Print(dialog_setting);
 		if (FileExist(file) && !DeleteFile(file)) {
 			return;
 		}
@@ -16,7 +17,7 @@ class EditorMapGroupPosFile: EditorFileType
 		FPrintln(handle, "<map>");
 		
 		array<Object> objects = {};
-		if (settings.ExportEntireMap) {	
+		if (dialog_setting & eDialogExtraSetting.EXPORT_ENTIRE_MAP) {	
 			GetGame().GetObjectsAtPosition3D(vector.Zero, 100000, objects, null);
 		} else {
 			foreach (EditorObjectData editor_object: data.EditorObjects) {
@@ -30,6 +31,10 @@ class EditorMapGroupPosFile: EditorFileType
 			}
 			
 			if (!world_object.IsInherited(House) || world_object.IsKindOf("BoundingBoxBase")) {
+				continue;
+			}
+			
+			if (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(world_object)) {
 				continue;
 			}
 			
@@ -50,8 +55,20 @@ class EditorMapGroupPosFile: EditorFileType
 		CloseFile(handle);
 	}
 	
+	override eDialogExtraSetting GetExportSettings()
+	{
+		return eDialogExtraSetting.EXPORT_ENTIRE_MAP;
+	}
+	
 	override string GetExtension() 
 	{
 		return ".xml";
+	}
+
+	override void GetValidExtensions(notnull inout array<ref Param2<string, string>> valid_extensions)
+	{
+		super.GetValidExtensions(valid_extensions);
+		valid_extensions.Insert(new Param2<string, string>("Text File", "*.txt"));
+		valid_extensions.Insert(new Param2<string, string>("MapGroupPos", "*.xml"));
 	}
 }

@@ -1,0 +1,208 @@
+WrapSpacerWidgetClass FileDialog {
+ visible 1
+ clipchildren 1
+ ignorepointer 0
+ color 0.1412 0.1569 0.1804 1
+ position 0 0
+ size 512 316
+ halign center_ref
+ valign center_ref
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 999
+ scriptclass ""
+ style Colorable
+ "Ignore invisible" 0
+ Padding 0
+ Margin 0
+ "Size To Content V" 1
+ content_halign center
+ {
+  FrameWidgetClass WindowDragWrapper {
+   visible 1
+   ignorepointer 0
+   color 1 1 1 0.3922
+   size 1 26
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   draggable 1
+   scriptclass ""
+   {
+    PanelWidgetClass TitleBar {
+     ignorepointer 1
+     color 0 0.4784 0.8 1
+     size 1 25
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     priority 255
+     draggable 0
+     style rover_sim_colorable
+     {
+      ImageWidgetClass TitleIcon {
+       visible 1
+       ignorepointer 1
+       color 0.6824 0.7176 0.702 1
+       position 5 0
+       size 18 18
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "SymbolHandler"
+       image0 ""
+       mode blend
+       "src alpha" 1
+       "clamp mode" clamp
+       "stretch mode" stretch_w_h
+       filter 1
+       {
+        ScriptParamsClass {
+         Symbol_Name "buildings"
+         Symbol_Size 3
+        }
+       }
+      }
+      TextWidgetClass TitleText {
+       clipchildren 1
+       ignorepointer 1
+       position 0 0
+       size 673 22
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass ""
+       text "DialogBox"
+       font "gui/fonts/Metron"
+       "italic text" 0
+       "bold text" 0
+       "text sharpness" 0.9
+       "exact text" 0
+       "size to text h" 1
+       "size to text v" 1
+       "text halign" center
+       "text valign" center
+      }
+      PanelWidgetClass TitleClosePanel {
+       ignorepointer 1
+       color 0.7843 0.2941 0.2745 1
+       position 2 2
+       size 21 21
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass TitleClose {
+         visible 1
+         ignorepointer 0
+         color 0.6667 0.6667 0.6667 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         priority 5
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text "X"
+         font "gui/fonts/Metron-Bold"
+         {
+          ScriptParamsClass {
+           Relay_Command "ExitDialogExecute"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass WrapSpacerWidget1 {
+   visible 1
+   ignorepointer 1
+   position 0 0
+   size 1 225
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   {
+    RichTextWidgetClass Text {
+     ignorepointer 1
+     size 0.8 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     text "This is a test message"
+     font "gui/fonts/Metron22"
+     "exact text" 1
+     "size to text h" 1
+     "size to text v" 1
+     "text halign" center
+     "text valign" center
+     wrap 1
+    }
+   }
+  }
+  PanelWidgetClass PanelWidget4 {
+   ignorepointer 1
+   color 0.2275 0.2471 0.2627 1
+   size 1 58
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    GridSpacerWidgetClass GridSpacerWidget1 {
+     ignorepointer 1
+     position 0 7
+     size 166 42
+     halign center_ref
+     valign bottom_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scriptclass "ViewBinding"
+     Padding 0
+     Margin 8
+     "Size To Content H" 1
+     content_halign center
+     content_valign center
+     Columns 12
+     Rows 1
+     {
+      ScriptParamsClass {
+       Binding_Name "Buttons"
+      }
+     }
+    }
+   }
+  }
+ }
+}

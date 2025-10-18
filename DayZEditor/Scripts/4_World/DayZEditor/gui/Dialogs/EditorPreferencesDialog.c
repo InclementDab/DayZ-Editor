@@ -9,16 +9,13 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		"#STR_EDITOR_THEMES",
 		"#STR_EDITOR_ADVANCED",
 	};
-	
-			// autoptr since assigned prior to the handover to the array
-	protected autoptr CheckBoxPrefab m_AutoSaveToggle;
-	protected autoptr ScriptView m_AutoSaveTimer;
-	
+		
 	void EditorPreferencesDialog(string title, string default_group = "General")
 	{
-		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", m_Editor.Settings, string.Empty);
+		EditorSettings settings = GetEditor().GetSettings();
+		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", settings, string.Empty);
 
-		DropdownListPrefab<LogLevel> log_level("#STR_EDITOR_LOG_LEVEL", m_Editor.Settings, "SelectedLogLevel");
+		DropdownListPrefab<LogLevel> log_level("#STR_EDITOR_LOG_LEVEL", settings, "SelectedLogLevel");
 		log_level["Trace"] = LogLevel.TRACE;
 		log_level["Debug"] = LogLevel.DEBUG;
 		log_level["Info"] = LogLevel.INFO;
@@ -26,61 +23,54 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		log_level["Error"] = LogLevel.ERROR;
 		
 		general_group.Insert(log_level);
+						
+		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_QUICK_MOVE_STEP", settings, "QuickMoveStepSize", 0.01));	
+		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_QUICK_MOVE_FOLLOWS", settings, "QuickMoveFollowsCamera"));	
+		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SPAWN_ITEMS_WITH_ATTACHMENTS", settings, "SpawnItemsWithAttachments"));	
 		
-		m_AutoSaveToggle = new CheckBoxPrefab("#STR_EDITOR_AUTO_SAVE", m_Editor.Settings, "AutoSaveEnabled");
-		general_group.Insert(m_AutoSaveToggle);
-		m_AutoSaveTimer = new SliderPrefab("#STR_EDITOR_AUTO_SAVE_TIMER", m_Editor.Settings, "AutoSaveTimer", 10, 600);
-		general_group.Insert(m_AutoSaveTimer);
+		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_SCREEN_LOGS", settings, "ShowScreenLogs"));
+		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_BOUNDING_BOXES", settings, "ShowBoundingBoxes"));
 		
-		// update view state of auto save timer
-		PrefabBaseController<bool> controller = m_AutoSaveToggle.GetPrefabController();
-		m_AutoSaveTimer.GetLayoutRoot().Show(controller.Value);
 		
-		general_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", m_Editor.Settings, "ViewDistance", 1, 20000));
-		general_group.Insert(new SliderPrefab("#STR_EDITOR_OBJECT_VIEW_DISTANCE", m_Editor.Settings, "ObjectViewDistance", 1, 8000));
-		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_QUICK_MOVE_STEP", m_Editor.Settings, "QuickMoveStepSize", 0.01));	
-		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_QUICK_MOVE_FOLLOWS", m_Editor.Settings, "QuickMoveFollowsCamera"));	
-		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SPAWN_ITEMS_WITH_ATTACHMENTS", m_Editor.Settings, "SpawnItemsWithAttachments"));	
+		GroupPrefab camera_group = new GroupPrefab("#STR_EDITOR_CAMERA", settings, string.Empty);
+		if (GetEditor().GetCamera().GetSettings().LegacyCamera) {
+			camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_SPEED", settings, "CameraSpeed", 0, 500));
+			camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_TILT", settings, "CameraTilt", -90, 90));
+			camera_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_RULE_OF_THIRDS", settings, "RuleOfThirds"));
+			camera_group.Insert(new CheckBoxPrefab("Allow Below Ground", settings, "AllowBelowGround"));
+		}
 		
-		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_SCREEN_LOGS", m_Editor.Settings, "ShowScreenLogs"));
-		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_BOUNDING_BOXES", m_Editor.Settings, "ShowBoundingBoxes"));
+		GroupPrefab marker_group = new GroupPrefab("#STR_EDITOR_MARKERS", settings, string.Empty);
+		marker_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_TOOLTIPS", settings, "MarkerTooltips"));
+		marker_group.Insert(new CheckBoxPrefab("#STR_EDITOR_GROUND_OCCLUSION", settings, "MarkerGroundOcclusion"));
+		marker_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", settings, "MarkerViewDistance", 1, 5000));
+		marker_group.Insert(new ColorPickerPrefab("#STR_EDITOR_MARKER_COLOR", settings, "MarkerPrimaryColor"));
 		
-		GroupPrefab camera_group = new GroupPrefab("#STR_EDITOR_CAMERA", m_Editor.Settings, string.Empty);
-		camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_SPEED", m_Editor.Settings, "CameraSpeed", 0, 500));
-		camera_group.Insert(new SliderPrefab("#STR_EDITOR_CAMERA_TILT", m_Editor.Settings, "CameraTilt", -90, 90));
-		camera_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_RULE_OF_THIRDS", m_Editor.Settings, "RuleOfThirds"));
-		camera_group.Insert(new CheckBoxPrefab("Allow Below Ground", m_Editor.Settings, "AllowBelowGround"));
+		GroupPrefab brush_settings = new GroupPrefab("#STR_EDITOR_BRUSHES", settings, string.Empty);
+		brush_settings.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_OBJECT_MARKERS", settings, "BrushedObjectMarkers"));
+		brush_settings.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_LIST_ITEMS", settings, "BrushedListItems"));
 		
-		GroupPrefab marker_group = new GroupPrefab("#STR_EDITOR_MARKERS", m_Editor.Settings, string.Empty);
-		marker_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_TOOLTIPS", m_Editor.Settings, "MarkerTooltips"));
-		marker_group.Insert(new CheckBoxPrefab("#STR_EDITOR_GROUND_OCCLUSION", m_Editor.Settings, "MarkerGroundOcclusion"));
-		marker_group.Insert(new SliderPrefab("#STR_EDITOR_VIEW_DISTANCE", m_Editor.Settings, "MarkerViewDistance", 1, 5000));
-		marker_group.Insert(new ColorPickerPrefab("#STR_EDITOR_MARKER_COLOR", m_Editor.Settings, "MarkerPrimaryColor"));
+		GroupPrefab advanced_group = new GroupPrefab("#STR_EDITOR_ADVANCED", settings, string.Empty);
+		advanced_group.Insert(new EditBoxPrefab("#STR_EDITOR_LOOT_SPAWN_FILE", settings, "EditorProtoFile"));
+		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_MODAL_DIALOGS", settings, "LockCameraDuringDialogs"));
+		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_PRELOAD_OBJECTS", settings, "PreloadObjects"));
+		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_HIGH_PRECISION_COLLISION", settings, "HighPrecisionCollision"));
+		advanced_group.Insert(new CheckBoxPrefab("Minify Clipboard Data", settings, "MinifyCopyData"));
+		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_DEBUG_MODE", settings, "DebugMode"));
 		
-		GroupPrefab brush_settings = new GroupPrefab("#STR_EDITOR_BRUSHES", m_Editor.Settings, string.Empty);
-		brush_settings.Insert(new EditBoxPrefab("#STR_EDITOR_BRUSH_FILE", m_Editor.Settings, "EditorBrushFile"));
-		brush_settings.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_OBJECT_MARKERS", m_Editor.Settings, "BrushedObjectMarkers"));
-		brush_settings.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW_LIST_ITEMS", m_Editor.Settings, "BrushedListItems"));
-		
-		GroupPrefab advanced_group = new GroupPrefab("#STR_EDITOR_ADVANCED", m_Editor.Settings, string.Empty);
-		advanced_group.Insert(new EditBoxPrefab("#STR_EDITOR_LOOT_SPAWN_FILE", m_Editor.Settings, "EditorProtoFile"));
-		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_MODAL_DIALOGS", m_Editor.Settings, "LockCameraDuringDialogs"));
-		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_PRELOAD_OBJECTS", m_Editor.Settings, "PreloadObjects"));
-		advanced_group.Insert(new CheckBoxPrefab("Show Objects with Scope 0", m_Editor.Settings, "ShowScopeZeroObjects"));
-		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_HIGH_PRECISION_COLLISION", m_Editor.Settings, "HighPrecisionCollision"));
-		advanced_group.Insert(new CheckBoxPrefab("#STR_EDITOR_DEBUG_MODE", m_Editor.Settings, "DebugMode"));
-		
-		GroupPrefab colors_group = new GroupPrefab("#STR_EDITOR_THEMES", m_Editor.Settings, string.Empty);
-		colors_group.Insert(new ColorPickerPrefab("#STR_EDITOR_HIGHLIGHT_COLOR", m_Editor.Settings, "HighlightColor"));
-		colors_group.Insert(new ColorPickerPrefab("#STR_EDITOR_SELECTED_COLOR", m_Editor.Settings, "SelectionColor"));
+		GroupPrefab colors_group = new GroupPrefab("#STR_EDITOR_THEMES", settings, string.Empty);
+		colors_group.Insert(new ColorPickerPrefab("#STR_EDITOR_HIGHLIGHT_COLOR", settings, "HighlightColor"));
+		colors_group.Insert(new ColorPickerPrefab("#STR_EDITOR_SELECTED_COLOR", settings, "SelectionColor"));
 		
 		DialogCategoryListItem general_category("#STR_EDITOR_GENERAL");
 		general_category.AddContent(general_group);
 		AddContent(general_category);
 		
-		DialogCategoryListItem camera_category("#STR_EDITOR_CAMERA");
-		camera_category.AddContent(camera_group);
-		AddContent(camera_category);
+		if (GetEditor().GetCamera().GetSettings().LegacyCamera) {
+			DialogCategoryListItem camera_category("#STR_EDITOR_CAMERA");
+			camera_category.AddContent(camera_group);
+			AddContent(camera_category);
+		}
 		
 		DialogCategoryListItem marker_category("#STR_EDITOR_MARKERS");
 		marker_category.AddContent(marker_group);
@@ -110,20 +100,11 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 		AddButton("#STR_EDITOR_CLOSE", DialogResult.Cancel);
 		AddButton("#STR_EDITOR_DEFAULTS", "SetDefaults");
 	}
-	
-	override bool OnClick(Widget w, int x, int y, int button)
-	{
-		// update view state of autosave timer
-		PrefabBaseController<bool> controller = m_AutoSaveToggle.GetPrefabController();
-		m_AutoSaveTimer.GetLayoutRoot().Show(controller.Value);
 		
-		return super.OnClick(w, x, y, button);
-	}
-	
 	protected override void DialogExitButtonCallback(DialogExitButton button)
 	{
 		if (button.ButtonResult == DialogResult.OK) {
-			m_Editor.Settings.Save();
+			GetEditor().GetSettings().Save();
 		}
 		
 		super.DialogExitButtonCallback(button);
@@ -137,7 +118,7 @@ class EditorPreferencesDialog: EditorDialogCategoryBase
 	void SetDefaults()
 	{
 		EditorLog.Trace("EditorPreferencesDialog::SetDefaults");
-		m_Editor.Settings.SetDefaults();
+		GetEditor().GetSettings().SetDefaults();
 		
 		for (int i = 0; i < m_DialogBaseController.DialogContentData.Count(); i++) {
 			GroupPrefab group = GroupPrefab.Cast(m_DialogBaseController.DialogContentData[i]);

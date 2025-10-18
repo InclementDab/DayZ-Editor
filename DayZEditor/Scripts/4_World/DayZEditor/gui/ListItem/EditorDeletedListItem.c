@@ -1,19 +1,16 @@
 class EditorDeletedListItem: EditorListItem
 {
 	protected EditorDeletedObject m_EditorDeletedObject;
+	Widget WrapSpacerWidget1;
 	
 	void EditorDeletedListItem(EditorDeletedObject deleted_object)
 	{
 		m_EditorDeletedObject = deleted_object;
 		
-		string item_name = m_EditorDeletedObject.GetType();
-		if (item_name.Length() >= 30) {
-			item_name = item_name.Substring(0, 28) + "...";
-		}
+		string item_name = m_EditorDeletedObject.GetData().ModelName;		
+		ListItemLabel.SetText(string.Format("%1 (%2)", item_name, m_EditorDeletedObject.GetID()));
 		
-		m_TemplateController.Label = string.Format("%1 (%2)", item_name, m_EditorDeletedObject.GetID());
-		m_TemplateController.NotifyPropertyChanged("Label");
-		
+		WrapSpacerWidget1.Show(false);
 		//m_TemplateController.Icon = m_EditorDeletedObject.GetData().Icon;
 		//m_TemplateController.NotifyPropertyChanged("Icon");
 	}
@@ -22,22 +19,37 @@ class EditorDeletedListItem: EditorListItem
 	{
 		EditorLog.Trace("EditorDeletedListItem::ListItemExecute");
 		switch (args.GetMouseButton()) {
-
+			case MouseState.MIDDLE:
 			case MouseState.LEFT: {
+				if (args.GetMouseButton() == MouseState.MIDDLE) {
+					vector clip_info[2];
+					m_EditorDeletedObject.ClippingInfo(clip_info);
+					
+					vector transform[4];
+					m_EditorDeletedObject.GetTransform(transform);
+					
+					vector high_point = 2 * Vector(Math.Max(clip_info[0][0], clip_info[1][0]), Math.Max(clip_info[0][1], clip_info[1][1]), Math.Max(clip_info[0][2], clip_info[1][2]));
+					high_point[1] = (high_point[0] + high_point[2]) * 0.5;					
+					vector new_position = high_point.Multiply4(transform);
+					
+					EditorCamera camera = GetEditor().GetCamera();
+					camera.SetPosition(new_position);
+					camera.LookAt(m_EditorDeletedObject.GetOriginalPosition());
+				}			
 
-				if (KeyState(KeyCode.KC_LCONTROL)) {
+				if (GetEditor().IsCtrlDown()) {
 					GetEditor().ToggleHiddenObjectSelection(m_EditorDeletedObject);
 					return true;
 				} 
 				
-				if (!KeyState(KeyCode.KC_LSHIFT)) {
+				if (!GetEditor().IsShiftDown()) {
 					GetEditor().ClearSelection();
 				}
 				
 				GetEditor().SelectHiddenObject(m_EditorDeletedObject);
 				
 				// Multi select handling
-				if (KeyState(KeyCode.KC_LSHIFT)) {
+				if (GetEditor().IsShiftDown()) {
 					int this_index, that_index;
 					EditorListItem tertiary_item;
 					ObservableCollection<EditorListItem> list_items = GetEditor().GetEditorHud().GetTemplateController().RightbarDeletionData;
@@ -57,15 +69,7 @@ class EditorDeletedListItem: EditorListItem
 				}
 				
 				return true;
-			}
-			
-			case MouseState.MIDDLE: {
-				EditorCamera camera = GetEditor().GetCamera();
-				vector pos = m_EditorDeletedObject.GetOriginalPosition();
-				pos[1] = camera.GetPosition()[1];
-				camera.SetPosition(pos);
-				return true;
-			}			
+			}		
 		}
 		
 		return true;
@@ -106,6 +110,6 @@ class EditorDeletedListItem: EditorListItem
 	
 	override string GetLayoutFile() 
 	{
-		return "DayZEditor/gui/Layouts/items/EditorDeletionsListItem.layout";
+		return "DayZEditor/gui/Layouts/items/EditorPlacedListItem.layout";
 	}
 }
