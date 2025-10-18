@@ -6,7 +6,7 @@ class PlayerCameraData
 }
 
 modded class MissionGameplay
-{
+{	
 	protected ref EditorMainMenu m_PauseMenu;
 	private const float SYNC_COMPLETE_DEBOUNCE_TIME = 1.5;
 	private float m_syncDebounceTimer = -1.0;
@@ -41,18 +41,6 @@ modded class MissionGameplay
 	{
 		super.OnInit();
 
-		/*
-		GetUApi().GetInputByName("UACOTModuleToggleCOT").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTToggleButtons").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTTogglePlayer").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTToggleCamera").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTToggleESP").ForceDisable(true);
-		GetUApi().GetInputByName("UACOTToggleMap").ForceDisable(true);
-		GetUApi().GetInputByName("UACameraToolSpeedIncrease").ForceDisable(true);
-		GetUApi().GetInputByName("UACameraToolSpeedDecrease").ForceDisable(true);
-		GetUApi().UpdateControls();*/
-
-
 	}
 	
 	void SendSyncComplete() 
@@ -76,9 +64,9 @@ modded class MissionGameplay
 			}
 		} else {
 			super.OnKeyPress(key);
-		}
+		}	
 	}
-
+	
 	override void OnKeyRelease(int key)
 	{
 		if (GetEditor() && GetEditor().IsActive()) {
@@ -96,7 +84,7 @@ modded class MissionGameplay
 			super.OnMouseButtonRelease(button);
 		}
 	}
-	
+
 	override void OnUpdate(float timeslice)
 	{
 		// Sync debounce timer for CLIENT_SYNC_COMPLETE
@@ -184,18 +172,15 @@ modded class MissionGameplay
 			{
 				super.OnUpdate(timeslice);
 			}
-			
+
 			m_CachedEditor.Update(timeslice);
-		}
-		else
-		{
+		} else {
 			super.OnUpdate(timeslice);
 		}
 
 		// Multiplayer camera interpolation
 		if (GetGame().IsMultiplayer()) {
-			foreach (int player_id, Object camera: Cameras)
-			{
+			foreach (int player_id, Object camera: Cameras) {
 				if (!camera) {
 					continue;
 				}
@@ -213,11 +198,11 @@ modded class MissionGameplay
 				
 				float qout[4];
 				Math3D.QuatLerp(qout, last_camera_data.Quat, camera_data.Quat, time_passed);
-
+				
 				vector mat[4];
 				Math3D.QuatToMatrix(qout, mat);
 				mat[3] = vector.Lerp(last_camera_data.Position, camera_data.Position, time_passed);
-
+								
 				camera.SetTransform(mat);
 				camera.Update();
 				if (CameraMarkers[player_id])
@@ -256,12 +241,12 @@ modded class MissionGameplay
 	override void OnMissionLoaded()
 	{
 		super.OnMissionLoaded();
-
+		
 		// Server can handle itself
 		if (GetGame().IsMultiplayer()) {
 			return;
 		}
-		
+
 		// In the event we handle the creation on our own
 		if (m_AutoInitializeEditor) {
 			vector center_pos = Editor.GetMapCenterPosition();
@@ -271,10 +256,10 @@ modded class MissionGameplay
 				Error("Player was not created, exiting");
 				return;
 			}
-			
+	
 			// Make sure to select player immediately so they can be controlled
 			GetGame().SelectPlayer(null, player);
-
+	
 			g_Editor = new Editor(player);
 			g_Editor.SetActive(true);
 			m_IsEditorInitialized = true;
@@ -308,7 +293,7 @@ modded class MissionGameplay
 		{
 			return;
 		}
-		
+
 		m_PauseQueued = true;
 
 		if (g_Game.GetGameState() != DayZGameState.IN_GAME) {
@@ -363,20 +348,11 @@ modded class MissionGameplay
 	}
 
 	void OnERPC(PlayerIdentity sender, Object target, int rpc_type, ParamsReadContext ctx)
-	{
-	PrintFormat("[EDITOR DEBUG] ========================================");
-	PrintFormat("[EDITOR DEBUG] OnERPC CALLED!");
-	PrintFormat("[EDITOR DEBUG] RPC Type: %1", rpc_type);
-	PrintFormat("[EDITOR DEBUG] IsMultiplayer: %1", GetGame().IsMultiplayer());
-	PrintFormat("[EDITOR DEBUG] Sender: %1", sender);
-	PrintFormat("[EDITOR DEBUG] Target: %1", target);
-	PrintFormat("[EDITOR DEBUG] ========================================");
-		
+	{		
 		int count, i;
 		string uuid;
 		
 		if (!GetGame().IsMultiplayer()) {
-	PrintFormat("[EDITOR DEBUG] >>> BLOCKED: Not multiplayer");
 			return;
 		}
 
@@ -387,7 +363,7 @@ modded class MissionGameplay
 		{
 			if (!isInitialized)
 			{
-	PrintFormat("[EDITOR DEBUG] >>> RPC %1 BLOCKED - Editor not initialized", rpc_type);
+				PrintFormat("[EDITOR DEBUG] >>> RPC %1 BLOCKED - Editor not initialized", rpc_type);
 				return;
 			}
 
@@ -399,54 +375,42 @@ modded class MissionGameplay
 				case EditorRPC.SERVER_CHAT:
 					if (!isActivated)
 					{
-		PrintFormat("[EDITOR DEBUG] >>> UI RPC %1 BLOCKED - Editor not activated", rpc_type);
+						PrintFormat("[EDITOR DEBUG] >>> UI RPC %1 BLOCKED - Editor not activated", rpc_type);
 						return;
 					}
 					break;
 			}
 		}
 
-	PrintFormat("[EDITOR DEBUG] >>> Processing RPC %1...", rpc_type);
-
 		switch (rpc_type) {
-			case EditorRPC.EDITOR_CREATE: {
-	PrintFormat("[EDITOR DEBUG] ========== EDITOR_CREATE RPC ==========");
-				
+			case EditorRPC.EDITOR_CREATE: {				
 				PlayerBase player;
 				if (!ctx.Read(player)) {
-	PrintFormat("[EDITOR DEBUG] ERROR: Failed to read player from context");
+					PrintFormat("[EDITOR DEBUG] ERROR: Failed to read player from context");
 					return;
 				}
-	PrintFormat("[EDITOR DEBUG] Player read: %1", player);
 				
 				PlayerIdentity identity;
 				if (!ctx.Read(identity)) {
-	PrintFormat("[EDITOR DEBUG] ERROR: Failed to read identity from context");
+					PrintFormat("[EDITOR DEBUG] ERROR: Failed to read identity from context");
 					return;
 				}
-	PrintFormat("[EDITOR DEBUG] Identity read: %1", identity);
 				
-	PrintFormat("[EDITOR DEBUG] Creating new Editor instance...");
 				g_Editor = new Editor(player);
 				
 				if (g_Editor) {
-	PrintFormat("[EDITOR DEBUG] ✓ Editor created successfully: %1", g_Editor);
 					m_IsEditorInitialized = true;
 					m_CachedEditor = g_Editor;
-	PrintFormat("[EDITOR DEBUG] Scheduling ActivateEditor in 100ms...");
 					GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(this.ActivateEditor, 100, false);
-	PrintFormat("[EDITOR DEBUG] ========== EDITOR_CREATE COMPLETE ==========");
 				} else {
-	PrintFormat("[EDITOR DEBUG]  FATAL: Failed to create Editor instance! ");
+					PrintFormat("[EDITOR DEBUG]  FATAL: Failed to create Editor instance! ");
 				}
 				break;
 			}
 
-			case EditorRPC.PLAYER_JOINED: {
-	PrintFormat("[EDITOR DEBUG] === PLAYER_JOINED RPC ===");
-				
+			case EditorRPC.PLAYER_JOINED: {				
 				if (!GetEditor() || !GetEditor().GetEditorHud()) {
-	PrintFormat("[EDITOR DEBUG] >>> BLOCKED - Editor/EditorHud not ready");
+					PrintFormat("[EDITOR DEBUG] >>> BLOCKED - Editor/EditorHud not ready");
 					return;
 				}
 				
@@ -455,7 +419,6 @@ modded class MissionGameplay
 
 				string name;
 				ctx.Read(name);
-	PrintFormat("[EDITOR DEBUG] Player joined: ID=%1, Name=%2", player_id3, name);
 				
 				Cameras[player_id3] = GetGame().CreateObjectEx("DSLRCamera", vector.Zero, ECE_LOCAL);
 				CameraMarkers[player_id3] = new EditorCameraMarker(name);
@@ -466,7 +429,6 @@ modded class MissionGameplay
 					hud.GetTemplateController().RightbarPlayerData.Insert(new EditorPlayerListItem(player_id3, name));
 				}
 				
-	PrintFormat("[EDITOR DEBUG] Camera created for player %1", player_id3);
 				break;
 			}
 
@@ -488,7 +450,7 @@ modded class MissionGameplay
 					ctx.Read(low);
 					ctx.Read(high);
 					
-					EditorObjectData dta = new EditorObjectData();
+               		EditorObjectData dta = new EditorObjectData();
 					dta.Read(ctx, int.MAX);
 
 					dta.m_LowBits = low;
@@ -561,7 +523,7 @@ modded class MissionGameplay
 					}
 					
 					GetEditor().UpdateObjectByUuid(uuid, dta2);
-				}
+				}				
 				
 	PrintFormat("[EDITOR DEBUG] Objects updated successfully");
 				break;
@@ -629,7 +591,7 @@ case EditorRPC.DRAG_SESSION:
 				map<string, Object> hidden_objects = new map<string, Object>();
 				for (i = 0; i < count; i++) {
 					ctx.Read(uuid);
-
+					
 					Object entity;
 					ctx.Read(entity);
 					
@@ -685,7 +647,6 @@ case EditorRPC.DRAG_SESSION:
 				copyarray(camera_data.Quat, camera_quat);
 				camera_data.Position = camera_pos;
 				camera_data.Timestamp = GetDayZGame().GetTickTime();
-
 				LastCameraData[player_id] = CameraData[player_id];
 				CameraData[player_id] = camera_data;
 				break;
@@ -736,6 +697,7 @@ case EditorRPC.DRAG_SESSION:
 				
 				string chat_text;
 				ctx.Read(chat_text);
+				
 				string chat_sender;
 				ctx.Read(chat_sender);
 	PrintFormat("[EDITOR DEBUG] Chat from %1: %2", chat_sender, chat_text);
@@ -890,7 +852,7 @@ case EditorRPC.DRAG_SESSION:
 		Math3D.YawPitchRollMatrix(newParentOri, newParentTransform);
 		newParentTransform[3] = newParentPos;
 
-	foreach (LocalDragChildData childData : m_ActiveDragSession.m_ChildData)
+		foreach (LocalDragChildData childData : m_ActiveDragSession.m_ChildData)
 		{
 			EditorObject childObject = childData.m_ChildObject;
 			if (!childObject) continue;

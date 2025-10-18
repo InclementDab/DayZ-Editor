@@ -19,16 +19,15 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	void ~EditorObjectPropertiesDialog()
 	{
-		// foreach (EditorObject editor_object: m_EditorObjects) {
-		// 	editor_object.UpdateNet();
-		
 		// Ensures full persistence update when closing the properties dialog
+		//TODO 1: Per tick update.
+		//TODO 2: Only update changed data.
 		if (m_EditorObjects.Count() > 0) 
 		{
-			foreach (EditorObject obj : m_EditorObjects){
-				if (obj) 
+			foreach (EditorObject editor_object: m_EditorObjects) {
+				if (editor_object) 
 				{
-					obj.UpdateNet(); // Send full OBJECT_UPDATE (39254) for persistence
+					editor_object.UpdateNet();
 				}
 			}
 		}

@@ -863,44 +863,6 @@ class Editor: Managed
 			ProcessCameraTrack(timeslice);
 		}
 	}
-/*
-
-void SendBatchTransformUpdate(array<ref EditorObject> objects)
-{
-    if (!GetGame().IsMultiplayer() || objects.Count() == 0) {
-        return;
-    }
-
-    ScriptRPC rpc = new ScriptRPC();
-    
-    int objectCount = objects.Count();
-    rpc.Write(objectCount);
-    
-    for (int i = 0; i < objectCount; i++)
-    {
-        EditorObject obj = objects[i];
-        if (!obj || obj.Uuid == string.Empty) continue;
-        
-        int packedData[4];
-        EditorNetUtils.PackTransform(obj.GetPosition(), obj.GetOrientation(), obj.GetScale(), packedData);
-
-        PrintFormat("[CLIENT-SEND | PRE-SEND] Packed Data: %1, %2, %3, %4", 
-            packedData[0], packedData[1], packedData[2], packedData[3]);
-        
-        rpc.Write(obj.Uuid);
-        rpc.Write(packedData[0]);
-        rpc.Write(packedData[1]);
-        rpc.Write(packedData[2]);
-        rpc.Write(packedData[3]);
-
-        PrintFormat("[CLIENT-SEND | NATIVE BATCH] Sending update for UUID: '%1' at Position: %2", 
-            obj.Uuid, obj.GetPosition().ToString());
-    }
-    
-    rpc.Send(null, EditorRPC.BATCH_UPDATE_TRANSFORM_PACKED, true);
-}
-
-*/
 	
 	// https://www.cubic.org/docs/hermite.htm
 	private static float H00(float t) { return (2 * t * t * t) - (3 * t * t) + 1; }
@@ -1283,7 +1245,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 			int input_direction = fwd_input.LocalPress() + fwd_input.LocalHold() - bck_input.LocalPress() - bck_input.LocalHold();
 			input_direction = Math.Clamp(input_direction, -1, 1);
 			if (input_direction) {
-			auto placeables = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(GetEditorHud().GetTemplateController().CategoryConfig, GetEditorHud().GetTemplateController().LeftbarSpacerConfig, GetEditorHud().GetTemplateController().LeftbarSpacerStatic);
+				auto placeables = Ternary<ObservableCollection<ref EditorPlaceableListItem>>.If(GetEditorHud().GetTemplateController().CategoryConfig, GetEditorHud().GetTemplateController().LeftbarSpacerConfig, GetEditorHud().GetTemplateController().LeftbarSpacerStatic);
 				for (int i = 0; i < placeables.Count(); i++) {
 					if (placeables[i].IsSelected()) {
 						if (!placeables[i + input_direction]) {
@@ -1293,29 +1255,28 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 						placeables[i].Deselect();
 						AddInHand(placeables[i + input_direction].GetPlaceableItem());
 						placeables[i + input_direction].Select();
-
+						
 						// Handle tooltip showing
 						placeables[i].OnMouseLeave(null, null, 0, 0);
 						placeables[i + input_direction].OnMouseEnter(null, 0, 0);
-
+						
 						GetEditorHud().GetTemplateController().LeftbarScroll.VScrollToPos01((i + 1) /  placeables.Count());
 						break;
 					}
 				}
-			}
-		} // Tyler, this is fucked up but it works for now 
-		else if (selected_objects.Count()) {
-		bool kbd_fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalHold() && GridMode) || (fwd_input.LocalPress() && GridMode);
-		bool kbd_bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalHold() && GridMode) || (bck_input.LocalPress() && GridMode);
-		bool kbd_left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalHold() && GridMode) || (left_input.LocalPress() && GridMode);
-		bool kbd_right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalHold() && GridMode) || (right_input.LocalPress() && GridMode);
-		bool kbd_up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalHold() && GridMode) || (up_input.LocalPress() && GridMode);
-		bool kbd_down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalHold() && GridMode) || (down_input.LocalPress() && GridMode);
-		bool kbd_big_on = big_input.LocalValue();
-		bool kbd_small_on = small_input.LocalValue();
+			}*/
+		} else if (selected_objects.Count()) {
+		bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalHold() && GridMode) || (fwd_input.LocalPress() && GridMode);
+		bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalHold() && GridMode) || (bck_input.LocalPress() && GridMode);
+		bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalHold() && GridMode) || (left_input.LocalPress() && GridMode);
+		bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalHold() && GridMode) || (right_input.LocalPress() && GridMode);
+		bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalHold() && GridMode) || (up_input.LocalPress() && GridMode);
+		bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalHold() && GridMode) || (down_input.LocalPress() && GridMode);
+		bool big_on = big_input.LocalValue();
+		bool small_on = small_input.LocalValue();
 
 		// Check if block should execute (movement OR pending action)
-		bool should_execute = kbd_fwd_on || kbd_bck_on || kbd_left_on || kbd_right_on || kbd_up_on || kbd_down_on || kbd_big_on || kbd_small_on || m_QuickMoveUndoAction;
+		bool should_execute = fwd_on || bck_on || left_on || right_on || up_on || down_on || big_on || small_on || m_QuickMoveUndoAction;
 		if (should_execute)
 		{
 			if (IsDragging())
@@ -1372,22 +1333,22 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 			}
 			
 			// UNDO/REDO logic
-			array<UAInput> kbd_input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input, big_input, small_input };
+			array<UAInput> input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input, big_input, small_input };
 			
-			bool kbd_input_is_press = false;
-			int kbd_press_input_count = 0;
-			foreach (UAInput kbd_check_press : kbd_input_list)
+			bool input_is_press = false;
+			int press_input_count = 0;
+			foreach (UAInput check_press : input_list)
 			{
-				if (!kbd_check_press) continue;
-				bool kbd_has_press = kbd_check_press.LocalPress();
-				if (kbd_has_press)
+				if (!check_press) continue;
+				bool has_press = check_press.LocalPress();
+				if (has_press)
 				{
-					kbd_press_input_count++;
+					press_input_count++;
 				}
-				kbd_input_is_press = kbd_input_is_press || kbd_has_press;
+				input_is_press = input_is_press || has_press;
 			}
 			
-			if (kbd_input_is_press)
+			if (input_is_press)
 			{
 				m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");
 				if (m_QuickMoveUndoAction)
@@ -1421,32 +1382,32 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 				}
 			}
 			
-			bool kbd_input_is_release = false;
-			int kbd_total_undo_captured = 0;
-			int kbd_total_redo_captured = 0;
+			bool input_is_release = false;
+			int total_undo_captured = 0;
+			int total_redo_captured = 0;
 			
-			foreach (UAInput kbd_check : kbd_input_list)
+			foreach (UAInput check : input_list)
 			{
-				if (!kbd_check) continue;
-				bool kbd_input_has_press = kbd_check.LocalPress();
-				bool kbd_input_has_release = kbd_check.LocalRelease();
+				if (!check) continue;
+				bool input_has_press = check.LocalPress();
+				bool input_has_release = check.LocalRelease();
 
-				if (kbd_input_has_press)
+				if (input_has_press)
 				{
 					if (m_QuickMoveUndoAction)
 					{
-						foreach (int kbd_cap_idx, EditorObject kbd_cap_obj : selected_objects)
+						foreach (int cap_idx, EditorObject cap_obj : selected_objects)
 						{
-							if (!kbd_cap_obj)
+							if (!cap_obj)
 							{
-								PrintFormat("[UNDO-CAPTURE] WARNING: Null object at %1", kbd_cap_idx);
+								PrintFormat("[UNDO-CAPTURE] WARNING: Null object at %1", cap_idx);
 								continue;
 							}
 							
-							vector kbd_cap_transform[4];
-							kbd_cap_obj.GetTransform(kbd_cap_transform);
-							m_QuickMoveUndoAction.InsertUndoParameter(kbd_cap_obj.GetTransformArray());
-							kbd_total_undo_captured++;
+							vector cap_transform[4];
+							cap_obj.GetTransform(cap_transform);
+							m_QuickMoveUndoAction.InsertUndoParameter(cap_obj.GetTransformArray());
+							total_undo_captured++;
 						}
 					}
 					else
@@ -1455,22 +1416,22 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 					}
 				}
 
-				if (kbd_input_has_release)
+				if (input_has_release)
 				{
 					if (m_QuickMoveUndoAction)
 					{
-						foreach (int kbd_redo_idx, EditorObject kbd_redo_obj : selected_objects)
+						foreach (int redo_idx, EditorObject redo_obj : selected_objects)
 						{
-							if (!kbd_redo_obj)
+							if (!redo_obj)
 							{
-								PrintFormat("[REDO-CAPTURE] WARNING: Null object at %1", kbd_redo_idx);
+								PrintFormat("[REDO-CAPTURE] WARNING: Null object at %1", redo_idx);
 								continue;
 							}
 							
-							vector kbd_redo_transform[4];
-							kbd_redo_obj.GetTransform(kbd_redo_transform);
-							m_QuickMoveUndoAction.InsertRedoParameter(kbd_redo_obj.GetTransformArray());
-							kbd_total_redo_captured++;
+							vector redo_transform[4];
+							redo_obj.GetTransform(redo_transform);
+							m_QuickMoveUndoAction.InsertRedoParameter(redo_obj.GetTransformArray());
+							total_redo_captured++;
 						}
 					}
 					else
@@ -1478,11 +1439,11 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 						PrintFormat("[REDO-CAPTURE] ERROR: Action is NULL!");
 					}
 					
-					kbd_input_is_release = true;
+					input_is_release = true;
 				}
 			}
 			
-			if (kbd_input_is_release)
+			if (input_is_release)
 			{
 				if (m_QuickMoveUndoAction)
 				{
@@ -1524,45 +1485,50 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 			vector pos_offset = vector.Zero;
 			vector ori_offset = vector.Zero;
 			float scale_offset = 0;
-			if (GetDayZGame().IsLeftCtrlDown() && kbd_fwd_on) {
+			if (GetDayZGame().IsLeftCtrlDown() && fwd_on) {
 				ori_offset = ori_offset + Vector(0, 0, step_size);
 			}
-			else if (kbd_fwd_on) {
+			
+			else if (fwd_on) {
 				pos_offset = pos_offset + Vector(0, 0, step_size).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && kbd_bck_on) {
+			if (GetDayZGame().IsLeftCtrlDown() && bck_on) {
 				ori_offset = ori_offset + Vector(0, 0, -step_size);
 			}
-			else if (kbd_bck_on) {
+			
+			else if (bck_on) {
 				pos_offset = pos_offset + Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && kbd_left_on) {
+			if (GetDayZGame().IsLeftCtrlDown() && left_on) {
 				ori_offset = ori_offset + Vector(-step_size, 0, 0);
 			}
-			else if (kbd_left_on) {
+			
+			else if (left_on) {
 				pos_offset = pos_offset + Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && kbd_right_on) {
+			if (GetDayZGame().IsLeftCtrlDown() && right_on) {
 				ori_offset = ori_offset + Vector(step_size, 0, 0);
 			}
-			else if (kbd_right_on) {
+			
+			else if (right_on) {
 				pos_offset = pos_offset + Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && kbd_up_on) {
+			if (GetDayZGame().IsLeftCtrlDown() && up_on) {
 				ori_offset = ori_offset + Vector(0, step_size, 0);
-			}
-			else if (kbd_up_on) {
+			}	
+					
+			else if (up_on) {
 				pos_offset = pos_offset + Vector(0, step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && kbd_down_on) {
+			if (GetDayZGame().IsLeftCtrlDown() && down_on) {
 				ori_offset = ori_offset + Vector(0, -step_size, 0);
 			}
-			else if (kbd_down_on) {
+			else if (down_on) {
 				pos_offset = pos_offset + Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
@@ -1577,7 +1543,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 			ori_offset = ori_offset + ori_offset * Math.RAD2DEG;
 			
 			if (pos_offset != vector.Zero || ori_offset != vector.Zero || scale_offset != 0) {
-				foreach (int moveid, EditorObject selected_object: selected_objects) {
+				foreach (int id, EditorObject selected_object: selected_objects) {
 					vector rel_mat[4];
 					selected_object.GetTransform(rel_mat);
 					
@@ -1592,8 +1558,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 					
 					vector avg_mat[4];
 					Math3D.YawPitchRollMatrix(ori_offset, avg_mat);
-					avg_mat[3] = average_position;
-					
+					avg_mat[3] = average_position;					
 					vector res_mat[4];
 					Math3D.MatrixMultiply4(avg_mat, inv_mat, res_mat);
 					
@@ -2448,9 +2413,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 	}
 	
 	EditorObject CreateObjectByUuid(string uuid, notnull EditorObjectData editor_object_data, bool create_undo = true)
-	{		
-		PrintFormat("[Editor] CreateObjectByUuid: uuid=%1, type=%2", uuid, editor_object_data.Type);
-		
+	{				
 		// Cache Data (for undo / redo)
 		m_SessionCache[editor_object_data.GetID()] = editor_object_data;
 						
@@ -2462,9 +2425,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 		}
 		
 			editor_object.Uuid = uuid;
-			m_EditorObjectsByUuid[uuid] = editor_object;
-		
-		PrintFormat("[Editor] CreateObjectByUuid SUCCESS: uuid=%1, editor_object=%2", uuid, editor_object.GetID());		
+			m_EditorObjectsByUuid[uuid] = editor_object;	
 		EditorAction action = new EditorAction("Delete", "Create");
 		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
@@ -2526,7 +2487,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 		
 	array<EditorObject> CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
 	{
-		array<EditorObject> processed_objects = new array<EditorObject>();
+		array<EditorObject> object_set = new array<EditorObject>();
 		EditorAction action = new EditorAction("Delete", "Create");
 		
 		foreach (string uuid, EditorObjectData editor_object_data: data_list) {
@@ -2554,7 +2515,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 
-				processed_objects.Insert(m_EditorObjectsByUuid[uuid]);
+				object_set.Insert(m_EditorObjectsByUuid[uuid]);
 
 				continue;
 			}
@@ -2576,7 +2537,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 			
 			GetStatistics().EditorPlacedObjects++;
 
-			processed_objects.Insert(editor_object);
+			object_set.Insert(editor_object);
 
 		}
 		
@@ -2584,7 +2545,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 			InsertAction(action);
 		}
 		
-		return processed_objects;
+		return object_set;
 	}	
 
 	bool DeleteObject(notnull EditorObject editor_object, bool create_undo = true, bool send_net_message = true) 
@@ -2690,7 +2651,7 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 		
 		int count;
 		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (int id, EditorObject editor_object: editor_object_map) {			
+		foreach (int id, EditorObject editor_object: editor_object_map) {
 			if (!editor_object.IsLocked() && editor_object.IsVisible()) {
 				if (editor_object.IsSelected()) {
 					DeselectObject(editor_object);
@@ -3637,7 +3598,6 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 		
 	EditorObjectMap GetSelectedObjects() 
 	{
-		if (!m_ObjectManager) return null;
 		return m_ObjectManager.GetSelectedObjects(); 
 	}
 	
@@ -3653,7 +3613,6 @@ void SendBatchTransformUpdate(array<ref EditorObject> objects)
 	
 	EditorObjectMap GetPlacedObjects() 
 	{
-		if (!m_ObjectManager) return null;
 		return m_ObjectManager.GetPlacedObjects(); 
 	}
 	

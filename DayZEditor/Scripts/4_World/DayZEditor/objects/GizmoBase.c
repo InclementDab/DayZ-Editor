@@ -317,12 +317,11 @@ class EditorGizmo: Managed
 		}
 
 		if (interact_input.LocalRelease() && m_InteractionIndex != -1) {
-    		PrintFormat("[GIZMO] ===== RELEASE CONDITION MET =====");
 			m_InteractionIndex = -1;
 			m_DragOffset = vector.Zero;
 			m_DragRotationOffset = vector.Zero;
 						
-			array<ref EditorObject> dragged_final = new array<ref EditorObject>(); // Collect objects for final send
+			array<ref EditorObject> dragged_final = new array<ref EditorObject>();
 			
 			foreach (EditorObject selected_rewind_object2: m_AllSelectedObjects) {
 				selected_rewind_object2.Update();
@@ -338,13 +337,10 @@ class EditorGizmo: Managed
 				}
 				
 				selected_rewind_object2.IsBeingDragged = false;
-				// CRITICAL FIX: On release, explicitly call the persistence path.
 				if (GetGame().IsMultiplayer()) selected_rewind_object2.UpdateNet();
 			}
 			
 			GetEditor().InsertAction(m_RewindAction);
-
-			PrintFormat("[GIZMO] ===== GIZMO RELEASE DETECTED =====");
 		}
 		
 		m_VisibleSortedInteractions.Clear();
