@@ -1503,9 +1503,9 @@ class Editor: Managed
 			return false;
 		}
 				
-		if (!GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD)) {
-			return false;
-		}
+		//if (!GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD)) {
+			//return false;
+		//}
 		
 		if (IsPlayerControlled()) {
 			return false;
@@ -1519,7 +1519,7 @@ class Editor: Managed
 		if (m_CurrentKeys.Find(key) != -1) {
 			return true;
 		}
-		
+				
 		m_CurrentKeys.Insert(key);
 		EditorCommand command = CommandManager.GetCommandFromShortcut(m_CurrentKeys.GetMask());
 		if (!command) {
