@@ -87,6 +87,9 @@ class EditorGizmo: Managed
 	
 	protected static ref map<string, EntityAI> s_Gizmos = new map<string, EntityAI>();
 	
+	protected int m_UpdateFrameCounter = 0;
+	protected const int UPDATE_FRAME_RATE = 30;
+	
 	void EditorGizmo()
 	{
 		m_Editor = GetEditor();
@@ -106,9 +109,18 @@ class EditorGizmo: Managed
 		}
 	}	
 
+	private bool m_WasInteracting = false;
+
+	bool WasInteracting()
+	{
+		return m_WasInteracting;
+	}
+
 	bool IsInteracting()
 	{
-		return m_InteractionIndex != -1;
+		bool interacting = (m_InteractionIndex != -1);
+		m_WasInteracting = interacting;
+		return interacting;
 	}
 	
 	protected void PreUpdateGizmo(float dt)
@@ -170,6 +182,8 @@ class EditorGizmo: Managed
 #endif
 		
 		m_AllSelectedObjects = GetEditor().GetSelectedObjectsOrdered();
+		if (m_AllSelectedObjects.Count() == 0) return;
+
 		m_TopSelectedObject = m_AllSelectedObjects[m_AllSelectedObjects.Count() - 1];
 		if (!m_TopSelectedObject || m_AllSelectedObjects.Count() == 0) {
 			//m_InteractionIndex = -1;
@@ -270,6 +284,16 @@ class EditorGizmo: Managed
 			m_DragRotationOffset = m_DragOffset.InvMultiply4(m_TopTransformOrthogonal).VectorToAngles();			
 			copyarray(m_TopTransformOriginal, top_transform);
 
+			if (GetGame().IsMultiplayer())
+			{
+				EditorObject rpc_start_parent = m_AllSelectedObjects[0];
+				array<EditorObject> rpc_start_children = {};
+				for (int rpc_start_j = 1; rpc_start_j < m_AllSelectedObjects.Count(); rpc_start_j++)
+					rpc_start_children.Insert(m_AllSelectedObjects[rpc_start_j]);
+
+				GetEditor().GetNetActionManager().SendDragSessionStart(rpc_start_parent, rpc_start_children);
+			}
+
 			// Register rewinds
 			m_RewindAction = new EditorAction("SetTransform", "SetTransform");
 			m_LocalTransformsToTarget = new map<EditorObject, ref array<vector>>();
@@ -322,6 +346,14 @@ class EditorGizmo: Managed
 				
 				selected_rewind_object2.IsBeingDragged = false;
 			}
+
+			if (GetGame().IsMultiplayer() && m_AllSelectedObjects.Count() > 0)
+			{
+				EditorObject rpc_end_parent = m_AllSelectedObjects[0];
+				int rpc_end_packed[4];
+				EditorNetUtils.PackTransform(rpc_end_parent.GetPosition(), rpc_end_parent.GetOrientation(), rpc_end_parent.GetScale(), rpc_end_packed);
+				GetEditor().GetNetActionManager().SendDragSessionEnd(rpc_end_parent.Uuid, rpc_end_packed);
+			}
 			
 			GetEditor().InsertAction(m_RewindAction);
 		}
@@ -334,6 +366,32 @@ class EditorGizmo: Managed
 		UpdateGizmo(dt, gizmo_transform);
 		//Scope0.Dump("Update");
 		
+        // Check if a gizmo interaction is currently active.
+		if (m_InteractionIndex != -1)
+		{
+            // Throttle network updates to avoid sending an RPC on every single frame.
+			m_UpdateFrameCounter++;
+			if (m_UpdateFrameCounter >= UPDATE_FRAME_RATE)
+			{
+				m_UpdateFrameCounter = 0;
+				
+				if (GetGame().IsMultiplayer())
+				{
+                    // The first object in the selection is considered the "parent" for the drag session.
+					EditorObject parent = m_AllSelectedObjects[0];
+					if (parent)
+					{
+                        // Pack the parent's current transform into a compressed format.
+						int packedData[4];
+						EditorNetUtils.PackTransform(parent.GetPosition(), parent.GetOrientation(), parent.GetScale(), packedData);
+						
+                        // Use the NetActionManager to send the unreliable UPDATE RPC.
+						GetEditor().GetNetActionManager().SendDragSessionUpdate(parent.Uuid, packedData);
+					}
+				}
+			}
+		}
+
 		foreach (int interaction_index_color, GizmoInteractionSource clip_info_color: m_InteractionCollisions) {
 			
 			if (!clip_info_color) {

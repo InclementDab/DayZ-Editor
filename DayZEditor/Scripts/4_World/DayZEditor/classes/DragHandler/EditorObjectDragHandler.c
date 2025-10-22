@@ -59,7 +59,15 @@ class Plane3D: Managed
 
 class EditorObjectDragHandler: EditorDragHandler
 {
-	protected float m_LastAngle;
+	override void OnDragStart(notnull EditorObject target, array<EditorObject> additional_targets = null)
+	{
+		super.OnDragStart(target, additional_targets);
+
+		if (GetGame().IsMultiplayer())
+		{
+			GetEditor().GetNetActionManager().SendDragSessionStart(target, additional_targets);
+		}
+	}
 
 	protected EDragFlags GetDragFlags()
 	{
@@ -246,12 +254,24 @@ class EditorObjectDragHandler: EditorDragHandler
 			};
 			
 			vector output_additional_mat[4];
-			Math3D.MatrixMultiply4(transform_from_object_center, local_additional_mat, output_additional_mat);
+			vector ortho_parent_mat[4];
+			copyarray(ortho_parent_mat, transform_from_object_center);
+
+			// Orthogonalize the temporary matrix, removing all scale information.
+			Math3D.MatrixOrthogonalize4(ortho_parent_mat);
+			Math3D.MatrixMultiply4(ortho_parent_mat, local_additional_mat, output_additional_mat);
 			selected_object.SetTransform(output_additional_mat);
 		}
 		
 		target.SetBottomTransform(transform);
 		target.Update();
+
+		if (GetGame().IsMultiplayer())
+		{
+			int packedData[4];
+			EditorNetUtils.PackTransform(target.GetPosition(), target.GetOrientation(), target.GetScale(), packedData);
+			GetEditor().GetNetActionManager().SendDragSessionUpdate(target.Uuid, packedData);
+		}
 	}
 	
 	static vector GetAveragePosition(EditorObjectMap objects)
@@ -268,5 +288,55 @@ class EditorObjectDragHandler: EditorDragHandler
 		avg_position[1] = GetGame().SurfaceY(avg_position[0], avg_position[2]);
 		
 		return avg_position;
+	}
+
+	override void OnDragFinish()
+	{
+		// First, send the new reliable END RPC for the session.
+		if (GetGame().IsMultiplayer() && m_Target)
+		{
+			int packedData[4];
+			EditorNetUtils.PackTransform(m_Target.GetPosition(), m_Target.GetOrientation(), m_Target.GetScale(), packedData);
+			GetEditor().GetNetActionManager().SendDragSessionEnd(m_Target.Uuid, packedData);
+		}
+
+		// Manually replicate the cleanup logic from EditorDragHandler 
+		if (m_RewindAction)
+		{
+			// Finalize undo/redo action with the 'after' state.
+			array<EditorObject> all_dragged_objects = { m_Target };
+			if (m_AdditionalDragTargets)
+				all_dragged_objects.InsertAll(m_AdditionalDragTargets);
+
+			foreach(EditorObject dragged_obj : all_dragged_objects)
+			{
+				if (dragged_obj)
+					m_RewindAction.InsertRedoParameter(dragged_obj.GetTransformArray());
+			}
+
+			GetEditor().InsertAction(m_RewindAction);
+		}
+
+		// This manually performs the cleanup from the base class's OnDragFinish,
+		// because we are intentionally not calling super.OnDragFinish() to prevent old RPCs.
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_OnDragging);
+
+		if (m_Target)
+			m_Target.IsBeingDragged = false;
+
+		if (m_AdditionalDragTargets)
+		{
+			foreach(EditorObject child_obj : m_AdditionalDragTargets)
+			{
+				if (child_obj)
+					child_obj.IsBeingDragged = false;
+			}
+		}
+
+		m_IsDragging = false;
+		m_Target = null;
+		m_AdditionalDragTargets = null;
+		m_LocalTransformsToTarget = null;
+		m_RewindAction = null;
 	}
 }

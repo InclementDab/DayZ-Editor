@@ -444,13 +444,8 @@ class EditorObject: EditorWorldObject
 	
 	void UpdateNet()
 	{
-		if (GetGame().IsMultiplayer()) {
-			ScriptRPC rpc = new ScriptRPC();
-			rpc.Write(1);
-			rpc.Write(Uuid);
-			GetData().Write(rpc, int.MAX);
-			rpc.Send(null, 39254, true);
-		}
+		if (GetGame().IsMultiplayer() && GetEditor() && GetEditor().GetNetActionManager())
+			GetEditor().GetNetActionManager().SendObjectUpdate(this);
 	}
 	
 	void PlaceOnSurfaceRotated(out vector trans[4], vector pos, float dx = 0, float dz = 0, float fAngle = 0, bool align = false) 
@@ -1041,17 +1036,20 @@ class EditorObjectController: Managed
 				break;
 			}
 			
-			case "Scale":
-			case "Position":
+			case "Position": {
+				m_EditorObject.SetPosition(Position);
+				m_EditorObject.Update();
+				break;
+			}
+			
 			case "Orientation": {
-				vector matrix[4];
-				Math3D.YawPitchRollMatrix(Orientation, matrix);
-				matrix[0] = matrix[0] * Scale;
-				matrix[1] = matrix[1] * Scale;
-				matrix[2] = matrix[2] * Scale;
-				matrix[3] = Position;
-								
-				m_EditorObject.SetTransform(matrix);
+				m_EditorObject.SetOrientation(Orientation);
+				m_EditorObject.Update();
+				break;
+			}
+
+			case "Scale": {
+				m_EditorObject.SetScale(Scale);
 				m_EditorObject.Update();
 				break;
 			}

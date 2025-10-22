@@ -61,19 +61,9 @@ class EditorDragHandler: Managed
 				m_RewindAction.InsertRedoParameter(selected_object.GetTransformArray());
 			}
 			
-			IEntity children = selected_object.GetWorldObject().GetChildren();
-			while (children) {
-				children.SetFlags(EntityFlags.VISIBLE, false);
-				children = children.GetSibling();
-			}
-			
 			selected_object.Update();
-			selected_object.UpdateNet();
 			selected_object.IsBeingDragged = false;
 		}
-		
-		m_Target.UpdateNet();
-		
 		GetEditor().InsertAction(m_RewindAction);
 		
 		m_Target = null;

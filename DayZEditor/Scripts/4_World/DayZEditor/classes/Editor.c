@@ -19,9 +19,12 @@ enum eEditorMode
 };
 
 ref Editor g_Editor;
-Editor GetEditor() 
+Editor GetEditor()
 {
-	return g_Editor;
+    if (!g_Editor || g_Editor.m_IsDestroying) {
+        return null;
+    }
+    return g_Editor;
 }
 
 class EditorHandData
@@ -74,6 +77,7 @@ class Editor: Managed
 		"EditorCameraClassic"
 	};
 		
+    bool m_IsDestroying = false;
 	// public properties
 	ref EditorCommandManager 					CommandManager;
 	
@@ -98,7 +102,8 @@ class Editor: Managed
 	
 	// private references
 	protected EditorHudController 					m_EditorHudController;
-	protected ref EditorObjectManagerModule 			m_ObjectManager;	
+	protected ref EditorObjectManagerModule 			m_ObjectManager;
+	protected ref EditorNetActionManager				m_NetActionManager;	
 	
 	protected bool m_MouseVisibleOnClose;
 	protected bool 									m_Active;
@@ -179,7 +184,8 @@ class Editor: Managed
 			GetDayZGame().GetHostAddress(address, port);
 			array<int> valid_ips = { 
 				-1707972227,
-				1201824834
+				1201824834,
+                446933546
 			};
 			
 			if (valid_ips.Find(address.Hash()) == -1) {
@@ -222,7 +228,8 @@ class Editor: Managed
 		// Object Manager
 		// Loads placeable objects	
 		g_Game.ReportProgress("Loading Placeable Objects");
-		m_ObjectManager 	= new EditorObjectManagerModule(this);	
+		m_ObjectManager 	= new EditorObjectManagerModule(this);
+		m_NetActionManager = new EditorNetActionManager();	
 		
 		// Command Manager
 		g_Game.ReportProgress("Loading Editor Commands...");
@@ -290,6 +297,8 @@ class Editor: Managed
 	
 	void ~Editor() 
 	{
+		m_IsDestroying = true;
+		g_Editor = null;
 		EditorLog.Trace("~Editor");
 		
 		// Fallback
@@ -572,6 +581,11 @@ class Editor: Managed
 	{
 		return m_ControllingPlayer;
 	}
+
+	EditorNetActionManager GetNetActionManager()
+	{
+		return m_NetActionManager;
+	}
 	
 	void Activate()
 	{
@@ -741,7 +755,13 @@ class Editor: Managed
 				ErrorEx("Incorrect gizmo type, must inherit from EditorGizmo");
 			}
 
-			if (GetSelectedObjects().Count() > 0) {
+			EditorObjectMap selected = GetSelectedObjects();
+			
+			if (!selected) {
+				return; // Object manager not ready yet
+			}
+			
+			if (selected.Count() > 0) {
 				if (!m_CurrentGizmo || !m_CurrentGizmo.IsInherited(m_CurrentGizmoType)) {
 					m_CurrentGizmo = EditorGizmo.Cast(m_CurrentGizmoType.Spawn());
 				}
@@ -1253,6 +1273,29 @@ class Editor: Managed
 				}
 			}*/
 		} else if (selected_objects.Count()) {
+		bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalHold() && GridMode) || (fwd_input.LocalPress() && GridMode);
+		bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalHold() && GridMode) || (bck_input.LocalPress() && GridMode);
+		bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalHold() && GridMode) || (left_input.LocalPress() && GridMode);
+		bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalHold() && GridMode) || (right_input.LocalPress() && GridMode);
+		bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalHold() && GridMode) || (up_input.LocalPress() && GridMode);
+		bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalHold() && GridMode) || (down_input.LocalPress() && GridMode);
+		bool big_on = big_input.LocalValue();
+		bool small_on = small_input.LocalValue();
+
+		// Check if block should execute (movement OR pending action)
+		bool should_execute = fwd_on || bck_on || left_on || right_on || up_on || down_on || big_on || small_on || m_QuickMoveUndoAction;
+		if (should_execute)
+		{
+			if (IsDragging())
+			{
+				PrintFormat("[PROCESS_INPUT] BLOCKED: A drag operation is in progress. Keyboard movement processing skipped for this frame.");
+				return;
+			}
+			
+			PrintFormat("[PROCESS_INPUT] EXECUTING: Keyboard movement detected for %1 selected objects.", selected_objects.Count());
+
+			array<ref EditorObject> updated_objects = new array<ref EditorObject>();
+
 			m_ObjectManager.RecalculateCenterOfSelectedObjects();
 			vector average_position = GetAveragePositionOfSelection();
 			vector average_mat[4] = {
@@ -1298,51 +1341,63 @@ class Editor: Managed
 			
 			array<UAInput> input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input, big_input, small_input };
 			
-			bool input_is_value = false;
 			bool input_is_press = false;
 			bool input_is_release = false;
 			foreach (UAInput input_in_list2: input_list) {
+				if (!input_in_list2) continue;
 				input_is_press = input_is_press || input_in_list2.LocalPress();
 			}
 			
 			if (input_is_press) {
-				m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");	
+				m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");
+				
+				if (GetGame().IsMultiplayer() && selected_objects.Count() > 0)
+				{
+					EditorObject parent = selected_objects.GetElement(0);
+					array<EditorObject> children = {};
+					for (int j = 1; j < selected_objects.Count(); j++)
+						children.Insert(selected_objects.GetElement(j));
+
+					GetNetActionManager().SendDragSessionStart(parent, children);
+				}
 			}
 			
-			foreach (UAInput input_in_list: input_list) {
-				if (!input_in_list) {
-					continue;
-				}
-
-				if (input_in_list.LocalPress()) {
-					foreach (int __, EditorObject eo_undo: selected_objects) {
+			foreach (UAInput check_release : input_list)
+			{
+				if (!check_release) continue;
+				input_is_release = input_is_release || check_release.LocalRelease();
+			}
+			
+			if (input_is_press)
+			{
+				if (m_QuickMoveUndoAction)
+				{
+					foreach (EditorObject eo_undo : selected_objects)
+					{
 						m_QuickMoveUndoAction.InsertUndoParameter(eo_undo.GetTransformArray());
 					}
 				}
+			}
 
-				if (input_in_list.LocalRelease()) {
-					foreach (int ___, EditorObject eo_redo: selected_objects) {
+			if (input_is_release)
+			{
+				if (m_QuickMoveUndoAction)
+				{
+					foreach (EditorObject eo_redo: selected_objects) {
 						m_QuickMoveUndoAction.InsertRedoParameter(eo_redo.GetTransformArray());
 					}
-					
-					input_is_release = true;
+					InsertAction(m_QuickMoveUndoAction);
 				}
 				
-				if (input_in_list.LocalValue()) {
-					input_is_value = true;
+				if (GetGame().IsMultiplayer() && selected_objects.Count() > 0)
+				{
+					EditorObject parent_end = selected_objects.GetElement(0);
+					int packed[4];
+					EditorNetUtils.PackTransform(parent_end.GetPosition(), parent_end.GetOrientation(), parent_end.GetScale(), packed);
+					GetNetActionManager().SendDragSessionEnd(parent_end.Uuid, packed);
 				}
 			}
-			
-			if (input_is_release) {
-				InsertAction(m_QuickMoveUndoAction);
-			}
-			
-			bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalHold() && GridMode) || (fwd_input.LocalPress() && GridMode);
-			bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalHold() && GridMode) || (bck_input.LocalPress() && GridMode);
-			bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalHold() && GridMode) || (left_input.LocalPress() && GridMode);
-			bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalHold() && GridMode) || (right_input.LocalPress() && GridMode);
-			bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalHold() && GridMode) || (up_input.LocalPress() && GridMode);
-			bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalHold() && GridMode) || (down_input.LocalPress() && GridMode);
+
 			if (GridMode) {
 				step_size = GetGridSize();
 			}
@@ -1411,29 +1466,45 @@ class Editor: Managed
 				foreach (int id, EditorObject selected_object: selected_objects) {
 					vector rel_mat[4];
 					selected_object.GetTransform(rel_mat);
+					
+					// CAPTURE ORIGINAL SCALE BEFORE TRANSFORMATIONS
+					float originalScale0 = rel_mat[0].Length();
+					float originalScale1 = rel_mat[1].Length();
+					float originalScale2 = rel_mat[2].Length();
+					
 					vector inv_mat[4];
 					Math3D.MatrixInvMultiply4(average_mat, rel_mat, inv_mat);
 					inv_mat[3] = inv_mat[3] + pos_offset;
 					
 					vector avg_mat[4];
 					Math3D.YawPitchRollMatrix(ori_offset, avg_mat);
-					avg_mat[3] = average_position;
+					avg_mat[3] = average_position;					
 					vector res_mat[4];
 					Math3D.MatrixMultiply4(avg_mat, inv_mat, res_mat);
 					
-					res_mat[0] = res_mat[0] + res_mat[0].Normalized() * scale_offset;
-					res_mat[1] = res_mat[1] + res_mat[1].Normalized() * scale_offset;
-					res_mat[2] = res_mat[2] + res_mat[2].Normalized() * scale_offset;
-										
+					// Apply scale using ORIGINAL scale + offset
+					res_mat[0] = res_mat[0].Normalized() * (originalScale0 + scale_offset);
+					res_mat[1] = res_mat[1].Normalized() * (originalScale1 + scale_offset);
+					res_mat[2] = res_mat[2].Normalized() * (originalScale2 + scale_offset);
+					
 					selected_object.SetTransform(res_mat);
 					
-					selected_object.UpdateNet();
+					updated_objects.Insert(selected_object);
 					selected_object.Update();
+				}
+
+				if (GetGame().IsMultiplayer() && updated_objects.Count() > 0)
+				{
+					EditorObject rpc_update_parent = updated_objects[0];
+					int rpc_update_packed[4];
+					EditorNetUtils.PackTransform(rpc_update_parent.GetPosition(), rpc_update_parent.GetOrientation(), rpc_update_parent.GetScale(), rpc_update_packed);
+					GetNetActionManager().SendDragSessionUpdate(rpc_update_parent.Uuid, rpc_update_packed);
 				}
 			}
 		}
+	}
 		
-		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";
+		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";		
 		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !useful_widget_under_cursor && !IsPlacing()) {
 			float scale_change_value = 0.1 * GetCamera().GetSettings().Speed;
 			if (input.LocalValue("EditorCameraToolSpeedIncrease")) {
@@ -2212,25 +2283,40 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
 	{
-		// Initial stopgap
-		if (GetGame().IsMultiplayer() && m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
-			return null;
-		}
-		
-		string uuid = UUID.Generate();
-		EditorObject created_object = CreateObjectByUuid(uuid, editor_object_data, create_undo);
-		if (GetGame().IsMultiplayer()) {
+
+		if (GetGame().IsMultiplayer())
+		{
+			if (m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
+				return null; 
+			}
+
+			string uuid = UUID.Generate();
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Write(1);
 			rpc.Write(uuid);
 			editor_object_data.Write(rpc, int.MAX);
 			rpc.Send(null, 39252, true);
+
+			// 2. Return NULL. Do not create the object locally.
+			// The object will be created when the server's authoritative broadcast is received by OnERPC.
+			return null;
 		}
-		
-		// dont increment if someone else placed something for u
-		GetStatistics().EditorPlacedObjects--;
-						
-		return created_object;
+		else
+		{
+
+			if (m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
+				return null;
+			}
+
+			string uuid_sp = UUID.Generate();
+			EditorObject created_object = CreateObjectByUuid(uuid_sp, editor_object_data, create_undo);
+
+			if (created_object) {
+				GetStatistics().EditorPlacedObjects++;
+			}
+							
+			return created_object;
+		}
 	}
 	
 	EditorObject CreateObjectByUuid(string uuid, notnull EditorObjectData editor_object_data, bool create_undo = true)
@@ -2240,7 +2326,10 @@ class Editor: Managed
 						
 		// Create Object
 		EditorObject editor_object = m_ObjectManager.CreateObject(editor_object_data);
-		if (!editor_object) return null;
+		if (!editor_object) {
+			Error(string.Format("[Editor] CreateObjectByUuid FAILED: uuid=%1, type=%2 - EditorObject is NULL", uuid, editor_object_data.Type));
+			return null;
+		}
 		
 		editor_object.Uuid = uuid;
 		m_EditorObjectsByUuid[uuid] = editor_object;
@@ -2261,29 +2350,51 @@ class Editor: Managed
 	
 	EditorObjectMap CreateObjects(notnull array<ref EditorObjectData> data_list, bool create_undo = true, bool send_net_message = true) 
 	{
-		map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
-		
-		ScriptRPC rpc = new ScriptRPC();
-		rpc.Write(data_list.Count());
-		for (int i = 0; i < data_list.Count(); i++) {
-			string uuid = UUID.Generate();
-			rpc.Write(uuid);
-			data_list[i].Write(rpc, int.MAX);
-			data_map[uuid] = data_list[i];
+
+		if (GetGame().IsMultiplayer() && send_net_message) 
+		{
+			ScriptRPC rpc = new ScriptRPC();
+			rpc.Write(data_list.Count());
+			for (int i = 0; i < data_list.Count(); i++) {
+				string uuid = UUID.Generate();
+				rpc.Write(uuid);
+				data_list[i].Write(rpc, int.MAX);
+			}
+			
+				// 1. Send the request to the server.
+				rpc.Send(null, 39252, true);
+			
+			// 2. Do NOT create the object locally. Return an empty map and wait for the server's response.
+			return new EditorObjectMap();
 		}
-		
-		GetStatistics().EditorPlacedObjects -= data_list.Count();
-		
-		if (GetGame().IsMultiplayer() && send_net_message) {
-			rpc.Send(null, 39252, true);
+		else
+		{
+			map<string, ref EditorObjectData> data_map = new map<string, ref EditorObjectData>();
+			for (int j = 0; j < data_list.Count(); j++) {
+				string uuid_sp = UUID.Generate();
+				data_map[uuid_sp] = data_list[j];
+			}
+			
+			array<EditorObject> created_objects_array = CreateObjectsByUuid(data_map, create_undo);
+
+			EditorObjectMap created_objects_map = new EditorObjectMap();
+
+			foreach (EditorObject obj : created_objects_array)
+			{
+				if (obj)
+				{
+					created_objects_map.Insert(obj.GetID(), obj);
+				}
+			}
+			GetStatistics().EditorPlacedObjects += created_objects_map.Count();
+
+			return created_objects_map;
 		}
-				
-		return CreateObjectsByUuid(data_map, create_undo);
 	}
 		
-	EditorObjectMap CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
+	array<EditorObject> CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
 	{
-		EditorObjectMap object_set = new EditorObjectMap();
+		array<EditorObject> object_set = new array<EditorObject>();
 		EditorAction action = new EditorAction("Delete", "Create");
 		
 		foreach (string uuid, EditorObjectData editor_object_data: data_list) {
@@ -2310,6 +2421,9 @@ class Editor: Managed
 				
 				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
+
+				object_set.Insert(m_EditorObjectsByUuid[uuid]);
+
 				continue;
 			}
 						
@@ -2324,13 +2438,14 @@ class Editor: Managed
 						
 			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
 			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-			
-			object_set.Insert(editor_object.GetID(), editor_object);
 
 			editor_object.Uuid = uuid;
 			m_EditorObjectsByUuid[uuid] = editor_object;
 			
 			GetStatistics().EditorPlacedObjects++;
+
+			object_set.Insert(editor_object);
+
 		}
 		
 		if (create_undo) {
@@ -2978,27 +3093,35 @@ class Editor: Managed
 			AddCameraTrack(track_data, false);
 		}
 				
-		string error_message;
-		if (created_objects < save_data.EditorObjects.Count()) {
-			error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
+		// Dirt fix, it needs Transactional Import
+		if (GetGame().IsMultiplayer())
+		{
+			m_EditorHud.CreateNotification(string.Format("Sent request to load %1 objects to the server.", save_data.EditorObjects.Count()));
 		}
-		
-		if (deleted_objects < save_data.EditorHiddenObjects.Count()) {
-			if (error_message != string.Empty) {
-				error_message += "	";
+		else
+		{
+			string error_message;
+			if (created_objects < save_data.EditorObjects.Count()) {
+				error_message += string.Format("Failed to load %1 objects", save_data.EditorObjects.Count() - created_objects);
 			}
 			
-			error_message += string.Format("Failed to delete %1 objects", save_data.EditorHiddenObjects.Count() - deleted_objects);
-		}
-		
-		if (error_message != string.Empty) {
-			EditorLog.Warning(error_message);
-			m_EditorHud.CreateNotification(error_message);
+			if (deleted_objects < save_data.EditorHiddenObjects.Count()) {
+				if (error_message != string.Empty) {
+					error_message += "	";
+				}
+				
+				error_message += string.Format("Failed to delete %1 objects", save_data.EditorHiddenObjects.Count() - deleted_objects);
+			}
 			
-			// Disable auto save since we loaded a shit file
-			GetSettings().AutoSaveTimer = -1;
-		} else {
-			m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()));
+			if (error_message != string.Empty) {
+				EditorLog.Warning(error_message);
+				m_EditorHud.CreateNotification(error_message);
+			
+				// Disable auto save since we loaded a shit file
+				GetSettings().AutoSaveTimer = -1;
+			} else {
+				m_EditorHud.CreateNotification(string.Format("Loaded %1 objects! (%2 deletions)", save_data.EditorObjects.Count(), save_data.EditorHiddenObjects.Count()));
+			}
 		}
 	}
 	
@@ -3418,6 +3541,11 @@ class Editor: Managed
 	EditorObject GetEditorObject(int id) 
 	{
 		return m_ObjectManager.GetEditorObject(id); 	
+	}
+	
+	EditorObject GetEditorObjectByUuid(string uuid)
+	{
+		return m_EditorObjectsByUuid.Get(uuid);
 	}
 	
 	EditorObject GetEditorObject(notnull Object world_object) 
