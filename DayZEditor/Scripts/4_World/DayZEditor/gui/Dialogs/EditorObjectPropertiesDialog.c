@@ -70,8 +70,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", m_EditorMultiObjectCommandController, string.Empty);
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", m_EditorMultiObjectCommandController, "Show"));
 		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", m_EditorMultiObjectCommandController, "Name"));
-		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", m_EditorMultiObjectCommandController, "Position"));
-		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", m_EditorMultiObjectCommandController, "Orientation"));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", m_EditorMultiObjectCommandController, "Position", 3));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", m_EditorMultiObjectCommandController, "Orientation", 2));
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", m_EditorMultiObjectCommandController, "Scale", 0.01));
 		
 		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", m_EditorMultiObjectCommandController, string.Empty);
@@ -101,8 +101,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", this, string.Empty);
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", controller, "Show"));
 		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", controller, "Name"));
-		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", controller, "Position"));
-		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", controller, "Orientation"));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", controller, "Position", 3));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", controller, "Orientation", 2));
 		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", controller, "Scale", 0.01));
 
 		/*
