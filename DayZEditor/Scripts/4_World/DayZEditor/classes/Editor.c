@@ -2004,18 +2004,19 @@ class Editor: Managed
 		array<EditorObject> placed_objects = {};
 		array<ref EditorObjectData> data_list = {};
 		foreach (EditorWorldObject placing_object, EditorHandData hand_data: m_PlacingObjects) {			
-			Object entity = placing_object.GetWorldObject();
+			//We need it like this rn cos internal model classnames (e.g. TreeHard)	
+			EditorHologram editor_hologram;
+			if (!Class.CastTo(editor_hologram, placing_object)) {
+					continue;
+			}
+
+			Object entity = editor_hologram.GetWorldObject();
 			if (!entity) {
-				EditorLog.Warning("Invalid Entity");
+				EditorLog.Warning("Invalid Entity from %1", editor_hologram.GetPlaceableItem().Type);
 				return null;
 			}
 			
-			string type = entity.GetType();
-			if (type == string.Empty) {
-				type = entity.GetShapeName();
-			}
-			
-			EditorObjectData editor_object_data = EditorObjectData.Create(type, entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EFE_DEFAULT);
+			EditorObjectData editor_object_data = EditorObjectData.Create(editor_hologram.GetPlaceableItem().GetSpawnType(), entity.GetPosition(), entity.GetOrientation(), entity.GetScale(), EFE_DEFAULT);
 			if (!editor_object_data) {
 				EditorLog.Warning("Invalid Object data from %1", entity.GetType());
 				return null;
