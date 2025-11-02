@@ -13,7 +13,7 @@ class EditorPlaceableItem : Managed
 	string Path; // config path CfgVehicles, CfgWeapons etc...
 	EditorPlaceableItemCategory Category;
 	
-	bool ScriptedType;
+	bool ScriptedTypeEx;
 	bool ConsoleFriendly;
 
 	private void EditorPlaceableItem()
@@ -81,7 +81,7 @@ class EditorPlaceableItem : Managed
 		placeable_item.Path = "Scripted/" + scripted_type.ToString();
 		placeable_item.Category = EditorPlaceableItemCategory.SCRIPTED;
 		placeable_item.ConsoleFriendly = console_friendly;
-		placeable_item.ScriptedType = 1;
+		placeable_item.ScriptedTypeEx = 1;
 		return placeable_item;
 	}
 
