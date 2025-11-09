@@ -352,7 +352,9 @@ class EditorObjectManagerModule : Managed
 			return null;
 		}
 
+#ifdef DEV_LOGGING
 		PrintFormat("[EditorObjectManager] CreateObject: Attempting to create type=%1", editor_object_data.Type);
+#endif
 
 		EditorObject editor_object = new EditorObject(editor_object_data);
 
@@ -370,7 +372,9 @@ class EditorObjectManagerModule : Managed
 			return null;
 		}
 
+#ifdef DEV_LOGGING
 		PrintFormat("[EditorObjectManager] CreateObject SUCCESS: type=%1, world_object_id=%2", editor_object_data.Type, editor_object.GetWorldObject().GetID());
+#endif
 
 		// strong ref
 		m_EditorObjectRefs[editor_object.GetID()] = editor_object;

@@ -1288,11 +1288,15 @@ class Editor: Managed
 		{
 			if (IsDragging())
 			{
+#ifdef DEV_LOGGING
 				PrintFormat("[PROCESS_INPUT] BLOCKED: A drag operation is in progress. Keyboard movement processing skipped for this frame.");
+#endif
 				return;
 			}
 			
+#ifdef DEV_LOGGING
 			PrintFormat("[PROCESS_INPUT] EXECUTING: Keyboard movement detected for %1 selected objects.", selected_objects.Count());
+#endif
 
 			array<ref EditorObject> updated_objects = new array<ref EditorObject>();
 
