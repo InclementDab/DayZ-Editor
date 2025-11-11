@@ -577,7 +577,7 @@ class EditorObjectManagerModule : Managed
 			return true; // i mean i guess its hidden /shrug
 		}
 		
-		return (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(object));
+		return (g_Game.GetSuppressedObjectManager().IsSuppressed(object));
 	}
 
 	EditorObjectMap GetSelectedObjects()

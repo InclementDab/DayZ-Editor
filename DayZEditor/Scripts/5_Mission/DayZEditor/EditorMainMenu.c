@@ -133,9 +133,9 @@ class EditorMainMenu: ScriptViewMenu
 		}
 		
 		// Update global login counter
-		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
-		string uid = GetDayZGame().GetUserManager().GetSelectedUser().GetUid();
-		string username = GetDayZGame().GetUserManager().GetSelectedUser().GetName();
+		EditorStatistics statistics = EditorStatistics.Cast(g_Game.GetProfileSetting(EditorStatistics));
+		string uid = g_Game.GetUserManager().GetSelectedUser().GetUid();
+		string username = g_Game.GetUserManager().GetSelectedUser().GetName();
 		Payload_EditorLogin login_payload = new Payload_EditorLogin();
 		login_payload.SteamId = uid;
 		login_payload.SteamUsername = username;
@@ -149,13 +149,13 @@ class EditorMainMenu: ScriptViewMenu
 		login_payload.CharactersEdited = statistics.CharactersEdited;
 
 		string payload, error;
-		if (GetDayZGame().LoginCache) {
-			OnLoginResponse(GetDayZGame().LoginCache);
+		if (g_Game.LoginCache) {
+			OnLoginResponse(g_Game.LoginCache);
 		}
 		else if (JsonFileLoader<Payload_EditorLogin>.MakeData(login_payload, payload, error, false)) {
 			// load a dummy into the login cache so we dont keep calling it.
 			// the response will either assign or null it depending on the success
-			GetDayZGame().LoginCache = new Payload_EditorLoginResponse();
+			g_Game.LoginCache = new Payload_EditorLoginResponse();
 			
 			RestContext ctx = CreateRestApi().GetRestContext(Editor.WEB_API_ENDPOINT);
 			ctx.SetHeader("application/json\r\nUser-Agent: DayZ-Editor");
@@ -170,7 +170,7 @@ class EditorMainMenu: ScriptViewMenu
 			Editor.HasTestedVersion = true;
 		}
 		
-		EditorSettings settings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+		EditorSettings settings = EditorSettings.Cast(g_Game.GetProfileSetting(EditorSettings));
 		if (!settings.HasSelectedConsoleMode) {
 			// keeps showing for some reason
 			//ShowDialog("Enable Console Mode?", "Welcome to DayZ Editor. Are you planning to edit for Console? You can always change this later in the settings", 2401, DBT_YESNO, DBB_YES, DMT_QUESTION);
@@ -264,7 +264,7 @@ class EditorMainMenu: ScriptViewMenu
 			ServerShowcaseImage.Show(true);
 		}
 			
-		if (!GetDayZGame().LoginCache) {
+		if (!g_Game.LoginCache) {
 			global = false;
 			GlobeFrame.Show(false);
 		} else {
@@ -280,7 +280,7 @@ class EditorMainMenu: ScriptViewMenu
 		}
 		
 		// Get statistics
-		EditorStatistics statistics = EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
+		EditorStatistics statistics = EditorStatistics.Cast(g_Game.GetProfileSetting(EditorStatistics));
 		TimeSpan time = statistics.EditorPlayTime;
 
 		string placed = statistics.EditorPlacedObjects.ToString();
@@ -289,11 +289,11 @@ class EditorMainMenu: ScriptViewMenu
 		string edited = statistics.CharactersEdited.ToString();
 		string edit_time = time.Format();
 		if (global) {
-			placed = GetDayZGame().LoginCache.GlobalItemsPlaced;
-			removed = GetDayZGame().LoginCache.GlobalItemsDeleted;
-			controlled = GetDayZGame().LoginCache.GlobalCharactersControlled;
-			edited = GetDayZGame().LoginCache.GlobalCharactersEdited;
-			edit_time = GetDayZGame().LoginCache.GlobalTimePlayed;
+			placed = g_Game.LoginCache.GlobalItemsPlaced;
+			removed = g_Game.LoginCache.GlobalItemsDeleted;
+			controlled = g_Game.LoginCache.GlobalCharactersControlled;
+			edited = g_Game.LoginCache.GlobalCharactersEdited;
+			edit_time = g_Game.LoginCache.GlobalTimePlayed;
 		}
 		
 		m_TemplateController.StatisticsEntries.Clear();
@@ -348,7 +348,7 @@ class EditorMainMenu: ScriptViewMenu
 		GetMousePos(mouse_x, mouse_y);
 		GetScreenSize(screen_x, screen_y);
 		
-		Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
+		Payload_EditorLoginResponse login_cache = g_Game.LoginCache;
 		if (m_IsShowcaseActive && login_cache && GetWidgetUnderCursor() != ServerShowcase) {
 			m_ShowcaseTime += dt;
 			auto showcase = login_cache.Showcases[m_ShowcaseIndex];
@@ -396,51 +396,51 @@ class EditorMainMenu: ScriptViewMenu
 			case ExitButton: {
 				child_image.SetColor(LinearColor.INDIAN_RED);
 				child_image.SetImage(3);
-				GetDayZGame().CreateDelayedTooltip(w, "#main_menu_exit", TooltipPosition.INSIDE);
+				g_Game.CreateDelayedTooltip(w, "#main_menu_exit", TooltipPosition.INSIDE);
 				break;
 			}
 
 			case SettingButton: {
 				child_image.SetColor(LinearColor.LIGHT_BLUE);
 				child_image.SetImage(3);
-				GetDayZGame().CreateDelayedTooltip(w, "#main_menu_options", TooltipPosition.INSIDE);
+				g_Game.CreateDelayedTooltip(w, "#main_menu_options", TooltipPosition.INSIDE);
 				break;
 			}
 
 			case DiscordButton: {
 				child_image.SetColor(LinearColor.DISCORD);
-				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
+				g_Game.CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
 				break;
 			}
 
 			case WikiButton: {
 				child_image.SetColor(LinearColor.GOLDENROD);
 				child_image.SetImage(3);
-				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/github.com\/InclementDab\/DayZ-Editor", TooltipPosition.INSIDE);
+				g_Game.CreateDelayedTooltip(w, "https:\/\/github.com\/InclementDab\/DayZ-Editor", TooltipPosition.INSIDE);
 				break;
 			}
 
 			case TwitterButton: {
 				child_image.SetColor(LinearColor.TWITTER);
-				GetDayZGame().CreateDelayedTooltip(w, "https:\/\/twitter.com\/InclementDab", TooltipPosition.INSIDE);
+				g_Game.CreateDelayedTooltip(w, "https:\/\/twitter.com\/InclementDab", TooltipPosition.INSIDE);
 				break;
 			}
 				
 			case ContinueButton: {
 				child_image.SetColor(LinearColor.PINK);
-				GetDayZGame().CreateDelayedTooltip(w, "Continue", TooltipPosition.INSIDE);
+				g_Game.CreateDelayedTooltip(w, "Continue", TooltipPosition.INSIDE);
 				break;
 			}
 
 			case NextServerShowcase: {
 				child_image.SetImage(3);
-				GetDayZGame().CreateDelayedTooltip(w, "Next", TooltipPosition.INSIDE);
+				g_Game.CreateDelayedTooltip(w, "Next", TooltipPosition.INSIDE);
 				break;
 			}
 
 			case PrevServerShowcase: {
 				child_image.SetImage(3);
-				GetDayZGame().CreateDelayedTooltip(w, "Previous", TooltipPosition.INSIDE);
+				g_Game.CreateDelayedTooltip(w, "Previous", TooltipPosition.INSIDE);
 				break;
 			}
 			
@@ -461,12 +461,12 @@ class EditorMainMenu: ScriptViewMenu
 				
 			case ServerShowcase: {
 				ServerShowcaseOutline.SetColor(EditorColors.BLUE);
-				Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
+				Payload_EditorLoginResponse login_cache = g_Game.LoginCache;
 				if (m_IsShowcaseActive && login_cache && login_cache.Showcases.IsValidIndex(m_ShowcaseIndex)) {
 					auto showcase = login_cache.Showcases[m_ShowcaseIndex];
-					GetDayZGame().CreateDelayedTooltip(w, showcase.RedirectUrl, TooltipPosition.TOP_RIGHT);
+					g_Game.CreateDelayedTooltip(w, showcase.RedirectUrl, TooltipPosition.TOP_RIGHT);
 				} else {
-					GetDayZGame().CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
+					g_Game.CreateDelayedTooltip(w, "https:\/\/discord.gg\/dayz-editor", TooltipPosition.INSIDE);
 				}
 
 				break;
@@ -490,7 +490,7 @@ class EditorMainMenu: ScriptViewMenu
 
 	override bool OnMouseLeave(Widget w, Widget enterW, int x, int y)
 	{
-		GetDayZGame().ClearTooltip();
+		g_Game.ClearTooltip();
 
 		Widget child_icon = w.FindAnyWidget(string.Format("%1_Icon", w.GetName()));
 		ImageWidget child_image = ImageWidget.Cast(child_icon);
@@ -557,7 +557,7 @@ class EditorMainMenu: ScriptViewMenu
 			return super.OnMouseButtonUp(w, x, y, button);
 		}
 		
-		Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
+		Payload_EditorLoginResponse login_cache = g_Game.LoginCache;
 		switch (w) {
 			case ServerShowcase: {
 				if (m_IsShowcaseActive && login_cache) {
@@ -616,7 +616,7 @@ class EditorMainMenu: ScriptViewMenu
 			return super.OnClick(w, x, y, button);
 		}
 		
-		Payload_EditorLoginResponse login_cache = GetDayZGame().LoginCache;
+		Payload_EditorLoginResponse login_cache = g_Game.LoginCache;
 
 		switch (w) {
 			case ExitButton: {
@@ -739,7 +739,7 @@ class EditorMainMenu: ScriptViewMenu
 			}
 			
 			case 2401: {
-				EditorSettings settings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+				EditorSettings settings = EditorSettings.Cast(g_Game.GetProfileSetting(EditorSettings));
 				if (result == DBB_YES) {
 					settings.ConsoleMode = 1;
 				} else {

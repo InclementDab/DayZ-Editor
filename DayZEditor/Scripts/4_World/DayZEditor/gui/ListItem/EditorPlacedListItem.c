@@ -215,13 +215,13 @@ class EditorPlacedListItem: EditorListItem
 				if (LockedImage.IsVisible() && m_EditorObject.IsLocked()) {					
 					string command_name = GetEditor().CommandManager[EditorUnlockCommand].GetName();
 					string command_shortcut = GetEditor().CommandManager[EditorUnlockCommand].GetShortcutString();
-					GetDayZGame().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(command_name, w, TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", command_shortcut)), w);
+					g_Game.DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(command_name, w, TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", command_shortcut)), w);
 				} else {
 					
 					
 					string command_name2 = GetEditor().CommandManager[EditorLockCommand].GetName();
 					string command_shortcut2 = GetEditor().CommandManager[EditorLockCommand].GetShortcutString();
-					GetDayZGame().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(command_name2, w, TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", command_shortcut2)), w);
+					g_Game.DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(command_name2, w, TooltipPosition.BOTTOM_LEFT, string.Format("(%1)", command_shortcut2)), w);
 				}
 				break;
 			}
@@ -229,7 +229,7 @@ class EditorPlacedListItem: EditorListItem
 			case ToggleBoundingBoxImage.GetParent(): {
 				// todo make toggle command
 				//if (ToggleBoundingBoxImage.IsVisible()) {
-					GetDayZGame().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle Bounding Box", w, TooltipPosition.BOTTOM_LEFT), w);
+					g_Game.DelaySetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle Bounding Box", w, TooltipPosition.BOTTOM_LEFT), w);
 				//}
 				
 				if (mouse_down) {
@@ -244,7 +244,7 @@ class EditorPlacedListItem: EditorListItem
 			
 			case ToggleWorldMarkerImage.GetParent(): {
 				//if (ToggleWorldMarkerImage.IsVisible()) {
-					GetDayZGame().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle World Marker", w, TooltipPosition.BOTTOM_LEFT), w);
+					g_Game.DelaySetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle World Marker", w, TooltipPosition.BOTTOM_LEFT), w);
 				//}
 				
 				if (mouse_down) {
@@ -264,7 +264,7 @@ class EditorPlacedListItem: EditorListItem
 			}
 			
 			default: {
-				GetDayZGame().DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(string.Format("(%1)", m_EditorObject.GetDisplayName()), w, TooltipPosition.BOTTOM_LEFT), w);
+				g_Game.DelaySetCurrentTooltip(EditorTooltip.CreateOnButton(string.Format("(%1)", m_EditorObject.GetDisplayName()), w, TooltipPosition.BOTTOM_LEFT), w);
 				break;
 			}
 		}

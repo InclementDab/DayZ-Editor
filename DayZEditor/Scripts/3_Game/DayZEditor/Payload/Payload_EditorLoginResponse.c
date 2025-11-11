@@ -52,7 +52,7 @@ class EditorLoginCallback : RestCallbackBase
 	{
 		super.OnError(errorCode);
 		
-		GetDayZGame().LoginCache = null;
+		g_Game.LoginCache = null;
 	}
 	
 	override void OnSuccess(string data, int dataSize)
@@ -70,7 +70,7 @@ class EditorLoginCallback : RestCallbackBase
 			m_OnPayloadSuccess.Invoke(response);
 		}
 		
-		GetDayZGame().LoginCache = response;
+		g_Game.LoginCache = response;
 	}
 }
 

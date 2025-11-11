@@ -405,7 +405,7 @@ class EditorHud: ScriptView
 #endif
 		
 		// lctrl for commands
-		if (toggle_editor.LocalPress() && !GetDayZGame().IsLeftCtrlDown() && input_unlocked) {
+		if (toggle_editor.LocalPress() && !g_Game.IsLeftCtrlDown() && input_unlocked) {
 			// Control current player
 			if (m_Editor.IsActive()) {
 				m_Editor.ControlPlayer(m_Editor.GetPlayer());
@@ -414,7 +414,7 @@ class EditorHud: ScriptView
 			}
 		}
 		
-		if (toggle_hud_input.LocalPress() && input_unlocked && !GetDayZGame().IsLeftCtrlDown()) {		
+		if (toggle_hud_input.LocalPress() && input_unlocked && !g_Game.IsLeftCtrlDown()) {		
 			m_IsVisible = !m_IsVisible;
 			
 			if (m_Editor.GetSettings().ClearSelectionOnHudHide) {
@@ -432,7 +432,7 @@ class EditorHud: ScriptView
 		}
 		
 		// Teleport the player
-		if (teleport_to_cursor.LocalPress() && GetGame().GetUIManager().IsCursorVisible() && !GetDayZGame().IsLeftCtrlDown() && input_unlocked) {
+		if (teleport_to_cursor.LocalPress() && GetGame().GetUIManager().IsCursorVisible() && !g_Game.IsLeftCtrlDown() && input_unlocked) {
 			PlayerBase teleport_player = m_Editor.GetControllingPlayer();
 			if (!teleport_player) {
 				teleport_player = m_Editor.GetPlayer();
@@ -464,7 +464,7 @@ class EditorHud: ScriptView
 			Map.SetFlags(WidgetFlags.IGNOREPOINTER);
 		}
 		
-		if (left_mouse_input.LocalRelease() || !GetDayZGame().IsAppActive()) {
+		if (left_mouse_input.LocalRelease() || !g_Game.IsAppActive()) {
 			m_DragWidget = null;
 			m_DragBoxDelayStart = 10;
 			m_DragBoxStartX = -1;
@@ -1335,14 +1335,14 @@ class EditorHud: ScriptView
 			ClearCurrentTooltip();
 		} else {
 			if (CanCreateTooltip()) {
-				GetDayZGame().SetCurrentTooltip(current_tooltip);
+				g_Game.SetCurrentTooltip(current_tooltip);
 			}
 		}
 	}
 	
 	TooltipView CreateDelayedTooltip(Widget w, string text, TooltipPosition position, string desc = string.Empty, Symbols icon = string.Empty, int delay = 300)
 	{
-		return GetDayZGame().CreateDelayedTooltip(w, text, position, desc, icon, delay);
+		return g_Game.CreateDelayedTooltip(w, text, position, desc, icon, delay);
 	}
 
 	protected bool CanCreateTooltip()
@@ -1352,7 +1352,7 @@ class EditorHud: ScriptView
 	
 	void ClearCurrentTooltip()
 	{
-		GetDayZGame().ClearTooltip();
+		g_Game.ClearTooltip();
 	}
 	
 	bool ReloadBrushes(string file)

@@ -290,7 +290,7 @@ class EditorFileDialog: EditorModal
 		for (int j = 0; j < directory_split.Count(); j++) {
 			string full_dir = directory_split[0];
 			for (int k = 1; k <= j; k++) {
-				full_dir = SystemPath.Join(full_dir, directory_split[k]);
+				full_dir = SystemPath.Combine(full_dir, directory_split[k]);
 			}
 
 			m_TemplateController.FolderViews.Insert(new EditorFileQuickView(full_dir, ScriptCaller.Create(OnQuickDirectoryPressed)));

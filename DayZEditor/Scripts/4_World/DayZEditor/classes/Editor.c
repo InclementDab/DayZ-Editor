@@ -181,7 +181,7 @@ class Editor: Managed
 		if (GetGame().IsMultiplayer()) {
 			string address;
 			int port;
-			GetDayZGame().GetHostAddress(address, port);
+			g_Game.GetHostAddress(address, port);
 			array<int> valid_ips = { 
 				-1707972227,
 				1201824834,
@@ -215,7 +215,7 @@ class Editor: Managed
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
 		g_Game.ReportProgress("Loading Camera...");
-		EditorCameraSettings camera_settings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+		EditorCameraSettings camera_settings = EditorCameraSettings.Cast(g_Game.GetProfileSetting(EditorCameraSettings));
 		string camera_type = "EditorCamera_V2";
 		if (camera_settings.LegacyCamera) {
 			camera_type = "EditorCameraClassic";
@@ -264,8 +264,8 @@ class Editor: Managed
 		// this is terrible but it didnt work in OnMissionLoaded so im forced to reckon with my demons
 		GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(PPEffects.ResetAll, 1000);
 		
-		GetDayZGame().Event_OnActivateMessage.Insert(OnActivateMessage);
-		GetDayZGame().Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
+		g_Game.Event_OnActivateMessage.Insert(OnActivateMessage);
+		g_Game.Event_OnDeactivateMessage.Insert(OnDeactivateMessage);
 		
 		m_RestApi = new EditorWebApi();
 #ifndef DIAG_DEVELOPER
@@ -281,14 +281,14 @@ class Editor: Managed
 		SetMode(eEditorMode.None);
 		
 		// Load default file
-		if (GetDayZGame().EditorFileToLoad != string.Empty) {			
-			if (File.Exists(GetDayZGame().EditorFileToLoad)) {
+		if (g_Game.EditorFileToLoad != string.Empty) {			
+			if (File.Exists(g_Game.EditorFileToLoad)) {
 				EditorOpenCommand open_command = EditorOpenCommand.Cast(CommandManager[EditorOpenCommand]);
-				LoadSaveData(open_command.ImportFile(GetDayZGame().EditorFileToLoad), true);
-				SetSaveFile(GetDayZGame().EditorFileToLoad);
+				LoadSaveData(open_command.ImportFile(g_Game.EditorFileToLoad), true);
+				SetSaveFile(g_Game.EditorFileToLoad);
 			}
 			
-			GetDayZGame().EditorFileToLoad = string.Empty;
+			g_Game.EditorFileToLoad = string.Empty;
 		}
 		
 		g_Game.ReportProgress("Loading Editor...");
@@ -424,9 +424,9 @@ class Editor: Managed
 			return m_CursorRaycast;
 		}
 
-		if (!ignore) {
-			return m_CursorRaycastGround;
-		}
+		//if (!ignore) {
+		//	return m_CursorRaycastGround;
+		//}
 
 		return PerformRaycast(GetCursorRay(), ignore, m_EditorCamera.GetSettings().ViewDistance / 2, ground_only);
 	}
@@ -736,15 +736,15 @@ class Editor: Managed
 		float raycast_distance = GetCameraSettings().ViewDistance / 5;
 		
 		// The most common rays and raycast for the tool to use are updated and cached at the beginning of each frame. If you need a different raycast, then you will perform it yourself
-		m_CursorRay = new Ray(GetGame().GetCurrentCameraPosition(), GetDayZGame().GetPointerDirection());
+		m_CursorRay = new Ray(GetGame().GetCurrentCameraPosition(), g_Game.GetPointerDirection());
 		m_CameraRay = new Ray(GetGame().GetCurrentCameraPosition(), GetGame().GetCurrentCameraDirection());
-				
+		
 		if (GetGame().GetUIManager().IsCursorVisible()) {
 			m_CursorRaycast = PerformRaycast(m_CursorRay, null, raycast_distance, false);
-			m_CursorRaycastGround = PerformRaycast(m_CursorRay, null, raycast_distance, true);		
+			//m_CursorRaycastGround = PerformRaycast(m_CursorRay, null, raycast_distance, true);		
 		} else {
 			m_CameraRaycast = PerformRaycast(m_CameraRay, null, raycast_distance, false);
-			m_CameraRaycastGround = PerformRaycast(m_CameraRay, null, raycast_distance, true);
+			//m_CameraRaycastGround = PerformRaycast(m_CameraRay, null, raycast_distance, true);
 		}
 		
 #ifdef GIZMOS_ENABLED
@@ -1409,7 +1409,7 @@ class Editor: Managed
 			vector pos_offset = vector.Zero;
 			vector ori_offset = vector.Zero;
 			float scale_offset = 0;
-			if (GetDayZGame().IsLeftCtrlDown() && fwd_on) {
+			if (g_Game.IsLeftCtrlDown() && fwd_on) {
 				ori_offset = ori_offset + Vector(0, 0, step_size);
 			}
 			
@@ -1417,7 +1417,7 @@ class Editor: Managed
 				pos_offset = pos_offset + Vector(0, 0, step_size).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && bck_on) {
+			if (g_Game.IsLeftCtrlDown() && bck_on) {
 				ori_offset = ori_offset + Vector(0, 0, -step_size);
 			}
 			
@@ -1425,7 +1425,7 @@ class Editor: Managed
 				pos_offset = pos_offset + Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && left_on) {
+			if (g_Game.IsLeftCtrlDown() && left_on) {
 				ori_offset = ori_offset + Vector(-step_size, 0, 0);
 			}
 			
@@ -1433,7 +1433,7 @@ class Editor: Managed
 				pos_offset = pos_offset + Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && right_on) {
+			if (g_Game.IsLeftCtrlDown() && right_on) {
 				ori_offset = ori_offset + Vector(step_size, 0, 0);
 			}
 			
@@ -1441,7 +1441,7 @@ class Editor: Managed
 				pos_offset = pos_offset + Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && up_on) {
+			if (g_Game.IsLeftCtrlDown() && up_on) {
 				ori_offset = ori_offset + Vector(0, step_size, 0);
 			}	
 					
@@ -1449,7 +1449,7 @@ class Editor: Managed
 				pos_offset = pos_offset + Vector(0, step_size, 0).Multiply3(camera_transform_mat);
 			}
 			
-			if (GetDayZGame().IsLeftCtrlDown() && down_on) {
+			if (g_Game.IsLeftCtrlDown() && down_on) {
 				ori_offset = ori_offset + Vector(0, -step_size, 0);
 			}
 			else if (down_on) {
@@ -3621,17 +3621,17 @@ class Editor: Managed
 	
 	EditorSettings GetSettings()
 	{
-		return EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+		return EditorSettings.Cast(g_Game.GetProfileSetting(EditorSettings));
 	}
 	
 	EditorStatistics GetStatistics()
 	{
-		return EditorStatistics.Cast(GetDayZGame().GetProfileSetting(EditorStatistics));
+		return EditorStatistics.Cast(g_Game.GetProfileSetting(EditorStatistics));
 	}
 
 	EditorCameraSettings GetCameraSettings()
 	{
-		return EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+		return EditorCameraSettings.Cast(g_Game.GetProfileSetting(EditorCameraSettings));
 	}
 	
 	EditorWebApi GetWebApi()

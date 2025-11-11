@@ -360,7 +360,7 @@ class EditorClientManager
                 PlayerCameraData camera_data = new PlayerCameraData();
 				camera_data.Position = camera_pos;
 				copyarray(camera_data.Quat, camera_quat);
-				camera_data.Timestamp = GetDayZGame().GetTickTime();
+				camera_data.Timestamp = g_Game.GetTickTime();
 
 				LastCameraData[player_id] = CameraData[player_id];
                 CameraData[player_id] = camera_data;
@@ -474,7 +474,7 @@ class EditorClientManager
                     continue;
                 }
 
-                float time_since_start = GetDayZGame().GetTickTime() - last_camera_data.Timestamp;
+                float time_since_start = g_Game.GetTickTime() - last_camera_data.Timestamp;
                 float t = time_since_start / total_time_between_updates;
                 t = Math.Clamp(t, 0.0, 1.0);
 

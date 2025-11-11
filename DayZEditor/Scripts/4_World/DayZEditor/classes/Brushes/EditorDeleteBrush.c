@@ -11,7 +11,7 @@ class DeleteBrush : EditorBrush
 		foreach (Object object : objects) {
 			if (!object) continue;
 
-			if (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(object))
+			if (g_Game.GetSuppressedObjectManager().IsSuppressed(object))
 			{
 				continue;
 			}

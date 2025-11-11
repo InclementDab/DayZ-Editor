@@ -34,7 +34,7 @@ class EditorMapGroupPosFile: EditorFileType
 				continue;
 			}
 			
-			if (GetDayZGame().GetSuppressedObjectManager().IsSuppressed(world_object)) {
+			if (g_Game.GetSuppressedObjectManager().IsSuppressed(world_object)) {
 				continue;
 			}
 			

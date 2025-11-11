@@ -72,7 +72,7 @@ class EditorCamera: Camera
 	void EditorCamera()
 	{
 		SetEventMask(EntityEvent.FRAME);
-		m_EditorCameraSettings = EditorCameraSettings.Cast(GetDayZGame().GetProfileSetting(EditorCameraSettings));
+		m_EditorCameraSettings = EditorCameraSettings.Cast(g_Game.GetProfileSetting(EditorCameraSettings));
 		m_CameraFovActual = m_EditorCameraSettings.FieldOfView2 * Math.DEG2RAD;
 
 		NearPlane = GetNearPlane();
@@ -279,7 +279,7 @@ class EditorCamera_V2: EditorCamera
 				rotation = -rotation;
 			}
 		} else {
-			teleport = input.GetInputByID(UAZoomIn).LocalPress() && !GetDayZGame().IsLeftCtrlDown();
+			teleport = input.GetInputByID(UAZoomIn).LocalPress() && !g_Game.IsLeftCtrlDown();
 		}
 		
 		if (GetWidgetUnderCursor()) {

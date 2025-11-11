@@ -178,7 +178,7 @@ class EditorGizmo: Managed
 		
 #ifdef DIAG_DEVELOPER
 		bool debug_collisions = 0;
-		//GetDayZGame().ReloadShape(m_Gizmo);
+		//g_Game.ReloadShape(m_Gizmo);
 #endif
 		
 		m_AllSelectedObjects = GetEditor().GetSelectedObjectsOrdered();

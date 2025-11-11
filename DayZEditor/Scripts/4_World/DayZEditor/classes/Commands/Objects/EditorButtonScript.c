@@ -130,7 +130,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 				WidgetAnimator.AnimateColor(m_LayoutRoot, GetEditor().GetSettings().HighlightColor, 70);
 			}
 				
-			GetDayZGame().DelaySetCurrentTooltip(tooltip, w);
+			g_Game.DelaySetCurrentTooltip(tooltip, w);
 		}
 
 		return true;

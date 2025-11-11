@@ -64,7 +64,7 @@ class EditorMapView: ScriptView
 		Image.LoadImageFile(1, m_ImageHover);
 		Image.SetImage(1);
 
-		m_EditorSettings = EditorSettings.Cast(GetDayZGame().GetProfileSetting(EditorSettings));
+		m_EditorSettings = EditorSettings.Cast(g_Game.GetProfileSetting(EditorSettings));
 
 		if (!GetGame().VerifyWorldOwnership(m_MapConfig)) {
 			PurchaseButton.Show(true);
@@ -234,7 +234,7 @@ class EditorMapView: ScriptView
 			return;
 		}
 		
-		GetDayZGame().EditorFileToLoad = file;
+		g_Game.EditorFileToLoad = file;
 		GetGame().PlayMission(CreateEditorMissionFolder(m_MapConfig));
 	}
 
@@ -285,17 +285,17 @@ class EditorMapView: ScriptView
 			}
 			
 			case StartButton: {
-				GetDayZGame().CreateDelayedTooltip(w, string.Format("Load %1", map_name), TooltipPosition.TOP_RIGHT);
+				g_Game.CreateDelayedTooltip(w, string.Format("Load %1", map_name), TooltipPosition.TOP_RIGHT);
 				break;
 			}
 			
 			case LoadButton: {
-				GetDayZGame().CreateDelayedTooltip(w, string.Format("Open Existing File", map_name), TooltipPosition.TOP_RIGHT);
+				g_Game.CreateDelayedTooltip(w, string.Format("Open Existing File", map_name), TooltipPosition.TOP_RIGHT);
 				break;
 			}
 			
 			case PurchaseButton: {
-				GetDayZGame().CreateDelayedTooltip(w, string.Format("Purchase %1", map_name), TooltipPosition.TOP_RIGHT);
+				g_Game.CreateDelayedTooltip(w, string.Format("Purchase %1", map_name), TooltipPosition.TOP_RIGHT);
 				break;
 			}
 		}
@@ -310,7 +310,7 @@ class EditorMapView: ScriptView
 			return true;
 		}
 		
-		GetDayZGame().ClearTooltip();
+		g_Game.ClearTooltip();
 		
 		switch (w) {
 			case Button: {

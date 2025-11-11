@@ -12,27 +12,13 @@ modded class PlayerBase
 		
 		return emotes;
 	}
-	
-	override void EEKilled(Object killer)
-	{
-		//super.EEKilled(killer);
-		
-		// Quick! Before he stops breathing
-		if (this == PlayerBase.Cast(GetEditor().GetPlayer())) {
-			GetEditor().SetActive(true);
-		}
-	}
-	
-	override void OnSelectPlayer()
-	{
-		super.OnSelectPlayer();
-		
-		GetInputController().SetDisabled(false);
-	}
-	
+			
 	// Yeet
 	override void CheckDeath()
 	{
+		if (!g_Editor) {
+			super.CheckDeath();
+		}
 	}
 	
 	override void OnDebugSpawn()
@@ -91,5 +77,8 @@ modded class PlayerBase
 	// yeet
 	override void DepleteStamina(EStaminaModifiers modifier, float dT = -1)
 	{
+		if (!g_Editor) {
+			super.DepleteStamina(modifier, dT);
+		}
 	}
 }

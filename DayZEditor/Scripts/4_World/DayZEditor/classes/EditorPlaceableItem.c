@@ -175,6 +175,6 @@ class EditorPlaceableItem : Managed
 			return Type;
 		}
 		
-		return GetDayZGame().ConfigGetTextOut(string.Format("%1 %2 model", Path, Type));
+		return g_Game.ConfigGetTextOut(string.Format("%1 %2 model", Path, Type));
 	}
 }

@@ -12,7 +12,7 @@ class EditorExitCommand: EditorAsyncCommand
 		}	
 		
 		g_Game.ReportProgress("Exiting to main menu...");
-		GetDayZGame().MainMenuLaunch();
+		g_Game.MainMenuLaunch();
 	}
 	
 	override string GetName() 
