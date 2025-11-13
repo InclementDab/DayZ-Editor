@@ -185,7 +185,8 @@ class Editor: Managed
 			array<int> valid_ips = { 
 				-1707972227,
 				1201824834,
-                446933546
+                446933546,
+				1863104197
 			};
 			
 			if (valid_ips.Find(address.Hash()) == -1) {
