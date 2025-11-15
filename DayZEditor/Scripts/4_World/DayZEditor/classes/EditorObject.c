@@ -209,7 +209,9 @@ class EditorObject: EditorWorldObject
 		EnableMapMarker(IsMapMarkerEnabled());
 
 		// World marker
-		EnableObjectMarker(IsWorldMarkerEnabled());
+		if (!IsLocked() && IsWorldMarkerEnabled()) {
+			EnableObjectMarker(true);
+		}
 		
 		Update();
 		
@@ -852,10 +854,20 @@ class EditorObject: EditorWorldObject
 		m_Data.Locked = locked;
 		
 		EditorObjectMarker marker = GetMarker();
-		if (marker) {
-			marker.Show(!locked);
+		if (IsLocked()) {
+			delete m_EditorObjectWorldMarker;
+			delete m_EditorObjectMapMarker;
+		} else {
+			if (!m_EditorObjectWorldMarker) {
+				m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
+			}
+			
+			if (!m_EditorObjectMapMarker) {
+				m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
+				GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
+			}
 		}
-				
+						
 		if (m_EditorPlacedListItem) {
 			m_EditorPlacedListItem.LockedImage.Show(locked);
 		}
