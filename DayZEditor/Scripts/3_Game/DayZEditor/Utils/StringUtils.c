@@ -2,28 +2,49 @@ class StringUtils
 {
     static string FloatToString(float value, int decimal_places)
     {
-        string str = value.ToString(false);
-        int dot_pos = str.IndexOf(".");
-        
-        if (dot_pos == -1) {
-            if (decimal_places > 0) {
-                str += ".";
-                for (int i = 0; i < decimal_places; i++) {
-                    str += "0";
-                }
-            }
-            return str;
+        // 1. Standard Rounding for integers
+        if (decimal_places <= 0)
+            return Math.Round(value).ToString();
+
+        // 2. Handle Sign manually
+        string sign = "";
+        if (value < 0)
+        {
+            sign = "-";
+            value = Math.AbsFloat(value);
         }
-        
-        int desired_length = dot_pos + decimal_places + 1;
-        
-        if (str.Length() <= desired_length) {
-            while (str.Length() < desired_length) {
-                str += "0";
-            }
-            return str;
+
+        // 3. Split Integer and Fraction
+        float intPart = Math.Floor(value);
+        float fracPart = value - intPart;
+
+        // 4. Round Fraction
+        float scale = Math.Pow(10, decimal_places);
+        float roundedFrac = Math.Round(fracPart * scale);
+
+        // 5. Handle Rollover
+        if (roundedFrac >= scale)
+        {
+            intPart += 1;
+            roundedFrac = 0;
         }
-        
-        return str.Substring(0, desired_length);
+
+        // 6. Stringify Integer
+        string sInt = intPart.ToString();
+        int dotIndex = sInt.IndexOf(".");
+        if (dotIndex != -1) sInt = sInt.Substring(0, dotIndex);
+
+        // 7. Stringify Fraction
+        string sFrac = roundedFrac.ToString();
+        dotIndex = sFrac.IndexOf(".");
+        if (dotIndex != -1) sFrac = sFrac.Substring(0, dotIndex);
+
+        // 8. Pad Zeros
+        while (sFrac.Length() < decimal_places)
+        {
+            sFrac = "0" + sFrac;
+        }
+
+        return sign + sInt + "." + sFrac;
     }
 }
