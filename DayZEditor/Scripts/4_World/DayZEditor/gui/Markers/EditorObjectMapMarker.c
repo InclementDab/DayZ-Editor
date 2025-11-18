@@ -12,11 +12,11 @@ class EditorObjectMapMarker: EditorObjectMarker
 	override void Update(float dt)
 	{
 		if (!m_EditorMap || !m_EditorMap.IsVisible()) { 
-			Show(false);
+			m_LayoutRoot.Show(false);
 			return;
 		}
 		
-		Show(true);
+		m_LayoutRoot.Show(true);
 		vector position = m_EditorMap.MapToScreen(m_EditorObject.GetPosition());
 		SetPos(position[0], position[1]);
 		SetSize(0.5);

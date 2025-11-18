@@ -850,18 +850,6 @@ class Editor: Managed
 				m_EditorHud.ObjectHoverSelectObjectReadout.SetText(surface_type);
 			}
 		}
-
-		if (m_EditorCamera && m_EditorHudController) {
-			vector cam_pos = m_EditorCamera.GetPosition();
-			
-			m_EditorHudController.cam_x = cam_pos[0];
-			m_EditorHudController.cam_y = cam_pos[1];
-			m_EditorHudController.cam_z = cam_pos[2];
-			
-			//m_EditorHudController.NotifyPropertyChanged("cam_x");
-			//m_EditorHudController.NotifyPropertyChanged("cam_y");
-			//m_EditorHudController.NotifyPropertyChanged("cam_z");
-		}
 				
 		if (IsPlacing()) {
 			HandleHands(timeslice);
@@ -1096,13 +1084,11 @@ class Editor: Managed
 		UAInput down_input = input_api.GetInputByName("EditorMoveObjectDown");
 		UAInput turbo_input = input_api.GetInputByID(UATurbo);
 		UAInput slow_input = input_api.GetInputByID(UALookAround);
-		UAInput r_input = input_api.GetInputByID(UAReloadMagazine);
 		UAInput big_input = input_api.GetInputByName("EditorScaleIncrease");
 		UAInput small_input = input_api.GetInputByName("EditorScaleDecrease");
 		UAInput left_click_input = input_api.GetInputByID(UAFire);
 		UAInput right_click_input = input_api.GetInputByID(UATempRaiseWeapon);
 		UAInput middle_click_input = input_api.GetInputByID(UAZoomIn);
-		UAInput cycle_mode_input = input_api.GetInputByName("EditorCycleWidget");
 		
 		if (m_CameraMoveActive) {
 			m_CameraMoveActive = GetUApi().GetInputByID(UATempRaiseWeapon).LocalValue();
@@ -1221,11 +1207,11 @@ class Editor: Managed
 		}
 		
 		if (!IsPlacing()) {
-			if (cycle_mode_input.LocalPress()) {
+			if (input_api.GetInputByName("EditorCycleWidget").LocalPress()) {
 				SetMode(m_EditorMode + 1);
 			}
 		} else {
-			if (r_input.LocalPress()) {
+			if (input_api.GetInputByID(UAReloadMagazine).LocalPress()) {
 				m_HandsInputOrientation = m_HandsInputOrientation + Vector(90, 0, 0);
 			}
 			
@@ -1274,240 +1260,240 @@ class Editor: Managed
 				}
 			}*/
 		} else if (selected_objects.Count()) {
-		bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalHold() && GridMode) || (fwd_input.LocalPress() && GridMode);
-		bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalHold() && GridMode) || (bck_input.LocalPress() && GridMode);
-		bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalHold() && GridMode) || (left_input.LocalPress() && GridMode);
-		bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalHold() && GridMode) || (right_input.LocalPress() && GridMode);
-		bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalHold() && GridMode) || (up_input.LocalPress() && GridMode);
-		bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalHold() && GridMode) || (down_input.LocalPress() && GridMode);
-		bool big_on = big_input.LocalValue();
-		bool small_on = small_input.LocalValue();
-
-		// Check if block should execute (movement OR pending action)
-		bool should_execute = fwd_on || bck_on || left_on || right_on || up_on || down_on || big_on || small_on || m_QuickMoveUndoAction;
-		if (should_execute)
-		{
-			if (IsDragging())
+			bool fwd_on = (fwd_input.LocalValue() && !GridMode) || (fwd_input.LocalHold() && GridMode) || (fwd_input.LocalPress() && GridMode);
+			bool bck_on = (bck_input.LocalValue() && !GridMode) || (bck_input.LocalHold() && GridMode) || (bck_input.LocalPress() && GridMode);
+			bool left_on = (left_input.LocalValue() && !GridMode) || (left_input.LocalHold() && GridMode) || (left_input.LocalPress() && GridMode);
+			bool right_on = (right_input.LocalValue() && !GridMode) || (right_input.LocalHold() && GridMode) || (right_input.LocalPress() && GridMode);
+			bool up_on = (up_input.LocalValue() && !GridMode) || (up_input.LocalHold() && GridMode) || (up_input.LocalPress() && GridMode);
+			bool down_on = (down_input.LocalValue() && !GridMode) || (down_input.LocalHold() && GridMode) || (down_input.LocalPress() && GridMode);
+			bool big_on = big_input.LocalValue();
+			bool small_on = small_input.LocalValue();
+	
+			// Check if block should execute (movement OR pending action)
+			bool should_execute = fwd_on || bck_on || left_on || right_on || up_on || down_on || big_on || small_on || m_QuickMoveUndoAction;
+			if (should_execute)
 			{
+				if (IsDragging())
+				{
 #ifdef DEV_LOGGING
-				PrintFormat("[PROCESS_INPUT] BLOCKED: A drag operation is in progress. Keyboard movement processing skipped for this frame.");
+					PrintFormat("[PROCESS_INPUT] BLOCKED: A drag operation is in progress. Keyboard movement processing skipped for this frame.");
 #endif
-				return;
-			}
-			
-#ifdef DEV_LOGGING
-			PrintFormat("[PROCESS_INPUT] EXECUTING: Keyboard movement detected for %1 selected objects.", selected_objects.Count());
-#endif
-
-			array<ref EditorObject> updated_objects = new array<ref EditorObject>();
-
-			m_ObjectManager.RecalculateCenterOfSelectedObjects();
-			vector average_position = GetAveragePositionOfSelection();
-			vector average_mat[4] = {
-				"1 0 0",
-				"0 1 0",
-				"0 0 1",
-				average_position
-			};
-			
-			float step_size = GetSettings().QuickMoveRate;
-			if (turbo_input.LocalValue()) {
-				step_size *= 6.685;
-			}
-			
-			if (slow_input.LocalValue()) {
-				step_size /= 6.685;
-			}
-			
-			step_size *= dt;
-			
-			vector camera_transform_mat[4];
-			GetCamera().GetTransform(camera_transform_mat);
-
-			switch (GetSettings().QuickMoveMode) {
-				case 0: { // World flat
-					camera_transform_mat[0] = vector.Aside;
-					camera_transform_mat[1] = vector.Up;
-					camera_transform_mat[2] = vector.Forward;
-					break;
+					return;
 				}
-
-				case 1: { // Camera flat
-					camera_transform_mat[1] = vector.Up;
-					camera_transform_mat[2] = (camera_transform_mat[0] * vector.Up).Normalized();
-					Math3D.MatrixOrthogonalize4(camera_transform_mat);
-					break;
-				}
-
-				case 2: { // Camera 3d
-					break;
-				}
-			}
-			
-			array<UAInput> input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input, big_input, small_input };
-			
-			bool input_is_press = false;
-			bool input_is_release = false;
-			foreach (UAInput input_in_list2: input_list) {
-				if (!input_in_list2) continue;
-				input_is_press = input_is_press || input_in_list2.LocalPress();
-			}
-			
-			if (input_is_press) {
-				m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");
 				
-				if (GetGame().IsMultiplayer() && selected_objects.Count() > 0)
-				{
-					EditorObject parent = selected_objects.GetElement(0);
-					array<EditorObject> children = {};
-					for (int j = 1; j < selected_objects.Count(); j++)
-						children.Insert(selected_objects.GetElement(j));
-
-					GetNetActionManager().SendDragSessionStart(parent, children);
+#ifdef DEV_LOGGING
+				PrintFormat("[PROCESS_INPUT] EXECUTING: Keyboard movement detected for %1 selected objects.", selected_objects.Count());
+#endif
+	
+				array<ref EditorObject> updated_objects = new array<ref EditorObject>();
+	
+				m_ObjectManager.RecalculateCenterOfSelectedObjects();
+				vector average_position = GetAveragePositionOfSelection();
+				vector average_mat[4] = {
+					"1 0 0",
+					"0 1 0",
+					"0 0 1",
+					average_position
+				};
+				
+				float step_size = GetSettings().QuickMoveRate;
+				if (turbo_input.LocalValue()) {
+					step_size *= 6.685;
 				}
-			}
-			
-			foreach (UAInput check_release : input_list)
-			{
-				if (!check_release) continue;
-				input_is_release = input_is_release || check_release.LocalRelease();
-			}
-			
-			if (input_is_press)
-			{
-				if (m_QuickMoveUndoAction)
-				{
-					foreach (EditorObject eo_undo : selected_objects)
+				
+				if (slow_input.LocalValue()) {
+					step_size /= 6.685;
+				}
+				
+				step_size *= dt;
+				
+				vector camera_transform_mat[4];
+				GetCamera().GetTransform(camera_transform_mat);
+	
+				switch (GetSettings().QuickMoveMode) {
+					case 0: { // World flat
+						camera_transform_mat[0] = vector.Aside;
+						camera_transform_mat[1] = vector.Up;
+						camera_transform_mat[2] = vector.Forward;
+						break;
+					}
+	
+					case 1: { // Camera flat
+						camera_transform_mat[1] = vector.Up;
+						camera_transform_mat[2] = (camera_transform_mat[0] * vector.Up).Normalized();
+						Math3D.MatrixOrthogonalize4(camera_transform_mat);
+						break;
+					}
+	
+					case 2: { // Camera 3d
+						break;
+					}
+				}
+				
+				array<UAInput> input_list = { fwd_input, bck_input, left_input, right_input, up_input, down_input, big_input, small_input };
+				
+				bool input_is_press = false;
+				bool input_is_release = false;
+				foreach (UAInput input_in_list2: input_list) {
+					if (!input_in_list2) continue;
+					input_is_press = input_is_press || input_in_list2.LocalPress();
+				}
+				
+				if (input_is_press) {
+					m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");
+					
+					if (GetGame().IsMultiplayer() && selected_objects.Count() > 0)
 					{
-						m_QuickMoveUndoAction.InsertUndoParameter(eo_undo.GetTransformArray());
+						EditorObject parent = selected_objects.GetElement(0);
+						array<EditorObject> children = {};
+						for (int j = 1; j < selected_objects.Count(); j++)
+							children.Insert(selected_objects.GetElement(j));
+	
+						GetNetActionManager().SendDragSessionStart(parent, children);
 					}
-				}
-			}
-
-			if (input_is_release)
-			{
-				if (m_QuickMoveUndoAction)
-				{
-					foreach (EditorObject eo_redo: selected_objects) {
-						m_QuickMoveUndoAction.InsertRedoParameter(eo_redo.GetTransformArray());
-					}
-					InsertAction(m_QuickMoveUndoAction);
 				}
 				
-				if (GetGame().IsMultiplayer() && selected_objects.Count() > 0)
+				foreach (UAInput check_release : input_list)
 				{
-					EditorObject parent_end = selected_objects.GetElement(0);
-					int packed[4];
-					EditorNetUtils.PackTransform(parent_end.GetPosition(), parent_end.GetOrientation(), parent_end.GetScale(), packed);
-					GetNetActionManager().SendDragSessionEnd(parent_end.Uuid, packed);
+					if (!check_release) continue;
+					input_is_release = input_is_release || check_release.LocalRelease();
 				}
-			}
-
-			if (GridMode) {
-				step_size = GetGridSize();
-			}
-			
-			vector pos_offset = vector.Zero;
-			vector ori_offset = vector.Zero;
-			float scale_offset = 0;
-			if (g_Game.IsLeftCtrlDown() && fwd_on) {
-				ori_offset = ori_offset + Vector(0, 0, step_size);
-			}
-			
-			else if (fwd_on) {
-				pos_offset = pos_offset + Vector(0, 0, step_size).Multiply3(camera_transform_mat);
-			}
-			
-			if (g_Game.IsLeftCtrlDown() && bck_on) {
-				ori_offset = ori_offset + Vector(0, 0, -step_size);
-			}
-			
-			else if (bck_on) {
-				pos_offset = pos_offset + Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
-			}
-			
-			if (g_Game.IsLeftCtrlDown() && left_on) {
-				ori_offset = ori_offset + Vector(-step_size, 0, 0);
-			}
-			
-			else if (left_on) {
-				pos_offset = pos_offset + Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
-			}
-			
-			if (g_Game.IsLeftCtrlDown() && right_on) {
-				ori_offset = ori_offset + Vector(step_size, 0, 0);
-			}
-			
-			else if (right_on) {
-				pos_offset = pos_offset + Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
-			}
-			
-			if (g_Game.IsLeftCtrlDown() && up_on) {
-				ori_offset = ori_offset + Vector(0, step_size, 0);
-			}	
-					
-			else if (up_on) {
-				pos_offset = pos_offset + Vector(0, step_size, 0).Multiply3(camera_transform_mat);
-			}
-			
-			if (g_Game.IsLeftCtrlDown() && down_on) {
-				ori_offset = ori_offset + Vector(0, -step_size, 0);
-			}
-			else if (down_on) {
-				pos_offset = pos_offset + Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
-			}
-			
-			if (big_input.LocalValue()) {
-				scale_offset = step_size;
-			}
-			
-			if (small_input.LocalValue()) {
-				scale_offset = -step_size;
-			}
-			
-			ori_offset = ori_offset + ori_offset * Math.RAD2DEG;
-					
-			if (pos_offset != vector.Zero || ori_offset != vector.Zero || scale_offset != 0) {
-				foreach (int id, EditorObject selected_object: selected_objects) {
-					vector rel_mat[4];
-					selected_object.GetTransform(rel_mat);
-					
-					// CAPTURE ORIGINAL SCALE BEFORE TRANSFORMATIONS
-					float originalScale0 = rel_mat[0].Length();
-					float originalScale1 = rel_mat[1].Length();
-					float originalScale2 = rel_mat[2].Length();
-					
-					vector inv_mat[4];
-					Math3D.MatrixInvMultiply4(average_mat, rel_mat, inv_mat);
-					inv_mat[3] = inv_mat[3] + pos_offset;
-					
-					vector avg_mat[4];
-					Math3D.YawPitchRollMatrix(ori_offset, avg_mat);
-					avg_mat[3] = average_position;					
-					vector res_mat[4];
-					Math3D.MatrixMultiply4(avg_mat, inv_mat, res_mat);
-					
-					// Apply scale using ORIGINAL scale + offset
-					res_mat[0] = res_mat[0].Normalized() * (originalScale0 + scale_offset);
-					res_mat[1] = res_mat[1].Normalized() * (originalScale1 + scale_offset);
-					res_mat[2] = res_mat[2].Normalized() * (originalScale2 + scale_offset);
-					
-					selected_object.SetTransform(res_mat);
-					
-					updated_objects.Insert(selected_object);
-					selected_object.Update();
-				}
-
-				if (GetGame().IsMultiplayer() && updated_objects.Count() > 0)
+				
+				if (input_is_press)
 				{
-					EditorObject rpc_update_parent = updated_objects[0];
-					int rpc_update_packed[4];
-					EditorNetUtils.PackTransform(rpc_update_parent.GetPosition(), rpc_update_parent.GetOrientation(), rpc_update_parent.GetScale(), rpc_update_packed);
-					GetNetActionManager().SendDragSessionUpdate(rpc_update_parent.Uuid, rpc_update_packed);
+					if (m_QuickMoveUndoAction)
+					{
+						foreach (EditorObject eo_undo : selected_objects)
+						{
+							m_QuickMoveUndoAction.InsertUndoParameter(eo_undo.GetTransformArray());
+						}
+					}
+				}
+	
+				if (input_is_release)
+				{
+					if (m_QuickMoveUndoAction)
+					{
+						foreach (EditorObject eo_redo: selected_objects) {
+							m_QuickMoveUndoAction.InsertRedoParameter(eo_redo.GetTransformArray());
+						}
+						InsertAction(m_QuickMoveUndoAction);
+					}
+					
+					if (GetGame().IsMultiplayer() && selected_objects.Count() > 0)
+					{
+						EditorObject parent_end = selected_objects.GetElement(0);
+						int packed[4];
+						EditorNetUtils.PackTransform(parent_end.GetPosition(), parent_end.GetOrientation(), parent_end.GetScale(), packed);
+						GetNetActionManager().SendDragSessionEnd(parent_end.Uuid, packed);
+					}
+				}
+	
+				if (GridMode) {
+					step_size = GetGridSize();
+				}
+				
+				vector pos_offset = vector.Zero;
+				vector ori_offset = vector.Zero;
+				float scale_offset = 0;
+				if (g_Game.IsLeftCtrlDown() && fwd_on) {
+					ori_offset = ori_offset + Vector(0, 0, step_size);
+				}
+				
+				else if (fwd_on) {
+					pos_offset = pos_offset + Vector(0, 0, step_size).Multiply3(camera_transform_mat);
+				}
+				
+				if (g_Game.IsLeftCtrlDown() && bck_on) {
+					ori_offset = ori_offset + Vector(0, 0, -step_size);
+				}
+				
+				else if (bck_on) {
+					pos_offset = pos_offset + Vector(0, 0, -step_size).Multiply3(camera_transform_mat);
+				}
+				
+				if (g_Game.IsLeftCtrlDown() && left_on) {
+					ori_offset = ori_offset + Vector(-step_size, 0, 0);
+				}
+				
+				else if (left_on) {
+					pos_offset = pos_offset + Vector(-step_size, 0, 0).Multiply3(camera_transform_mat);
+				}
+				
+				if (g_Game.IsLeftCtrlDown() && right_on) {
+					ori_offset = ori_offset + Vector(step_size, 0, 0);
+				}
+				
+				else if (right_on) {
+					pos_offset = pos_offset + Vector(step_size, 0, 0).Multiply3(camera_transform_mat);
+				}
+				
+				if (g_Game.IsLeftCtrlDown() && up_on) {
+					ori_offset = ori_offset + Vector(0, step_size, 0);
+				}	
+						
+				else if (up_on) {
+					pos_offset = pos_offset + Vector(0, step_size, 0).Multiply3(camera_transform_mat);
+				}
+				
+				if (g_Game.IsLeftCtrlDown() && down_on) {
+					ori_offset = ori_offset + Vector(0, -step_size, 0);
+				}
+				else if (down_on) {
+					pos_offset = pos_offset + Vector(0, -step_size, 0).Multiply3(camera_transform_mat);
+				}
+				
+				if (big_input.LocalValue()) {
+					scale_offset = step_size;
+				}
+				
+				if (small_input.LocalValue()) {
+					scale_offset = -step_size;
+				}
+				
+				ori_offset = ori_offset + ori_offset * Math.RAD2DEG;
+						
+				if (pos_offset != vector.Zero || ori_offset != vector.Zero || scale_offset != 0) {
+					foreach (int id, EditorObject selected_object: selected_objects) {
+						vector rel_mat[4];
+						selected_object.GetTransform(rel_mat);
+						
+						// CAPTURE ORIGINAL SCALE BEFORE TRANSFORMATIONS
+						float originalScale0 = rel_mat[0].Length();
+						float originalScale1 = rel_mat[1].Length();
+						float originalScale2 = rel_mat[2].Length();
+						
+						vector inv_mat[4];
+						Math3D.MatrixInvMultiply4(average_mat, rel_mat, inv_mat);
+						inv_mat[3] = inv_mat[3] + pos_offset;
+						
+						vector avg_mat[4];
+						Math3D.YawPitchRollMatrix(ori_offset, avg_mat);
+						avg_mat[3] = average_position;					
+						vector res_mat[4];
+						Math3D.MatrixMultiply4(avg_mat, inv_mat, res_mat);
+						
+						// Apply scale using ORIGINAL scale + offset
+						res_mat[0] = res_mat[0].Normalized() * (originalScale0 + scale_offset);
+						res_mat[1] = res_mat[1].Normalized() * (originalScale1 + scale_offset);
+						res_mat[2] = res_mat[2].Normalized() * (originalScale2 + scale_offset);
+						
+						selected_object.SetTransform(res_mat);
+						
+						updated_objects.Insert(selected_object);
+						selected_object.Update();
+					}
+	
+					if (GetGame().IsMultiplayer() && updated_objects.Count() > 0)
+					{
+						EditorObject rpc_update_parent = updated_objects[0];
+						int rpc_update_packed[4];
+						EditorNetUtils.PackTransform(rpc_update_parent.GetPosition(), rpc_update_parent.GetOrientation(), rpc_update_parent.GetScale(), rpc_update_packed);
+						GetNetActionManager().SendDragSessionUpdate(rpc_update_parent.Uuid, rpc_update_packed);
+					}
 				}
 			}
 		}
-	}
 		
 		bool useful_widget_under_cursor = GetWidgetUnderCursor() && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons";		
 		if (GetCamera() && GetCamera().GetSettings() && !GetCamera().GetSettings().LegacyCamera && !useful_widget_under_cursor && !IsPlacing()) {

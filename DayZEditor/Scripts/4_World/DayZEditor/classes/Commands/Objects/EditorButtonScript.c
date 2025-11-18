@@ -68,7 +68,6 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 			}
 			
 			Icon.SetColor(m_Command.GetColor());
-			
 		} else {
 			if (hovering && can_execute) {
 				if (mouse_state) {
@@ -76,6 +75,7 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 				} else {
 					Icon.SetImage(1);
 				}
+				
 				Icon.SetColor(m_Command.GetColor());
 			} else {
 				Icon.SetImage(2);

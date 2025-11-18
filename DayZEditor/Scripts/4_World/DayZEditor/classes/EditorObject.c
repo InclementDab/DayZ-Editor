@@ -858,11 +858,11 @@ class EditorObject: EditorWorldObject
 			delete m_EditorObjectWorldMarker;
 			delete m_EditorObjectMapMarker;
 		} else {
-			if (!m_EditorObjectWorldMarker) {
+			if (!m_EditorObjectWorldMarker && IsWorldMarkerEnabled()) {
 				m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
 			}
 			
-			if (!m_EditorObjectMapMarker) {
+			if (!m_EditorObjectMapMarker && IsMapMarkerEnabled()) {
 				m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
 				GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 			}

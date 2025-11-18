@@ -137,12 +137,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		m_LayoutRoot.Update();
 	}
 	
-	protected vector GetPosition()
-	{		
-		
-	}
-	
-	
 	override typename GetDragHandlerType()
 	{
 		return EditorObjectDragHandler;
