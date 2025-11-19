@@ -7,6 +7,18 @@ class EditorCameraTrack: EditorObject
 		delete m_CameraListItem;
 	}
 	
+    override void CleanupUI()
+{
+        if (m_CameraListItem)
+        {
+            delete m_CameraListItem;
+            m_CameraListItem = null;
+        }
+        
+        // Call super to clean up markers if any exist on tracks
+        super.CleanupUI(); 
+    }
+	
 	void SetListIndex(int index)
 	{
 		if (m_CameraListItem) {

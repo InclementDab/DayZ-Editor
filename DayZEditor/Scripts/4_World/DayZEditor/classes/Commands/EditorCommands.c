@@ -9,6 +9,14 @@ class EditorCommand: RelayCommand
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(Update);
 	}
 	
+    // Remove from update queue on deletion to prevent calling dead object
+    void ~EditorCommand()
+    {
+        if (GetGame()) {
+            GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Remove(Update);
+        }
+    }
+	
 	protected void Update(float dt)
 	{
 	}

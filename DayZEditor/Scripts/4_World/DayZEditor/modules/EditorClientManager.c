@@ -450,6 +450,10 @@ class EditorClientManager
         {
             m_CachedEditor.Update(timeslice);
         }
+        // if (m_CachedEditor)
+        // {
+        //     m_CachedEditor.Update(timeslice);
+        // }
 
         // Multiplayer camera interpolation
         if (GetGame().IsMultiplayer()) {
@@ -517,6 +521,7 @@ class EditorClientManager
             g_Editor.SetActive(true);
             m_IsEditorActivated = true;
             m_CachedEditor = g_Editor;
+            //m_CachedEditor = g_Editor;
             PrintFormat("[EDITOR DEBUG] Editor activated and cached");
         }
     }

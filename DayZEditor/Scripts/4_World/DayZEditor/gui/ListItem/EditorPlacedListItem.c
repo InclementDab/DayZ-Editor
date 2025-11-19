@@ -29,6 +29,15 @@ class EditorPlacedListItem: EditorListItem
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
 	}
 		
+    void ~EditorPlacedListItem()
+    {
+        if (m_EditorObject)
+        {
+            m_EditorObject.OnObjectSelected.Remove(EditorObjectSelected);
+            m_EditorObject.OnObjectDeselected.Remove(EditorObjectDeselected);
+        }
+    }
+		
 	void EditorObjectSelected(EditorObject data) 
 	{
 		Select();

@@ -11,6 +11,20 @@ class EditorObjectMapMarker: EditorObjectMarker
 	
 	override void Update(float dt)
 	{
+		// Strict null check on the widget object
+        if (!m_EditorMap) 
+        {
+             // Try to re-acquire
+            if (m_Editor && m_Editor.GetEditorHud())
+                m_EditorMap = m_Editor.GetEditorHud().Map;
+        }
+
+        // If still null, or if the widget is dead (invisible/destroyed), abort.
+        if (!m_EditorMap) { 
+            m_LayoutRoot.Show(false);
+            return;
+        }
+
 		if (!m_EditorMap || !m_EditorMap.IsVisible()) { 
 			m_LayoutRoot.Show(false);
 			return;

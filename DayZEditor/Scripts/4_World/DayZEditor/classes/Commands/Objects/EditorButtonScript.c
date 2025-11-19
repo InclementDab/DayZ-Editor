@@ -41,8 +41,23 @@ class EditorButtonScript: ScriptedWidgetEventHandler
 #endif
 	}
 
+    void ~EditorButtonScript()
+    {
+        if (GetGame())
+        {
+            GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+        }
+    }
+
 	protected void Update(float dt)
 	{
+		
+        if (!m_LayoutRoot) 
+        {
+            GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
+            return;
+        }
+
 		m_TickAccumulated += dt;
 		if (m_TickAccumulated < 0.124) {
 			return;

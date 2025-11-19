@@ -712,9 +712,9 @@ class EditorMainMenu: ScriptViewMenu
 					break;
 				}
 				
-				if (GetEditor()) {
-					GetEditor().DestroyHud();
-				}
+				// if (GetEditor()) {
+				// 	GetEditor().DestroyHud();
+				// }
 				
 				if (GetGame().IsMultiplayer()) {
 					GetGame().LogoutRequestTime();

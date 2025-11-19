@@ -47,7 +47,14 @@ class EditorChatLine
 
 	void ~EditorChatLine()
 	{
-		delete m_TextWidget;
+        // Stop timers before destroying widgets
+        if (m_FadeTimer) m_FadeTimer.Stop();
+        if (m_TimeoutTimer) m_TimeoutTimer.Stop();
+
+        // Safe deletion
+		if (m_TextWidget) delete m_TextWidget;
+        // m_RootWidget is managed, best to unlink or let parent destroy
+        if (m_RootWidget) m_RootWidget.Unlink(); 
 	}
 
 	void Set(ChatMessageEventParams params)	// Param 1 --> Channel, Param 2 --> sender name, Param 3 --> message, Param 4 ?? 
@@ -214,7 +221,10 @@ class EditorChat
 
 	void Destroy()
 	{
-		m_Lines.Clear();
+        if (m_Lines)
+        {
+		    m_Lines.Clear();
+        }
 	}
 	
 	void Clear()

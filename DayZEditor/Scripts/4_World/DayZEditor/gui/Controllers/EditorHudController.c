@@ -97,6 +97,15 @@ class EditorHudController: EditorControllerBase
 		EditorLog.OnLog.Remove(OnEditorLog);
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(Update);
 #endif
+
+        if (LeftContent) LeftContent.Clear();
+        if (RightContent) RightContent.Clear();
+        if (RightbarPlacedData) RightbarPlacedData.Clear();
+        if (RightbarDeletionData) RightbarDeletionData.Clear();
+        if (RightbarPlayerData) RightbarPlayerData.Clear();
+        if (CameraTrackData) CameraTrackData.Clear();
+        if (CameraControls) CameraControls.Clear();
+        if (EditorLogEntries) EditorLogEntries.Clear();
 	}
 		
 	void Update()

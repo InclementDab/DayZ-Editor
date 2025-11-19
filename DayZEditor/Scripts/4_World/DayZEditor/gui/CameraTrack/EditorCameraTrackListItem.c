@@ -65,6 +65,16 @@ class EditorCameraTrackListItem: ScriptView
 		OnObjectUpdate();
 	}
 
+    void ~EditorCameraTrackListItem()
+    {
+        if (m_CameraTrack)
+        {
+            m_CameraTrack.OnObjectSelected.Remove(OnSelected);
+            m_CameraTrack.OnObjectDeselected.Remove(OnDeselected);
+            m_CameraTrack.OnUpdated.Remove(OnObjectUpdate);
+        }
+    }
+
 	protected void OnObjectUpdate()
 	{
 		vector position = m_CameraTrack.GetPosition();

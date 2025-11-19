@@ -83,11 +83,30 @@ modded class MissionGameplay
 		m_Hud.InventoryShown = false;
 	}*/
 	
-	override void OnMissionFinish()
-	{
-		super.OnMissionFinish();
-		
-		delete g_Editor;
+    override void OnMissionFinish()
+    {
+        // 1. Delete the Editor first. This tears down HUD, Gizmos, and Object Managers.
+        if (g_Editor)
+        {
+            delete g_Editor;
+            g_Editor = null;
+        }
+
+        // 2. Delete the Client Manager
+        if (m_EditorClientManager)
+        {
+            delete m_EditorClientManager;
+            m_EditorClientManager = null;
+        }
+
+        // 3. Clear local camera cache to prevent stale pointers
+        Cameras.Clear();
+        LastCameraData.Clear();
+        CameraData.Clear();
+        CameraMarkers.Clear();
+
+        // 4. Finally, let the engine finish.
+        super.OnMissionFinish();
 	}
 	
 	override void OnMissionLoaded()

@@ -29,8 +29,12 @@ class EditorMarker: ScriptView
 
 	void ~EditorMarker()
 	{
-		if (s_AllMarkers) {
-			s_AllMarkers.RemoveItem(this);
+        // Check index first to prevent out-of-bounds access if the array was already cleared externally.
+        if (s_AllMarkers) {
+            int index = s_AllMarkers.Find(this);
+            if (index != -1) {
+                s_AllMarkers.RemoveOrdered(index);
+            }
 		}
 	}
 	

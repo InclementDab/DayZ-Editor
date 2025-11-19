@@ -61,6 +61,22 @@ class EditorDeletedObject: EditorWorldObject
 		m_EditorDeletedObjectWorldMarker.Show(false);
 	}
 	
+    void CleanupUI()
+	{
+        if (m_EditorDeletedListItem)
+        {
+            delete m_EditorDeletedListItem;
+            m_EditorDeletedListItem = null;
+        }
+
+        // Also delete the world marker here just in case
+        if (m_EditorDeletedObjectWorldMarker)
+        {
+            delete m_EditorDeletedObjectWorldMarker;
+            m_EditorDeletedObjectWorldMarker = null;
+        }
+    }
+
 	void ~EditorDeletedObject()
 	{
 		// just for the sake of cache clearing

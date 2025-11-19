@@ -312,9 +312,20 @@ class EditorHud: ScriptView
 		
 		m_EditorCameraMarker = new EditorCameraMarker(GetGame().GetUserManager().GetSelectedUser().GetName());
 	}
-	
+
+    void ~EditorHud()
+    {
+        if (m_Chat)
+        {
+            delete m_Chat;
+        }
+    }
+
 	override void Update(float dt)
-	{
+	{        
+		// Stop immediately if destruction has begun. Accessing s_AllMarkers or m_Editor objects after this point is unsafe.
+        if (!m_Editor || m_Editor.m_IsDestroying) return;
+
 		super.Update(dt);
 		
 		if (!GetGame().IsAppActive()) {
@@ -487,6 +498,9 @@ class EditorHud: ScriptView
 		EditorCanvas.Clear();
 		m_DragBoxDelayStart -= dt;
 		if (left_mouse_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.Brush && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers) {	
+			int markerCount = 0;
+			int m = 0;
+
 			switch (m_SelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
@@ -508,8 +522,17 @@ class EditorHud: ScriptView
 						EditorCanvas.DrawLine(m_LassoHistory[0][0], m_LassoHistory[0][1], m_LassoHistory[m_LassoHistory.Count() - 1][0], m_LassoHistory[m_LassoHistory.Count() - 1][1], 2, 0xFF4B77BE);
 					}
 					
-					foreach (EditorMarker marker0: EditorMarker.s_AllMarkers) {
-						if (!marker0 || !marker0.GetLayoutRoot().IsVisible()) {
+					// Safe Iteration for Lasso
+					markerCount = EditorMarker.s_AllMarkers.Count();
+					for (m = 0; m < markerCount; m++)
+					{
+						// Bounds Check: Array size might change during iteration if objects delete themselves
+						if (m >= EditorMarker.s_AllMarkers.Count()) break;
+
+						EditorMarker marker0 = EditorMarker.s_AllMarkers[m];
+
+						// Ensure Script Object and Widget exist
+						if (!marker0 || !marker0.GetLayoutRoot() || !marker0.GetLayoutRoot().IsVisible()) {
 							continue;
 						}
 
@@ -537,7 +560,14 @@ class EditorHud: ScriptView
 					int y_avg = (m_DragBoxStartY + mouse_y) / 2;
 					EditorCanvas.DrawLine(x_avg, m_DragBoxStartY, x_avg, mouse_y, mouse_x - m_DragBoxStartX, 0x644B77BE);		
 					
-					foreach (EditorMarker marker: EditorMarker.s_AllMarkers) {
+					// Safe Iteration for Box
+					markerCount = EditorMarker.s_AllMarkers.Count();
+					for (m = 0; m < markerCount; m++)
+					{
+						if (m >= EditorMarker.s_AllMarkers.Count()) break;
+
+						EditorMarker marker = EditorMarker.s_AllMarkers[m];
+						
 						if (!marker || !marker.GetLayoutRoot() || !marker.GetLayoutRoot().IsVisible()) {
 							continue;
 						}
@@ -596,8 +626,15 @@ class EditorHud: ScriptView
 						}
 					}
 
-					foreach (EditorMarker marker2: EditorMarker.s_AllMarkers) {
-						if (!marker2 || !marker2.GetLayoutRoot().IsVisible()) {
+					// Safe Iteration for Ellipse
+					markerCount = EditorMarker.s_AllMarkers.Count();
+					for (m = 0; m < markerCount; m++)
+					{
+						if (m >= EditorMarker.s_AllMarkers.Count()) break;
+
+						EditorMarker marker2 = EditorMarker.s_AllMarkers[m];
+
+						if (!marker2 || !marker2.GetLayoutRoot() || !marker2.GetLayoutRoot().IsVisible()) {
 							continue;
 						}
 						

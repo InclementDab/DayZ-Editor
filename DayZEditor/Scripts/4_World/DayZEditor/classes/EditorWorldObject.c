@@ -19,7 +19,18 @@ class EditorWorldObject: Managed
 
 	void ~EditorWorldObject()
 	{
-		GetGame().ObjectDelete(m_WorldObject);
+        // Safer Deletion Logic
+        // If the Editor is destroying (Game Exit/Mission End), the Engine might owns the cleanup. 
+		// Touching m_WorldObject during world destruction could be the causes of shutdown crash.
+        
+        if (GetGame() && m_WorldObject)
+        {
+            // Check our custom flag on the global Editor instance
+            if (GetEditor() && !GetEditor().m_IsDestroying)
+            {
+				GetGame().ObjectDelete(m_WorldObject);
+            }
+        }
 	}
 	
 	void SetWorldObject(Object object)

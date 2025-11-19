@@ -117,15 +117,19 @@ class EditorObject: EditorWorldObject
 	void ~EditorObject()
 	{
 		EditorLog.Trace("~EditorObject");
-		if (m_Data && GetWorldObject()) {
-			Update();
-		}
 
-		if (s_AllByObject && GetWorldObject()) {
-			s_AllByObject.Remove(GetWorldObject());
-		}
-		
-		HideBoundingBox();
+        if (GetGame() && GetEditor() && !GetEditor().m_IsDestroying) 
+        {
+            if (m_Data && GetWorldObject()) {
+                Update();
+            }
+
+            if (s_AllByObject && GetWorldObject()) {
+                s_AllByObject.Remove(GetWorldObject());
+            }
+            
+            HideBoundingBox();
+        }
 
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;
@@ -496,6 +500,26 @@ class EditorObject: EditorWorldObject
 		m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
 	}
 	
+    void CleanupUI()
+	{
+        if (m_EditorPlacedListItem)
+        {
+            delete m_EditorPlacedListItem;
+            m_EditorPlacedListItem = null;
+        }
+
+        if (m_EditorObjectMapMarker)
+        {
+            delete m_EditorObjectMapMarker;
+            m_EditorObjectMapMarker = null;
+        }
+
+        if (m_EditorObjectWorldMarker)
+        {
+            delete m_EditorObjectWorldMarker;
+            m_EditorObjectWorldMarker = null;
+        }
+    }
 	void EnableMapMarker(bool enable) 
 	{
 		EditorLog.Trace("EditorObject::EnableMapMarker");

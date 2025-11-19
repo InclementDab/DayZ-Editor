@@ -42,12 +42,14 @@ class EditorObjectManagerModule : Managed
 
 	// Current Selected PlaceableListItem
 	EditorPlaceableItem CurrentSelectedItem;
+    protected bool m_IsRunningUnresolvedCheck;
 
 	void EditorObjectManagerModule(Editor editor)
 	{
 
 		// This background task will run independently of the synchronous asset loading below.
 		if (GetGame().IsMultiplayer()) {
+            m_IsRunningUnresolvedCheck = true;
 			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(ProcessUnresolvedObjects, 250, true); // Check every 250ms
 		}
 
@@ -226,6 +228,28 @@ class EditorObjectManagerModule : Managed
 			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(UniversallightLight));
 		}
 	}
+
+    void ~EditorObjectManagerModule()
+    {
+        // 1. Only attempt to remove if we actually started it, and if the Game/Queue still exists.
+        if (m_IsRunningUnresolvedCheck && GetGame() && GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY))
+        {
+            GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(ProcessUnresolvedObjects);
+        }
+
+        // 2. Break Strong References. We check if the container exists ( != null) before clearing.
+        
+        // Primary Strong References
+        if (m_EditorObjectRefs)         m_EditorObjectRefs.Clear();
+        if (m_EditorDeletedObjectRefs)  m_EditorDeletedObjectRefs.Clear();
+        
+        // Secondary Helper Maps (Must be cleared to allow GC)
+        if (m_PlacedObjects)            m_PlacedObjects.Clear();
+        if (m_SelectedObjects)          m_SelectedObjects.Clear();
+        
+        // Pending Network Objects 
+        if (m_UnresolvedObjects)        m_UnresolvedObjects.Clear();
+    }
 
     void RegisterUnresolvedObject(EditorObject obj)
     {

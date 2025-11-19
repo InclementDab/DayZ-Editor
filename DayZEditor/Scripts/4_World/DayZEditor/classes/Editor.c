@@ -298,27 +298,46 @@ class Editor: Managed
 	
 	void ~Editor() 
 	{
+        // 1. SET FLAG FIRST
 		m_IsDestroying = true;
-		g_Editor = null;
+        
 		EditorLog.Trace("~Editor");
-		
-		// Fallback
-		if (GetGame() && m_Mission) {
-			// Causing more trouble than its worth, null ptrs
-			// fix if you need to delete editor safely when running for some reason (MP?)
-			//SetActive(false);
-		}
-				
+
+        // 2. Clean up timers/events
+        if (GetGame()) {
+            GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).Remove(OnStatisticsSave);
+            g_Game.Event_OnActivateMessage.Remove(OnActivateMessage);
+            g_Game.Event_OnDeactivateMessage.Remove(OnDeactivateMessage);
+        }
+
+        // 3. Save Data
 		GetSettings().Save();
 		GetStatistics().Save();
-		
-		delete m_EditorHud;
-		delete m_EditorInventoryEditorHud;
+        
+        // 4. Destroy HUD (clears widgets)
+        if (m_EditorHud) {
+            DestroyHud();
+        }
+
+        // 5. Cleanup Inventory HUD if active
+        if (m_EditorInventoryEditorHud) {
+			delete m_EditorInventoryEditorHud;
+            m_EditorInventoryEditorHud = null;
+        }
+
+        // 6. Delete Components
 		delete Brush;
 		delete m_SessionCache;
 		delete m_DeletedSessionCache;
 		delete m_PlacingObjects;
 		delete m_RecentlyOpenedFiles;
+        
+        // 7. Clear Object Manager
+        // !EditorObject destructors will run now. 
+        // Because m_IsDestroying is true, they will skip unsafe logic.
+        if (m_ObjectManager) {
+            delete m_ObjectManager; 
+        }
 		
 		GetGame().ObjectDelete(m_EditorCamera);
 	}
@@ -726,6 +745,9 @@ class Editor: Managed
 	
 	void Update(float timeslice)
 	{				
+		// If the HUD has been destroyed (by the Exit command), stop updating immediately.
+		if (!m_EditorHud) return;
+
 		if (!GetGame().IsAppActive()) {
 			return;
 		}
@@ -1054,6 +1076,9 @@ class Editor: Managed
 	
 	void ProcessInput(float dt, Input input)
 	{
+		// If HUD is gone, we cannot process input related to it.
+		if (!m_EditorHud) return;
+
 		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !GetEditorHud().GetDialog();
 		if (!input_unlocked) {
 			return;
@@ -2204,18 +2229,59 @@ class Editor: Managed
 
 	// Call me first to safely and quickly clean up the editor. otherwise you're going to have a bad time
 	void DestroyHud()
-	{
-		for (int i = 0; i < m_EditorHud.GetTemplateController().LeftContent.Count(); i++) {
-			if (m_EditorHud.GetTemplateController().LeftContent[i].GetLayoutRoot()) {
-				m_EditorHud.GetTemplateController().LeftContent[i].GetLayoutRoot().Unlink();
-			}
-			
-			//delete m_EditorHud.GetTemplateController().LeftContent[i];
-		}
-		
-		//m_EditorHud.GetTemplateController().LeftContent.Clear();				
+    {
+        if (!m_EditorHud) return;
+
+        // 1. Destroy Static UI Elements
+        if (EditorHud.CurrentMenu) {
+            delete EditorHud.CurrentMenu;
+            EditorHud.CurrentMenu = null;
+        }
+
+        if (EditorHud.CurrentDialog) {
+            EditorHud.CurrentDialog.CloseDialog(); 
+            EditorHud.CurrentDialog = null;
+        }
+
+        // 2. Force objects to unhook their UI listeners NOW.
+        // If we don't do this, clearing the HUD will delete the widgets, 
+        // but the Script Objects (ListItems) might receive events.
+        if (GetPlacedObjects()) {
+            foreach (int id, EditorObject obj : GetPlacedObjects()) {
+                if (obj) obj.CleanupUI(); 
+            }
+        }
+
+        if (GetDeletedObjects()) {
+            foreach (int id2, EditorDeletedObject delObj : GetDeletedObjects()) {
+                if (delObj) delObj.CleanupUI(); 
+            }
+        }
+
+        if (m_ObjectManager) {
+            array<EditorCameraTrack> tracks = m_ObjectManager.GetCameraTracks();
+            if (tracks) {
+                foreach (EditorCameraTrack track : tracks) {
+                    if (track) track.CleanupUI();
+                }
+            }
+        }
+
+        // 5. Clean up Controllers in HUD
+        if (m_EditorHud.GetTemplateController()) {
+            if (m_EditorHud.GetTemplateController().LeftContent)
+                m_EditorHud.GetTemplateController().LeftContent.Clear();
+            if (m_EditorHud.GetTemplateController().RightbarPlacedData)
+                m_EditorHud.GetTemplateController().RightbarPlacedData.Clear();
+            if (m_EditorHud.GetTemplateController().RightbarDeletionData)
+                m_EditorHud.GetTemplateController().RightbarDeletionData.Clear();
+            if (m_EditorHud.GetTemplateController().CameraTrackData)
+                m_EditorHud.GetTemplateController().CameraTrackData.Clear();
+        }
 		
 		delete m_EditorHud;
+        m_EditorHud = null;
+        m_EditorHudController = null;
 	}
 	
 	EditorHud ReloadHud() 
@@ -2827,7 +2893,10 @@ class Editor: Managed
 	{
 		GetStatistics().Save();
 		EditorSaveFile = string.Empty;	
-		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
+		if (m_EditorHud && m_EditorHud.GetTemplateController()) {
+			m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
+		}
+
 		m_ActionStack.Clear();
 		m_SessionCache.Clear();
 		m_ObjectManager.Clear();

@@ -7,12 +7,13 @@ class EditorExitCommand: EditorAsyncCommand
 			return;
 		}
 		
-		if (m_Editor) {
-			m_Editor.Clear();
-		}	
+		// !REMOVED: m_Editor.DestroyHud() and m_Editor.Clear()
+		// Cleanup is now handled by the Editor destructor called in OnMissionFinish.
 		
 		g_Game.ReportProgress("Exiting to main menu...");
-		g_Game.MainMenuLaunch();
+		
+        // Defer MainMenuLaunch to the CallQueue to allow the current script frame (button click event) to resolve clean before the world is destroyed.
+		GetGame().GetCallQueue(CALL_CATEGORY_GUI).Call(g_Game.MainMenuLaunch);
 	}
 	
 	override string GetName() 
