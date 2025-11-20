@@ -3,7 +3,6 @@ class EditorObject: EditorWorldObject
 	static ref map<Object, EditorObject> s_AllByObject = new map<Object, EditorObject>();
 	
 	protected ref EditorObjectData 			m_Data;
-	protected ref EditorObjectMapMarker		m_EditorObjectMapMarker;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
 	
@@ -129,7 +128,6 @@ class EditorObject: EditorWorldObject
 
 		delete m_EditorObjectWorldMarker; 
 		delete m_EditorPlacedListItem;
-		delete m_EditorObjectMapMarker;
 		
 		delete OnObjectSelected;
 		delete OnObjectDeselected;
@@ -499,15 +497,12 @@ class EditorObject: EditorWorldObject
 	void EnableMapMarker(bool enable) 
 	{
 		EditorLog.Trace("EditorObject::EnableMapMarker");
-		if (m_EditorObjectMapMarker)
-			delete m_EditorObjectMapMarker;
 		
 		if (!enable) {
 			return;
 		}
 		
-		m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
-		GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
+		//GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 	}
 		
 	void Show(bool show) 
@@ -521,12 +516,10 @@ class EditorObject: EditorWorldObject
 				HideBoundingBox();
 			}
 			
-			m_EditorObjectMapMarker.Show(true);
 			m_EditorObjectWorldMarker.Show(true);
 		} else {
 			m_Data.Flags |= EditorObjectFlags.HIDDEN;
 			GetWorldObject().ClearFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
-			m_EditorObjectMapMarker.Show(false);
 			m_EditorObjectWorldMarker.Show(false);
 		}
 
@@ -779,28 +772,13 @@ class EditorObject: EditorWorldObject
 		}
 		
 		Update();
-		
-		/*
-		for (int i = 0; i < 12; i++) {
-			if (m_BBoxLines[i]) {
-				m_BBoxLines[i].SetFlags(EntityFlags.VISIBLE, false);
-			}
-		}
-		
-		if (m_BBoxBase) {
-			m_BBoxBase.SetFlags(EntityFlags.VISIBLE, false);
-		}
-		
-		if (m_CenterLine) {
-			m_CenterLine.SetFlags(EntityFlags.VISIBLE, false);
-		}*/
 	}
 	
 	void HideBoundingBox()
 	{
 		for (int i = 0; i < 12; i++) {
 			if (m_BBoxLines[i]) {
-				m_BBoxLines[i].ClearFlags(EntityFlags.VISIBLE, false);
+				m_BBoxLines[i].Delete();
 			}
 		}
 	}
@@ -833,19 +811,12 @@ class EditorObject: EditorWorldObject
 	// Returns active Marker, either World or Map marker
 	// Can return null
 	EditorObjectMarker GetMarker()
-	{
-		//EditorLog.Trace("EditorObject::GetMarker");
-		
-		if (g_Editor.GetEditorHud().IsMapVisible()) {
-			return m_EditorObjectMapMarker;
-		}
-		
+	{	
 		return m_EditorObjectWorldMarker;
 	}
 	
 	EditorPlacedListItem GetListItem()
 	{
-		//EditorLog.Trace("EditorObject::GetListItem");
 		return m_EditorPlacedListItem;
 	}
 		
@@ -856,15 +827,9 @@ class EditorObject: EditorWorldObject
 		EditorObjectMarker marker = GetMarker();
 		if (IsLocked()) {
 			delete m_EditorObjectWorldMarker;
-			delete m_EditorObjectMapMarker;
 		} else {
 			if (!m_EditorObjectWorldMarker && IsWorldMarkerEnabled()) {
 				m_EditorObjectWorldMarker = new EditorObjectWorldMarker(this);
-			}
-			
-			if (!m_EditorObjectMapMarker && IsMapMarkerEnabled()) {
-				m_EditorObjectMapMarker = new EditorObjectMapMarker(this);
-				GetEditor().GetEditorHud().GetTemplateController().InsertMapMarker(m_EditorObjectMapMarker);
 			}
 		}
 						

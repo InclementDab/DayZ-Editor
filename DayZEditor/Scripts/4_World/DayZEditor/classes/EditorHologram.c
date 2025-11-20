@@ -2,7 +2,6 @@ class EditorHologram: EditorWorldObject
 {
 	protected EditorPlaceableItem		m_PlaceableItem;
 	protected Widget 					m_EditorMapMarkerWidget;
-	protected EditorObjectMapMarker 	m_EditorMapMarker;
 	protected MapWidget					m_MapWidget;
 			
 	void EditorHologram(EditorPlaceableItem placeable_item) 
