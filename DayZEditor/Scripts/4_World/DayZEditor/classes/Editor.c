@@ -299,7 +299,8 @@ class Editor: Managed
 	void ~Editor() 
 	{
 		m_IsDestroying = true;
-		g_Editor = null;
+
+		//!Removed `g_Editor = null;` , Cleanup OnMissionFinish
 		EditorLog.Trace("~Editor");
 		
 		// Fallback
@@ -2325,11 +2326,15 @@ class Editor: Managed
 		
 		editor_object.Uuid = uuid;
 		m_EditorObjectsByUuid[uuid] = editor_object;
-		EditorAction action = new EditorAction("Delete", "Create");
-		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-		
+
 		if (create_undo) {
+			EditorAction action = new EditorAction("Delete", "Create");
+            
+            // UNDO: Delete by ID
+            action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+            // REDO: Create using Data Snapshot
+            action.InsertRedoParameter(new Param1<EditorObjectData>(editor_object_data));
+            
 			InsertAction(action);
 		}
 		
@@ -2412,7 +2417,7 @@ class Editor: Managed
 				}
 				
 				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
-				action.InsertRedoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
+				action.InsertRedoParameter(new Param1<EditorObjectData>(editor_object_data)); 
 
 				object_set.Insert(m_EditorObjectsByUuid[uuid]);
 
@@ -2428,8 +2433,10 @@ class Editor: Managed
 			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 			if (!editor_object) continue;
 						
+			// UNDO: Delete by ID
 			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+			// REDO: Create using Data Snapshot
+			action.InsertRedoParameter(new Param1<EditorObjectData>(editor_object_data));
 
 			editor_object.Uuid = uuid;
 			m_EditorObjectsByUuid[uuid] = editor_object;
@@ -2465,14 +2472,16 @@ class Editor: Managed
 			DeselectObject(editor_object);
 		}
 		
-		EditorAction action = new EditorAction("Create", "Delete");
-		action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-		action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+        if (create_undo) {
+			EditorAction action = new EditorAction("Create", "Delete");
+            // UNDO: ID and current Position for undo deletion. 
+            action.InsertUndoParameter(new Param2<int, vector>(editor_object.GetID(), editor_object.GetPosition()));
+            // REDO: Pass only ID. 
+            action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
+            InsertAction(action);
+        }
+        
 		m_ObjectManager.DeleteObject(editor_object);
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
 		
 		if (GetGame().IsMultiplayer() && send_net_message) {
 			ScriptRPC rpc = new ScriptRPC();
@@ -2520,7 +2529,7 @@ class Editor: Managed
 					DeselectObject(editor_object);
 				}
 			
-				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+                action.InsertUndoParameter(new Param2<int, vector>(editor_object.GetID(), editor_object.GetPosition()));
 				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
 				count++;
@@ -2556,7 +2565,7 @@ class Editor: Managed
 					DeselectObject(editor_object);
 				}
 				
-				action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
+                action.InsertUndoParameter(new Param2<int, vector>(editor_object.GetID(), editor_object.GetPosition()));
 				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
 				count++;
@@ -3421,7 +3430,7 @@ class Editor: Managed
 		EditorCameraTrack camera_track = m_ObjectManager.CreateCameraTrack(camera_track_data);		
 		EditorAction action = new EditorAction("Delete", "Create");
 		action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
-		action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
+		action.InsertRedoParameter(new Param1<EditorObjectData>(camera_track_data));
 		
 		if (create_undo) {
 			InsertAction(action);
@@ -3433,7 +3442,7 @@ class Editor: Managed
 	void DeleteCameraTrack(EditorCameraTrack camera_track, bool create_undo = true)
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
-		action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
+		action.InsertUndoParameter(new Param2<int, vector>(camera_track.GetID(), camera_track.GetPosition()));
 		action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
 
 		if (!m_ObjectManager.DeleteCameraTrack(camera_track)) {
@@ -3449,7 +3458,7 @@ class Editor: Managed
 	{
 		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (auto camera_track: camera_tracks) {
-			action.InsertUndoParameter(new Param1<int>(camera_track.GetID()));
+			action.InsertUndoParameter(new Param2<int, vector>(camera_track.GetID(), camera_track.GetPosition()));
 			action.InsertRedoParameter(new Param1<int>(camera_track.GetID()));
 
 			m_ObjectManager.DeleteCameraTrack(camera_track);

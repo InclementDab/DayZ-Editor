@@ -85,9 +85,12 @@ modded class MissionGameplay
 	
 	override void OnMissionFinish()
 	{
+		if (g_Editor)
+		{
+			delete g_Editor;
+			g_Editor = null;
+		}
 		super.OnMissionFinish();
-		
-		delete g_Editor;
 	}
 	
 	override void OnMissionLoaded()

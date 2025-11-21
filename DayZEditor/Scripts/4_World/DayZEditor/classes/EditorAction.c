@@ -80,21 +80,62 @@ class EditorAction
 		RedoParameters.Insert(params);
 	}
 	
-	void Create(Param1<int> params)
+	void Create(Param params)
 	{
-		//EditorLog.Trace("EditorAction::Create %1", params.param1.ToString());
-		EditorObjectData data = GetEditor().GetSessionDataById(params.param1);
+		EditorObjectData data;
+		vector snapshotPosition = vector.Zero;
+		bool useSnapshotPosition = false;
+
+		// Case 1: Undo Delete (ID + Final Position)
+		Param2<int, vector> undoDeleteParams = Param2<int, vector>.Cast(params);
+		if (undoDeleteParams)
+		{
+			data = GetEditor().GetSessionDataById(undoDeleteParams.param1);
+			snapshotPosition = undoDeleteParams.param2;
+			useSnapshotPosition = true;
+		}
+		// Case 2: Redo Create (Full Data Snapshot)
+		else 
+		{
+			Param1<EditorObjectData> redoCreateParams = Param1<EditorObjectData>.Cast(params);
+			if (redoCreateParams)
+			{
+				data = redoCreateParams.param1;
+			}
+		}
+		
 		if (!data) {
 			EditorLog.Error("EditorAction::Create Data was null!");
 			return;
 		}
 		
+		// Prevent Duplicate Spawning if the ID already exists in the world
+		if (GetEditor().GetPlacedObjectById(data.GetID())) 
+		{
+			return;
+		}
+
+		// Temp override data's position with the snapshot from deletion
+		vector cachedPosition = data.Position;
+		if (useSnapshotPosition) 
+		{
+			data.Position = snapshotPosition;
+		}
+
+		// Respawn the object
 		GetEditor().CreateObject(data, false);
+
+		// Revert the data object for session cache
+		if (useSnapshotPosition) 
+		{
+			data.Position = cachedPosition;
+		}
 	}
 	
 	void Delete(Param1<int> params)
 	{
 		//EditorLog.Trace("EditorAction::Delete %1", params.param1.ToString());
+        if (!params) return;
 		EditorObject object = GetEditor().GetPlacedObjectById(params.param1);
 		if (!object) {
 			EditorLog.Error("EditorAction::Delete Object was null!");
