@@ -59,15 +59,17 @@ class EditorCameraDialog: EditorDialogBase
 		}*/
 		
 		m_CameraGroup = new GroupPrefab("Camera", m_EditorCamera, string.Empty);
-		m_CameraGroup.Insert(new SliderPrefab("FOV", m_EditorCamera, "FOV", 30, 165));
-		m_CameraGroup.Insert(new SliderPrefab("Gaussian Blur", m_EditorCamera, "Blur", 0, 1));
-		m_CameraGroup.Insert(new SliderPrefab("Near Plane", m_EditorCamera, "NearPlane",  0, 1));
-		m_CameraGroup.Insert(new SliderPrefab("DOF Distance", m_EditorCamera, "DOFDistance", 0, 500));
-		m_CameraGroup.Insert(new SliderPrefab("DOF Blur", m_EditorCamera, "DOFBlur", 0, 1));
-		m_CameraGroup.Insert(new SliderPrefab("Vignette", m_EditorCamera, "Vignette", 0, 1));
-		m_CameraGroup.Insert(new SliderPrefab("Sharpness", m_EditorCamera, "Sharpness", 0, 1));
-		m_CameraGroup.Insert(new SliderPrefab("Exposure", m_EditorCamera, "Exposure", 0, 3));
-		m_CameraGroup.Insert(new SliderPrefab("Smoothing", m_EditorCamera, "Smoothing", 0, 1));
+		m_CameraGroup.Insert(new SliderPrefab("FOV", m_EditorCamera, "FOV", 30, 165, 0.1));
+		m_CameraGroup.Insert(new SliderPrefab("Tilt", m_EditorCamera, "Tilt", -90, 90, 0.1));
+		m_CameraGroup.Insert(new SliderPrefab("View Distance", GetEditor().GetCameraSettings(), "ViewDistance", 120, 6000, 50.0));
+		m_CameraGroup.Insert(new SliderPrefab("Gaussian Blur", m_EditorCamera, "Blur", 0, 1, 0.001));
+		m_CameraGroup.Insert(new SliderPrefab("Near Plane", m_EditorCamera, "NearPlane", 0.01, 1, 0.001));
+		m_CameraGroup.Insert(new SliderPrefab("DOF Distance", m_EditorCamera, "DOFDistance", 0, 2000, 1.0));
+		m_CameraGroup.Insert(new SliderPrefab("DOF Blur", m_EditorCamera, "DOFBlur", 0, 0.1, 0.001));
+		m_CameraGroup.Insert(new SliderPrefab("Vignette", m_EditorCamera, "Vignette", 0, 1, 0.01));
+		m_CameraGroup.Insert(new SliderPrefab("Sharpness", m_EditorCamera, "Sharpness", 0, 1, 0.01));
+		m_CameraGroup.Insert(new SliderPrefab("Exposure", m_EditorCamera, "Exposure", 0, 3, 0.05));
+		m_CameraGroup.Insert(new SliderPrefab("Smoothing", m_EditorCamera, "Smoothing", 0, 1, 0.01));
 		m_CameraGroup.Open(OpenCameraGroup);
 				
 		m_ColorCorrectionGroup = new GroupPrefab("Filters", m_EditorCamera, string.Empty);
