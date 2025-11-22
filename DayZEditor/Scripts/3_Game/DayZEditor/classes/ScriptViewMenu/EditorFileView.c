@@ -1,18 +1,15 @@
 class EditorFileView: ScriptView
 {
 	protected string m_File;
-	protected ref ScriptCaller m_OnClicked, m_OnDoubleClicked;
 	protected bool m_IsDirectory;
 	protected float m_ClickTick;
 	
 	ImageWidget Icon;
 	TextWidget FileName, Extension;
 
-	void EditorFileView(string file, ScriptCaller on_click, ScriptCaller on_double_click, bool is_directory)
+	void EditorFileView(string file, bool is_directory)
 	{
 		m_File = file;
-		m_OnClicked = on_click;
-		m_OnDoubleClicked = on_double_click;
 		m_IsDirectory = is_directory;
 
 		string file_name = File.GetName(m_File);
@@ -42,17 +39,15 @@ class EditorFileView: ScriptView
 
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
-		if (m_OnClicked) {
-			m_OnClicked.Invoke(this, m_File);
-		}
+        EditorFileDialog parent_dialog = EditorFileDialog.Cast(GetParent());
+        if (!parent_dialog) return super.OnMouseButtonDown(w, x, y, button);
 		
 		if (GetGame().GetTickTime() < m_ClickTick + 0.3) {
-			if (m_OnDoubleClicked) {
-				m_OnDoubleClicked.Invoke(this, m_File);
-			}
+            GetGame().GameScript.CallFunctionParams( parent_dialog, "OnFileDoublePressed", null, new Param2<string, bool>(m_File, m_IsDirectory) );
 			m_ClickTick = 0;
 		} else {
 			m_ClickTick = GetGame().GetTickTime();
+            GetGame().GameScript.CallFunctionParams( parent_dialog, "OnFilePressed", null, new Param1<string>(m_File) );
 		}
 		
 		return super.OnMouseButtonDown(w, x, y, button);

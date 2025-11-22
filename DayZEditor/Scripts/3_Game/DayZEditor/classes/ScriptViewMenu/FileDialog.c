@@ -281,7 +281,9 @@ class EditorFileDialog: EditorModal
 		m_TemplateController.Files.Clear();
 		foreach (string sorted_file: all_loaded_files) {
 			bool is_folder = folders_temp.Find(sorted_file) != -1;
-			m_TemplateController.Files.Insert(new EditorFileView(sorted_file, ScriptCaller.Create(OnFilePressed), ScriptCaller.Create(OnFileDoublePressed), is_folder));
+            EditorFileView file_view = new EditorFileView(sorted_file, is_folder);
+            file_view.SetParent(this); 
+			m_TemplateController.Files.Insert(file_view);
 		}
 
 		array<string> directory_split = {};
@@ -308,25 +310,29 @@ class EditorFileDialog: EditorModal
 		PrintFormat("Loaded Directory %1, %2 folders, %3 files", m_CurrentDirectory, folders.Count(), files.Count());
 	}
 
-	protected void OnFilePressed(EditorFileView view, string file)
+	void OnFilePressed(string file)
 	{
 		for (int i = 0; i < m_TemplateController.Files.Count(); i++) {
-			 m_TemplateController.Files[i].GetLayoutRoot().SetColor(0xff24282e);
+             EditorFileView view = m_TemplateController.Files[i];
+             if (view) {
+                 if (view.GetFile() == file) {
+                    view.GetLayoutRoot().SetColor(0xff007acc); 
+                 } else {
+                    view.GetLayoutRoot().SetColor(0xff24282e);
+                 }
+             }
 		}
 		
 		if (File.GetExtension(file) != string.Empty) {
 			m_CurrentFile = file;
 			FileNameBox.SetText(File.GetName(m_CurrentFile));
 		}
-				
-		view.GetLayoutRoot().SetColor(0xff007acc);
 	}
 
-	protected void OnFileDoublePressed(EditorFileView view, string file)
+	void OnFileDoublePressed(string file, bool is_directory)
 	{
 		Print(2);
 		Print(file);
-		bool is_directory = view.IsDirectory();
 		if (is_directory) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetDirectory, 0, 0, file, true);
 		} else {
