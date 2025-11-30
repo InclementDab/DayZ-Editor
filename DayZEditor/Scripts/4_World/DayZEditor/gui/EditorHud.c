@@ -261,17 +261,17 @@ class EditorHud: ScriptView
 		m_TemplateController.NotifyPropertyChanged("FavoritesToggle");
 		
 		EditorCamera camera = m_Editor.GetCamera();
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", EditorCamera.FOV_MIN * Math.RAD2DEG, EditorCamera.FOV_MAX * Math.RAD2DEG));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("Tilt", camera, "Tilt", -90, 90));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("View Distance", GetEditor().GetCameraSettings(), "ViewDistance", EditorCamera.VIEW_DISTANCE_MIN, EditorCamera.VIEW_DISTANCE_MAX));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("Gaussian Blur", camera, "Blur", 0, 1));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("Near Plane", camera, "NearPlane",  0, 1));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Distance", camera, "DOFDistance", 0, 500));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Blur", camera, "DOFBlur", 0, 1));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("Vignette", camera, "Vignette", 0, 1));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("Sharpness", camera, "Sharpness", 0, 1));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("Exposure", camera, "Exposure", 0, 3));
-		m_TemplateController.CameraControls.Insert(new SliderPrefab("Smoothing", camera, "Smoothing", 0, 1));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("FOV", camera, "FOV", EditorCamera.FOV_MIN * Math.RAD2DEG, EditorCamera.FOV_MAX * Math.RAD2DEG, 0.1));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Tilt", camera, "Tilt", -90, 90, 0.1));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("View Distance", GetEditor().GetCameraSettings(), "ViewDistance", EditorCamera.VIEW_DISTANCE_MIN, EditorCamera.VIEW_DISTANCE_MAX, 50.0));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Gaussian Blur", camera, "Blur", 0, 1, 0.001));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Near Plane", camera, "NearPlane",  0.01, 1, 0.001));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Distance", camera, "DOFDistance", 0, 2000, 1.0));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("DOF Blur", camera, "DOFBlur", 0, 0.1, 0.001));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Vignette", camera, "Vignette", 0, 1, 0.01));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Sharpness", camera, "Sharpness", 0, 1, 0.01));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Exposure", camera, "Exposure", 0, 3, 0.05));
+		m_TemplateController.CameraControls.Insert(new SliderPrefab("Smoothing", camera, "Smoothing", 0, 1, 0.01));
 								
 		// Set up toolbars based on screen size
 		int screen_w, screen_h;
