@@ -184,8 +184,6 @@ class EditorFileDialog: EditorModal
 
 		ExtraSetting.Show(m_DialogSettings != 0 && (m_DialogMode == eDialogMode.SAVE || m_DialogMode == eDialogMode.EXPORT));
 		
-		m_TemplateController.Directories[0].GetLayoutRoot().SetColor(0xff007acc);
-
 		if (s_LastDirectory == string.Empty) {
 			s_LastDirectory = SystemPath.Combine(SystemPath.Saves(), "Editor");
 		}
@@ -312,6 +310,14 @@ class EditorFileDialog: EditorModal
 			m_DirectoryHistory.Insert(directory);
 			m_CurrentHistoryIndex = 0;
 		}
+		
+		for (j = 0; j < m_TemplateController.Directories.Count(); j++) {
+			if (m_CurrentDirectory.Contains(m_TemplateController.Directories[j].GetDirectory())) {
+				m_TemplateController.Directories[j].GetLayoutRoot().SetColor(0xff007acc);
+			} else {
+				m_TemplateController.Directories[j].GetLayoutRoot().SetColor(0xff24282e);
+			}
+		}
 				
 		PrintFormat("Loaded Directory %1, %2 folders, %3 files", m_CurrentDirectory, folders.Count(), files.Count());
 	}
@@ -337,8 +343,6 @@ class EditorFileDialog: EditorModal
 
 	void OnFileDoublePressed(string file, bool is_directory)
 	{
-		Print(2);
-		Print(file);
 		if (is_directory) {
 			GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetDirectory, 0, 0, file, true);
 		} else {
@@ -360,11 +364,6 @@ class EditorFileDialog: EditorModal
 
 	protected void OnDirectoryPressed(EditorDirectoryView view, string directory)
 	{
-		for (int i = 0; i < m_TemplateController.Directories.Count(); i++) {
-			 m_TemplateController.Directories[i].GetLayoutRoot().SetColor(0xff24282e);
-		}
-		
-		view.GetLayoutRoot().SetColor(0xff007acc);
 		GetGame().GetCallQueue(CALL_CATEGORY_GUI).CallLater(SetDirectory, 0, 0, directory, true);
 	}
 	

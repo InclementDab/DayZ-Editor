@@ -26,6 +26,11 @@ class EditorDirectoryView: ScriptView
 		return super.OnMouseButtonUp(w, x, y, button);
 	}
 
+	string GetDirectory()
+	{
+		return m_Directory;
+	}
+	
 	override string GetLayoutFile()
 	{
 		return "DayZEditor/GUI/layouts/dialogs/Directory.layout";
