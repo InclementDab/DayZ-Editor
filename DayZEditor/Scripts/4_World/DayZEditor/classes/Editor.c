@@ -1133,7 +1133,7 @@ class Editor: Managed
 				}
 			}
 		}
-		
+				
 		//	left click logic
 		if (left_click_input.LocalPress()) {
 #ifdef GIZMOS_ENABLED
@@ -1983,7 +1983,6 @@ class Editor: Managed
 	array<EditorObject> PlaceObject()
 	{
 		EditorLog.Trace("Editor::PlaceObject");
-		
 		// I hate all these exceptions but were dealing with vanilla UI bullshit
 		if (GetWidgetUnderCursor() && !GetWidgetUnderCursor().IsInherited(MapWidget) && GetWidgetUnderCursor().GetName() != "HudPanel" && GetWidgetUnderCursor().GetName() != "CursorIcons") {
 			return null;
@@ -1999,7 +1998,7 @@ class Editor: Managed
 			//We need it like this rn cos internal model classnames (e.g. TreeHard)	
 			EditorHologram editor_hologram;
 			if (!Class.CastTo(editor_hologram, placing_object)) {
-					continue;
+				continue;
 			}
 
 			Object entity = editor_hologram.GetWorldObject();

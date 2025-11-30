@@ -90,6 +90,8 @@ class EditorFileDialog: EditorModal
 		SystemPath.Mission()
 	};
 
+	static string s_LastDirectory;
+	
 	protected EditorFileDialogController m_TemplateController;
 	
 	protected eDialogMode m_DialogMode;
@@ -184,7 +186,11 @@ class EditorFileDialog: EditorModal
 		
 		m_TemplateController.Directories[0].GetLayoutRoot().SetColor(0xff007acc);
 
-		SetDirectory(SystemPath.Combine(SystemPath.Saves(), "Editor"));
+		if (s_LastDirectory == string.Empty) {
+			s_LastDirectory = SystemPath.Combine(SystemPath.Saves(), "Editor");
+		}
+		
+		SetDirectory(s_LastDirectory);
 		
 		if (m_DefaultFile) {
 			string extension = File.GetExtension(m_DefaultFile);
@@ -218,7 +224,6 @@ class EditorFileDialog: EditorModal
 		} else {
 			ExplorerBackImage.SetAlpha(1.0);
 		}
-
 	}
 
 	protected void SetDirectory(string directory, bool update_history = true)
@@ -233,6 +238,7 @@ class EditorFileDialog: EditorModal
 		}
 		
 		m_CurrentDirectory = SystemPath.Format(directory);
+		s_LastDirectory = m_CurrentDirectory;
 
 		array<ref Param2<string, string>> extensions = {};
 		m_FileType.GetValidExtensions(extensions);
