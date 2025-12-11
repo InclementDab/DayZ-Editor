@@ -13,6 +13,7 @@ class EditorEditMenu: EditorMenu
 		AddMenuCategory("#STR_EDITOR_TRANSFORM", EditorTransformModeMenu, Symbols.RIGHT_LEFT);
 		AddMenuDivider();
 		AddMenuButton(m_Editor.CommandManager[EditorCheckDuplicatesCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorCheckDeletedDuplicatesCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorScriptEditorCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorOptionsCommand]);
 	}

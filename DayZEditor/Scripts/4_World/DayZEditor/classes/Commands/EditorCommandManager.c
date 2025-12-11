@@ -113,6 +113,7 @@ class EditorCommandManager
 		RegisterCommand(EditorSearchCommand);
 		RegisterCommand(EditorSearchObjectCommand);
 		RegisterCommand(EditorCheckDuplicatesCommand);
+		RegisterCommand(EditorCheckDeletedDuplicatesCommand); 
 	
 		RegisterCommand(EditorImportFromDZE);
 		RegisterCommand(EditorImportFromInit);
