@@ -229,6 +229,8 @@ class EditorCamera_V2: EditorCamera
 	protected vector m_LinearVelocity, m_AngularVelocity;
 	protected vector m_Impulse;
 	
+	const float CAMERA_COLLISION_RADIUS = 0.2;
+	
 	void EditorCamera_V2()
 	{		
 		Speed = m_EditorCameraSettings.Speed;
@@ -343,7 +345,37 @@ class EditorCamera_V2: EditorCamera
 		m_LinearVelocity = m_LinearVelocity + transform[1] * movement[1] * speed * 2;
 		m_LinearVelocity = m_LinearVelocity + transform[2] * movement[2] * speed;
 
-		transform[3] = transform[3] + (m_LinearVelocity * timeSlice);
+		// Calculate intended new position
+		vector next_position = transform[3] + (m_LinearVelocity * timeSlice);
+
+		// CameraCollision Logic
+		if (GetEditor().CameraCollision)
+        {
+            // Only check if we are actually moving
+            if (m_LinearVelocity.LengthSq() > 0.0001)
+            {
+                vector hitPos, hitNormal;
+                Object hitObj;
+                float hitFraction;
+                
+                // Collide with 
+                int layers = PhxInteractionLayers.TERRAIN | PhxInteractionLayers.BUILDING | PhxInteractionLayers.ROADWAY | PhxInteractionLayers.FENCE;
+                
+                // Cast a sphere 
+                bool hit = DayZPhysics.SphereCastBullet( transform[3], next_position, CAMERA_COLLISION_RADIUS, layers, this, hitObj, hitPos, hitNormal, hitFraction );
+
+                if (hit) 
+                {
+                    // If we hit, stop exactly at the hit point + a tiny offset 
+                    next_position = hitPos + (hitNormal * 0.1);
+                    
+                    // Kill momentum so we don't slide/bounce against the wall
+                    m_LinearVelocity = vector.Zero;
+                }
+            }
+        }
+
+		transform[3] = next_position;
 
 		if (!m_EditorCameraSettings.AllowUnderEarth) {
 			transform[3][1] = Math.Max(GetGame().SurfaceY(transform[3][0], transform[3][2]) + GetNearPlane() * 2, transform[3][1]);

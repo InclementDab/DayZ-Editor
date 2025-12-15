@@ -122,6 +122,7 @@ class Editor: Managed
 	bool 										CollisionMode;
 	bool 										LightningMode;
 	bool 										GridMode;
+	bool 										CameraCollision;
 	
 	ref EditorEnvironment UserEnvironment;
 	ref EditorDragHandler DragHandler;
