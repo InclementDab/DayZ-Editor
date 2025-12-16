@@ -1050,6 +1050,11 @@ class EditorObjectController: Managed
 				m_EditorObject.SetHealth(Health);
 				break;
 			}
+			
+			case "UsePhysics": {
+				m_EditorObject.SetPhysicsEnabled(UsePhysics);
+				break;
+			}
 		}
 	}
 }

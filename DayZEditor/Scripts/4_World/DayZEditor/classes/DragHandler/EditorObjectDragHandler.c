@@ -148,22 +148,21 @@ class EditorObjectDragHandler: EditorDragHandler
 			rotation_source_pos = ProjectToGround(transform);
 		}
 
-		vector up_dir = vector.Up;
-		//if (GetEditor().GetSettings().AltMoveMode) {
-		//	up_dir = transform[1];
-		//}
-		
+		vector up_dir = vector.Up;		
+		float distance_to_ground = 0;
 		if (GetEditor().MagnetMode) {
 			up_dir = GetGame().SurfaceGetNormal(rotation_source_pos[0], rotation_source_pos[2]);		
 		}
 
-		//up_dir.Normalize();
-
-		if (GetEditor().GroundMode) {
-			icon_position = transform[3] - transform[1].Normalized() * vector.Distance(rotation_source_pos, transform[3]);
+		up_dir.Normalize();
+		Ray downward_ray = new Ray(transform[3], -up_dir);
+		if (GetEditor().GroundMode && cursor_raycast) {			
+			Raycast downward_raycast = downward_ray.PerformRaycastRV(target.GetWorldObject(), null, 0, 1000, ObjIntersect.View, true);
+			distance_to_ground = downward_raycast.Length();
+			//icon_position = transform[3] - vector.Up * vector.Distance(rotation_source_pos, transform[3]);
 
 			// always use transform[1] because GetBottomCenter is doing the opposite of this
-			cursor_pos = cursor_pos + transform[1].Normalized() * vector.Distance(rotation_source_pos, transform[3]);
+			//cursor_pos = cursor_pos + vector.Up * vector.Distance(rotation_source_pos, transform[3]);
 		}
 								
 		// Handle Z-Only motion
@@ -187,7 +186,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		
 		// Handle XY Rotation
 		else if (GetEditor().IsShiftDown()) {
-			Plane3D xy_plane = new Plane3D(up_dir, icon_position);
+			Plane3D xy_plane = new Plane3D(transform[1], icon_position);
 			vector xy_intersect = xy_plane.Intersect(cursor_ray);
 			if (vector.Distance(icon_position, xy_intersect) > 0.001) {
 				vector cursor_intersect_dir = vector.Direction(icon_position, xy_intersect);
@@ -197,8 +196,8 @@ class EditorObjectDragHandler: EditorDragHandler
 
 				vector cursor_dir_mat[4];
 				cursor_intersect_dir.Normalize();
-				if (cursor_intersect_dir.Length() > 0 && Math.AbsFloat(vector.Dot(cursor_intersect_dir, up_dir)) != 1) {
-					Math3D.DirectionAndUpMatrix(cursor_intersect_dir, up_dir, cursor_dir_mat);
+				if (cursor_intersect_dir.Length() > 0 && Math.AbsFloat(vector.Dot(cursor_intersect_dir, transform[1])) != 1) {
+					Math3D.DirectionAndUpMatrix(cursor_intersect_dir, transform[1], cursor_dir_mat);
 					Math3D.MatrixOrthogonalize3(cursor_dir_mat);
 
 					//cursor_dir_mat[3] = icon_position.InvMultiply4(transform) + transform[3];
@@ -221,10 +220,13 @@ class EditorObjectDragHandler: EditorDragHandler
 			if (GetEditor().MagnetMode) {
 				vector aside_new = transform[0] * up_dir;			
 				Math3D.DirectionAndUpMatrix(aside_new, up_dir, transform_new);
-			//	Math3D.MatrixOrthogonalize4(transform_new);
 				Math3D.MatrixMultiply3(scale_matrix, transform_new, transform_new);
 			} else {
 				target.GetTransform(transform_new);
+			}
+			
+			if (GetEditor().GroundMode) {
+				cursor_pos = cursor_pos + up_dir * distance_to_ground;
 			}
 
 			transform_new[3] = cursor_pos;

@@ -99,7 +99,7 @@ class EditorDragHandler: Managed
 	{
 		vector ground, ground_dir; 
 		int component;
-		DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, ground, ground_dir, component, null, null, null, false, true);
+		DayZPhysics.RaycastRV(transform[3], transform[3] + vector.Up * -1000, ground, ground_dir, component, null, null, null, false, true);
 		return ground;
 	}
 

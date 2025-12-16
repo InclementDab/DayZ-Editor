@@ -64,17 +64,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 		
-		// now get a more accurate position for the visual representation since we've determined this will be drawn
-		// Should the position be raycasted on the ground, or locked to the object
-		if (!m_Editor.GroundMode) {
-			position = m_EditorObject.GetBottomCenter();
-		} else {
-			vector object_transform[4];
-			m_EditorObject.GetTransform(object_transform);
-			vector ground_dir; int component;
-			DayZPhysics.RaycastRV(object_transform[3], object_transform[3] + object_transform[1] * -1000, position, ground_dir, component, null, null, m_EditorObject.GetWorldObject(), false, true); // set to ground only
-		}
-		
+		position = m_EditorObject.GetBottomCenter();
 		screen_pos = GetGame().GetScreenPos(position);
 		if (m_MapWidget.IsVisible()) {
 			screen_pos = m_MapWidget.MapToScreen(position);
