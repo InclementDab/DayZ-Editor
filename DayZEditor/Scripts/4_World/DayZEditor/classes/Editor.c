@@ -494,7 +494,7 @@ class Editor: Managed
 		//}
 
 		if (!camera_raycast) {
-			camera_raycast = source_ray.PerformRaycastRVEX(0, distance, ObjIntersectFire, { ignore }, ground_only);
+			camera_raycast = source_ray.PerformRaycastRVEX(0, distance, ObjIntersectGeom, { ignore }, ground_only);
 		}
 		
 		return camera_raycast;
@@ -502,7 +502,7 @@ class Editor: Managed
 	
 	protected Raycast PerformRaycastEx(notnull Ray source_ray, array<Object> ignores, float distance, bool ground_only)
 	{
-		return source_ray.PerformRaycastRVEX(0, distance, ObjIntersectFire, ignores, ground_only);
+		return source_ray.PerformRaycastRVEX(0, distance, ObjIntersectGeom, ignores, ground_only);
 	}
 	
 	bool IsMapActive()
@@ -859,6 +859,10 @@ class Editor: Managed
 
 		if (IsRunningCameraTrack()) {
 			ProcessCameraTrack(timeslice);
+		}
+		
+		if (IsDragging()) {
+			GetDayZGame().ClearTooltip();
 		}
 	}
 	

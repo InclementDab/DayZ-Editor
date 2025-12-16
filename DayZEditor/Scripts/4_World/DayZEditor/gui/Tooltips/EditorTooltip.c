@@ -25,6 +25,10 @@ class EditorTooltip: ScriptView
 	
 	static EditorTooltip CreateOnButton(string text, Widget button, TooltipPositions position, string shortcut_text = "")
 	{
+		if (GetEditor().IsDragging()) {
+			return null;
+		}
+		
 		float pos_x, pos_y;
 		float b_x, b_y, b_w, b_h;
 		button.GetScreenPos(b_x, b_y);

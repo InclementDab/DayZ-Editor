@@ -134,8 +134,14 @@ class EditorObjectDragHandler: EditorDragHandler
 		ignored_objects.InsertAll(all_object_instances);
 		ignored_objects.Insert(GetEditor().GetPlayer());
 
-		Ray cursor_ray = GetEditor().GetCursorRay();		
-		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(ignored_objects, GetEditor().GroundMode);
+		Ray cursor_ray = GetEditor().GetCursorRay();				
+		int interaction_layers = -1;
+		if (GetEditor().GroundMode) {
+			interaction_layers &= PhxInteractionLayers.TERRAIN;
+		}
+		
+		Raycast cursor_raycast = cursor_ray.PerformRaycastMulti(ignored_objects, GetEditor().GetCamera().GetSettings().ViewDistance / 2, interaction_layers);
+		
 		vector cursor_pos = cursor_ray.GetPoint(10.0);
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;
@@ -151,29 +157,27 @@ class EditorObjectDragHandler: EditorDragHandler
 		vector up_dir = vector.Up;		
 		float distance_to_ground = 0;
 		if (GetEditor().MagnetMode) {
-			up_dir = GetGame().SurfaceGetNormal(rotation_source_pos[0], rotation_source_pos[2]);		
+			up_dir = cursor_raycast.Bounce.Direction;
 		}
 
 		up_dir.Normalize();
 		Ray downward_ray = new Ray(transform[3], -up_dir);
 		if (GetEditor().GroundMode && cursor_raycast) {			
 			Raycast downward_raycast = downward_ray.PerformRaycastRV(target.GetWorldObject(), null, 0, 1000, ObjIntersect.View, true);
-			distance_to_ground = downward_raycast.Length();
-			//icon_position = transform[3] - vector.Up * vector.Distance(rotation_source_pos, transform[3]);
-
-			// always use transform[1] because GetBottomCenter is doing the opposite of this
-			//cursor_pos = cursor_pos + vector.Up * vector.Distance(rotation_source_pos, transform[3]);
+			if (downward_raycast) {
+				distance_to_ground = downward_raycast.Length();
+			}
 		}
 								
 		// Handle Z-Only motion
 		if (KeyState(KeyCode.KC_LMENU)) {			
 			// This should always be ortho			
-			vector forward_plane = up_dir * camera_transform[0];
+			vector forward_plane = transform[1] * camera_transform[0];
 			Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
 			vector intersect = z_plane.Intersect(cursor_ray);
 			
 			vector up_dir_matrix[4];
-			Math3D.DirectionAndUpMatrix(forward_plane, up_dir, up_dir_matrix);
+			Math3D.DirectionAndUpMatrix(forward_plane, transform[1], up_dir_matrix);
 			Math3D.MatrixOrthogonalize4(up_dir_matrix);
 			up_dir_matrix[3] = transform[3];
 			vector local_intersect = intersect.InvMultiply4(up_dir_matrix);
@@ -211,6 +215,10 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Plane placement
 		else if (GetEditor().IsCtrlDown()) {
 			Plane3D camera_plane = new Plane3D(camera_transform[2], transform[3]);
+			
+#ifdef DIAG_DEVELOPER
+			camera_plane.Debug();
+#endif
 			vector camera_plane_intersect = camera_plane.Intersect(cursor_ray);			
 			transform[3] = camera_plane_intersect;
 		}
