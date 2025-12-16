@@ -43,11 +43,11 @@ class EditorFileView: ScriptView
         if (!parent_dialog) return super.OnMouseButtonDown(w, x, y, button);
 		
 		if (GetGame().GetTickTime() < m_ClickTick + 0.3) {
-            GetGame().GameScript.CallFunctionParams( parent_dialog, "OnFileDoublePressed", null, new Param2<string, bool>(m_File, m_IsDirectory) );
+			parent_dialog.OnFileDoublePressed(m_File, m_IsDirectory);
 			m_ClickTick = 0;
 		} else {
 			m_ClickTick = GetGame().GetTickTime();
-            GetGame().GameScript.CallFunctionParams( parent_dialog, "OnFilePressed", null, new Param1<string>(m_File) );
+			parent_dialog.OnFilePressed(m_File);
 		}
 		
 		return super.OnMouseButtonDown(w, x, y, button);

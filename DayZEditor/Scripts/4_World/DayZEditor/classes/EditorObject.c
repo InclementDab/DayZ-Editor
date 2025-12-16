@@ -318,9 +318,11 @@ class EditorObject: EditorWorldObject
 		object_data.Locked = m_Data.Locked;
 		object_data.Flags = m_Data.Flags;
 		
+				
 		// Copy parameters
-		foreach (string parameter_name, SerializableParam parameter: m_Data.Parameters) {
-			object_data.Parameters[parameter_name] = parameter;
+		SerializedBuilding serial_building = SerializedBuilding.Cast(m_WorldObject);
+		if (serial_building) {
+			serial_building.Write(object_data.Parameters);
 		}
 		
 		return object_data;
