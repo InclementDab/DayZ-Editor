@@ -4,6 +4,8 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	protected ref array<EditorObject> m_EditorObjects = {};
 	protected ref EditorMultiObjectCommandController m_EditorMultiObjectCommandController;
 	protected EditorObject m_EditorObject;
+	
+	protected EditorObjectController m_CurrentController;
 			
 	void EditorObjectPropertiesDialog(string title, notnull array<EditorObject> editor_objects)
 	{
@@ -19,6 +21,15 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	void ~EditorObjectPropertiesDialog()
 	{
+		// Clear and reset the controllers event property changed since the dialog doesnt need to close nessicarily	
+		if (m_CurrentController && m_CurrentController.Event_OnPropertyChanged.Count(OnPropertyChanged)) {
+			m_CurrentController.Event_OnPropertyChanged.Remove(OnPropertyChanged);
+		}
+		
+		if (m_EditorObject) {
+			GetEditor().CreateCheckpoint(m_EditorObject);
+		}
+		
 		// Ensures full persistence update when closing the properties dialog
 		//TODO 1: Per tick update.
 		//TODO 2: Only update changed data.
@@ -62,10 +73,21 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		SetMultipleEditorObjects(m_EditorObjects);
 	}
+	
+	protected void OnPropertyChanged(string property_name)
+	{
+	}
 			
 	void SetMultipleEditorObjects(array<EditorObject> editor_objects)
 	{
-		m_EditorMultiObjectCommandController = new EditorMultiObjectCommandController(editor_objects);
+		// Clear and reset the controllers event property changed since the dialog doesnt need to close nessicarily	
+		if (m_CurrentController && m_CurrentController.Event_OnPropertyChanged.Count(OnPropertyChanged)) {
+			m_CurrentController.Event_OnPropertyChanged.Remove(OnPropertyChanged);
+		}
+		
+		m_EditorMultiObjectCommandController = new EditorMultiObjectCommandController(m_EditorObject, editor_objects);
+		m_CurrentController = m_EditorMultiObjectCommandController;
+		m_CurrentController.Event_OnPropertyChanged.Insert(OnPropertyChanged);
 		
 		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", m_EditorMultiObjectCommandController, string.Empty);
 		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", m_EditorMultiObjectCommandController, "Show"));
@@ -88,10 +110,19 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 	
 	// This function is a mess
 	void SetEditorObject(EditorObject editor_object)
-	{		
-		m_EditorObject = editor_object;
+	{	
+		// Clear and reset the controllers event property changed since the dialog doesnt need to close nessicarily	
+		if (m_CurrentController && m_CurrentController.Event_OnPropertyChanged.Count(OnPropertyChanged)) {
+			m_CurrentController.Event_OnPropertyChanged.Remove(OnPropertyChanged);
+		}
 		
-		EditorObjectController controller = m_EditorObject.GetController();
+		if (m_EditorObject && m_EditorObject != editor_object) {
+			GetEditor().CreateCheckpoint(m_EditorObject);
+		}
+		
+		m_EditorObject = editor_object;
+		m_CurrentController = m_EditorObject.GetController();
+		m_CurrentController.Event_OnPropertyChanged.Insert(OnPropertyChanged);
 						
 		// If network light
 		//if (NetworkLightBase.Cast(m_EditorObject.GetWorldObject())) {
@@ -99,11 +130,11 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		//}
 		
 		GroupPrefab general_group = new GroupPrefab("#STR_EDITOR_GENERAL", this, string.Empty);
-		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", controller, "Show"));
-		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", controller, "Name"));
-		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", controller, "Position", 3));
-		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", controller, "Orientation", 2));
-		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", controller, "Scale", 0.01));
+		general_group.Insert(new CheckBoxPrefab("#STR_EDITOR_SHOW", m_CurrentController, "Show"));
+		general_group.Insert(new EditBoxPrefab("#STR_EDITOR_NAME", m_CurrentController, "Name"));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_POSITION", m_CurrentController, "Position", 3));
+		general_group.Insert(new VectorPrefab("#STR_EDITOR_ORIENTATION", m_CurrentController, "Orientation", 2));
+		general_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_SCALE", m_CurrentController, "Scale", 0.01));
 
 		/*
 		if (editor_object.GetWorldObject().IsInherited(EditorLootPoint)) {
@@ -190,14 +221,14 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", editor_object, string.Empty);
 		if (editor_object.GetWorldObject().HasDamageSystem()) {
-			object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", controller, "Health", 1, 0, editor_object.GetWorldObject().GetMaxHealth()));
+			//object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", m_CurrentController, "Health", 1, 0, editor_object.GetWorldObject().GetMaxHealth()));
 		}
 		
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", controller, "EditorOnly"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", controller, "Simulate"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", controller, "Locked"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", controller, "UsePhysics"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", controller, "AllowDamage"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", m_CurrentController, "EditorOnly"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", m_CurrentController, "Simulate"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", m_CurrentController, "Locked"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_CurrentController, "UsePhysics"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", m_CurrentController, "AllowDamage"));
 		//object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_COLLISION", editor_object, "Collision"));
 		string expansion_check = "ExpansionMarketModule";
 		if (expansion_check.ToType() && editor_object.GetWorldObject().IsInherited(EntityAI)) {

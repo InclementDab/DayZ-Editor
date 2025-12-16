@@ -6,14 +6,11 @@ class EditorShowCommand: EditorCommand
 		
 		EditorAction hide_action = new EditorAction("Unshow", "Show");
 		EditorObjectMap selected_objects = m_Editor.GetSelectedObjects();
+		GetEditor().CreateCheckpoint(selected_objects);
 		foreach (EditorObject selected_object: selected_objects) {		
 			selected_object.Show(true);
-			
-			hide_action.InsertUndoParameter(new Param1<int>(selected_object.GetID()));
-			hide_action.InsertRedoParameter(new Param1<int>(selected_object.GetID()));
 		}
 		
-		m_Editor.InsertAction(hide_action);
 		return true;
 	}
 	

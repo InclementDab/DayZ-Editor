@@ -1,3 +1,4 @@
+static int EditorObjectId = 0;
 class EditorObject: EditorWorldObject
 {
 	static ref map<Object, EditorObject> s_AllByObject = new map<Object, EditorObject>();
@@ -15,6 +16,7 @@ class EditorObject: EditorWorldObject
 		
 	protected bool m_IsSelected;
 	
+	int Id = EditorObjectId++;
 	string Uuid;
 	bool IsBeingDragged;
 			
@@ -24,6 +26,10 @@ class EditorObject: EditorWorldObject
 	ref ScriptInvoker OnChanged = new ScriptInvoker();
 	
 	protected int m_LowBits, m_HighBits;
+	
+	protected bool m_IsPhysicsEnabled;
+	
+	ref EditorObjectController m_Controller;
 		
 	void EditorObject(notnull EditorObjectData data)
 	{
@@ -158,6 +164,11 @@ class EditorObject: EditorWorldObject
 		}
 #endif
 	}
+	
+	void CreateSnapshot()
+	{
+		GetEditor().CreateCheckpoint(this);
+	}
 		
 	void SetDisplayName(string display_name) 
 	{
@@ -175,12 +186,12 @@ class EditorObject: EditorWorldObject
 	
 	string GetType() 
 	{
-		return m_Data.Type; 
+		return m_Data.Type;
 	}
 	
 	int GetID() 
 	{
-		return m_Data.GetID(); 
+		return Id;
 	}
 
 	EditorObjectFlags GetFlags() 
@@ -555,25 +566,32 @@ class EditorObject: EditorWorldObject
 
 	void SetPhysicsEnabled(bool physics)
 	{
-		if (!PlayerBase.Cast(GetWorldObject())) {
-			if (GetWorldObject()) {
-				if (physics) {
-					GetWorldObject().CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
-					GetWorldObject().SetDynamicPhysicsLifeTime(-1);
-					dBodySetMass(GetWorldObject(), 100);
-				} else {
-					GetWorldObject().SetDynamicPhysicsLifeTime(0.001);
-				}
-			}
-
-			//m_Data.Physics = physics;
-			OnChanged.Invoke();
+		if (!m_WorldObject || m_WorldObject.IsMan()) {
+			return;
 		}
+		
+		if (physics) {
+			m_WorldObject.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+			m_WorldObject.SetDynamicPhysicsLifeTime(-1);
+			dBodySetMass(m_WorldObject, 100);
+		} else {
+			m_WorldObject.SetDynamicPhysicsLifeTime(0.001);
+		}
+		
+		m_IsPhysicsEnabled = physics;
+		OnChanged.Invoke();
+	}
+	
+	bool IsPhysicsEnabled()
+	{
+		return m_IsPhysicsEnabled;
 	}
 	
 	void SetHealth(float health)
 	{
-		GetWorldObject().SetHealth("GlobalHealth", "Health", health);
+		if (m_WorldObject.HasDamageSystem()) {
+			m_WorldObject.SetHealth("GlobalHealth", "Health", health);
+		}
 	}
 	
 	float GetHealth()
@@ -945,16 +963,14 @@ class EditorObject: EditorWorldObject
 		
 		DeleteFile(file_name);	
 	}
-	
-	protected ref EditorObjectController m_Controller;
-	
+		
 	EditorObjectController GetController()
 	{
 		if (!m_Controller) {
-			m_Controller = new EditorObjectController();
+			m_Controller = new EditorObjectController(this);
 		}
 		
-		m_Controller.Update(this);
+		m_Controller.Update();
 		return m_Controller;
 	}
 }
@@ -963,14 +979,17 @@ class EditorObjectController: Managed
 {
 	protected EditorObject m_EditorObject;
 	
-	bool Show = true;
-	string Name;
-	vector Position, DeltaPosition;
-	vector Orientation, DeltaOrientation;
-	protected ref map<Object, vector> OriginalPositions = new map<Object, vector>();
-	protected ref map<Object, vector> OriginalOrientations = new map<Object, vector>();
-	float Scale = 1.0;
+	ref ScriptInvoker Event_OnPropertyChanged = new ScriptInvoker();
 	
+	int Id;
+	bool Show = true;
+	string Type;
+	EditorObjectFlags Flags;
+	bool Selected;
+	string Name;
+	vector Position;
+	vector Orientation;
+	float Scale = 1.0;
 	float Health = 100;
 	bool Locked;
 	bool UsePhysics;
@@ -980,10 +999,18 @@ class EditorObjectController: Managed
 	
 	string ExpansionTraderType;
 	
-	void Update(notnull EditorObject editor_object)
+	void EditorObjectController(EditorObject editor_object)
 	{
 		m_EditorObject = editor_object;
-		
+	}
+	
+	void Update()
+	{		
+		Id = m_EditorObject.GetID();
+		// todo: static p3d?
+		Type = m_EditorObject.GetType();
+		Flags = m_EditorObject.GetFlags();
+		Selected = m_EditorObject.IsSelected();
 		Show = m_EditorObject.IsVisible();
 		Name = m_EditorObject.GetDisplayName();
 		Position = m_EditorObject.GetPosition();
@@ -999,9 +1026,28 @@ class EditorObjectController: Managed
 			ExpansionTraderType = SerializableParam1<string>.Cast(m_EditorObject.GetData().Parameters["ExpansionTraderType"]).param1;
 		}
 	}
+
+	void Send()
+    {
+		m_EditorObject.Id = Id;
+		m_EditorObject.Show(true);
+		m_EditorObject.SetDisplayName(Name);
+		Print(Position);
+		m_EditorObject.SetPosition(Position);
+		m_EditorObject.SetOrientation(Orientation);
+		m_EditorObject.SetScale(Scale);
+		m_EditorObject.Lock(Locked);
+		m_EditorObject.SetAllowDamage(AllowDamage);
+		m_EditorObject.SetIsEditorOnly(EditorOnly);
+		m_EditorObject.SetHealth(Health);
+		m_EditorObject.SetPhysicsEnabled(UsePhysics);
+		m_EditorObject.Update();
+    }
 	
 	void PropertyChanged(string property_name)
 	{
+		Event_OnPropertyChanged.Invoke(property_name);
+		
 		switch (property_name) {
 			case "Show": {
 				m_EditorObject.Show(Show);
@@ -1056,5 +1102,68 @@ class EditorObjectController: Managed
 				break;
 			}
 		}
+	}
+	
+	void Serialize(Serializer serializer)
+	{
+		serializer.Write(Id);		
+		serializer.Write(Type);
+		serializer.Write(Flags);
+		serializer.Write(Selected);
+		serializer.Write(Show);
+		serializer.Write(Name);
+		serializer.Write(Position);
+		serializer.Write(Orientation);
+		serializer.Write(Scale);
+		serializer.Write(Health);
+		serializer.Write(Locked);
+		serializer.Write(UsePhysics);
+		serializer.Write(AllowDamage);
+		serializer.Write(Collision);
+		serializer.Write(EditorOnly);
+	}
+	
+	void Deserialize(Serializer serializer)
+	{
+		serializer.Read(Id);
+		serializer.Read(Type);
+		serializer.Read(Flags);
+		serializer.Read(Selected);
+		serializer.Read(Show);
+		serializer.Read(Name);
+		serializer.Read(Position);
+		serializer.Read(Orientation);
+		serializer.Read(Scale);
+		serializer.Read(Health);
+		serializer.Read(Locked);
+		serializer.Read(UsePhysics);
+		serializer.Read(AllowDamage);
+		serializer.Read(Collision);
+		serializer.Read(EditorOnly);
+	}
+		
+	// Well, sort of
+	static EditorObject CreateFromSerializer(Serializer serializer)
+	{		
+		EditorObjectController controller = new EditorObjectController(null);
+		controller.Deserialize(serializer);
+				
+		EditorObject editor_object = GetEditor().GetObjectManager().GetPlacedObjectById(controller.Id);		
+		PrintFormat("Creating form serializer " + controller.Id);
+		if (!editor_object) {
+			EditorObjectData data = EditorObjectData.Create(controller.Type, controller.Position, controller.Orientation, controller.Scale, controller.Flags);
+			editor_object = new EditorObject(data);
+		}
+		
+		editor_object.m_Controller = controller;
+		controller.m_EditorObject = editor_object;
+		controller.Send();
+		
+		if (!GetEditor().GetObjectManager().RegisterEditorObject(editor_object)) {
+			ErrorEx("Failed to register editor object on deserialization process");
+			return null;
+		}
+				
+		return editor_object;
 	}
 }

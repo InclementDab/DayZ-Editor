@@ -2,7 +2,6 @@ class EditorDragHandler: Managed
 {
 	protected EditorObject m_Target;
 	protected ref array<EditorObject> m_AdditionalDragTargets = {};
-	protected ref EditorAction m_RewindAction;
 	protected bool m_IsDragging;
 	protected ref map<EditorObject, ref array<vector>> m_LocalTransformsToTarget = new map<EditorObject, ref array<vector>>();
 	
@@ -13,17 +12,12 @@ class EditorDragHandler: Managed
 			m_AdditionalDragTargets = additional_targets;
 		}
 
-		m_RewindAction = new EditorAction("SetTransform", "SetTransform");
-		m_RewindAction.InsertUndoParameter(m_Target.GetTransformArray());
-
 		vector transform_without_scale[4];
 		m_Target.GetTransform(transform_without_scale);
 		Math3D.MatrixOrthogonalize4(transform_without_scale);
 		
 		foreach (EditorObject selected_object: m_AdditionalDragTargets) {
-			if (selected_object != m_Target) {
-				m_RewindAction.InsertUndoParameter(selected_object.GetTransformArray());
-				
+			if (selected_object != m_Target) {				
 				vector additional_drag_target_mat[4];
 				selected_object.GetWorldObject().GetTransform(additional_drag_target_mat);
 				
@@ -45,6 +39,13 @@ class EditorDragHandler: Managed
 			
 			selected_object.IsBeingDragged = true;
 		}
+		
+		array<EditorObject> undo_targets = { m_Target };
+		foreach (EditorObject selected_object2: m_AdditionalDragTargets) {			
+			undo_targets.Insert(selected_object2);
+		}
+		
+		GetEditor().CreateCheckpoint(undo_targets);
 
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Insert(_OnDragging);
 		
@@ -55,17 +56,16 @@ class EditorDragHandler: Managed
 	{
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_OnDragging);
 
-		m_RewindAction.InsertRedoParameter(m_Target.GetTransformArray());
+		array<EditorObject> undo_targets = { m_Target };
 		foreach (EditorObject selected_object: m_AdditionalDragTargets) {
-			if (selected_object != m_Target) {
-				m_RewindAction.InsertRedoParameter(selected_object.GetTransformArray());
-			}
-			
 			selected_object.Update();
 			selected_object.IsBeingDragged = false;
+			
+			undo_targets.Insert(selected_object);
 		}
-		GetEditor().InsertAction(m_RewindAction);
 		
+		GetEditor().CreateCheckpoint(undo_targets);
+				
 		m_Target = null;
 		m_AdditionalDragTargets = {};
 	}

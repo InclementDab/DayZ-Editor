@@ -2,7 +2,7 @@ static int EditorObjectDataId;
 modded class EditorObjectData
 {
 	[NonSerialized()]
-	protected int m_Id = EditorObjectDataId++;
+	int m_Id = EditorObjectDataId++;
 	
 	// Storing the data of networked objects. MP only
 	[NonSerialized()]

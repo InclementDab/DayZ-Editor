@@ -482,12 +482,12 @@ class Editor: Managed
 
 	protected Raycast PerformRaycast(notnull Ray source_ray, Object ignore, float distance, bool ground_only)
 	{
-		//DumpStack();
-		Raycast camera_raycast;
-		const int interaction_layers = PhxInteractionLayers.CAMERA;
-		if (!ground_only) {
-			camera_raycast = source_ray.PerformRaycast(ignore, distance, interaction_layers);
+		int interaction_layers = PhxInteractionLayers.CAMERA;
+		if (ground_only) {
+			interaction_layers = PhxInteractionLayers.TERRAIN;
 		}
+		
+		Raycast camera_raycast = source_ray.PerformRaycast(ignore, distance, interaction_layers);
 
 		//if (!camera_raycast) {
 		//	camera_raycast = source_ray.PerformRaycastRV(ignore, null, 0, distance, ObjIntersectFire, ground_only);
@@ -502,7 +502,12 @@ class Editor: Managed
 	
 	protected Raycast PerformRaycastEx(notnull Ray source_ray, array<Object> ignores, float distance, bool ground_only)
 	{
-		return source_ray.PerformRaycastRVEX(0, distance, ObjIntersectGeom, ignores, ground_only);
+		int interaction_layers = -1;
+		if (ground_only) {
+			interaction_layers = PhxInteractionLayers.TERRAIN;
+		}
+		
+		return source_ray.PerformRaycastMulti(ignores, distance, interaction_layers);
 	}
 	
 	bool IsMapActive()
@@ -1055,9 +1060,7 @@ class Editor: Managed
 			//SnapToNearbyObjects(world_object, dt);
 		}
 	}
-			
-	protected ref EditorAction m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");	
-	
+				
 	void ProcessInput(float dt, Input input)
 	{
 		bool input_unlocked = (!GetFocus() || !GetFocus().IsInherited(EditBoxWidget)) && !GetEditorHud().GetDialog();
@@ -1276,7 +1279,7 @@ class Editor: Managed
 			bool small_on = small_input.LocalValue();
 	
 			// Check if block should execute (movement OR pending action)
-			bool should_execute = fwd_on || bck_on || left_on || right_on || up_on || down_on || big_on || small_on || m_QuickMoveUndoAction;
+			bool should_execute = fwd_on || bck_on || left_on || right_on || up_on || down_on || big_on || small_on;
 			if (should_execute)
 			{
 				if (IsDragging())
@@ -1345,9 +1348,7 @@ class Editor: Managed
 					input_is_press = input_is_press || input_in_list2.LocalPress();
 				}
 				
-				if (input_is_press) {
-					m_QuickMoveUndoAction = new EditorAction("SetTransform", "SetTransform");
-					
+				if (input_is_press) {					
 					if (GetGame().IsMultiplayer() && selected_objects.Count() > 0)
 					{
 						EditorObject parent = selected_objects.GetElement(0);
@@ -1365,27 +1366,12 @@ class Editor: Managed
 					input_is_release = input_is_release || check_release.LocalRelease();
 				}
 				
-				if (input_is_press)
-				{
-					if (m_QuickMoveUndoAction)
-					{
-						foreach (EditorObject eo_undo : selected_objects)
-						{
-							m_QuickMoveUndoAction.InsertUndoParameter(eo_undo.GetTransformArray());
-						}
-					}
+				if (input_is_press) {
+					CreateCheckpoint(selected_objects);
 				}
 	
 				if (input_is_release)
-				{
-					if (m_QuickMoveUndoAction)
-					{
-						foreach (EditorObject eo_redo: selected_objects) {
-							m_QuickMoveUndoAction.InsertRedoParameter(eo_redo.GetTransformArray());
-						}
-						InsertAction(m_QuickMoveUndoAction);
-					}
-					
+				{					
 					if (GetGame().IsMultiplayer() && selected_objects.Count() > 0)
 					{
 						EditorObject parent_end = selected_objects.GetElement(0);
@@ -2114,7 +2100,7 @@ class Editor: Managed
 	void StopInventoryEditor()
 	{
 		Entity ent = m_EditorInventoryEditorHud.GetEntity();
-		EditorObject obj =GetEditorObject(ent);
+		EditorObject obj = GetEditorObject(ent);
 		if (obj) {
 			obj.Update();
 		}		
@@ -2236,40 +2222,83 @@ class Editor: Managed
 		return m_EditorHud;
 	}
 
-	void InsertAction(EditorAction action) 
+	protected int m_SnapshotIndex = 0;
+	
+	// 2D Array of groups of snapshots
+	protected ref array<ref array<ref EditorSnapshot>> m_Snapshots = {};
+	
+	void CreateCheckpoint(notnull EditorObject editor_object)
 	{
-		for (int i = m_ActionStack.Count() - 1; i >= m_CurrentActionIndex + 1; i--) {
-			m_ActionStack.RemoveOrdered(i);
-		}		
-
-		m_ActionStack.Insert(action);
-		m_CurrentActionIndex = m_ActionStack.Count() - 1;
+		EditorObjectSnapshot snapshot = new EditorObjectSnapshot(editor_object.GetController());
+		InsertSnapshot(snapshot);
 	}
 	
+	void CreateCheckpoint(notnull array<EditorObject> editor_objects)
+	{		
+		array<ref EditorSnapshot> snapshots = {};
+		foreach (EditorObject editor_object: editor_objects) {
+			snapshots.Insert(new EditorObjectSnapshot(editor_object.GetController()));
+		}
+		
+		InsertSnapshots(snapshots);
+	}
+	
+	void CreateCheckpoint(notnull EditorObjectMap editor_object_map)
+	{
+		CreateCheckpoint(editor_object_map.GetValueArray());
+	}
+	
+	protected void InsertSnapshot(notnull EditorSnapshot snapshot)
+	{		
+		array<ref EditorSnapshot> snapshots = { snapshot };
+		InsertSnapshots(snapshots);
+	}
+	
+	protected void InsertSnapshots(notnull array<ref EditorSnapshot> snapshots)
+	{
+#ifdef DIAG_DEVELOPER
+		PrintFormat("Snapshot Created for %1 objects", snapshots.Count());
+#endif
+		
+		for (int i = m_Snapshots.Count() - 1; i >= m_SnapshotIndex + 1; i--) {
+			m_Snapshots.Remove(i);
+		}
+		
+		m_Snapshots.Insert(snapshots);
+		m_SnapshotIndex = m_Snapshots.Count();
+	}
+		
 	void Undo()
 	{
 		if (CanUndo()) {
-			m_ActionStack[m_CurrentActionIndex].CallUndo();
-			m_CurrentActionIndex--;
+			m_SnapshotIndex--;
+			array<ref EditorSnapshot> snapshots = m_Snapshots[m_SnapshotIndex];
+			for (int i = 0; i < snapshots.Count(); i++) {
+				snapshots[i].Recall();
+			}
 		}
 	}
 	
 	void Redo()
 	{
 		if (CanRedo()) {
-			m_CurrentActionIndex++;
-			m_ActionStack[m_CurrentActionIndex].CallRedo();
+			array<ref EditorSnapshot> snapshots = m_Snapshots[m_SnapshotIndex];
+			for (int i = 0; i < snapshots.Count(); i++) {
+				snapshots[i].UnRecall();
+			}
+
+			m_SnapshotIndex++;
 		}
 	}
 	
 	bool CanUndo() 
 	{
-		return m_CurrentActionIndex >= 0;
+		return m_SnapshotIndex > 0;
 	}
 	
 	bool CanRedo() 
 	{
-		return m_CurrentActionIndex < m_ActionStack.Count() - 1;
+		return m_SnapshotIndex < m_Snapshots.Count();
 	}
 			
 	EditorObject CreateObject(notnull Object target, EditorObjectFlags flags = EFE_DEFAULT, bool create_undo = true) 
@@ -2280,7 +2309,6 @@ class Editor: Managed
 	
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data, bool create_undo = true) 
 	{
-
 		if (GetGame().IsMultiplayer())
 		{
 			if (m_ObjectManager.GetPlacedObjects().Count() >= 60000) {
@@ -2331,15 +2359,9 @@ class Editor: Managed
 		editor_object.Uuid = uuid;
 		m_EditorObjectsByUuid[uuid] = editor_object;
 
-		if (create_undo) {
-			EditorAction action = new EditorAction("Delete", "Create");
-            
-            // UNDO: Delete by ID
-            action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-            // REDO: Create using Data Snapshot
-            action.InsertRedoParameter(new Param1<EditorObjectData>(editor_object_data));
-            
-			InsertAction(action);
+		if (create_undo) {			
+			EditorObjectCreationSnapshot snapshot = new EditorObjectCreationSnapshot(editor_object.GetController());
+			InsertSnapshot(snapshot);
 		}
 		
 		GetStatistics().EditorPlacedObjects++;
@@ -2387,6 +2409,7 @@ class Editor: Managed
 					created_objects_map.Insert(obj.GetID(), obj);
 				}
 			}
+			
 			GetStatistics().EditorPlacedObjects += created_objects_map.Count();
 
 			return created_objects_map;
@@ -2396,7 +2419,6 @@ class Editor: Managed
 	array<EditorObject> CreateObjectsByUuid(notnull map<string, ref EditorObjectData> data_list, bool create_undo = true)
 	{
 		array<EditorObject> object_set = new array<EditorObject>();
-		EditorAction action = new EditorAction("Delete", "Create");
 		
 		foreach (string uuid, EditorObjectData editor_object_data: data_list) {
 			
@@ -2420,9 +2442,6 @@ class Editor: Managed
 					m_EditorObjectsByUuid[uuid].ShowBoundingBox();
 				}
 				
-				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
-				action.InsertRedoParameter(new Param1<EditorObjectData>(editor_object_data)); 
-
 				object_set.Insert(m_EditorObjectsByUuid[uuid]);
 
 				continue;
@@ -2436,11 +2455,11 @@ class Editor: Managed
 			// Create Object
 			EditorObject editor_object = m_ObjectManager.CreateObject(m_SessionCache[editor_object_data.GetID()]);
 			if (!editor_object) continue;
-						
-			// UNDO: Delete by ID
-			action.InsertUndoParameter(new Param1<int>(editor_object.GetID()));
-			// REDO: Create using Data Snapshot
-			action.InsertRedoParameter(new Param1<EditorObjectData>(editor_object_data));
+			
+			if (create_undo) {
+				EditorObjectCreationSnapshot snapshot = new EditorObjectCreationSnapshot(editor_object.GetController());
+				InsertSnapshot(snapshot);
+			}
 
 			editor_object.Uuid = uuid;
 			m_EditorObjectsByUuid[uuid] = editor_object;
@@ -2450,11 +2469,7 @@ class Editor: Managed
 			object_set.Insert(editor_object);
 
 		}
-		
-		if (create_undo) {
-			InsertAction(action);
-		}
-		
+				
 		return object_set;
 	}
 		
@@ -2476,13 +2491,9 @@ class Editor: Managed
 			DeselectObject(editor_object);
 		}
 		
-        if (create_undo) {
-			EditorAction action = new EditorAction("Create", "Delete");
-            // UNDO: ID and current Position for undo deletion. 
-            action.InsertUndoParameter(new Param2<int, vector>(editor_object.GetID(), editor_object.GetPosition()));
-            // REDO: Pass only ID. 
-            action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
-            InsertAction(action);
+        if (create_undo) {			
+			EditorObjectDeletionSnapshot snapshot = new EditorObjectDeletionSnapshot(editor_object.GetController());
+			InsertSnapshot(snapshot);
         }
         
 		m_ObjectManager.DeleteObject(editor_object);
@@ -2525,16 +2536,23 @@ class Editor: Managed
 		ScriptRPC rpc = new ScriptRPC();
 		rpc.Write(editor_objects.Count());
 		
+		if (create_undo) {
+			array<ref EditorSnapshot> snapshots = {};
+			foreach (EditorObject deleted_object_snap: editor_objects) {
+				EditorObjectDeletionSnapshot snapshot = new EditorObjectDeletionSnapshot(deleted_object_snap.GetController());
+				snapshots.Insert(snapshot);
+			}
+			
+			InsertSnapshots(snapshots);
+		}
+		
 		int count;
-		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (EditorObject editor_object: editor_objects) {
 			if (!editor_object.IsLocked()) {
 				if (editor_object.IsSelected()) {
 					DeselectObject(editor_object);
 				}
 			
-                action.InsertUndoParameter(new Param2<int, vector>(editor_object.GetID(), editor_object.GetPosition()));
-				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
 				count++;
 				
@@ -2543,10 +2561,6 @@ class Editor: Managed
 					m_EditorObjectsByUuid.Remove(editor_object.Uuid);
 				}
 			}
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
 		}
 		
 		if (GetGame().IsMultiplayer() && send_net_message) {
@@ -2561,16 +2575,23 @@ class Editor: Managed
 		ScriptRPC rpc = new ScriptRPC();
 		rpc.Write(editor_object_map.Count());
 		
+		if (create_undo) {
+			array<ref EditorSnapshot> snapshots = {};
+			foreach (int id2, EditorObject deleted_object_snap: editor_object_map) {
+				EditorObjectDeletionSnapshot snapshot = new EditorObjectDeletionSnapshot(deleted_object_snap.GetController());
+				snapshots.Insert(snapshot);
+			}
+			
+			InsertSnapshots(snapshots);
+		}
+		
 		int count;
-		EditorAction action = new EditorAction("Create", "Delete");
 		foreach (int id, EditorObject editor_object: editor_object_map) {			
 			if (!editor_object.IsLocked() && editor_object.IsVisible()) {
 				if (editor_object.IsSelected()) {
 					DeselectObject(editor_object);
 				}
 				
-                action.InsertUndoParameter(new Param2<int, vector>(editor_object.GetID(), editor_object.GetPosition()));
-				action.InsertRedoParameter(new Param1<int>(editor_object.GetID()));
 				m_ObjectManager.DeleteObject(editor_object);
 				count++;
 				
@@ -2579,10 +2600,6 @@ class Editor: Managed
 					m_EditorObjectsByUuid.Remove(editor_object.Uuid);
 				}
 			}
-		}
-		
-		if (create_undo) {
-			InsertAction(action);
 		}
 		
 		if (GetGame().IsMultiplayer() && send_net_message) {
@@ -2654,10 +2671,8 @@ class Editor: Managed
 		}
 		
 		if (create_undo) {
-			EditorAction action = new EditorAction("Unhide", "Hide");
-			action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
-			action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
-			InsertAction(action);
+			EditorDeletedObjectSnapshot snapshot = new EditorDeletedObjectSnapshot(map_object.GetID());
+			InsertSnapshot(snapshot);
 		}
 		
 		GetStatistics().EditorRemovedObjects++;
@@ -2692,6 +2707,7 @@ class Editor: Managed
 	{
 		EditorAction action = new EditorAction("Unhide", "Hide");
 		
+		array<ref EditorSnapshot> deleted_object_snapshots = {};
 		foreach (string uuid, Object object: deleted_object_map) {
 			if (!object) {
 				continue;
@@ -2707,10 +2723,8 @@ class Editor: Managed
 			
 			EditorDeletedObjectData deleted_object_data = EditorDeletedObjectData.Create(object);
 			m_DeletedSessionCache[deleted_object_data.ID] = deleted_object_data;		
-			if (create_undo) {
-				action.InsertUndoParameter(new Param1<int>(deleted_object_data.ID));
-				action.InsertRedoParameter(new Param1<int>(deleted_object_data.ID));
-			}
+			
+			deleted_object_snapshots.Insert(new EditorDeletedObjectSnapshot(deleted_object_data.GetID()));
 			
 			EditorDeletedObject deleted_object = new EditorDeletedObject(deleted_object_data);
 			deleted_object.Uuid = uuid;
@@ -2719,7 +2733,7 @@ class Editor: Managed
 		}
 		
 		if (create_undo) {
-			InsertAction(action);
+			InsertSnapshots(deleted_object_snapshots);
 		}
 	}
 		
@@ -2734,10 +2748,8 @@ class Editor: Managed
 		}
 		
 		if (create_undo) {
-			EditorAction action = new EditorAction("Hide", "Unhide");
-			action.InsertUndoParameter(new Param1<int>(data.ID));
-			action.InsertRedoParameter(new Param1<int>(data.ID));
-			InsertAction(action);
+			EditorUnDeleteObjectSnapshot snapshot = new EditorUnDeleteObjectSnapshot(data.GetID());
+			InsertSnapshot(snapshot);
 		}
 		
 		m_ObjectManager.UnhideMapObject(data.ID);
@@ -2756,19 +2768,15 @@ class Editor: Managed
 		
 		ScriptRPC rpc = new ScriptRPC();
 		rpc.Write(1);
-		
-		EditorAction action = new EditorAction("Hide", "Unhide");
-		// todo refactor
-		action.InsertUndoParameter(new Param1<int>(map_object.GetID()));
-		action.InsertRedoParameter(new Param1<int>(map_object.GetID()));
-				
+						
 		rpc.Write(map_object.Uuid);
 		m_HiddenObjectsByUuid.Remove(map_object.Uuid);
 		
 		m_ObjectManager.UnhideMapObject(map_object);
 
 		if (create_undo) {
-			InsertAction(action);
+			EditorUnDeleteObjectSnapshot snapshot = new EditorUnDeleteObjectSnapshot(map_object.GetID());
+			InsertSnapshot(snapshot);
 		}
 		
 		if (GetGame().IsMultiplayer() && send_net_message) {
@@ -2792,28 +2800,21 @@ class Editor: Managed
 	{
 		ScriptRPC rpc = new ScriptRPC();
 		rpc.Write(deleted_objects.Count());
-		
-		EditorAction action;
-		if (create_undo) {
-			action = new EditorAction("Hide", "Unhide");
-		}
-				
-		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {						
-			if (create_undo) {
-				action.InsertUndoParameter(new Param1<int>(id));
-				action.InsertRedoParameter(new Param1<int>(id));
-			}
-			
+					
+		array<ref EditorSnapshot> snapshots = {};
+		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {									
 			GetStatistics().EditorRemovedObjects++;
 			m_ObjectManager.UnhideMapObject(id);
 
 			rpc.Write(deleted_object.Uuid);
 			
+			snapshots.Insert(new EditorUnDeleteObjectSnapshot(deleted_object.GetID()));
+			
 			m_HiddenObjectsByUuid.Remove(deleted_object.Uuid);
 		}
 		
 		if (create_undo) {
-			InsertAction(action);
+			InsertSnapshots(snapshots);
 		}
 
 		if (GetGame().IsMultiplayer() && send_net_message) {
@@ -2842,6 +2843,8 @@ class Editor: Managed
 		EditorSaveFile = string.Empty;	
 		m_EditorHud.GetTemplateController().NotifyPropertyChanged("m_Editor.EditorSaveFile");
 		m_ActionStack.Clear();
+		m_Snapshots.Clear();
+		m_SnapshotIndex = 0;
 		m_SessionCache.Clear();
 		m_ObjectManager.Clear();
 		m_CurrentFileAuthorCredits.Clear();
@@ -2865,10 +2868,7 @@ class Editor: Managed
 	
 	void LockObject(EditorObject editor_object)
 	{
-		EditorAction action = new EditorAction("Unlock", "Lock");
-		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
-		InsertAction(action);
+		editor_object.CreateSnapshot();
 		
 		editor_object.Lock(true);
 		DeselectObject(editor_object);
@@ -2876,44 +2876,28 @@ class Editor: Managed
 
 	void LockObjects(EditorObjectMap editor_object_map, bool create_undo = true)
 	{
-		EditorAction action = new EditorAction("Unlock", "Lock");
+		CreateCheckpoint(editor_object_map);
 		foreach (int id, EditorObject editor_object: editor_object_map) {
 			if (editor_object && !editor_object.IsLocked()) {
-				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
 				editor_object.Lock(true);
 				DeselectObject(editor_object);
 			}
-		}
-
-		if (create_undo) {
-			InsertAction(action);
 		}
 	}
 	
 	void UnlockObject(EditorObject editor_object)
 	{
-		EditorAction action = new EditorAction("Lock", "Unlock");
-		action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-		action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
-		InsertAction(action);
-		
+		editor_object.CreateSnapshot();
 		editor_object.Lock(false);
 	}
 
 	void UnlockObjects(EditorObjectMap editor_object_map, bool create_undo = true)
 	{
-		EditorAction action = new EditorAction("Lock", "Unlock");
+		CreateCheckpoint(editor_object_map);
 		foreach (int id, EditorObject editor_object: editor_object_map) {
 			if (editor_object && editor_object.IsLocked()) {
-				action.InsertUndoParameter(new Param1<EditorObject>(editor_object));
-				action.InsertRedoParameter(new Param1<EditorObject>(editor_object));		
 				editor_object.Lock(false);
 			}
-		}
-
-		if (create_undo) {
-			InsertAction(action);
 		}
 	}
 			
@@ -3437,7 +3421,7 @@ class Editor: Managed
 		action.InsertRedoParameter(new Param1<EditorObjectData>(camera_track_data));
 		
 		if (create_undo) {
-			InsertAction(action);
+			//InsertAction(action);
 		}
 
 		return camera_track;
@@ -3454,7 +3438,7 @@ class Editor: Managed
 		}
 
 		if (create_undo) {
-			InsertAction(action);
+			//InsertAction(action);
 		}
 	}
 	
@@ -3469,7 +3453,7 @@ class Editor: Managed
 		}
 
 		if (create_undo) {
-			InsertAction(action);
+			//InsertAction(action);
 		}
 	}
 		

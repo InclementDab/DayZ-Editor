@@ -295,11 +295,9 @@ class EditorGizmo: Managed
 			}
 
 			// Register rewinds
-			m_RewindAction = new EditorAction("SetTransform", "SetTransform");
+			GetEditor().CreateCheckpoint(m_AllSelectedObjects);
 			m_LocalTransformsToTarget = new map<EditorObject, ref array<vector>>();
-			foreach (EditorObject selected_rewind_object: m_AllSelectedObjects) {
-				m_RewindAction.InsertUndoParameter(selected_rewind_object.GetTransformArray());
-				
+			foreach (EditorObject selected_rewind_object: m_AllSelectedObjects) {				
 				if (selected_rewind_object != m_TopSelectedObject) {
 					vector additional_drag_target_mat[4];
 					selected_rewind_object.GetTopTransform(additional_drag_target_mat);
@@ -333,7 +331,6 @@ class EditorGizmo: Managed
 						
 			foreach (EditorObject selected_rewind_object2: m_AllSelectedObjects) {
 				selected_rewind_object2.Update();
-				m_RewindAction.InsertRedoParameter(selected_rewind_object2.GetTransformArray());
 				
 				if (selected_rewind_object2 != m_TopSelectedObject) {
 					// Hide bounding boxes
@@ -354,8 +351,6 @@ class EditorGizmo: Managed
 				EditorNetUtils.PackTransform(rpc_end_parent.GetPosition(), rpc_end_parent.GetOrientation(), rpc_end_parent.GetScale(), rpc_end_packed);
 				GetEditor().GetNetActionManager().SendDragSessionEnd(rpc_end_parent.Uuid, rpc_end_packed);
 			}
-			
-			GetEditor().InsertAction(m_RewindAction);
 		}
 		
 		m_VisibleSortedInteractions.Clear();

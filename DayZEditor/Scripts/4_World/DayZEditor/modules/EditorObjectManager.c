@@ -336,10 +336,24 @@ class EditorObjectManagerModule : Managed
 	{
 		return m_CameraTracks;
 	}
+	
+	bool RegisterEditorObject(notnull EditorObject editor_object)
+	{
+#ifdef DIAG_DEVELOPER
+		PrintFormat("Registering EditorObject: %1", editor_object.GetID());
+#endif
 		
+		// strong ref
+		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
+
+		m_PlacedObjects.InsertEditorObject(editor_object);
+		
+		EditorEvents.ObjectCreated(this, editor_object);		
+		return true;
+	}
+			
 	EditorObject CreateObject(notnull EditorObjectData editor_object_data)
 	{
-
 		if (!editor_object_data)
 		{
 			Error("[EditorObjectManager] CreateObject: editor_object_data is NULL!");
@@ -357,7 +371,6 @@ class EditorObjectManagerModule : Managed
 #endif
 
 		EditorObject editor_object = new EditorObject(editor_object_data);
-
 		if (!editor_object)
 		{
 			Error(string.Format("[EditorObjectManager] CreateObject: EditorObject instantiation FAILED for type=%1", editor_object_data.Type));
@@ -375,13 +388,9 @@ class EditorObjectManagerModule : Managed
 #ifdef DEV_LOGGING
 		PrintFormat("[EditorObjectManager] CreateObject SUCCESS: type=%1, world_object_id=%2", editor_object_data.Type, editor_object.GetWorldObject().GetID());
 #endif
-
-		// strong ref
-		m_EditorObjectRefs[editor_object.GetID()] = editor_object;
-
-		m_PlacedObjects.InsertEditorObject(editor_object);
 		
-		EditorEvents.ObjectCreated(this, editor_object);		
+		RegisterEditorObject(editor_object);
+		
 		return editor_object;
 	}
 

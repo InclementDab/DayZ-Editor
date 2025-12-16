@@ -6,15 +6,12 @@ class EditorFixStaticFileCommand: EditorCommand
 		super.Execute(sender, args);
 		
 		auto selected_objects = m_Editor.GetSelectedObjects();		
+		GetEditor().CreateCheckpoint(selected_objects);
 		foreach (int id, EditorObject selected_object: selected_objects) {			
-			if (selected_object.GetType().Contains(".p3d")) {
-				EditorAction undo = new EditorAction("SetTransform", "SetTransform");
-				undo.InsertUndoParameter(selected_object.GetTransformArray());
+			if (selected_object.GetType().Contains(".p3d")) {				
 				vector center = GetP3dBoundingCenter(selected_object.GetType());
 				selected_object.SetPosition(selected_object.GetPosition() + center);
 				selected_object.SetOrientation(selected_object.GetOrientation() * Math.RAD2DEG);
-				undo.InsertRedoParameter(selected_object.GetTransformArray());
-				m_Editor.InsertAction(undo);
 			}
 		}
 		
@@ -76,15 +73,12 @@ class EditorUnFixStaticFileCommand: EditorCommand
 		super.Execute(sender, args);
 		
 		auto selected_objects = m_Editor.GetSelectedObjects();		
+		GetEditor().CreateCheckpoint(selected_objects);
 		foreach (int id, EditorObject selected_object: selected_objects) {			
 			if (selected_object.GetType().Contains(".p3d")) {
-				EditorAction undo = new EditorAction("SetTransform", "SetTransform");
-				undo.InsertUndoParameter(selected_object.GetTransformArray());
 				vector center = GetP3dBoundingCenter(selected_object.GetType());
 				selected_object.SetPosition(selected_object.GetPosition() - center);
 				selected_object.SetOrientation(selected_object.GetOrientation() * Math.DEG2RAD);
-				undo.InsertRedoParameter(selected_object.GetTransformArray());
-				m_Editor.InsertAction(undo);
 			}
 		}
 		

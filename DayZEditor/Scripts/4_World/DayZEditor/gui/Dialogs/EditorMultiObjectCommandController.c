@@ -1,10 +1,10 @@
 // This is the handler for when the dialog has multiple objects selected
-class EditorMultiObjectCommandController
+class EditorMultiObjectCommandController: EditorObjectController
 {
 	protected ref array<EditorObject> m_EditorObjects = {};	
 	protected vector m_CenterPoint;
 
-	void EditorMultiObjectCommandController(notnull array<EditorObject> editor_objects)
+	void EditorMultiObjectCommandController(EditorObject editor_object, notnull array<EditorObject> editor_objects)
 	{
 		m_EditorObjects.InsertArray(editor_objects);
 		
@@ -28,8 +28,8 @@ class EditorMultiObjectCommandController
 			EditorObject first_obj = m_EditorObjects[0];
 			Name = first_obj.GetDisplayName();
 			
-			foreach (EditorObject editor_object: m_EditorObjects) {
-				if (Name != editor_object.GetDisplayName())
+			foreach (EditorObject editor_object2: m_EditorObjects) {
+				if (Name != editor_object2.GetDisplayName())
 					hasConsistentName = false;
 			}
 
@@ -40,34 +40,16 @@ class EditorMultiObjectCommandController
 	
 	void ~EditorMultiObjectCommandController()
 	{
-		delete m_EditorObjects;
 	}
 	
-	bool Show = true;
-	string Name;
-	vector Position, DeltaPosition;
-	vector Orientation, DeltaOrientation;
-	float Scale = 1.0, DeltaScale = 1.0;
-	
-	float Health = 100;
-	bool Locked;
-	bool UsePhysics;
-	bool AllowDamage = false;
-	bool Collision = true;
-	bool EditorOnly = false;
-	
-	void PropertyChanged(string property_name)
+	vector DeltaPosition;
+	vector DeltaOrientation;
+	float DeltaScale = 1.0;
+		
+	override void PropertyChanged(string property_name)
 	{
-		EditorAction undo_action = new EditorAction("SetTransform", "SetTransform");
-
-		if (property_name == "Position" || property_name == "Orientation" || property_name == "Scale")
-		{
-			foreach (EditorObject editor_object_undo : m_EditorObjects)
-			{
-				undo_action.InsertUndoParameter(editor_object_undo.GetTransformArray());
-			}
-		}
-
+		Event_OnPropertyChanged.Invoke(property_name);
+		
 		switch (property_name) {
 			case "Show": {
 				foreach (EditorObject obj_show : m_EditorObjects)
@@ -166,16 +148,6 @@ class EditorMultiObjectCommandController
 				//editor_object.EditorOnly = EditorOnly;
 				break;
 			}
-		}
-
-		if (property_name == "Position" || property_name == "Orientation" || property_name == "Scale")
-		{
-			foreach (EditorObject editor_object_redo : m_EditorObjects)
-			{
-				editor_object_redo.Update();
-				undo_action.InsertRedoParameter(editor_object_redo.GetTransformArray());
-			}
-			GetEditor().InsertAction(undo_action);
 		}
 		
 		// Update the 'last known' values for the next delta calculation.

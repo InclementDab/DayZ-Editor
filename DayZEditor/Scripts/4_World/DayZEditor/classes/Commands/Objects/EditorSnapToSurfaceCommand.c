@@ -5,12 +5,11 @@ class EditorSnapToSurfaceCommand: EditorCommand
 		super.Execute(sender, args);
 		
 		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();		
-		EditorAction align_undo = new EditorAction("SetTransform", "SetTransform");
+		GetEditor().CreateCheckpoint(editor_objects);
 		foreach (EditorObject editor_object: editor_objects) {
 			vector transform[4];
 			
 			editor_object.GetTransform(transform);
-			align_undo.InsertUndoParameter(editor_object.GetTransformArray());
 			
 			// Get Ground Position
 			vector ground_position, ground_dir; 
@@ -27,12 +26,8 @@ class EditorSnapToSurfaceCommand: EditorCommand
 			editor_object.SetTransform(transform);
 			
 			editor_object.Update();
-			
-			align_undo.InsertRedoParameter(editor_object.GetTransformArray());
 		}
-		
-		m_Editor.InsertAction(align_undo);
-		
+				
 		return true;
 	}
 	

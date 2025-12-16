@@ -23,6 +23,183 @@ class EditorActionStack: set<ref EditorAction>
 	}
 }
 
+class EditorSnapshot: Managed
+{
+	bool Recall()
+	{	
+		return false;
+	}
+	
+	bool UnRecall()
+	{
+		return false;
+	}
+}
+
+class EditorDeletedObjectSnapshot: EditorSnapshot
+{
+	protected int m_DeletedObjectId;
+	void EditorDeletedObjectSnapshot(int deleted_object)
+	{
+		m_DeletedObjectId = deleted_object;
+	}
+	
+	override bool Recall()
+	{
+		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(m_DeletedObjectId);
+		if (data) {
+			return GetEditor().UnhideMapObject(data, false);
+		}
+		
+		return false;
+	}
+	
+	override bool UnRecall()
+	{
+		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(m_DeletedObjectId);
+		if (data) {
+			return GetEditor().HideMapObject(data, false);
+		}
+		
+		return false;
+	}
+}
+
+class EditorUnDeleteObjectSnapshot: EditorSnapshot
+{
+	protected int m_DeletedObjectId;
+	void EditorUnDeleteObjectSnapshot(int deleted_object)
+	{
+		m_DeletedObjectId = deleted_object;
+	}
+	
+	override bool UnRecall()
+	{
+		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(m_DeletedObjectId);
+		if (data) {
+			return GetEditor().UnhideMapObject(data, false);
+		}
+		
+		return false;
+	}
+	
+	override bool Recall()
+	{
+		EditorDeletedObjectData data = GetEditor().GetDeletedSessionDataById(m_DeletedObjectId);
+		if (data) {
+			return GetEditor().HideMapObject(data, false);
+		}
+		
+		return false;
+	}
+}
+
+class EditorObjectSnapshot: EditorSnapshot
+{
+	protected int m_EditorObjectId;
+	protected EditorObjectController m_Controller;
+	protected ref ScriptReadWriteContext m_Data = new ScriptReadWriteContext();
+	protected ref ScriptReadWriteContext m_InverseData = new ScriptReadWriteContext();
+	
+	void EditorObjectSnapshot(notnull EditorObjectController editor_object_controller)
+	{
+		m_Controller = editor_object_controller;
+		m_Controller.Update();
+		m_EditorObjectId = m_Controller.Id;
+		
+		m_Controller.Serialize(m_Data.GetWriteContext());
+	}
+	
+	override bool Recall()
+	{		
+		EditorObject editor_object = GetEditor().GetPlacedObjectById(m_EditorObjectId);
+		if (!editor_object) {
+			editor_object = EditorObjectController.CreateFromSerializer(m_Data.GetReadContext());
+			m_Controller = editor_object.GetController();
+		} else {
+			m_Controller = editor_object.GetController();
+			m_Controller.Update();
+			
+			m_InverseData = new ScriptReadWriteContext();
+			m_Controller.Serialize(m_InverseData.GetWriteContext());
+			
+			m_Controller.Deserialize(m_Data.GetReadContext());
+			m_Controller.Send();
+		}
+		
+		return true;
+	}
+	
+	override bool UnRecall()
+	{		
+		EditorObject editor_object = GetEditor().GetPlacedObjectById(m_EditorObjectId);
+		if (!editor_object) {
+			editor_object = EditorObjectController.CreateFromSerializer(m_InverseData.GetReadContext());
+			m_Controller = editor_object.GetController();
+		} else {
+			m_Controller = editor_object.GetController();
+			m_Controller.Update();
+			
+			m_Data = new ScriptReadWriteContext();
+			m_Controller.Serialize(m_Data.GetWriteContext());
+			
+			m_Controller.Deserialize(m_InverseData.GetReadContext());
+			m_Controller.Send();
+		}
+		
+		return true;
+	}
+	
+	EditorObjectController GetController()
+	{
+		return m_Controller;
+	}
+}
+
+// Special kind of class that just deletes shit for funsies
+class EditorObjectCreationSnapshot: EditorObjectSnapshot
+{	
+	void EditorObjectCreationSnapshot(notnull EditorObjectController editor_object_controller)
+	{
+		m_EditorObjectId = editor_object_controller.Id;
+	}
+	
+	override bool Recall()
+	{
+		EditorObject recall_object = GetEditor().GetPlacedObjectById(m_EditorObjectId);
+		if (!recall_object) {
+			return false;
+		}
+		
+		m_Controller = recall_object.GetController();
+		
+		// Serialize the inverse
+		m_InverseData = new ScriptReadWriteContext();
+		m_Controller.Serialize(m_InverseData.GetWriteContext());
+		
+		return GetEditor().DeleteObject(recall_object, false);
+	}
+}
+
+class EditorObjectDeletionSnapshot: EditorObjectSnapshot
+{
+	override bool UnRecall()
+	{
+		EditorObject recall_object = GetEditor().GetPlacedObjectById(m_EditorObjectId);
+		if (!recall_object) {
+			return false;
+		}
+		
+		m_Controller = recall_object.GetController();
+		
+		// Serialize the inverse
+		m_Data = new ScriptReadWriteContext();
+		m_Controller.Serialize(m_Data.GetWriteContext());
+		
+		return GetEditor().DeleteObject(recall_object, false);
+	}
+}
+
 class EditorAction
 {
 	protected bool m_Undone;
@@ -30,7 +207,7 @@ class EditorAction
 	
 	ref array<ref Param> UndoParameters = {};
 	ref array<ref Param> RedoParameters = {};
-			
+				
 	void EditorAction(string undo_action, string redo_action)
 	{
 		m_UndoAction = undo_action;
@@ -51,11 +228,11 @@ class EditorAction
 	{ 
 		return m_Undone; 
 	}
-	
+			
 	void CallUndo()
 	{
-		EditorLog.Trace("EditorAction::CallUndo %1", m_UndoAction);		
-		m_Undone = true;
+		//EditorLog.Trace("EditorAction::CallUndo %1", m_UndoAction);		
+		m_Undone = true;		
 		foreach (Param param: UndoParameters) {
 			g_Script.Call(this, m_UndoAction, param);
 		}
@@ -63,8 +240,8 @@ class EditorAction
 	
 	void CallRedo()
 	{
-		EditorLog.Trace("EditorAction::CallRedo %1", m_UndoAction);
-		m_Undone = false;
+		//EditorLog.Trace("EditorAction::CallRedo %1", m_UndoAction);
+		m_Undone = false;		
 		foreach (Param param: RedoParameters) {
 			g_Script.Call(this, m_RedoAction, param);
 		}

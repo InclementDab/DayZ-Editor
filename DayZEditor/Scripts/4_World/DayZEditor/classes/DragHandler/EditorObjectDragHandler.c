@@ -133,15 +133,9 @@ class EditorObjectDragHandler: EditorDragHandler
 		array<Object> ignored_objects = {};
 		ignored_objects.InsertAll(all_object_instances);
 		ignored_objects.Insert(GetEditor().GetPlayer());
-
-		Ray cursor_ray = GetEditor().GetCursorRay();				
-		int interaction_layers = -1;
-		if (GetEditor().GroundMode) {
-			interaction_layers &= PhxInteractionLayers.TERRAIN;
-		}
 		
-		Raycast cursor_raycast = cursor_ray.PerformRaycastMulti(ignored_objects, GetEditor().GetCamera().GetSettings().ViewDistance / 2, interaction_layers);
-		
+		Ray cursor_ray = GetEditor().GetCursorRayModeSafe();						
+		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(ignored_objects, GetEditor().GroundMode);
 		vector cursor_pos = cursor_ray.GetPoint(10.0);
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;
@@ -310,27 +304,10 @@ class EditorObjectDragHandler: EditorDragHandler
 			GetEditor().GetNetActionManager().SendDragSessionEnd(m_Target.Uuid, packedData);
 		}
 
-		// Manually replicate the cleanup logic from EditorDragHandler 
-		if (m_RewindAction)
-		{
-			// Finalize undo/redo action with the 'after' state.
-			array<EditorObject> all_dragged_objects = { m_Target };
-			if (m_AdditionalDragTargets)
-				all_dragged_objects.InsertAll(m_AdditionalDragTargets);
-
-			foreach(EditorObject dragged_obj : all_dragged_objects)
-			{
-				if (dragged_obj)
-					m_RewindAction.InsertRedoParameter(dragged_obj.GetTransformArray());
-			}
-
-			GetEditor().InsertAction(m_RewindAction);
-		}
-
 		// This manually performs the cleanup from the base class's OnDragFinish,
 		// because we are intentionally not calling super.OnDragFinish() to prevent old RPCs.
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_OnDragging);
-
+		
 		if (m_Target)
 			m_Target.IsBeingDragged = false;
 
@@ -347,6 +324,5 @@ class EditorObjectDragHandler: EditorDragHandler
 		m_Target = null;
 		m_AdditionalDragTargets = null;
 		m_LocalTransformsToTarget = null;
-		m_RewindAction = null;
 	}
 }
