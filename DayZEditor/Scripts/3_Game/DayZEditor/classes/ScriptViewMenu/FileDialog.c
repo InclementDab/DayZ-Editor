@@ -341,6 +341,10 @@ class EditorFileDialog: EditorModal
 		}
 	}
 
+	void OnFileDoublePressed(EditorFileView view, string file)
+	{
+	}
+	
 	void OnFileDoublePressed(string file, bool is_directory)
 	{
 		if (is_directory) {
@@ -408,7 +412,7 @@ class EditorFileDialog: EditorModal
 					break;
 				}
 				
-				case SaveButton: {
+				case SaveButton: {					
 					if (!FileNameBox.GetText() && !(m_DialogFlags & eDialogFlags.ALLOW_EMPTY_FILES)) {
 						m_EditorMessageBox = new EditorMessageBox("Please select a valid file name", MessageBoxButtons.OK, null);
 						return true;

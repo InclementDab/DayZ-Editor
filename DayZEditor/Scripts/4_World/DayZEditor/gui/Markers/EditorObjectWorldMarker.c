@@ -34,7 +34,7 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			m_MapWidget = m_Editor.GetEditorHud().Map;
 		}
 				
-		if (m_EditorObject.IsLocked() || !m_Editor.GetEditorHud().IsVisible() || !m_Show || m_EditorObject.IsBeingDragged) {
+		if (m_EditorObject.IsLocked() || !m_Editor.GetEditorHud().IsVisible() || !m_Show) {
 			if (m_LayoutRoot.IsVisible()) {
 				m_LayoutRoot.Show(false);
 			}

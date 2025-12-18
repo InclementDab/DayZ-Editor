@@ -258,6 +258,7 @@ class EditorObject: EditorWorldObject
 		}
 		
 		m_IsSelected = true;
+		
 		ShowBoundingBox();
 		OnObjectSelected.Invoke(this);
 	}
