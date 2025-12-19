@@ -64,6 +64,12 @@ modded class MissionGameplay
 
 		if (GetEditor()) {
 			GetEditor().Update(timeslice);
+
+            // Allow standard inputs in player mode
+            if (!GetEditor().IsActive()) {
+                super.OnUpdate(timeslice);
+            }
+
 		} else {
 			super.OnUpdate(timeslice);
 		}

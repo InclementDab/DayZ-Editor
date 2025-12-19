@@ -121,6 +121,7 @@ class EditorMultiObjectCommandController
 			}
 							
 			case "Scale": {
+                if (Math.AbsFloat(Scale) <= Math.EPSILON  ) return;
 				float scale_multiplier = 1.0;
 				if (DeltaScale != 0) {
 					scale_multiplier = Scale / DeltaScale;

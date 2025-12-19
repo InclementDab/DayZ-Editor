@@ -1029,6 +1029,7 @@ class EditorObjectController: Managed
 			}
 
 			case "Scale": {
+                if (Math.AbsFloat(Scale) <= Math.EPSILON * 2) return;
 				m_EditorObject.SetScale(Scale);
 				m_EditorObject.Update();
 				break;
