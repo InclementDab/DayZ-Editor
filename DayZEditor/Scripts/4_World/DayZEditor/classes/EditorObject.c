@@ -556,22 +556,33 @@ class EditorObject: EditorWorldObject
 		}
 	}
 
+	protected bool m_PhysicsEnabled;
+	
 	void SetPhysicsEnabled(bool physics)
 	{
-		if (!PlayerBase.Cast(GetWorldObject())) {
-			if (GetWorldObject()) {
-				if (physics) {
-					GetWorldObject().CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
-					GetWorldObject().SetDynamicPhysicsLifeTime(-1);
-					dBodySetMass(GetWorldObject(), 100);
-				} else {
-					GetWorldObject().SetDynamicPhysicsLifeTime(0.001);
-				}
-			}
-
-			//m_Data.Physics = physics;
-			OnChanged.Invoke();
+		if (PlayerBase.Cast(m_WorldObject)) {
+			return;
 		}
+		
+		if (!m_WorldObject) {
+			return;
+		}
+		
+		m_PhysicsEnabled = physics;
+		if (m_PhysicsEnabled) {
+			m_WorldObject.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+			m_WorldObject.SetDynamicPhysicsLifeTime(-1);
+			dBodySetMass(m_WorldObject, 100);
+		} else {
+			m_WorldObject.SetDynamicPhysicsLifeTime(0.001);
+		}
+		
+		OnChanged.Invoke();
+	}
+	
+	bool IsPhysicsEnabled()
+	{
+		return m_PhysicsEnabled;
 	}
 	
 	void SetHealth(float health)
@@ -996,6 +1007,7 @@ class EditorObjectController: Managed
 		Locked = m_EditorObject.IsLocked();
 		EditorOnly = m_EditorObject.IsEditorOnly();
 		Health = m_EditorObject.GetHealth();
+		UsePhysics = m_EditorObject.IsPhysicsEnabled();
 		
 		// Yikes
 		if (m_EditorObject.GetData().Parameters["ExpansionTraderType"]) {
