@@ -387,7 +387,7 @@ class EditorCamera_V2: EditorCamera
 		// FOV velocity
 		float p[1];
 		copyarray(p, m_CameraFovVelocity);		
-		m_CameraFovActual = Math.SmoothCD(m_CameraFovActual, m_EditorCameraSettings.FieldOfView2 * Math.DEG2RAD + zoom * FOV_ZOOM_AMT, p, 0.05, 800 * (m_EditorCameraSettings.SmoothingLevel + 0.5), timeSlice);
+		m_CameraFovActual = Math.SmoothCD(m_CameraFovActual, Math.Clamp(m_EditorCameraSettings.FieldOfView2 * Math.DEG2RAD + zoom * FOV_ZOOM_AMT, 0.001, Math.PI2), p, 0.05, 800 * (m_EditorCameraSettings.SmoothingLevel + 0.5), timeSlice);
 
 		// Apply
 		SetFOV(m_CameraFovActual);

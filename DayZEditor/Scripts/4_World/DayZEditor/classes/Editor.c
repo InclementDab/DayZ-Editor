@@ -123,6 +123,8 @@ class Editor: Managed
 	bool 										LightningMode;
 	bool 										GridMode;
 	bool 										CameraCollision;
+	bool 										UnlockMode;
+	bool 										LockMode;
 	
 	ref EditorEnvironment UserEnvironment;
 	ref EditorDragHandler DragHandler;
@@ -1138,7 +1140,7 @@ class Editor: Managed
 				}
 			}
 		}
-				
+		
 		//	left click logic
 		if (left_click_input.LocalPress()) {
 #ifdef GIZMOS_ENABLED
@@ -1155,6 +1157,28 @@ class Editor: Managed
 			if (IsPlacing()) {
 				PlaceObject();
 				return;
+			}
+			
+			if (m_ObjectUnderCursor && LockMode) {
+				EditorObject lock_object = GetEditorObject(m_ObjectUnderCursor);
+				if (lock_object && !lock_object.IsLocked()) {
+					lock_object.Lock(true);
+					return;
+				}
+			}
+			
+			if (m_ObjectUnderCursor && UnlockMode) {
+				EditorObject unlock_object = GetEditorObject(m_ObjectUnderCursor);
+				if (unlock_object && unlock_object.IsLocked()) {
+					unlock_object.Lock(false);
+					
+					if (!turbo_input.LocalValue()) {
+						ClearSelection();
+					}
+					
+					SelectObject(unlock_object);
+					return;
+				}
 			}
 			
 			if (IsCtrlDown() && m_ObjectUnderCursor && !widget_under_cursor) {

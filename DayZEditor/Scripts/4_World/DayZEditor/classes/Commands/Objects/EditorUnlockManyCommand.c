@@ -7,12 +7,8 @@ class EditorUnlockManyCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 				
-		if (m_Editor.GetEditorHud().GetBrushState() && m_Editor.Brush.IsInherited(EditorUnlockBrush)) {
-			m_Editor.GetEditorHud().SetBrushState(0);
-		} else {
-			m_Editor.GetEditorHud().SetBrushByTypename(EditorUnlockBrush);
-			m_Editor.GetEditorHud().SetBrushState(1);
-		}
+		m_Editor.UnlockMode = !m_Editor.UnlockMode;
+		m_Editor.LockMode = false;
 		
 		return true;
 	}
@@ -34,6 +30,6 @@ class EditorUnlockManyCommand: EditorCommand
 	
 	override bool IsToggled()
 	{
-		return GetEditor().Brush && GetEditor().Brush.IsInherited(EditorUnlockBrush);
+		return GetEditor().UnlockMode;
 	}
 }
