@@ -22,6 +22,7 @@ class EditorObject: EditorWorldObject
 	ref ScriptInvoker OnObjectDeselected = new ScriptInvoker();
 	ref ScriptInvoker OnUpdated = new ScriptInvoker();
 	ref ScriptInvoker OnChanged = new ScriptInvoker();
+	ref ScriptInvoker OnDeleted = new ScriptInvoker();
 	
 	protected int m_LowBits, m_HighBits;
 		
@@ -116,6 +117,10 @@ class EditorObject: EditorWorldObject
 	void ~EditorObject()
 	{
 		EditorLog.Trace("~EditorObject");
+		if (OnDeleted) {
+			OnDeleted.Invoke(this);
+		}
+		
 		if (m_Data && GetWorldObject()) {
 			Update();
 		}
@@ -127,7 +132,6 @@ class EditorObject: EditorWorldObject
 		HideBoundingBox();
 
 		delete m_EditorObjectWorldMarker; 
-		delete m_EditorPlacedListItem;
 		
 		delete OnObjectSelected;
 		delete OnObjectDeselected;
@@ -197,7 +201,7 @@ class EditorObject: EditorWorldObject
 		m_HighBits = high;
 	}
 	
-	override void SetWorldObject(Object object)
+	override void SetWorldObject(notnull Object object)
 	{		
 		super.SetWorldObject(object);
 												

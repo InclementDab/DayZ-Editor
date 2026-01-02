@@ -7,6 +7,7 @@ class EditorEditMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorUndoCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorRedoCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorFindAndReplaceCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorDeleteCommand]);
 		AddMenuDivider();
 		AddMenuCategory("#STR_EDITOR_SELECT", EditorSelectMenu, Symbols.OBJECT_GROUP);
 		AddMenuCategory("#STR_EDITOR_EDIT", EditorClipboardMenu, Symbols.CLIPBOARD);
@@ -28,6 +29,7 @@ class EditorSelectMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorEllipseSelectionCommand]);	
 		AddMenuButton(m_Editor.CommandManager[EditorLassoSelectionCommand]);
 		AddMenuDivider();
+		AddMenuButton(m_Editor.CommandManager[EditorSelectAllCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorInvertSelectionCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorClearSelectionCommand]);
 	}

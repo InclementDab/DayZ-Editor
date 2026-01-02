@@ -22,7 +22,7 @@ class EditorWorldObject: Managed
 		GetGame().ObjectDelete(m_WorldObject);
 	}
 	
-	void SetWorldObject(Object object)
+	void SetWorldObject(notnull Object object)
 	{
 		m_WorldObject = object;
 		m_WorldEntity = EntityAI.Cast(m_WorldObject);

@@ -27,6 +27,7 @@ class EditorPlacedListItem: EditorListItem
 		
 		m_EditorObject.OnObjectSelected.Insert(EditorObjectSelected);
 		m_EditorObject.OnObjectDeselected.Insert(EditorObjectDeselected);	
+		m_EditorObject.OnDeleted.Insert(EditorObjectDeleted);
 	}
 		
 	void EditorObjectSelected(EditorObject data) 
@@ -37,6 +38,11 @@ class EditorPlacedListItem: EditorListItem
 	void EditorObjectDeselected(EditorObject data) 
 	{
 		Deselect();
+	}
+	
+	void EditorObjectDeleted()
+	{
+		Delete();
 	}
 	
 	bool ListItemShowExecute(ButtonCommandArgs args)

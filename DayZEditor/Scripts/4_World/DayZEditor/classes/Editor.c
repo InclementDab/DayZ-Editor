@@ -3065,6 +3065,10 @@ class Editor: Managed
 			return;
 		}
 		
+		// Reset UI states
+		m_EditorHud.LeftSearchBar.SetText(string.Empty);
+		m_EditorHud.RightSearchBar.SetText(string.Empty);
+		
 		int created_objects, deleted_objects;
 		if (save_data.MapName != string.Empty && save_data.MapName != GetGame().GetWorldName()) {			
 			EditorLog.Warning("Different map detected");
@@ -3185,8 +3189,10 @@ class Editor: Managed
 
 		// Save Objects
 		EditorObjectMap placed_objects = GetPlacedObjects();
+		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
 		if (selected_only) {
 			placed_objects = GetSelectedObjects();
+			deleted_objects = GetSelectedHiddenObjects();
 		}
 		
 		if (placed_objects) {
@@ -3197,10 +3203,11 @@ class Editor: Managed
 			}
 		}
 		
-		EditorDeletedObjectMap deleted_objects = GetObjectManager().GetDeletedObjects();
-		foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
-			if (deleted_object.GetWorldObject()) {
-				save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
+		if (deleted_objects) {
+			foreach (int id, EditorDeletedObject deleted_object: deleted_objects) {
+				if (deleted_object.GetWorldObject()) {
+					save_data.EditorHiddenObjects.Insert(deleted_object.GetData());
+				}
 			}
 		}
 		

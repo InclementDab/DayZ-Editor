@@ -165,6 +165,7 @@ class EditorHud: ScriptView
 			
 			string model_name = placeable_item.GetModelName();
 			model_name.Replace(SystemPath.SEPERATOR_ALT, SystemPath.SEPERATOR);
+			model_name.Replace(SystemPath.SEPERATOR + SystemPath.SEPERATOR, SystemPath.SEPERATOR);
 			model_name.ToLower();
 			model_name.TrimInPlace();
 			if (model_name == "bmp" || model_name == "bmp.p3d" || model_name.Length() == 0) {
@@ -174,9 +175,16 @@ class EditorHud: ScriptView
 			if (model_name[0] == SystemPath.SEPERATOR) {
 				model_name = model_name.Substring(1, model_name.Length() - 1);
 			}
-						
+									
 			array<string> model_path_split = {};
 			model_name.Split(SystemPath.SEPERATOR, model_path_split);
+			// todo: need to work on deadline
+			//if (placeable_item.Name.Contains(".p3d")) {
+				// Adding static folder to seperate things that are.. static
+			//	model_path_split.InsertAt("static", model_path_split.Count());
+			//	model_path_split.Debug();
+			//}
+			
 			int depth = model_path_split.Count() - 1;
 			for (int i = 0; i < model_path_split.Count(); i++) {
 				string folder_name = model_path_split[i];
@@ -1118,7 +1126,9 @@ class EditorHud: ScriptView
 				string right_search_bar_text = RightSearchBar.GetText();
 				auto right_spacer_config = Ternary<ObservableCollection<EditorListItem>>.If(m_TemplateController.CategoryPlacements, m_TemplateController.RightbarPlacedData, m_TemplateController.RightbarDeletionData);
 				for (i = 0; i < right_spacer_config.Count(); i++) {					
-					right_spacer_config[i].GetLayoutRoot().Show(right_spacer_config[i].FilterType(right_search_bar_text));
+					if (right_spacer_config[i]) {
+						right_spacer_config[i].GetLayoutRoot().Show(right_spacer_config[i].FilterType(right_search_bar_text));
+					}
 				}
 				
 				RightbarScroll.VScrollToPos(0);

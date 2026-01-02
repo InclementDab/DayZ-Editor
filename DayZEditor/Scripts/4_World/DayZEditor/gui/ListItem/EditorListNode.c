@@ -238,13 +238,17 @@ class EditorFolderListNode: EditorListNode
 		Text.SetText(text);
 		m_Text.ToLower();
 		m_LayoutRoot.SetSort(0);
+		m_LayoutRoot.ClearFlags(WidgetFlags.DRAGGABLE);
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)
 	{
 		super.OnDoubleClick(w, x, y, button);
 		
-		SetCollapsed(!IsCollapsed());	
+		if (w == m_LayoutRoot) {
+			SetCollapsed(!IsCollapsed());	
+		}
+		
 		return true;
 	}
 	

@@ -12,7 +12,7 @@ class EditorObjectSelectionCommand: EditorCommand
 	
 	override string GetName()
 	{
-		return "Toggle Objects Are Clickable";
+		return "Objects Are Clickable";
 	}
 	
 	override LinearColor GetColor()
