@@ -179,7 +179,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Handle Z-Only motion
 		if (KeyState(KeyCode.KC_LMENU)) {			
 			// This should always be ortho			
-			vector forward_plane = transform[1] * camera_transform[0];
+			vector forward_plane = up_dir * camera_transform[0];
 			Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
 			vector intersect = z_plane.Intersect(cursor_ray);
 			
