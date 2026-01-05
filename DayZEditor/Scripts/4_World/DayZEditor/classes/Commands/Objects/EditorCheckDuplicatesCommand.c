@@ -10,26 +10,45 @@ class EditorCheckDuplicatesCommand: EditorAsyncCommand
 			editor_objects = GetEditor().GetPlacedObjects();
 		}
 		
+		// Bucket Sort by Type
+		map<string, ref array<EditorObject>> buckets = new map<string, ref array<EditorObject>>();
+		
 		foreach (int id, EditorObject editor_object: editor_objects) {
-			Object world_object = editor_object.GetWorldObject();
-			array<Object> world_objects = {};
-			array<CargoBase> cargo_base = {};
-			GetGame().GetObjectsAtPosition3D(world_object.GetPosition(), 1, world_objects, cargo_base);
-			
-			if (duplicate_objects[id]) {
-				continue;
+			if (!editor_object) continue;
+
+			string type = editor_object.GetType();
+			if (!buckets.Contains(type)) {
+				buckets[type] = new array<EditorObject>();
 			}
-			
-			foreach (Object found_object: world_objects) {
-				if (found_object == world_object) {
-					continue;
-				}
+			buckets[type].Insert(editor_object);
+		}
+
+		// Iterate through buckets to find duplicates
+		foreach (string keyType, array<EditorObject> bucket_list : buckets) {
+			int count = bucket_list.Count();
+			if (count < 2) continue; // No duplicates possible in this bucket
+
+			for (int i = 0; i < count; i++) {
+				EditorObject world_object = bucket_list[i];
 				
-				if (found_object.GetType() != world_object.GetType()) {
-					continue;
-				}
+				// we can skip checking it against others if already marked as duplicate
+				if (duplicate_objects.Contains(world_object.GetID())) continue;
+
+				vector world_pos = world_object.GetPosition();
+
+				for (int j = i + 1; j < count; j++) {
+					EditorObject found_object = bucket_list[j];
+					
+					// If target is already marked, skip
+					if (duplicate_objects.Contains(found_object.GetID())) continue;
+
+					// Position Check (0.25m tolerance / 25cm) (Distance squared for performance)
+					if (vector.DistanceSq(world_pos, found_object.GetPosition()) > 0.0625) {
+						continue;
+					}
 				
-				duplicate_objects.InsertEditorObject(GetEditor().GetEditorObject(found_object));
+					duplicate_objects.InsertEditorObject(found_object);
+				}
 			}
 		}
 		
