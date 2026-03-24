@@ -642,7 +642,13 @@ class EditorObjectManagerModule : Managed
 	string ConvertP3dFileToPotentialObjectType(string p3d_file)	
 	{
 		array<EditorPlaceableItem> placeables = m_PlaceableObjectsByP3dPath[p3d_file];
-		if (placeables && placeables.Count() > 0) {
+		if (placeables && placeables.Count() > 0) {						
+			foreach (auto placeable: placeables) {
+				if (!placeable.Type.Contains("bldr")) {
+					return placeable.Type;
+				}
+			}
+			
 			return placeables[0].Type;
 		}
 

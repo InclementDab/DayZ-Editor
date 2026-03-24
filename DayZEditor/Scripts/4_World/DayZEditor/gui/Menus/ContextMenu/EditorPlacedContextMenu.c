@@ -39,7 +39,7 @@ class EditorPlacedContextMenu: EditorContextMenu
 		
 		AddMenuButton(m_Editor.CommandManager[EditorMakeStaticCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorMakeConfigCommand]);
-		
+						
 		AddMenuDivider();		
 		AddMenuButton(m_Editor.CommandManager[EditorDuplicateCommand]);
 		
@@ -49,6 +49,9 @@ class EditorPlacedContextMenu: EditorContextMenu
 		AddMenuButton(m_Editor.CommandManager[EditorExportEventPos]);
 		AddMenuButton(m_Editor.CommandManager[EditorExportSelectionAsEventGroup]);
 		AddMenuButton(m_Editor.CommandManager[EditorExportSelectionRelativeToBuilding]);
+		m_Editor.CommandManager[EditorImportRelativeToBuilding].SetData(new Param1<EditorObject>(context));
+		AddMenuButton(m_Editor.CommandManager[EditorImportRelativeToBuilding]);
+		
 		AddMenuButton(m_Editor.CommandManager[EditorObjectPropertiesCommand]);
 	}
 }

@@ -42,6 +42,9 @@ class EditorExportSelectionRelativeToBuilding: EditorCommand
 			Math3D.YawPitchRollMatrix(save_data.EditorObjects[i].Orientation, mat_object);
 			mat_object[3] = save_data.EditorObjects[i].Position;
 			Math3D.MatrixInvMultiply4(mat, mat_object, mat_object);
+			mat_object[0] = mat_object[0] * save_data.EditorObjects[i].Scale;
+			mat_object[1] = mat_object[1] * save_data.EditorObjects[i].Scale;
+			mat_object[2] = mat_object[2] * save_data.EditorObjects[i].Scale;
 
 			EditorObjectData obj_data = EditorObjectData.Create(save_data.EditorObjects[i].Type, mat_object);
 			save_data2.EditorObjects.Insert(obj_data);
@@ -61,5 +64,64 @@ class EditorExportSelectionRelativeToBuilding: EditorCommand
 	override string GetName()
 	{
 		return "Export Relative to Selection";
+	}
+}
+
+[RegisterEditorCommand(EditorImportRelativeToBuilding)]
+class EditorImportRelativeToBuilding: EditorCommand
+{
+	protected Object m_SourceObject;
+	
+	protected override bool Execute(Class sender, CommandArgs args)
+	{
+		super.Execute(sender, args);
+		
+		Param1<EditorObject> data = Param1<EditorObject>.Cast(GetData());
+		if (!data) {
+			return false;
+		}
+
+		m_SourceObject = data.param1.GetWorldObject();
+		GetEditor().GetEditorHud().ShowFileDialog("Import Relative to Object", EditorDZEFile, ScriptCaller.Create(OnFileSelected), eDialogMode.IMPORT, 0, string.Format("%1.dze", m_SourceObject.GetType()));
+		return true;
+	}
+	
+	protected void OnFileSelected(string file_name, eDialogExtraSetting extra_settings)
+	{
+		EditorFileType file_type = new EditorDZEFile();
+		EditorFileManager.GetSafeFileName(file_name, file_type.GetExtension());
+
+		vector mat[4];
+		m_SourceObject.GetTransform(mat);
+		
+		EditorSaveData save_data = file_type.Import(file_name, null);
+		EditorSaveData save_data2 = new EditorSaveData();
+		for (int i = 0; i < save_data.EditorObjects.Count(); i++) {
+			vector mat_object[4];
+			Math3D.YawPitchRollMatrix(save_data.EditorObjects[i].Orientation, mat_object);
+			mat_object[3] = save_data.EditorObjects[i].Position;
+			Math3D.MatrixMultiply4(mat, mat_object, mat_object);
+			mat_object[0] = mat_object[0] * save_data.EditorObjects[i].Scale;
+			mat_object[1] = mat_object[1] * save_data.EditorObjects[i].Scale;
+			mat_object[2] = mat_object[2] * save_data.EditorObjects[i].Scale;
+			
+			//save_data.EditorObjects[i].Orientation = Math3D.MatrixToAngles(mat_object);
+			//save_data.EditorObjects[i].Position = mat_object[3];
+			EditorObjectData data = EditorObjectData.Create(save_data.EditorObjects[i].Type, mat_object);
+			data.Flags = EFE_DEFAULT;
+			save_data2.EditorObjects.Insert(data);
+			
+			//GetEditor().CreateObject(save_data.EditorObjects[i]);
+		}
+		
+		GetEditor().LoadSaveData(save_data2);
+		
+		string message = string.Format("Loaded %1 objects (%2)", save_data.EditorObjects.Count(), File.GetName(file_name));
+		GetEditor().GetEditorHud().CreateNotification(message);
+	}
+	
+	override string GetName()
+	{
+		return "Import Relative to Object";
 	}
 }
