@@ -215,7 +215,7 @@ class EditorGizmo: Managed
 		gizmo_transform[0] = -gizmo_transform[0];
 		gizmo_transform[2] = -gizmo_transform[2];
 		
-		float gizmo_distance = vector.Distance(top_transform[3], camera_transform[3]);
+		float gizmo_distance = vector.Distance(top_transform[3], GetGame().GetCurrentCameraPosition());
 		float gizmo_scale = gizmo_distance * m_CameraFieldOfView * 0.1;
 		GizmoInteractionSource.Scale = gizmo_scale; // update collision scaling
 		vector gizmo_scale_mat[4];

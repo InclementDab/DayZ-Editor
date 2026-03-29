@@ -456,7 +456,7 @@ class EditorHud: ScriptView
 						ScriptRPC rpc_teleport = new ScriptRPC();
 						rpc_teleport.Write(teleport_player);
 						rpc_teleport.Write(teleport_player_raycast.Bounce.Position);
-						rpc_teleport.Send(null, 39258, false);
+						rpc_teleport.Send(null, EditorRPC.PLAYER_TELEPORT, false);
 					}
 				}
 			}

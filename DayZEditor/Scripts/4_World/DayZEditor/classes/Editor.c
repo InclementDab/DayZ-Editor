@@ -561,6 +561,12 @@ class Editor: Managed
 		
 		m_ControllingPlayer.DisableSimulation(false);
 		
+		vector cam_pos_ctrl = GetGame().GetCurrentCameraPosition();
+		if (!GetGame().IsMultiplayer() && m_EditorCamera) {
+			cam_pos_ctrl = m_EditorCamera.GetPosition();
+		}
+
+		
 		m_EditorCamera.SetActive(false);
 		GetGame().SelectPlayer(null, m_ControllingPlayer);
 		
@@ -577,8 +583,8 @@ class Editor: Managed
 		if (GetGame().IsMultiplayer()) {
 			ScriptRPC rpc = new ScriptRPC();
 			rpc.Write(m_Active);
-			rpc.Write(vector.Zero); // unused
-			rpc.Send(null, 39261, true);
+			rpc.Write(cam_pos_ctrl);
+			rpc.Send(null, EditorRPC.CAMERA_CONTROL, true);
 		}
 	}
 	
@@ -1677,8 +1683,10 @@ class Editor: Managed
 			}
 		} else {
 			ScriptRPC rpc = new ScriptRPC();
+			vector camera_control_pos = GetGame().GetCurrentCameraPosition();
 			rpc.Write(m_Active);
-			rpc.Send(null, 39261, true);
+			rpc.Write(camera_control_pos);
+			rpc.Send(null, EditorRPC.CAMERA_CONTROL, true);
 		}
 		
 		if (m_EditorHud) {
@@ -2948,6 +2956,7 @@ class Editor: Managed
 			return PlayerBase.Cast(GetGame().GetPlayer());
 		} 
 	
+		position[1] = GetGame().SurfaceY(position[0], position[2]);
 		PlayerBase player = PlayerBase.Cast(GetGame().CreatePlayer(identity, type, position, 0, string.Empty));
 		if (!player) {
 			EditorLog.Error("Failed to create new player, type %1", type);
