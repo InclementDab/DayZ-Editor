@@ -4,10 +4,13 @@ class EditorSelectAllCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		
+		string right_search_bar_text = GetEditor().GetEditorHud().RightSearchBar.GetText();
 		if (GetEditor().GetEditorHud().GetTemplateController().CategoryPlacements) {
 			EditorObjectMap placed_objects = m_Editor.GetPlacedObjects();
 			foreach (EditorObject eo: placed_objects) {
-				m_Editor.SelectObject(eo);
+				if (!eo.GetListItem() || eo.GetListItem().FilterType(right_search_bar_text)) {
+					m_Editor.SelectObject(eo);
+				}
 			}
 		}
 		

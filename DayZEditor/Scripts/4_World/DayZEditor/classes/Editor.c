@@ -2836,10 +2836,10 @@ class Editor: Managed
 				action.InsertRedoParameter(new Param1<int>(id));
 			}
 			
+			rpc.Write(deleted_object.Uuid);
+			
 			GetStatistics().EditorRemovedObjects++;
 			m_ObjectManager.UnhideMapObject(id);
-
-			rpc.Write(deleted_object.Uuid);
 			
 			m_HiddenObjectsByUuid.Remove(deleted_object.Uuid);
 		}
@@ -2978,6 +2978,7 @@ class Editor: Managed
     	player.GetInventory().CreateInInventory("CivilianBelt");
     	player.GetInventory().CreateInInventory("TaloonBag_Blue");
     	player.GetInventory().CreateInInventory("SledgeHammer");
+		player.GetHumanInventory().CreateInHands("SKS");
 	    return player;
 	}
 			
