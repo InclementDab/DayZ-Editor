@@ -1,4 +1,4 @@
-class EditorPlacedListNode: EditorNodeView
+/*class EditorPlacedListNode: EditorNodeView
 {
 	protected EditorObject m_EditorObject;
 	
@@ -62,7 +62,7 @@ class EditorPlacedListNode: EditorNodeView
 						break;
 					}
 					
-					GetEditor().GetEditorHud().GetTemplateController().DoMultiSelect(this_index, that_index, list_items);*/
+					GetEditor().GetEditorHud().GetTemplateController().DoMultiSelect(this_index, that_index, list_items);
 					
 				}
 				
@@ -126,4 +126,4 @@ class EditorPlacedListNode: EditorNodeView
 	{
 		return m_EditorObject.IsSelected();
 	}
-}
+}*/

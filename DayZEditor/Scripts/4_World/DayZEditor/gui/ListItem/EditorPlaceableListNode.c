@@ -3,9 +3,9 @@ class EditorPlaceableListNode: EditorNodeView
 	protected EditorPlaceableItem m_PlaceableItem;
 	protected string m_SearchString1, m_SearchString2;
 	
-	void EditorPlaceableListNode(notnull EditorPlaceableItem placeable_item)
+	void EditorPlaceableListNode(notnull EditorNode node)
 	{
-		m_PlaceableItem = placeable_item;
+		m_PlaceableItem = EditorPlaceableItem.Cast(node);
 		m_SearchString1 = m_PlaceableItem.Type;
 		m_SearchString2 = m_PlaceableItem.Name;
 		
@@ -13,15 +13,15 @@ class EditorPlaceableListNode: EditorNodeView
 		m_SearchString2.ToLower();
 		
 		Text.SetText(m_PlaceableItem.Name);		
-		if (placeable_item.Type.Contains(".p3d")) {
+		if (m_PlaceableItem.Type.Contains(".p3d")) {
 			Symbols.TREE_DECIDUOUS.Load(IconImage, 2);
 			IconImage.SetColor(LinearColor.LIGHT_YELLOW);
 			m_LayoutRoot.SetSort(100);
-		} else if (placeable_item.Type.Contains("_DE")) {
+		} else if (m_PlaceableItem.Type.Contains("_DE")) {
 			Symbols.MONEY_BILL.Load(IconImage, 2);
 			IconImage.SetColor(LinearColor.LIGHT_BLUE);
 		} else {
-			if (GetGame().IsKindOf(placeable_item.Type, "Inventory_Base")) {
+			if (GetGame().IsKindOf(m_PlaceableItem.Type, "Inventory_Base")) {
 				Symbols.SHOVEL.Load(IconImage, 2);
 				IconImage.SetColor(LinearColor.LIGHT_BLUE);
 			} else {
@@ -32,7 +32,7 @@ class EditorPlaceableListNode: EditorNodeView
 		
 		Favorite.Show(true);
 		
-		if (GetEditor().GetSettings().FavoriteItems.Find(placeable_item.Type) != -1) {
+		if (GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1) {
 			FavoriteIcon.SetImage(3);
 			FavoriteIcon.SetColor(LinearColor.GOLD);
 		} else {
@@ -161,21 +161,7 @@ class EditorPlaceableListNode: EditorNodeView
 			
 		return super.OnClick(w, x, y, button);
 	}
-	
-	override bool FilterType(string filter, bool favorites)
-	{
-		if (!filter && !favorites) {
-			return true;
-		}
 		
-		bool matches_filter = (m_SearchString1.Contains(filter) || m_SearchString2.Contains(filter) || !filter);
-		if (favorites) {
-			return (matches_filter && GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1);
-		}
-		
-		return matches_filter;
-	}
-	
 	override bool IsSelected()
 	{
 		auto placing_objects = GetEditor().GetPlacingObjects();

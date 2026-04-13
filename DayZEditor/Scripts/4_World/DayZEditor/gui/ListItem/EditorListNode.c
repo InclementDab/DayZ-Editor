@@ -1,12 +1,86 @@
+class EditorNode: Managed
+{
+	protected ref EditorNodeView m_EditorNodeView;
+	
+	ref array<ref EditorNode> Children = {};
+	protected EditorNode m_Parent;
+	
+	void InsertChild(notnull EditorNode node)
+	{
+		Children.Insert(node);
+		
+		if (m_EditorNodeView && node.GetView()) {
+			m_EditorNodeView.InsertChild(node.CreateView());
+		}
+		
+		node.m_Parent = this;
+	}
+		
+	EditorNodeView GetView()
+	{
+		return m_EditorNodeView;
+	}
+	
+	EditorNode GetParent()
+	{
+		return m_Parent;
+	}
+	
+	EditorNodeView CreateView()
+	{
+		if (!m_EditorNodeView) {
+			m_EditorNodeView = new EditorNodeView(this);
+			if (m_Parent) {
+				m_Parent.CreateView().InsertChild(m_EditorNodeView);
+			}
+		}
+		
+		return m_EditorNodeView;
+	}
+	
+	bool FilterType(string filter, bool favorites)
+	{
+		return false;
+	}
+}
+
+class EditorFolderNode: EditorNode
+{
+	protected string m_Text;
+	
+	void EditorFolderNode(string text)
+	{
+		m_Text = text;
+	}
+	
+	string GetText()
+	{
+		return m_Text;
+	}
+	
+	override EditorNodeView CreateView()
+	{
+		if (!m_EditorNodeView) {
+			m_EditorNodeView = new EditorFolderListNode(this);
+		}
+		
+		return m_EditorNodeView;
+	}
+	
+	override bool FilterType(string filter, bool favorites)
+	{
+		return m_Text.Contains(filter);
+	}
+}
+
 class EditorNodeView: ScriptView
 {	
 	static EditorNodeView s_SelectedNode;
 	static ref EditorNodeViewContextMenu s_ContextMenu;
-		
-	ref array<ref EditorNodeView> ChildrenItems = {};
-	
+			
 	protected bool m_IsCollapsed = true;
-	protected EditorNodeView m_Parent;
+	
+	protected EditorNode m_Node;
 	
 	bool m_TemporaryReveal;
 	
@@ -17,8 +91,9 @@ class EditorNodeView: ScriptView
 	EditBoxWidget Edit;
 	WrapSpacerWidget Children;
 	
-	void EditorNodeView()
+	void EditorNodeView(notnull EditorNode node)
 	{
+		m_Node = node;
 		Collapse.Show(false);
 		m_LayoutRoot.SetSort(1);
 		CollapseIcon.LoadImageFile(1, "set:solid image:square_minus");
@@ -27,22 +102,28 @@ class EditorNodeView: ScriptView
 	
 	void ~EditorNodeView()
 	{
-		ChildrenItems.Clear();
 	}
-	
+		
 	void InsertChild(notnull EditorNodeView list_node)
 	{
-		ChildrenItems.Insert(list_node);
-		Collapse.Show(ChildrenItems.Count());
+		Collapse.Show(true);
 		Children.AddChild(list_node.GetLayoutRoot());
-		
-		list_node.m_Parent = this;
 	}
 	
 	void SetCollapsed(bool collapsed)
 	{			
-		if (!ChildrenItems.Count()) {
+		if (!m_Node.Children.Count()) {
 			return;
+		}
+		
+		if (!collapsed) {
+			foreach (EditorNode node_child1: m_Node.Children) {
+				Children.AddChild(node_child1.CreateView().GetLayoutRoot());
+			}
+		} else {
+			foreach (EditorNode node_child2: m_Node.Children) {
+				delete node_child2.GetView();
+			}
 		}
 		
 		m_IsCollapsed = collapsed;
@@ -62,15 +143,15 @@ class EditorNodeView: ScriptView
 		m_LayoutRoot.SetScreenSize(screen_x, h + 24 * screen_y / 1080.0);
 		
 		// If you are setting this as collapsed, the parents must be uncollapsed because you can access it. we are using this to update the collapse state
-		if (GetListParent()) {
-			GetListParent().SetCollapsed(false);
+		if (m_Node.GetParent() && m_Node.GetParent().GetView()) {
+			m_Node.GetParent().GetView().SetCollapsed(false);
 		}
 	}
 			
 	void CollapseAll()
 	{		
-		for (int i = 0; i < ChildrenItems.Count(); i++) {
-			ChildrenItems[i].SetCollapsed(true);
+		for (int i = 0; i < m_Node.Children.Count(); i++) {
+			m_Node.Children[i].GetView().SetCollapsed(true);
 		}
 		
 		SetCollapsed(true);
@@ -78,8 +159,8 @@ class EditorNodeView: ScriptView
 	
 	void ExpandAll()
 	{		
-		for (int i = 0; i < ChildrenItems.Count(); i++) {
-			ChildrenItems[i].SetCollapsed(false);
+		for (int i = 0; i < m_Node.Children.Count(); i++) {
+			m_Node.Children[i].GetView().SetCollapsed(false);
 		}
 		
 		SetCollapsed(false);
@@ -200,17 +281,7 @@ class EditorNodeView: ScriptView
 	{
 		return false;
 	}
-	
-	EditorNodeView GetListParent()
-	{
-		return m_Parent;
-	}
-		
-	bool FilterType(string filter, bool favorites)
-	{
-		return false;
-	}
-	
+				
 	// All of these slow down the process
 	override bool OnUpdate(Widget w)
 	{
@@ -232,10 +303,14 @@ class EditorFolderListNode: EditorNodeView
 {
 	protected string m_Text;
 	
-	void EditorFolderListNode(string text)
+	void EditorFolderListNode(notnull EditorNode node)
 	{
-		m_Text = text;
-		Text.SetText(text);
+		EditorFolderNode folder_node = EditorFolderNode.Cast(node);
+		if (folder_node) {
+			m_Text = folder_node.GetText();
+			Text.SetText(m_Text);
+		}
+		
 		m_Text.ToLower();
 		m_LayoutRoot.SetSort(0);
 		m_LayoutRoot.ClearFlags(WidgetFlags.DRAGGABLE);
@@ -261,10 +336,5 @@ class EditorFolderListNode: EditorNodeView
 		GetEditor().ClearHand();
 		
 		return super.OnMouseButtonDown(w, x, y, button);
-	}
-	
-	override bool FilterType(string filter, bool favorites)
-	{
-		return m_Text.Contains(filter);
 	}
 }

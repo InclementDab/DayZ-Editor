@@ -5,7 +5,7 @@ enum EditorPlaceableItemCategory
 	SCRIPTED = 2
 }
 
-class EditorPlaceableItem : Managed
+class EditorPlaceableItem : EditorNode
 {
 	int Scope;
 	string Name;
@@ -176,5 +176,25 @@ class EditorPlaceableItem : Managed
 		}
 		
 		return g_Game.ConfigGetTextOut(string.Format("%1 %2 model", Path, Type));
+	}
+	
+	override bool FilterType(string filter, bool favorites)
+	{
+		if (!filter && !favorites) {
+			return true;
+		}
+		
+		string search_string1 = Type;
+		search_string1.ToLower();
+		
+		string search_string2 = Name;
+		search_string2.ToLower();
+			
+		bool matches_filter = (search_string1.Contains(filter) || search_string2.Contains(filter) || !filter);
+		if (favorites) {
+			return (matches_filter && GetEditor().GetSettings().FavoriteItems.Find(Type) != -1);
+		}
+		
+		return matches_filter;
 	}
 }
