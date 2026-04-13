@@ -1,12 +1,12 @@
-class EditorListNode: ScriptView
+class EditorNodeView: ScriptView
 {	
-	static EditorListNode s_SelectedNode;
-	static ref EditorListNodeContextMenu s_ContextMenu;
+	static EditorNodeView s_SelectedNode;
+	static ref EditorNodeViewContextMenu s_ContextMenu;
 		
-	ref array<ref EditorListNode> ChildrenItems = {};
+	ref array<ref EditorNodeView> ChildrenItems = {};
 	
 	protected bool m_IsCollapsed = true;
-	protected EditorListNode m_Parent;
+	protected EditorNodeView m_Parent;
 	
 	bool m_TemporaryReveal;
 	
@@ -17,7 +17,7 @@ class EditorListNode: ScriptView
 	EditBoxWidget Edit;
 	WrapSpacerWidget Children;
 	
-	void EditorListNode()
+	void EditorNodeView()
 	{
 		Collapse.Show(false);
 		m_LayoutRoot.SetSort(1);
@@ -25,12 +25,12 @@ class EditorListNode: ScriptView
 		CollapseIcon.LoadImageFile(0, "set:regular image:square_plus");
 	}
 	
-	void ~EditorListNode()
+	void ~EditorNodeView()
 	{
 		ChildrenItems.Clear();
 	}
 	
-	void InsertChild(notnull EditorListNode list_node)
+	void InsertChild(notnull EditorNodeView list_node)
 	{
 		ChildrenItems.Insert(list_node);
 		Collapse.Show(ChildrenItems.Count());
@@ -201,7 +201,7 @@ class EditorListNode: ScriptView
 		return false;
 	}
 	
-	EditorListNode GetListParent()
+	EditorNodeView GetListParent()
 	{
 		return m_Parent;
 	}
@@ -228,7 +228,7 @@ class EditorListNode: ScriptView
 	}
 }
 
-class EditorFolderListNode: EditorListNode
+class EditorFolderListNode: EditorNodeView
 {
 	protected string m_Text;
 	
@@ -255,7 +255,7 @@ class EditorFolderListNode: EditorListNode
 	override bool OnMouseButtonDown(Widget w, int x, int y, int button)
 	{
 		if (button == MouseState.RIGHT) {
-			s_ContextMenu = new EditorListNodeContextMenu(x, y, this);
+			s_ContextMenu = new EditorNodeViewContextMenu(x, y, this);
 		}
 		
 		GetEditor().ClearHand();

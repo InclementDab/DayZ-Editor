@@ -1,4 +1,4 @@
-class EditorPlaceableListNode: EditorListNode
+class EditorPlaceableListNode: EditorNodeView
 {
 	protected EditorPlaceableItem m_PlaceableItem;
 	protected string m_SearchString1, m_SearchString2;

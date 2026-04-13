@@ -1,4 +1,4 @@
-class EditorPlacedListNode: EditorListNode
+class EditorPlacedListNode: EditorNodeView
 {
 	protected EditorObject m_EditorObject;
 	

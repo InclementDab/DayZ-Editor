@@ -4,7 +4,7 @@ class EditorExpandAllCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		Param1<EditorListNode> data = Param1<EditorListNode>.Cast(GetData());
+		Param1<EditorNodeView> data = Param1<EditorNodeView>.Cast(GetData());
 		if (!data) {
 			return false;
 		}
@@ -14,7 +14,7 @@ class EditorExpandAllCommand: EditorCommand
 		return true;
 	}
 	
-	protected void ExpandAll(notnull EditorListNode list_node)
+	protected void ExpandAll(notnull EditorNodeView list_node)
 	{
 		list_node.ExpandAll();
 	}
@@ -36,7 +36,7 @@ class EditorCollapseAllCommand: EditorCommand
 	protected override bool Execute(Class sender, CommandArgs args)
 	{
 		super.Execute(sender, args);
-		Param1<EditorListNode> data = Param1<EditorListNode>.Cast(GetData());
+		Param1<EditorNodeView> data = Param1<EditorNodeView>.Cast(GetData());
 		if (!data) {
 			return false;
 		}
@@ -46,7 +46,7 @@ class EditorCollapseAllCommand: EditorCommand
 		return true;
 	}
 	
-	protected void CollapseAll(notnull EditorListNode list_node)
+	protected void CollapseAll(notnull EditorNodeView list_node)
 	{		
 		list_node.CollapseAll();
 	}

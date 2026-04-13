@@ -184,7 +184,7 @@ class EditorObjectDragHandler: EditorDragHandler
 			vector intersect = z_plane.Intersect(cursor_ray);
 			
 			vector up_dir_matrix[4];
-			Math3D.DirectionAndUpMatrix(forward_plane, transform[1], up_dir_matrix);
+			Math3D.DirectionAndUpMatrix(forward_plane, up_dir, up_dir_matrix);
 			Math3D.MatrixOrthogonalize4(up_dir_matrix);
 			up_dir_matrix[3] = transform[3];
 			vector local_intersect = intersect.InvMultiply4(up_dir_matrix);

@@ -134,9 +134,9 @@ class EditorHud: ScriptView
 		"CameraTrackRunButton"
 	};
 	
-	ref map<string, EditorListNode> m_FolderNodes = new map<string, EditorListNode>();		
-	ref map<int, ref array<EditorListNode>> m_FolderNodesByDepth = new map<int, ref array<EditorListNode>>();		
-	ref array<EditorListNode> m_SearchableListNodes = {};
+	ref map<string, EditorNodeView> m_FolderNodes = new map<string, EditorNodeView>();		
+	ref map<int, ref array<EditorNodeView>> m_FolderNodesByDepth = new map<int, ref array<EditorNodeView>>();		
+	ref array<EditorNodeView> m_SearchableListNodes = {};
 	
 	void EditorHud(notnull Editor editor)
 	{	
@@ -1061,9 +1061,9 @@ class EditorHud: ScriptView
 		
 		int depth = m_FolderNodesByDepth.Count() - 1;
 		for (int i = depth; i >= 0; --i) {
-			array<EditorListNode> nodes = m_FolderNodesByDepth[i];			
+			array<EditorNodeView> nodes = m_FolderNodesByDepth[i];			
 			for (int j = 0; j < nodes.Count(); j++) {				
-				EditorListNode node = nodes[j];
+				EditorNodeView node = nodes[j];
 				Widget layout = node.GetLayoutRoot();
 				bool search_succeed = !has_requirements_for_search;
 				if (has_requirements_for_search) {

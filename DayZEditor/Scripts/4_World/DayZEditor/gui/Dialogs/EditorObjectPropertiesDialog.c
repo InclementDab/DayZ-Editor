@@ -194,7 +194,7 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		}
 		
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", controller, "EditorOnly"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", controller, "Simulate"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", controller, "Simulation"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", controller, "Locked"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", controller, "UsePhysics"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", controller, "AllowDamage"));

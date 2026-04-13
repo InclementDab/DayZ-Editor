@@ -574,9 +574,8 @@ class EditorObject: EditorWorldObject
 		
 		m_PhysicsEnabled = physics;
 		if (m_PhysicsEnabled) {
-			m_WorldObject.CreateDynamicPhysics(PhxInteractionLayers.DYNAMICITEM);
+			m_WorldObject.CreateDynamicPhysics(PhxInteractionLayers.ITEM_LARGE);
 			m_WorldObject.SetDynamicPhysicsLifeTime(-1);
-			dBodySetMass(m_WorldObject, 100);
 		} else {
 			m_WorldObject.SetDynamicPhysicsLifeTime(0.001);
 		}
@@ -992,6 +991,7 @@ class EditorObjectController: Managed
 	float Health = 100;
 	bool Locked;
 	bool UsePhysics;
+	bool Simulation;
 	bool AllowDamage = false;
 	bool Collision = true;
 	bool EditorOnly = false;
@@ -1073,6 +1073,11 @@ class EditorObjectController: Managed
 			
 			case "UsePhysics": {
 				m_EditorObject.SetPhysicsEnabled(UsePhysics);
+				break;
+			}			
+			
+			case "Simulation": {
+				m_EditorObject.SetSimulate(Simulation);
 				break;
 			}
 		}
