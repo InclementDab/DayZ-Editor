@@ -68,7 +68,7 @@ FrameWidgetClass NodeView {
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 12 14
+         size 12 12
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -113,7 +113,7 @@ FrameWidgetClass NodeView {
        disabled 0
        ignorepointer 1
        position 0 0
-       size 14 14
+       size 12 12
        halign center_ref
        valign center_ref
        hexactpos 1

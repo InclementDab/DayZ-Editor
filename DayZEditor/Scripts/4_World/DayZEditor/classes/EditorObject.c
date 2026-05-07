@@ -286,7 +286,7 @@ class EditorObject: EditorWorldObject
 			EditorLog.Warning(string.Format("World Object is null!"));
 			return object_data;
 		}
-		
+				
 		object_data.Type = m_WorldObject.GetType();				
 		object_data.Position = GetPosition();
 

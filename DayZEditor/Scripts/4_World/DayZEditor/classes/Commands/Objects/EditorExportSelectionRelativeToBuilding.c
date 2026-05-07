@@ -44,8 +44,7 @@ class EditorExportSelectionRelativeToBuilding: EditorCommand
 			Math3D.MatrixInvMultiply4(mat, mat_object, mat_object);
 			mat_object[0] = mat_object[0] * save_data.EditorObjects[i].Scale;
 			mat_object[1] = mat_object[1] * save_data.EditorObjects[i].Scale;
-			mat_object[2] = mat_object[2] * save_data.EditorObjects[i].Scale;
-
+			mat_object[2] = mat_object[2] * save_data.EditorObjects[i].Scale;			
 			EditorObjectData obj_data = EditorObjectData.Create(save_data.EditorObjects[i].Type, mat_object);
 			save_data2.EditorObjects.Insert(obj_data);
 		}
@@ -63,7 +62,7 @@ class EditorExportSelectionRelativeToBuilding: EditorCommand
 
 	override string GetName()
 	{
-		return "Export Relative to Selection";
+		return "Export Relative...";
 	}
 }
 
@@ -122,6 +121,6 @@ class EditorImportRelativeToBuilding: EditorCommand
 	
 	override string GetName()
 	{
-		return "Import Relative to Object";
+		return "Import Relative...";
 	}
 }

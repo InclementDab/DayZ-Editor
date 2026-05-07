@@ -2559,7 +2559,13 @@ class Editor: Managed
 		
 		int count;
 		EditorAction action = new EditorAction("Create", "Delete");
-		foreach (EditorObject editor_object: editor_objects) {
+		while (editor_objects.Count() > 0) {
+			EditorObject editor_object = editor_objects[0];
+			editor_objects.Remove(0);
+			if (!editor_object) {
+				continue;
+			}
+			
 			if (!editor_object.IsLocked()) {
 				if (editor_object.IsSelected()) {
 					DeselectObject(editor_object);
