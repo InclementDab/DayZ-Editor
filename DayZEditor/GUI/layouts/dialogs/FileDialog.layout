@@ -2,8 +2,8 @@ WrapSpacerWidgetClass FileDialog {
  visible 1
  clipchildren 1
  ignorepointer 0
- color 0.1412 0.1569 0.1804 1
- size 700 492
+ color 0.141 0.157 0.18 1
+ size 880 602
  halign center_ref
  valign center_ref
  hexactpos 1
@@ -21,7 +21,7 @@ WrapSpacerWidgetClass FileDialog {
   FrameWidgetClass WindowDragWrapper {
    visible 1
    ignorepointer 0
-   color 1 1 1 0.3922
+   color 1 1 1 0.392
    size 1 26
    hexactpos 1
    vexactpos 1
@@ -32,7 +32,7 @@ WrapSpacerWidgetClass FileDialog {
    {
     PanelWidgetClass TitleBar {
      ignorepointer 1
-     color 0 0.4784 0.8 1
+     color 0 0.478 0.8 1
      size 1 25
      halign center_ref
      hexactpos 1
@@ -46,7 +46,7 @@ WrapSpacerWidgetClass FileDialog {
       ImageWidgetClass TitleIcon {
        visible 1
        ignorepointer 1
-       color 0.6824 0.7176 0.702 1
+       color 0.682 0.718 0.702 1
        position 5 0
        size 18 18
        valign center_ref
@@ -94,7 +94,7 @@ WrapSpacerWidgetClass FileDialog {
       }
       PanelWidgetClass TitleClosePanel {
        ignorepointer 1
-       color 0.7843 0.2941 0.2745 1
+       color 0.784 0.294 0.275 1
        position 2 2
        size 21 21
        halign right_ref
@@ -107,7 +107,7 @@ WrapSpacerWidgetClass FileDialog {
         ButtonWidgetClass TitleClose {
          visible 1
          ignorepointer 0
-         color 0.6667 0.6667 0.6667 1
+         color 0.667 0.667 0.667 1
          position 0 0
          size 1 1
          halign center_ref
@@ -136,7 +136,7 @@ WrapSpacerWidgetClass FileDialog {
   }
   PanelWidgetClass PanelWidget0 {
    ignorepointer 1
-   color 0.1725 0.1922 0.2118 1
+   color 0.172 0.192 0.212 1
    size 1 48
    hexactpos 1
    vexactpos 1
@@ -201,7 +201,7 @@ WrapSpacerWidgetClass FileDialog {
        {
         ImageWidgetClass ExplorerFwdImage {
          ignorepointer 1
-         color 1 1 1 0.3922
+         color 1 1 1 0.392
          size 18 18
          halign center_ref
          valign center_ref
@@ -392,7 +392,7 @@ WrapSpacerWidgetClass FileDialog {
   WrapSpacerWidgetClass DialogButtons {
    visible 0
    ignorepointer 0
-   color 0.7059 0.7059 0.7059 1
+   color 0.706 0.706 0.706 1
    size 0.9 36
    halign center_ref
    valign bottom_ref
@@ -418,7 +418,7 @@ WrapSpacerWidgetClass FileDialog {
    visible 1
    ignorepointer 1
    position 0 0
-   size 1 346
+   size 1 456
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -426,7 +426,7 @@ WrapSpacerWidgetClass FileDialog {
    {
     ScrollWidgetClass ScrollWidget0 {
      ignorepointer 0
-     size 0.333 0.9
+     size 0.25 0.9
      valign bottom_ref
      hexactpos 1
      vexactpos 1
@@ -455,8 +455,8 @@ WrapSpacerWidgetClass FileDialog {
     }
     PanelWidgetClass Divider {
      ignorepointer 1
-     color 0.5647 0.5647 0.5647 1
-     position 0.333 0
+     color 0.565 0.565 0.565 1
+     position 0.25 0
      size 0.001 1
      hexactpos 0
      vexactpos 1
@@ -465,10 +465,10 @@ WrapSpacerWidgetClass FileDialog {
      scaled 1
      style rover_sim_colorable
     }
-    ScrollWidgetClass ScrollWidget1 {
+    ScrollWidgetClass FileScroller {
      ignorepointer 0
-     position 0.334 0
-     size 0.666 0.9
+     position 0.25 0
+     size 0.75 0.9
      valign bottom_ref
      hexactpos 0
      vexactpos 1
@@ -497,8 +497,8 @@ WrapSpacerWidgetClass FileDialog {
     }
     PanelWidgetClass FolderHeader {
      ignorepointer 1
-     color 0.2275 0.2471 0.2627 1
-     size 0.333 0.1
+     color 0.228 0.247 0.263 1
+     size 0.25 0.1
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -521,9 +521,9 @@ WrapSpacerWidgetClass FileDialog {
     }
     PanelWidgetClass FileHeader {
      ignorepointer 1
-     color 0.2275 0.2471 0.2627 1
-     position 0.334 0
-     size 0.666 0.1
+     color 0.228 0.247 0.263 1
+     position 0.25 0
+     size 0.75 0.1
      hexactpos 0
      vexactpos 1
      hexactsize 0
@@ -561,7 +561,7 @@ WrapSpacerWidgetClass FileDialog {
   }
   PanelWidgetClass PanelWidget4 {
    ignorepointer 1
-   color 0.2275 0.2471 0.2627 1
+   color 0.228 0.247 0.263 1
    position 10 10
    size 1 72
    hexactpos 1

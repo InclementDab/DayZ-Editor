@@ -91,6 +91,7 @@ class EditorFileDialog: EditorModal
 	};
 
 	static string s_LastDirectory;
+	static ref map<string, float> s_ScrollPositions = new map<string, float>();
 	
 	protected EditorFileDialogController m_TemplateController;
 	
@@ -111,6 +112,7 @@ class EditorFileDialog: EditorModal
 	EditBoxWidget SearchBox, FileNameBox;
 	ButtonWidget SaveButton, CancelButton, ExplorerBack, ExplorerFwd, TitleClose, RefreshButton;
 	ImageWidget ExplorerBackImage, ExplorerFwdImage;
+	ScrollWidget FileScroller;
 
 	void EditorFileDialog(typename file_type, ScriptCaller on_file_selected, eDialogMode dialog_mode, eDialogFlags dialog_flags, string default_value)
 	{
@@ -235,8 +237,13 @@ class EditorFileDialog: EditorModal
 			update_history = false;
 		}
 		
+		s_ScrollPositions[m_CurrentDirectory] = FileScroller.GetVScrollPos();
+		
 		m_CurrentDirectory = SystemPath.Format(directory);
 		s_LastDirectory = m_CurrentDirectory;
+		
+		// Maps return 0 when there is no entry so this is valid
+		FileScroller.VScrollToPos(s_ScrollPositions[m_CurrentDirectory]);
 
 		array<ref Param2<string, string>> extensions = {};
 		m_FileType.GetValidExtensions(extensions);
