@@ -27,7 +27,7 @@ class EditorObjectMarker: EditorMarker
 		if (m_Editor.IsPlacing() || m_Editor.Brush) { 
 			return false;
 		}
-
+		
 		// Delete the current tooltip to clean the UI a bit
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 
@@ -52,7 +52,7 @@ class EditorObjectMarker: EditorMarker
 		if (m_Editor.IsPlacing() || m_Editor.Brush) { 
 			return false;
 		}
-		
+				
 		// Delete the current tooltip to clean the UI a bit
 		GetEditor().GetEditorHud().SetCurrentTooltip(null);
 		

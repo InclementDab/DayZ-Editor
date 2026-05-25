@@ -107,6 +107,7 @@ class Editor: Managed
 	
 	protected bool m_MouseVisibleOnClose;
 	protected bool 									m_Active;
+	protected bool m_JustPlacedObject;
 	// todo: change this to some EditorFile struct that manages this better
 	// bouncing around strings is a PAIN... i think it also breaks directories... maybe not
 	protected string								EditorSaveFile;
@@ -130,7 +131,7 @@ class Editor: Managed
 	ref EditorDragHandler DragHandler;
 
 	static const int Experimental = 0;
-	static const int MinorVersionNumber = 5;
+	static const int MinorVersionNumber = 6;
 	static const int VersionNumber = 35;
 	static const string Version = string.Format("1.%1%2%3", VersionNumber, Ternary<string>.If(MinorVersionNumber, "." + MinorVersionNumber.ToString(), string.Empty), Ternary<string>.If(Experimental, "E", string.Empty));
 	static bool HasTestedVersion = false;
@@ -1224,6 +1225,10 @@ class Editor: Managed
 				return;
 			}
 		}
+		
+		if (left_click_input.LocalRelease()) {
+			m_JustPlacedObject = false;
+		}
 
 		if (middle_click_input.LocalPress()) {
 			// Ctrl + Middle Mouse logic
@@ -1548,8 +1553,8 @@ class Editor: Managed
 		// This is all the logic that controls inventory hud, not a fan but it works
 		// update: it doesnt work
 		// update 2: it works
-		if (m_Player && !m_Active) {					
-			if (input.LocalPress("EditorToggleInventoryEditor", false)) {
+		if (m_Player && !m_Active) {
+			if (input.LocalPress("EditorToggleInventoryEditor")) {
 				if (m_EditorInventoryEditorHud) {
 					StopInventoryEditor();
 				}
@@ -1558,14 +1563,6 @@ class Editor: Managed
 					GetGame().GetMission().HideInventory();
 					// Default to m_Player
 					StartInventoryEditor(m_Player);
-				}
-				
-				return;
-			}
-			
-			if (input.LocalPress("EditorToggleInventory", false)) {
-				if (m_EditorInventoryEditorHud) {
-					StopInventoryEditor();
 				}
 			}
 		}
@@ -2005,8 +2002,8 @@ class Editor: Managed
 		m_PlacingObjects[world_object] = hand_data;
 		EditorEvents.AddInHand(this, world_object, hand_data);
 		
-		if (!IsShiftDown()) {
-			ClearSelection();
+		if (!IsShiftDown() && !IsPlacing()) {
+			//ClearSelection();
 		}
 		
 		return m_PlacingObjects;
@@ -2057,6 +2054,7 @@ class Editor: Managed
 			}
 		}
 						
+		m_JustPlacedObject = true;
 		// Dont create the undo on multiplayer because its going to be immediately deleted when receiving the info from the server
 		// you will create a null action and boomy
 		// update: stumbled upon this and we are creating undo in mp. is this why item placement is bug?
@@ -2070,7 +2068,7 @@ class Editor: Managed
 			
 			placed_objects.Insert(editor_object_created);
 		}
-					
+			
 		return placed_objects;
 	}
 	
@@ -2082,6 +2080,11 @@ class Editor: Managed
 		}
 		//delete m_PlacingObjects;
 		//m_PlacingObjects.Clear();
+	}
+	
+	bool HasJustPlacedObject()
+	{
+		return m_JustPlacedObject;
 	}
 	
 	void EditLootSpawns(EditorPlaceableItem placeable_item)

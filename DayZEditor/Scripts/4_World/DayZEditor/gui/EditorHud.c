@@ -344,7 +344,7 @@ class EditorHud: ScriptView
 			ShowCursor(true);
 			return;
 		}
-				
+						
 		int mouse_x, mouse_y;
 		GetMousePos(mouse_x, mouse_y);
 
@@ -452,7 +452,6 @@ class EditorHud: ScriptView
 					teleport_player.SetPosition(teleport_player_raycast.Bounce.Position);
 					
 					if (GetGame().IsMultiplayer()) {
-						Print(teleport_player);
 						ScriptRPC rpc_teleport = new ScriptRPC();
 						rpc_teleport.Write(teleport_player);
 						rpc_teleport.Write(teleport_player_raycast.Bounce.Position);
@@ -471,7 +470,7 @@ class EditorHud: ScriptView
 
 			Map.SetFlags(WidgetFlags.IGNOREPOINTER);
 		}
-		
+						
 		if (left_mouse_input.LocalRelease() || !g_Game.IsAppActive()) {
 			m_DragWidget = null;
 			m_DragBoxDelayStart = 10;
@@ -494,7 +493,7 @@ class EditorHud: ScriptView
 				
 		EditorCanvas.Clear();
 		m_DragBoxDelayStart -= dt;
-		if (left_mouse_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.Brush && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers) {	
+		if (left_mouse_input.LocalValue() && m_DragBoxDelayStart < 0 && GetGame().GetInput().HasGameFocus() && cursor_visible && !m_Editor.IsPlacing() && !m_Editor.IsDragging() && !m_Editor.Brush && !m_DragWidget && m_DragBoxStartX != -1 && m_DragBoxStartY != -1 && EditorMarker.s_AllMarkers && !m_Editor.HasJustPlacedObject()) {	
 			switch (m_SelectionMode) {
 				case SelectionMode.LASSO: {
 					vector current = Vector(mouse_x, mouse_y, 0);
