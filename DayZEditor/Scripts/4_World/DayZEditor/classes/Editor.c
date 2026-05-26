@@ -489,7 +489,7 @@ class Editor: Managed
 		Raycast camera_raycast;
 		const int interaction_layers = PhxInteractionLayers.CAMERA;
 		if (!ground_only) {
-			camera_raycast = source_ray.PerformRaycast(ignore, distance, interaction_layers);
+			camera_raycast = source_ray.PerformRaycast(ignore, distance, -1);
 		}
 
 		//if (!camera_raycast) {

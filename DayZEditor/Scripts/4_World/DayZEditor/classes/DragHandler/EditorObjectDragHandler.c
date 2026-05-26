@@ -147,7 +147,8 @@ class EditorObjectDragHandler: EditorDragHandler
 		}
 		
 		//Raycast cursor_raycast = cursor_ray.PerformRaycastMulti(ignored_objects, GetEditor().GetCamera().GetSettings().ViewDistance / 2, interaction_layers);
-		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(ignored_objects, GetEditor().GroundMode);
+		//Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(ignored_objects, GetEditor().GroundMode);
+		Raycast cursor_raycast = GetEditor().GetCursorRaycast(target.GetWorldObject(), GetEditor().GroundMode);
 			
 		vector cursor_pos = cursor_ray.GetPoint(10.0);
 		if (cursor_raycast) {
@@ -167,6 +168,10 @@ class EditorObjectDragHandler: EditorDragHandler
 			up_dir = cursor_raycast.Bounce.Direction;
 			if (up_dir.LengthSq() == 0) {
 				up_dir = GetGame().SurfaceGetNormal(cursor_raycast.Bounce.Position[0], cursor_raycast.Bounce.Position[2]);
+			}
+			
+			if (up_dir.LengthSq() == 0) {
+				up_dir = vector.Up;
 			}
 		}
 
@@ -282,6 +287,11 @@ class EditorObjectDragHandler: EditorDragHandler
 			Math3D.MatrixMultiply4(ortho_parent_mat, local_additional_mat, output_additional_mat);
 			selected_object.SetTransform(output_additional_mat);
 		}
+		
+		if (transform[0].LengthSq() == 0 || transform[1].LengthSq() == 0 || transform[2].LengthSq() == 0) {
+			Math3D.MatrixIdentity3(transform);
+		}
+		
 		
 		target.SetBottomTransform(transform);
 		target.Update();

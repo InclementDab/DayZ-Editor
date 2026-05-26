@@ -59,7 +59,7 @@ class EditorNodeView: ScriptView
 		
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);		
-		m_LayoutRoot.SetScreenSize(screen_x, h + 24 * screen_y / 1080.0);
+		m_LayoutRoot.SetScreenSize(screen_x, h + 28 * screen_y / 1080.0);
 		
 		// If you are setting this as collapsed, the parents must be uncollapsed because you can access it. we are using this to update the collapse state
 		if (GetListParent()) {
