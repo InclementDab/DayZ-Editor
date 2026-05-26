@@ -1,0 +1,153 @@
+PanelWidgetClass AssetsBrowserCardRoot {
+ visible 1
+ clipchildren 1
+ inheritalpha 0
+ ignorepointer 0
+ color 0.11 0.118 0.133 1
+ size 192 196
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ style editor_selection
+ {
+  ButtonWidgetClass AssetsBrowserCardButton {
+   visible 1
+   clipchildren 0
+   inheritalpha 0
+   ignorepointer 0
+   size 1 1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   style Empty
+   {
+    FrameWidgetClass AssetsBrowserCardPreviewFrame {
+     clipchildren 0
+     inheritalpha 0
+     ignorepointer 1
+     position 8 8
+     size 176 128
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     scaled 1
+     {
+      ItemPreviewWidgetClass AssetsBrowserCardPreview {
+       visible 1
+       ignorepointer 1
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       "force flip" 0
+      }
+     }
+    }
+    PanelWidgetClass AssetsBrowserCardFooter {
+     ignorepointer 1
+     color 0.11 0.118 0.133 1
+     position 8 144
+     size 176 34
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style DayZDefaultPanel
+     {
+      TextWidgetClass AssetsBrowserCardTitle {
+       clipchildren 1
+       ignorepointer 1
+       color 1 1 1 1
+       position 8 4
+       size 160 13
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Item"
+       font "gui/fonts/sdf_MetronBook24"
+       "exact text" 1
+       "exact text size" 10
+       "text halign" left
+       "text valign" center
+      }
+      TextWidgetClass AssetsBrowserCardSource {
+       clipchildren 1
+       ignorepointer 1
+       color 1 1 1 0.78
+       position 8 18
+       size 160 12
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       text "Source"
+       font "gui/fonts/sdf_MetronLight24"
+       "exact text" 1
+       "exact text size" 9
+       "text halign" left
+       "text valign" center
+      }
+     }
+    }
+   }
+  }
+  FrameWidgetClass AssetsBrowserCardFavorite {
+   visible 1
+   ignorepointer 1
+   position 162 8
+   size 20 20
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   scaled 1
+   {
+    ButtonWidgetClass AssetsBrowserCardFavoriteButton {
+     visible 1
+     clipchildren 1
+     color 1 1 1 0.392
+     position 0 0
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 1
+     style Empty
+     switch toggle
+     {
+      ImageWidgetClass AssetsBrowserCardFavoriteIcon {
+       visible 1
+       clipchildren 0
+       ignorepointer 1
+       color 1 1 1 1
+       position 0 0
+       size 14 16
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 1
+       scriptclass ""
+       image0 "set:dayz_editor_gui image:Star"
+       mode blend
+       "src alpha" 1
+       filter 1
+      }
+     }
+    }
+   }
+  }
+ }
+}

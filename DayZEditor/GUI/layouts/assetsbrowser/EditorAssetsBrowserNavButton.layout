@@ -1,0 +1,46 @@
+PanelWidgetClass AssetsBrowserNavButtonRoot {
+ visible 1
+ clipchildren 1
+ ignorepointer 0
+ color 0.169 0.18 0.204 1
+ size 100 26
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ style editor_selection
+ {
+  TextWidgetClass AssetsBrowserNavButtonLabel {
+   ignorepointer 1
+   size 1 1
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   text "Filter"
+   font "gui/fonts/system"
+   "exact text size" 14
+   text_proportion 0.75
+   "size to text h" 1
+   "size to text v" 1
+   "text halign" center
+   "text valign" center
+  }
+  ButtonWidgetClass AssetsBrowserNavButton {
+   visible 1
+   clipchildren 0
+   ignorepointer 0
+   color 0.706 0.706 0.706 1
+   size 1 1
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 0
+   scaled 1
+   style Default
+   "no focus" 1
+  }
+ }
+}

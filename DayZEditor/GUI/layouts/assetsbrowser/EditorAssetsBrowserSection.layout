@@ -1,0 +1,92 @@
+PanelWidgetClass AssetsBrowserSectionRoot {
+ visible 1
+ clipchildren 0
+ ignorepointer 0
+ size 0 0
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ {
+  PanelWidgetClass AssetsBrowserSectionHeader {
+   visible 1
+   clipchildren 1
+   ignorepointer 0
+   color 0.125 0.141 0.176 0.94
+   position 0 0
+   size 420 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    TextWidgetClass AssetsBrowserSectionTitle {
+     ignorepointer 1
+     position 10 0
+     size 400 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "SECTION"
+     font "gui/fonts/sdf_MetronBook24"
+     "exact text size" 14
+     text_proportion 0.75
+     "text valign" center
+    }
+    PanelWidgetClass AssetsBrowserSectionCollapseRoot {
+     visible 1
+     clipchildren 1
+     ignorepointer 0
+     color 0.125 0.141 0.176 0.94
+     position 398 0
+     size 22 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass AssetsBrowserSectionCollapseButton {
+       visible 1
+       ignorepointer 0
+       position 0 0
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style Default
+       text ""
+      }
+      ImageWidgetClass AssetsBrowserSectionCollapseIcon {
+       ignorepointer 1
+       position 0 0
+       size 22 22
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 1
+       draggable 0
+       mode additive
+       "src alpha" 1
+       pivot 1 1
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass AssetsBrowserSectionGrid {
+   visible 1
+   ignorepointer 0
+   position 0 30
+   size 0 0
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+  }
+ }
+}

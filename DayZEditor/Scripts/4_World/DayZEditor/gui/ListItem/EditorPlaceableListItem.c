@@ -6,12 +6,15 @@ class EditorPlaceableListItemLarge: EditorPlaceableListItem
 	
 	void EditorPlaceableListItemLarge(EditorPlaceableItem placeable_item)
 	{
-		Object preview_object = GetGame().CreateObjectEx(placeable_item.Type, vector.Zero, ECE_LOCAL);
+		Object preview_object = GetGame().CreateObjectEx(placeable_item.Type, Vector(0, -1000, 0), ECE_LOCAL | ECE_CREATEPHYSICS | ECE_TRACE);
 		if (preview_object) {
 			m_PreviewItem = EntityAI.Cast(preview_object);
 			if (!m_PreviewItem) {
 				preview_object.Delete();
 			} else {
+				dBodyDestroy(m_PreviewItem);
+				m_PreviewItem.DisableSimulation(true);
+				m_PreviewItem.SetAllowDamage(false);
 				ItemPreview.SetItem(m_PreviewItem);
 				ItemPreview.SetView(0);
 				ItemPreview.Update();
@@ -55,7 +58,7 @@ class EditorPlaceableListItem: EditorListItem
 		EditorEvents.OnRemoveFromHand.Insert(OnStopPlacing);
 #endif
 		
-		if (GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1) {
+		if (m_PlaceableItem.IsFavorite()) {
 			m_TemplateController.Favorite = true;
 			ListItemFavorites.Show(true);
 			m_TemplateController.NotifyPropertyChanged("Favorite");
@@ -248,21 +251,8 @@ class EditorPlaceableListItem: EditorListItem
 	override bool OnFavoriteToggle(CheckBoxCommandArgs args)
 	{
 		EditorLog.Debug("Toggling Favorite Favorite %1", m_PlaceableItem.Type);
-
-		EditorSettings settings = GetEditor().GetSettings();
-		if (!args.GetCheckBoxState()) {
-			int index = settings.FavoriteItems.Find(m_PlaceableItem.Type);
-			if (index != -1) {
-				settings.FavoriteItems.Remove(index);
-				settings.Save();
-			}
-		} else {
-			if (settings.FavoriteItems.Find(m_PlaceableItem.Type) == -1) {
-				settings.FavoriteItems.Insert(m_PlaceableItem.Type);
-				settings.Save();
-			}
-		}
-
+		GetEditor().GetEditorHud().SetFavoriteState(m_PlaceableItem, args.GetCheckBoxState());
+		SetFavorite(args.GetCheckBoxState());
 		return true;
 	}
 }

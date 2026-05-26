@@ -4,11 +4,11 @@ class EditorRemoveFromFavoritesCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		Param1<EditorPlaceableItem> data = Param1<EditorPlaceableItem>.Cast(GetData());
-		if (!data) {
+		if (!data || !data.param1) {
 			return false;
 		}
 		
-		//data.param1.SetFavorite(false);		
+		GetEditor().GetEditorHud().SetFavoriteState(data.param1, false);
 		return true;
 	}
 	

@@ -4,12 +4,11 @@ class EditorAddToFavoritesCommand: EditorCommand
 	{
 		super.Execute(sender, args);
 		Param1<EditorPlaceableItem> data = Param1<EditorPlaceableItem>.Cast(GetData());
-		if (!data) {
+		if (!data || !data.param1) {
 			return false;
 		}
 		
-		GetEditor().GetSettings().FavoriteItems.Insert(data.param1.Type);
-		GetEditor().GetSettings().Save();
+		GetEditor().GetEditorHud().SetFavoriteState(data.param1, true);
 		return true;
 	}
 	

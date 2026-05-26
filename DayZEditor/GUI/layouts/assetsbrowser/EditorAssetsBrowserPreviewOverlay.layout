@@ -1,0 +1,24 @@
+FrameWidgetClass AssetsBrowserPreviewOverlay {
+ visible 1
+ ignorepointer 1
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ scaled 1
+ {
+  ItemPreviewWidgetClass AssetsBrowserPreviewItem {
+   visible 1
+   ignorepointer 1
+   size 0.9 0.9
+   halign center_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 0
+   scaled 1
+   "force flip" 0
+  }
+ }
+}

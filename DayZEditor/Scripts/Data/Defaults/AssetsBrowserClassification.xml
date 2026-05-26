@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssetsBrowserClassification>
+	<VanillaPaths>
+		<Tab id="structures">
+			<Subcategory id="buildings">
+				<Sections>
+					<Section id="ruins" label="Ruins" order="0" />
+				</Sections>
+				<Path folder="DZ/structures/residential" />
+				<Path folder="DZ/structures/ruins" section="ruins" />
+				<Path folder="DZ/structures/specific/castles" />
+				<Path folder="DZ/structures/specific/churches" />
+				<Path folder="DZ/structures/specific/hotel" />
+				<Path folder="DZ/structures/specific/prison" />
+			</Subcategory>
+
+			<Subcategory id="barriers">
+				<Path folder="DZ/structures/walls" />
+			</Subcategory>
+
+			<Subcategory id="infrastructure">
+				<Path folder="DZ/structures/roads" />
+				<Path folder="DZ/structures/rail" />
+				<Path folder="DZ/structures/bridges" />
+				<Path folder="DZ/structures/specific/cableway" />
+				<Path folder="DZ/structures/specific/skilift" />
+				<Path folder="DZ/structures/specific/fuelstation" />
+				<Path folder="DZ/structures/specific/radio" />
+				<Path folder="DZ/structures/specific/towers" />
+				<Path folder="DZ/structures/specific/underground" />
+			</Subcategory>
+
+			<Subcategory id="signs">
+				<Path folder="DZ/structures/signs" />
+			</Subcategory>
+
+			<Subcategory id="military">
+				<Path folder="DZ/structures/specific/airfields" />
+				<Path folder="DZ/structures/specific/airport" />
+				<Path folder="DZ/structures/military" />
+			</Subcategory>
+
+			<Subcategory id="industrial">
+				<Path folder="DZ/structures/industrial" />
+			</Subcategory>
+
+			<Subcategory id="basebuilding">
+				<Sections>
+					<Section id="fortifications" label="Fortifications" order="0" />
+				</Sections>
+				<Path folder="DZ/gear/camping/fence" section="fortifications" />
+				<Path folder="DZ/gear/camping/watchtower" section="fortifications" />
+				<Path folder="DZ/gear/camping/barbed_wire" section="fortifications" />
+				<Path folder="DZ/gear/camping/territory_flag" section="fortifications" />
+				<Path folder="DZ/gear/camping/combination_lock" section="fortifications" />
+				<Path folder="DZ/gear/camping/camo_net" section="fortifications" />
+				<Path folder="DZ/gear/camping/hbox" section="fortifications" />
+				<Path folder="DZ/gear/camping/shelter" section="fortifications" />
+			</Subcategory>
+
+			<Subcategory id="misc">
+				<Sections>
+					<Section id="building_parts" label="Building Parts" order="0" />
+				</Sections>
+				<Path folder="DZ/structures/proxy_buildingparts" section="building_parts" />
+				<Path folder="DZ/structures/specific" />
+			</Subcategory>
+		</Tab>
+
+		<Tab id="props">
+			<Subcategory id="wrecks">
+				<Path folder="DZ/structures/wrecks" />
+			</Subcategory>
+
+			<Subcategory id="furniture">
+				<Path folder="DZ/structures/furniture/cases" />
+				<Path folder="DZ/structures/furniture/cases/case_cans_b" />
+				<Path folder="DZ/structures/furniture/cases/case_cans_b.p3d" />
+				<Path folder="DZ/structures/furniture" />
+			</Subcategory>
+
+			<Subcategory id="storage">
+				<Sections>
+					<Section id="camping" label="Camping" order="0" />
+					<Section id="camping_storage" label="Camping Storage" order="1" />
+				</Sections>
+				<Path folder="DZ/structures/furniture/generalstore" />
+				<Path folder="DZ/gear/containers" />
+				<Path folder="DZ/gear/camping" section="camping" />
+				<Path folder="DZ/gear/camping/tent" section="camping_storage" />
+				<Path folder="DZ/gear/camping/stash" section="camping_storage" />
+				<Path folder="DZ/gear/camping/sea_chest" section="camping_storage" />
+			</Subcategory>
+
+			<Subcategory id="decor">
+				<Sections>
+					<Section id="camp_decor" label="Camp Decor" order="0" />
+				</Sections>
+				<Path folder="DZ/structures/specific/statues" />
+				<Path folder="DZ/structures/specific/monuments" />
+				<Path folder="DZ/structures/specific/cultural" />
+				<Path folder="DZ/structures/specific/maps" />
+				<Path folder="DZ/structures/specific/deadbodies" />
+				<Path folder="DZ/structures/furniture/decoration" />
+				<Path folder="DZ/structures/furniture/lighting" />
+				<Path folder="DZ/gear/camping/bonfire" section="camp_decor" />
+				<Path folder="DZ/gear/camping/christmas_lights" section="camp_decor" />
+				<Path folder="DZ/gear/camping/string_lights" section="camp_decor" />
+			</Subcategory>
+
+			<Subcategory id="appliances">
+				<Sections>
+					<Section id="power_and_lighting" label="Power and Lighting" order="0" />
+				</Sections>
+				<Path folder="DZ/structures/furniture/eletrical_appliances" />
+				<Path folder="DZ/structures/furniture/kitchen" />
+				<Path folder="DZ/structures/furniture/medical" />
+				<Path folder="DZ/structures/furniture/radar_equipment" />
+				<Path folder="DZ/gear/camping/generator" section="power_and_lighting" />
+				<Path folder="DZ/gear/camping/charger" section="power_and_lighting" />
+				<Path folder="DZ/gear/camping/cable_reel" section="power_and_lighting" />
+				<Path folder="DZ/gear/camping/spotlight" section="power_and_lighting" />
+			</Subcategory>
+		</Tab>
+
+		<Tab id="vehicles">
+			<Subcategory id="cars">
+				<Path folder="DZ/vehicles/wheeled" />
+			</Subcategory>
+
+			<Subcategory id="trucks">
+				<Path folder="DZ/vehicles/wheeled/truck_01" />
+				<Path folder="DZ/vehicles/wheeled/truck_02" />
+				<Path folder="DZ/vehicles/wheeled/transitbus" />
+				<Path folder="DZ/vehicles/wheeled/van_01" />
+			</Subcategory>
+
+			<Subcategory id="boats">
+				<Path folder="DZ/vehicles/water" />
+			</Subcategory>
+
+			<Subcategory id="parts">
+				<Sections>
+					<Section id="vehicle_parts" label="Vehicle Parts" order="0" />
+				</Sections>
+				<Path folder="DZ/vehicles/parts" section="vehicle_parts" />
+			</Subcategory>
+		</Tab>
+
+		<Tab id="nature">
+			<Subcategory id="trees_bushes">
+				<Sections>
+					<Section id="trees" label="Trees" order="0" />
+					<Section id="bushes" label="Bushes" order="1" />
+				</Sections>
+				<Path folder="DZ/plants/tree" section="trees" />
+				<Path folder="DZ/plants/bush" section="bushes" />
+			</Subcategory>
+
+			<Subcategory id="plants">
+				<Sections>
+					<Section id="ground_cover" label="Ground Cover" order="0" />
+					<Section id="building_greenery" label="Building Greenery" order="1" />
+					<Section id="world_variants" label="World Variants" order="2" />
+				</Sections>
+				<Path folder="DZ/plants/clutter" section="ground_cover" />
+				<Path folder="DZ/plants/building" section="building_greenery" />
+				<Path folder="DZ/plants" section="world_variants" />
+			</Subcategory>
+
+			<Subcategory id="rocks">
+				<Sections>
+					<Section id="rocks" label="Rocks" order="0" />
+					<Section id="snow_rocks" label="Snow Rocks" order="1" />
+				</Sections>
+				<Path folder="DZ/rocks" section="rocks" />
+			</Subcategory>
+
+			<Subcategory id="terrain">
+				<Sections>
+					<Section id="water" label="Water" order="0" />
+				</Sections>
+				<Path folder="DZ/water" section="water" />
+			</Subcategory>
+		</Tab>
+
+		<Tab id="clothing">
+			<Subcategory id="back">
+				<Path folder="DZ/characters/backpacks" />
+			</Subcategory>
+
+			<Subcategory id="belt">
+				<Path folder="DZ/characters/belts" />
+			</Subcategory>
+
+			<Subcategory id="eyewear">
+				<Path folder="DZ/characters/glasses" />
+			</Subcategory>
+
+			<Subcategory id="hands">
+				<Path folder="DZ/characters/gloves" />
+			</Subcategory>
+
+			<Subcategory id="head">
+				<Path folder="DZ/characters/headgear" />
+			</Subcategory>
+
+			<Subcategory id="face">
+				<Path folder="DZ/characters/masks" />
+			</Subcategory>
+
+			<Subcategory id="legs">
+				<Path folder="DZ/characters/pants" />
+			</Subcategory>
+
+			<Subcategory id="feet">
+				<Path folder="DZ/characters/shoes" />
+			</Subcategory>
+
+			<Subcategory id="body">
+				<Path folder="DZ/characters/tops" />
+			</Subcategory>
+
+			<Subcategory id="vest">
+				<Path folder="DZ/characters/vests" />
+			</Subcategory>
+		</Tab>
+
+		<Tab id="gear">
+			<Subcategory id="firearms">
+				<Path folder="DZ/weapons/firearms" />
+			</Subcategory>
+
+			<Subcategory id="pistols">
+				<Path folder="DZ/weapons/pistols" />
+			</Subcategory>
+
+			<Subcategory id="shotguns">
+				<Path folder="DZ/weapons/shotguns" />
+			</Subcategory>
+
+			<Subcategory id="melee">
+				<Path folder="DZ/weapons/melee" />
+			</Subcategory>
+
+			<Subcategory id="archery">
+				<Path folder="DZ/weapons/archery" />
+			</Subcategory>
+
+			<Subcategory id="launchers">
+				<Path folder="DZ/weapons/launchers" />
+			</Subcategory>
+
+			<Subcategory id="explosives">
+				<Path folder="DZ/weapons/explosives" />
+			</Subcategory>
+
+			<Subcategory id="nonlethal">
+				<Path folder="DZ/weapons/nonlethal" />
+			</Subcategory>
+
+			<Subcategory id="weapon_attachments">
+				<Path folder="DZ/weapons/attachments" />
+			</Subcategory>
+
+			<Subcategory id="optics">
+				<Sections>
+					<Section id="optics" label="Optics" order="0" />
+				</Sections>
+				<Path folder="DZ/weapons/attachments/optics" section="optics" />
+				<Path folder="DZ/gear/optics" section="optics" />
+			</Subcategory>
+
+			<Subcategory id="magazines">
+				<Sections>
+					<Section id="magazines" label="Magazines" order="0" />
+					<Section id="ammunition" label="Ammunition" order="1" />
+				</Sections>
+				<Path folder="DZ/weapons/attachments/magazine" section="magazines" />
+				<Path folder="DZ/weapons/ammunition" section="ammunition" />
+				<Path folder="DZ/weapons/projectiles" section="ammunition" />
+			</Subcategory>
+
+			<Subcategory id="misc">
+				<Path folder="DZ/weapons/misc" section="misc" />
+			</Subcategory>
+		</Tab>
+
+		<Tab id="consumables">
+			<Subcategory id="food">
+				<Path folder="DZ/gear/food" />
+				<Path folder="DZ/gear/drinks" />
+				<Path folder="DZ/gear/cooking" />
+			</Subcategory>
+
+			<Subcategory id="medical">
+				<Path folder="DZ/gear/medical" />
+			</Subcategory>
+
+			<Subcategory id="tools">
+				<Path folder="DZ/gear/tools" />
+				<Path folder="DZ/gear/crafting" />
+				<Path folder="DZ/gear/navigation" />
+				<Path folder="DZ/gear/radio" />
+				<Path folder="DZ/gear/books" />
+				<Path folder="DZ/gear/cultivation" />
+				<Path folder="DZ/gear/traps" />
+				<Path folder="DZ/gear/consumables" />
+			</Subcategory>
+		</Tab>
+
+		<Tab id="creatures">
+			<Subcategory id="animals">
+				<Sections>
+					<Section id="animals" label="Animals" order="0" />
+				</Sections>
+				<Path folder="DZ/animals" />
+			</Subcategory>
+
+			<Subcategory id="infected">
+				<Sections>
+					<Section id="zombies" label="Zombies" order="0" />
+				</Sections>
+				<Path folder="DZ/characters/zombies" section="zombies" />
+			</Subcategory>
+
+			<Subcategory id="humans">
+				<Sections>
+					<Section id="humans" label="Humans" order="0" />
+				</Sections>
+			</Subcategory>
+		</Tab>
+
+		<Tab id="effects">
+			<Subcategory id="lights">
+				<Sections>
+					<Section id="lights" label="Lights" order="0" />
+				</Sections>
+			</Subcategory>
+
+			<Subcategory id="particles">
+				<Sections>
+					<Section id="particles" label="Particles" order="0" />
+				</Sections>
+			</Subcategory>
+
+			<Subcategory id="scripted">
+				<Sections>
+					<Section id="scripted" label="Scripted" order="0" />
+				</Sections>
+			</Subcategory>
+		</Tab>
+
+		<Tab id="misc">
+			<Subcategory id="editor">
+				<Sections>
+					<Section id="scripted" label="Scripted" order="0" />
+				</Sections>
+			</Subcategory>
+
+			<Subcategory id="unknown">
+				<Sections>
+					<Section id="unknown" label="Unknown" order="0" />
+					<Section id="characters" label="Characters" order="1" />
+				</Sections>
+				<Path folder="DZ/characters/heads" section="characters" />
+				<Path folder="DZ/characters/bodies" section="characters" />
+			</Subcategory>
+		</Tab>
+	</VanillaPaths>
+
+	<Mods>
+		<Mod id="builder_items" label="Builder Items">
+			<Tab id="structures">
+				<Subcategory id="industrial">
+					<Sections>
+						<Section id="builder_items" label="Builder Items" order="0" />
+					</Sections>
+					<Path folder="BuilderItems/structures/industrial" section="builder_items" />
+				</Subcategory>
+			</Tab>
+		</Mod>
+	</Mods>
+</AssetsBrowserClassification>

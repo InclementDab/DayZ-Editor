@@ -8,6 +8,11 @@ IF NOT EXIST %drive% (
 	goto check
 )
 
+IF EXIST "%drive%\DayZEditor" (
+	ECHO Removing existing junction "%drive%\DayZEditor"
+	RMDIR "%drive%\DayZEditor"
+)
+
 REM Loop through all subdirectories in the current directory
 FOR /D %%D IN (*) DO (
     REM Check for gproj file

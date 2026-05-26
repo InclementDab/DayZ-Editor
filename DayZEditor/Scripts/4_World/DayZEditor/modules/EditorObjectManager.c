@@ -38,6 +38,7 @@ class EditorObjectManagerModule : Managed
 	// lookup table by p3d
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dFile = new map<string, ref array<EditorPlaceableItem>>();
 	protected ref map<string, ref array<EditorPlaceableItem>> m_PlaceableObjectsByP3dPath = new map<string, ref array<EditorPlaceableItem>>();
+	protected ref EditorAssetsBrowserCatalog m_AssetsBrowserCatalog;
 	protected vector m_AveragePositionOfSelection;
 
 	// Current Selected PlaceableListItem
@@ -225,6 +226,9 @@ class EditorObjectManagerModule : Managed
 			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(SpotlightLight));
 			m_PlaceableObjects.Insert(EditorPlaceableItem.Create(UniversallightLight));
 		}
+
+		m_AssetsBrowserCatalog = new EditorAssetsBrowserCatalog();
+		m_AssetsBrowserCatalog.Build(m_PlaceableObjects);
 	}
 
     void RegisterUnresolvedObject(EditorObject obj)
@@ -269,10 +273,21 @@ class EditorObjectManagerModule : Managed
 	};
 		
 	static bool ValidatePath(string path)
-	{		
+	{
+		if (path == string.Empty) {
+			return false;
+		}
+
+		string normalized_path = path;
+		normalized_path.Replace("\\", "/");
+		normalized_path.ToLower();
+
 		foreach (string p: VALID_PATHS)
 		{
-			if (path.Contains(p))
+			string normalized_valid_path = p;
+			normalized_valid_path.Replace("\\", "/");
+			normalized_valid_path.ToLower();
+			if (normalized_path.Contains(normalized_valid_path))
 				return true;
 		}
 		
@@ -629,6 +644,11 @@ class EditorObjectManagerModule : Managed
 	array<ref EditorPlaceableItem> GetPlaceableObjects()
 	{
 		return m_PlaceableObjects;
+	}
+
+	EditorAssetsBrowserCatalog GetAssetsBrowserCatalog()
+	{
+		return m_AssetsBrowserCatalog;
 	}
 
 	// return a list of objects that use this p3d, useful for finding adequite replacements for 

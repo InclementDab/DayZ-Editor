@@ -45,6 +45,12 @@ class EditorSettings: ProfileSettings
 	
 	bool ShowScopeZeroObjects		= false;
 	bool ShowFavoriteObjects		= false;
+	bool AssetsBrowserFavoritesOnly		= false;
+	int AssetsBrowserPlatformFilter		= 0;
+	int AssetsBrowserPlacementTypeFilter = 0;
+	string AssetsBrowserLastTabId		= "structures";
+	string AssetsBrowserLastSubtabId	= "buildings";
+	ref array<string> AssetsBrowserSelectedSources = {};
 
 	// Camera Settings
 	float CameraSpeed				= 25;

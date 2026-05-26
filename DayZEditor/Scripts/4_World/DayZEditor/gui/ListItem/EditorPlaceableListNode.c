@@ -31,14 +31,7 @@ class EditorPlaceableListNode: EditorNodeView
 		}
 		
 		Favorite.Show(true);
-		
-		if (GetEditor().GetSettings().FavoriteItems.Find(placeable_item.Type) != -1) {
-			FavoriteIcon.SetImage(3);
-			FavoriteIcon.SetColor(LinearColor.GOLD);
-		} else {
-			FavoriteIcon.SetImage(2);
-			FavoriteIcon.SetColor(LinearColor.WHITE);
-		}
+		RefreshFavoriteState();
 		
 		EditorEvents.OnObjectPlaced.Insert(OnObjectPlaced);
 	}
@@ -142,19 +135,7 @@ class EditorPlaceableListNode: EditorNodeView
 	{
 		switch (w) {
 			case FavoriteButton: {
-				bool is_favorite = GetEditor().GetSettings().FavoriteItems.Find(m_PlaceableItem.Type) != -1;
-				if (is_favorite) {
-					GetEditor().GetSettings().FavoriteItems.RemoveItem(m_PlaceableItem.Type);
-					FavoriteIcon.SetImage(2);
-					FavoriteIcon.SetColor(LinearColor.WHITE);
-					GetEditor().GetEditorHud().RefreshSearchBar();
-				} else {
-					GetEditor().GetSettings().FavoriteItems.Insert(m_PlaceableItem.Type);
-					FavoriteIcon.SetImage(3);
-					FavoriteIcon.SetColor(LinearColor.GOLD);
-				}
-				
-				GetEditor().GetSettings().Save();
+				GetEditor().GetEditorHud().SetFavoriteState(m_PlaceableItem, !m_PlaceableItem.IsFavorite());
 				break;
 			}
 		}
@@ -188,5 +169,16 @@ class EditorPlaceableListNode: EditorNodeView
 		}
 		
 		return false;
+	}
+
+	void RefreshFavoriteState()
+	{
+		if (m_PlaceableItem.IsFavorite()) {
+			FavoriteIcon.SetImage(3);
+			FavoriteIcon.SetColor(LinearColor.GOLD);
+		} else {
+			FavoriteIcon.SetImage(2);
+			FavoriteIcon.SetColor(LinearColor.WHITE);
+		}
 	}
 }

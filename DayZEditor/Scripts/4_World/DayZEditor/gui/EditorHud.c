@@ -113,6 +113,9 @@ class EditorHud: ScriptView
 	protected ref array<vector> m_LassoHistory = {};
 	
 	protected ref EditorCameraMarker m_EditorCameraMarker;
+	protected ref EditorAssetsBrowserView m_AssetsBrowser;
+	protected bool m_AssetsBrowserPreviousLeftbar;
+	protected bool m_AssetsBrowserPreviousRightbar;
 	
 	static const ref array<string> ThemedWidgetStrings = {
 		"LeftbarPanelSearchBarIconButton",
@@ -319,6 +322,15 @@ class EditorHud: ScriptView
 		CinematicCameraButton.Show(true);
 		
 		m_EditorCameraMarker = new EditorCameraMarker(GetGame().GetUserManager().GetSelectedUser().GetName());
+		m_AssetsBrowser = new EditorAssetsBrowserView(this, m_Editor.GetObjectManager().GetAssetsBrowserCatalog());
+		m_AssetsBrowser.SetParent(this);
+		m_LayoutRoot.AddChild(m_AssetsBrowser.GetLayoutRoot());
+		m_AssetsBrowser.Show(false);
+	}
+
+	void ~EditorHud()
+	{
+		delete m_AssetsBrowser;
 	}
 	
 	override void Update(float dt)
@@ -356,6 +368,7 @@ class EditorHud: ScriptView
 		UAInput right_mouse_input = input_api.GetInputByID(UAMenuBack);
 		UAInput toggle_hud_input = input_api.GetInputByName("EditorToggleUI");
 		UAInput toggle_cursor = input_api.GetInputByName("EditorToggleCursor");
+		UAInput toggle_assets_browser = input_api.GetInputByName("EditorToggleAssetsBrowser");
 		UAInput toggle_editor = input_api.GetInputByName("EditorToggleActive");
 		UAInput teleport_to_cursor = input_api.GetInputByName("EditorTeleportPlayerToCursor");
 		UAInput toggle_map = input_api.GetInputByName("EditorToggleMap");
@@ -368,12 +381,27 @@ class EditorHud: ScriptView
 		bool useful_widget_under_cursor = widget_under_cursor && widget_under_cursor.GetName() != "HudPanel" && widget_under_cursor.GetName() != "CursorIcons";
 		Widget focus_widget = GetFocus();
 		bool cursor_visible = GetGame().GetUIManager().IsCursorVisible();
-		bool input_unlocked = (!focus_widget || !focus_widget.IsInherited(EditBoxWidget)) && !m_Dialog;
+		bool assets_browser_open = IsAssetsBrowserOpen();
+		bool assets_browser_hotkey_unlocked = (!focus_widget || !focus_widget.IsInherited(EditBoxWidget)) && !m_Dialog;
+		bool input_unlocked = (!focus_widget || !focus_widget.IsInherited(EditBoxWidget)) && !m_Dialog && !assets_browser_open;
 		bool any_mouse_press = (left_mouse_input.LocalPress() || right_mouse_input.LocalPress());
 
 		if (m_Editor.IsInventoryEditorActive()) {
+			CloseAssetsBrowser(false);
 			m_LayoutRoot.Show(false);
 			return;
+		}
+
+		if (toggle_assets_browser && toggle_assets_browser.LocalPress() && assets_browser_hotkey_unlocked && !g_Game.IsLeftCtrlDown()) {
+			if (assets_browser_open) {
+				CloseAssetsBrowser();
+				return;
+			}
+
+			if (input_unlocked && m_LayoutRoot.IsVisible() && !Map.IsVisible() && !m_Editor.IsPlayerControlled() && m_Editor.IsActive()) {
+				ToggleAssetsBrowser();
+				return;
+			}
 		}
 		
 		if (toggle_map.LocalPress() && input_unlocked && m_LayoutRoot.IsVisible()) {
@@ -1109,6 +1137,33 @@ class EditorHud: ScriptView
 		Symbols left_search_bar_icon = Ternary<Symbols>.If(!search_string.Length(), Symbols.MAGNIFYING_GLASS, Symbols.X);
 		left_search_bar_icon.Load(LeftSearchBarIconIcon);
 	}
+
+	void SetFavoriteState(EditorPlaceableItem placeable, bool favorite)
+	{
+		if (!placeable) {
+			return;
+		}
+
+		EditorSettings settings = GetEditor().GetSettings();
+		bool is_favorite = settings.FavoriteItems.Find(placeable.Type) != -1;
+		if (is_favorite == favorite) {
+			return;
+		}
+
+		if (favorite) {
+			settings.FavoriteItems.Insert(placeable.Type);
+		} else {
+			settings.FavoriteItems.RemoveItem(placeable.Type);
+		}
+
+		settings.Save();
+		RefreshSearchBar();
+		RefreshFavoriteIndicators();
+
+		if (m_AssetsBrowser) {
+			m_AssetsBrowser.OnFavoriteStateChanged();
+		}
+	}
 	
 	override bool OnChange(Widget w, int x, int y, bool finished)
 	{
@@ -1274,6 +1329,10 @@ class EditorHud: ScriptView
 	
 	void ShowCursor(bool state) 
 	{
+		if (!state && IsAssetsBrowserOpen()) {
+			CloseAssetsBrowser(false);
+		}
+
 		GetGame().GetUIManager().ShowCursor(state);
 		
 		if (!state) {
@@ -1306,6 +1365,64 @@ class EditorHud: ScriptView
 	bool IsMapVisible()
 	{
 		return Map.IsVisible();
+	}
+
+	void ToggleAssetsBrowser()
+	{
+		if (IsAssetsBrowserOpen()) {
+			CloseAssetsBrowser();
+			return;
+		}
+
+		if (m_AssetsBrowser) {
+			m_AssetsBrowserPreviousLeftbar = m_TemplateController.LeftbarFrame.IsVisible();
+			m_AssetsBrowserPreviousRightbar = m_TemplateController.RightbarFrame.IsVisible();
+			m_TemplateController.LeftbarFrame.Show(false);
+			m_TemplateController.RightbarFrame.Show(false);
+			Menubar.Show(false);
+			ToolsWrapper.Show(false);
+			InfobarFrame.Show(false);
+			ToolbarFrame.Show(false);
+
+			Widget compass = m_LayoutRoot.FindAnyWidget("CompassTicks");
+			if (compass) {
+				compass.Show(false);
+			}
+
+			m_AssetsBrowser.Open();
+		}
+	}
+
+	void CloseAssetsBrowser(bool restore_cursor = true)
+	{
+		if (m_AssetsBrowser) {
+			m_AssetsBrowser.Close(restore_cursor);
+		}
+	}
+
+	void OnAssetsBrowserClosed()
+	{
+		m_TemplateController.LeftbarFrame.Show(m_AssetsBrowserPreviousLeftbar);
+		m_TemplateController.RightbarFrame.Show(m_AssetsBrowserPreviousRightbar);
+		Menubar.Show(true);
+		ToolsWrapper.Show(true);
+		InfobarFrame.Show(true);
+		ToolbarFrame.Show(true);
+
+		Widget compass = m_LayoutRoot.FindAnyWidget("CompassTicks");
+		if (compass) {
+			compass.Show(true);
+		}
+	}
+
+	bool IsAssetsBrowserOpen()
+	{
+		return m_AssetsBrowser && m_AssetsBrowser.IsOpen();
+	}
+
+	EditorAssetsBrowserView GetAssetsBrowser()
+	{
+		return m_AssetsBrowser;
 	}
 	
 	bool IsSelectionBoxActive()
@@ -1362,6 +1479,20 @@ class EditorHud: ScriptView
 	void ClearCurrentTooltip()
 	{
 		g_Game.ClearTooltip();
+	}
+
+	void RefreshFavoriteIndicators()
+	{
+		foreach (EditorNodeView list_node: m_SearchableListNodes) {
+			EditorPlaceableListNode placeable_view = EditorPlaceableListNode.Cast(list_node);
+			if (placeable_view) {
+				placeable_view.RefreshFavoriteState();
+			}
+		}
+
+		if (m_AssetsBrowser) {
+			m_AssetsBrowser.RefreshAllCardFavorites();
+		}
 	}
 	
 	bool ReloadBrushes(string file)
