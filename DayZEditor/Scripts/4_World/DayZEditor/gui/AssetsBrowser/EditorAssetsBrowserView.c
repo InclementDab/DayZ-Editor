@@ -823,8 +823,10 @@ class EditorAssetsBrowserSectionView: ScriptView
 	protected EditorAssetsBrowserView m_Owner;
 	protected ref EditorAssetsBrowserSectionData m_SectionData;
 	protected ref EditorAssetsBrowserSectionHeaderHandler m_HeaderHandler;
+	protected EditorPlaceableItem m_SelectedPlaceable;
 	protected string m_SectionKey;
 	protected ref array<ref EditorAssetsBrowserCard> m_Cards = {};
+	protected float m_AvailableWidth;
 	protected float m_Height;
 	protected bool m_IsCollapsed;
 	protected bool m_IsCollapseHovered;
@@ -840,15 +842,15 @@ class EditorAssetsBrowserSectionView: ScriptView
 	{
 		m_Owner = owner;
 		m_SectionData = section_data;
+		m_SelectedPlaceable = selected_placeable;
 		m_SectionKey = section_key;
+		m_AvailableWidth = available_width;
 		m_IsCollapsed = collapsed;
 
 		AssetsBrowserSectionTitle.SetText(section_data.Label);
 
-		foreach (EditorAssetsBrowserEntry entry: section_data.Entries) {
-			EditorAssetsBrowserCard card = new EditorAssetsBrowserCard(owner, entry, entry.Placeable == selected_placeable);
-			m_Cards.Insert(card);
-			AssetsBrowserSectionGrid.AddChild(card.GetLayoutRoot());
+		if (!m_IsCollapsed) {
+			BuildCards();
 		}
 
 		if (AssetsBrowserSectionCollapseIcon) {
@@ -858,7 +860,7 @@ class EditorAssetsBrowserSectionView: ScriptView
 
 		UpdateCollapseButton();
 		BindHeaderEvents();
-		LayoutCards(available_width);
+		LayoutCards(m_AvailableWidth);
 	}
 
 	void ~EditorAssetsBrowserSectionView()
@@ -871,6 +873,26 @@ class EditorAssetsBrowserSectionView: ScriptView
 			delete m_Cards[i];
 		}
 		m_Cards.Clear();
+	}
+
+	string GetSectionKey()
+	{
+		return m_SectionKey;
+	}
+
+	void SetCollapsed(bool collapsed)
+	{
+		if (m_IsCollapsed == collapsed) {
+			return;
+		}
+
+		m_IsCollapsed = collapsed;
+		if (!m_IsCollapsed) {
+			BuildCards();
+		}
+
+		UpdateCollapseButton();
+		LayoutCards(m_AvailableWidth);
 	}
 
 	void AppendCards(out array<ref EditorAssetsBrowserCard> cards)
@@ -947,6 +969,19 @@ class EditorAssetsBrowserSectionView: ScriptView
 
 		m_HeaderHandler = new EditorAssetsBrowserSectionHeaderHandler(this);
 		AssetsBrowserSectionHeader.SetHandler(m_HeaderHandler);
+	}
+
+	protected void BuildCards()
+	{
+		if (m_Cards.Count() > 0) {
+			return;
+		}
+
+		foreach (EditorAssetsBrowserEntry entry: m_SectionData.Entries) {
+			EditorAssetsBrowserCard card = new EditorAssetsBrowserCard(m_Owner, entry, entry.Placeable == m_SelectedPlaceable);
+			m_Cards.Insert(card);
+			AssetsBrowserSectionGrid.AddChild(card.GetLayoutRoot());
+		}
 	}
 
 	protected void LayoutCards(float available_width)
@@ -2271,15 +2306,29 @@ class EditorAssetsBrowserView: ScriptView
 		EditorPlaceableItem selected_placeable = GetCurrentPlaceable();
 		array<ref EditorAssetsBrowserSectionData> sections = m_Catalog.GetSections(m_FilterState);
 		float content_width = GetSectionContentWidth();
-		float current_y = 0;
 
 		foreach (EditorAssetsBrowserSectionData section: sections) {
 			string section_key = GetSectionStateKey(section);
 			EditorAssetsBrowserSectionView section_view = new EditorAssetsBrowserSectionView(this, section, selected_placeable, content_width, section_key, IsSectionCollapsed(section_key));
-			section_view.SetPosition(0, current_y);
 			m_SectionViews.Insert(section_view);
 			AssetsBrowserSectionList.AddChild(section_view.GetLayoutRoot());
+		}
 
+		LayoutSections();
+		AssetsBrowserEmptyLabel.Show(sections.Count() == 0);
+	}
+
+	protected void LayoutSections()
+	{
+		float content_width = GetSectionContentWidth();
+		float current_y = 0;
+
+		foreach (EditorAssetsBrowserSectionView section_view: m_SectionViews) {
+			if (!section_view) {
+				continue;
+			}
+
+			section_view.SetPosition(0, current_y);
 			if (section_view.IsCollapsed()) {
 				current_y += section_view.GetHeight() + COLLAPSED_SECTION_SPACING;
 			} else {
@@ -2288,7 +2337,6 @@ class EditorAssetsBrowserView: ScriptView
 		}
 
 		AssetsBrowserSectionList.SetSize(content_width, current_y);
-		AssetsBrowserEmptyLabel.Show(sections.Count() == 0);
 	}
 
 	protected void EnsureValidSelection()
@@ -2383,7 +2431,16 @@ class EditorAssetsBrowserView: ScriptView
 			m_CollapsedSections.Set(section_key, true);
 		}
 
-		QueueRender(false, false, false);
+		foreach (EditorAssetsBrowserSectionView section_view: m_SectionViews) {
+			if (section_view && section_view.GetSectionKey() == section_key) {
+				section_view.SetCollapsed(IsSectionCollapsed(section_key));
+				LayoutSections();
+				AssetsBrowserSectionList.Update();
+				AssetsBrowserScroll.Update();
+				RefreshPreviews();
+				return;
+			}
+		}
 	}
 
 	protected void SyncToCurrentPlaceable()
