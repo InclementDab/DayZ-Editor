@@ -1,5 +1,6 @@
 class EditorWorldObject: Managed
 {
+	protected vector m_Clipping[2];
 	protected vector m_LineCenters[12]; 
 	protected vector m_LineVerticies[8];
 	protected vector m_BoundingCenter;
@@ -32,16 +33,15 @@ class EditorWorldObject: Managed
 			return;
 		}
 		
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		m_LineVerticies[0] = clip_info[0];
-		m_LineVerticies[1] = Vector(clip_info[0][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[2] = Vector(clip_info[1][0], clip_info[0][1], clip_info[1][2]);
-		m_LineVerticies[3] = Vector(clip_info[1][0], clip_info[0][1], clip_info[0][2]);		
-		m_LineVerticies[4] = Vector(clip_info[1][0], clip_info[1][1], clip_info[0][2]);
-		m_LineVerticies[5] = clip_info[1];
-		m_LineVerticies[6] = Vector(clip_info[0][0], clip_info[1][1], clip_info[1][2]);
-		m_LineVerticies[7] = Vector(clip_info[0][0], clip_info[1][1], clip_info[0][2]);
+		ClippingInfo(m_Clipping);
+		m_LineVerticies[0] = m_Clipping[0];
+		m_LineVerticies[1] = Vector(m_Clipping[0][0], m_Clipping[0][1], m_Clipping[1][2]);
+		m_LineVerticies[2] = Vector(m_Clipping[1][0], m_Clipping[0][1], m_Clipping[1][2]);
+		m_LineVerticies[3] = Vector(m_Clipping[1][0], m_Clipping[0][1], m_Clipping[0][2]);		
+		m_LineVerticies[4] = Vector(m_Clipping[1][0], m_Clipping[1][1], m_Clipping[0][2]);
+		m_LineVerticies[5] = m_Clipping[1];
+		m_LineVerticies[6] = Vector(m_Clipping[0][0], m_Clipping[1][1], m_Clipping[1][2]);
+		m_LineVerticies[7] = Vector(m_Clipping[0][0], m_Clipping[1][1], m_Clipping[0][2]);
 				
 		m_LineCenters[0] = AverageVectors(m_LineVerticies[0], m_LineVerticies[1]);
 		m_LineCenters[1] = AverageVectors(m_LineVerticies[0], m_LineVerticies[3]);
@@ -60,8 +60,12 @@ class EditorWorldObject: Managed
 		
 		vector base_point = AverageVectors(AverageVectors(m_LineVerticies[0], m_LineVerticies[1]), AverageVectors(m_LineVerticies[2], m_LineVerticies[3]));
 		m_VectorBasePoint = base_point;
+		
+		vector clip_low = m_Clipping[0];
+		
+		// Add the lower clipping bounds so the world object is offset by this correctly		
 		m_BoundingCenter = m_WorldObject.GetBoundingCenter();
-		m_ClippingCenter = AverageVectors(clip_info[0], clip_info[1]);
+		m_ClippingCenter = AverageVectors(m_Clipping[0], m_Clipping[1]);
 		
 		/*
 		for (int i = 0; i < 12; i++) {
@@ -81,10 +85,10 @@ class EditorWorldObject: Managed
             int k = j / 3;
             int l = j % 3;
 												
-			vector box_plane_clip = clip_info[k];
+			vector box_plane_clip = m_Clipping[k];
             vector box_plane_position = box_plane_clip;// + m_BoundingCenter;// + Position; // may need to be center of clip                            
             vector test_clipping[2];
-            copyarray(test_clipping, clip_info);
+            copyarray(test_clipping, m_Clipping);
 			
             if (j >= 3) {
                 test_clipping[1][l] = test_clipping[0][l];
@@ -197,5 +201,54 @@ class EditorWorldObject: Managed
 		}
 
 		return object;
+	}
+	
+	vector GetBoundingCenter()
+	{
+		return m_BoundingCenter;
+	}
+	
+	vector GetBottomCenter()
+	{		
+		vector transform[4];
+		GetWorldObject().GetTransform(transform);
+		
+		vector low = m_Clipping[0];
+		return (Vector(0, low[1], 0)).Multiply4(transform);
+	}
+	
+	void GetBottomTransform(out vector transform[4])
+	{
+		vector mat[4];
+		GetWorldObject().GetTransform(mat);
+		copyarray(transform, mat);
+		vector low = m_Clipping[0];
+		transform[3] = (Vector(0, low[1], 0)).Multiply4(mat);
+	}	
+	
+	void SetBottomTransform(vector transform[4])	
+	{
+		vector low = m_Clipping[0];
+		vector pos_offset = Vector(0, -low[1], 0).Multiply3(transform);
+		transform[3] = transform[3] + pos_offset;
+		SetTransform(transform);
+	}
+	
+	void SetTopTransform(vector transform[4])
+	{
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		vector pos_offset = Vector(0, clip_info[1][1], 0).Multiply3(transform);
+		transform[3] = transform[3] - pos_offset;
+		SetTransform(transform);
+	}
+	
+	void GetTopTransform(out vector transform[4])
+	{
+		vector clip_info[2];
+		ClippingInfo(clip_info);
+		GetTransform(transform);
+		vector pos_offset = Vector(0, clip_info[1][1], 0).Multiply3(transform);
+		transform[3] = transform[3] + pos_offset;
 	}
 }

@@ -1054,7 +1054,7 @@ class EditorHud: ScriptView
 		string search_string = LeftSearchBar.GetText();
 		search_string.ToLower();		
 		
-		float static_visual_addition = 24 * screen_y / 1080.0;
+		float static_visual_addition = 28 * screen_y / 1080.0;
 
 		bool has_requirements_for_search = search_string.Length() > 2 || favorite_toggle;
 		

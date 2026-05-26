@@ -147,25 +147,24 @@ class EditorObjectDragHandler: EditorDragHandler
 		}
 		
 		//Raycast cursor_raycast = cursor_ray.PerformRaycastMulti(ignored_objects, GetEditor().GetCamera().GetSettings().ViewDistance / 2, interaction_layers);
-		//Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(ignored_objects, GetEditor().GroundMode);
+		Raycast cursor_raycast_rv = GetEditor().GetCursorRaycastModeSafeEx(ignored_objects, GetEditor().GroundMode);
 		Raycast cursor_raycast = GetEditor().GetCursorRaycast(target.GetWorldObject(), GetEditor().GroundMode);
 			
 		vector cursor_pos = cursor_ray.GetPoint(10.0);
-		if (cursor_raycast) {
-			cursor_pos = cursor_raycast.Bounce.Position;
+		if (cursor_raycast_rv) {
+			cursor_pos = cursor_raycast_rv.Bounce.Position;
 		}
 
 		vector icon_position = target.GetBottomCenter();
+		vector object_up_direction = target.GetWorldObject().GetDirectionUp();
 		
-		vector rotation_source_pos = icon_position;
-		if (GetEditor().GroundMode) {
-			rotation_source_pos = ProjectToGround(transform);
-		}
-
-		vector up_dir = vector.Up;		
+		vector up_dir = object_up_direction;		
 		float distance_to_ground = 0;
 		if (GetEditor().MagnetMode) {
-			up_dir = cursor_raycast.Bounce.Direction;
+			if (cursor_raycast) {
+				up_dir = cursor_raycast.Bounce.Direction;
+			}
+			
 			if (up_dir.LengthSq() == 0) {
 				up_dir = GetGame().SurfaceGetNormal(cursor_raycast.Bounce.Position[0], cursor_raycast.Bounce.Position[2]);
 			}
@@ -177,22 +176,25 @@ class EditorObjectDragHandler: EditorDragHandler
 
 		up_dir.Normalize();
 		Ray downward_ray = new Ray(transform[3], -up_dir);
-		if (GetEditor().GroundMode && cursor_raycast) {			
+		if (GetEditor().GroundMode) {			
 			Raycast downward_raycast = downward_ray.PerformRaycastRV(target.GetWorldObject(), null, 0, 1000, ObjIntersect.View, true);
 			if (downward_raycast) {
 				distance_to_ground = downward_raycast.Length();
+				
+				// Theres other ways to do this but i think its the most efficient. dont overengineer
+				icon_position = icon_position - object_up_direction * distance_to_ground;
 			}
 		}
 								
 		// Handle Z-Only motion
 		if (KeyState(KeyCode.KC_LMENU)) {			
 			// This should always be ortho			
-			vector forward_plane = up_dir * camera_transform[0];
+			vector forward_plane = object_up_direction * camera_transform[0];
 			Plane3D z_plane = new Plane3D(forward_plane, transform[3]);
 			vector intersect = z_plane.Intersect(cursor_ray);
 			
 			vector up_dir_matrix[4];
-			Math3D.DirectionAndUpMatrix(forward_plane, up_dir, up_dir_matrix);
+			Math3D.DirectionAndUpMatrix(forward_plane, object_up_direction, up_dir_matrix);
 			Math3D.MatrixOrthogonalize4(up_dir_matrix);
 			up_dir_matrix[3] = transform[3];
 			vector local_intersect = intersect.InvMultiply4(up_dir_matrix);

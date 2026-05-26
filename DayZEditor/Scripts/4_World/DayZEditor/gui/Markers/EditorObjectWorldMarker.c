@@ -44,10 +44,16 @@ class EditorObjectWorldMarker: EditorObjectMarker
 		
 		// first get a crude position to see if we are off screen. this check is very very fast
 		vector position = m_EditorObject.GetPosition();
-		vector screen_pos = GetGame().GetScreenPos(position);
-		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;
 		float distancesq = vector.DistanceSq(GetGame().GetCurrentCameraPosition(), position);
 		bool in_distance = m_MarkerDistSq > distancesq;
+		if (!in_distance && !m_MapWidget.IsVisible()) {
+			if (m_LayoutRoot.IsVisible()) {
+				m_LayoutRoot.Show(false);
+			}
+
+			return;
+		}
+		
 		if (!m_MapWidget.IsVisible()) {
 			EditorMarkerColor.SetAlpha(1 - (Math.Clamp(distancesq, 0, m_MarkerDistSq) / m_MarkerDistSq));
 			EditorMarkerOutline.SetAlpha(1 - (Math.Clamp(distancesq, 0, m_MarkerDistSq) / m_MarkerDistSq));
@@ -56,7 +62,18 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			EditorMarkerOutline.SetAlpha(1.0);
 		}
 		
-		if ((off_screen || !in_distance) && !m_MapWidget.IsVisible()) {
+		position = m_EditorObject.GetBottomCenter();
+		if (GetEditor().GroundMode) {
+			Ray downward_ray = new Ray(position, -m_EditorObject.GetWorldObject().GetDirectionUp());
+			Raycast downward_raycast = downward_ray.PerformRaycastRV(m_EditorObject.GetWorldObject(), null, 0, 1000, ObjIntersect.View, true);
+			if (downward_raycast) {
+				position = downward_raycast.Bounce.Position;
+			}
+		}
+		
+		vector screen_pos = GetGame().GetScreenPos(position);
+		bool off_screen = screen_pos[0] <= 0 || screen_pos[0] >= m_ScreenX || screen_pos[1] <= 0 || screen_pos[1] >= m_ScreenY || screen_pos[2] < 0;		
+		if (off_screen && !m_MapWidget.IsVisible()) {
 			if (m_LayoutRoot.IsVisible()) {
 				m_LayoutRoot.Show(false);
 			}
@@ -64,8 +81,6 @@ class EditorObjectWorldMarker: EditorObjectMarker
 			return;
 		}
 		
-		position = m_EditorObject.GetBottomCenter();
-		screen_pos = GetGame().GetScreenPos(position);
 		if (m_MapWidget.IsVisible()) {
 			screen_pos = m_MapWidget.MapToScreen(position);
 			m_LayoutRoot.SetSort(100);

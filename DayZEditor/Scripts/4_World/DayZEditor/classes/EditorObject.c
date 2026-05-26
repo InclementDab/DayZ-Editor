@@ -627,46 +627,6 @@ class EditorObject: EditorWorldObject
 		return m_Data.AllowDamage;
 	}
 		
-	vector GetBottomCenter()
-	{		
-		vector transform[4];
-		GetWorldObject().GetTransform(transform);
-		return (Vector(0, -m_BoundingCenter[1], 0)).Multiply4(transform);
-	}
-	
-	void GetBottomTransform(out vector transform[4])
-	{
-		vector mat[4];
-		GetWorldObject().GetTransform(mat);
-		copyarray(transform, mat);
-		transform[3] = (Vector(0, -m_BoundingCenter[1],	 0)).Multiply4(mat);
-	}	
-	
-	void SetBottomTransform(vector transform[4])	
-	{
-		vector pos_offset = Vector(0, m_BoundingCenter[1], 0).Multiply3(transform);
-		transform[3] = transform[3] + pos_offset;
-		SetTransform(transform);
-	}
-	
-	void SetTopTransform(vector transform[4])
-	{
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		vector pos_offset = Vector(0, clip_info[1][1], 0).Multiply3(transform);
-		transform[3] = transform[3] - pos_offset;
-		SetTransform(transform);
-	}
-	
-	void GetTopTransform(out vector transform[4])
-	{
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		GetTransform(transform);
-		vector pos_offset = Vector(0, clip_info[1][1], 0).Multiply3(transform);
-		transform[3] = transform[3] + pos_offset;
-	}
-	
 	float GetYDistance()
 	{
 		return m_BoundingCenter[1];

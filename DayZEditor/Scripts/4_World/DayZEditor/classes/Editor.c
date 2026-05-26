@@ -1012,13 +1012,8 @@ class Editor: Managed
 			}
 		}
 		
-		Raycast cursor_raycast = GetCursorRaycastModeSafeEx(objects_to_ignore, GroundMode);
-		vector position;
-		if (cursor_raycast) {
-			position = cursor_raycast.Bounce.Position;
-		} else {
-			position = GetCursorRay().GetPoint(50); // rather arbitrary
-		}
+		/*Raycast cursor_raycast = GetCursorRaycastModeSafeEx(objects_to_ignore, GroundMode);
+		
 					
 		vector transform[4];
 		Math3D.MatrixIdentity4(transform);
@@ -1028,18 +1023,41 @@ class Editor: Managed
 			surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
 		}
 		
-		vector local_aside = m_MainHandObject.GetWorldObject().GetDirection();
-		if (false) {
-			vector camera_transform[4];
-			m_EditorCamera.GetTransform(camera_transform);
-			local_aside = camera_transform[0];
+		
+		
+		*/
+		
+		// Copied from EditorObjectDragHandler because im a great programmer
+		Raycast cursor_raycast = GetCursorRaycast(m_MainHandObject.GetWorldObject(), GroundMode);
+					
+		vector cursor_pos = GetCursorRay().GetPoint(10.0);
+		if (cursor_raycast) {
+			cursor_pos = cursor_raycast.Bounce.Position;
 		}
+				
+		vector up_dir = vector.Up;		
+		float distance_to_ground = 0;
+		if (MagnetMode) {
+			up_dir = cursor_raycast.Bounce.Direction;
+			if (up_dir.LengthSq() == 0) {
+				up_dir = GetGame().SurfaceGetNormal(cursor_raycast.Bounce.Position[0], cursor_raycast.Bounce.Position[2]);
+			}
+			
+			if (up_dir.LengthSq() == 0) {
+				up_dir = vector.Up;
+			}
+		}
+
+		up_dir.Normalize();
 		
-		transform[0] = surface_normal * local_aside;
-		transform[1] = surface_normal;
-		transform[2] = surface_normal * (local_aside * vector.Up);
-		transform[3] = position + Vector(0, m_MainHandObject.GetWorldObject().GetBoundingCenter()[1], 0).Multiply3(transform);
-		
+		vector local_aside = m_MainHandObject.GetWorldObject().GetDirection();
+		vector transform[4] = {
+			up_dir * local_aside,
+			up_dir,
+			up_dir * (local_aside * vector.Up),
+			cursor_pos
+		};
+				
 		vector userinput_matrix[3];
 		Math3D.YawPitchRollMatrix(m_HandsInputOrientation, userinput_matrix);
 		Math3D.MatrixMultiply3(transform, userinput_matrix, transform);
@@ -1059,7 +1077,7 @@ class Editor: Managed
 				Math3D.MatrixMultiply4(transform, hand_matrix, local_transform);
 			}
 						
-			world_object.SetTransform(local_transform);
+			world_object.SetBottomTransform(local_transform);
 			
 			//SnapToNearbyObjects(world_object, dt);
 		}
