@@ -1286,7 +1286,6 @@ class EditorAssetsBrowserView: ScriptView
 		delete EditorHud.CurrentMenu;
 		m_EditorHud.ClearCurrentTooltip();
 
-		SyncToCurrentPlaceable();
 		m_SuppressControlChanges = true;
 		AssetsBrowserSearch.SetText(m_SearchText);
 		m_SuppressControlChanges = false;
@@ -2441,22 +2440,6 @@ class EditorAssetsBrowserView: ScriptView
 				return;
 			}
 		}
-	}
-
-	protected void SyncToCurrentPlaceable()
-	{
-		EditorPlaceableItem current_placeable = GetCurrentPlaceable();
-		if (!current_placeable) {
-			return;
-		}
-
-		EditorAssetsBrowserEntry entry = m_Catalog.FindByPlaceable(current_placeable);
-		if (!entry) {
-			return;
-		}
-
-		m_FilterState.TabId = entry.TabId;
-		m_FilterState.SubcategoryId = entry.SubcategoryId;
 	}
 
 	protected EditorPlaceableItem GetCurrentPlaceable()
