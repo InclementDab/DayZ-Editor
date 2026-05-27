@@ -61,6 +61,7 @@ msbuild.wrn
 *.cache
 RunJacobWorkdrive.bat
 
-# Wokrbench Artifacts 
+# Workbench Artifacts 
 DayZEditor\Workbench\_
 DayZEditor\Workbench\launch.bin
+DayZEditor/Workbench/_
