@@ -1,0 +1,489 @@
+WrapSpacerWidgetClass EditorDialog {
+ visible 1
+ clipchildren 1
+ ignorepointer 0
+ color 0.059 0.059 0.059 0.965
+ position 0 0
+ size 0.5 0
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ scaled 1
+ priority 998
+ scriptclass ""
+ style Colorable
+ "Ignore invisible" 0
+ Padding 8
+ Margin 0
+ "Size To Content H" 1
+ "Size To Content V" 1
+ content_halign center
+ content_valign center
+ {
+  FrameWidgetClass WindowDragWrapper {
+   visible 1
+   ignorepointer 0
+   color 1 1 1 0.392
+   size 1 26
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   draggable 1
+   {
+    PanelWidgetClass TitleBar {
+     ignorepointer 1
+     color 0 0.478 0.8 0.922
+     size 1 25
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     priority 255
+     style rover_sim_colorable
+     {
+      TextWidgetClass TitleText {
+       clipchildren 1
+       ignorepointer 1
+       position 0 0
+       size 1 0.9
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       scriptclass "ViewBinding"
+       text "DialogBox"
+       font "gui/fonts/Metron"
+       "exact text" 0
+       "size to text h" 0
+       "text halign" center
+       "text valign" center
+       {
+        ScriptParamsClass {
+         Binding_Name "Title"
+        }
+       }
+      }
+      PanelWidgetClass TitleClosePanel {
+       ignorepointer 1
+       color 0.784 0.294 0.275 1
+       position 2 2
+       size 21 21
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass TitleClose {
+         visible 1
+         ignorepointer 0
+         color 0.667 0.667 0.667 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         priority 5
+         scriptclass "ViewBinding"
+         style Default
+         "no focus" 1
+         text "X"
+         font "gui/fonts/Metron-Bold"
+         {
+          ScriptParamsClass {
+           Relay_Command "ExitDialogExecute"
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  ScrollWidgetClass DialogWrapper {
+   visible 1
+   clipchildren 1
+   ignorepointer 0
+   position 0 0
+   size 0.9 500
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   "Scrollbar V" 0
+   {
+    PanelWidgetClass DialogContent {
+     visible 1
+     clipchildren 1
+     ignorepointer 1
+     size 1 500
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     priority 2
+     {
+      WrapSpacerWidgetClass ListBoxWrapper {
+       visible 1
+       clipchildren 1
+       ignorepointer 1
+       color 0.172 0.192 0.212 1
+       position 0 0
+       size 1 482
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 1
+       scaled 0
+       style Colorable
+       "Size To Content H" 1
+       "Size To Content V" 1
+       content_halign center
+       {
+        TextListboxWidgetClass ListBox {
+         visible 1
+         clipchildren 1
+         ignorepointer 0
+         size 0.98 485
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 1
+         scaled 1
+         style Default
+         "title visible" 0
+         colums ""
+         lines 9999
+         font "gui/fonts/MetronBook22"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass ChangelogNavigationButtons {
+   visible 1
+   ignorepointer 0
+   position 0 0
+   size 180 32
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   {
+    PanelWidgetClass PrevButtonWrapper {
+     visible 1
+     ignorepointer 1
+     color 0.235 0.235 0.235 1
+     position 0 2
+     size 40 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     priority 1
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass PrevButton {
+       visible 1
+       ignorepointer 0
+       color 0.784 0.294 0.275 1
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       scriptclass "ViewBinding"
+       style Default
+       text "<"
+       font "gui/fonts/Metron"
+       {
+        ScriptParamsClass {
+         Relay_Command "OnPrevButton"
+        }
+       }
+      }
+     }
+    }
+    TextWidgetClass PageIndicatorText {
+     visible 1
+     ignorepointer 1
+     color 0.565 0.565 0.565 1
+     position 44 0
+     size 92 32
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Normal
+     text "- / -"
+     font "gui/fonts/MetronBook16"
+     "exact text" 0
+     "text halign" center
+     "text valign" center
+    }
+    PanelWidgetClass NextButtonWrapper {
+     visible 1
+     ignorepointer 1
+     color 0.235 0.235 0.235 1
+     position 140 2
+     size 40 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     priority 1
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass NextButton {
+       visible 1
+       ignorepointer 0
+       color 0.784 0.294 0.275 1
+       position 0 0
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       scriptclass "ViewBinding"
+       style Default
+       text ">"
+       font "gui/fonts/Metron"
+       {
+        ScriptParamsClass {
+         Relay_Command "OnNextButton"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass DonationTextWrapper {
+   visible 1
+   clipchildren 1
+   ignorepointer 1
+   color 0.059 0.059 0.059 0.863
+   size 0.9 80
+   halign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    MultilineTextWidgetClass DonationText {
+     visible 1
+     clipchildren 1
+     ignorepointer 1
+     position 0 0
+     size 0.95 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 1
+     style DayZNormal
+     text "DayZ Editor is 100% free to use, and it always will be! But if you want to see even more awesome updates, consider joining our supporter community on Discord. Your support drives future content and improvements!"
+     font "gui/fonts/MetronBook-Bold"
+     "exact text" 1
+     "size to text h" 0
+     "size to text v" 0
+     "text halign" center
+     "text valign" center
+     wrap 1
+    }
+   }
+  }
+  WrapSpacerWidgetClass DialogButtons {
+   ignorepointer 0
+   position 0 0
+   size 0.9 35
+   halign center_ref
+   hexactpos 0
+   vexactpos 0
+   hexactsize 0
+   vexactsize 1
+   scaled 1
+   style Empty
+   Padding 5
+   Margin 8
+   content_halign center
+   content_valign center
+   {
+    PanelWidgetClass SupportButtonWrapper {
+     visible 1
+     clipchildren 1
+     ignorepointer 1
+     color 0.235 0.235 0.235 1
+     size 120 29
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 1
+     priority 1
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass SupportButton {
+       visible 1
+       ignorepointer 0
+       color 0.753 0.365 0.322 1
+       position 0 0
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       scriptclass "ViewBinding"
+       style Default
+       text "Support Dab!"
+       text_proportion 0.7
+       font "gui/fonts/Metron"
+       {
+        ScriptParamsClass {
+         Relay_Command "OnDonateButton"
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass DiscordButtonWrapper {
+     visible 1
+     ignorepointer 1
+     color 0.235 0.235 0.235 1
+     size 120 28
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 1
+     priority 1
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass DiscordButton {
+       visible 1
+       ignorepointer 0
+       color 0.753 0.365 0.322 1
+       position 0 0
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       scriptclass "ViewBinding"
+       style Default
+       text "Join Discord"
+       text_proportion 0.8
+       font "gui/fonts/Metron"
+       {
+        ScriptParamsClass {
+         Relay_Command "OnDiscordButton"
+        }
+       }
+      }
+     }
+    }
+    PanelWidgetClass CloseButtonWrapper {
+     visible 1
+     ignorepointer 1
+     color 0.235 0.235 0.235 1
+     position 0 0
+     size 90 28
+     hexactpos 0
+     vexactpos 0
+     hexactsize 1
+     vexactsize 1
+     priority 1
+     style rover_sim_colorable
+     {
+      ButtonWidgetClass CloseButton {
+       visible 1
+       ignorepointer 0
+       color 0.753 0.365 0.322 1
+       position 0 0
+       size 1 1
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       priority 2
+       scriptclass "ViewBinding"
+       style Default
+       text "Close"
+       text_proportion 0.8
+       font "gui/fonts/Metron"
+       {
+        ScriptParamsClass {
+         Relay_Command "OnCloseButton"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  WrapSpacerWidgetClass NeverShowAgainWrapper {
+   visible 1
+   ignorepointer 1
+   position 0 0
+   size 0.95 30
+   halign center_ref
+   valign bottom_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   content_halign right
+   content_valign center
+   {
+    CheckBoxWidgetClass NeverShowAgainCheckBox {
+     visible 1
+     ignorepointer 0
+     color 0.706 0.706 0.706 1
+     position 0 0
+     size 22 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style CheckBox_22px
+     checked 0
+    }
+    TextWidgetClass NeverShowAgainText {
+     visible 1
+     inheritalpha 0
+     ignorepointer 1
+     color 0.565 0.565 0.565 1
+     size 250 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Normal
+     text "Don't Show Again"
+     font "gui/fonts/MetronBook"
+     "exact text" 1
+     "text halign" right
+     "text valign" center
+    }
+   }
+  }
+ }
+}
