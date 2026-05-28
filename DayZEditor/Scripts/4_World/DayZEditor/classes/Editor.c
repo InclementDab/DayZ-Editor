@@ -1619,8 +1619,12 @@ class Editor: Managed
 		//if (!GetGame().GetInput().HasGameFocus(INPUT_DEVICE_KEYBOARD)) {
 			//return false;
 		//}
-		
+				
 		if (IsPlayerControlled()) {
+			return false;
+		}
+		
+		if (!m_Active) {
 			return false;
 		}
 		
