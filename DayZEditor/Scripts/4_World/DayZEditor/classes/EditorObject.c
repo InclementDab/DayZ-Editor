@@ -283,7 +283,7 @@ class EditorObject: EditorWorldObject
 	{		
 		EditorObjectData object_data = new EditorObjectData();		
 		if (!m_WorldObject) {
-			EditorLog.Warning(string.Format("World Object is null!"));
+			//EditorLog.Warning(string.Format("World Object is null!"));
 			return object_data;
 		}
 				
@@ -388,7 +388,7 @@ class EditorObject: EditorWorldObject
 	{		
 		vector transform[4];
 		m_WorldObject.GetTransform(transform);
-		Math3D.MatrixOrthogonalize3(transform);
+		Math3D.MatrixOrthogonalize4(transform);
 		return Math3D.MatrixToAngles(transform);
 	}
 

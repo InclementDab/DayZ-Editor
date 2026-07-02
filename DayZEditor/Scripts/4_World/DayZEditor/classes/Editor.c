@@ -602,21 +602,22 @@ class Editor: Managed
 	void Activate()
 	{
 		m_Active = true;
-				
+						
 		// Shut down Inventory Editor, done prior to the camera due to the destructor
 		if (m_EditorInventoryEditorHud) {
 			delete m_EditorInventoryEditorHud;
 		}
 				
 		if (m_EditorCamera) {
+			GetGame().SelectPlayer(GetGame().GetPlayer().GetIdentity(), null);
 			m_EditorCamera.SetActive(true);
 		}
-			
+					
 		if (m_EditorHud) {
 			m_EditorHud.Show(true);
 			m_EditorHud.SetCurrentTooltip(null);
 		}
-				
+						
 		EditorObjectMap placed_objects = GetPlacedObjects();
 		if (placed_objects) {
 			foreach (EditorObject editor_object: placed_objects) {
@@ -1695,6 +1696,7 @@ class Editor: Managed
 		if (!GetGame().IsMultiplayer()) {
 			if (m_Active) {
 				if (m_EditorCamera) {
+					GetGame().SelectPlayer(null, null);
 					m_EditorCamera.SetActive(true);
 				}
 			} else {
@@ -1727,7 +1729,7 @@ class Editor: Managed
 				editor_object.HideBoundingBox();
 			}
 		}
-				
+						
 		GetGame().GetUIManager().ShowCursor(m_Active);
 		
 		if (m_Player && !IsPlayerControlled()) {
@@ -2017,17 +2019,17 @@ class Editor: Managed
 			m_EditorHud.SetBrushState(0);
 		}
 		
+		if (!IsShiftDown() && !IsPlacing()) {
+			ClearSelection();
+		}
+		
 		if (m_PlacingObjects.Count() == 0) {
 			m_MainHandObject = world_object;
 		}
 		
 		m_PlacingObjects[world_object] = hand_data;
 		EditorEvents.AddInHand(this, world_object, hand_data);
-		
-		if (!IsShiftDown() && !IsPlacing()) {
-			//ClearSelection();
-		}
-		
+				
 		return m_PlacingObjects;
 	}
 	
