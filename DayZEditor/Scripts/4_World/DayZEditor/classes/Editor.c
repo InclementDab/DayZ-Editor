@@ -1029,9 +1029,9 @@ class Editor: Managed
 		*/
 		
 		// Copied from EditorObjectDragHandler because im a great programmer
-		Raycast cursor_raycast = GetCursorRaycast(m_MainHandObject.GetWorldObject(), GroundMode);
+		Raycast cursor_raycast = GetCursorRaycastModeSafeEx(objects_to_ignore, GroundMode);
 					
-		vector cursor_pos = GetCursorRay().GetPoint(10.0);
+		vector cursor_pos = GetCursorRayModeSafe().GetPoint(10.0);
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;
 		}

@@ -129,10 +129,6 @@ class EditorObjectDragHandler: EditorDragHandler
 		vector transform[4];
 		target.GetBottomTransform(transform);
 
-		vector transform_without_scale[4];
-		copyarray(transform_without_scale, transform);
-		Math3D.MatrixOrthogonalize4(transform_without_scale);
-		
 		vector scale_matrix[3];
 		Math3D.ScaleMatrix(m_InitialScale, scale_matrix);
 
@@ -258,12 +254,17 @@ class EditorObjectDragHandler: EditorDragHandler
 			copyarray(transform, transform_new);
 		}
 
-		copyarray(transform_without_scale, transform);
-		Math3D.MatrixOrthogonalize4(transform_without_scale);
-		
+		if (transform[0].LengthSq() == 0 || transform[1].LengthSq() == 0 || transform[2].LengthSq() == 0) {
+			Math3D.MatrixIdentity3(transform);
+		}
+
+		// Apply the bottom-pivot transform first, then use the object's actual
+		// origin transform to preserve every additional object's relative offset.
+		target.SetBottomTransform(transform);
+		target.Update();
+
 		vector transform_from_object_center[4];
-		copyarray(transform_from_object_center, transform);
-		transform_from_object_center[3] = Vector(0, target.GetWorldObject().GetBoundingCenter()[1], 0).Multiply4(transform_from_object_center);
+		target.GetTransform(transform_from_object_center);
 		Math3D.MatrixOrthogonalize4(transform_from_object_center);
 				
 		// Handle all child objects
@@ -281,22 +282,9 @@ class EditorObjectDragHandler: EditorDragHandler
 			};
 			
 			vector output_additional_mat[4];
-			vector ortho_parent_mat[4];
-			copyarray(ortho_parent_mat, transform_from_object_center);
-
-			// Orthogonalize the temporary matrix, removing all scale information.
-			Math3D.MatrixOrthogonalize4(ortho_parent_mat);
-			Math3D.MatrixMultiply4(ortho_parent_mat, local_additional_mat, output_additional_mat);
+			Math3D.MatrixMultiply4(transform_from_object_center, local_additional_mat, output_additional_mat);
 			selected_object.SetTransform(output_additional_mat);
 		}
-		
-		if (transform[0].LengthSq() == 0 || transform[1].LengthSq() == 0 || transform[2].LengthSq() == 0) {
-			Math3D.MatrixIdentity3(transform);
-		}
-		
-		
-		target.SetBottomTransform(transform);
-		target.Update();
 
 		if (GetGame().IsMultiplayer())
 		{
