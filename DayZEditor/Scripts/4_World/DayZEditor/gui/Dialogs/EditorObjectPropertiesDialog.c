@@ -77,7 +77,13 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		GroupPrefab object_group = new GroupPrefab("#STR_EDITOR_OBJECT", m_EditorMultiObjectCommandController, string.Empty);
 		object_group.Insert(new EditBoxNumberPrefab("#STR_EDITOR_HEALTH", m_EditorMultiObjectCommandController, "Health"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", m_EditorMultiObjectCommandController, "EditorOnly"));
-		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", m_EditorMultiObjectCommandController, "Simulate"));
+		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", m_EditorMultiObjectCommandController, "Simulation"));
+		foreach (EditorObject editor_object: editor_objects) {
+			if (editor_object.CanEnableAI()) {
+				object_group.Insert(new CheckBoxPrefab("Enable Active AI", m_EditorMultiObjectCommandController, "ActiveAI"));
+				break;
+			}
+		}
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", m_EditorMultiObjectCommandController, "Locked"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", m_EditorMultiObjectCommandController, "UsePhysics"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", m_EditorMultiObjectCommandController, "AllowDamage"));
@@ -195,6 +201,9 @@ class EditorObjectPropertiesDialog: EditorDialogBase
 		
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_EDITOR_ONLY", controller, "EditorOnly"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_SIMULATION", controller, "Simulation"));
+		if (editor_object.CanEnableAI()) {
+			object_group.Insert(new CheckBoxPrefab("Enable Active AI", controller, "ActiveAI"));
+		}
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_LOCK", controller, "Locked"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_PHYSICS", controller, "UsePhysics"));
 		object_group.Insert(new CheckBoxPrefab("#STR_EDITOR_ENABLE_DAMAGE", controller, "AllowDamage"));

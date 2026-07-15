@@ -25,10 +25,17 @@ class EditorMultiObjectCommandController
 			
 			// Logic to handle ambiguous properties for the UI (like Name).
 			bool hasConsistentName = true;
+			bool has_ai_object;
 			EditorObject first_obj = m_EditorObjects[0];
 			Name = first_obj.GetDisplayName();
+			Simulation = first_obj.IsSimulationEnabled();
 			
 			foreach (EditorObject editor_object: m_EditorObjects) {
+				if (!has_ai_object && editor_object.CanEnableAI()) {
+					ActiveAI = editor_object.IsAIActive();
+					has_ai_object = true;
+				}
+
 				if (Name != editor_object.GetDisplayName())
 					hasConsistentName = false;
 			}
@@ -52,6 +59,8 @@ class EditorMultiObjectCommandController
 	float Health = 100;
 	bool Locked;
 	bool UsePhysics;
+	bool Simulation;
+	bool ActiveAI;
 	bool AllowDamage = false;
 	bool Collision = true;
 	bool EditorOnly = false;
@@ -149,6 +158,18 @@ class EditorMultiObjectCommandController
 			case "UsePhysics": {
 				foreach (EditorObject obj_phys : m_EditorObjects)
 					obj_phys.SetPhysicsEnabled(UsePhysics);
+				break;
+			}
+
+			case "Simulation": {
+				foreach (EditorObject obj_simulation : m_EditorObjects)
+					obj_simulation.SetSimulate(Simulation);
+				break;
+			}
+
+			case "ActiveAI": {
+				foreach (EditorObject obj_ai : m_EditorObjects)
+					obj_ai.SetAIActive(ActiveAI);
 				break;
 			}
 			

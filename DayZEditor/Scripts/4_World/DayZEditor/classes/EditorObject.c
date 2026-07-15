@@ -1,5 +1,7 @@
 class EditorObject: EditorWorldObject
 {
+	protected static const string ACTIVE_AI_PARAMETER = "EditorActiveAI";
+
 	static ref map<Object, EditorObject> s_AllByObject = new map<Object, EditorObject>();
 	
 	protected ref EditorObjectData 			m_Data;
@@ -14,6 +16,7 @@ class EditorObject: EditorWorldObject
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 		
 	protected bool m_IsSelected;
+	protected bool m_ActiveAI;
 	
 	string Uuid;
 	bool IsBeingDragged;
@@ -29,6 +32,7 @@ class EditorObject: EditorWorldObject
 	void EditorObject(notnull EditorObjectData data)
 	{
 		m_Data = data;
+		ReadActiveAIState();
 		
 		m_LowBits = m_Data.m_LowBits;
 		m_HighBits = m_Data.m_HighBits;
@@ -221,6 +225,8 @@ class EditorObject: EditorWorldObject
 		if (serialized_building) {
 			serialized_building.Read(m_Data.Parameters);
 		}
+
+		UpdateSimulationState();
 		
 		GetEditor().GetObjectManager().m_WorldObjectIndex.Insert(m_WorldObject.GetID(), this);
 	}
@@ -312,9 +318,9 @@ class EditorObject: EditorWorldObject
 		// Deprecate this
 		object_data.BottomCenter = GetBottomCenter();
 		
-		object_data.Simulate = false;
-		if (m_WorldEntity) {
-			object_data.Simulate = !m_WorldEntity.GetIsSimulationDisabled();
+		object_data.Simulate = m_Data.Simulate;
+		if (m_ActiveAI) {
+			object_data.Parameters[ACTIVE_AI_PARAMETER] = SerializableParam1<bool>.Create(true);
 		}
 		
 		// Anything in here needs to either be stored on EditorObject, or found from m_WorldObject itself
@@ -554,10 +560,183 @@ class EditorObject: EditorWorldObject
 
 	void SetSimulate(bool simulate)
 	{
-		if (m_WorldEntity) {
-			m_WorldEntity.DisableSimulation(!simulate);
-			OnChanged.Invoke();
+		if (m_Data.Simulate == simulate) {
+			return;
 		}
+
+		m_Data.Simulate = simulate;
+		UpdateSimulationState();
+		OnChanged.Invoke();
+	}
+
+	bool IsSimulationEnabled()
+	{
+		return m_Data.Simulate;
+	}
+
+	bool CanEnableAI()
+	{
+		return DayZCreatureAI.Cast(m_WorldEntity) != null;
+	}
+
+	bool IsAIActive()
+	{
+		return m_ActiveAI;
+	}
+
+	static bool ShouldSuppressAICommands(notnull DayZCreatureAI creature_ai)
+	{
+		if (!s_AllByObject) {
+			return false;
+		}
+
+		EditorObject editor_object = s_AllByObject[creature_ai];
+		return editor_object && editor_object.IsSimulationEnabled() && !editor_object.IsAIActive();
+	}
+
+	void SetAIActive(bool active)
+	{
+		if (!CanEnableAI() || m_ActiveAI == active) {
+			return;
+		}
+
+		m_ActiveAI = active;
+		WriteActiveAIState();
+		UpdateSimulationState();
+		OnChanged.Invoke();
+	}
+
+	protected void ReadActiveAIState()
+	{
+		SerializableParam1<bool> parameter = SerializableParam1<bool>.Cast(m_Data.Parameters[ACTIVE_AI_PARAMETER]);
+		if (parameter) {
+			m_ActiveAI = parameter.param1;
+		}
+	}
+
+	protected void WriteActiveAIState()
+	{
+		if (m_ActiveAI) {
+			m_Data.Parameters[ACTIVE_AI_PARAMETER] = SerializableParam1<bool>.Create(true);
+		} else {
+			m_Data.Parameters.Remove(ACTIVE_AI_PARAMETER);
+		}
+	}
+
+	protected void UpdateSimulationState()
+	{
+		if (!m_WorldEntity) {
+			return;
+		}
+
+		DayZCreatureAI creature_ai = DayZCreatureAI.Cast(m_WorldEntity);
+		if (!creature_ai) {
+			m_WorldEntity.DisableSimulation(!m_Data.Simulate);
+			return;
+		}
+
+		AIAgent ai_agent = creature_ai.GetAIAgent();
+		if (ai_agent && (!m_Data.Simulate || !m_ActiveAI)) {
+			SetCreatureAIIdle(creature_ai, ai_agent);
+		}
+
+		if (!m_Data.Simulate) {
+			m_WorldEntity.DisableSimulation(true);
+			return;
+		}
+
+		if (m_WorldEntity.GetIsSimulationDisabled()) {
+			vector transform[4];
+			m_WorldEntity.GetTransform(transform);
+			m_WorldEntity.DisableSimulation(false);
+			SynchronizeCreatureTransform(creature_ai, transform);
+		}
+
+		if (!m_ActiveAI) {
+			return;
+		}
+
+		if (!ai_agent) {
+			AIWorld ai_world = GetGame().GetWorld().GetAIWorld();
+			if (ai_world) {
+				// AIWorld owns the group and removes it after its agent is destroyed.
+				AIGroup ai_group = ai_world.CreateDefaultGroup();
+				if (ai_group) {
+					creature_ai.InitAIAgent(ai_group);
+				}
+			}
+			ai_agent = creature_ai.GetAIAgent();
+		}
+
+		if (!ai_agent) {
+			m_ActiveAI = false;
+			WriteActiveAIState();
+			EditorLog.Warning("Unable to activate AI for %1", GetType());
+			return;
+		}
+
+		SetCreatureAIActive(creature_ai, ai_agent);
+	}
+
+	protected void SetCreatureAIIdle(notnull DayZCreatureAI creature_ai, notnull AIAgent ai_agent)
+	{
+		DayZAnimal animal = DayZAnimal.Cast(creature_ai);
+
+		ai_agent.SetKeepInIdle(true);
+		if (m_WorldEntity.GetIsSimulationDisabled() || !creature_ai.IsAlive()) {
+			return;
+		}
+
+		if (animal) {
+			return;
+		}
+
+		DayZInfected infected = DayZInfected.Cast(creature_ai);
+		if (infected) {
+			DayZInfectedInputController infected_controller = infected.GetInputController();
+			if (infected_controller) {
+				infected_controller.OverrideMovementSpeed(true, 0);
+				infected_controller.OverrideAlertLevel(true, false, 0, 0);
+				if (infected.GetCommand_Move()) {
+					infected.StartCommand_Move();
+				}
+			}
+		}
+	}
+
+	protected void SetCreatureAIActive(notnull DayZCreatureAI creature_ai, notnull AIAgent ai_agent)
+	{
+		DayZAnimal animal = DayZAnimal.Cast(creature_ai);
+		if (animal) {
+			DayZAnimalInputController animal_controller = animal.GetInputController();
+			if (animal_controller) {
+				animal_controller.OverrideTurnSpeed(false, 0);
+				animal_controller.OverrideMovementSpeed(false, 0);
+				animal_controller.OverrideAlertLevel(false, false, 0, 0);
+				animal_controller.OverrideBehaviourAction(false, DayZAnimalBehaviourAction.GRAZE_ON_SPOT_INPUT);
+				animal_controller.OverrideBehaviourSlot(false, DayZAnimalBehaviourSlot.CALM_GRAZING);
+			}
+		}
+
+		DayZInfected infected = DayZInfected.Cast(creature_ai);
+		if (infected) {
+			DayZInfectedInputController infected_controller = infected.GetInputController();
+			if (infected_controller) {
+				infected_controller.OverrideMovementSpeed(false, 0);
+				infected_controller.OverrideAlertLevel(false, false, 0, 0);
+			}
+		}
+
+		ai_agent.SetKeepInIdle(false);
+	}
+
+	protected void SynchronizeCreatureTransform(notnull DayZCreatureAI creature_ai, vector transform[4])
+	{
+		// Creature simulation owns a separate transform while disabled. Update both sides before its next tick.
+		creature_ai.SetPosition(transform[3]);
+		creature_ai.SetDirection(transform[2]);
+		creature_ai.SetTransform(transform);
+		creature_ai.Update();
 	}
 
 	protected bool m_PhysicsEnabled;
@@ -952,6 +1131,7 @@ class EditorObjectController: Managed
 	bool Locked;
 	bool UsePhysics;
 	bool Simulation;
+	bool ActiveAI;
 	bool AllowDamage = false;
 	bool Collision = true;
 	bool EditorOnly = false;
@@ -972,6 +1152,8 @@ class EditorObjectController: Managed
 		EditorOnly = m_EditorObject.IsEditorOnly();
 		Health = m_EditorObject.GetHealth();
 		UsePhysics = m_EditorObject.IsPhysicsEnabled();
+		Simulation = m_EditorObject.IsSimulationEnabled();
+		ActiveAI = m_EditorObject.IsAIActive();
 		
 		// Yikes
 		if (m_EditorObject.GetData().Parameters["ExpansionTraderType"]) {
@@ -1038,6 +1220,13 @@ class EditorObjectController: Managed
 			
 			case "Simulation": {
 				m_EditorObject.SetSimulate(Simulation);
+				Simulation = m_EditorObject.IsSimulationEnabled();
+				break;
+			}
+
+			case "ActiveAI": {
+				m_EditorObject.SetAIActive(ActiveAI);
+				ActiveAI = m_EditorObject.IsAIActive();
 				break;
 			}
 		}
