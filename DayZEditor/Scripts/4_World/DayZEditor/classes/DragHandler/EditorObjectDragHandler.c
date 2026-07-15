@@ -57,21 +57,69 @@ class Plane3D: Managed
 	}
 }
 
+class EditorDragSurfaceState: Managed
+{
+	vector m_PositionOffset;
+	float m_Heading;
+	float m_Scale;
+	float m_YDistance;
+	ref EditorSurfaceProjectionCache m_SurfaceCache = new EditorSurfaceProjectionCache();
+
+	void EditorDragSurfaceState(vector position_offset, float heading, float scale, float y_distance)
+	{
+		m_PositionOffset = position_offset;
+		m_Heading = heading;
+		m_Scale = scale;
+		m_YDistance = y_distance;
+	}
+}
+
 class EditorObjectDragHandler: EditorDragHandler
 {
 	protected float m_InitialScale = 1.0;
+	protected float m_InitialHeading;
+	protected float m_Heading;
+	protected bool m_HasIndependentSurfacePlacement;
+	protected ref array<Object> m_IgnoredObjects = {};
+	protected ref map<EditorObject, ref EditorDragSurfaceState> m_SurfaceStates = new map<EditorObject, ref EditorDragSurfaceState>();
 
 	override void OnDragStart(notnull EditorObject target, array<EditorObject> additional_targets = null)
 	{
 		super.OnDragStart(target, additional_targets);
 
-        if (target) {
-            m_InitialScale = target.GetScale();
-        }
+		m_InitialScale = target.GetScale();
+		m_Heading = Math.NormalizeAngle(target.GetOrientation()[0]);
+		m_InitialHeading = m_Heading;
 
-		if (GetGame().IsMultiplayer())
-		{
-			GetEditor().GetNetActionManager().SendDragSessionStart(target, additional_targets);
+		Object player = GetEditor().GetPlayer();
+		if (player) {
+			m_IgnoredObjects.Insert(player);
+		}
+		m_IgnoredObjects.Insert(target.GetWorldObject());
+
+		vector heading_matrix[3];
+		Math3D.YawPitchRollMatrix(Vector(m_InitialHeading, 0, 0), heading_matrix);
+		vector target_position = target.GetPosition();
+		foreach (EditorObject additional_target: m_AdditionalDragTargets) {
+			if (additional_target) {
+				CacheSurfaceState(additional_target, target_position, heading_matrix);
+			}
+		}
+
+		if (GetGame().IsMultiplayer()) {
+			GetEditor().GetNetActionManager().SendDragSessionStart(target, m_AdditionalDragTargets);
+		}
+	}
+
+	protected void CacheSurfaceState(notnull EditorObject editor_object, vector target_position, vector heading_matrix[3])
+	{
+		vector position_offset = editor_object.GetPosition() - target_position;
+		position_offset = position_offset.InvMultiply3(heading_matrix);
+		m_SurfaceStates[editor_object] = new EditorDragSurfaceState(position_offset, Math.NormalizeAngle(editor_object.GetOrientation()[0]), editor_object.GetScale(), editor_object.GetYDistance());
+
+		Object world_object = editor_object.GetWorldObject();
+		if (world_object) {
+			m_IgnoredObjects.Insert(world_object);
 		}
 	}
 
@@ -113,15 +161,6 @@ class EditorObjectDragHandler: EditorDragHandler
 	protected override void OnDragging(notnull EditorObject target, notnull array<EditorObject> additional_drag_targets)
 	{
 		//ScopedFunctionTimer Scope0("EditorObjectDragHandler.OnDragging");
-
-		array<EditorObject> all_objects = {};
-		all_objects.Insert(target);
-		all_objects.InsertAll(additional_drag_targets);
-						
-		array<Object> all_object_instances = {};
-		foreach (EditorObject editor_object_get_object: all_objects) {
-			all_object_instances.Insert(editor_object_get_object.GetWorldObject());
-		}
 		
 		vector camera_transform[4];
 		GetEditor().GetCamera().GetTransform(camera_transform);
@@ -132,53 +171,32 @@ class EditorObjectDragHandler: EditorDragHandler
 		vector scale_matrix[3];
 		Math3D.ScaleMatrix(m_InitialScale, scale_matrix);
 
-		array<Object> ignored_objects = {};
-		ignored_objects.InsertAll(all_object_instances);
-		ignored_objects.Insert(GetEditor().GetPlayer());
-
-		Ray cursor_ray = GetEditor().GetCursorRay();				
-		int interaction_layers = -1;
-		if (GetEditor().GroundMode) {
-			interaction_layers &= PhxInteractionLayers.TERRAIN;
-		}
-		
-		//Raycast cursor_raycast = cursor_ray.PerformRaycastMulti(ignored_objects, GetEditor().GetCamera().GetSettings().ViewDistance / 2, interaction_layers);
-		Raycast cursor_raycast_rv = GetEditor().GetCursorRaycastModeSafeEx(ignored_objects, GetEditor().GroundMode);
-		Raycast cursor_raycast = GetEditor().GetCursorRaycast(target.GetWorldObject(), GetEditor().GroundMode);
+		Ray cursor_ray = GetEditor().GetCursorRayModeSafe();
+		bool ground_mode = GetEditor().GroundMode;
+		Raycast cursor_raycast = GetEditor().GetCursorRaycastModeSafeEx(m_IgnoredObjects, ground_mode);
 			
 		vector cursor_pos = cursor_ray.GetPoint(10.0);
-		if (cursor_raycast_rv) {
-			cursor_pos = cursor_raycast_rv.Bounce.Position;
+		if (cursor_raycast) {
+			cursor_pos = cursor_raycast.Bounce.Position;
 		}
+		vector cursor_surface_position = cursor_pos;
 
 		vector icon_position = target.GetBottomCenter();
 		vector object_up_direction = target.GetWorldObject().GetDirectionUp();
 		
-		vector up_dir = object_up_direction;		
 		float distance_to_ground = 0;
-		if (GetEditor().MagnetMode) {
-			if (cursor_raycast) {
-				up_dir = cursor_raycast.Bounce.Direction;
-			}
-			
-			if (up_dir.LengthSq() == 0) {
-				up_dir = GetGame().SurfaceGetNormal(cursor_raycast.Bounce.Position[0], cursor_raycast.Bounce.Position[2]);
-			}
-			
-			if (up_dir.LengthSq() == 0) {
-				up_dir = vector.Up;
-			}
-		}
+		vector surface_normal;
+		bool has_surface = EditorSurfacePlacement.GetSurfaceNormal(cursor_raycast, ground_mode, surface_normal);
+		bool snap_to_surface = has_surface && !ground_mode;
+		bool align_to_surface = has_surface && GetEditor().MagnetMode;
+		bool use_origin_transform = false;
 
-		up_dir.Normalize();
-		Ray downward_ray = new Ray(transform[3], -up_dir);
-		if (GetEditor().GroundMode) {			
+		if (ground_mode) {
+			Ray downward_ray = new Ray(transform[3], -vector.Up);
 			Raycast downward_raycast = downward_ray.PerformRaycastRV(target.GetWorldObject(), null, 0, 1000, ObjIntersect.View, true);
 			if (downward_raycast) {
 				distance_to_ground = downward_raycast.Length();
-				
-				// Theres other ways to do this but i think its the most efficient. dont overengineer
-				icon_position = icon_position - object_up_direction * distance_to_ground;
+				icon_position[1] = icon_position[1] - distance_to_ground;
 			}
 		}
 								
@@ -216,6 +234,7 @@ class EditorObjectDragHandler: EditorDragHandler
 				if (cursor_intersect_dir.Length() > 0 && Math.AbsFloat(vector.Dot(cursor_intersect_dir, transform[1])) != 1) {
 					Math3D.DirectionAndUpMatrix(cursor_intersect_dir, transform[1], cursor_dir_mat);
 					Math3D.MatrixOrthogonalize3(cursor_dir_mat);
+					m_Heading = Math.NormalizeAngle(cursor_intersect_dir.VectorToAngles()[0]);
 
 					//cursor_dir_mat[3] = icon_position.InvMultiply4(transform) + transform[3];
 					Math3D.MatrixMultiply3(scale_matrix, cursor_dir_mat, cursor_dir_mat);
@@ -238,34 +257,40 @@ class EditorObjectDragHandler: EditorDragHandler
 		// Handle regular motion
 		else {
 			vector transform_new[4];
-			if (GetEditor().MagnetMode) {
-				vector aside_new = transform[0] * up_dir;			
-				Math3D.DirectionAndUpMatrix(aside_new, up_dir, transform_new);
-				Math3D.MatrixMultiply3(scale_matrix, transform_new, transform_new);
-			} else {
+			if (!align_to_surface || !EditorSurfacePlacement.GetMagnetTransform(m_Heading, surface_normal, m_InitialScale, cursor_pos, transform_new)) {
 				target.GetTransform(transform_new);
 			}
-			
-			if (GetEditor().GroundMode) {
-				cursor_pos = cursor_pos + up_dir * distance_to_ground;
+
+			if (snap_to_surface) {
+				cursor_pos[1] = EditorSurfacePlacement.GetSnappedHeight(cursor_pos[1], surface_normal, target.GetYDistance(), m_InitialScale);
+				use_origin_transform = true;
+			} else if (ground_mode) {
+				cursor_pos[1] = cursor_pos[1] + distance_to_ground;
 			}
 
 			transform_new[3] = cursor_pos;
 			copyarray(transform, transform_new);
 		}
 
-		if (transform[0].LengthSq() == 0 || transform[1].LengthSq() == 0 || transform[2].LengthSq() == 0) {
-			Math3D.MatrixIdentity3(transform);
+		if (use_origin_transform) {
+			target.SetTransform(transform);
+		} else {
+			target.SetBottomTransform(transform);
 		}
-
-		// Apply the bottom-pivot transform first, then use the object's actual
-		// origin transform to preserve every additional object's relative offset.
-		target.SetBottomTransform(transform);
 		target.Update();
 
+		// Use the object's actual origin transform to preserve every additional object's relative offset.
 		vector transform_from_object_center[4];
 		target.GetTransform(transform_from_object_center);
 		Math3D.MatrixOrthogonalize4(transform_from_object_center);
+
+		vector group_heading_matrix[3];
+		float heading_delta;
+		vector target_position = target.GetPosition();
+		if (align_to_surface && use_origin_transform && additional_drag_targets.Count() > 0) {
+			Math3D.YawPitchRollMatrix(Vector(m_Heading, 0, 0), group_heading_matrix);
+			heading_delta = Math.NormalizeAngle(m_Heading - m_InitialHeading);
+		}
 				
 		// Handle all child objects
 		foreach (EditorObject selected_object: additional_drag_targets) {
@@ -273,12 +298,34 @@ class EditorObjectDragHandler: EditorDragHandler
 				continue;
 			}
 
-			array<vector> dyn_vec_arry = m_LocalTransformsToTarget[selected_object];
+			EditorDragSurfaceState surface_state = m_SurfaceStates[selected_object];
+			if (align_to_surface && use_origin_transform && surface_state) {
+				// Keep group layout heading-only; each object supplies its own surface tilt.
+				vector projected_position = surface_state.m_PositionOffset.Multiply3(group_heading_matrix) + target_position;
+				vector projection_start = EditorSurfacePlacement.GetSurfaceProjectionStart(projected_position, cursor_surface_position, surface_normal, surface_state.m_YDistance * surface_state.m_Scale);
+				vector selected_surface_position;
+				vector selected_surface_normal;
+				if (EditorSurfacePlacement.GetSurfaceBelowCached(projection_start, m_IgnoredObjects, false, surface_state.m_SurfaceCache, selected_surface_position, selected_surface_normal)) {
+					vector selected_transform[4];
+					float selected_heading = Math.NormalizeAngle(surface_state.m_Heading + heading_delta);
+					if (EditorSurfacePlacement.GetMagnetTransform(selected_heading, selected_surface_normal, surface_state.m_Scale, projected_position, selected_transform)) {
+						if (snap_to_surface) {
+							selected_transform[3][1] = EditorSurfacePlacement.GetSnappedHeight(selected_surface_position[1], selected_surface_normal, surface_state.m_YDistance, surface_state.m_Scale);
+						}
+
+						selected_object.SetTransform(selected_transform);
+						m_HasIndependentSurfacePlacement = true;
+						continue;
+					}
+				}
+			}
+
+			array<vector> local_transform_array = m_LocalTransformsToTarget[selected_object];
 			vector local_additional_mat[4] = {
-				dyn_vec_arry[0],
-				dyn_vec_arry[1],
-				dyn_vec_arry[2],
-				dyn_vec_arry[3]
+				local_transform_array[0],
+				local_transform_array[1],
+				local_transform_array[2],
+				local_transform_array[3]
 			};
 			
 			vector output_additional_mat[4];
@@ -286,11 +333,10 @@ class EditorObjectDragHandler: EditorDragHandler
 			selected_object.SetTransform(output_additional_mat);
 		}
 
-		if (GetGame().IsMultiplayer())
-		{
-			int packedData[4];
-			EditorNetUtils.PackTransform(target.GetPosition(), target.GetOrientation(), target.GetScale(), packedData);
-			GetEditor().GetNetActionManager().SendDragSessionUpdate(target.Uuid, packedData);
+		if (GetGame().IsMultiplayer()) {
+			int packed_data[4];
+			EditorNetUtils.PackTransform(target.GetPosition(), target.GetOrientation(), target.GetScale(), packed_data);
+			GetEditor().GetNetActionManager().SendDragSessionUpdate(target.Uuid, packed_data);
 		}
 	}
 	
@@ -313,43 +359,48 @@ class EditorObjectDragHandler: EditorDragHandler
 	override void OnDragFinish()
 	{
 		// First, send the new reliable END RPC for the session.
-		if (GetGame().IsMultiplayer() && m_Target)
-		{
-			int packedData[4];
-			EditorNetUtils.PackTransform(m_Target.GetPosition(), m_Target.GetOrientation(), m_Target.GetScale(), packedData);
-			GetEditor().GetNetActionManager().SendDragSessionEnd(m_Target.Uuid, packedData);
+		if (GetGame().IsMultiplayer() && m_Target) {
+			int packed_data[4];
+			EditorNetUtils.PackTransform(m_Target.GetPosition(), m_Target.GetOrientation(), m_Target.GetScale(), packed_data);
+			GetEditor().GetNetActionManager().SendDragSessionEnd(m_Target.Uuid, packed_data);
 		}
 
-		// Manually replicate the cleanup logic from EditorDragHandler 
-		if (m_RewindAction)
-		{
+		// Manually replicate the cleanup logic from EditorDragHandler.
+		if (m_RewindAction) {
 			// Finalize undo/redo action with the 'after' state.
 			array<EditorObject> all_dragged_objects = { m_Target };
-			if (m_AdditionalDragTargets)
+			if (m_AdditionalDragTargets) {
 				all_dragged_objects.InsertAll(m_AdditionalDragTargets);
+			}
 
-			foreach(EditorObject dragged_obj : all_dragged_objects)
-			{
-				if (dragged_obj)
-					m_RewindAction.InsertRedoParameter(dragged_obj.GetTransformArray());
+			foreach (EditorObject dragged_object: all_dragged_objects) {
+				if (dragged_object) {
+					dragged_object.Update();
+					m_RewindAction.InsertRedoParameter(dragged_object.GetTransformArray());
+				}
 			}
 
 			GetEditor().InsertAction(m_RewindAction);
+		}
+
+		// Keep high-frequency drag updates parent-only, then reliably publish exact child transforms once.
+		if (m_HasIndependentSurfacePlacement && GetGame().IsMultiplayer() && m_AdditionalDragTargets && m_AdditionalDragTargets.Count() > 0) {
+			GetEditor().GetNetActionManager().SendTransformUpdate(m_AdditionalDragTargets);
 		}
 
 		// This manually performs the cleanup from the base class's OnDragFinish,
 		// because we are intentionally not calling super.OnDragFinish() to prevent old RPCs.
 		GetGame().GetUpdateQueue(CALL_CATEGORY_GUI).Remove(_OnDragging);
 
-		if (m_Target)
+		if (m_Target) {
 			m_Target.IsBeingDragged = false;
+		}
 
-		if (m_AdditionalDragTargets)
-		{
-			foreach(EditorObject child_obj : m_AdditionalDragTargets)
-			{
-				if (child_obj)
-					child_obj.IsBeingDragged = false;
+		if (m_AdditionalDragTargets) {
+			foreach (EditorObject child_object: m_AdditionalDragTargets) {
+				if (child_object) {
+					child_object.IsBeingDragged = false;
+				}
 			}
 		}
 
@@ -358,5 +409,7 @@ class EditorObjectDragHandler: EditorDragHandler
 		m_AdditionalDragTargets = null;
 		m_LocalTransformsToTarget = null;
 		m_RewindAction = null;
+		m_IgnoredObjects = null;
+		m_SurfaceStates = null;
 	}
 }

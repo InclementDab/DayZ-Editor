@@ -1001,68 +1001,61 @@ class Editor: Managed
 	}
 	
 	protected vector m_HandsInputOrientation;
+	protected float m_HandsHeading;
+	protected bool m_HandsHeadingInitialized;
+	protected ref array<Object> m_HandsIgnoredObjects = {};
+	protected ref map<EditorWorldObject, ref EditorSurfaceProjectionCache> m_HandsSurfaceCaches = new map<EditorWorldObject, ref EditorSurfaceProjectionCache>();
+	protected bool m_HandsIgnoredObjectsDirty = true;
 	
 	// maybe abstract this to a new class, like EditorHandsManager
 	void HandleHands(float dt)
 	{
-		Input input = GetGame().GetInput();
-		array<Object> objects_to_ignore = { m_Player };
-		foreach (EditorWorldObject world_object_0, EditorHandData hand_data_0: m_PlacingObjects) {
-			if (world_object_0 && world_object_0.GetWorldObject()) {
-				objects_to_ignore.Insert(world_object_0.GetWorldObject());
+		if (!m_MainHandObject || !m_MainHandObject.GetWorldObject()) {
+			return;
+		}
+
+		if (!m_HandsHeadingInitialized) {
+			m_HandsHeading = m_MainHandObject.GetWorldObject().GetOrientation()[0];
+			m_HandsHeadingInitialized = true;
+		}
+
+		m_HandsHeading = Math.NormalizeAngle(m_HandsHeading + m_HandsInputOrientation[0]);
+		m_HandsInputOrientation = vector.Zero;
+
+		if (m_HandsIgnoredObjectsDirty) {
+			m_HandsIgnoredObjects.Clear();
+			if (m_Player) {
+				m_HandsIgnoredObjects.Insert(m_Player);
 			}
+			foreach (EditorWorldObject placing_object, EditorHandData placing_data: m_PlacingObjects) {
+				if (placing_object && placing_object.GetWorldObject()) {
+					m_HandsIgnoredObjects.Insert(placing_object.GetWorldObject());
+				}
+			}
+			m_HandsIgnoredObjectsDirty = false;
 		}
-		
-		/*Raycast cursor_raycast = GetCursorRaycastModeSafeEx(objects_to_ignore, GroundMode);
-		
-					
-		vector transform[4];
-		Math3D.MatrixIdentity4(transform);
-		
-		vector surface_normal = vector.Up;
-		if (MagnetMode) {
-			surface_normal = GetGame().SurfaceGetNormal(position[0], position[2]);
-		}
-		
-		
-		
-		*/
-		
-		// Copied from EditorObjectDragHandler because im a great programmer
-		Raycast cursor_raycast = GetCursorRaycastModeSafeEx(objects_to_ignore, GroundMode);
+
+		Raycast cursor_raycast = GetCursorRaycastModeSafeEx(m_HandsIgnoredObjects, GroundMode);
 					
 		vector cursor_pos = GetCursorRayModeSafe().GetPoint(10.0);
 		if (cursor_raycast) {
 			cursor_pos = cursor_raycast.Bounce.Position;
 		}
-				
-		vector up_dir = vector.Up;		
-		float distance_to_ground = 0;
-		if (MagnetMode) {
-			up_dir = cursor_raycast.Bounce.Direction;
-			if (up_dir.LengthSq() == 0) {
-				up_dir = GetGame().SurfaceGetNormal(cursor_raycast.Bounce.Position[0], cursor_raycast.Bounce.Position[2]);
-			}
-			
-			if (up_dir.LengthSq() == 0) {
-				up_dir = vector.Up;
-			}
+
+		vector layout_transform[4];
+		Math3D.YawPitchRollMatrix(Vector(m_HandsHeading, 0, 0), layout_transform);
+		layout_transform[3] = cursor_pos;
+
+		vector cursor_magnet_transform[4];
+		vector cursor_surface_normal;
+		bool has_cursor_magnet_transform = false;
+		if (MagnetMode && EditorSurfacePlacement.GetSurfaceNormal(cursor_raycast, GroundMode, cursor_surface_normal)) {
+			has_cursor_magnet_transform = EditorSurfacePlacement.GetMagnetTransform(m_HandsHeading, cursor_surface_normal, 1.0, cursor_pos, cursor_magnet_transform);
 		}
 
-		up_dir.Normalize();
-		
-		vector local_aside = m_MainHandObject.GetWorldObject().GetDirection();
-		vector transform[4] = {
-			up_dir * local_aside,
-			up_dir,
-			up_dir * (local_aside * vector.Up),
-			cursor_pos
-		};
-				
-		vector userinput_matrix[3];
-		Math3D.YawPitchRollMatrix(m_HandsInputOrientation, userinput_matrix);
-		Math3D.MatrixMultiply3(transform, userinput_matrix, transform);
-		m_HandsInputOrientation = vector.Zero;
+		if (has_cursor_magnet_transform && GroundMode) {
+			copyarray(layout_transform, cursor_magnet_transform);
+		}
 						
 		foreach (EditorWorldObject world_object, EditorHandData hand_data: m_PlacingObjects) {
 			if (!world_object || !world_object.GetWorldObject()) {
@@ -1070,15 +1063,49 @@ class Editor: Managed
 			}
 			
 			vector local_transform[4];
-			copyarray(local_transform, transform);
+			copyarray(local_transform, layout_transform);
+			float object_heading = m_HandsHeading;
 			if (hand_data) {
 				vector hand_matrix[4];
 				Math3D.YawPitchRollMatrix(hand_data.OrientationOffset, hand_matrix);
 				hand_matrix[3] = hand_data.PositionOffset;
-				Math3D.MatrixMultiply4(transform, hand_matrix, local_transform);
+				Math3D.MatrixMultiply4(layout_transform, hand_matrix, local_transform);
+				object_heading = Math.NormalizeAngle(m_HandsHeading + hand_data.OrientationOffset[0]);
 			}
-						
-			world_object.SetBottomTransform(local_transform);
+
+			bool has_object_magnet_transform = false;
+			vector object_surface_position;
+			vector object_surface_normal;
+			float scale = world_object.GetWorldObject().GetScale();
+			if (has_cursor_magnet_transform && !GroundMode) {
+				if (world_object == m_MainHandObject && !hand_data) {
+					copyarray(local_transform, cursor_magnet_transform);
+					object_surface_position = cursor_pos;
+					object_surface_normal = cursor_surface_normal;
+					has_object_magnet_transform = true;
+				} else {
+					EditorSurfaceProjectionCache surface_cache = m_HandsSurfaceCaches[world_object];
+					if (!surface_cache) {
+						surface_cache = new EditorSurfaceProjectionCache();
+						m_HandsSurfaceCaches[world_object] = surface_cache;
+					}
+
+					vector projection_start = EditorSurfacePlacement.GetSurfaceProjectionStart(local_transform[3], cursor_pos, cursor_surface_normal, world_object.GetBoundingCenter()[1] * scale);
+					if (EditorSurfacePlacement.GetSurfaceBelowCached(projection_start, m_HandsIgnoredObjects, false, surface_cache, object_surface_position, object_surface_normal)) {
+						has_object_magnet_transform = EditorSurfacePlacement.GetMagnetTransform(object_heading, object_surface_normal, 1.0, local_transform[3], local_transform);
+					}
+				}
+			}
+
+			local_transform[0] = local_transform[0] * scale;
+			local_transform[1] = local_transform[1] * scale;
+			local_transform[2] = local_transform[2] * scale;
+			if (has_object_magnet_transform) {
+				local_transform[3][1] = EditorSurfacePlacement.GetSnappedHeight(object_surface_position[1], object_surface_normal, world_object.GetBoundingCenter()[1], scale);
+				world_object.SetTransform(local_transform);
+			} else {
+				world_object.SetBottomTransform(local_transform);
+			}
 			
 			//SnapToNearbyObjects(world_object, dt);
 		}
@@ -1819,6 +1846,20 @@ class Editor: Managed
 	{
 		EditorEvents.RemoveFromHand(this, world_object, m_PlacingObjects[world_object]);
 		m_PlacingObjects.Remove(world_object);
+		m_HandsSurfaceCaches.Remove(world_object);
+		m_HandsIgnoredObjectsDirty = true;
+		if (world_object == m_MainHandObject) {
+			m_MainHandObject = null;
+			m_HandsHeadingInitialized = false;
+			m_HandsInputOrientation = vector.Zero;
+			foreach (EditorWorldObject remaining_object, EditorHandData remaining_data: m_PlacingObjects) {
+				if (remaining_object && remaining_object.GetWorldObject()) {
+					m_MainHandObject = remaining_object;
+					m_HandsHeadingInitialized = true;
+					break;
+				}
+			}
+		}
 		delete world_object;		
 	}
 	
@@ -2025,9 +2066,12 @@ class Editor: Managed
 		
 		if (m_PlacingObjects.Count() == 0) {
 			m_MainHandObject = world_object;
+			m_HandsHeadingInitialized = false;
+			m_HandsInputOrientation = vector.Zero;
 		}
 		
 		m_PlacingObjects[world_object] = hand_data;
+		m_HandsIgnoredObjectsDirty = true;
 		EditorEvents.AddInHand(this, world_object, hand_data);
 				
 		return m_PlacingObjects;

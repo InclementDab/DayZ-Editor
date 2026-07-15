@@ -19,7 +19,9 @@ class EditorAlignToSurfaceCommand: EditorCommand
 			}
 
 			vector aligned_transform[4];
-			EditorSurfacePlacement.GetAlignedTransform(editor_object, surface_normal, aligned_transform);
+			if (!EditorSurfacePlacement.GetAlignedTransform(editor_object, surface_normal, aligned_transform)) {
+				continue;
+			}
 
 			align_undo.InsertUndoParameter(editor_object.GetTransformArray());
 			editor_object.SetTransform(aligned_transform);

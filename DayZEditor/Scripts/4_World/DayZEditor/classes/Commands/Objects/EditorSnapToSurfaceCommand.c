@@ -5,7 +5,7 @@ class EditorSnapToSurfaceCommand: EditorCommand
 		super.Execute(sender, args);
 		
 		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();		
-		EditorAction align_undo = new EditorAction("SetTransform", "SetTransform");
+		EditorAction snap_undo = new EditorAction("SetTransform", "SetTransform");
 		bool has_changes;
 		foreach (EditorObject editor_object: editor_objects) {
 			if (!editor_object || editor_object.IsLocked()) {
@@ -19,18 +19,20 @@ class EditorSnapToSurfaceCommand: EditorCommand
 			}
 
 			vector snapped_transform[4];
-			EditorSurfacePlacement.GetSnappedTransform(editor_object, surface_position, surface_normal, snapped_transform);
+			if (!EditorSurfacePlacement.GetSnappedTransform(editor_object, surface_position, surface_normal, snapped_transform)) {
+				continue;
+			}
 
-			align_undo.InsertUndoParameter(editor_object.GetTransformArray());
+			snap_undo.InsertUndoParameter(editor_object.GetTransformArray());
 			editor_object.SetTransform(snapped_transform);
 			editor_object.Update();
 			has_changes = true;
 			
-			align_undo.InsertRedoParameter(editor_object.GetTransformArray());
+			snap_undo.InsertRedoParameter(editor_object.GetTransformArray());
 		}
 		
 		if (has_changes) {
-			m_Editor.InsertAction(align_undo);
+			m_Editor.InsertAction(snap_undo);
 		}
 		
 		return true;
