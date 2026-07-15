@@ -7,6 +7,7 @@
 	protected EditorInventoryEditorCamera m_Camera;
 	protected EntityAI m_Entity;
 	protected EditorObject m_EditorObject;
+	protected bool m_SimulationDisabled;
 
 	Widget OpenInventoryOutline;
 	EditBoxWidget ItemSelectorSearchBar, AttachmentSelectorSearchBar;
@@ -17,6 +18,7 @@
 	{
 		m_Entity = entity;
 		m_EditorObject = GetEditor().GetEditorObject(m_Entity);
+		m_SimulationDisabled = m_Entity.GetIsSimulationDisabled();
 		m_Camera = EditorInventoryEditorCamera.Cast(GetGame().CreateObject("EditorInventoryEditorCamera", m_Entity.GetPosition()));
 		m_Camera.SetTarget(m_Entity);
 		
@@ -42,6 +44,10 @@
 	
 	void ~EditorInventoryEditorHud()
 	{
+		if (m_Entity) {
+			m_Entity.DisableSimulation(m_SimulationDisabled);
+		}
+
 		GetGame().ObjectDelete(m_Camera);
 	}
 	
