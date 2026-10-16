@@ -137,10 +137,10 @@ class EditorObjectManagerModule : Managed
 			}
 		}
 
-		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/plants_sakhal", "DZ/rocks", "DZ/rocks_bliss", "DZ/rocks_sakhal" };
+		array<string> paths = { "DZ/plants", "DZ/plants_bliss", "DZ/plants_sakhal", "DZ/plants_takistan", "DZ/rocks", "DZ/rocks_bliss", "DZ/rocks_sakhal", "DZ/rocks_takistan" };
 		// handle static objects
 		foreach (string model_path: paths) {
-			array<string> p3d_files = Directory.EnumerateFiles(model_path, "*.p3d");
+			array<string> p3d_files = Directory.EnumerateFiles(model_path, "*.p3d", 16);
 			foreach (string p3d_file_unformat: p3d_files) {
 				string p3d_file = p3d_file_unformat;
 				p3d_file.ToLower();	
