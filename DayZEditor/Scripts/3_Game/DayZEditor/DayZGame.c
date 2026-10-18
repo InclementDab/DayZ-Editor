@@ -126,12 +126,12 @@ modded class DayZGame
 		for (int i = 0; i < ConfigGetChildrenCount("CfgWorlds"); i++) {
 			string map_name;
 			ConfigGetChildName("CfgWorlds", i, map_name);
-			if (VerifyWorldOwnership(map_name) && ConfigIsExisting(string.Format("CfgWorlds %1 worldName", map_name))) {
+			//if (VerifyWorldOwnership(map_name) && ConfigIsExisting(string.Format("CfgWorlds %1 worldName", map_name))) {
 				string text = ConfigGetTextOut(string.Format("CfgWorlds %1 ceFiles", map_name));
 				if (text.Contains("DayZEditor")) {
 					maps.Insert(map_name);
 				}
-			}
+			//}
 		}
 		
 		m_CharClassNames = { "SurvivorM_Mirek", "SurvivorM_Boris", "SurvivorM_Cyril", "SurvivorM_Denis", "SurvivorM_Elias", "SurvivorM_Francis", "SurvivorM_Guo", "SurvivorM_Hassan", "SurvivorM_Indar", "SurvivorM_Jose", "SurvivorM_Kaito", "SurvivorM_Lewis", "SurvivorM_Manua", "SurvivorM_Niki", "SurvivorM_Oliver", "SurvivorM_Peter", "SurvivorM_Quinn", "SurvivorM_Rolf", "SurvivorM_Seth", "SurvivorM_Taiki", "SurvivorF_Eva", "SurvivorF_Frida", "SurvivorF_Gabi", "SurvivorF_Helga", "SurvivorF_Irena", "SurvivorF_Judy", "SurvivorF_Keiko", "SurvivorF_Linda", "SurvivorF_Maria", "SurvivorF_Naomi", "SurvivorF_Baty" };

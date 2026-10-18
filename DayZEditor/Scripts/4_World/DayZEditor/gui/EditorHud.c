@@ -199,7 +199,7 @@ class EditorHud: ScriptView
 				if (i < model_path_split.Count() - 1) {
 					EditorFolderListNode folder_node;
 					if (m_FolderNodes.Contains(full_path)) {
-						folder_node = m_FolderNodes[full_path];
+						folder_node = EditorFolderListNode.Cast(m_FolderNodes[full_path]);
 					} else {
 						folder_node = new EditorFolderListNode(folder_name);
 						m_FolderNodes[full_path] = folder_node;
@@ -215,7 +215,7 @@ class EditorHud: ScriptView
 							m_TemplateController.LeftContent.Insert(folder_node);
 						} else {
 							string directory_parent = full_path.Substring(0, full_path.LastIndexOf(SystemPath.SEPERATOR));
-							EditorFolderListNode parent_node = m_FolderNodes[directory_parent];
+							EditorFolderListNode parent_node = EditorFolderListNode.Cast(m_FolderNodes[directory_parent]);
 							if (parent_node) {
 								parent_node.InsertChild(folder_node);
 							}

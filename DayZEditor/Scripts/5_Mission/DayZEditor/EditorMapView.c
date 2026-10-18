@@ -66,7 +66,8 @@ class EditorMapView: ScriptView
 
 		m_EditorSettings = EditorSettings.Cast(g_Game.GetProfileSetting(EditorSettings));
 
-		if (!GetGame().VerifyWorldOwnership(m_MapConfig)) {
+		EDLCId dlc = GetGame().GetContentDLCService().GetDLCFromWorld(m_MapConfig);
+		if (dlc && GetGame().GetContentDLCService().IsValidDLCID(dlc) && !GetGame().GetContentDLCService().IsDLCInstalled(dlc)) {
 			PurchaseButton.Show(true);
 			StartButton.Show(false);
 			LoadButton.Show(false);
@@ -194,7 +195,8 @@ class EditorMapView: ScriptView
 			}
 
 			case PurchaseButton: {
-				GetGame().GoBuyWorldDLC(m_MapConfig);
+				EDLCId dlc = GetGame().GetContentDLCService().GetDLCFromWorld(m_MapConfig);
+				GetGame().GetContentDLCService().BuyDLC(dlc);
 				break;
 			}
 			

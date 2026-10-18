@@ -26,6 +26,6 @@ if "%dayz_tools:~-10%"=="DayZ Tools" (
     set "profile_path=%homedrive%%homepath%\Documents\DayZ Exp"
 )
 
-start "" /b "%dayz_tools%\Bin\Workbench\workbenchApp.exe" -doLogs "-repository=\"%repository%\"
+start "" /b "C:\Program Files (x86)\Steam\steamapps\common\DayZ Experimental Tools\Bin\Workbench\workbenchApp.exe" -doLogs "-repository=%repository%" "-prefix=DayZEditor"
 
 exit
