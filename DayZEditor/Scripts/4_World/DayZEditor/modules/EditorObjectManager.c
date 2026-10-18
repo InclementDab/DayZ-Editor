@@ -81,20 +81,16 @@ class EditorObjectManagerModule : Managed
 				}
 				
 				EditorPlaceableItem placeable_item = EditorPlaceableItem.Create(path, type, scope);
+				// set all classed objects with dz model to console friendly - p3ds handled below
+				placeable_item.ConsoleFriendly = model.IndexOf("dz" + SystemPath.SEPERATOR) == 0 && !type_lower.Contains("bldr_"); // and stop bldr sneaking in
+
 				if (type_lower.Contains("land_") || type_lower.Contains("staticobj_")) {
 					placeable_item.Scope = 2;
-					placeable_item.ConsoleFriendly = 1;	
 				}
 
 				// Yikes
 				if (GetGame().IsKindOf(type, "Inventory_Base") || GetGame().IsKindOf(type, "Weapon_Base") || GetGame().IsKindOf(type, "DZ_LightAI") || GetGame().IsKindOf(type, "Magazine_Base")) {
 					placeable_item.Scope = 1;
-					placeable_item.ConsoleFriendly = 1;
-				}
-					
-				// bldr_ check is a hack but I cannot easily check the folder a config is defined in. not sure the best way to go about this.
-				if (model.Contains("dz/") && !type.Contains("bldr_")) {
-					placeable_item.ConsoleFriendly = 1;
 				}
 
 				// Register as placeable
