@@ -95,6 +95,7 @@ class EditorDragHandler: Managed
 	protected void OnDragging(notnull EditorObject target, notnull array<EditorObject> additional_drag_targets);
 	
 	// Raycast ground below object
+	// Retired
 	static vector ProjectToGround(vector transform[4])
 	{
 		vector ground, ground_dir; 
@@ -104,6 +105,7 @@ class EditorDragHandler: Managed
 	}
 
 	// Raycast ground below object, (UNTESTED)
+	// Retired
 	static bool ProjectToGround4(vector transform[4], out vector result[4])
 	{		
 		Ray ground_project_ray = new Ray(transform[3], -transform[1]);

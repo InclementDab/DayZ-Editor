@@ -171,7 +171,7 @@ class EditorWorldObject: Managed
 		}
 		else
 		{
-			object = GetGame().CreateObjectEx(type, position, ECE_LOCAL | ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD | ECE_INITAI);
+			object = GetGame().CreateObjectEx(type, position, ECE_LOCAL | ECE_SETUP | ECE_UPDATEPATHGRAPH | ECE_CREATEPHYSICS | ECE_NOLIFETIME | ECE_NOPERSISTENCY_CHAR | ECE_NOPERSISTENCY_WORLD);
 		}
 
 		if (!object)
@@ -186,18 +186,16 @@ class EditorWorldObject: Managed
 		object.SetFlags(EntityFlags.VISIBLE, true);
 		object.Update();
 		
-		// Needed for AI Placement			
+		// Editor objects are frozen by default.
 		EntityAI entity_ai;
 		if (Class.CastTo(entity_ai, object))
 		{
-			GetGame().GetCallQueue(CALL_CATEGORY_GAMEPLAY).CallLater(entity_ai.DisableSimulation, 15, 0, true);
-			//entity_ai.DisableSimulation(true);
-
-			// weeeeeeee
 			if (GetEditor().GetSettings().SpawnItemsWithAttachments && (entity_ai.GetInventory().GetCargo() || entity_ai.GetInventory().GetAttachmentSlotsCount() > 0))
 			{
 				entity_ai.OnDebugSpawn();
 			}
+
+			entity_ai.DisableSimulation(true);
 		}
 
 		return object;

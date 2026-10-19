@@ -5,33 +5,35 @@ class EditorSnapToSurfaceCommand: EditorCommand
 		super.Execute(sender, args);
 		
 		EditorObjectMap editor_objects = m_Editor.GetSelectedObjects();		
-		EditorAction align_undo = new EditorAction("SetTransform", "SetTransform");
+		EditorAction snap_undo = new EditorAction("SetTransform", "SetTransform");
+		bool has_changes;
 		foreach (EditorObject editor_object: editor_objects) {
-			vector transform[4];
-			
-			editor_object.GetTransform(transform);
-			align_undo.InsertUndoParameter(editor_object.GetTransformArray());
-			
-			// Get Ground Position
-			vector ground_position, ground_dir; 
-			int component;
-			DayZPhysics.RaycastRV(transform[3], transform[3] + transform[1] * -1000, ground_position, ground_dir, component, null, null, null, false, true);
-			
-			vector surface_normal = GetGame().SurfaceGetNormal(ground_position[0], ground_position[2]);
-			vector local_ori = editor_object.GetWorldObject().GetDirection();
-			transform[0] = surface_normal * local_ori;
-			transform[1] = surface_normal;
-			transform[2] = surface_normal * (local_ori * vector.Up);
-			transform[3] = ground_position + (surface_normal * editor_object.GetYDistance());
-			
-			editor_object.SetTransform(transform);
-			
+			if (!editor_object || editor_object.IsLocked()) {
+				continue;
+			}
+
+			vector surface_position;
+			vector surface_normal;
+			if (!EditorSurfacePlacement.GetSurfaceBelow(editor_object, surface_position, surface_normal)) {
+				continue;
+			}
+
+			vector snapped_transform[4];
+			if (!EditorSurfacePlacement.GetSnappedTransform(editor_object, surface_position, surface_normal, snapped_transform)) {
+				continue;
+			}
+
+			snap_undo.InsertUndoParameter(editor_object.GetTransformArray());
+			editor_object.SetTransform(snapped_transform);
 			editor_object.Update();
+			has_changes = true;
 			
-			align_undo.InsertRedoParameter(editor_object.GetTransformArray());
+			snap_undo.InsertRedoParameter(editor_object.GetTransformArray());
 		}
 		
-		m_Editor.InsertAction(align_undo);
+		if (has_changes) {
+			m_Editor.InsertAction(snap_undo);
+		}
 		
 		return true;
 	}

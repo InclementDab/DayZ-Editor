@@ -80,13 +80,16 @@ class EditorClipboard
 		
 		EditorObjectMap editor_objects = GetEditor().CreateObjects(write_data);
 		foreach (int id, EditorObject editor_object: editor_objects) {						
-			if (GetEditor().MagnetMode) {				
-				vector transform[4];
-				editor_object.GetTransform(transform);
-				
-				vector ground_transform[4];
-				EditorObjectDragHandler.ProjectToGround4(transform, ground_transform);
-				editor_object.SetBottomTransform(ground_transform);				
+			if (GetEditor().MagnetMode) {
+				vector surface_position;
+				vector surface_normal;
+				if (EditorSurfacePlacement.GetSurfaceBelow(editor_object, surface_position, surface_normal)) {
+					vector snapped_transform[4];
+					if (EditorSurfacePlacement.GetSnappedTransform(editor_object, surface_position, surface_normal, snapped_transform)) {
+						editor_object.SetTransform(snapped_transform);
+						editor_object.Update();
+					}
+				}
 			}
 			
 			GetEditor().SelectObject(editor_object);
