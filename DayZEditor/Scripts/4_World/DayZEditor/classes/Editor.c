@@ -84,6 +84,7 @@ class Editor: Managed
 	// protected Editor Members
 	protected ref EditorHud							m_EditorHud;
 	ref EditorBrush	Brush;
+	protected ref EditorSplineTool m_SplineTool;
 	protected ref map<int, ref EditorObjectData>			m_SessionCache; // strong ref of EditorObjectData
 	protected ref map<int, ref EditorDeletedObjectData>		m_DeletedSessionCache;
 	protected ref map<string, EditorObject> m_EditorObjectsByUuid = new map<string, EditorObject>();
@@ -216,6 +217,9 @@ class Editor: Managed
 		if (!FileExist(brush_file) && !CopyFile(BRUSH_XML_FILE, brush_file)) {
 			Error(string.Format("Could not copy brush data to %1", brush_file));
 		}
+		
+		// Default generator presets
+		EditorSplinePresets.CreateDefaults();
 										
 		// Camera Init
 		EditorLog.Info("Initializing Camera");
@@ -245,6 +249,8 @@ class Editor: Managed
 		// Needs to exist on clients for Undo / Redo syncing
 		m_SessionCache 			= new map<int, ref EditorObjectData>();
 		m_DeletedSessionCache   = new map<int, ref EditorDeletedObjectData>();
+		
+		m_SplineTool = new EditorSplineTool(this);
 		
 		// Init Hud
 		g_Game.ReportProgress("Loading Editor Hud...");
@@ -320,6 +326,7 @@ class Editor: Managed
 		delete m_EditorHud;
 		delete m_EditorInventoryEditorHud;
 		delete Brush;
+		delete m_SplineTool;
 		delete m_SessionCache;
 		delete m_DeletedSessionCache;
 		delete m_PlacingObjects;
@@ -790,6 +797,7 @@ class Editor: Managed
 		
 		// Process input after gizmo update because gizmos will need to block input during an interaction
 		ProcessInput(timeslice, GetGame().GetInput());
+		m_SplineTool.Update(timeslice);
 
 		if (IsPlayerActive()) {
 			bool cursor_active = GetGame().GetUIManager().IsCursorVisible();
@@ -1103,6 +1111,11 @@ class Editor: Managed
 			GetUApi().GetInputByName("UACameraToolSpeedIncrease").Supress();
 			GetUApi().GetInputByName("UACameraToolSpeedDecrease").Supress();
 			GetUApi().UpdateControls();
+		}
+		
+		// Spline points get the click before the selection does
+		if (m_SplineTool.ProcessInput(dt)) {
+			return;
 		}
 		
 		int mouse_x, mouse_y;
@@ -1627,6 +1640,10 @@ class Editor: Managed
 		
 		if (!m_Active) {
 			return false;
+		}
+		
+		if (m_SplineTool.OnKeyPress(key)) {
+			return true;
 		}
 		
 		Widget focus = GetFocus();
@@ -2909,6 +2926,7 @@ class Editor: Managed
 		m_ActionStack.Clear();
 		m_SessionCache.Clear();
 		m_ObjectManager.Clear();
+		m_SplineTool.Clear();
 		m_CurrentFileAuthorCredits.Clear();
 		m_CurrentFileCreationDate = 0;
 	}
@@ -3168,6 +3186,8 @@ class Editor: Managed
 		foreach (EditorCameraTrackData track_data: save_data.CameraTracks) {
 			AddCameraTrack(track_data, false);
 		}
+		
+		m_SplineTool.InsertSplines(save_data.Splines);
 				
 		// Dirt fix, it needs Transactional Import
 		if (GetGame().IsMultiplayer())
@@ -3257,6 +3277,12 @@ class Editor: Managed
 		array<EditorCameraTrack> camera_tracks = GetObjectManager().GetCameraTracks();
 		foreach (EditorCameraTrack track: camera_tracks) {
 			save_data.CameraTracks.Insert(EditorCameraTrackData.Cast(track.GetData()));
+		}
+		
+		if (!selected_only) {
+			foreach (EditorSplineData spline: m_SplineTool.GetSplines()) {
+				save_data.Splines.Insert(spline);
+			}
 		}
 		
 		return save_data;
@@ -3577,6 +3603,11 @@ class Editor: Managed
 		return m_EditorCamera;
 	}
 	
+	EditorSplineTool GetSplineTool()
+	{
+		return m_SplineTool;
+	}
+	
 	EditorObjectManagerModule GetObjectManager() 
 	{
 		return m_ObjectManager;
@@ -3681,6 +3712,11 @@ class Editor: Managed
 	bool IsDragging()
 	{
 		if (m_CurrentGizmo && m_CurrentGizmo.IsInteracting()) {
+			return true;
+		}
+		
+		// a spline point being moved, so no box selection starts at the same time
+		if (m_SplineTool && m_SplineTool.IsDraggingPoint()) {
 			return true;
 		}
 		

@@ -6,6 +6,12 @@ class EditorFileType: Managed
 	Managed Import(string file) { return null; }
 	void Export(Managed data, string file);
 	
+	// Folder the file dialog opens in, empty for the last folder used
+	string GetDirectory()
+	{
+		return string.Empty;
+	}
+	
 	eDialogExtraSetting GetExportSettings()
 	{
 		return eDialogExtraSetting.EXPORT_SELECTED_ONLY;
