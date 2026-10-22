@@ -83,7 +83,7 @@ class EditorHud: ScriptView
 	Widget CameraPanel;
 	Widget LeftbarPanelSearchBarPanel, RightPanelSearchBarPanel, TabPanel;
 		
-	CanvasWidget EditorCanvas;
+	CanvasWidget EditorCanvas, SplineCanvas, SplineMapCanvas;
 	MapWidget Map;
 	ButtonWidget CameraPanelButton, PlayerTabButton;
 	ButtonWidget CameraTrackPreviousButton, CameraTrackRunButton, CameraTrackNextButton, CameraTrackStopButton, CameraTrackRecordButton; 
@@ -1478,6 +1478,21 @@ class EditorHud: ScriptView
 		return m_Dialog;
 	}
 	
+	// Not modal, the world stays clickable while it is open
+	EditorSplineDialog ShowSplineDialog()
+	{
+		if (!m_SplineDialog) {
+			m_SplineDialog = new EditorSplineDialog();
+		}
+		
+		return m_SplineDialog;
+	}
+	
+	EditorSplineDialog GetSplineDialog()
+	{
+		return m_SplineDialog;
+	}
+	
 	ScriptView GetDialog()
 	{
 		return m_Dialog;
@@ -1485,6 +1500,7 @@ class EditorHud: ScriptView
 	
 	protected ref ScriptView m_Dialog;
 	protected ref ScriptView m_MessageBox;
+	protected ref EditorSplineDialog m_SplineDialog;
 		
 	// Dialog Control
 	static ref DialogBase CurrentDialog;

@@ -1,0 +1,102 @@
+PanelWidgetClass SplineAssetInput {
+ visible 1
+ ignorepointer 0
+ color 0.172 0.192 0.212 1
+ position 0 0
+ size 1 26
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ scaled 1
+ style rover_sim_colorable
+ {
+  TextWidgetClass Caption {
+   ignorepointer 1
+   position 0 0
+   size 0.25 26
+   hexactpos 0
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   text "Assets"
+   font "gui/fonts/MetronBook16"
+   "exact text" 0
+   "text valign" center
+   "text offset" -12 0
+   "text halign" right
+  }
+  PanelWidgetClass AssetBoxWrapper {
+   ignorepointer 1
+   color 0.07 0.078 0.09 1
+   position 0.25 3
+   size 0.4 20
+   hexactpos 0
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    EditBoxWidgetClass AssetBox {
+     size 0.97 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     scaled 1
+     text ""
+     "exact text" 1
+     font "gui/fonts/Metron16"
+    }
+   }
+  }
+  PanelWidgetClass SelectedButtonWrapper {
+   ignorepointer 1
+   position 0.66 3
+   size 0.17 20
+   hexactpos 0
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style Outline_1px
+   {
+    ButtonWidgetClass SelectedButton {
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     text "+ Selected"
+     font "gui/fonts/MetronBook16"
+    }
+   }
+  }
+  PanelWidgetClass ClearButtonWrapper {
+   ignorepointer 1
+   position 0.84 3
+   size 0.14 20
+   hexactpos 0
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style Outline_1px
+   {
+    ButtonWidgetClass ClearButton {
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     text "Clear"
+     font "gui/fonts/MetronBook16"
+    }
+   }
+  }
+ }
+}
