@@ -1,10 +1,11 @@
-PanelWidgetClass Panel {
+PanelWidgetClass {
+ Name "Panel"
  visible 1
  clipchildren 0
  ignorepointer 0
  color 0.129 0.137 0.149 1
  position 0 0
- size 1 24
+ size 1 22
  hexactpos 1
  vexactpos 1
  hexactsize 0
@@ -15,8 +16,9 @@ PanelWidgetClass Panel {
  scriptclass ""
  style rover_sim_colorable
  {
-  FrameWidgetClass Icon01 {
-   visible 1
+  FrameWidgetClass "{00000000121A7D30}" {
+   Name "Icon01"
+   visible 0
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
@@ -31,13 +33,14 @@ PanelWidgetClass Panel {
    scaled 1
    scriptclass ""
    {
-    ImageWidgetClass Icon {
+    ImageWidgetClass "{00000000EC663ED9}" {
+     Name "Icon"
      visible 1
      clipchildren 1
      inheritalpha 0
      ignorepointer 1
      position 8 0
-     size 14 14
+     size 16 16
      halign right_ref
      valign center_ref
      hexactpos 1
@@ -50,13 +53,13 @@ PanelWidgetClass Panel {
      imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
      mode blend
      "src alpha" 1
-     filter 1
      nocache 0
      pivot 0.5 0.5
     }
    }
   }
-  TextWidgetClass Label {
+  TextWidgetClass "{00000000D807CA1C}" {
+   Name "Label"
    visible 1
    clipchildren 0
    inheritalpha 0
@@ -77,13 +80,14 @@ PanelWidgetClass Panel {
    "size to text v" 0
    "text valign" center
   }
-  TextWidgetClass Shortcut {
+  TextWidgetClass "{00000000D247AA99}" {
+   Name "Shortcut"
    visible 1
    clipchildren 0
    inheritalpha 0
    ignorepointer 1
    color 1 1 1 0.706
-   position 48 0
+   position 12 0
    size 0.3 12
    halign right_ref
    valign center_ref
@@ -103,7 +107,8 @@ PanelWidgetClass Panel {
    "text halign" right
    "text valign" center
   }
-  FrameWidgetClass Expand {
+  FrameWidgetClass "{00000000A523518F}" {
+   Name "Expand"
    visible 0
    clipchildren 0
    inheritalpha 0
@@ -119,13 +124,14 @@ PanelWidgetClass Panel {
    scaled 1
    scriptclass ""
    {
-    ImageWidgetClass Icon2 {
+    ImageWidgetClass "{00000000F2069126}" {
+     Name "Icon2"
      visible 1
      clipchildren 1
      inheritalpha 0
      ignorepointer 1
-     position 0 0
-     size 14 18
+     position 8 0
+     size 16 16
      halign right_ref
      valign center_ref
      hexactpos 1
@@ -138,7 +144,7 @@ PanelWidgetClass Panel {
      imageTexture "{5E2BA9CFCF99DFE0}DayZEditor/GUI/icons/icon_save.edds"
      mode blend
      "src alpha" 1
-     filter 1
+     filter 0
      nocache 0
      pivot 0.5 0.5
      {
