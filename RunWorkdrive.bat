@@ -4,7 +4,7 @@ set repository="%cd%"
 rem Loop through all directories in the current directory
 for /d %%D in (*) do (
     if exist "%%D\Workbench\" (
-        cd "%%D\Workbench"
+        cd /d "%%D\Workbench"
         goto :foundwb
     )
 )
@@ -26,6 +26,6 @@ if "%dayz_tools:~-10%"=="DayZ Tools" (
     set "profile_path=%homedrive%%homepath%\Documents\DayZ Exp"
 )
 
-start "" /b "C:\Program Files (x86)\Steam\steamapps\common\DayZ Experimental Tools\Bin\Workbench\workbenchApp.exe" -doLogs "-repository=%repository%" "-prefix=DayZEditor"
+start "" /b "%dayz_tools%\Bin\Workbench\workbenchApp.exe" -filePatching -doLogs "-repository=%repository%" "-prefix=DayZEditor" "-mod=C:\Dev\proj\DayZ-Dabs-Framework;C:\Dev\proj\DayZ-CommunityFramework;C:\Dev\proj\DayZ-Editor"
 
 exit

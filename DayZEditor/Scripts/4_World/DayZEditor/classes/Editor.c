@@ -179,7 +179,7 @@ class Editor: Managed
 
 		EditorLog.Trace("Editor");
 		g_Game.ReportProgress("Loading Editor...");
-
+		DumpStack();
 		PrintFormat("Loading DayZ Editor v%1", Version);
 		
 		if (GetGame().IsMultiplayer()) {
@@ -227,7 +227,10 @@ class Editor: Managed
 		}
 
 #ifndef NO_GUI
-		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, m_Player.GetPosition() + Vector(0, 5, 0), ECE_LOCAL));
+		vector camera_position = m_Player.GetPosition();
+		camera_position[1] = GetGame().SurfaceY(camera_position[0], camera_position[2]) + 10;
+		
+		m_EditorCamera = EditorCamera.Cast(GetGame().CreateObjectEx(camera_type, camera_position, ECE_LOCAL));
 #endif
 		
 		// Object Manager
@@ -629,7 +632,8 @@ class Editor: Managed
 					editor_object.GetMarker().Show(true);			
 				}
 				
-				editor_object.HideBoundingBox();
+				// Should we just disable the selection?
+				//editor_object.SetSel(false);
 			}
 		}
 				
@@ -1207,7 +1211,7 @@ class Editor: Managed
 				}
 			}
 			
-			if (IsCtrlDown() && m_ObjectUnderCursor && !widget_under_cursor) {
+			if (IsCtrlDown() && m_ObjectUnderCursor && m_ObjectUnderCursor.GetShapeName() && !widget_under_cursor) {
 				EditorPlaceableItem placeable_object = GetReplaceableItem(m_ObjectUnderCursor);
 				if (placeable_object) {
 					ClearHand();
@@ -1252,7 +1256,7 @@ class Editor: Managed
 		if (middle_click_input.LocalPress()) {
 			// Ctrl + Middle Mouse logic
 			if (IsCtrlDown()) {
-				if (m_ObjectUnderCursor) {			
+				if (m_ObjectUnderCursor && m_ObjectUnderCursor.GetShapeName()) {			
 					ClearSelection();
 					if (GetEditorObject(m_ObjectUnderCursor)) {
 						DeleteObject(GetEditorObject(m_ObjectUnderCursor));
@@ -1726,7 +1730,7 @@ class Editor: Managed
 					editor_object.GetMarker().Show(m_Active);			
 				}
 				
-				editor_object.HideBoundingBox();
+				editor_object.SetBoundingBoxVisibility(m_Active);
 			}
 		}
 						
@@ -2463,9 +2467,7 @@ class Editor: Managed
 			if (!editor_object_data) continue;
 			
 			// In the event the object already exists. The data for the existing object will get packed into the EditorObjectData struct
-			if (m_EditorObjectsByUuid[uuid]) {
-				m_EditorObjectsByUuid[uuid].HideBoundingBox();
-				
+			if (m_EditorObjectsByUuid[uuid]) {				
 				Object existing_world_object = m_EditorObjectsByUuid[uuid].GetWorldObject();
 				if (editor_object_data.WorldObject) {
 					m_EditorObjectsByUuid[uuid].SetWorldObject(editor_object_data.WorldObject);
@@ -2474,11 +2476,7 @@ class Editor: Managed
 				m_EditorObjectsByUuid[uuid].SetWorldObjectNetworkId(editor_object_data.m_LowBits, editor_object_data.m_HighBits);
 				
 				GetGame().ObjectDelete(existing_world_object);
-				
-				if (m_EditorObjectsByUuid[uuid].IsSelected()) {
-					m_EditorObjectsByUuid[uuid].ShowBoundingBox();
-				}
-				
+								
 				action.InsertUndoParameter(new Param1<int>(m_EditorObjectsByUuid[uuid].GetID()));
 				action.InsertRedoParameter(new Param1<EditorObjectData>(editor_object_data)); 
 
@@ -3161,7 +3159,6 @@ class Editor: Managed
 			EditorObject created_object = CreateObject(data, false);
 			if (created_object) {
 				created_objects++;
-				created_object.HideBoundingBox(); // bugfix with new bounding boxes
 			}			
 		}
 		

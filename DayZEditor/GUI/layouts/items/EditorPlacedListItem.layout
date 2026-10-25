@@ -1,8 +1,9 @@
-WrapSpacerWidgetClass ListItem {
+WrapSpacerWidgetClass {
+ Name "ListItem"
  visible 1
  clipchildren 1
  ignorepointer 1
- color 0.0196 0.0196 0.0196 0
+ color 0.02 0.02 0.02 0
  position 0 0
  size 1 23
  hexactpos 1
@@ -19,11 +20,12 @@ WrapSpacerWidgetClass ListItem {
  content_halign right
  content_valign center
  {
-  ButtonWidgetClass ListItemButton {
+  ButtonWidgetClass "{000000004516E36F}" {
+   Name "ListItemButton"
    visible 1
    clipchildren 0
    ignorepointer 0
-   color 0.7529 0.3686 0.3255 1
+   color 0.753 0.369 0.326 1
    position 0 0
    size 1 1
    halign center_ref
@@ -36,7 +38,8 @@ WrapSpacerWidgetClass ListItem {
    scriptclass "ViewBinding"
    style Empty
    {
-    TextWidgetClass ListItemLabel {
+    TextWidgetClass "{00000000AA645E0E}" {
+     Name "ListItemLabel"
      visible 1
      disabled 0
      clipchildren 1
@@ -65,7 +68,8 @@ WrapSpacerWidgetClass ListItem {
       }
      }
     }
-    WrapSpacerWidgetClass WrapSpacerWidget1 {
+    WrapSpacerWidgetClass "{000000006AE965F8}" {
+     Name "WrapSpacerWidget1"
      ignorepointer 1
      size 0.5 1
      halign right_ref
@@ -79,9 +83,10 @@ WrapSpacerWidgetClass ListItem {
      content_halign right
      content_valign center
      {
-      ButtonWidgetClass ToggleBoundingBox {
-       visible 1
-       color 1 1 1 0.0784
+      ButtonWidgetClass "{000000001702E174}" {
+       Name "ToggleBoundingBox"
+       visible 0
+       color 1 1 1 0.078
        position 0 0
        size 18 18
        valign center_ref
@@ -92,7 +97,8 @@ WrapSpacerWidgetClass ListItem {
        scriptclass "ViewBinding"
        style Empty
        {
-        ImageWidgetClass ToggleBoundingBoxImage {
+        ImageWidgetClass "{00000000BFB15E21}" {
+         Name "ToggleBoundingBoxImage"
          visible 1
          ignorepointer 1
          position 0 0
@@ -122,10 +128,11 @@ WrapSpacerWidgetClass ListItem {
         }
        }
       }
-      FrameWidgetClass ImageWidget0 {
+      FrameWidgetClass "{00000000E8B3A68F}" {
+       Name "ImageWidget0"
        visible 1
        ignorepointer 1
-       color 0.7059 0.7059 0.7059 1
+       color 0.706 0.706 0.706 1
        size 3 18
        halign center_ref
        valign center_ref
@@ -134,9 +141,10 @@ WrapSpacerWidgetClass ListItem {
        hexactsize 1
        vexactsize 1
        {
-        ImageWidgetClass ImageWidget1 {
+        ImageWidgetClass "{00000000E05A4CD6}" {
+         Name "ImageWidget1"
          ignorepointer 1
-         color 0.7843 0.7843 0.7843 0.1569
+         color 0.784 0.784 0.784 0.157
          size 1 0.6
          halign center_ref
          valign center_ref
@@ -149,9 +157,10 @@ WrapSpacerWidgetClass ListItem {
         }
        }
       }
-      ButtonWidgetClass ToggleWorldMarker {
+      ButtonWidgetClass "{000000009667F47E}" {
+       Name "ToggleWorldMarker"
        visible 1
-       color 1 1 1 0.0784
+       color 1 1 1 0.078
        position 0 0
        size 18 18
        valign center_ref
@@ -162,7 +171,8 @@ WrapSpacerWidgetClass ListItem {
        scriptclass "ViewBinding"
        style Empty
        {
-        ImageWidgetClass ToggleWorldMarkerImage {
+        ImageWidgetClass "{000000009E45B3B6}" {
+         Name "ToggleWorldMarkerImage"
          visible 1
          ignorepointer 1
          position 0 0
@@ -192,10 +202,11 @@ WrapSpacerWidgetClass ListItem {
         }
        }
       }
-      FrameWidgetClass ImageWidget2 {
+      FrameWidgetClass "{00000000EA515839}" {
+       Name "ImageWidget2"
        visible 1
        ignorepointer 1
-       color 0.7059 0.7059 0.7059 1
+       color 0.706 0.706 0.706 1
        position 0 0
        size 3 18
        halign center_ref
@@ -205,9 +216,10 @@ WrapSpacerWidgetClass ListItem {
        hexactsize 1
        vexactsize 1
        {
-        ImageWidgetClass ImageWidget3 {
+        ImageWidgetClass "{00000000BC78CCC6}" {
+         Name "ImageWidget3"
          ignorepointer 1
-         color 0.7843 0.7843 0.7843 0.1569
+         color 0.784 0.784 0.784 0.157
          size 1 0.6
          halign center_ref
          valign center_ref
@@ -220,9 +232,10 @@ WrapSpacerWidgetClass ListItem {
         }
        }
       }
-      ButtonWidgetClass ToggleLockedButton {
+      ButtonWidgetClass "{000000003056C398}" {
+       Name "ToggleLockedButton"
        visible 1
-       color 1 1 1 0.0784
+       color 1 1 1 0.078
        position 0 0
        size 18 18
        valign center_ref
@@ -233,7 +246,8 @@ WrapSpacerWidgetClass ListItem {
        scriptclass "ViewBinding"
        style Empty
        {
-        ImageWidgetClass LockedImage {
+        ImageWidgetClass "{00000000FF7320D6}" {
+         Name "LockedImage"
          visible 1
          ignorepointer 1
          position 0 0

@@ -73,7 +73,7 @@ class EditorSettings: ProfileSettings
 	bool LockCameraDuringDialogs 	= true;
 		
 #ifndef COMPONENT_SYSTEM	
-	[RegisterProfileSettingMultistate("APPEARANCE", "BoundingBoxSize", "Bounding Box Size", {"OFF", "THIN", "MEDIUM", "THICK", "EXTRA THICCC"})]
+	//[RegisterProfileSettingMultistate("APPEARANCE", "BoundingBoxSize", "Bounding Box Size", {"OFF", "THIN", "MEDIUM", "THICK", "EXTRA THICCC"})]
 #endif
 	int BoundingBoxSize = 2;
 	
@@ -115,6 +115,11 @@ class EditorSettings: ProfileSettings
 	[RegisterProfileSettingColor("APPEARANCE", "SelectionColor", "Selection Color", false)]
 #endif
 	int SelectionColor				= 0xff6ba5ff;
+
+#ifndef COMPONENT_SYSTEM	
+	[RegisterProfileSettingColor("APPEARANCE", "BoundingBoxColor", "Bounding Box Color", true)]
+#endif	
+	int BoundingBoxColor 			= 0x88FFFF00;
 	
 	// Brush Settings
 #ifndef COMPONENT_SYSTEM	

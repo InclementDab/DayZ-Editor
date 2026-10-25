@@ -86,7 +86,9 @@ class EditorPlaceableListNode: EditorNodeView
 			if (preview) {
 				tooltip.SetContent(preview);
 			}
-		}		
+		} else {
+			tooltip.SetTitle("NO PREVIEW");
+		}
 		
 		GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
 		

@@ -9,7 +9,7 @@ class EditorWorldObject: Managed
 	
 	protected EntityAI m_WorldEntity;
 	protected Object m_WorldObject;
-		
+	
 	protected ref array<ref EditorSnapPoint> m_SnapPoints = {};
 	protected ref array<ref EditorSnapPlane> m_SnapPlanes = {};
 	

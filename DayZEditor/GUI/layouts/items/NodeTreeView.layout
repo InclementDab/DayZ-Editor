@@ -1,8 +1,8 @@
-FrameWidgetClass NodeView {
+FrameWidgetClass {
+ Name "NodeView"
  visible 1
- clipchildren 0
  position 0 0
- size 2000 28
+ size 2000 24
  hexactpos 1
  vexactpos 1
  hexactsize 1
@@ -11,7 +11,8 @@ FrameWidgetClass NodeView {
  draggable 1
  scriptclass ""
  {
-  GridSpacerWidgetClass Wrapper {
+  GridSpacerWidgetClass "{00000000190379B8}" {
+   Name "Wrapper"
    visible 1
    clipchildren 0
    inheritalpha 0
@@ -32,21 +33,23 @@ FrameWidgetClass NodeView {
    Columns 7
    Rows 1
    {
-    FrameWidgetClass Collapse {
+    FrameWidgetClass "{00000000E81C6B42}" {
+     Name "Collapse"
      visible 1
      disabled 0
      clipchildren 0
      inheritalpha 0
      ignorepointer 1
      position 7 0
-     size 20 28
+     size 20 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 1
      {
-      ButtonWidgetClass CollapseButton {
+      ButtonWidgetClass "{00000000A1DFB436}" {
+       Name "CollapseButton"
        visible 1
        clipchildren 1
        position 0 0
@@ -62,14 +65,15 @@ FrameWidgetClass NodeView {
        scriptclass ""
        style Empty
        font "gui/fonts/etelkatextpro14"
-       switch toggle
+       "switch" toggle
        {
-        ImageWidgetClass CollapseIcon {
+        ImageWidgetClass "{00000000CEE33CAC}" {
+         Name "CollapseIcon"
          visible 1
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 12 12
+         size 12 14
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -78,14 +82,16 @@ FrameWidgetClass NodeView {
          vexactsize 1
          scaled 1
          scriptclass ""
-         image0 "set:thin image:square_plus"
+         image0 "set:regular image:square_plus"
          mode additive
          "src alpha" 1
+         "stretch mode" stretch_w_h
          filter 1
         }
        }
       }
-      ImageWidgetClass ChildrenWidth {
+      ImageWidgetClass "{0000000042979855}" {
+       Name "ChildrenWidth"
        ignorepointer 0
        color 0.784 0.784 0.784 1
        size -8 1
@@ -98,18 +104,20 @@ FrameWidgetClass NodeView {
       }
      }
     }
-    FrameWidgetClass IconFrame {
+    FrameWidgetClass "{0000000013B07341}" {
+     Name "IconFrame"
      visible 1
      ignorepointer 1
      position 37 0
-     size 20 28
+     size 20 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 1
      {
-      ImageWidgetClass IconImage {
+      ImageWidgetClass "{00000000BB3A86EB}" {
+       Name "IconImage"
        visible 1
        disabled 0
        ignorepointer 1
@@ -136,14 +144,15 @@ FrameWidgetClass NodeView {
       }
      }
     }
-    GridSpacerWidgetClass Panel {
+    GridSpacerWidgetClass "{00000000789CBE6E}" {
+     Name "Panel"
      visible 1
      disabled 0
      clipchildren 1
      ignorepointer 1
      color 0.027 0.435 0.572 0
      position 67 0
-     size 16 28
+     size 16 24
      hexactpos 1
      vexactpos 1
      hexactsize 0
@@ -161,7 +170,8 @@ FrameWidgetClass NodeView {
      Columns 1
      Rows 1
      {
-      GridSpacerWidgetClass Outline {
+      GridSpacerWidgetClass "{00000000B4716DBA}" {
+       Name "Outline"
        visible 1
        disabled 0
        clipchildren 0
@@ -188,13 +198,14 @@ FrameWidgetClass NodeView {
        Columns 1
        Rows 1
        {
-        TextWidgetClass Text {
+        TextWidgetClass "{00000000F600684C}" {
+         Name "Text"
          visible 1
          disabled 0
          clipchildren 1
          ignorepointer 1
          position 0 0
-         size 451 16
+         size 451 14
          halign center_ref
          valign center_ref
          hexactpos 1
@@ -214,7 +225,8 @@ FrameWidgetClass NodeView {
          "size to text v" 0
          "text valign" center
          {
-          EditBoxWidgetClass Edit {
+          EditBoxWidgetClass "{00000000F443D413}" {
+           Name "Edit"
            visible 0
            disabled 0
            clipchildren 1
@@ -244,18 +256,20 @@ FrameWidgetClass NodeView {
       }
      }
     }
-    FrameWidgetClass Favorite {
+    FrameWidgetClass "{00000000C184BB0B}" {
+     Name "Favorite"
      visible 0
      ignorepointer 1
      position 7 0
-     size 20 26
+     size 20 24
      hexactpos 1
      vexactpos 1
      hexactsize 1
      vexactsize 1
      scaled 1
      {
-      ButtonWidgetClass FavoriteButton {
+      ButtonWidgetClass "{00000000B47F0C83}" {
+       Name "FavoriteButton"
        visible 1
        clipchildren 1
        color 1 1 1 0.392
@@ -271,9 +285,10 @@ FrameWidgetClass NodeView {
        scriptclass ""
        style Empty
        font "gui/fonts/etelkatextpro14"
-       switch toggle
+       "switch" toggle
        {
-        ImageWidgetClass FavoriteIcon {
+        ImageWidgetClass "{000000007F886B6F}" {
+         Name "FavoriteIcon"
          visible 1
          clipchildren 0
          ignorepointer 1
@@ -305,12 +320,27 @@ FrameWidgetClass NodeView {
     }
    }
   }
-  WrapSpacerWidgetClass Children {
+  TextWidgetClass "{6AAE447280B57620}" {
+   Name "RightText"
+   visible 0
+   position 12 0
+   size 48 14
+   halign right_ref
+   valign center_ref
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "Test"
+   "size to text h" 1
+  }
+  WrapSpacerWidgetClass "{00000000A00B53FC}" {
+   Name "Children"
    visible 0
    disabled 0
    clipchildren 1
    ignorepointer 1
-   position 16 30
+   position 16 24
    size 1 48
    hexactpos 1
    vexactpos 1
@@ -323,10 +353,12 @@ FrameWidgetClass NodeView {
    "Size To Content H" 1
    "Size To Content V" 1
   }
-  ImageWidgetClass ChildrenHeight {
+  ImageWidgetClass "{0000000078CE56EC}" {
+   Name "ChildrenHeight"
+   visible 0
    ignorepointer 0
    color 0.784 0.784 0.784 1
-   position 8 0
+   position 20 0
    size 1 0
    valign bottom_ref
    hexactpos 1

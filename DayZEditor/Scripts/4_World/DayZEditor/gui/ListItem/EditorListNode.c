@@ -9,11 +9,12 @@ class EditorNodeView: ScriptView
 	protected EditorNodeView m_Parent;
 	
 	bool m_TemporaryReveal;
+	int m_ChildrenCount;
 	
 	Widget Collapse, IconFrame, Hide, Panel, ChildrenHeight, Favorite;
 	ButtonWidget CollapseButton, HideButton, FavoriteButton;
 	ImageWidget CollapseIcon, IconImage, HideIcon, FavoriteIcon;
-	TextWidget Text;
+	TextWidget Text, RightText;
 	EditBoxWidget Edit;
 	WrapSpacerWidget Children;
 	
@@ -35,6 +36,10 @@ class EditorNodeView: ScriptView
 		ChildrenItems.Insert(list_node);
 		Collapse.Show(ChildrenItems.Count());
 		Children.AddChild(list_node.GetLayoutRoot());
+		
+		m_ChildrenCount++;
+		RightText.SetText(m_ChildrenCount.ToString());
+		RightText.Show(true);
 		
 		list_node.m_Parent = this;
 	}
@@ -59,7 +64,7 @@ class EditorNodeView: ScriptView
 		
 		int screen_x, screen_y;
 		GetScreenSize(screen_x, screen_y);		
-		m_LayoutRoot.SetScreenSize(screen_x, h + 28 * screen_y / 1080.0);
+		m_LayoutRoot.SetScreenSize(screen_x, h + 24 * screen_y / 1080.0);
 		
 		// If you are setting this as collapsed, the parents must be uncollapsed because you can access it. we are using this to update the collapse state
 		if (GetListParent()) {
@@ -239,6 +244,7 @@ class EditorFolderListNode: EditorNodeView
 		m_Text.ToLower();
 		m_LayoutRoot.SetSort(0);
 		m_LayoutRoot.ClearFlags(WidgetFlags.DRAGGABLE);
+		IconImage.SetColor(LinearColor.Create(231, 201, 169));
 	}
 	
 	override bool OnDoubleClick(Widget w, int x, int y, int button)

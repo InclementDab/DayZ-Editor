@@ -5,15 +5,15 @@ class EditorObject: EditorWorldObject
 	protected ref EditorObjectData 			m_Data;
 	protected ref EditorObjectWorldMarker	m_EditorObjectWorldMarker;
 	protected ref EditorPlacedListItem 		m_EditorPlacedListItem;
-	
-	protected Object		m_BBoxLines[12];	
-	protected Object 		m_BBoxBase;
+		
 	protected Object 		m_CenterLine;
 	protected Object		m_BasePoint;
+	protected Shape 		m_BoundingBox, m_BoundingBox2, m_BoundingBox3, m_BoundingBox4;
 	
 	protected ref map<string, ref EditorObjectAnimationSource> m_ObjectAnimations = new map<string, ref EditorObjectAnimationSource>();
 		
 	protected bool m_IsSelected;
+	protected bool m_BoundingBoxVisible;
 	
 	string Uuid;
 	bool IsBeingDragged;
@@ -106,13 +106,16 @@ class EditorObject: EditorWorldObject
 			}	
 		}		
 		
-// #ifndef DIAG_DEVELOPER
-// 		if (GetGame().IsMultiplayer()) {
-// #endif
-// 			GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
-// #ifndef DIAG_DEVELOPER
-// 		}
-// #endif
+		GetGame().GetUpdateQueue(CALL_CATEGORY_GAMEPLAY).Insert(OnFrame);
+		
+		DayZAnimal animal = DayZAnimal.Cast(m_WorldEntity);
+		if (animal) {
+			AIAgent agent = animal.GetAIAgent(); 
+			if (agent) {
+				m_AIGroupCached = agent.GetGroup();
+				animal.DestroyAIAgent(); // automatically destroy because sim is disabled by default
+			}
+		}
 	}		
 	void ~EditorObject()
 	{
@@ -129,24 +132,66 @@ class EditorObject: EditorWorldObject
 			s_AllByObject.Remove(GetWorldObject());
 		}
 		
-		HideBoundingBox();
-
 		delete m_EditorObjectWorldMarker; 
 		
 		delete OnObjectSelected;
 		delete OnObjectDeselected;
 	}
 	
+	// Pointers to shapes are buggy?
+	protected bool m_BoundingBoxCreated;
+	
 	protected void OnFrame(float dt)
 	{
-		if (!m_Data.WorldObject || !m_WorldObject) {
-			// Trolly for the world object every frame to see if we've gotten into its network bubble
-			Object world_object_found = GetGame().GetObjectByNetworkId(m_LowBits, m_HighBits);
-			if (world_object_found) {
-				SetWorldObject(world_object_found);
+		if (!m_BoundingBoxVisible) {
+			if (m_BoundingBoxCreated) {
+				// should destroy next frame
+				m_BoundingBox.SetFlags(ShapeFlags.ONCE);
+				m_BoundingBox2.SetFlags(ShapeFlags.ONCE);
+				m_BoundingBox3.SetFlags(ShapeFlags.ONCE);
+				m_BoundingBox4.SetFlags(ShapeFlags.ONCE);
+				m_BoundingBoxCreated = false;
 			}
+			
+			return;
 		}
+		
+		// Handle bounding box
+		// Is m_Data valid here? absolute hell
+		if (m_BoundingBoxVisible) {
+			vector transform[4];
+			m_WorldObject.GetTransform(transform);
+			if (!m_BoundingBoxCreated) {
+				vector bounding_box_lines[9], bounding_box_lines2[3], bounding_box_lines3[2], bounding_box_lines4[2];
+				copyarray(bounding_box_lines, m_LineVerticies);
+				bounding_box_lines[8] = bounding_box_lines[4];
 				
+				bounding_box_lines2[0] = bounding_box_lines[3];
+				bounding_box_lines2[1] = bounding_box_lines[0];
+				bounding_box_lines2[2] = bounding_box_lines[7];
+				
+				bounding_box_lines3[0] = bounding_box_lines[1];
+				bounding_box_lines3[1] = bounding_box_lines[6];
+				
+				bounding_box_lines4[0] = bounding_box_lines[2];
+				bounding_box_lines4[1] = bounding_box_lines[5];
+				
+				int color = g_Editor.GetSettings().BoundingBoxColor;
+				int flags = ShapeFlags.VISIBLE | ShapeFlags.NOCULL | ShapeFlags.TRANSP;
+				m_BoundingBox = Shape.CreateLines(color, flags, bounding_box_lines, 9);
+				m_BoundingBox2 = Shape.CreateLines(color, flags, bounding_box_lines2, 3);
+				m_BoundingBox3 = Shape.CreateLines(color, flags, bounding_box_lines3, 2);
+				m_BoundingBox4 = Shape.CreateLines(color, flags, bounding_box_lines4, 2);
+				
+				m_BoundingBoxCreated = true;
+			}
+			
+			m_BoundingBox.SetMatrix(transform);
+			m_BoundingBox2.SetMatrix(transform);
+			m_BoundingBox3.SetMatrix(transform);
+			m_BoundingBox4.SetMatrix(transform);
+		}
+			
 #ifdef DIAG_DEVELOPER
 		return;
 		// Local space
@@ -204,9 +249,7 @@ class EditorObject: EditorWorldObject
 	override void SetWorldObject(notnull Object object)
 	{		
 		super.SetWorldObject(object);
-												
-		ShowBoundingBox();
-		
+				
 		// Map marker
 		EnableMapMarker(IsMapMarkerEnabled());
 
@@ -257,26 +300,20 @@ class EditorObject: EditorWorldObject
 	
 	void OnSelected()
 	{
-		if (IsLocked() || IsSelected()) {
-			return;
+		if (!IsLocked() && !m_IsSelected) {
+			m_IsSelected = true;
+			SetBoundingBoxVisibility(true);
+			OnObjectSelected.Invoke(this);
 		}
-		
-		m_IsSelected = true;
-		
-		ShowBoundingBox();
-		OnObjectSelected.Invoke(this);
 	}
 	
 	void OnDeselected()
-	{
-		HideBoundingBox();
-		
-		if (!IsSelected()) {
-			return;
+	{		
+		if (m_IsSelected) {
+			m_IsSelected = false;
+			SetBoundingBoxVisibility(false);
+			OnObjectDeselected.Invoke(this);
 		}
-		
-		m_IsSelected = false;
-		OnObjectDeselected.Invoke(this);
 	}
 	
 	EditorObjectData GetData() 
@@ -518,9 +555,9 @@ class EditorObject: EditorWorldObject
 			m_Data.Flags &= ~EditorObjectFlags.HIDDEN;
 			GetWorldObject().SetFlags(EntityFlags.VISIBLE | EntityFlags.TOUCHTRIGGERS, true);
 			if (m_IsSelected) {
-				ShowBoundingBox();
+				SetBoundingBoxVisibility(true);
 			} else {
-				HideBoundingBox();
+				SetBoundingBoxVisibility(false);
 			}
 			
 			m_EditorObjectWorldMarker.Show(true);
@@ -551,12 +588,23 @@ class EditorObject: EditorWorldObject
 		m_WorldObject.SetAllowDamage(damage);
 		OnChanged.Invoke();
 	}
+	
+	protected AIGroup m_AIGroupCached;
 
 	void SetSimulate(bool simulate)
 	{
 		if (m_WorldEntity) {
 			m_WorldEntity.DisableSimulation(!simulate);
 			OnChanged.Invoke();
+			
+			DayZAnimal animal = DayZAnimal.Cast(m_WorldEntity);
+			if (animal) {
+				if (simulate) {
+					animal.InitAIAgent(m_AIGroupCached);
+				} else {
+					animal.DestroyAIAgent();
+				}
+			}
 		}
 	}
 
@@ -662,101 +710,16 @@ class EditorObject: EditorWorldObject
 		return result;
 	}	
 
-	void SetBoundingBox(bool state, bool set_flags = false)
+	void SetBoundingBoxVisibility(bool state)
 	{
-		if (set_flags) {
-			if (state) {
-				m_Data.Flags |= EditorObjectFlags.BBOX;
-			} else {
-				m_Data.Flags &= ~EditorObjectFlags.BBOX;
-			}
-		}
+		// New
+		m_BoundingBoxVisible = state;
 		
-		if (state && IsSelected()) {
-			ShowBoundingBox();
+		// Old.
+		if (state) {
+			m_Data.Flags |= EditorObjectFlags.BBOX;
 		} else {
-			HideBoundingBox();
-		}
-	}
-		
-	void ShowBoundingBox()
-	{		
-		// Global Settings Check
-		if (!GetEditor().GetSettings().BoundingBoxSize) {
-			return;
-		}
-		
-		if (!(GetData().Flags & EditorObjectFlags.BBOX)) {
-			return;
-		}
-				
-		if (!GetWorldObject()) {
-			return;
-		}
-								
-		float bounding_box_thickness = 0;
-		switch (GetEditor().GetSettings().BoundingBoxSize) {
-			case 1: { // small
-				bounding_box_thickness = 0.008;
-				break;
-			}
-			
-			case 2: { // medium
-				bounding_box_thickness = 0.016;
-				break;
-			}
-			
-			case 3: { // large
-				bounding_box_thickness = 0.032;
-				break;
-			}
-			
-			case 4: { // gigantic
-				bounding_box_thickness = 0.064;
-				break;
-			}
-		}
-		
-		bounding_box_thickness /= 2;
-		
-		vector clip_info[2];
-		ClippingInfo(clip_info);
-		vector min = clip_info[0];
-		vector max = clip_info[1];
-		
-		vector position = AverageVectors(min, max);
-		vector size = max - min;
-		
-		int i;
-		if (m_BBoxLines[0] != null) {
-			for (i = 0; i < 12; i++) {
-				m_BBoxLines[i].SetFlags(EntityFlags.VISIBLE, false);
-			}
-		} else {
-			for (i = 0; i < 12; i++) {
-				vector transform[4];			
-				transform[3] = m_LineCenters[i];
-				
-				for (int j = 0; j < 3; j++) {
-					transform[j][j] = ((position[j] == m_LineCenters[i][j]) * size[j] / 2) + bounding_box_thickness;
-				}
-				 
-				m_BBoxLines[i] = EntityAI.Cast(GetGame().CreateObjectEx("BoundingBoxBase", m_LineCenters[i], ECE_LOCAL));
-				m_BBoxLines[i].SetTransform(transform);
-				
-				m_WorldObject.AddChild(m_BBoxLines[i], -1);
-			}
-		}
-		
-		Update();
-	}
-	
-	void HideBoundingBox()
-	{
-		for (int i = 0; i < 12; i++) {
-			if (m_BBoxLines[i]) {
-				m_BBoxLines[i].Delete();
-			}
+			m_Data.Flags &= ~EditorObjectFlags.BBOX;
 		}
 	}
 	

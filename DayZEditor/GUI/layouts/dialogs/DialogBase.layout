@@ -2,7 +2,7 @@ WrapSpacerWidgetClass EditorDialog {
  visible 1
  clipchildren 1
  ignorepointer 0
- color 0.059 0.059 0.059 0.992
+ color 0.1098 0.1255 0.1529 0.9922
  position 0 -1.089
  size 0.35 0
  hexactpos 1
@@ -13,7 +13,7 @@ WrapSpacerWidgetClass EditorDialog {
  scriptclass ""
  style Colorable
  "Ignore invisible" 0
- Padding 12
+ Padding 8
  Margin 0
  "Size To Content H" 1
  "Size To Content V" 1
@@ -22,8 +22,8 @@ WrapSpacerWidgetClass EditorDialog {
   FrameWidgetClass WindowDragWrapper {
    visible 1
    ignorepointer 0
-   color 1 1 1 0.392
-   size 1 26
+   color 1 1 1 1
+   size 1 36
    hexactpos 1
    vexactpos 1
    hexactsize 0
@@ -33,8 +33,8 @@ WrapSpacerWidgetClass EditorDialog {
    {
     PanelWidgetClass TitleBar {
      ignorepointer 1
-     color 0 0.478 0.8 1
-     size 1 25
+     color 0.1647 0.1843 0.2157 1
+     size 1 36
      halign center_ref
      hexactpos 1
      vexactpos 1
@@ -47,7 +47,7 @@ WrapSpacerWidgetClass EditorDialog {
       ImageWidgetClass TitleIcon {
        visible 1
        ignorepointer 1
-       color 0.682 0.718 0.702 1
+       color 0.3922 0.6588 0.9373 1
        position 5 0
        size 18 18
        valign center_ref
@@ -73,7 +73,7 @@ WrapSpacerWidgetClass EditorDialog {
        clipchildren 1
        ignorepointer 1
        position 0 0
-       size 1 0.9
+       size 1 1
        halign center_ref
        valign center_ref
        hexactpos 1
@@ -83,14 +83,15 @@ WrapSpacerWidgetClass EditorDialog {
        scaled 1
        scriptclass "ViewBinding"
        text "DialogBox"
-       font "gui/fonts/Metron"
+       font "gui/fonts/MetronBook22"
        "italic text" 0
        "bold text" 0
-       "text sharpness" 0.9
+       "text sharpness" 1
        "exact text" 0
        "size to text h" 0
        "text halign" center
        "text valign" center
+       color 0.8667 0.8902 0.9255 1
        {
         ScriptParamsClass {
          Binding_Name "Title"
@@ -99,9 +100,9 @@ WrapSpacerWidgetClass EditorDialog {
       }
       PanelWidgetClass TitleClosePanel {
        ignorepointer 1
-       color 0.784 0.294 0.275 1
-       position 2 2
-       size 21 21
+       color 0.2196 0.2510 0.2941 1
+       position 2 5
+       size 26 26
        halign right_ref
        hexactpos 1
        vexactpos 1
@@ -112,7 +113,7 @@ WrapSpacerWidgetClass EditorDialog {
         ButtonWidgetClass TitleClose {
          visible 1
          ignorepointer 0
-         color 0.667 0.667 0.667 1
+         color 0.8667 0.8902 0.9255 1
          position 0 0
          size 1 1
          halign center_ref
@@ -123,7 +124,7 @@ WrapSpacerWidgetClass EditorDialog {
          vexactsize 0
          priority 5
          scriptclass "ViewBinding"
-         style Default
+         style Editor
          "no focus" 1
          text "X"
          font "gui/fonts/Metron-Bold"
@@ -135,6 +136,18 @@ WrapSpacerWidgetClass EditorDialog {
         }
        }
       }
+     PanelWidgetClass HeaderAccentDivider {
+      ignorepointer 1
+      color 0.2471 0.5216 0.7922 1
+      position 0 0
+      size 1 1
+      valign bottom_ref
+      hexactpos 1
+      vexactpos 1
+      hexactsize 0
+      vexactsize 1
+      style rover_sim_colorable
+     }
      }
     }
    }
@@ -151,6 +164,7 @@ WrapSpacerWidgetClass EditorDialog {
    vexactsize 1
    scriptclass ""
    "Scrollbar V" 1
+   halign center_ref
    {
     WrapSpacerWidgetClass DialogContent {
      visible 1
@@ -163,7 +177,7 @@ WrapSpacerWidgetClass EditorDialog {
      vexactsize 1
      priority 2
      scriptclass "ViewBinding"
-     Padding 12
+     Padding 10
      Margin 7
      "Size To Content V" 1
      content_halign center
@@ -178,20 +192,21 @@ WrapSpacerWidgetClass EditorDialog {
   PanelWidgetClass ContentButtonSpacer {
    visible 1
    disabled 1
-   ignorepointer 0
-   color 0.706 0.706 0.706 0.941
-   position 10 10
-   size 1 1
+   ignorepointer 1
+   color 0.2549 0.2941 0.3451 1
+   position 0 0
+   size 0.9 1
    hexactpos 1
    vexactpos 1
    hexactsize 0
    vexactsize 1
    style rover_sim_colorable
+   halign center_ref
   }
   WrapSpacerWidgetClass DialogButtons {
    ignorepointer 0
-   color 0.706 0.706 0.706 1
-   size 0.9 36
+   color 0.1647 0.1843 0.2157 1
+   size 0.9 46
    halign center_ref
    valign bottom_ref
    hexactpos 0
@@ -201,8 +216,8 @@ WrapSpacerWidgetClass EditorDialog {
    scaled 1
    priority 3
    scriptclass "ViewBinding"
-   style Empty
-   Padding 5
+   style Colorable
+   Padding 8
    Margin 0
    content_halign center
    content_valign center

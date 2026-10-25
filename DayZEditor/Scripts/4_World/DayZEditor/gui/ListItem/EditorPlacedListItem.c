@@ -170,11 +170,10 @@ class EditorPlacedListItem: EditorListItem
 	
 	void OnToggleBoundingBoxExecute(ButtonCommandArgs args)
 	{
-		bool new_state = !(m_EditorObject.GetFlags() & EditorObjectFlags.BBOX);
-		m_EditorObject.SetBoundingBox(!m_EditorObject.IsBoundingBoxEnabled(), true);
-		ToggleBoundingBoxImage.Show(new_state);
+		//bool new_state = !(m_EditorObject.GetFlags() & EditorObjectFlags.BBOX);
+		//ToggleBoundingBoxImage.Show(new_state);
 		
-		GetEditor().GetEditorHud().SetCurrentTooltip(null);
+		//GetEditor().GetEditorHud().SetCurrentTooltip(null);
 	}	
 	
 	void OnWorldMarkerExecute(ButtonCommandArgs args)
@@ -233,6 +232,7 @@ class EditorPlacedListItem: EditorListItem
 			}
 			
 			case ToggleBoundingBoxImage.GetParent(): {
+				/*
 				// todo make toggle command
 				//if (ToggleBoundingBoxImage.IsVisible()) {
 					g_Game.DelaySetCurrentTooltip(EditorTooltip.CreateOnButton("Toggle Bounding Box", w, TooltipPosition.BOTTOM_LEFT), w);
@@ -240,11 +240,10 @@ class EditorPlacedListItem: EditorListItem
 				
 				if (mouse_down) {
 					bool new_state = !(m_EditorObject.GetFlags() & EditorObjectFlags.BBOX);
-					m_EditorObject.SetBoundingBox(!m_EditorObject.IsBoundingBoxEnabled(), true);
 					ToggleBoundingBoxImage.Show(new_state);
 					return true;
 				}
-				
+				*/
 				break;
 			}
 			

@@ -182,7 +182,9 @@ class EditorPlaceableListItem: EditorListItem
 			if (preview) {
 				tooltip.SetContent(preview);
 			}
-		}		
+		} else {
+			tooltip.SetTitle("NONE");
+		}	
 		
 		GetEditor().GetEditorHud().SetCurrentTooltip(tooltip);
 		
