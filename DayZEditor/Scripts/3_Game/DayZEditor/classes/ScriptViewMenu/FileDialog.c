@@ -190,7 +190,12 @@ class EditorFileDialog: EditorModal
 			s_LastDirectory = SystemPath.Combine(SystemPath.Saves(), "Editor");
 		}
 		
-		SetDirectory(s_LastDirectory);
+		string start_directory = m_FileType.GetDirectory();
+		if (start_directory == string.Empty) {
+			start_directory = s_LastDirectory;
+		}
+		
+		SetDirectory(start_directory);
 		
 		if (m_DefaultFile) {
 			string extension = File.GetExtension(m_DefaultFile);
@@ -240,7 +245,11 @@ class EditorFileDialog: EditorModal
 		s_ScrollPositions[m_CurrentDirectory] = FileScroller.GetVScrollPos();
 		
 		m_CurrentDirectory = SystemPath.Format(directory);
-		s_LastDirectory = m_CurrentDirectory;
+		
+		// file types with their own folder dont change where the next dialog opens
+		if (m_FileType.GetDirectory() == string.Empty) {
+			s_LastDirectory = m_CurrentDirectory;
+		}
 		
 		// Maps return 0 when there is no entry so this is valid
 		FileScroller.VScrollToPos(s_ScrollPositions[m_CurrentDirectory]);

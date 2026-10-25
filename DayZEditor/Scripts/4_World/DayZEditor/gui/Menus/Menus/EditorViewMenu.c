@@ -7,5 +7,6 @@ class EditorViewMenu: EditorMenu
 		AddMenuButton(m_Editor.CommandManager[EditorReloadHudCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorDumpSceneCommand]);
 		AddMenuButton(m_Editor.CommandManager[EditorCameraControlsCommand]);
+		AddMenuButton(m_Editor.CommandManager[EditorSplineToolCommand]);
 	}
 }

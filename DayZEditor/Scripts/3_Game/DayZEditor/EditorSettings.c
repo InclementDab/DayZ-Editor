@@ -39,6 +39,9 @@ class EditorSettings: ProfileSettings
 	// Set once on launch
 	bool HasSelectedConsoleMode = 0;
 	
+	// Set once the default generator presets were written
+	int GeneratorPresetVersion = 0;
+	
 	// todo: stub
 	////[RegisterProfileSettingMultistate("PLACEMENT", "AllowPlacementOfPersistentItems", "Place Persistent Items", {"NO", "YES"})]
 	bool AllowPlacementOfPersistentItems = false; 

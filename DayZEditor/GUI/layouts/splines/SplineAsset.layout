@@ -1,0 +1,68 @@
+PanelWidgetClass SplineAsset {
+ visible 1
+ ignorepointer 0
+ color 0.141 0.157 0.18 1
+ position 0 0
+ size 1 24
+ hexactpos 1
+ vexactpos 1
+ hexactsize 0
+ vexactsize 1
+ scaled 1
+ style rover_sim_colorable
+ {
+  TextWidgetClass Tag {
+   ignorepointer 1
+   color 0.85 0.3 0.3 1
+   position 0 0
+   size 0.25 24
+   hexactpos 0
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   text ""
+   font "gui/fonts/MetronBook16"
+   "exact text" 0
+   "text valign" center
+   "text offset" -12 0
+   "text halign" right
+  }
+  TextWidgetClass Label {
+   ignorepointer 1
+   color 0.882 0.937 0.902 1
+   position 0.25 0
+   size 0.6 24
+   hexactpos 0
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   text "Asset"
+   font "gui/fonts/MetronBook16"
+   "exact text" 0
+   "text valign" center
+  }
+  PanelWidgetClass RemoveButtonWrapper {
+   ignorepointer 1
+   position 0.92 2
+   size 0.06 20
+   hexactpos 0
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style Outline_1px
+   {
+    ButtonWidgetClass RemoveButton {
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     text "X"
+     font "gui/fonts/MetronBook16"
+    }
+   }
+  }
+ }
+}

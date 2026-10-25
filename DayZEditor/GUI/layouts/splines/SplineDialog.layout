@@ -1,0 +1,831 @@
+PanelWidgetClass SplineDialog {
+ visible 1
+ clipchildren 1
+ ignorepointer 0
+ color 0.141 0.157 0.18 1
+ position 0 60
+ size 480 760
+ hexactpos 1
+ vexactpos 1
+ hexactsize 1
+ vexactsize 1
+ priority 998
+ scriptclass ""
+ style rover_sim_colorable
+ {
+  FrameWidgetClass WindowDragWrapper {
+   visible 1
+   ignorepointer 0
+   color 1 1 1 0.392
+   size 1 26
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   draggable 1
+   scriptclass ""
+   {
+    PanelWidgetClass TitleBar {
+     ignorepointer 1
+     color 0 0.478 0.8 1
+     size 1 25
+     halign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     priority 255
+     draggable 0
+     style rover_sim_colorable
+     {
+      ImageWidgetClass TitleIcon {
+       visible 1
+       ignorepointer 1
+       color 0.682 0.718 0.702 1
+       position 5 0
+       size 18 18
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scriptclass "SymbolHandler"
+       image0 ""
+       mode blend
+       "src alpha" 1
+       "clamp mode" clamp
+       "stretch mode" stretch_w_h
+       filter 1
+       {
+        ScriptParamsClass {
+         Symbol_Name "bezier_curve"
+         Symbol_Size 3
+        }
+       }
+      }
+      TextWidgetClass TitleText {
+       clipchildren 1
+       ignorepointer 1
+       position 0 0
+       size 380 22
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       scaled 0
+       scriptclass ""
+       text "Spline Tool"
+       font "gui/fonts/Metron"
+       "italic text" 0
+       "bold text" 0
+       "text sharpness" 0.9
+       "exact text" 0
+       "size to text h" 1
+       "size to text v" 1
+       "text halign" center
+       "text valign" center
+      }
+      PanelWidgetClass TitleClosePanel {
+       ignorepointer 1
+       color 0.784 0.294 0.275 1
+       position 2 2
+       size 21 21
+       halign right_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 1
+       vexactsize 1
+       style rover_sim_colorable
+       {
+        ButtonWidgetClass TitleClose {
+         visible 1
+         ignorepointer 0
+         color 0.667 0.667 0.667 1
+         position 0 0
+         size 1 1
+         halign center_ref
+         valign center_ref
+         hexactpos 1
+         vexactpos 1
+         hexactsize 0
+         vexactsize 0
+         priority 5
+         style Default
+         "no focus" 1
+         text "X"
+         font "gui/fonts/Metron-Bold"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass Toolbar {
+   ignorepointer 1
+   color 0.172 0.192 0.212 1
+   position 0 26
+   size 1 72
+   hexactpos 1
+   vexactpos 1
+   hexactsize 0
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    PanelWidgetClass NewSplineButtonWrapper {
+     ignorepointer 1
+     position 8 6
+     size 149 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass NewSplineButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "New Spline"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+    PanelWidgetClass NewPolylineButtonWrapper {
+     ignorepointer 1
+     position 165 6
+     size 149 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass NewPolylineButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "New Polyline"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+    PanelWidgetClass DeleteButtonWrapper {
+     ignorepointer 1
+     position 322 6
+     size 150 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass DeleteButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Delete Spline"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+    PanelWidgetClass EditModeButtonWrapper {
+     ignorepointer 1
+     position 8 40
+     size 149 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass EditModeButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Edit Points: ON"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+    CheckBoxWidgetClass SnapCheck {
+     position 165 43
+     size 22 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style CheckBox_16px
+     font "gui/fonts/Metron16"
+     checked 1
+    }
+    TextWidgetClass SnapLabel {
+     ignorepointer 1
+     position 191 40
+     size 125 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Snap To Ground"
+     font "gui/fonts/Metron16"
+     "exact text" 0
+     "text valign" center
+    }
+    PanelWidgetClass PresetsButtonWrapper {
+     ignorepointer 1
+     position 322 40
+     size 150 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass PresetsButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Presets..."
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+   }
+  }
+  PanelWidgetClass SplinesHeader {
+   ignorepointer 1
+   color 0.228 0.247 0.263 1
+   position 8 104
+   size 464 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    TextWidgetClass SplinesHeaderText {
+     ignorepointer 1
+     position 10 0
+     size 200 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Splines"
+     font "gui/fonts/Metron16"
+     "exact text" 0
+     "text valign" center
+    }
+    TextWidgetClass SplineCountText {
+     ignorepointer 1
+     color 0.682 0.718 0.702 1
+     position 254 0
+     size 200 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text ""
+     font "gui/fonts/Metron16"
+     "exact text" 0
+     "text valign" center
+     "text halign" right
+    }
+   }
+  }
+  ScrollWidgetClass SplinesScroller {
+   ignorepointer 0
+   position 8 128
+   size 464 100
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   "Scrollbar V" 1
+   {
+    WrapSpacerWidgetClass SplinesContent {
+     ignorepointer 1
+     size 1 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scriptclass "ViewBinding"
+     Padding 0
+     Margin 0
+     "Size To Content V" 1
+     {
+      ScriptParamsClass {
+       Binding_Name "Splines"
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass SplinesEmptyText {
+   ignorepointer 1
+   color 0.682 0.718 0.702 1
+   position 8 128
+   size 464 100
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "Press New Spline or New Polyline, then Ctrl + Click in the world."
+   font "gui/fonts/Metron16"
+   "exact text" 0
+   "text valign" center
+   "text halign" center
+  }
+  PanelWidgetClass SplinePanel {
+   ignorepointer 1
+   color 0.172 0.192 0.212 1
+   position 8 232
+   size 464 92
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    TextWidgetClass NameLabel {
+     ignorepointer 1
+     position 8 4
+     size 56 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Name"
+     font "gui/fonts/Metron16"
+     "exact text" 0
+     "text valign" center
+    }
+    PanelWidgetClass SplineNameBoxWrapper {
+     ignorepointer 1
+     color 0.07 0.078 0.09 1
+     position 64 4
+     size 392 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      EditBoxWidgetClass SplineNameBox {
+       size 0.97 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       text ""
+       "exact text" 1
+       font "gui/fonts/Metron16"
+      }
+     }
+    }
+    CheckBoxWidgetClass ClosedCheck {
+     position 8 35
+     size 22 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style CheckBox_16px
+     font "gui/fonts/Metron16"
+     checked 0
+    }
+    TextWidgetClass ClosedLabel {
+     ignorepointer 1
+     position 34 32
+     size 100 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Closed Loop"
+     font "gui/fonts/Metron16"
+     "exact text" 0
+     "text valign" center
+    }
+    PanelWidgetClass TypeButtonWrapper {
+     ignorepointer 1
+     position 140 33
+     size 150 26
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass TypeButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Make Polyline"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+    PanelWidgetClass ReverseButtonWrapper {
+     ignorepointer 1
+     position 298 33
+     size 158 26
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass ReverseButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Reverse"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+    TextWidgetClass TensionLabel {
+     ignorepointer 1
+     position 8 62
+     size 104 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Tension"
+     font "gui/fonts/Metron16"
+     "exact text" 0
+     "text valign" center
+    }
+    PanelWidgetClass TensionBoxWrapper {
+     ignorepointer 1
+     color 0.07 0.078 0.09 1
+     position 112 64
+     size 56 24
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style rover_sim_colorable
+     {
+      EditBoxWidgetClass TensionBox {
+       size 0.97 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       scaled 1
+       text "0"
+       "exact text" 1
+       font "gui/fonts/Metron16"
+      }
+     }
+    }
+    PanelWidgetClass DropButtonWrapper {
+     ignorepointer 1
+     position 176 63
+     size 136 26
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass DropButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Drop To Ground"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+    PanelWidgetClass FocusButtonWrapper {
+     ignorepointer 1
+     position 320 63
+     size 136 26
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass FocusButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "Focus Camera"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass InfoText {
+   ignorepointer 1
+   color 0.682 0.718 0.702 1
+   position 8 328
+   size 464 20
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text ""
+   font "gui/fonts/MetronBook16"
+   "exact text" 0
+   "text valign" center
+  }
+  PanelWidgetClass GeneratorPanel {
+   ignorepointer 1
+   color 0.228 0.247 0.263 1
+   position 8 352
+   size 464 28
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style rover_sim_colorable
+   {
+    TextWidgetClass GeneratorLabel {
+     ignorepointer 1
+     position 8 0
+     size 160 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "Generator"
+     font "gui/fonts/Metron16"
+     "exact text" 0
+     "text valign" center
+    }
+    PanelWidgetClass GeneratorPrevButtonWrapper {
+     ignorepointer 1
+     position 176 3
+     size 26 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass GeneratorPrevButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text "<"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+    TextWidgetClass GeneratorText {
+     ignorepointer 1
+     position 206 0
+     size 220 28
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     text "None"
+     font "gui/fonts/Metron16"
+     "exact text" 0
+     "text valign" center
+     "text halign" center
+    }
+    PanelWidgetClass GeneratorNextButtonWrapper {
+     ignorepointer 1
+     position 430 3
+     size 26 22
+     hexactpos 1
+     vexactpos 1
+     hexactsize 1
+     vexactsize 1
+     style Outline_1px
+     {
+      ButtonWidgetClass GeneratorNextButton {
+       size 1 1
+       halign center_ref
+       valign center_ref
+       hexactpos 1
+       vexactpos 1
+       hexactsize 0
+       vexactsize 0
+       text ">"
+       font "gui/fonts/MetronBook16"
+      }
+     }
+    }
+   }
+  }
+  ScrollWidgetClass PropertiesScroller {
+   ignorepointer 0
+   position 8 384
+   size 464 270
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   "Scrollbar V" 1
+   {
+    WrapSpacerWidgetClass PropertiesContent {
+     ignorepointer 1
+     size 1 48
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 1
+     scriptclass "ViewBinding"
+     Padding 0
+     Margin 0
+     "Size To Content V" 1
+     {
+      ScriptParamsClass {
+       Binding_Name "Properties"
+      }
+     }
+    }
+   }
+  }
+  TextWidgetClass StatusText {
+   ignorepointer 1
+   color 0.682 0.718 0.702 1
+   position 8 658
+   size 464 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text ""
+   font "gui/fonts/MetronBook16"
+   "exact text" 0
+   "text valign" center
+  }
+  PanelWidgetClass GenerateButtonWrapper {
+   ignorepointer 1
+   position 8 684
+   size 149 30
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Outline_1px
+   {
+    ButtonWidgetClass GenerateButton {
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     text "Generate"
+     font "gui/fonts/MetronBook16"
+    }
+   }
+  }
+  PanelWidgetClass ClearButtonWrapper {
+   ignorepointer 1
+   position 165 684
+   size 149 30
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Outline_1px
+   {
+    ButtonWidgetClass ClearButton {
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     text "Clear Generated"
+     font "gui/fonts/MetronBook16"
+    }
+   }
+  }
+  PanelWidgetClass SavePresetButtonWrapper {
+   ignorepointer 1
+   position 322 684
+   size 150 30
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style Outline_1px
+   {
+    ButtonWidgetClass SavePresetButton {
+     size 1 1
+     halign center_ref
+     valign center_ref
+     hexactpos 1
+     vexactpos 1
+     hexactsize 0
+     vexactsize 0
+     text "Save Preset"
+     font "gui/fonts/MetronBook16"
+    }
+   }
+  }
+  CheckBoxWidgetClass PreviewCheck {
+   position 8 727
+   size 22 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style CheckBox_16px
+   font "gui/fonts/Metron16"
+   checked 1
+  }
+  TextWidgetClass PreviewLabel {
+   ignorepointer 1
+   position 34 724
+   size 190 28
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "Show Preview Markers"
+   font "gui/fonts/Metron16"
+   "exact text" 0
+   "text valign" center
+  }
+  CheckBoxWidgetClass ConsoleCheck {
+   position 236 727
+   size 22 22
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   style CheckBox_16px
+   font "gui/fonts/Metron16"
+   checked 1
+  }
+  TextWidgetClass ConsoleLabel {
+   ignorepointer 1
+   position 262 724
+   size 210 28
+   hexactpos 1
+   vexactpos 1
+   hexactsize 1
+   vexactsize 1
+   text "Console Friendly Assets Only"
+   font "gui/fonts/Metron16"
+   "exact text" 0
+   "text valign" center
+  }
+ }
+}

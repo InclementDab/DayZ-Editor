@@ -234,4 +234,9 @@ class EditorAction
 	{
 		param.param1.Lock(false);
 	}
+	
+	void SetSplines(Param1<string> params)
+	{
+		GetEditor().GetSplineTool().RestoreState(params.param1);
+	}
 }

@@ -39,6 +39,16 @@ FrameWidgetClass EditorFrame {
      vexactsize 0
      priority 239
     }
+    CanvasWidgetClass SplineCanvas {
+     ignorepointer 1
+     position 0 0
+     size 1 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+     priority 239
+    }
     GridSpacerWidgetClass CompassTicks {
      visible 1
      clipchildren 0
@@ -3972,6 +3982,148 @@ FrameWidgetClass EditorFrame {
               }
              }
             }
+            GridSpacerWidgetClass Section11 {
+             clipchildren 1
+             ignorepointer 1
+             position 0 0
+             size 0 0
+             hexactpos 1
+             vexactpos 1
+             hexactsize 1
+             vexactsize 1
+             scaled 1
+             Margin 0
+             "Size To Content H" 1
+             "Size To Content V" 1
+             content_halign center
+             content_valign center
+             Columns 2
+             Rows 1
+             {
+              PanelWidgetClass NewSplineButton {
+               clipchildren 1
+               color 0.149 0.153 0.161 1
+               position 0 0
+               size 32 1.01
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
+               style rover_sim_colorable
+               "no focus" 1
+               {
+                ImageWidgetClass NewSplineButton_Icon {
+                 clipchildren 1
+                 inheritalpha 0
+                 ignorepointer 1
+                 position 0 0
+                 size 20 22
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 1
+                 priority 1
+                 scriptclass "SymbolHandler"
+                 image0 ""
+                 mode blend
+                 "src alpha" 1
+                 "clamp mode" clamp
+                 filter 1
+                 {
+                  ScriptParamsClass {
+                   Symbol_Name "bezier_curve"
+                   Symbol_Size 1
+                  }
+                 }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorNewSplineCommand"
+                }
+               }
+              }
+              PanelWidgetClass NewPolylineButton {
+               clipchildren 1
+               color 0.149 0.153 0.161 1
+               position 0 0
+               size 32 1.01
+               hexactpos 1
+               vexactpos 1
+               hexactsize 1
+               vexactsize 0
+               scaled 1
+               scriptclass "EditorButtonScript"
+               style rover_sim_colorable
+               "no focus" 1
+               {
+                ImageWidgetClass NewPolylineButton_Icon {
+                 clipchildren 1
+                 inheritalpha 0
+                 ignorepointer 1
+                 position 0 0
+                 size 20 22
+                 halign center_ref
+                 valign center_ref
+                 hexactpos 1
+                 vexactpos 1
+                 hexactsize 1
+                 vexactsize 1
+                 scaled 1
+                 priority 1
+                 scriptclass "SymbolHandler"
+                 image0 ""
+                 mode blend
+                 "src alpha" 1
+                 "clamp mode" clamp
+                 filter 1
+                 {
+                  ScriptParamsClass {
+                   Symbol_Name "vector_polygon"
+                   Symbol_Size 1
+                  }
+                 }
+                }
+               }
+               {
+                ScriptParamsClass {
+                 CommandType "EditorNewPolylineCommand"
+                }
+               }
+              }
+             }
+            }
+            PanelWidgetClass Divider118 {
+             ignorepointer 1
+             position 0 0
+             size 19 1
+             halign center_ref
+             valign center_ref
+             hexactpos 0
+             vexactpos 0
+             hexactsize 1
+             vexactsize 0
+             {
+              PanelWidgetClass Divider119 {
+               ignorepointer 1
+               color 0 0 0 0.588
+               position 0 0
+               size 0.1 0.6
+               halign center_ref
+               valign center_ref
+               hexactpos 0
+               vexactpos 0
+               hexactsize 0
+               vexactsize 0
+               style rover_sim_colorable
+              }
+             }
+            }
            }
           }
          }
@@ -5146,6 +5298,17 @@ FrameWidgetClass EditorFrame {
    vexactpos 0
    hexactsize 0
    vexactsize 0
+   {
+    CanvasWidgetClass SplineMapCanvas {
+     ignorepointer 1
+     position 0 0
+     size 1 1
+     hexactpos 0
+     vexactpos 0
+     hexactsize 0
+     vexactsize 0
+    }
+   }
   }
  }
 }
